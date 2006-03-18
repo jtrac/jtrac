@@ -21,7 +21,6 @@
 			<groupId>bsh</groupId>
 			<artifactId>bsh</artifactId>
 			<version>2.0b1</version>
-			<scope>runtime</scope>
 		</dependency>		
 	</dependencies>
 	<build>
