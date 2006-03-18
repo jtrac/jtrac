@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="jtrac" basedir=".">
+
+    <property file="build.properties"/>
+    <property file="build-deps.properties"/>	
+    <property name="war.name" value="jtrac"/>    	
+	
+    <target name="clean">
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="target"/>
+        </delete>      
+    </target>	
+	
+    <target name="compile">
+        <mkdir dir="target/classes"/>
+        <javac srcdir="src/main/java" destdir="target/classes" debug="true" classpath="${test.jars}"/>
+        <copy todir="target/classes">
+            <fileset dir="src/main/resources"/>
+        </copy>              
+    </target> 			
+	
+    <target name="war-exploded" depends="compile">
+        <copy todir="target/${war.name}">
+            <fileset dir="src/main/webapp"/>
+        </copy>
+        <copy todir="target/${war.name}/WEB-INF/classes">
+            <fileset dir="target/classes"/>
+        </copy>
+        <copy todir="target/${war.name}/WEB-INF/lib" flatten="true">
+            <fileset dir="${m2.repo}" includes="${runtime.jars}" casesensitive="false"/>         
+        </copy>
+    </target>
+    	
+    <!-- ========================== TEST ============================ -->
+	
+    <target name="all" depends="clean, compile-test">
+        <checkstyle-macro/>
+        <style in="target/reports/checkstyle.xml" out="target/reports/checkstyle.html" 
+        style="etc/checkstyle-noframes-sorted.xsl"/>     
+        <delete dir="home/db"/>        
+        <antcall target="test-coverage"/>
+    </target>
+	
+    <target name="compile-test" depends="compile">
+        <mkdir dir="target/test-classes"/>
+        <javac srcdir="src/test/java" destdir="target/test-classes" debug="true">
+            <classpath>
+                <path path="target/classes"/>
+                <path path="${test.jars}"/>
+            </classpath>
+        </javac>
+    </target> 			
+    
+    <target name="test-coverage" depends="compile-test">    
+        <test-macro emmaEnabled="true"/>
+        <junitreport todir="target/reports">
+            <fileset dir="target/reports">
+                <include name="TEST-*.xml" />
+            </fileset>
+            <report format="frames" todir="target/reports"/>
+        </junitreport>        
+    </target>
+    
+    <target name="test" depends="compile-test">
+        <test-macro/>     
+    </target>
+    
+    <target name="test-single" depends="compile-test">
+    	<!-- files property expected from netbeans -->
+        <fail unless="files">no files selected!</fail>      
+        <test-macro files="${files}" emmaEnabled="true"/>      
+    </target>    
+    
+    <taskdef resource="emma_ant.properties" classpath="${emma.jars}"/>
+    
+    <macrodef name="test-macro">
+        <attribute name="files" default="**/*Test.java"/>
+        <attribute name="emmaEnabled" default="false"/>
+        <sequential>
+            <mkdir dir="target/reports"/>
+            <emma enabled="@{emmaEnabled}">                    
+                <instr instrpath="target/classes" 
+                outdir="target/instr-classes" 
+                metadatafile="target/metadata.emma" merge="true"/>
+            </emma>            
+            <junit fork="true" dir="." tempdir="target">
+                <classpath>
+                    <path path="target/instr-classes"/>
+                    <path path="target/classes"/>
+                    <path path="target/test-classes"/>
+                    <path path="${test.jars}"/>                
+                    <path path="${emma.jars}"/>
+                </classpath>
+                <jvmarg value="-Demma.coverage.out.file=${basedir}/target/coverage.emma"/>
+                <jvmarg value="-Demma.coverage.out.merge=true"/>
+                <formatter type="brief" usefile="false"/>
+                <formatter type="xml"/>            
+                <batchtest todir="target/reports">
+                    <fileset dir="src/test/java" includes="@{files}"/>
+                </batchtest>
+            </junit>
+            <emma enabled="@{emmaEnabled}">
+                <report sourcepath="src/main/java">
+                    <fileset dir="target">
+                        <include name="*.emma"/>
+                    </fileset>                
+                    <html outfile="${basedir}/target/reports/index-coverage.html"/>
+                </report>
+            </emma>          
+        </sequential>
+    </macrodef>
+	
+    <!-- ======================= CHECKSTYLE ========================= -->	
+	
+    <taskdef resource="checkstyletask.properties" classpath="${checkstyle.jars}"/>	                	
+	
+    <target name="checkstyle">
+        <checkstyle-macro/>
+        <concat>
+            <fileset dir="target/reports" includes="checkstyle.txt"/>
+        </concat>
+        <style in="target/reports/checkstyle.xml" out="target/reports/checkstyle.html" 
+        style="etc/checkstyle-noframes-sorted.xsl"/> 
+    </target>
+    
+    <target name="checkstyle-single" depends="compile">
+        <!-- files property expected from netbeans -->
+        <fail unless="files">no files selected</fail>
+        <checkstyle-macro files="${files}"/>
+        <concat>
+            <fileset dir="target/reports" includes="checkstyle.txt"/>
+        </concat>
+    </target>    
+	
+    <macrodef name="checkstyle-macro">
+        <attribute name="files" default="**/*.java"/>
+        <sequential>
+            <mkdir dir="target/reports"/>
+            <checkstyle config="etc/checkstyle.xml" failOnViolation="false">
+                <property key="checkstyle.cache.file" file="target/checkstyle-cache"/>
+                <property key="checkstyle.header.file" file="etc/header.txt"/>
+                <fileset dir="src/main/java" includes="@{files}"/>
+                <classpath location="target/classes"/>
+                <formatter type="xml" toFile="target/reports/checkstyle.xml"/>
+                <formatter type="plain" toFile="target/reports/checkstyle.txt"/>
+            </checkstyle>            
+        </sequential>
+    </macrodef>	
+	
+    <!-- =========================== DOC ============================ -->
+	
+    <target name="javadoc">
+        <mkdir dir="target/doc/api"/>
+        <javadoc destdir="target/doc/api" windowtitle="JTrac" use="true" defaultexcludes="true" breakiterator="true">
+            <packageset dir="src/main/java"/>           
+            <doctitle><![CDATA[<h1>JTrac API Documentation</h1>]]></doctitle>
+            <bottom><![CDATA[<i>JTrac</i> - <a href="http://jtrac.info">http://jtrac.info</a>]]></bottom>
+        </javadoc>
+    </target>
+	
+    <!-- ========================= TOMCAT =========================== -->
+           
+    <target name="tomcat-clean">
+        <input message="All tomcat webapps [${tomcat.home}/webapps] will be deleted.  Are you sure?"
+            validargs="y,n" addproperty="do.clean"/>
+        <condition property="do.abort">
+            <equals arg1="n" arg2="${do.clean}"/>
+        </condition>
+        <fail if="do.abort">aborted by user.</fail>        
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="${tomcat.home}/work"/>
+            <fileset dir="${tomcat.home}/webapps">
+                <exclude name="ROOT/**"/>
+            </fileset>
+        </delete> 	
+    </target>
+    
+    <target name="tomcat-deploy" depends="war-exploded">  
+        <copy todir="${tomcat.home}/webapps/${war.name}">
+            <fileset dir="target/${war.name}"/>
+        </copy>
+    </target>     
+    
+    <target name="tomcat-reload" depends="war-exploded">
+        <taskdef name="tomcat-reload-task" classname="org.apache.catalina.ant.ReloadTask" 
+        	classpath="${tomcat.home}/server/lib/catalina-ant.jar"/>     	
+        <tomcat-reload-task url="${tomcat.manager.url}" 
+			username="${tomcat.manager.username}" 
+			password="${tomcat.manager.password}" 
+			path="/${war.name}"/>	
+    </target>	
+	
+    <target name="tomcat-start">
+        <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
+            <jvmarg line="-Dcatalina.home=${tomcat.home}"/>
+            <jvmarg line="-Dfile.encoding=UTF-8"/>
+            <jvmarg line="-Djtrac.home=home"/>
+        </java>
+    </target>   
+
+    <target name="tomcat-restart" depends="tomcat-stop, tomcat-deploy, tomcat-start"/>
+	
+    <target name="tomcat-stop">
+        <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
+            <jvmarg line="-Dcatalina.home=${tomcat.home}"/>
+            <arg line="stop"/>
+        </java>
+    </target>
+	
+    <!-- target for remote debugging -->
+    <target name="tomcat-start-debug">
+        <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
+            <jvmarg line="-Djtrac.home=home"/>
+            <jvmarg line="-Dcatalina.home=${tomcat.home}"/>
+            <jvmarg line="-Dfile.encoding=UTF-8"/>
+            <jvmarg line="-Xdebug"/>
+            <jvmarg line="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"/>
+        </java>
+    </target>    
+    
+    <!-- target for NetBeans Profiler on Windows -->
+    <target name="tomcat-start-profiler">
+        <property name="nbprof.home" value="${netbeans.home}/../profiler1/lib"/>
+        <property name="agent.path" value="${nbprof.home}/deployed/jdk15/windows/profilerinterface.dll=${nbprof.home},5140"/>
+        <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
+            <jvmarg line="-Dcatalina.home=${tomcat.home}"/>
+            <jvmarg line="-Dfile.encoding=UTF-8"/>
+            <jvmarg line="-Djtrac.home=home"/>
+            <jvmarg line="-agentpath:${agent.path}"/>
+        </java>
+    </target> 	
+              
+</project>

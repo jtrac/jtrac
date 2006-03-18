@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!-- application context definition for "jtrac" Dispatcher Servlet (Spring MVC front controller) -->
+
+<beans> 
+
+    <!-- ============================ VIEW RESOLVER ============================== -->
+    <!--
+    - This sets up a uniform way to map the view logical name (with JSTL support)
+    - to the actual web resource (jsp).  If we need a more complex mapping
+    - it can be done through a resource bundle
+    -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    
+    <!-- ======================== URL TO HANDLER MAPPING ============================ -->
+    <!--
+    - This bean is an explicit URL mapper that is used by the "jtrac" DispatcherServlet
+    - It is used instead of the spring default BeanNameUrlHandlerMapping.
+    -->
+    <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="interceptors">
+            <list>
+                <bean class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
+                    <property name="sessionFactory" ref="sessionFactory"/>
+                </bean>
+            </list>
+        </property>
+        <property name="alwaysUseFullPath" value="true"/>
+        <property name="mappings">
+            <props>
+                <prop key="/login.htm">defaultController</prop>
+                <prop key="/dashboard.htm">defaultController</prop>
+                <prop key="/logout.htm">defaultController</prop>
+                <prop key="/webflow.htm">flowController</prop>
+                <prop key="/svn_form.htm">defaultController</prop>
+                <prop key="/svn_view.htm">defaultController</prop>
+                <prop key="/chart/svn_commits_per_committer.jpg">defaultController</prop>
+            </props>
+        </property>
+    </bean>    
+    
+    <!-- =========================== SPRING MVC ============================= -->
+    
+    <!--
+    - This bean is a MultiActionController that manages miscellaneous 
+    - view rendering e.g. simple hyperlinks that do not need a FormController
+    -->
+    <bean id="defaultController" class="info.jtrac.web.DefaultMultiActionController">
+        <property name="methodNameResolver">
+            <bean class="org.springframework.web.servlet.mvc.multiaction.PropertiesMethodNameResolver">
+                <property name="alwaysUseFullPath" value="true"/>
+                <property name="mappings">
+                    <props>
+                        <prop key="/login.htm">loginHandler</prop>
+                        <prop key="/dashboard.htm">dashboardHandler</prop>
+                        <prop key="/logout.htm">logoutHandler</prop>
+                        <prop key="/svn_form.htm">svnFormHandler</prop>
+                        <prop key="/svn_view.htm">svnViewHandler</prop>
+                        <prop key="/chart/svn_commits_per_committer.jpg">svnCommitsPerCommitterChartHandler</prop>
+                    </props>
+                </property>
+            </bean>        
+        </property>
+        <property name="jtrac" ref="jtrac"/>
+    </bean>    
+    
+    <!-- ======================== SPRING WEB FLOW ============================ -->
+    
+    <!-- common web flow controller for all spring web flows 
+    - The flow id of the flow to start should be passed in 
+    - using the "_flowId" request parameter
+    -->
+    <bean id="flowController" class="org.springframework.webflow.executor.mvc.FlowController">
+    	<property name="flowExecutor">
+			<bean class="org.springframework.webflow.executor.FlowExecutorImpl">
+				<constructor-arg>
+					<bean class="org.springframework.webflow.registry.XmlFlowRegistryFactoryBean">
+						<property name="flowLocations" value="/WEB-INF/flows/*-flow.xml"/>
+					</bean>				
+				</constructor-arg>
+			</bean>    	
+    	</property>
+	</bean>    	    
+    
+    <!-- ======================= USER CREATE FLOW ACTIONS ======================= -->
+    <bean id="userFormAction" class="info.jtrac.web.webflow.UserFormAction">
+        <property name="jtrac" ref="jtrac"/>
+    </bean>
+    
+    <!-- ===================== TRACKER CREATE FLOW ACTIONS ====================== -->
+    
+    <bean id="spaceFormAction" class="info.jtrac.web.webflow.SpaceFormAction">
+        <property name="jtrac" ref="jtrac"/>
+    </bean>
+    
+    <bean id="fieldFormAction" class="info.jtrac.web.webflow.FieldFormAction"/>    
+        
+</beans>

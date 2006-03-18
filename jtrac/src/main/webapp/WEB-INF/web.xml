@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+    version="2.4">
+
+    <!-- Spring context config location(s) -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            /WEB-INF/applicationContext.xml
+            /WEB-INF/applicationContext-acegi.xml
+        </param-value>
+    </context-param>
+
+    <!-- used by Spring Log4jConfigListener -->
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>/WEB-INF/log4j.properties</param-value>
+    </context-param>
+   
+    <filter>
+        <filter-name>acegiSecurityFilter</filter-name>
+        <filter-class>org.acegisecurity.util.FilterToBeanProxy</filter-class>
+        <init-param>
+            <param-name>targetClass</param-name>
+            <param-value>org.acegisecurity.util.FilterChainProxy</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>acegiSecurityFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping> 
+    
+    <!-- Leave the listener commented-out if using JBoss -->
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+    
+    <!-- Spring IoC container / root (web) application context bootstrap -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    
+    <!-- publish HttpSessionCreatedEvent and HttpSessionDestroyedEvent 
+    to the Spring WebApplicationContext -->
+    <listener>
+        <listener-class>org.acegisecurity.ui.session.HttpSessionEventPublisher</listener-class>
+    </listener>
+    
+    <!-- spring MVC DispatcherServlet (front controller)
+    Spring looks for /WEB-INF/<servlet-name>-servlet.xml by default 
+    and loads a web application context from it -->
+    <servlet>
+        <servlet-name>jtrac</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>  
+    
+    <servlet-mapping>
+        <servlet-name>jtrac</servlet-name>
+        <url-pattern>*.htm</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>jtrac</servlet-name>
+        <url-pattern>/chart/*</url-pattern>
+    </servlet-mapping>     
+         
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+    
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/WEB-INF/jsp/exception.jsp</location>
+    </error-page>    
+    
+</web-app>

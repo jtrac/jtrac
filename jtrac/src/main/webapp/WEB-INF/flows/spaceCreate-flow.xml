@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
+	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
+
+<flow start-state="spaceCreateForm">
+
+    <view-state id="spaceCreateForm" view="space_form">
+        <entry-actions>
+            <action bean="spaceFormAction" method="setupForm"/>
+        </entry-actions>        
+        <transition on="submit" to="spaceFieldsView">
+            <action bean="spaceFormAction" method="bind"/>
+            <action bean="spaceFormAction" method="spaceCreateHandler"/>
+        </transition>
+    </view-state>
+    
+    <view-state id="spaceFieldsView" view="space_fields">
+	    <transition on="back" to="spaceCreateForm"/>
+        <transition on="add" to="spaceFieldForm">
+            <action bean="spaceFormAction" method="spaceFieldAddHandler"/>
+        </transition>
+        <transition on="edit" to="spaceFieldForm">
+            <action bean="spaceFormAction" method="spaceFieldEditHandler"/>
+        </transition>
+        <transition on="next" to="spaceRolesView"/>     
+    </view-state>
+   
+    <view-state id="spaceFieldForm" view="space_field_form">      
+        <transition on="cancel" to="spaceFieldsView"/>
+        <transition on="update" to="spaceFieldForm">
+            <action bean="fieldFormAction" method="bindAndValidate"/>
+            <action bean="fieldFormAction" method="fieldUpdateHandler"/>
+        </transition>
+        <transition on="done" to="spaceFieldsView">
+            <action bean="fieldFormAction" method="bindAndValidate"/>
+            <action bean="fieldFormAction" method="fieldUpdateHandler"/>
+            <action bean="spaceFormAction" method="spaceFieldUpdateHandler"/>
+        </transition>        
+    </view-state>
+ 
+    <view-state id="spaceRolesView" view="space_roles">
+        <transition on="back" to="spaceFieldsView"/>       
+        <transition on="addState" to="spaceRolesView">
+            <action bean="spaceFormAction" method="spaceStateAddHandler"/>
+        </transition>
+        <transition on="addRole" to="spaceRolesView">
+            <action bean="spaceFormAction" method="spaceRoleAddHandler"/>
+        </transition>
+        <transition on="next" to="spacePreviewView"/>     
+    </view-state>
+    
+    <view-state id="spacePreviewView" view="space_preview">
+        <transition on="back" to="spaceRolesView"/>       
+        <transition on="save" to="spaceListView">
+            <action bean="spaceFormAction" method="spaceSaveHandler"/>
+            <action bean="spaceFormAction" method="spaceListViewSetup"/>
+        </transition>        
+    </view-state>
+    
+    <end-state id="spaceListView" view="space_list"/>    
+    
+</flow>
+

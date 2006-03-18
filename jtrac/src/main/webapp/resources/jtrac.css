@@ -1,0 +1,14 @@
+body { font-size: 80%; font-family: Arial; background: url("greyback.gif"); }
+table.jtrac tr { font-size: 80%; }
+table.jtrac th, .label { background: #CCCCCC; padding-left: 0.2em; padding-right: 0.2em; }
+tr.center td { text-align: center; }
+.label { font-weight: bold; text-align: right; }
+a { color: blue; }
+a:hover { color: red; }
+.multiselect { height: 12em; overflow: auto; background: white; text-align: left; border: solid thin; }
+.nav { font-size: 95%; font-weight: bold; color: black; padding-left: 1em; padding-right: 1em; }
+.nav-over { font-size: 95%; font-weight: bold; background-color: #DEDEFF; padding-left: 1em; padding-right: 1em; }
+.error { color: red; font-weight: bold; }
+.info { color: blue; font-weight: bold; }
+.alt, .header, .footer { background: #DEDEFF; } 
+.selected { background: #ADD8E6; }

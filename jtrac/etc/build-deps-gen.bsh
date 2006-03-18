@@ -1,0 +1,61 @@
+// beanshell script to create a properties file designed to seamlesslly
+// integrate Maven with an Ant build file and even a Netbeans project.xml
+// requires the "bshrunner" Maven plugin available in the JTrac Subversion repository
+
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
+
+// functions
+writePath(artifacts, relative) {
+    for (Artifact a : artifacts) {
+        f = a.getFile();
+        if (f == null) {
+            print("*** resolving artifact: " + a);
+            artifactResolver.resolve(a, remoteArtifactRepositories, localRepository);
+            f = a.getFile();
+        }
+        p = f.getPath().substring(len).replace('\\','/');
+        if (relative) {
+            out.write("\\\n    " + p + ",");
+        } else {
+            out.write("\\\n    ${m2.repo}/" + p + ":");
+        }
+    }
+    out.write('\n');
+}
+
+resolveDependencies(groupId, artifactId, version) {
+    pomArtifact = artifactFactory.createArtifact(groupId, artifactId, version, "", "jar"); 
+    pomProject = mavenProjectBuilder.buildFromRepository(pomArtifact, remoteArtifactRepositories, localRepository);    
+    artifacts = pomProject.createArtifacts(artifactFactory, Artifact.SCOPE_TEST, new ScopeArtifactFilter(Artifact.SCOPE_TEST));
+    for (Artifact a : artifacts) {
+        artifactResolver.resolve(a, remoteArtifactRepositories, localRepository);
+    }
+    artifacts.add(pomArtifact);
+    return artifacts;      
+}
+
+os = new FileOutputStream("build-deps.properties");
+out = new PrintWriter(os);      
+baseDir = localRepository.getBasedir().replace('\\','/');
+len = baseDir.length() + 1;                         
+out.write("# *** generated file - not created by hand! ***\n");
+out.write("m2.repo=" + baseDir + "\n");
+//==============================
+out.write("test.jars=");
+testArtifacts = project.getDependencyArtifacts();
+testArtifacts.addAll(project.getTestArtifacts());
+writePath(testArtifacts, false);
+//==============================
+out.write("runtime.jars=");
+writePath(project.getArtifacts(), true);
+//==============================
+out.write("checkstyle.jars=");
+writePath(resolveDependencies("checkstyle", "checkstyle", "4.1"), false);
+//==============================
+out.write("emma.jars=");            
+emmaDeps = resolveDependencies("emma", "emma", "2.0.5312");
+emmaAntDeps = resolveDependencies("emma", "emma_ant", "2.0.5312");
+emmaDeps.addAll(emmaAntDeps);
+writePath(emmaDeps, false);
+out.close();
