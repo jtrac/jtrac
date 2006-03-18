@@ -12,3 +12,4 @@ a:hover { color: red; }
 .info { color: blue; font-weight: bold; }
 .alt, .header, .footer { background: #DEDEFF; } 
 .selected { background: #ADD8E6; }
+.bdr-bottom, tr.bdr-bottom td { border-bottom : thin solid grey; }

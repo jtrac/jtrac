@@ -197,9 +197,7 @@
             <jvmarg line="-Dfile.encoding=UTF-8"/>
             <jvmarg line="-Djtrac.home=home"/>
         </java>
-    </target>   
-
-    <target name="tomcat-restart" depends="tomcat-stop, tomcat-deploy, tomcat-start"/>
+    </target>
 	
     <target name="tomcat-stop">
         <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">

@@ -43,4 +43,46 @@ public class ValidationUtils {
         return value;
     }
     
+    public static boolean isAllUpperCase(String input) {
+        if (input == null) {
+            return false;
+        }
+        for (char c : input.toCharArray()) {
+            if (!(Character.isUpperCase(c) || Character.isDigit(c))) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public static boolean isAllLowerCase(String input) {
+        if (input == null) {
+            return false;
+        }        
+        for (char c : input.toCharArray()) {
+            if (!(Character.isLowerCase(c) || Character.isDigit(c))) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * Only letters are allowed, not even numbers
+     */
+    public static boolean isTitleCase(String input) {
+        if (input == null || input.length() == 0 || !Character.isUpperCase(input.charAt(0))) {
+            return false;
+        }
+        if (input.length() > 1) {
+            for (char c : input.substring(1).toCharArray()) {
+                if (!(Character.isLowerCase(c))) {
+                    return false;
+                }
+            }            
+        }
+        return true;        
+    }
+    
+    
 }

@@ -48,13 +48,9 @@ public class SpaceFormAction extends AbstractFormAction {
                 errors.rejectValue("prefixCode", "error.space.prefixCode.tooshort",
                         "Length should be at least 3 characters.");
             }
-            for (int i = 0; i < prefixCode.length(); i++) {
-                char c = prefixCode.charAt(i);
-                if (!(Character.isUpperCase(c) || Character.isDigit(c))) {
-                    errors.rejectValue("prefixCode", "error.space.prefixCode.badchars",
-                            "Only capital letters and numeric characters allowed.");
-                    break;
-                }
+            if (!ValidationUtils.isAllUpperCase(prefixCode)) {
+                errors.rejectValue("prefixCode", "error.space.prefixCode.badchars",
+                        "Only capital letters and numeric characters allowed.");
             }
         }
         if (errors.hasErrors()) {
@@ -106,18 +102,28 @@ public class SpaceFormAction extends AbstractFormAction {
     public Event spaceStateAddHandler(RequestContext context) throws Exception {
         Space space = (Space) getFormObject(context);
         String state = ValidationUtils.getParameter(context, "state");
-        if (state != null) {
-            space.getMetadata().addState(state);
+        if (!ValidationUtils.isTitleCase(state)) {
+            Errors errors = getFormErrors(context);
+            errors.reject("error.spaceRoles.state.badchars", 
+                    "State name has to start with a capital letter followed by lower-case letters.");
+            context.getRequestScope().put("state", state);
+            return error();
         }
+        space.getMetadata().addState(state);        
         return success();
     }
     
     public Event spaceRoleAddHandler(RequestContext context) throws Exception {
         Space space = (Space) getFormObject(context);
         String role = ValidationUtils.getParameter(context, "role");             
-        if (role != null) {
-            space.getMetadata().addRole(role);
-        }
+        if (!ValidationUtils.isAllUpperCase(role)) {
+            Errors errors = getFormErrors(context);
+            errors.reject("error.spaceRoles.role.badchars", 
+                    "Role name has to be all capital letters or digits.");
+            context.getRequestScope().put("role", role);
+            return error();
+        }        
+        space.getMetadata().addRole(role);
         return success();
     }
     
