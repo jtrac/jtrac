@@ -191,7 +191,7 @@
 			path="/${war.name}"/>	
     </target>	
 	
-    <target name="tomcat-start">
+    <target name="tomcat-start" depends="tomcat-deploy">
         <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
             <jvmarg line="-Dcatalina.home=${tomcat.home}"/>
             <jvmarg line="-Dfile.encoding=UTF-8"/>

@@ -61,6 +61,15 @@ public class State implements Serializable {
     public State(int s, String n) {
         this.status = s;
         this.name = n;
+        // default rules for state transitions
+        if (s == NEW) {
+            addTransition(OPEN);
+        } else if (s == OPEN) {
+            addTransition(OPEN);
+            addTransition(CLOSED);
+        } else if (s == CLOSED) {
+            addTransition(OPEN);
+        }
     }
     
     public State(Element e) {
@@ -120,6 +129,22 @@ public class State implements Serializable {
         }
         fields.put(fieldName, mask);
     }
+    
+    public void addTransition(int toStatus) {
+        transitions.add(toStatus);
+    }
+    
+    /**
+     * to make JSTL EL easier
+     * create Map on the fly but with boolean true values for keys that are present
+     */
+    public Map<Integer, Boolean> getTransitionMap() {
+        Map<Integer, Boolean> map = new HashMap<Integer, Boolean>();
+        for (Integer i : transitions) {
+            map.put(i, true);
+        }
+        return map;
+    }    
     
     //=======================================================================   
 

@@ -1,4 +1,5 @@
-<%@ include file="/WEB-INF/jsp/header.jsp" %>
+<%@ page session="true" contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
     <head>
@@ -7,7 +8,7 @@
     </head>
     <body>
         
-        <table width="100%" class="jtrac"><tr class="header"><td>jTrac</td></tr></table>
+        <table width="100%" class="jtrac"><tr class="header"><td>JTrac</td></tr></table>
         
         <hr/>        
         <br/>

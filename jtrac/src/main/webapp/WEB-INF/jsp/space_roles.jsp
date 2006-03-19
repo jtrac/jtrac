@@ -18,7 +18,7 @@
         <td/>
         <td/>
         <th colspan="${statesCount - 1}">Next Allowed State</th>
-        <th colspan="${fieldsCount}">Field Permissions <br/>(can view / can edit)</th>        
+        <th colspan="${fieldsCount}">Field Level Permissions</th>        
     </tr>
     <tr class="center alt">
         <th>State</th>
@@ -39,29 +39,33 @@
         <c:forEach items="${roles}" var="role" varStatus="innerRow">
             <c:set var="innerRowClass">
                 <c:choose>
-                    <c:when test="${selectedState == mapEntry.value && selectedRole == role.name}">selected</c:when>
+                    <c:when test="${selectedStatus == mapEntry.key && selectedRole == role.name}">selected</c:when>
                     <c:when test="${innerRow.count % 2 == 0}">alt</c:when>
                 </c:choose>            
             </c:set>
             <c:set var="lastRole">
                 <c:if test="${innerRow.count == rolesCount}">bdr-bottom</c:if>
-            </c:set>            
+            </c:set>
+           <c:set var="roleState" value="${role.states[mapEntry.key]}"/>
             <tr class="center ${innerRowClass} ${lastRole}">
                 <c:if test="${innerRow.count == 1}">
-                    <td rowspan="${rolesCount}" class="bdr-bottom ${rowClass}">${mapEntry.value}</td>
+                    <td rowspan="${rolesCount}" class="bdr-bottom ${rowClass}">${roleState.name}</td>
                 </c:if>
                 <td>${role.name}</td>
                 <c:forEach items="${states}" var="innerMapEntry">
                     <c:if test="${innerMapEntry.key != 0}">
-                        <td>X</td>
+                        <td>
+                            <c:if test="${!empty roleState.transitionMap[innerMapEntry.key]}">X</c:if>&nbsp;
+                        </td>
                     </c:if>
                 </c:forEach>
                 <c:forEach items="${fields}" var="field">
+                    <c:set var="mask" value="${roleState.fields[field.name]}"/>
                     <td>
-                        <select name="foo">
-                            <option>Hide</option>
-                            <option>View</option>
-                            <option>Edit</option>
+                        <select name="TODO">
+                            <option value="0" <c:if test='${mask == 0}'>selected='true'</c:if>>Hide</option>
+                            <option value="1" <c:if test='${mask == 1}'>selected='true'</c:if>>View</option>
+                            <option value="2" <c:if test='${mask == 2}'>selected='true'</c:if>>Edit</option>
                         </select>
                     </td>
                 </c:forEach>                

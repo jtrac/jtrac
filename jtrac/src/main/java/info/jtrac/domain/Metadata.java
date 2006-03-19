@@ -117,6 +117,7 @@ public class Metadata implements Serializable {
     
     public void initRoles() {
         states.put(State.NEW, "New");
+        states.put(State.OPEN, "Open");
         states.put(State.CLOSED, "Closed");
         addRole("DEFAULT");
     }
