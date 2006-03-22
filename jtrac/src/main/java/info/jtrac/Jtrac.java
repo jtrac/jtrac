@@ -40,6 +40,7 @@ public interface Jtrac extends UserDetailsService {
     Space loadSpace(String prefixCode);
     void storeSpace(Space space);
     List<Space> loadAllSpaces();
+    List<Space> loadUnallocatedSpacesForUser(int userId);
     //========================================================
     void storeMetadata(Metadata metadata);
     Metadata loadMetadata(int id);

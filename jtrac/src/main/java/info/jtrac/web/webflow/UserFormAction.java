@@ -39,7 +39,7 @@ public class UserFormAction extends AbstractFormAction {
     public UserFormAction() {
         setFormObjectClass(UserForm.class);
         setFormObjectName("userForm");
-        setFormObjectScope(ScopeType.FLOW);
+        setFormObjectScope(ScopeType.REQUEST);
         setValidator(new UserFormValidator());
     }
     
@@ -101,10 +101,34 @@ public class UserFormAction extends AbstractFormAction {
             Errors errors = getFormErrors(context);
             errors.rejectValue("user.loginName", "error.user.loginName.exists", "Login ID already exists");
             return error();
-        }        
-        jtrac.storeUser(userForm.getUser());
+        }
+        User user = userForm.getUser();
+        jtrac.storeUser(user);
+        context.getFlowScope().put("user", user);
         return success();
     }
+    
+    public Event userAllocateSpaceSetup(RequestContext context) throws Exception {
+        User user = (User) context.getFlowScope().get("user");
+        context.getRequestScope().put("spaces", jtrac.loadUnallocatedSpacesForUser(user.getId()));
+        return success();
+    }    
+    
+    public Event userAllocateSpaceRoleSetup(RequestContext context) {
+        String spaceId = ValidationUtils.getParameter(context, "spaceId");
+        int id = Integer.parseInt(spaceId);
+        context.getFlowScope().put("space", jtrac.loadSpace(id));
+        return success();
+    }     
+    
+    public Event userAllocateHandler(RequestContext context) {
+        User user = (User) context.getFlowScope().get("user");
+        Space space = (Space) context.getFlowScope().get("space");
+        String roleKey = ValidationUtils.getParameter(context, "roleKey");
+        user.addSpaceRole(space, roleKey);
+        jtrac.storeUser(user);
+        return success();
+    }     
     
     public Event userListViewSetup(RequestContext context) {
         context.getRequestScope().put("users", jtrac.loadAllUsers());

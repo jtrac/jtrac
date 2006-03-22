@@ -19,8 +19,8 @@ package info.jtrac.domain;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.userdetails.UserDetails;
@@ -47,7 +47,7 @@ public class User implements UserDetails, Serializable {
     private String email;
     private Metadata metadata;
     private boolean locked;
-    private Set<SpaceRole> spaceRoles = new HashSet<SpaceRole>();
+    private Set<SpaceRole> spaceRoles = new TreeSet<SpaceRole>();
     
     //=============================================================
    

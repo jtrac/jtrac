@@ -17,8 +17,8 @@
 package info.jtrac;
 
 import info.jtrac.domain.Metadata;
-import info.jtrac.domain.Role;
 import info.jtrac.domain.Space;
+import info.jtrac.domain.SpaceRole;
 import info.jtrac.domain.User;
 
 import java.util.List;
@@ -120,6 +120,15 @@ public class JtracImpl implements Jtrac {
     
     public List<Space> loadAllSpaces() {
         return dao.loadAllSpaces();
+    }
+    
+    public List<Space> loadUnallocatedSpacesForUser(int userId) {
+        List<Space> spaces = loadAllSpaces();
+        User user = loadUser(userId);
+        for(SpaceRole spaceRole : user.getSpaceRoles()) {
+            spaces.remove(spaceRole.getSpace());
+        }
+        return spaces;
     }
     
     public void storeMetadata(Metadata metadata) {

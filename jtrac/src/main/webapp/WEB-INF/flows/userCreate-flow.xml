@@ -8,12 +8,28 @@
         <entry-actions>
             <action bean="userFormAction" method="setupForm"/>
         </entry-actions>
-        <transition on="submit" to="userListView">
+        <transition on="submit" to="userAllocateSpace">
             <action bean="userFormAction" method="bindAndValidate"/>
             <action bean="userFormAction" method="userFormHandler"/>
-            <action bean="userFormAction" method="userListViewSetup"/>
         </transition>
     </view-state>  
+
+    <view-state id="userAllocateSpace" view="user_allocate_space">
+        <entry-actions>
+            <action bean="userFormAction" method="userAllocateSpaceSetup"/>
+        </entry-actions>
+        <transition on="next" to="userAllocateSpaceRole"/>
+    </view-state>  
+    
+    <view-state id="userAllocateSpaceRole" view="user_allocate_space_role">
+        <entry-actions>
+            <action bean="userFormAction" method="userAllocateSpaceRoleSetup"/>
+        </entry-actions>
+        <transition on="save" to="userListView">
+            <action bean="userFormAction" method="userAllocateHandler"/>
+            <action bean="userFormAction" method="userListViewSetup"/>
+        </transition>
+    </view-state>    
     
     <end-state id="userListView" view="user_list"/>
 
