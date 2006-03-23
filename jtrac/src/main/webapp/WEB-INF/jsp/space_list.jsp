@@ -2,9 +2,11 @@
 
 <span class="info">Spaces</span>
 
+<a href="<c:url value='webflow.htm'><c:param name='_flowId' value='spaceCreate-flow'/></c:url>">Create New Space</a>
+
 <table class="jtrac">
 
-    <tr><th>Space Key</th></tr>
+    <tr><th>Space Key</th><th>Users</th></tr>
 
     <c:forEach items="${spaces}" var="space" varStatus="row">
         <c:set var="rowClass">
@@ -15,7 +17,10 @@
         </c:set>
         <tr ${rowClass}>
             <td>
-                <a href="<c:url value='space_edit.htm'><c:param name='spaceId' value='${space.id}'/></c:url>">${space.prefixCode}</a>
+                <a href="<c:url value='webflow.htm'><c:param name='_flowId' value='${space.id}'/></c:url>">${space.prefixCode}</a>
+            </td>
+            <td>
+                <a href="<c:url value='webflow.htm'><c:param name='_flowId' value='${space.id}'/></c:url>">${space.prefixCode}</a>
             </td>
         </tr>
     </c:forEach>

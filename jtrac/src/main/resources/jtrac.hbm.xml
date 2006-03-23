@@ -131,7 +131,7 @@
         <property name="prefixCode" column="prefix_code" unique="true"/>         
         <property name="description" column="description" type="text"/>
         <one-to-one name="spaceSequence"/>
-        <many-to-one name="metadata" column="metadata_id" cascade="all"/>
+        <many-to-one name="metadata" column="metadata_id" cascade="all"/>       
     </class>
     
     <class name="SpaceSequence" table="space_sequence">

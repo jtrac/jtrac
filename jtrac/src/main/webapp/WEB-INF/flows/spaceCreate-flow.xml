@@ -2,8 +2,12 @@
 <!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
 	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
 
-<flow start-state="spaceCreateForm">
+<flow start-state="isEdit">
 
+    <decision-state id="isEdit">
+        <if test="${isEdit}" then="spaceFieldsView" else="state4"/>
+    </decision-state>    
+    
     <view-state id="spaceCreateForm" view="space_form">
         <entry-actions>
             <action bean="spaceFormAction" method="setupForm"/>

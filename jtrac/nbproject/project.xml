@@ -82,13 +82,17 @@
                         <location>src/main/java</location>
                     </source-folder>
                     <source-folder style="packages">
+                        <label>src/main/resources</label>
+                        <location>src/main/resources</location>
+                    </source-folder>                    
+                    <source-folder style="packages">
                         <label>src/test/java</label>
                         <location>src/test/java</location>
                     </source-folder>
                     <source-folder style="tree">
                         <label>Web Pages</label>
                         <location>src/main/webapp</location>
-                    </source-folder>
+                    </source-folder>                  
                     <source-file>
                         <location>build.xml</location>
                     </source-file>

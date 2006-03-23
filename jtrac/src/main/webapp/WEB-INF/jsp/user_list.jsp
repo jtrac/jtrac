@@ -2,6 +2,8 @@
 
 <span class="info">Users and Allocated Trackers</span>
 
+<a href="<c:url value='webflow.htm'><c:param name='_flowId' value='userCreate-flow'/></c:url>">Create New User</a>
+
 <table class="jtrac">
 
     <tr><th>User Name</th><th>Edit Profile</th><th>Locked</th><th>Tracker (Role)</th><th>Assign</br>Tracker</th></tr>
