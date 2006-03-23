@@ -13,25 +13,15 @@
             <action bean="userFormAction" method="userFormHandler"/>
         </transition>
     </view-state>  
-
-    <view-state id="userAllocateSpace" view="user_allocate_space">
-        <entry-actions>
-            <action bean="userFormAction" method="userAllocateSpaceSetup"/>
-        </entry-actions>
-        <transition on="next" to="userAllocateSpaceRole"/>
-    </view-state>  
     
-    <view-state id="userAllocateSpaceRole" view="user_allocate_space_role">
-        <entry-actions>
-            <action bean="userFormAction" method="userAllocateSpaceRoleSetup"/>
-        </entry-actions>
-        <transition on="save" to="userListView">
-            <action bean="userFormAction" method="userAllocateHandler"/>
-            <action bean="userFormAction" method="userListViewSetup"/>
-        </transition>
-    </view-state>    
+    <subflow-state id="userAllocateSpace" flow="userAllocate-flow">
+        <attribute-mapper>
+            <input-mapping value="${flowScope.user}" as="user"/>
+        </attribute-mapper>
+        <transition on="dashboardView" to="dashboardView"/>
+    </subflow-state>
     
-    <end-state id="userListView" view="user_list"/>
+    <end-state id="dashboardView" view="externalRedirect:dashboard.htm"/>
 
 </flow>
 

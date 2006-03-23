@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
+	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
+
+<flow start-state="userAllocateSpace"> 
+
+    <view-state id="userAllocateSpace" view="user_allocate_space">
+        <entry-actions>
+            <action bean="userFormAction" method="userAllocateSpaceSetup"/>
+        </entry-actions>
+        <transition on="next" to="userAllocateSpaceRole"/>
+        <transition on="cancel" to="dashboardView"/>
+    </view-state>  
+    
+    <view-state id="userAllocateSpaceRole" view="user_allocate_space_role">
+        <entry-actions>
+            <action bean="userFormAction" method="userAllocateSpaceRoleSetup"/>
+        </entry-actions>
+        <transition on="cancel" to="userAllocateSpace"/>
+        <transition on="allocate" to="userAllocateSpace">
+            <action bean="userFormAction" method="userAllocateHandler"/>
+        </transition>
+    </view-state>    
+    
+    <end-state id="dashboardView" view="externalRedirect:dashboard.htm"/>
+
+</flow>
+

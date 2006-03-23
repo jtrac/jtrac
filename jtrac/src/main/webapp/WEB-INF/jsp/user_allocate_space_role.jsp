@@ -2,6 +2,8 @@
 
 <span class="info">Allocate Role for User: ${user.loginName} within Space: ${space.prefixCode}</span>
 
+<p/>
+
 <form method="post" action="<c:url value='webflow.htm'/>">
 
     <select name="roleKey">
@@ -10,7 +12,9 @@
         </c:forEach>
     </select>
     
-    <input type="submit" name="_eventId_save" value="Save"/>
+    <input type="submit" name="_eventId_cancel" value="Cancel"/>
+    
+    <input type="submit" name="_eventId_allocate" value="Allocate"/>
 
     <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}">
 

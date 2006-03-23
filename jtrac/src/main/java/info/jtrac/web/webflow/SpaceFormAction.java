@@ -131,11 +131,6 @@ public class SpaceFormAction extends AbstractFormAction {
         Space space = (Space) getFormObject(context);
         jtrac.storeSpace(space);
         return success();
-    }
-    
-    public Event spaceListViewSetup(RequestContext context) {
-        context.getRequestScope().put("spaces", jtrac.loadAllSpaces());
-        return success();
     }    
     
 }

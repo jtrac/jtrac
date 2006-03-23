@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Users and Allocated Trackers / Role</span>
+<span class="info">Users and Allocated Trackers</span>
 
 <table class="jtrac">
 

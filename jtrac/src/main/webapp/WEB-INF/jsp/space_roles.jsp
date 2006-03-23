@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Space Roles and State-Transitions (Workflow)</span>
+<span class="info">Space Roles and State-Transitions (Workflow) for Space: ${space.prefixCode}</span>
 
 <p/>
 

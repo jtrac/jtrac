@@ -2,7 +2,7 @@
 
 <p/>
 
-<div class="error">jTrac Internal error</div>
+<div class="error">JTrac Internal error</div>
 
 <p/>
 

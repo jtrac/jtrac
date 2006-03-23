@@ -2,6 +2,8 @@
 
 <span class="info">Allocate Space to User: ${user.loginName} (${user.name})</span>
 
+<p/>
+
 <form method="post" action="<c:url value='webflow.htm'/>">
 
 <table class="jtrac">
@@ -44,6 +46,8 @@
     </tr>
 
 </table>
+
+<input type="submit" name="_eventId_cancel" value="Cancel"/>
 
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}">
 

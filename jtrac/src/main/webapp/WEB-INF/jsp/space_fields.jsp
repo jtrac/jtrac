@@ -1,17 +1,8 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Space Details</span>
+<span class="info">Custom Fields for Space: ${space.prefixCode}</span>
 
-<table class="jtrac">
-    <tr>
-        <th>Space ID</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td>${space.prefixCode}</td>
-        <td>${space.description}</td>
-    </tr>
-</table>
+<p/>
 
 <table class="jtrac">
     <tr>

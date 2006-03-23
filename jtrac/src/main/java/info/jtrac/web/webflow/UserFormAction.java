@@ -128,11 +128,6 @@ public class UserFormAction extends AbstractFormAction {
         user.addSpaceRole(space, roleKey);
         jtrac.storeUser(user);
         return success();
-    }     
-    
-    public Event userListViewSetup(RequestContext context) {
-        context.getRequestScope().put("users", jtrac.loadAllUsers());
-        return success();
-    }
+    }    
     
 }

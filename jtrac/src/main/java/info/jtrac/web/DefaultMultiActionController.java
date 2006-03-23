@@ -98,4 +98,12 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
         return new ModelAndView("this_is_never_used");
     }
     
+    public ModelAndView userListHandler(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("user_list", "users", jtrac.loadAllUsers());
+    }
+    
+    public ModelAndView spaceListHandler(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("space_list", "spaces", jtrac.loadAllSpaces());
+    }    
+    
 }
