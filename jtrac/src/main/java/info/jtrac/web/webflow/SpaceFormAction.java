@@ -66,6 +66,24 @@ public class SpaceFormAction extends AbstractFormAction {
         return success();
     }        
     
+    @Override
+    public Object loadFormObject(RequestContext context) {
+        String spaceId = ValidationUtils.getParameter(context, "spaceId");
+        if (spaceId != null) {
+            return jtrac.loadSpace(Integer.parseInt(spaceId));
+        }
+        return new Space();
+    }
+    
+    public Event checkIfEdit(RequestContext context) throws Exception {
+        setupForm(context);
+        Space space = (Space) getFormObject(context);
+        if (space.getId() != 0) {
+           return result("yes");
+        }
+        return result("no");
+    }
+    
     public Event spaceFieldAddHandler(RequestContext context) throws Exception {
         Space space = (Space) getFormObject(context);
         String fieldType = (String) context.getRequestParameters().get("fieldType");

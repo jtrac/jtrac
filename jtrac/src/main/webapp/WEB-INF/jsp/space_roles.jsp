@@ -49,7 +49,7 @@
            <c:set var="roleState" value="${role.states[mapEntry.key]}"/>
             <tr class="center ${innerRowClass} ${lastRole}">
                 <c:if test="${innerRow.count == 1}">
-                    <td rowspan="${rolesCount}" class="bdr-bottom ${rowClass}">${roleState.name}</td>
+                    <td rowspan="${rolesCount}" class="bdr-bottom ${rowClass}">${states[roleState.status]}</td>
                 </c:if>
                 <td>${role.name}</td>
                 <c:forEach items="${states}" var="innerMapEntry">

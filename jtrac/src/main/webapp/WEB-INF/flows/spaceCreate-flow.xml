@@ -2,16 +2,15 @@
 <!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
 	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
 
-<flow start-state="isEdit">
-
-    <decision-state id="isEdit">
-        <if test="${isEdit}" then="spaceFieldsView" else="state4"/>
-    </decision-state>    
+<flow start-state="checkIfEdit">
     
-    <view-state id="spaceCreateForm" view="space_form">
-        <entry-actions>
-            <action bean="spaceFormAction" method="setupForm"/>
-        </entry-actions>        
+    <action-state id="checkIfEdit">
+        <action bean="spaceFormAction" method="checkIfEdit"/>
+        <transition on="yes" to="spaceFieldsView"/>
+        <transition on="no" to="spaceCreateForm"/>
+    </action-state>    
+    
+    <view-state id="spaceCreateForm" view="space_form">      
         <transition on="submit" to="spaceFieldsView">
             <action bean="spaceFormAction" method="bind"/>
             <action bean="spaceFormAction" method="spaceCreateHandler"/>
@@ -55,13 +54,12 @@
     
     <view-state id="spacePreviewView" view="space_preview">
         <transition on="back" to="spaceRolesView"/>       
-        <transition on="save" to="spaceListView">
+        <transition on="save" to="dashboardView">
             <action bean="spaceFormAction" method="spaceSaveHandler"/>
-            <action bean="spaceFormAction" method="spaceListViewSetup"/>
         </transition>        
     </view-state>
     
-    <end-state id="spaceListView" view="space_list"/>    
+    <end-state id="dashboardView" view="externalRedirect:dashboard.htm"/>    
     
 </flow>
 

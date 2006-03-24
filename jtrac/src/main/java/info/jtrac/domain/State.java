@@ -43,7 +43,6 @@ import org.dom4j.Element;
 public class State implements Serializable {
     
     private int status;
-    private String name;
     private Set<Integer> transitions = new HashSet<Integer>();
     private Map<Field.Name, Integer> fields = new HashMap<Field.Name, Integer>();
     
@@ -58,9 +57,8 @@ public class State implements Serializable {
         // zero arg constructor
     }
     
-    public State(int s, String n) {
+    public State(int s) {
         this.status = s;
-        this.name = n;
         // default rules for state transitions
         if (s == NEW) {
             addTransition(OPEN);
@@ -73,7 +71,7 @@ public class State implements Serializable {
     }
     
     public State(Element e) {
-        status = Integer.parseInt(e.attributeValue(STATUS));
+        this.status = Integer.parseInt(e.attributeValue(STATUS));
         for (Object o : e.elements(TRANSITION)) {
             Element t = (Element) o;
             transitions.add(new Integer(t.attributeValue(STATUS)));
@@ -164,14 +162,6 @@ public class State implements Serializable {
         this.status = status;
     }
     
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-    
     public Set<Integer> getTransitions() {
         return transitions;
     }
@@ -184,7 +174,6 @@ public class State implements Serializable {
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("status [").append(status);
-        sb.append("]; name [").append(name);
         sb.append("]; transitions [").append(transitions);
         sb.append("]; fields [").append(fields).append("]");
         return sb.toString();

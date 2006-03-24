@@ -78,21 +78,21 @@
             <view>
                 <items>
                     <source-folder style="packages">
-                        <label>src/main/java</label>
+                        <label>src</label>
                         <location>src/main/java</location>
-                    </source-folder>
+                    </source-folder>                   
                     <source-folder style="packages">
-                        <label>src/main/resources</label>
-                        <location>src/main/resources</location>
-                    </source-folder>                    
-                    <source-folder style="packages">
-                        <label>src/test/java</label>
+                        <label>test</label>
                         <location>src/test/java</location>
                     </source-folder>
                     <source-folder style="tree">
-                        <label>Web Pages</label>
+                        <label>webapp</label>
                         <location>src/main/webapp</location>
-                    </source-folder>                  
+                    </source-folder>
+                    <source-folder style="tree">
+                        <label>resources</label>
+                        <location>src/main/resources</location>
+                    </source-folder>                     
                     <source-file>
                         <location>build.xml</location>
                     </source-file>

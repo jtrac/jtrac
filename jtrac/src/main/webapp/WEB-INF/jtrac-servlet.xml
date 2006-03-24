@@ -37,6 +37,9 @@
                 <prop key="/dashboard.htm">defaultController</prop>
                 <prop key="/logout.htm">defaultController</prop>
                 <prop key="/webflow.htm">flowController</prop>
+                <!-- =========================================== -->
+                <prop key="/user_list.htm">defaultController</prop>
+                <prop key="/space_list.htm">defaultController</prop>
                 <prop key="/svn_form.htm">defaultController</prop>
                 <prop key="/svn_view.htm">defaultController</prop>
                 <prop key="/chart/svn_commits_per_committer.jpg">defaultController</prop>
@@ -59,6 +62,8 @@
                         <prop key="/login.htm">loginHandler</prop>
                         <prop key="/dashboard.htm">dashboardHandler</prop>
                         <prop key="/logout.htm">logoutHandler</prop>
+                        <prop key="/user_list.htm">userListHandler</prop>
+                        <prop key="/space_list.htm">spaceListHandler</prop>
                         <prop key="/svn_form.htm">svnFormHandler</prop>
                         <prop key="/svn_view.htm">svnViewHandler</prop>
                         <prop key="/chart/svn_commits_per_committer.jpg">svnCommitsPerCommitterChartHandler</prop>
@@ -76,16 +81,16 @@
     - using the "_flowId" request parameter
     -->
     <bean id="flowController" class="org.springframework.webflow.executor.mvc.FlowController">
-    	<property name="flowExecutor">
-			<bean class="org.springframework.webflow.executor.FlowExecutorImpl">
-				<constructor-arg>
-					<bean class="org.springframework.webflow.registry.XmlFlowRegistryFactoryBean">
-						<property name="flowLocations" value="/WEB-INF/flows/*-flow.xml"/>
-					</bean>				
-				</constructor-arg>
-			</bean>    	
-    	</property>
-	</bean>    	    
+        <property name="flowExecutor">
+            <bean class="org.springframework.webflow.executor.FlowExecutorImpl">
+                <constructor-arg>
+                    <bean class="org.springframework.webflow.registry.XmlFlowRegistryFactoryBean">
+                        <property name="flowLocations" value="/WEB-INF/flows/*-flow.xml"/>
+                    </bean>				
+                </constructor-arg>
+            </bean>    	
+        </property>
+    </bean>    	    
     
     <!-- ======================= USER CREATE FLOW ACTIONS ======================= -->
     <bean id="userFormAction" class="info.jtrac.web.webflow.UserFormAction">

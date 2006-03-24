@@ -147,7 +147,7 @@ public class Metadata implements Serializable {
         states.put(newStatus, name);
         // by default each role will have permissions for this state, for all fields
         for (Role role : roles.values()) {
-            State state = new State(newStatus, name);
+            State state = new State(newStatus);
             state.add(fields.keySet());
             role.add(state);
         }
@@ -156,7 +156,7 @@ public class Metadata implements Serializable {
     public void addRole(String name) {
         Role role = new Role(name);
         for (Map.Entry<Integer, String> entry: states.entrySet()) {
-            State state = new State(entry.getKey(), entry.getValue());
+            State state = new State(entry.getKey());
             state.add(fields.keySet());
             role.add(state);
         }

@@ -2,6 +2,8 @@
 
 <span class="info">Create New User</span>
 
+<p/>
+
 <form method="post" action="<c:url value='webflow.htm'/>">
 
     <table class="jtrac">
