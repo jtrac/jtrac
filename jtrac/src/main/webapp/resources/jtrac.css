@@ -6,10 +6,10 @@ tr.center td { text-align: center; }
 a { color: blue; }
 a:hover { color: red; }
 .multiselect { height: 12em; overflow: auto; background: white; text-align: left; border: solid thin; }
-.nav { font-size: 95%; font-weight: bold; color: black; padding-left: 1em; padding-right: 1em; }
-.nav-over { font-size: 95%; font-weight: bold; background-color: #DEDEFF; padding-left: 1em; padding-right: 1em; }
 .error { color: red; font-weight: bold; }
 .info { color: blue; font-weight: bold; }
 .alt, .header, .footer { background: #DEDEFF; } 
 .selected { background: #ADD8E6; }
-.bdr-bottom, tr.bdr-bottom td { border-bottom : thin solid grey; }
+.bdr-bottom, tr.bdr-bottom td { border-bottom: thin solid grey; }
+.nav-table-outer { background-color: #CCCCCC; }
+.nav-table td { font-size: 80%; font-weight: bold; background-color: #DEDEFF; padding-left: 1em; padding-right: 1em; }
