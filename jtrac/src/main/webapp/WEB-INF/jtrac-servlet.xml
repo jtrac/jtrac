@@ -33,9 +33,10 @@
         <property name="alwaysUseFullPath" value="true"/>
         <property name="mappings">
             <props>
-                <prop key="/login.htm">defaultController</prop>
-                <prop key="/dashboard.htm">defaultController</prop>
+                <prop key="/login.htm">defaultController</prop>                
                 <prop key="/logout.htm">defaultController</prop>
+                <prop key="/dashboard.htm">defaultController</prop>
+                <prop key="/options.htm">defaultController</prop>
                 <prop key="/webflow.htm">flowController</prop>
                 <!-- =========================================== -->
                 <prop key="/user_list.htm">defaultController</prop>
@@ -60,8 +61,9 @@
                 <property name="mappings">
                     <props>
                         <prop key="/login.htm">loginHandler</prop>
-                        <prop key="/dashboard.htm">dashboardHandler</prop>
                         <prop key="/logout.htm">logoutHandler</prop>
+                        <prop key="/dashboard.htm">dashboardHandler</prop>
+                        <prop key="/options.htm">optionsHandler</prop>
                         <prop key="/user_list.htm">userListHandler</prop>
                         <prop key="/space_list.htm">spaceListHandler</prop>
                         <prop key="/svn_form.htm">svnFormHandler</prop>

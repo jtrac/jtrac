@@ -6,8 +6,8 @@
 <beans>
 	
     <!-- Automatically receives AuthenticationEvent messages -->
-    <bean id="loggerListener" class="org.acegisecurity.event.authentication.LoggerListener"/>
-
+    <bean id="loggerListener" class="org.acegisecurity.event.authentication.LoggerListener"/>    
+    
     <bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
         <property name="providers">
             <list>

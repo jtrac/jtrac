@@ -21,7 +21,7 @@
         <tr>
             <td>${spaceRole.space.prefixCode}</td>
             <td>${spaceRole.roleKey}</td>
-            <td>
+            <td align="center">
                 <a href="<c:url value='webflow.htm'>
                     <c:param name='userId' value='${user.id}'/>
                     <c:param name='deAllocate' value='${spaceRole.space.id}'/></c:url>">(X)</a>                

@@ -12,7 +12,7 @@
 
     <bean id="jtrac" class="info.jtrac.JtracImpl">
         <property name="dao" ref="dao"/>
-        <property name="passwordEncoder" ref="passwordEncoder"/>							
+        <property name="passwordEncoder" ref="passwordEncoder"/>
     </bean>    
     
     <bean id="passwordEncoder" class="org.acegisecurity.providers.encoding.Md5PasswordEncoder"/>

@@ -68,6 +68,11 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
         return new ModelAndView("dashboard");
     }
     
+    public ModelAndView optionsHandler(HttpServletRequest request,
+            HttpServletResponse response) {
+        return new ModelAndView("options");
+    }    
+    
     public ModelAndView svnFormHandler(HttpServletRequest request,
             HttpServletResponse response) {
         return new ModelAndView("svn_form");

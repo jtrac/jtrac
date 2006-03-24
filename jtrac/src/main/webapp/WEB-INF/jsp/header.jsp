@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="authz" uri="http://acegisecurity.org/authz" %>
+<c:set var="principal" value="${ACEGI_SECURITY_CONTEXT.authentication.principal}"/>
 
 <html>
 <head>
@@ -20,24 +21,16 @@
 <td>
     <table class="nav-table">
         <tr>		
-            <td>
-                <a href="<c:url value='dashboard.htm'/>">DASHBOARD</a>
-            </td>	
+            <td><a href="<c:url value='dashboard.htm'/>">DASHBOARD</a></td>	
         </tr>
     </table>
 </td>
 <td align="right">
     <table class="nav-table">
         <tr>								
-            <td>
-                <a href="<c:url value='options.htm'/>">OPTIONS</a>
-            </td>
-            <td>
-                <a href="<c:url value='logout.htm'/>">LOGOUT</a>
-            </td>		
-            <td>
-                <authz:authentication operation="name"/>
-            </td>
+            <td><a href="<c:url value='options.htm'/>">OPTIONS</a></td>
+            <td><a href="<c:url value='logout.htm'/>">LOGOUT</a></td>		
+            <td>${principal.name}</td>
         </tr>
     </table>
 </td>

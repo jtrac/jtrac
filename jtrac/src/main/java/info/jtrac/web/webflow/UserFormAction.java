@@ -103,7 +103,7 @@ public class UserFormAction extends AbstractFormAction {
             return error();
         }
         User user = userForm.getUser();
-        jtrac.storeUser(user);
+        jtrac.createUser(user);
         // context.getFlowScope().put("user", user);
         return success();
     }
@@ -135,7 +135,7 @@ public class UserFormAction extends AbstractFormAction {
         Space space = (Space) context.getFlowScope().get("space");
         String roleKey = ValidationUtils.getParameter(context, "roleKey");
         user.addSpaceRole(space, roleKey);
-        jtrac.storeUser(user);
+        jtrac.updateUser(user);
         return success();
     }    
     

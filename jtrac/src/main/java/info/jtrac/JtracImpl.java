@@ -23,6 +23,7 @@ import info.jtrac.domain.User;
 
 import java.util.List;
 import java.util.Random;
+import org.acegisecurity.context.SecurityContextHolder;
 
 
 import org.acegisecurity.providers.encoding.PasswordEncoder;
@@ -47,7 +48,7 @@ public class JtracImpl implements Jtrac {
     
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
-    }
+    } 
     
     private final Log logger = LogFactory.getLog(getClass());
     
@@ -87,8 +88,8 @@ public class JtracImpl implements Jtrac {
         return dao.loadUser(loginName);
     }
     
-    public void storeUser(User user) {
-        logger.info("Saving User");
+    public void createUser(User user) {
+        logger.info("Saving New User");
         String password = user.getPassword();
         if (password == null) {
             user.setPassword(generatePassword());
@@ -96,6 +97,12 @@ public class JtracImpl implements Jtrac {
             user.setPassword(encodeClearTextPassword(password));
         }
         dao.storeUser(user);
+    }
+    
+    public void updateUser(User user) {                
+        dao.storeUser(user);
+        // effectively forces the Acegi Security Context to reload
+        SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
     }
     
     public List<User> loadAllUsers() {
@@ -137,6 +144,6 @@ public class JtracImpl implements Jtrac {
     
     public Metadata loadMetadata(int id) {
         return dao.loadMetadata(id);
-    }    
+    }
     
 }

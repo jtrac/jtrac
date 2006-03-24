@@ -1,19 +1,9 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
 <span class="info">Dashboard</span>
-
-<p/>
-
-<a href="<c:url value='user_list.htm'/>">Users</a>
-
-<p/>
-
-<a href="<c:url value='space_list.htm'/>">Spaces</a>
-
-<p/>
-
-<a href="<c:url value='logout.htm'/>">Logout</a>
-
-<p/>
+   
+<c:forEach items="${principal.spaceRoles}" var="spaceRole">
+    ${spaceRole.space.prefixCode} - ${spaceRole.roleKey}
+</c:forEach>    
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>

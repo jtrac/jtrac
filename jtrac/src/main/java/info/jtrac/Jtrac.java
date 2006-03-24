@@ -31,7 +31,8 @@ import org.acegisecurity.userdetails.UserDetailsService;
  */
 public interface Jtrac extends UserDetailsService {
     
-    void storeUser(User user);
+    void createUser(User user);
+    void updateUser(User user);
     List<User> loadAllUsers();
     User loadUser(int id);
     User loadUser(String loginName);
