@@ -28,7 +28,7 @@
                 <a href="<c:url value='webflow.htm'>
                     <c:param name='_flowId' value='spaceAllocate-flow'/>
                     <c:param name='spaceId' value='${space.id}'/>
-                    </c:url>">${space.prefixCode}</a>
+                    </c:url>">(+)</a>
             </td>
         </tr>
     </c:forEach>

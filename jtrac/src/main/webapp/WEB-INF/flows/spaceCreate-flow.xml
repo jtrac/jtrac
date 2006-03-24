@@ -10,7 +10,8 @@
         <transition on="no" to="spaceCreateForm"/>
     </action-state>    
     
-    <view-state id="spaceCreateForm" view="space_form">      
+    <view-state id="spaceCreateForm" view="space_form">
+        <transition on="cancel" to="dashboardView"/>
         <transition on="submit" to="spaceFieldsView">
             <action bean="spaceFormAction" method="bind"/>
             <action bean="spaceFormAction" method="spaceCreateHandler"/>
@@ -18,7 +19,7 @@
     </view-state>
     
     <view-state id="spaceFieldsView" view="space_fields">
-	    <transition on="back" to="spaceCreateForm"/>
+	<transition on="back" to="spaceCreateForm"/>
         <transition on="add" to="spaceFieldForm">
             <action bean="spaceFormAction" method="spaceFieldAddHandler"/>
         </transition>

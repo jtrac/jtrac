@@ -8,6 +8,7 @@
         <entry-actions>
             <action bean="userFormAction" method="setupForm"/>
         </entry-actions>
+        <transition on="cancel" to="userListView"/>
         <transition on="submit" to="userAllocateSpace">
             <action bean="userFormAction" method="bindAndValidate"/>
             <action bean="userFormAction" method="userFormHandler"/>
@@ -16,12 +17,12 @@
     
     <subflow-state id="userAllocateSpace" flow="userAllocate-flow">
         <attribute-mapper>
-            <input-mapping value="${flowScope.user}" as="user"/>
+            <input-mapping value="${requestScope.userForm.user}" as="user"/>
         </attribute-mapper>
-        <transition on="dashboardView" to="dashboardView"/>
+        <transition on="userListView" to="userListView"/>
     </subflow-state>
     
-    <end-state id="dashboardView" view="externalRedirect:dashboard.htm"/>
+    <end-state id="userListView" view="externalRedirect:user_list.htm"/>
 
 </flow>
 

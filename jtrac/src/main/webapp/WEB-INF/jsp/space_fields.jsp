@@ -55,5 +55,4 @@
     <input type="submit" name="_eventId_next" value="Next"/>
 </form>
 
-
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>

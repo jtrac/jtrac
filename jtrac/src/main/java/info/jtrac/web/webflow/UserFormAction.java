@@ -104,19 +104,28 @@ public class UserFormAction extends AbstractFormAction {
         }
         User user = userForm.getUser();
         jtrac.storeUser(user);
-        context.getFlowScope().put("user", user);
+        // context.getFlowScope().put("user", user);
         return success();
     }
     
     public Event userAllocateSpaceSetup(RequestContext context) throws Exception {
         User user = (User) context.getFlowScope().get("user");
+        if (user == null) {
+            String userId = ValidationUtils.getParameter(context, "userId");
+            int id = Integer.parseInt(userId);
+            user = jtrac.loadUser(id);
+            context.getFlowScope().put("user", user);
+        }
         context.getRequestScope().put("spaces", jtrac.loadUnallocatedSpacesForUser(user.getId()));
         return success();
     }    
     
     public Event userAllocateSpaceRoleSetup(RequestContext context) {
         String spaceId = ValidationUtils.getParameter(context, "spaceId");
-        int id = Integer.parseInt(spaceId);
+        if (spaceId == null) {
+            return error();
+        }
+        int id = Integer.parseInt(spaceId);        
         context.getFlowScope().put("space", jtrac.loadSpace(id));
         return success();
     }     

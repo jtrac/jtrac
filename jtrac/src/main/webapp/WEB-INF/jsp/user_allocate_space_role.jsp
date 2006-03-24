@@ -10,11 +10,13 @@
         <c:forEach items="${space.metadata.roles}" var="roleMapEntry">
             <option>${roleMapEntry.key}</option>
         </c:forEach>
-    </select>
-    
-    <input type="submit" name="_eventId_cancel" value="Cancel"/>
+    </select>   
     
     <input type="submit" name="_eventId_allocate" value="Allocate"/>
+    
+    <p/>
+    
+    <input type="submit" name="_eventId_cancel" value="Cancel"/>
 
     <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}">
 

@@ -25,15 +25,20 @@
             <td>
                 <c:if test="${user.locked}">locked</c:if>
             </td>					
-            <td>						
-                <c:forEach items="${spaceRoles}" var="entry">
-                    <a href="<c:url value='space_allocate.htm'><c:param name='trackerId' value='${entry.key.id}'/></c:url>">
-                        ${entry.key.prefixCode}
-                    </a>&nbsp;(${entry.value.name})&nbsp;
+            <td>        
+                <c:forEach items="${user.spaceRoles}" var="spaceRole" varStatus="row">
+                    <a href="<c:url value='webflow.htm'>
+                        <c:param name='_flowId' value='spaceAllocate-flow'/>
+                        <c:param name='spaceId' value='${spaceRole.space.id}'/>
+                        </c:url>">${spaceRole.space.prefixCode}</a>
+                    (<i>${spaceRole.roleKey}</i>)           
                 </c:forEach>
             </td>
             <td align="center">
-                <a href="<c:url value='user_allocate.htm'><c:param name='userId' value='${user.id}'/></c:url>">(+)</a>
+                <a href="<c:url value='webflow.htm'>
+                    <c:param name='_flowId' value='userAllocate-flow'/>
+                    <c:param name='userId' value='${user.id}'/>
+                    </c:url>">(+)</a>
             </td>
         </tr>
     </c:forEach>
