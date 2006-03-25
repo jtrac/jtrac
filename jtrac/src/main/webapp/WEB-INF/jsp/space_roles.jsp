@@ -11,7 +11,7 @@
 <c:set var="fieldsCount" value="${space.metadata.fieldsCount}"/>
 <c:set var="statesCount" value="${space.metadata.statesCount}"/>
 
-<form method="post" action="<c:url value='webflow.htm'/>">
+<form method="post" action="<c:url value='flow.htm'/>">
 
 <table class="jtrac">
     <tr>

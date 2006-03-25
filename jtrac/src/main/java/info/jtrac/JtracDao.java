@@ -39,14 +39,15 @@ public interface JtracDao {
     //===========================================
     void storeSpace(Space space);
     Space loadSpace(int id);
-    List<Space> loadSpace(String prefixCode);
+    List<Space> findSpacesByPrefixCode(String prefixCode);
     List<Space> loadAllSpaces();
     //===========================================
     void storeUser(User user);
     User loadUser(int id);
     List<User> loadAllUsers();
-    User loadUser(String loginName);
-    User loadUserByEmail(String email);
+    List<User> findUsersByLoginName(String loginName);
+    List<User> findUsersByEmail(String email);
+    List<User> findUsersForSpace(int spaceId);
     //===========================================
 
 }

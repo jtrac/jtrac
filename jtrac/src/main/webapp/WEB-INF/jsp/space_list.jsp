@@ -2,7 +2,7 @@
 
 <span class="info">Spaces</span>
 
-<a href="<c:url value='webflow.htm'><c:param name='_flowId' value='spaceCreate-flow'/></c:url>">Create New Space</a>
+<a href="<c:url value='flow.htm'><c:param name='_flowId' value='space-flow'/></c:url>">Create New Space</a>
 
 <p/>
 
@@ -19,13 +19,13 @@
         </c:set>
         <tr ${rowClass}>
             <td>
-                <a href="<c:url value='webflow.htm'>
+                <a href="<c:url value='flow.htm'>
                     <c:param name='_flowId' value='spaceCreate-flow'/>
                     <c:param name='spaceId' value='${space.id}'/>
                     </c:url>">${space.prefixCode}</a>
             </td>
             <td align="center">
-                <a href="<c:url value='webflow.htm'>
+                <a href="<c:url value='flow.htm'>
                     <c:param name='_flowId' value='spaceAllocate-flow'/>
                     <c:param name='spaceId' value='${space.id}'/>
                     </c:url>">(+)</a>

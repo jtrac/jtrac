@@ -4,7 +4,7 @@
 
 <p/>
 
-<form method="post" action="<c:url value='webflow.htm'/>">
+<form method="post" action="<c:url value='flow.htm'/>">
 
     <select name="roleKey">
         <c:forEach items="${space.metadata.roles}" var="roleMapEntry">

@@ -37,7 +37,7 @@
                 <prop key="/logout.htm">defaultController</prop>
                 <prop key="/dashboard.htm">defaultController</prop>
                 <prop key="/options.htm">defaultController</prop>
-                <prop key="/webflow.htm">flowController</prop>
+                <prop key="/flow.htm">flowController</prop>
                 <!-- =========================================== -->
                 <prop key="/user_list.htm">defaultController</prop>
                 <prop key="/space_list.htm">defaultController</prop>
@@ -94,12 +94,13 @@
         </property>
     </bean>    	    
     
-    <!-- ======================= USER CREATE FLOW ACTIONS ======================= -->
+    <bean id="itemFormAction" class="info.jtrac.web.webflow.ItemFormAction">
+        <property name="jtrac" ref="jtrac"/>
+    </bean>    
+    
     <bean id="userFormAction" class="info.jtrac.web.webflow.UserFormAction">
         <property name="jtrac" ref="jtrac"/>
     </bean>
-    
-    <!-- ===================== TRACKER CREATE FLOW ACTIONS ====================== -->
     
     <bean id="spaceFormAction" class="info.jtrac.web.webflow.SpaceFormAction">
         <property name="jtrac" ref="jtrac"/>

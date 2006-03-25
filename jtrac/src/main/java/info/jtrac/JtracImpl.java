@@ -16,6 +16,7 @@
 
 package info.jtrac;
 
+import info.jtrac.domain.Item;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.SpaceRole;
@@ -65,19 +66,27 @@ public class JtracImpl implements Jtrac {
         return passwordEncoder.encodePassword(clearText, null);
     }
     
+    public void storeItem(Item item) {
+        dao.storeItem(item);
+    }
+    
+    public Item loadItem(long id) {
+        return dao.loadItem(id);
+    }
+    
     // =========  acegi UserDetailsService implementation ==========
     public UserDetails loadUserByUsername(String loginName) {
-        User user = null;
+        List<User> users = null;
         if (loginName.indexOf("@") != -1) {
-            user = dao.loadUserByEmail(loginName);
+            users = dao.findUsersByEmail(loginName);
         } else {
-            user = dao.loadUser(loginName);
+            users = dao.findUsersByLoginName(loginName);
         }
-        if (user == null) {
+        if (users.size() == 0) {
             throw new UsernameNotFoundException("User not found for '" + loginName + "'");
         }
         logger.debug("acegi: loadUserByUserName success for '" + loginName + "'");
-        return user;
+        return users.get(0);
     }
     
     public User loadUser(int id) {
@@ -85,7 +94,11 @@ public class JtracImpl implements Jtrac {
     }
     
     public User loadUser(String loginName) {
-        return dao.loadUser(loginName);
+        List<User> users = dao.findUsersByLoginName(loginName);
+        if (users.size() == 0) {
+            return null;
+        }
+        return users.get(0);
     }
     
     public void createUser(User user) {
@@ -114,11 +127,11 @@ public class JtracImpl implements Jtrac {
     }
     
     public Space loadSpace(String prefixCode) {
-        List<Space> spaces = dao.loadSpace(prefixCode);
-        if (spaces.size() > 0) {
-            return spaces.get(0);
+        List<Space> spaces = dao.findSpacesByPrefixCode(prefixCode);
+        if (spaces.size() == 0) {
+            return null;
         }
-        return null;
+        return spaces.get(0);
     }
     
     public void storeSpace(Space space) {

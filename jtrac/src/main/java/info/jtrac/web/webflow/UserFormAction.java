@@ -32,7 +32,7 @@ import org.springframework.webflow.ScopeType;
 import org.springframework.webflow.action.FormObjectAccessor;
 
 /**
- * Multiaction that backs the "User Create" flow
+ * Multiaction that backs the "User Create / Edit" flow
  */
 public class UserFormAction extends AbstractFormAction {
     

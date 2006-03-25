@@ -7,19 +7,19 @@
     <action-state id="checkIfEdit">
         <action bean="spaceFormAction" method="checkIfEdit"/>
         <transition on="yes" to="spaceFieldsView"/>
-        <transition on="no" to="spaceCreateForm"/>
+        <transition on="no" to="spaceForm"/>
     </action-state>    
     
-    <view-state id="spaceCreateForm" view="space_form">
+    <view-state id="spaceForm" view="space_form">
         <transition on="cancel" to="dashboardView"/>
         <transition on="submit" to="spaceFieldsView">
             <action bean="spaceFormAction" method="bind"/>
-            <action bean="spaceFormAction" method="spaceCreateHandler"/>
+            <action bean="spaceFormAction" method="spaceFormHandler"/>
         </transition>
     </view-state>
     
     <view-state id="spaceFieldsView" view="space_fields">
-	<transition on="back" to="spaceCreateForm"/>
+	<transition on="back" to="spaceForm"/>
         <transition on="add" to="spaceFieldForm">
             <action bean="spaceFormAction" method="spaceFieldAddHandler"/>
         </transition>

@@ -20,7 +20,7 @@
             </c:choose>            
         </c:set>        
         <c:set var='editUrl'>
-            <c:url value="webflow.htm">
+            <c:url value="flow.htm">
                 <c:param name='fieldName' value='${field.name}'/>
                 <c:param name='_eventId' value='edit'/>
                 <c:param name='_flowExecutionId' value='${flowExecutionId}'/>
@@ -42,7 +42,7 @@
 
 <p/>
 
-<form method="post" action="<c:url value='webflow.htm'/>">
+<form method="post" action="<c:url value='flow.htm'/>">
     <select name="fieldType">
         <c:forEach items="${space.metadata.availableFieldTypes}" var="entry">
             <option value="${entry.key}">${entry.value}</option>

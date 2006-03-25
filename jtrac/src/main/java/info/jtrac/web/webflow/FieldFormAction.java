@@ -27,7 +27,7 @@ import org.springframework.webflow.RequestContext;
 import org.springframework.webflow.ScopeType;
 
 /**
- * Multiaction that participates in the "Space Create" flow
+ * Multiaction that participates in the "Space Create / Edit" flow
  * for editing individual Fields
  */
 public class FieldFormAction extends AbstractFormAction {

@@ -53,7 +53,7 @@ public class HibernateJtracDao
     }
     
     public Item loadItem(long id) {
-        return (Item) getHibernateTemplate().load(Item.class, new Long(id));
+        return (Item) getHibernateTemplate().load(Item.class, id);
     }
     
     public void storeMetadata(Metadata metadata) {
@@ -61,7 +61,7 @@ public class HibernateJtracDao
     }
     
     public Metadata loadMetadata(int id) {
-        return (Metadata) getHibernateTemplate().load(Metadata.class, new Integer(id));
+        return (Metadata) getHibernateTemplate().load(Metadata.class, id);
     }    
     
     public void storeSpace(Space space) {
@@ -69,10 +69,10 @@ public class HibernateJtracDao
     }
     
     public Space loadSpace(int id) {
-        return (Space) getHibernateTemplate().load(Space.class, new Integer(id));
+        return (Space) getHibernateTemplate().load(Space.class, id);
     }
     
-    public List<Space> loadSpace(String prefixCode) {
+    public List<Space> findSpacesByPrefixCode(String prefixCode) {
         return getHibernateTemplate().find("from Space space where space.prefixCode = ?", prefixCode);
     }
     
@@ -85,7 +85,7 @@ public class HibernateJtracDao
     }
     
     public Role loadRole(int id) {
-        return (Role) getHibernateTemplate().load(Role.class, new Integer(id));
+        return (Role) getHibernateTemplate().load(Role.class, id);
     }
     
     public void storeUser(User user) {
@@ -93,34 +93,38 @@ public class HibernateJtracDao
     }
     
     public User loadUser(int id) {
-        return (User) getHibernateTemplate().load(User.class,
-                new Integer(id));
+        return (User) getHibernateTemplate().load(User.class, id);
     }
     
     public List<User> loadAllUsers() {
         return getHibernateTemplate().loadAll(User.class);
     }
     
-    public User loadUser(final String loginName) {
+    public List<User> findUsersByLoginName(final String loginName) {
         // using criteria query to override lazy loading during authentication
-        return (User) getHibernateTemplate().execute(new HibernateCallback() {
+        return (List<User>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) {
                 return session.createCriteria(User.class).setFetchMode(
                         "spaceRoles", FetchMode.JOIN).add(
-                        Restrictions.eq("loginName", loginName)).uniqueResult();
+                        Restrictions.eq("loginName", loginName)).list();
             }
         });
     }
     
-    public User loadUserByEmail(final String email) {
+    public List<User> findUsersByEmail(final String email) {
         // using criteria query to override lazy loading during authentication
-        return (User) getHibernateTemplate().execute(new HibernateCallback() {
+        return (List<User>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) {
                 return session.createCriteria(User.class).setFetchMode(
                         "spaceRoles", FetchMode.JOIN).add(
-                        Restrictions.eq("email", email)).uniqueResult();
+                        Restrictions.eq("email", email)).list();
             }
         });
+    }
+    
+    public List<User> findUsersForSpace(int spaceId) {
+        return getHibernateTemplate().find("select user from User user" + 
+                " join user.spaceRoles as spaceRole where spaceRole.space.id = ?", spaceId);
     }
     
     public void createSchema() {        

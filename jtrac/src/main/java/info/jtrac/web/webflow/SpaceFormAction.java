@@ -38,7 +38,7 @@ public class SpaceFormAction extends AbstractFormAction {
         setFormObjectScope(ScopeType.FLOW);
     }
     
-    public Event spaceCreateHandler(RequestContext context) throws Exception {
+    public Event spaceFormHandler(RequestContext context) throws Exception {
         Space space = (Space) getFormObject(context);
         String prefixCode = space.getPrefixCode();
         Errors errors = getFormErrors(context);

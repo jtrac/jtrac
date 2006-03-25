@@ -1,14 +1,10 @@
 package info.jtrac;
 
-import info.jtrac.JtracDao;
-import info.jtrac.JtracImpl;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Metadata;
-import info.jtrac.domain.Role;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
-
-import java.io.File;
+import java.util.List;
 import java.util.Set;
 
 import org.acegisecurity.GrantedAuthority;
@@ -80,9 +76,9 @@ public class JtracImplTest extends AbstractTransactionalDataSourceSpringContextT
         user.setLoginName("test");
         user.setEmail("test@jtrac.com");
         dao.storeUser(user);
-        User user1 = dao.loadUser("test");
+        User user1 = dao.findUsersByLoginName("test").get(0);
         assertTrue(user1.getEmail().equals("test@jtrac.com"));
-        User user2 = dao.loadUserByEmail("test@jtrac.com");
+        User user2 = dao.findUsersByEmail("test@jtrac.com").get(0);
         assertTrue(user2.getLoginName().equals("test"));
     }
 
@@ -91,7 +87,6 @@ public class JtracImplTest extends AbstractTransactionalDataSourceSpringContextT
         space.setPrefixCode("SPACE");
         space.setDescription("test description");
         Metadata metadata = getMetadata();
-        // dao.storeMetadata(metadata);
 
         space.setMetadata(metadata);
         dao.storeSpace(space);
@@ -102,12 +97,17 @@ public class JtracImplTest extends AbstractTransactionalDataSourceSpringContextT
         user.addSpaceRole(space, "ROLE_TEST");
         dao.storeUser(user);
 
-        User u1 = dao.loadUser("test");
+        User u1 = dao.findUsersByLoginName("test").get(0);
 
         GrantedAuthority[] gas = u1.getAuthorities();
         assertEquals(2, gas.length);
         assertEquals("ROLE_USER", gas[0].getAuthority());
         assertEquals("ROLE_TEST_SPACE", gas[1].getAuthority());
+        
+        List<User> users = dao.findUsersForSpace(space.getId());
+        assertEquals(1, users.size());
+        User u2 = users.get(0);
+        assertEquals("test", u2.getLoginName());
 
     }
 

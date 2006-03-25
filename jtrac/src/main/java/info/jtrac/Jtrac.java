@@ -16,8 +16,8 @@
 
 package info.jtrac;
 
+import info.jtrac.domain.Item;
 import info.jtrac.domain.Metadata;
-import info.jtrac.domain.Role;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 
@@ -31,15 +31,18 @@ import org.acegisecurity.userdetails.UserDetailsService;
  */
 public interface Jtrac extends UserDetailsService {
     
+    void storeItem(Item item);
+    Item loadItem(long id);
+    //========================================================
     void createUser(User user);
     void updateUser(User user);
     List<User> loadAllUsers();
     User loadUser(int id);
     User loadUser(String loginName);
     //========================================================
+    void storeSpace(Space space);
     Space loadSpace(int id);
     Space loadSpace(String prefixCode);
-    void storeSpace(Space space);
     List<Space> loadAllSpaces();
     List<Space> loadUnallocatedSpacesForUser(int userId);
     //========================================================
