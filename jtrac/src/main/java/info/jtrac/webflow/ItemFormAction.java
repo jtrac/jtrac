@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package info.jtrac.web.webflow;
+package info.jtrac.webflow;
 
 import info.jtrac.domain.Item;
 import info.jtrac.domain.Space;

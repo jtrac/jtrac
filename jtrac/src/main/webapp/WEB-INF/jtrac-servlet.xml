@@ -94,18 +94,18 @@
         </property>
     </bean>    	    
     
-    <bean id="itemFormAction" class="info.jtrac.web.webflow.ItemFormAction">
+    <bean id="itemFormAction" class="info.jtrac.webflow.ItemFormAction">
         <property name="jtrac" ref="jtrac"/>
     </bean>    
     
-    <bean id="userFormAction" class="info.jtrac.web.webflow.UserFormAction">
+    <bean id="userFormAction" class="info.jtrac.webflow.UserFormAction">
         <property name="jtrac" ref="jtrac"/>
     </bean>
     
-    <bean id="spaceFormAction" class="info.jtrac.web.webflow.SpaceFormAction">
+    <bean id="spaceFormAction" class="info.jtrac.webflow.SpaceFormAction">
         <property name="jtrac" ref="jtrac"/>
     </bean>
     
-    <bean id="fieldFormAction" class="info.jtrac.web.webflow.FieldFormAction"/>    
+    <bean id="fieldFormAction" class="info.jtrac.webflow.FieldFormAction"/>    
         
 </beans>

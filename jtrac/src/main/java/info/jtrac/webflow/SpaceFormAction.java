@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package info.jtrac.web.webflow;
+package info.jtrac.webflow;
 
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Space;
 import info.jtrac.util.ValidationUtils;
-import info.jtrac.web.webflow.FieldFormAction.FieldForm;
+import info.jtrac.webflow.FieldFormAction.FieldForm;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
