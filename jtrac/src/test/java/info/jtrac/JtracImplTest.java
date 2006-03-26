@@ -4,6 +4,7 @@ import info.jtrac.domain.Field;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
+import info.jtrac.domain.UserRole;
 import java.util.List;
 import java.util.Set;
 
@@ -104,10 +105,11 @@ public class JtracImplTest extends AbstractTransactionalDataSourceSpringContextT
         assertEquals("ROLE_USER", gas[0].getAuthority());
         assertEquals("ROLE_TEST_SPACE", gas[1].getAuthority());
         
-        List<User> users = dao.findUsersForSpace(space.getId());
-        assertEquals(1, users.size());
-        User u2 = users.get(0);
-        assertEquals("test", u2.getLoginName());
+        List<UserRole> userRoles = dao.findUsersForSpace(space.getId());
+        assertEquals(1, userRoles.size());
+        UserRole ur = userRoles.get(0);
+        assertEquals("test", ur.getUser().getLoginName());
+        assertEquals("ROLE_TEST", ur.getRoleKey());        
 
     }
 

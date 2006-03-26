@@ -11,7 +11,7 @@
     </action-state>    
     
     <view-state id="spaceForm" view="space_form">
-        <transition on="cancel" to="dashboardView"/>
+        <transition on="cancel" to="spaceListView"/>
         <transition on="submit" to="spaceFieldsView">
             <action bean="spaceFormAction" method="bind"/>
             <action bean="spaceFormAction" method="spaceFormHandler"/>
@@ -55,12 +55,19 @@
     
     <view-state id="spacePreviewView" view="space_preview">
         <transition on="back" to="spaceRolesView"/>       
-        <transition on="save" to="dashboardView">
+        <transition on="save" to="spaceAllocateFlow">
             <action bean="spaceFormAction" method="spaceSaveHandler"/>
         </transition>        
     </view-state>
     
-    <end-state id="dashboardView" view="externalRedirect:dashboard.htm"/>    
+    <subflow-state id="spaceAllocateFlow" flow="spaceAllocate">
+        <attribute-mapper>
+            <input-mapping value="${flowScope.space}" as="space"/>
+        </attribute-mapper>
+        <transition on="spaceListView" to="spaceListView"/>
+    </subflow-state>        
+    
+    <end-state id="spaceListView" view="externalRedirect:space_list.htm"/>   
     
 </flow>
 

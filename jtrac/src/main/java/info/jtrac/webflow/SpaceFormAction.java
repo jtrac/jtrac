@@ -18,11 +18,13 @@ package info.jtrac.webflow;
 
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Space;
+import info.jtrac.domain.User;
+import info.jtrac.domain.UserRole;
 import info.jtrac.util.ValidationUtils;
 import info.jtrac.webflow.FieldFormAction.FieldForm;
+import java.util.List;
 
 import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
 import org.springframework.webflow.Event;
 import org.springframework.webflow.RequestContext;
 import org.springframework.webflow.ScopeType;
@@ -39,7 +41,7 @@ public class SpaceFormAction extends AbstractFormAction {
     }
     
     public Event spaceFormHandler(RequestContext context) throws Exception {
-        Space space = (Space) getFormObject(context);
+        Space space = (Space) context.getFlowScope().get("space");
         String prefixCode = space.getPrefixCode();
         Errors errors = getFormErrors(context);
         ValidationUtils.rejectIfEmpty(errors, "prefixCode");
@@ -77,15 +79,15 @@ public class SpaceFormAction extends AbstractFormAction {
     
     public Event checkIfEdit(RequestContext context) throws Exception {
         setupForm(context);
-        Space space = (Space) getFormObject(context);
+        Space space = (Space) context.getFlowScope().get("space");
         if (space.getId() != 0) {
            return result("yes");
         }
         return result("no");
     }
     
-    public Event spaceFieldAddHandler(RequestContext context) throws Exception {
-        Space space = (Space) getFormObject(context);
+    public Event spaceFieldAddHandler(RequestContext context) {
+        Space space = (Space) context.getFlowScope().get("space");
         String fieldType = (String) context.getRequestParameters().get("fieldType");
         if (fieldType == null) {
             // no fields left, just return to the space details screen
@@ -98,8 +100,8 @@ public class SpaceFormAction extends AbstractFormAction {
         return success();
     }   
     
-    public Event spaceFieldEditHandler(RequestContext context) throws Exception {
-        Space space = (Space) getFormObject(context);
+    public Event spaceFieldEditHandler(RequestContext context) {
+        Space space = (Space) context.getFlowScope().get("space");
         String fieldName = (String) context.getRequestParameters().get("fieldName");    
         Field field = space.getMetadata().getField(fieldName).getClone();
         FieldForm fieldForm = new FieldForm();
@@ -108,8 +110,8 @@ public class SpaceFormAction extends AbstractFormAction {
         return success();
     }
     
-    public Event spaceFieldUpdateHandler(RequestContext context) throws Exception {
-        Space space = (Space) getFormObject(context);
+    public Event spaceFieldUpdateHandler(RequestContext context) {
+        Space space = (Space) context.getFlowScope().get("space");
         FieldForm fieldForm = (FieldForm) context.getFlowScope().get("fieldForm");
         Field field = fieldForm.getField();
         space.getMetadata().add(field); // will overwrite with clone if applicable
@@ -118,7 +120,7 @@ public class SpaceFormAction extends AbstractFormAction {
     }
     
     public Event spaceStateAddHandler(RequestContext context) throws Exception {
-        Space space = (Space) getFormObject(context);
+        Space space = (Space) context.getFlowScope().get("space");
         String state = ValidationUtils.getParameter(context, "state");
         if (!ValidationUtils.isTitleCase(state)) {
             Errors errors = getFormErrors(context);
@@ -132,7 +134,7 @@ public class SpaceFormAction extends AbstractFormAction {
     }
     
     public Event spaceRoleAddHandler(RequestContext context) throws Exception {
-        Space space = (Space) getFormObject(context);
+        Space space = (Space) context.getFlowScope().get("space");
         String role = ValidationUtils.getParameter(context, "role");             
         if (!ValidationUtils.isAllUpperCase(role)) {
             Errors errors = getFormErrors(context);
@@ -145,9 +147,37 @@ public class SpaceFormAction extends AbstractFormAction {
         return success();
     }
     
-    public Event spaceSaveHandler(RequestContext context) throws Exception {
-        Space space = (Space) getFormObject(context);
+    public Event spaceSaveHandler(RequestContext context) {
+        Space space = (Space) context.getFlowScope().get("space");
         jtrac.storeSpace(space);
+        return success();
+    }
+    
+    public Event spaceAllocateSetup(RequestContext context) {
+        Space space = (Space) context.getFlowScope().get("space");
+        if (space == null) {
+            String spaceId = ValidationUtils.getParameter(context, "spaceId");
+            int id = Integer.parseInt(spaceId);
+            space = jtrac.loadSpace(id); 
+        }
+        List<UserRole> userRoles = jtrac.findUsersForSpace(space.getId());
+        context.getRequestScope().put("userRoles", userRoles);
+        context.getRequestScope().put("unallocatedUsers", jtrac.findUnallocatedUsersForSpace(space.getId()));
+        return success();
+    }
+    
+    public Event spaceAllocateHandler(RequestContext context) {
+        String userId = ValidationUtils.getParameter(context, "userId");
+        if (userId == null) {
+            // no users left, no navigation
+            return error();            
+        }
+        int id = Integer.parseInt(userId);
+        User user = jtrac.loadUser(id);
+        Space space = (Space) context.getFlowScope().get("space");
+        String roleKey = ValidationUtils.getParameter(context, "roleKey");
+        user.addSpaceRole(space, roleKey);
+        jtrac.updateUser(user);
         return success();
     }    
     

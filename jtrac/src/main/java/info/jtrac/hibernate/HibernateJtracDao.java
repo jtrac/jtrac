@@ -22,6 +22,8 @@ import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Role;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
+import info.jtrac.domain.UserRole;
+import java.util.ArrayList;
 
 import java.util.List;
 
@@ -76,7 +78,7 @@ public class HibernateJtracDao
         return getHibernateTemplate().find("from Space space where space.prefixCode = ?", prefixCode);
     }
     
-    public List<Space> loadAllSpaces() {
+    public List<Space> findAllSpaces() {
         return getHibernateTemplate().loadAll(Space.class);
     }
     
@@ -96,7 +98,7 @@ public class HibernateJtracDao
         return (User) getHibernateTemplate().load(User.class, id);
     }
     
-    public List<User> loadAllUsers() {
+    public List<User> findAllUsers() {
         return getHibernateTemplate().loadAll(User.class);
     }
     
@@ -122,9 +124,16 @@ public class HibernateJtracDao
         });
     }
     
-    public List<User> findUsersForSpace(int spaceId) {
-        return getHibernateTemplate().find("select user from User user" + 
+    public List<UserRole> findUsersForSpace(int spaceId) {
+        List<Object[]> rawList = getHibernateTemplate().find("select user, spaceRole.roleKey from User user" + 
                 " join user.spaceRoles as spaceRole where spaceRole.space.id = ?", spaceId);
+        List<UserRole> userRoles = new ArrayList<UserRole>();
+        for (Object[] userRole : rawList) {
+            User user = (User) userRole[0];
+            String roleKey = (String) userRole[1];
+            userRoles.add(new UserRole(user, roleKey));
+        }
+        return userRoles;
     }
     
     public void createSchema() {        
@@ -138,7 +147,7 @@ public class HibernateJtracDao
             user.setName("Admin User");
             user.setPassword("21232f297a57a5a743894a0e4a801fc3");
             user.addSpaceRole(null, "ROLE_ADMIN");
-            getSession().merge(user);
+            getSession().save(user);
             logger.info("schema creation complete");
             return;
         }

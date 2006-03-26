@@ -23,8 +23,9 @@
             <td>${spaceRole.roleKey}</td>
             <td align="center">
                 <a href="<c:url value='flow.htm'>
-                    <c:param name='userId' value='${user.id}'/>
-                    <c:param name='deAllocate' value='${spaceRole.space.id}'/></c:url>">(X)</a>                
+                    <c:param name='_eventId' value='deallocate'/>
+                    <c:param name='_flowExecutionKey' value='${flowExecutionKey}'/>
+                    <c:param name='spaceId' value='${spaceRole.space.id}'/></c:url>">(X)</a>                
             </td>
         </tr>
 
@@ -39,7 +40,7 @@
 <p/>
 
 <select name="spaceId">
-    <c:forEach items="${spaces}" var="space">
+    <c:forEach items="${unallocatedSpaces}" var="space">
         <option value="${space.id}">${space.prefixCode}</option>
     </c:forEach>
 </select>

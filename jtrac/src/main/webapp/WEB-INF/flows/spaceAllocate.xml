@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
+	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
+
+<flow start-state="spaceAllocate"> 
+
+    <view-state id="spaceAllocate" view="space_allocate">
+        <entry-actions>
+            <action bean="spaceFormAction" method="spaceAllocateSetup"/>
+        </entry-actions>
+        <transition on="allocate" to="spaceAllocate">
+            <action bean="spaceFormAction" method="spaceAllocateHandler"/>
+        </transition>
+        <transition on="cancel" to="spaceListView"/>
+        <transition on="userCreate" to="userFlow"/>
+    </view-state>   
+    
+    <end-state id="spaceListView" view="externalRedirect:space_list.htm"/>
+
+    <end-state id="userFlow" view="flowRedirect:user"/>
+    
+</flow>
+

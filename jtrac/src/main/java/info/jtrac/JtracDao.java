@@ -18,10 +18,9 @@ package info.jtrac;
 
 import info.jtrac.domain.Item;
 import info.jtrac.domain.Metadata;
-import info.jtrac.domain.Role;
 import info.jtrac.domain.Space;
-import info.jtrac.domain.SpaceRole;
 import info.jtrac.domain.User;
+import info.jtrac.domain.UserRole;
 
 import java.util.List;
 
@@ -40,14 +39,14 @@ public interface JtracDao {
     void storeSpace(Space space);
     Space loadSpace(int id);
     List<Space> findSpacesByPrefixCode(String prefixCode);
-    List<Space> loadAllSpaces();
+    List<Space> findAllSpaces();
     //===========================================
     void storeUser(User user);
     User loadUser(int id);
-    List<User> loadAllUsers();
+    List<User> findAllUsers();
     List<User> findUsersByLoginName(String loginName);
     List<User> findUsersByEmail(String email);
-    List<User> findUsersForSpace(int spaceId);
+    List<UserRole> findUsersForSpace(int spaceId);
     //===========================================
 
 }

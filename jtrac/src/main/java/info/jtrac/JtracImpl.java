@@ -21,6 +21,7 @@ import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.SpaceRole;
 import info.jtrac.domain.User;
+import info.jtrac.domain.UserRole;
 
 import java.util.List;
 import java.util.Random;
@@ -118,9 +119,22 @@ public class JtracImpl implements Jtrac {
         SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
     }
     
-    public List<User> loadAllUsers() {
-        return dao.loadAllUsers();
+    public List<User> findAllUsers() {
+        return dao.findAllUsers();
     }
+    
+    public List<UserRole> findUsersForSpace(int spaceId) {
+        return dao.findUsersForSpace(spaceId);
+    }   
+    
+    public List<User> findUnallocatedUsersForSpace(int spaceId) {
+        List<User> users = findAllUsers();
+        List<UserRole> userRoles = findUsersForSpace(spaceId);
+        for(UserRole userRole : userRoles) {
+            users.remove(userRole.getUser());
+        }
+        return users;
+    }     
     
     public Space loadSpace(int id) {
         return dao.loadSpace(id);
@@ -138,12 +152,12 @@ public class JtracImpl implements Jtrac {
         dao.storeSpace(space);
     }
     
-    public List<Space> loadAllSpaces() {
-        return dao.loadAllSpaces();
+    public List<Space> findAllSpaces() {
+        return dao.findAllSpaces();
     }
     
-    public List<Space> loadUnallocatedSpacesForUser(int userId) {
-        List<Space> spaces = loadAllSpaces();
+    public List<Space> findUnallocatedSpacesForUser(int userId) {
+        List<Space> spaces = findAllSpaces();
         User user = loadUser(userId);
         for(SpaceRole spaceRole : user.getSpaceRoles()) {
             spaces.remove(spaceRole.getSpace());

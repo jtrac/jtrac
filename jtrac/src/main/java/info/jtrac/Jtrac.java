@@ -20,6 +20,7 @@ import info.jtrac.domain.Item;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
+import info.jtrac.domain.UserRole;
 
 import java.util.List;
 
@@ -36,15 +37,17 @@ public interface Jtrac extends UserDetailsService {
     //========================================================
     void createUser(User user);
     void updateUser(User user);
-    List<User> loadAllUsers();
+    List<User> findAllUsers();
     User loadUser(int id);
     User loadUser(String loginName);
+    List<UserRole> findUsersForSpace(int spaceId);
+    List<User> findUnallocatedUsersForSpace(int spaceId);
     //========================================================
     void storeSpace(Space space);
     Space loadSpace(int id);
     Space loadSpace(String prefixCode);
-    List<Space> loadAllSpaces();
-    List<Space> loadUnallocatedSpacesForUser(int userId);
+    List<Space> findAllSpaces();
+    List<Space> findUnallocatedSpacesForUser(int userId);
     //========================================================
     void storeMetadata(Metadata metadata);
     Metadata loadMetadata(int id);

@@ -2,7 +2,7 @@
 
 <span class="info">Users and Allocated Trackers</span>
 
-<a href="<c:url value='flow.htm'><c:param name='_flowId' value='user-flow'/></c:url>">Create New User</a>
+<a href="<c:url value='flow.htm'><c:param name='_flowId' value='user'/></c:url>">Create New User</a>
 
 <p/>
 
@@ -28,7 +28,7 @@
             <td>        
                 <c:forEach items="${user.spaceRoles}" var="spaceRole" varStatus="row">
                     <a href="<c:url value='flow.htm'>
-                        <c:param name='_flowId' value='spaceAllocate-flow'/>
+                        <c:param name='_flowId' value='spaceAllocate'/>
                         <c:param name='spaceId' value='${spaceRole.space.id}'/>
                         </c:url>">${spaceRole.space.prefixCode}</a>
                     (<i>${spaceRole.roleKey}</i>)           
@@ -36,7 +36,7 @@
             </td>
             <td align="center">
                 <a href="<c:url value='flow.htm'>
-                    <c:param name='_flowId' value='userAllocate-flow'/>
+                    <c:param name='_flowId' value='userAllocate'/>
                     <c:param name='userId' value='${user.id}'/>
                     </c:url>">(+)</a>
             </td>

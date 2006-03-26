@@ -9,13 +9,13 @@
             <action bean="userFormAction" method="setupForm"/>
         </entry-actions>
         <transition on="cancel" to="userListView"/>
-        <transition on="submit" to="userAllocateSpace">
+        <transition on="submit" to="userAllocateFlow">
             <action bean="userFormAction" method="bindAndValidate"/>
             <action bean="userFormAction" method="userFormHandler"/>
         </transition>
     </view-state>  
     
-    <subflow-state id="userAllocateSpace" flow="userAllocate-flow">
+    <subflow-state id="userAllocateFlow" flow="userAllocate">
         <attribute-mapper>
             <input-mapping value="${requestScope.userForm.user}" as="user"/>
         </attribute-mapper>
