@@ -1,15 +1,12 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
+<form method="post" action="<c:url value='flow.htm'/>">
+
 <span class="info">Users allocated to Space: ${space.prefixCode}</span>
 
-<a href="<c:url value='flow.htm'>
-    <c:param name='_eventId' value='userCreate'/>
-    <c:param name='_flowExecutionKey' value='${flowExecutionKey}'/>
-    </c:url>">Create New User</a> 
+<input type="submit" name="_eventId_userCreate" value="Create New User"/>
 
 <p/>
-
-<form method="post" action="<c:url value='flow.htm'/>">
 
 <table class="jtrac">
 
@@ -36,9 +33,17 @@
 
     </c:forEach>
     
-    <tr><td><br/></td></tr>
-    
+</table>
+
+<p/>
+
+<span class="info">Choose User and Role to allocate:</span>
+
+
+<table class="jtrac">
+        
     <tr>
+        <th>User</th>
         <td>
             <select name="userId">
                 <c:forEach items="${unallocatedUsers}" var="user">
@@ -46,19 +51,22 @@
                 </c:forEach>
             </select>        
         </td>
+    </tr>
+    <tr>
+        <th>Role</th>
         <td>
             <select name="roleKey">
                 <c:forEach items="${space.metadata.roleSet}" var="role">
                     <option>${role.name}</option>
                 </c:forEach>
-            </select>        
-        </td>        
-        <td>
+            </select>
             <input type="submit" name="_eventId_allocate" value="Allocate"/>
-        </td>
+        </td>        
     </tr>
 
 </table>
+
+<p/>
 
 <input type="submit" name="_eventId_cancel" value="Cancel"/>
 

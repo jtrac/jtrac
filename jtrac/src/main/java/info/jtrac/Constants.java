@@ -31,6 +31,7 @@ public class Constants {
     public static final String VALUE = "value";
     public static final String OPTIONAL = "optional";
     public static final String FIELD = "field";
+    public static final String FIELD_ORDER = "field-order";
     public static final String TRUE = "true";
     public static final String TRANSITION = "transition";
     public static final String STATE = "state";
@@ -40,5 +41,6 @@ public class Constants {
     public static final String FIELD_XPATH = "/" + METADATA + "/" + FIELDS + "/" + FIELD;
     public static final String ROLE_XPATH = "/" + METADATA + "/" + ROLES + "/" + ROLE;
     public static final String STATE_XPATH = "/" + METADATA + "/" + STATES + "/" + STATE;
+    public static final String FIELD_ORDER_XPATH = "/" + METADATA + "/" + FIELDS + "/" + FIELD_ORDER;
     
 }

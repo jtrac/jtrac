@@ -18,7 +18,7 @@
             </c:choose>            
         </c:set>    
 
-        <tr>
+        <tr ${rowClass}>
             <td>${spaceRole.space.prefixCode}</td>
             <td>${spaceRole.roleKey}</td>
             <td align="center">

@@ -6,8 +6,12 @@
 
 <form method="post" action="<c:url value='flow.htm'/>">
 
+    <spring:bind path="userForm.user.id">        
+        <input type="hidden" name="${status.expression}" value="${status.value}"/>
+    </spring:bind>
+
     <table class="jtrac">
-        <tr>    
+        <tr>
             <td class="label">Login ID</td>
             <spring:bind path="userForm.user.loginName">        
                 <td>

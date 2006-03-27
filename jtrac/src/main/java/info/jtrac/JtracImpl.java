@@ -54,7 +54,6 @@ public class JtracImpl implements Jtrac {
     
     private final Log logger = LogFactory.getLog(getClass());
     
-    // public for testing
     public String generatePassword() {
         byte[] ab = new byte[1];
         Random r = new Random();
@@ -62,8 +61,7 @@ public class JtracImpl implements Jtrac {
         return passwordEncoder.encodePassword(new String(ab), null).substring(24);
     }
     
-    // public for testing
-    public String encodeClearTextPassword(String clearText) {
+    public String encodeClearText(String clearText) {
         return passwordEncoder.encodePassword(clearText, null);
     }
     
@@ -101,22 +99,9 @@ public class JtracImpl implements Jtrac {
         }
         return users.get(0);
     }
-    
-    public void createUser(User user) {
-        logger.info("Saving New User");
-        String password = user.getPassword();
-        if (password == null) {
-            user.setPassword(generatePassword());
-        } else {
-            user.setPassword(encodeClearTextPassword(password));
-        }
+  
+    public void storeUser(User user) {                
         dao.storeUser(user);
-    }
-    
-    public void updateUser(User user) {                
-        dao.storeUser(user);
-        // effectively forces the Acegi Security Context to reload
-        SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
     }
     
     public List<User> findAllUsers() {

@@ -9,11 +9,15 @@
             <action bean="userFormAction" method="setupForm"/>
         </entry-actions>
         <transition on="cancel" to="userListView"/>
-        <transition on="submit" to="userAllocateFlow">
+        <transition on="submit" to="checkIfSpaceFlow">
             <action bean="userFormAction" method="bindAndValidate"/>
             <action bean="userFormAction" method="userFormHandler"/>
         </transition>
     </view-state>  
+    
+    <decision-state id="checkIfSpaceFlow">
+        <if test="${flowScope.space == null}" then="userAllocateFlow" else="userListView"/>
+    </decision-state>
     
     <subflow-state id="userAllocateFlow" flow="userAllocate">
         <attribute-mapper>
@@ -22,7 +26,9 @@
         <transition on="userListView" to="userListView"/>
     </subflow-state>
     
-    <end-state id="userListView" view="externalRedirect:user_list.htm"/>
+    <end-state id="userListView" view="externalRedirect:user_list.htm">
+        <output-attribute name="space"/>
+    </end-state>
 
 </flow>
 

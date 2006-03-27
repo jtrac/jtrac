@@ -16,13 +16,13 @@
             <td>${spaceRole.roleKey}</td>
             <td>
                 <a href="<c:url value='flow.htm'>
-                    <c:param name='_flowId' value='item-flow'/>
+                    <c:param name='_flowId' value='item'/>
                     <c:param name='spaceId' value='${spaceRole.space.id}'/>
                     </c:url>">NEW</a>                
             </td>
             <td>
                 <a href="<c:url value='flow.htm'>
-                    <c:param name='_flowId' value='itemSearch-flow'/>
+                    <c:param name='_flowId' value='itemSearch'/>
                     <c:param name='spaceId' value='${spaceRole.space.id}'/>
                     </c:url>">SEARCH</a>               
             </td>

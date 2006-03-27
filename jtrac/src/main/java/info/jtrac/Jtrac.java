@@ -31,12 +31,11 @@ import org.acegisecurity.userdetails.UserDetailsService;
  * Jtrac main business interface (facade)
  */
 public interface Jtrac extends UserDetailsService {
-    
+      
     void storeItem(Item item);
     Item loadItem(long id);
     //========================================================
-    void createUser(User user);
-    void updateUser(User user);
+    void storeUser(User user);
     List<User> findAllUsers();
     User loadUser(int id);
     User loadUser(String loginName);
@@ -51,5 +50,8 @@ public interface Jtrac extends UserDetailsService {
     //========================================================
     void storeMetadata(Metadata metadata);
     Metadata loadMetadata(int id);
+    //========================================================
+    String generatePassword();
+    String encodeClearText(String clearText);
     
 }

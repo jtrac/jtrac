@@ -27,6 +27,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -63,6 +64,7 @@ public class Metadata implements Serializable {
     private Map<Field.Name, Field> fields = new EnumMap<Field.Name, Field>(Field.Name.class);
     private Map<String, Role> roles = new HashMap<String, Role>();
     private Map<Integer, String> states = new TreeMap<Integer, String>();
+    private List<Field.Name> fieldOrder = new LinkedList<Field.Name>();
     
     /* accessor, will be used by Hibernate */
     public void setXml(String xmlString) {
@@ -301,6 +303,14 @@ public class Metadata implements Serializable {
 
     public void setStates(Map<Integer, String> states) {
         this.states = states;
+    }    
+    
+    public List<Field.Name> getFieldOrder() {
+        return fieldOrder;
+    }
+
+    public void setFieldOrder(List<Field.Name> fieldOrder) {
+        this.fieldOrder = fieldOrder;
     }    
     
     @Override

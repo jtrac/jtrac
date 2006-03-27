@@ -23,13 +23,13 @@ import info.jtrac.util.ValidationUtils;
 import java.io.Serializable;
 
 import static info.jtrac.Constants.*;
+import org.acegisecurity.context.SecurityContextHolder;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.webflow.Event;
 import org.springframework.webflow.RequestContext;
 import org.springframework.webflow.ScopeType;
-import org.springframework.webflow.action.FormObjectAccessor;
 
 /**
  * Multiaction that backs the "User Create / Edit" flow
@@ -94,16 +94,35 @@ public class UserFormAction extends AbstractFormAction {
         }        
     }
     
+    @Override
+    public Object loadFormObject(RequestContext context) {
+        UserForm userForm = new UserForm();
+        String userId = ValidationUtils.getParameter(context, "userId");
+        if (userId != null) {
+            User user = jtrac.loadUser(Integer.parseInt(userId));
+            user.setPassword(null);
+            userForm.setUser(user);
+            return userForm;
+        }
+        return userForm;
+    }    
+    
     public Event userFormHandler(RequestContext context) throws Exception {
         UserForm userForm = (UserForm) getFormObject(context);
-        User temp = jtrac.loadUser(userForm.getUser().getLoginName());
-        if (temp != null) {
+        User user = userForm.getUser();
+        User temp = jtrac.loadUser(user.getLoginName());
+        if (temp != null && temp.getId() != user.getId()) {
             Errors errors = getFormErrors(context);
             errors.rejectValue("user.loginName", "error.user.loginName.exists", "Login ID already exists");
             return error();
         }
-        User user = userForm.getUser();
-        jtrac.createUser(user);
+        String password = user.getPassword();
+        if (password == null) {
+            user.setPassword(jtrac.generatePassword());
+        } else {
+            user.setPassword(jtrac.encodeClearText(password));
+        }        
+        jtrac.storeUser(user);
         return success();
     }
     
@@ -135,7 +154,9 @@ public class UserFormAction extends AbstractFormAction {
         Space space = (Space) context.getFlowScope().get("space");
         String roleKey = ValidationUtils.getParameter(context, "roleKey");
         user.addSpaceRole(space, roleKey);
-        jtrac.updateUser(user);
+        jtrac.storeUser(user);
+        // effectively forces the Acegi Security Context to reload
+        SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
         return success();
     }    
     

@@ -39,11 +39,13 @@ public class ItemFormAction extends AbstractFormAction {
         String itemId = ValidationUtils.getParameter(context, "itemId");
         if (itemId != null) {
             return jtrac.loadItem(Long.parseLong(itemId));
+        } else {
+            Item item = new Item();
+            String spaceId = ValidationUtils.getParameter(context, "spaceId");
+            Space space = jtrac.loadSpace(Integer.parseInt(spaceId));
+            item.setSpace(space);
+            return item;
         }
-        String spaceId = ValidationUtils.getParameter(context, "spaceId");
-        Space space = jtrac.loadSpace(Integer.parseInt(spaceId));
-        context.getFlowScope().put("space", space);
-        return new Item();
     }    
     
     public Event itemFormHandler(RequestContext context) throws Exception {

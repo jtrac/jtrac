@@ -12,12 +12,18 @@
             <action bean="spaceFormAction" method="spaceAllocateHandler"/>
         </transition>
         <transition on="cancel" to="spaceListView"/>
-        <transition on="userCreate" to="userFlow"/>
+        <transition on="userCreate" to="userForm"/>
     </view-state>   
+
+    <subflow-state id="userForm" flow="user">
+        <attribute-mapper>
+            <input-mapping name="space"/>
+        </attribute-mapper>
+        <transition on="userListView" to="spaceAllocate"/>
+    </subflow-state>       
     
     <end-state id="spaceListView" view="externalRedirect:space_list.htm"/>
 
-    <end-state id="userFlow" view="flowRedirect:user"/>
     
 </flow>
 

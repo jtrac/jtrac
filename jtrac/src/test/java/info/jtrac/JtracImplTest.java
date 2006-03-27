@@ -47,7 +47,7 @@ public class JtracImplTest extends AbstractTransactionalDataSourceSpringContextT
     }
 
     public void testEncodeClearTextPassword() {
-        assertEquals("21232f297a57a5a743894a0e4a801fc3", jtrac.encodeClearTextPassword("admin"));
+        assertEquals("21232f297a57a5a743894a0e4a801fc3", jtrac.encodeClearText("admin"));
     }
 
     private Metadata getMetadata() {

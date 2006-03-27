@@ -20,7 +20,10 @@
         <tr ${rowClass}>
             <td>${user.name}</td>
             <td>
-                <a href="<c:url value='user_edit.htm'><c:param name='userId' value='${user.id}'/></c:url>">${user.loginName}</a>
+                <a href="<c:url value='flow.htm'>
+                    <c:param name='_flowId' value='user'/>
+                    <c:param name='userId' value='${user.id}'/>
+                    </c:url>">${user.loginName}</a>
             </td>
             <td>
                 <c:if test="${user.locked}">locked</c:if>

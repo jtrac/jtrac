@@ -23,6 +23,7 @@ import info.jtrac.domain.UserRole;
 import info.jtrac.util.ValidationUtils;
 import info.jtrac.webflow.FieldFormAction.FieldForm;
 import java.util.List;
+import org.acegisecurity.context.SecurityContextHolder;
 
 import org.springframework.validation.Errors;
 import org.springframework.webflow.Event;
@@ -158,7 +159,8 @@ public class SpaceFormAction extends AbstractFormAction {
         if (space == null) {
             String spaceId = ValidationUtils.getParameter(context, "spaceId");
             int id = Integer.parseInt(spaceId);
-            space = jtrac.loadSpace(id); 
+            space = jtrac.loadSpace(id);           
+            context.getFlowScope().put("space", space);
         }
         List<UserRole> userRoles = jtrac.findUsersForSpace(space.getId());
         context.getRequestScope().put("userRoles", userRoles);
@@ -177,7 +179,9 @@ public class SpaceFormAction extends AbstractFormAction {
         Space space = (Space) context.getFlowScope().get("space");
         String roleKey = ValidationUtils.getParameter(context, "roleKey");
         user.addSpaceRole(space, roleKey);
-        jtrac.updateUser(user);
+        jtrac.storeUser(user);
+        // effectively forces the Acegi Security Context to reload
+        SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
         return success();
     }    
     
