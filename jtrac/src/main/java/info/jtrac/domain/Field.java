@@ -267,8 +267,18 @@ public class Field implements Serializable {
         // set intelligent defaults to make adding new field to space easier
         if (name.type == 1) {
             label = "Severity";
+            addOption("1", "Fatal");
+            addOption("2", "Major");
+            addOption("3", "Minor");
+            addOption("4", "Trivial");
+            addOption("5", "Suggestion");
         } else if (name.type == 2) {
             label = "Priority";
+            addOption("1", "Highest");
+            addOption("2", "High");
+            addOption("3", "Medium");
+            addOption("4", "Low");
+            addOption("5", "Lowest");            
         }         
     }    
     

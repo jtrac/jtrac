@@ -38,7 +38,7 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 
 /**
- * XML metadata is one of the interesting design decisions of jTrac.
+ * XML metadata is one of the interesting design decisions of JTrac.
  * Metadata is defined for each space and so Items that belong to a
  * space are customized by the space metadata.
  * 
@@ -46,14 +46,18 @@ import org.dom4j.Element;
  * - Label
  * - whether mandatory or not
  * - the option values (drop down list options)
+ * - the option "key" values are stored in the database
+ * - the values corresponding to "key"s are resolved from the Metadata
+ *   and not through a database join.
  *
  * 2) the Roles available within a space
  * - for each (from) State the (to) State transitions allowed for this role
  * - and within each (from) State the fields that this Role can view / edit
  *
  * 3) the State labels corresponding to each state 
- * - we store 
- *
+ * - internally States are integers, but for display we need a label
+ * - labels can be customized
+ * - special State values: 0 = New, 1 = Open, 99 = Closed
  *
  * Also the metadata should define the order in which the fields are displayed
  * on the data entry screens and the query result screens etc.
@@ -93,8 +97,8 @@ public class Metadata implements Serializable {
             states.put(Integer.parseInt(key), value);
         }        
         for (Element e : (List<Element>) document.selectNodes(FIELD_ORDER_XPATH)) {
-            String name = e.attributeValue(NAME);
-            fieldOrder.add(Field.Name.valueOf(name));
+            String fieldName = e.attributeValue(NAME);
+            fieldOrder.add(Field.textToName(fieldName));
         }         
     }        
     
@@ -116,7 +120,7 @@ public class Metadata implements Serializable {
             e.addAttribute(STATUS, entry.getKey() + "");
             e.addAttribute(LABEL, entry.getValue());
         }
-        Element fo = root.addElement(FIELD_ORDER);
+        Element fo = fs.addElement(FIELD_ORDER);
         for (Field.Name f : fieldOrder) {
             Element e = fo.addElement(FIELD);
             e.addAttribute(NAME, f.toString());

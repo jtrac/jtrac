@@ -18,7 +18,7 @@
     
     <input type="submit" name="_eventId_cancel" value="Cancel"/>
 
-    <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}">
+    <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 
 </form>
 

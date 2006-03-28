@@ -32,7 +32,7 @@
             <td/>
             <td>
                 <input type="submit" name="_eventId_submit" value="Next"/>
-                <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}">
+                <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
             </td>
         </tr>
     </table>

@@ -2,15 +2,12 @@
 <!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
 	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
 
-<flow start-state="checkIfEdit">
-    
-    <action-state id="checkIfEdit">
-        <action bean="spaceFormAction" method="checkIfEdit"/>
-        <transition on="yes" to="spaceFieldsView"/>
-        <transition on="no" to="spaceForm"/>
-    </action-state>    
+<flow start-state="spaceForm"> 
     
     <view-state id="spaceForm" view="space_form">
+        <entry-actions>
+            <action bean="spaceFormAction" method="setupForm"/>
+        </entry-actions>        
         <transition on="cancel" to="spaceListView"/>
         <transition on="submit" to="spaceFieldsView">
             <action bean="spaceFormAction" method="bind"/>
@@ -50,15 +47,10 @@
         <transition on="addRole" to="spaceRolesView">
             <action bean="spaceFormAction" method="spaceRoleAddHandler"/>
         </transition>
-        <transition on="next" to="spacePreviewView"/>     
-    </view-state>
-    
-    <view-state id="spacePreviewView" view="space_preview">
-        <transition on="back" to="spaceRolesView"/>       
         <transition on="save" to="spaceAllocateFlow">
             <action bean="spaceFormAction" method="spaceSaveHandler"/>
-        </transition>        
-    </view-state>
+        </transition>
+    </view-state>  
     
     <subflow-state id="spaceAllocateFlow" flow="spaceAllocate">
         <attribute-mapper>

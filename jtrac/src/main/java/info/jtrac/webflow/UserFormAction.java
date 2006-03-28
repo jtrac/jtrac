@@ -98,7 +98,9 @@ public class UserFormAction extends AbstractFormAction {
     public Object loadFormObject(RequestContext context) {
         UserForm userForm = new UserForm();
         String userId = ValidationUtils.getParameter(context, "userId");
-        if (userId != null) {
+        // if called as subflow, userId may be vestigial from space allocate form
+        // hence extra check for space in Flow scope
+        if (userId != null && context.getFlowScope().get("space") == null) {
             User user = jtrac.loadUser(Integer.parseInt(userId));
             user.setPassword(null);
             userForm.setUser(user);

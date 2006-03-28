@@ -93,11 +93,11 @@
 <table class="jtrac">
     <tr>
         <td><input type="submit" name="_eventId_back" value="Back"/></td>
-        <td><input type="submit" name="_eventId_next" value="Next"/></td> 
+        <td><input type="submit" name="_eventId_save" value="Save"/></td> 
     </tr>
 </table>
 
-<input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}">
+<input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 
 </form>
 

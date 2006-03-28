@@ -78,15 +78,6 @@ public class SpaceFormAction extends AbstractFormAction {
         return new Space();
     }
     
-    public Event checkIfEdit(RequestContext context) throws Exception {
-        setupForm(context);
-        Space space = (Space) context.getFlowScope().get("space");
-        if (space.getId() != 0) {
-           return result("yes");
-        }
-        return result("no");
-    }
-    
     public Event spaceFieldAddHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
         String fieldType = (String) context.getRequestParameters().get("fieldType");
