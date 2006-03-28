@@ -41,6 +41,6 @@ public class Constants {
     public static final String FIELD_XPATH = "/" + METADATA + "/" + FIELDS + "/" + FIELD;
     public static final String ROLE_XPATH = "/" + METADATA + "/" + ROLES + "/" + ROLE;
     public static final String STATE_XPATH = "/" + METADATA + "/" + STATES + "/" + STATE;
-    public static final String FIELD_ORDER_XPATH = "/" + METADATA + "/" + FIELDS + "/" + FIELD_ORDER;
+    public static final String FIELD_ORDER_XPATH = "/" + METADATA + "/" + FIELDS + "/" + FIELD_ORDER + "/" + FIELD;
     
 }

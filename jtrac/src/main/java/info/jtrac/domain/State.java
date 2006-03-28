@@ -175,7 +175,8 @@ public class State implements Serializable {
         StringBuffer sb = new StringBuffer();
         sb.append("status [").append(status);
         sb.append("]; transitions [").append(transitions);
-        sb.append("]; fields [").append(fields).append("]");
+        sb.append("]; fields [").append(fields);
+        sb.append("]");
         return sb.toString();
     }
     

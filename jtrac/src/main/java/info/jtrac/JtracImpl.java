@@ -54,6 +54,10 @@ public class JtracImpl implements Jtrac {
     
     private final Log logger = LogFactory.getLog(getClass());
     
+    /**
+     * this has not been factored into the util package or a helper class
+     * because it depends on the PasswordEncoder configured 
+     */
     public String generatePassword() {
         byte[] ab = new byte[1];
         Random r = new Random();
@@ -61,6 +65,10 @@ public class JtracImpl implements Jtrac {
         return passwordEncoder.encodePassword(new String(ab), null).substring(24);
     }
     
+    /**
+     * this has not been factored into the util package or a helper class
+     * because it depends on the PasswordEncoder configured 
+     */    
     public String encodeClearText(String clearText) {
         return passwordEncoder.encodePassword(clearText, null);
     }

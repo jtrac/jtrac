@@ -278,7 +278,8 @@ public class Field implements Serializable {
         sb.append("name [").append(name);
         sb.append("]; label [").append(label);
         sb.append("]; optional [").append(optional);
-        sb.append("]; options [").append(options).append("]");
+        sb.append("]; options [").append(options);
+        sb.append("]");
         return sb.toString();
     }    
     

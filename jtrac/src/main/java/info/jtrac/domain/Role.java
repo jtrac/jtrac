@@ -112,7 +112,8 @@ public class Role implements Serializable {
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("name [").append(name);
-        sb.append("]; states [").append(states).append("]");
+        sb.append("]; states [").append(states);
+        sb.append("]");
         return sb.toString();
     }
     

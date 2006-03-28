@@ -144,7 +144,8 @@ public class Space implements Serializable {
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("id [").append(id);
-        sb.append("]; prefixCode [").append(prefixCode).append("]");
+        sb.append("]; prefixCode [").append(prefixCode);
+        sb.append("]");
         return sb.toString();
     }
     

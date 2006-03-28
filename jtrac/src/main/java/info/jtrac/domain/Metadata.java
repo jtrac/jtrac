@@ -42,11 +42,18 @@ import org.dom4j.Element;
  * Metadata is defined for each space and so Items that belong to a
  * space are customized by the space metadata.
  * 
- * The Metadata defines the following
- * - custom Fields for an Item (within a Space)
- * -- Label
- * -- whether mandatory or not
- * -- the option values (drop down list options)
+ * 1) custom Fields for an Item (within a Space)
+ * - Label
+ * - whether mandatory or not
+ * - the option values (drop down list options)
+ *
+ * 2) the Roles available within a space
+ * - for each (from) State the (to) State transitions allowed for this role
+ * - and within each (from) State the fields that this Role can view / edit
+ *
+ * 3) the State labels corresponding to each state 
+ * - we store 
+ *
  *
  * Also the metadata should define the order in which the fields are displayed
  * on the data entry screens and the query result screens etc.
@@ -71,23 +78,24 @@ public class Metadata implements Serializable {
         if (xmlString == null) {
             return;
         }
-        Document document = XmlUtils.parse(xmlString);
-        List<Element> fs = document.selectNodes(FIELD_XPATH);        
-        for (Element f : fs) {
-            Field field = new Field(f);            
+        Document document = XmlUtils.parse(xmlString);        
+        for (Element e : (List<Element>) document.selectNodes(FIELD_XPATH)) {
+            Field field = new Field(e);            
             fields.put(field.getName(), field);
-        }
-        List<Element> rs = document.selectNodes(ROLE_XPATH);        
-        for (Element r : rs) {
-            Role role = new Role(r);            
+        }       
+        for (Element e : (List<Element>) document.selectNodes(ROLE_XPATH)) {
+            Role role = new Role(e);            
             roles.put(role.getName(), role);
         }
-        List<Element> ss = document.selectNodes(STATE_XPATH);
-        for (Element s : ss) {
-            String key = s.attributeValue(STATUS);
-            String value = s.attributeValue(LABEL);
+        for (Element e : (List<Element>) document.selectNodes(STATE_XPATH)) {
+            String key = e.attributeValue(STATUS);
+            String value = e.attributeValue(LABEL);
             states.put(Integer.parseInt(key), value);
         }        
+        for (Element e : (List<Element>) document.selectNodes(FIELD_ORDER_XPATH)) {
+            String name = e.attributeValue(NAME);
+            fieldOrder.add(Field.Name.valueOf(name));
+        }         
     }        
     
     /* accessor, will be used by Hibernate */
@@ -107,7 +115,12 @@ public class Metadata implements Serializable {
             Element e = ss.addElement(STATE);
             e.addAttribute(STATUS, entry.getKey() + "");
             e.addAttribute(LABEL, entry.getValue());
-        }        
+        }
+        Element fo = root.addElement(FIELD_ORDER);
+        for (Field.Name f : fieldOrder) {
+            Element e = fo.addElement(FIELD);
+            e.addAttribute(NAME, f.toString());
+        }          
         return d.asXML();
     }
     
@@ -130,6 +143,7 @@ public class Metadata implements Serializable {
     
     public void add(Field field) {
         fields.put(field.getName(), field);
+        fieldOrder.add(field.getName());
         for (Role role : roles.values()) {
             for (State state : role.getStates().values()) {
                 state.add(field.getName());
@@ -319,7 +333,10 @@ public class Metadata implements Serializable {
         sb.append("id [").append(id);
         sb.append("]; parent [").append(parent);
         sb.append("]; fields [").append(fields);
-        sb.append("]; roles [").append(roles).append("]");
+        sb.append("]; roles [").append(roles);
+        sb.append("]; states [").append(states);
+        sb.append("]; fieldOrder [").append(fieldOrder);
+        sb.append("]");
         return sb.toString();
     }
     

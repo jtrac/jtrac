@@ -173,7 +173,8 @@ public class User implements UserDetails, Serializable {
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("id [").append(id);
-        sb.append("]; loginName [").append(loginName).append("]");
+        sb.append("]; loginName [").append(loginName);
+        sb.append("]");
         return sb.toString();
     }
     
