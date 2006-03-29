@@ -18,7 +18,15 @@ package info.jtrac.webflow;
 
 import info.jtrac.domain.Item;
 import info.jtrac.domain.Space;
+import info.jtrac.domain.User;
 import info.jtrac.util.ValidationUtils;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import org.acegisecurity.context.SecurityContextHolder;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.beans.propertyeditors.CustomNumberEditor;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.validation.DataBinder;
 import org.springframework.webflow.Event;
 import org.springframework.webflow.RequestContext;
 import org.springframework.webflow.ScopeType;
@@ -35,6 +43,13 @@ public class ItemFormAction extends AbstractFormAction {
     }
     
     @Override
+    protected void initBinder(RequestContext request, DataBinder binder) {
+        binder.registerCustomEditor(Integer.class, new CustomNumberEditor(Integer.class, true));
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
+    }    
+    
+    @Override
     public Object loadFormObject(RequestContext context) {
         String itemId = ValidationUtils.getParameter(context, "itemId");
         if (itemId != null) {
@@ -43,7 +58,7 @@ public class ItemFormAction extends AbstractFormAction {
             Item item = new Item();
             String spaceId = ValidationUtils.getParameter(context, "spaceId");
             Space space = jtrac.loadSpace(Integer.parseInt(spaceId));
-            item.setSpace(space);
+            context.getFlowScope().put("space", space);
             return item;
         }
     }    
@@ -52,6 +67,8 @@ public class ItemFormAction extends AbstractFormAction {
         Item item = (Item) getFormObject(context);
         Space space = (Space) context.getFlowScope().get("space");
         item.setSpace(space);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        item.setLoggedBy(user);
         jtrac.storeItem(item);
         return success();
     }        
