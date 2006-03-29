@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-package net.jdev.jtrac.web.tag;
+package info.jtrac.web.tag;
 
-import info.jtrac.domain.User;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
-
-import net.jdev.jtrac.entity.User;
 
 public class MultiSelect extends SimpleTagSupport {
     

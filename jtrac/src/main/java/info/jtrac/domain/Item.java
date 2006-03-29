@@ -65,10 +65,46 @@ public class Item implements Serializable {
     private Date cusTim03;
     //=========================
     
-    private Set history;
-    private Set children;
-    private Set attachments;    
+    private Set<History> history;
+    private Set<Item> children;
+    private Set<Attachment> attachments;    
 
+    private String getAsString(Object o) {
+        return o == null ? "" : o + "";
+    }
+  
+    //================================================
+    // we could have used reflection but doing this way for performance
+    public String getDisplayText(Field.Name fieldName) {
+        switch(fieldName) {
+            case SEVERITY: return getSeverityText();
+            case PRIORITY: return getPriorityText();
+            case CUS_INT_01: return getCusInt01Text(); 
+            case CUS_INT_02: return getCusInt02Text();
+            case CUS_INT_03: return getCusInt03Text();
+            case CUS_INT_04: return getCusInt04Text();
+            case CUS_INT_05: return getCusInt05Text();
+            case CUS_INT_06: return getCusInt06Text();
+            case CUS_INT_07: return getCusInt07Text();
+            case CUS_INT_08: return getCusInt08Text();
+            case CUS_INT_09: return getCusInt09Text();
+            case CUS_INT_10: return getCusInt10Text();
+            case CUS_DBL_01: return getAsString(cusDbl01);
+            case CUS_DBL_02: return getAsString(cusDbl02);
+            case CUS_DBL_03: return getAsString(cusDbl03);
+            case CUS_STR_01: return getAsString(cusStr01);
+            case CUS_STR_02: return getAsString(cusStr02);
+            case CUS_STR_03: return getAsString(cusStr03);
+            case CUS_STR_04: return getAsString(cusStr04);
+            case CUS_STR_05: return getAsString(cusStr05);
+            case CUS_TIM_01: return getAsString(cusTim01);
+            case CUS_TIM_02: return getAsString(cusTim02);
+            case CUS_TIM_03: return getAsString(cusTim03);
+        }
+        return "";
+    }
+    
+    //================================================
     public String getStatusText() {
         return space.getStatusText(status);
     }
@@ -407,27 +443,27 @@ public class Item implements Serializable {
         this.plannedEffort = plannedEffort;
     }
     
-    public Set getHistory() {
+    public Set<History> getHistory() {
         return history;
     }
 
-    public void setHistory(Set history) {
+    public void setHistory(Set<History> history) {
         this.history = history;
     }
 
-    public Set getChildren() {
+    public Set<Item> getChildren() {
         return children;
     }
 
-    public void setChildren(Set children) {
+    public void setChildren(Set<Item> children) {
         this.children = children;
     }
 
-    public Set getAttachments() {
+    public Set<Attachment> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(Set attachments) {
+    public void setAttachments(Set<Attachment> attachments) {
         this.attachments = attachments;
     }
     

@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package net.jdev.jtrac.web.tag;
+package info.jtrac.web.tag;
 
 import info.jtrac.domain.Item;
+import info.jtrac.util.ItemUtils;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
-
-import net.jdev.jtrac.entity.Item;
-import net.jdev.jtrac.entity.Tracker;
 
 public class ItemView extends SimpleTagSupport {
     
@@ -39,12 +37,11 @@ public class ItemView extends SimpleTagSupport {
         HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
         JspWriter out = pageContext.getOut();
         try {
-            // out.print(item.getAsHtml(tracker, historyId, response));
+            out.print(ItemUtils.getAsHtml(item, response));
         } catch (Exception e) {
             System.out.println("*** error in ItemView: " + e);
             e.printStackTrace();
-        }
-        
+        }        
     }
     
 }

@@ -2,7 +2,6 @@
 
 <p/>
 
-ITEM VIEW
-
+<jtrac:itemview item="${item}"/>
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>

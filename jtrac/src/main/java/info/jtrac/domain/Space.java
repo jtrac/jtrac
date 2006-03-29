@@ -38,55 +38,55 @@ public class Space implements Serializable {
     
     //=======================================================
     
-    public String getStatusText(int key) {
+    public String getStatusText(Integer key) {
         return metadata.getStatusText(key);
     }
     
-    public String getSeverityText(int key) {
+    public String getSeverityText(Integer key) {
         return metadata.getOptionText(SEVERITY, key);
     }
     
-    public String getPriorityText(int key) {
+    public String getPriorityText(Integer key) {
         return metadata.getOptionText(PRIORITY, key);
     }    
     
-    public String getCusInt01Text(int key) {
+    public String getCusInt01Text(Integer key) {
         return metadata.getOptionText(CUS_INT_01, key);
     }    
     
-    public String getCusInt02Text(int key) {
+    public String getCusInt02Text(Integer key) {
         return metadata.getOptionText(CUS_INT_02, key);
     }    
     
-    public String getCusInt03Text(int key) {
+    public String getCusInt03Text(Integer key) {
         return metadata.getOptionText(CUS_INT_03, key);
     }    
     
-    public String getCusInt04Text(int key) {
+    public String getCusInt04Text(Integer key) {
         return metadata.getOptionText(CUS_INT_04, key);
     }    
     
-    public String getCusInt05Text(int key) {
+    public String getCusInt05Text(Integer key) {
         return metadata.getOptionText(CUS_INT_05, key);
     }    
     
-    public String getCusInt06Text(int key) {
+    public String getCusInt06Text(Integer key) {
         return metadata.getOptionText(CUS_INT_06, key);
     }    
     
-    public String getCusInt07Text(int key) {
+    public String getCusInt07Text(Integer key) {
         return metadata.getOptionText(CUS_INT_07, key);
     }    
     
-    public String getCusInt08Text(int key) {
+    public String getCusInt08Text(Integer key) {
         return metadata.getOptionText(CUS_INT_08, key);
     }    
     
-    public String getCusInt09Text(int key) {
+    public String getCusInt09Text(Integer key) {
         return metadata.getOptionText(CUS_INT_09, key);
     }    
     
-    public String getCusInt10Text(int key) {
+    public String getCusInt10Text(Integer key) {
         return metadata.getOptionText(CUS_INT_10, key);
     }    
     

@@ -18,6 +18,7 @@ package info.jtrac.webflow;
 
 import info.jtrac.domain.Item;
 import info.jtrac.domain.Space;
+import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.util.ValidationUtils;
 import java.text.SimpleDateFormat;
@@ -68,6 +69,7 @@ public class ItemFormAction extends AbstractFormAction {
         Space space = (Space) context.getFlowScope().get("space");
         item.setSpace(space);
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        item.setStatus(State.OPEN);
         item.setLoggedBy(user);
         jtrac.storeItem(item);
         return success();

@@ -234,7 +234,7 @@ public class Metadata implements Serializable {
         return roles.values();
     }
     
-    public String getOptionText(Field.Name fieldName, int key) {
+    public String getOptionText(Field.Name fieldName, Integer key) {
         return getOptionText(fieldName,  key + "");
     }
     
