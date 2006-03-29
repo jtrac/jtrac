@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="authz" uri="http://acegisecurity.org/authz" %>
+<%@ taglib prefix="jtrac" uri="/WEB-INF/tld/jtrac.tld"%>
 <c:set var="principal" value="${ACEGI_SECURITY_CONTEXT.authentication.principal}"/>
 
 <html>

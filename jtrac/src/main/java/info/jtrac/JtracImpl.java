@@ -36,7 +36,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Jtrac Facade implementation
- * Here is where all the business logic is
+ * This is where all the business logic is
  * For data persistence this delegates to JtracDao
  */
 public class JtracImpl implements Jtrac {
