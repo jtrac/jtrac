@@ -72,13 +72,25 @@ public class Metadata implements Serializable {
     private String description;
     private Metadata parent;
 
-    private Map<Field.Name, Field> fields = new EnumMap<Field.Name, Field>(Field.Name.class);
-    private Map<String, Role> roles = new HashMap<String, Role>();
-    private Map<Integer, String> states = new TreeMap<Integer, String>();
-    private List<Field.Name> fieldOrder = new LinkedList<Field.Name>();
+    private Map<Field.Name, Field> fields;
+    private Map<String, Role> roles;
+    private Map<Integer, String> states;
+    private List<Field.Name> fieldOrder;
+    
+    public Metadata() {
+        init();
+    }
+    
+    private void init() {
+        fields = new EnumMap<Field.Name, Field>(Field.Name.class);
+        roles = new HashMap<String, Role>();
+        states = new TreeMap<Integer, String>();
+        fieldOrder = new LinkedList<Field.Name>();         
+    }
     
     /* accessor, will be used by Hibernate */
     public void setXml(String xmlString) {
+        init();
         if (xmlString == null) {
             return;
         }

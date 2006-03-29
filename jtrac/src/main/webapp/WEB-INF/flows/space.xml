@@ -10,7 +10,6 @@
         </entry-actions>        
         <transition on="cancel" to="spaceListView"/>
         <transition on="submit" to="spaceFieldsView">
-            <action bean="spaceFormAction" method="bind"/>
             <action bean="spaceFormAction" method="spaceFormHandler"/>
         </transition>
     </view-state>

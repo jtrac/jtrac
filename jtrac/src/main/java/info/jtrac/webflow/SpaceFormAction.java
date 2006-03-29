@@ -17,6 +17,7 @@
 package info.jtrac.webflow;
 
 import info.jtrac.domain.Field;
+import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
@@ -41,12 +42,40 @@ public class SpaceFormAction extends AbstractFormAction {
         setFormObjectScope(ScopeType.FLOW);
     }
     
+    @Override
+    public Object loadFormObject(RequestContext context) {
+        String spaceId = ValidationUtils.getParameter(context, "spaceId");
+        Space space = null;
+        if (spaceId != null) {
+            space = jtrac.loadSpace(Integer.parseInt(spaceId));
+            // cloning
+            Space clone = new Space();
+            clone.setId(space.getId());
+            clone.setPrefixCode(space.getPrefixCode() + "");
+            clone.setDescription(space.getDescription() == null ? null : space.getDescription() + "");
+            Metadata m = new Metadata();
+            m.setXml(space.getMetadata().getXml());
+            clone.setMetadata(m);
+            return clone;
+        } else {
+            space = new Space();
+            space.getMetadata().initRoles();
+            return space;
+        }
+    }    
+    
     public Event spaceFormHandler(RequestContext context) throws Exception {
+        // have to manually bind.  First get space from scope
         Space space = (Space) context.getFlowScope().get("space");
-        String prefixCode = space.getPrefixCode();
         Errors errors = getFormErrors(context);
-        ValidationUtils.rejectIfEmpty(errors, "prefixCode");
-        if (prefixCode != null) {
+        // manual binding
+        String prefixCode = ValidationUtils.getParameter(context, "prefixCode");
+        space.setPrefixCode(prefixCode);
+        String description = ValidationUtils.getParameter(context, "description");
+        space.setDescription(description);
+        if (prefixCode == null) {
+            errors.rejectValue("prefixCode", ValidationUtils.ERROR_EMPTY_CODE, ValidationUtils.ERROR_EMPTY_MSG);
+        } else {
             if (prefixCode.length() < 3) {
                 errors.rejectValue("prefixCode", "error.space.prefixCode.tooshort",
                         "Length should be at least 3 characters.");
@@ -60,22 +89,11 @@ public class SpaceFormAction extends AbstractFormAction {
             return error();
         }
         Space temp = jtrac.loadSpace(space.getPrefixCode());
-        if (temp != null) {            
+        if (temp != null && temp.getId() != space.getId()) {            
             errors.rejectValue("prefixCode", "error.space.prefixCode.exists", "Space already exists");
             return error();
-        }
-        space.getMetadata().initRoles();
-        logger.debug("initialized roles on metadata: " + space.getMetadata());   
+        } 
         return success();
-    }        
-    
-    @Override
-    public Object loadFormObject(RequestContext context) {
-        String spaceId = ValidationUtils.getParameter(context, "spaceId");
-        if (spaceId != null) {
-            return jtrac.loadSpace(Integer.parseInt(spaceId));
-        }
-        return new Space();
     }
     
     public Event spaceFieldAddHandler(RequestContext context) {

@@ -43,6 +43,21 @@ public class UserFormAction extends AbstractFormAction {
         setValidator(new UserFormValidator());
     }
     
+    @Override
+    public Object loadFormObject(RequestContext context) {
+        UserForm userForm = new UserForm();
+        String userId = ValidationUtils.getParameter(context, "userId");
+        // if called as subflow, userId may be vestigial from space allocate form
+        // hence extra check for space in Flow scope
+        if (userId != null && context.getFlowScope().get("space") == null) {
+            User user = jtrac.loadUser(Integer.parseInt(userId));
+            user.setPassword(null);
+            userForm.setUser(user);
+            return userForm;
+        }
+        return userForm;
+    }     
+    
     /**
      * Form backing object
      */
@@ -92,22 +107,7 @@ public class UserFormAction extends AbstractFormAction {
                 errors.rejectValue("passwordConfirm", "error.userForm.passwordConfirm.notsame", "Does not match password");
             }
         }        
-    }
-    
-    @Override
-    public Object loadFormObject(RequestContext context) {
-        UserForm userForm = new UserForm();
-        String userId = ValidationUtils.getParameter(context, "userId");
-        // if called as subflow, userId may be vestigial from space allocate form
-        // hence extra check for space in Flow scope
-        if (userId != null && context.getFlowScope().get("space") == null) {
-            User user = jtrac.loadUser(Integer.parseInt(userId));
-            user.setPassword(null);
-            userForm.setUser(user);
-            return userForm;
-        }
-        return userForm;
-    }    
+    }   
     
     public Event userFormHandler(RequestContext context) throws Exception {
         UserForm userForm = (UserForm) getFormObject(context);

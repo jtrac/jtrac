@@ -10,7 +10,16 @@
         <delete includeemptydirs="true" failonerror="false">
             <fileset dir="target"/>
         </delete>      
-    </target>	
+    </target>
+    
+    <target name="clean-db">
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="home/db"/>
+        </delete>
+        <delete failonerror="false">
+            <fileset dir="home" includes="*.log.*"/>
+        </delete>         
+    </target>    
 	
     <target name="compile">
         <mkdir dir="target/classes"/>
