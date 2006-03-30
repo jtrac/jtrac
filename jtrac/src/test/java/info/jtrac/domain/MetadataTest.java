@@ -59,10 +59,10 @@ public class MetadataTest extends TestCase {
         Field f = new Field(Field.Name.CUS_INT_01);
         m.add(f);
         assertEquals(1, m.getFieldsCount());
-        assertEquals("New", m.getStatusText(0));
-        assertEquals("Open", m.getStatusText(1));
-        assertEquals("Closed", m.getStatusText(99));
-        assertEquals("", m.getStatusText(50));
+        assertEquals("New", m.getStatusValue(0));
+        assertEquals("Open", m.getStatusValue(1));
+        assertEquals("Closed", m.getStatusValue(99));
+        assertEquals("", m.getStatusValue(50));
         
     }
     

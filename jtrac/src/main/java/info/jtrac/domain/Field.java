@@ -52,7 +52,7 @@ public class Field implements Serializable {
     /**
      * Resolve a String to a valid enum value for Field.Name
      */
-    public static Name textToName(String text) {
+    public static Name convertToName(String text) {
         Name n = nameMap.get(text);
         if (n == null) {
             throw new RuntimeException("Bad name " + text);
@@ -204,7 +204,7 @@ public class Field implements Serializable {
         addOption(value, text);
     } 
     
-    public String getOptionText(String key) {
+    public String getCustomValue(String key) {
         if (options == null || key == null) {
             return "";
         }
@@ -254,7 +254,7 @@ public class Field implements Serializable {
     
     /* custom accessor */
     public void setName(String nameAsString) {        
-        setName(textToName(nameAsString));
+        setName(convertToName(nameAsString));
     }
     
     public Name getName() {

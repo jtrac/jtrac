@@ -21,9 +21,9 @@ import java.io.Serializable;
 import static info.jtrac.domain.Field.Name.*;
 
 /**
- * A jTrac installation can be divided into different project
+ * A JTrac installation can be divided into different project
  * areas or workspaces.  The Space entity represents this concept.
- * The <code>Metdata</code> of a Space determines the type of
+ * The Metdata of a Space determines the type of
  * Items contained within the space.  Users can be mapped to a
  * space with different access permissions.
  */
@@ -35,60 +35,6 @@ public class Space implements Serializable {
     private String description;
     private SpaceSequence spaceSequence; 
     private Metadata metadata = new Metadata();
-    
-    //=======================================================
-    
-    public String getStatusText(Integer key) {
-        return metadata.getStatusText(key);
-    }
-    
-    public String getSeverityText(Integer key) {
-        return metadata.getOptionText(SEVERITY, key);
-    }
-    
-    public String getPriorityText(Integer key) {
-        return metadata.getOptionText(PRIORITY, key);
-    }    
-    
-    public String getCusInt01Text(Integer key) {
-        return metadata.getOptionText(CUS_INT_01, key);
-    }    
-    
-    public String getCusInt02Text(Integer key) {
-        return metadata.getOptionText(CUS_INT_02, key);
-    }    
-    
-    public String getCusInt03Text(Integer key) {
-        return metadata.getOptionText(CUS_INT_03, key);
-    }    
-    
-    public String getCusInt04Text(Integer key) {
-        return metadata.getOptionText(CUS_INT_04, key);
-    }    
-    
-    public String getCusInt05Text(Integer key) {
-        return metadata.getOptionText(CUS_INT_05, key);
-    }    
-    
-    public String getCusInt06Text(Integer key) {
-        return metadata.getOptionText(CUS_INT_06, key);
-    }    
-    
-    public String getCusInt07Text(Integer key) {
-        return metadata.getOptionText(CUS_INT_07, key);
-    }    
-    
-    public String getCusInt08Text(Integer key) {
-        return metadata.getOptionText(CUS_INT_08, key);
-    }    
-    
-    public String getCusInt09Text(Integer key) {
-        return metadata.getOptionText(CUS_INT_09, key);
-    }    
-    
-    public String getCusInt10Text(Integer key) {
-        return metadata.getOptionText(CUS_INT_10, key);
-    }    
     
     //=======================================================
     

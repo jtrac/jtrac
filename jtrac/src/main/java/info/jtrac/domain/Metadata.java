@@ -110,7 +110,7 @@ public class Metadata implements Serializable {
         }        
         for (Element e : (List<Element>) document.selectNodes(FIELD_ORDER_XPATH)) {
             String fieldName = e.attributeValue(NAME);
-            fieldOrder.add(Field.textToName(fieldName));
+            fieldOrder.add(Field.convertToName(fieldName));
         }         
     }        
     
@@ -154,7 +154,7 @@ public class Metadata implements Serializable {
     }
     
     public Field getField(String name) {
-        return fields.get(Field.textToName(name));
+        return fields.get(Field.convertToName(name));
     }        
     
     public void add(Field field) {
@@ -234,22 +234,22 @@ public class Metadata implements Serializable {
         return roles.values();
     }
     
-    public String getOptionText(Field.Name fieldName, Integer key) {
-        return getOptionText(fieldName,  key + "");
+    public String getCustomValue(Field.Name fieldName, Integer key) {
+        return getCustomValue(fieldName,  key + "");
     }
     
-    public String getOptionText(Field.Name fieldName, String key) {
+    public String getCustomValue(Field.Name fieldName, String key) {
         Field field = fields.get(fieldName);
         if (field != null) {
-            return field.getOptionText(key);
+            return field.getCustomValue(key);
         }
         if (parent != null) {
-            return parent.getOptionText(fieldName, key);
+            return parent.getCustomValue(fieldName, key);
         }
         return "";        
     }
     
-    public String getStatusText(int key) {
+    public String getStatusValue(Integer key) {
         String s = states.get(key);
         if (s == null) {
             return "";

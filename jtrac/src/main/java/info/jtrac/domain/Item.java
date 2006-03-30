@@ -20,6 +20,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+import static info.jtrac.domain.Field.Name.*;
+
 /**
  * Generic Item object that can represent a defect, task, etc.
  * An Item is customized by the <code>Metadata</code> of
@@ -69,11 +71,6 @@ public class Item implements Serializable {
     private Set<Item> children;
     private Set<Attachment> attachments;    
 
-    private String getAsString(Object o) {
-        return o == null ? "" : o + "";
-    }
-  
-    //================================================
     // we could have used reflection but doing this way for performance
     public String getDisplayText(Field.Name fieldName) {
         switch(fieldName) {
@@ -104,57 +101,61 @@ public class Item implements Serializable {
         return "";
     }
     
+    private String getAsString(Object o) {
+        return o == null ? "" : o + "";
+    }
+    
     //================================================
     public String getStatusText() {
-        return space.getStatusText(status);
+        return space.getMetadata().getStatusValue(status);
     }
     
     public String getSeverityText() {
-        return space.getSeverityText(severity);
+        return space.getMetadata().getCustomValue(SEVERITY, severity);
     }
     
     public String getPriorityText() {
-        return space.getPriorityText(priority);
+        return space.getMetadata().getCustomValue(PRIORITY, priority);
     }
     
     public String getCusInt01Text() {
-        return space.getCusInt01Text(cusInt01);
+        return space.getMetadata().getCustomValue(CUS_INT_01, cusInt01);
     }
     
     public String getCusInt02Text() {
-        return space.getCusInt02Text(cusInt02);
+        return space.getMetadata().getCustomValue(CUS_INT_02, cusInt02);
     }
     
     public String getCusInt03Text() {
-        return space.getCusInt03Text(cusInt03);
+        return space.getMetadata().getCustomValue(CUS_INT_03, cusInt03);
     }
     
     public String getCusInt04Text() {
-        return space.getCusInt04Text(cusInt04);
+        return space.getMetadata().getCustomValue(CUS_INT_04, cusInt04);
     }
     
     public String getCusInt05Text() {
-        return space.getCusInt05Text(cusInt05);
+        return space.getMetadata().getCustomValue(CUS_INT_05, cusInt05);
     }
     
     public String getCusInt06Text() {
-        return space.getCusInt06Text(cusInt06);
+        return space.getMetadata().getCustomValue(CUS_INT_06, cusInt06);
     }
     
     public String getCusInt07Text() {
-        return space.getCusInt07Text(cusInt07);
+        return space.getMetadata().getCustomValue(CUS_INT_07, cusInt07);
     }
     
     public String getCusInt08Text() {
-        return space.getCusInt08Text(cusInt08);
+        return space.getMetadata().getCustomValue(CUS_INT_08, cusInt08);
     }
     
     public String getCusInt09Text() {
-        return space.getCusInt09Text(cusInt09);
+        return space.getMetadata().getCustomValue(CUS_INT_09, cusInt09);
     }
     
     public String getCusInt10Text() {
-        return space.getCusInt10Text(cusInt10);
+        return space.getMetadata().getCustomValue(CUS_INT_10, cusInt10);
     }
     
     //======================================================

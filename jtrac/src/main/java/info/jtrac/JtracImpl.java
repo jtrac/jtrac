@@ -16,16 +16,18 @@
 
 package info.jtrac;
 
+import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.SpaceRole;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
+import java.util.Date;
+import java.util.LinkedHashSet;
 
 import java.util.List;
 import java.util.Random;
-import org.acegisecurity.context.SecurityContextHolder;
 
 
 import org.acegisecurity.providers.encoding.PasswordEncoder;
@@ -74,6 +76,16 @@ public class JtracImpl implements Jtrac {
     }
     
     public void storeItem(Item item) {
+        History history = new History(item);
+        Date now = new Date();
+        if (item.getTimeStamp() == null) {
+            item.setTimeStamp(now);
+        }
+        history.setTimeStamp(now);
+        if (item.getHistory() == null) {
+            item.setHistory(new LinkedHashSet<History>());
+        }
+        item.getHistory().add(history);
         dao.storeItem(item);
     }
     

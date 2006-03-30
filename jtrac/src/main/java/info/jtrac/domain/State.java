@@ -79,7 +79,7 @@ public class State implements Serializable {
         for (Object o : e.elements(FIELD)) {
             Element f = (Element) o;
             String fieldName = f.attributeValue(NAME);
-            fields.put(Field.textToName(fieldName), new Integer(f.attributeValue(MASK)));
+            fields.put(Field.convertToName(fieldName), new Integer(f.attributeValue(MASK)));
         }         
     }
     

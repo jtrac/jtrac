@@ -67,9 +67,9 @@ public class ItemFormAction extends AbstractFormAction {
     public Event itemFormHandler(RequestContext context) throws Exception {
         Item item = (Item) getFormObject(context);
         Space space = (Space) context.getFlowScope().get("space");
-        item.setSpace(space);
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        item.setSpace(space);        
         item.setStatus(State.OPEN);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();        
         item.setLoggedBy(user);
         jtrac.storeItem(item);
         return success();
