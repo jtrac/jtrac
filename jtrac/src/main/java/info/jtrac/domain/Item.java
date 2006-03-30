@@ -72,6 +72,37 @@ public class Item implements Serializable {
     private Set<Attachment> attachments;    
 
     // we could have used reflection but doing this way for performance
+    public Object getValue(Field.Name fieldName) {
+        switch(fieldName) {
+            case SEVERITY: return severity;
+            case PRIORITY: return priority;
+            case CUS_INT_01: return cusInt01;
+            case CUS_INT_02: return cusInt02;
+            case CUS_INT_03: return cusInt03;
+            case CUS_INT_04: return cusInt04;
+            case CUS_INT_05: return cusInt05;
+            case CUS_INT_06: return cusInt06;
+            case CUS_INT_07: return cusInt07;
+            case CUS_INT_08: return cusInt08;
+            case CUS_INT_09: return cusInt09;
+            case CUS_INT_10: return cusInt10;
+            case CUS_DBL_01: return cusDbl01;
+            case CUS_DBL_02: return cusDbl02;
+            case CUS_DBL_03: return cusDbl03;
+            case CUS_STR_01: return cusStr01;
+            case CUS_STR_02: return cusStr02;
+            case CUS_STR_03: return cusStr03;
+            case CUS_STR_04: return cusStr04;
+            case CUS_STR_05: return cusStr05;
+            case CUS_TIM_01: return cusTim01;
+            case CUS_TIM_02: return cusTim02;
+            case CUS_TIM_03: return cusTim03;
+        }
+        // should never reach here
+        return null;        
+    }    
+    
+    // we could have used reflection but doing this way for performance
     public String getDisplayText(Field.Name fieldName) {
         switch(fieldName) {
             case SEVERITY: return getSeverityText();
@@ -98,6 +129,7 @@ public class Item implements Serializable {
             case CUS_TIM_02: return getAsString(cusTim02);
             case CUS_TIM_03: return getAsString(cusTim03);
         }
+        // should never reach here
         return "";
     }
     

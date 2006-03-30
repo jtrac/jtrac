@@ -56,7 +56,7 @@ public class MultiSelect extends SimpleTagSupport {
                 out.print(sb);
             }
         } catch (IOException ioe) {
-            System.out.println("*** error in MultiSelect: " + ioe);
+            throw new RuntimeException(ioe);
         }
     }
     

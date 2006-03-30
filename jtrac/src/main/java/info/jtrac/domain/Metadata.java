@@ -59,10 +59,10 @@ import org.dom4j.Element;
  * - labels can be customized
  * - special State values: 0 = New, 1 = Open, 99 = Closed
  *
- * Also the metadata should define the order in which the fields are displayed
+ * 4) the order in which the fields are displayed
  * on the data entry screens and the query result screens etc.
  *
- * Metadata can be inherited.
+ * Metadata can be inherited, and this allows for "reuse"
  */
 public class Metadata implements Serializable {    
     
@@ -197,7 +197,7 @@ public class Metadata implements Serializable {
     
     public Set<Field.Name> getUnusedFieldNames() {
         EnumSet<Field.Name> allFieldNames = EnumSet.allOf(Field.Name.class);
-        for (Field f : getFieldSet()) {
+        for (Field f : getFields().values()) {
             allFieldNames.remove(f.getName());
         }
         return allFieldNames;
@@ -220,19 +220,24 @@ public class Metadata implements Serializable {
         throw new RuntimeException("No field available of type " + type);
     }
     
-    public Set<Field> getFieldSet() {
-        Set<Field> fieldSet = new LinkedHashSet<Field>();
+    // customized accessor
+    public Map<Field.Name, Field> getFields() {
+        Map<Field.Name, Field> map = fields;
         if (parent != null) {
-            fieldSet.addAll(parent.getFieldSet());
+            map.putAll(parent.getFields());
         }
-        // fields will override parent
-        fieldSet.addAll(fields.values());
-        return fieldSet;
-    }
+        return map;
+    }    
     
+    // to make JSTL easier
     public Collection<Role> getRoleSet() {
         return roles.values();
     }
+    
+    // to make JSTL easier
+    public Collection<Field> getFieldSet() {
+        return getFields().values();
+    }    
     
     public String getCustomValue(Field.Name fieldName, Integer key) {
         return getCustomValue(fieldName,  key + "");
@@ -262,7 +267,7 @@ public class Metadata implements Serializable {
     }
     
     public int getFieldsCount() {
-        return fields.size();
+        return getFields().size();
     }
     
     public int getStatesCount() {
@@ -311,37 +316,20 @@ public class Metadata implements Serializable {
         this.parent = parent;
     }
     
+    //=======================================
+    // no setters required
+    
     public Map<String, Role> getRoles() {
         return roles;
-    }
-
-    public void setRoles(Map<String, Role> roles) {
-        this.roles = roles;
-    }    
-    
-    public Map<Field.Name, Field> getFields() {
-        return fields;
-    }
-
-    public void setFields(Map<Field.Name, Field> fields) {
-        this.fields = fields;
-    }
+    }  
 
     public Map<Integer, String> getStates() {
         return states;
-    }
-
-    public void setStates(Map<Integer, String> states) {
-        this.states = states;
-    }    
+    }   
     
     public List<Field.Name> getFieldOrder() {
         return fieldOrder;
-    }
-
-    public void setFieldOrder(List<Field.Name> fieldOrder) {
-        this.fieldOrder = fieldOrder;
-    }    
+    }   
     
     @Override
     public String toString() {

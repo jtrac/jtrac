@@ -30,17 +30,13 @@ import org.dom4j.Element;
  * for a Space may contain a bunch of Role defintions as well.
  * Roles do the following
  * - define the State Transitions possible (i.e. from status --> to status)
- * - for each State (status) define the access permissions over Fields that the Role has
+ * - for each State (from status) define the access permissions that this Role has per Field
  */
 public class Role implements Serializable {
     
     private String name;
     private String description;
     private Map<Integer, State> states = new HashMap<Integer, State>();
-    
-    public Role() {
-        // zero arg constructor
-    }
     
     public Role(String name) {
         this.name = name;

@@ -6,7 +6,7 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.acegisecurity.GrantedAuthority;
 
@@ -68,7 +68,7 @@ public class JtracImplTest extends AbstractTransactionalDataSourceSpringContextT
         assertTrue(m1.getId() > 0);
         Metadata m2 = dao.loadMetadata(m1.getId());
         assertTrue(m2 != null);
-        Set<Field> fields = m2.getFieldSet();
+        Map<Field.Name, Field> fields = m2.getFields();
         assertTrue(fields.size() == 2);
     }
 

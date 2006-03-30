@@ -1,6 +1,5 @@
 package info.jtrac.domain;
-import info.jtrac.domain.Field;
-import info.jtrac.domain.Metadata;
+import java.util.Map;
 
 import java.util.Set;
 import junit.framework.TestCase;
@@ -25,9 +24,9 @@ public class MetadataTest extends TestCase {
     
     public void testGetFieldsFromXml() {
         Metadata m = getMetadata();
-        Set<Field> fields = m.getFieldSet();
+        Map<Field.Name, Field> fields = m.getFields();
         assertTrue(fields.size() == 2);
-        Field[] fa = fields.toArray(new Field[0]);
+        Field[] fa = fields.values().toArray(new Field[0]);
         assertEquals("cusInt01",  fa[0].getName() + "");
         assertEquals("Test Label",  fa[0].getLabel());
         assertEquals("cusInt02",  fa[1].getName() + "");
@@ -43,7 +42,7 @@ public class MetadataTest extends TestCase {
                 + "</fields></metadata>";
         m2.setXml(xmlString);
         m2.setParent(m1);
-        Set<Field> fields = m2.getFieldSet();
+        Map<Field.Name, Field> fields = m2.getFields();
         assertEquals(fields.size(), 4);
         Set<Field.Name> names = m2.getUnusedFieldNames();
         assertEquals(names.contains(Field.Name.CUS_INT_01), false);

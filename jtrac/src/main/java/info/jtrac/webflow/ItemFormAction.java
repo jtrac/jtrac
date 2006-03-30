@@ -16,6 +16,7 @@
 
 package info.jtrac.webflow;
 
+import info.jtrac.domain.Field;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
@@ -31,6 +32,7 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.validation.DataBinder;
+import org.springframework.validation.Errors;
 import org.springframework.webflow.Event;
 import org.springframework.webflow.RequestContext;
 import org.springframework.webflow.ScopeType;
@@ -49,6 +51,7 @@ public class ItemFormAction extends AbstractFormAction {
     @Override
     protected void initBinder(RequestContext request, DataBinder binder) {
         binder.registerCustomEditor(Integer.class, new CustomNumberEditor(Integer.class, true));
+        binder.registerCustomEditor(Double.class, new CustomNumberEditor(Double.class, true));
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
         binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
         binder.registerCustomEditor(User.class, new UserEditor(jtrac));
@@ -76,10 +79,24 @@ public class ItemFormAction extends AbstractFormAction {
     public Event itemFormHandler(RequestContext context) throws Exception {
         Item item = (Item) getFormObject(context);
         Space space = (Space) context.getFlowScope().get("space");
-        item.setSpace(space);        
-        item.setStatus(State.OPEN);
+        item.setSpace(space);
+        if (item.getId() == 0) {
+            item.setStatus(State.OPEN);
+        }        
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();        
         item.setLoggedBy(user);
+        // validation
+        Errors errors = getFormErrors(context);
+        ValidationUtils.rejectIfEmpty(errors, "summary", "detail", "assignedTo");
+        for (Field field : space.getMetadata().getFields().values()) {
+            Object o = item.getValue(field.getName());
+            if (o == null && !field.isOptional()) {
+                errors.rejectValue(field.getName() + "", ValidationUtils.ERROR_EMPTY_CODE, ValidationUtils.ERROR_EMPTY_MSG);
+            }
+        }
+        if (errors.hasErrors()) {
+            return error();
+        }
         jtrac.storeItem(item);
         return success();
     }        
