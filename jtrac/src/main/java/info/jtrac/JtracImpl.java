@@ -18,6 +18,7 @@ package info.jtrac;
 
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.SpaceRole;
@@ -91,6 +92,10 @@ public class JtracImpl implements Jtrac {
     
     public Item loadItem(long id) {
         return dao.loadItem(id);
+    }
+    
+    public List<Item> findItems(ItemSearch itemSearch) {
+        return dao.findItems(itemSearch);
     }
     
     // =========  acegi UserDetailsService implementation ==========

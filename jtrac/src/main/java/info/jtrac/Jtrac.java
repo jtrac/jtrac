@@ -17,6 +17,7 @@
 package info.jtrac;
 
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
@@ -34,6 +35,7 @@ public interface Jtrac extends UserDetailsService {
       
     void storeItem(Item item);
     Item loadItem(long id);
+    List<Item> findItems(ItemSearch itemSearch);
     //========================================================
     void storeUser(User user);
     List<User> findAllUsers();

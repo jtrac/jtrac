@@ -33,11 +33,12 @@
         <property name="alwaysUseFullPath" value="true"/>
         <property name="mappings">
             <props>
+                <prop key="/flow.htm">flowController</prop>
+                <!-- =========================================== -->
                 <prop key="/login.htm">defaultController</prop>                
                 <prop key="/logout.htm">defaultController</prop>
                 <prop key="/dashboard.htm">defaultController</prop>
                 <prop key="/options.htm">defaultController</prop>
-                <prop key="/flow.htm">flowController</prop>
                 <!-- =========================================== -->
                 <prop key="/user_list.htm">defaultController</prop>
                 <prop key="/space_list.htm">defaultController</prop>
@@ -106,6 +107,10 @@
         <property name="jtrac" ref="jtrac"/>
     </bean>
     
-    <bean id="fieldFormAction" class="info.jtrac.webflow.FieldFormAction"/>    
+    <bean id="fieldFormAction" class="info.jtrac.webflow.FieldFormAction"/>
+    
+    <bean id="itemSearchFormAction" class="info.jtrac.webflow.ItemSearchFormAction">
+        <property name="jtrac" ref="jtrac"/>
+    </bean>      
         
 </beans>

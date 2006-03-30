@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
+	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
+
+<flow start-state="itemSearchForm">  
+    
+    <view-state id="itemSearchForm" view="item_search_form">
+        <entry-actions>
+            <action bean="itemSearchFormAction" method="setupForm"/>
+        </entry-actions>
+        <transition on="search" to="itemSearchResultsView">
+            <action bean="itemSearchFormAction" method="bind"/>
+            <action bean="itemSearchFormAction" method="itemSearchFormHandler"/>
+        </transition>
+    </view-state>    
+    
+    <end-state id="itemSearchResultsView" view="item_search_results"/>    
+    
+</flow>
+

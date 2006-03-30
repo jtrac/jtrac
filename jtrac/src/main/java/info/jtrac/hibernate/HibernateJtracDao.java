@@ -18,8 +18,8 @@ package info.jtrac.hibernate;
 
 import info.jtrac.JtracDao;
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
-import info.jtrac.domain.Role;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
@@ -58,6 +58,10 @@ public class HibernateJtracDao
         return (Item) getHibernateTemplate().load(Item.class, id);
     }
     
+    public List<Item> findItems(ItemSearch itemSearch) {
+        return getHibernateTemplate().findByCriteria(itemSearch.getCriteria());
+    }
+    
     public void storeMetadata(Metadata metadata) {
         getHibernateTemplate().merge(metadata);
     }
@@ -80,14 +84,6 @@ public class HibernateJtracDao
     
     public List<Space> findAllSpaces() {
         return getHibernateTemplate().loadAll(Space.class);
-    }
-    
-    public void storeRole(Role role) {
-        getHibernateTemplate().merge(role);
-    }
-    
-    public Role loadRole(int id) {
-        return (Role) getHibernateTemplate().load(Role.class, id);
     }
     
     public void storeUser(User user) {

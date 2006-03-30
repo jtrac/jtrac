@@ -148,6 +148,16 @@ public class Item implements Serializable {
         return getSpace().getMetadata().getStatusValue(status);
     }
     
+    public String getLoggedByText() {
+        return loggedBy.getName();
+    }
+    
+    public String getAssignedToText() {
+        return assignedTo == null ? "" : assignedTo.getName();
+    }    
+    
+    //================================================
+    
     public String getSeverityText() {
         return getCustomValue(SEVERITY, severity);
     }
@@ -512,7 +522,7 @@ public class Item implements Serializable {
         sb.append("id [").append(id);
         sb.append("]; sequenceNum [").append(sequenceNum);
         sb.append("]; type [").append(type);
-        // sb.append("]; parent [").append(parent); horrible recursive loop
+        // sb.append("]; parent [").append(parent);
         sb.append("]; space [").append(space);
         sb.append("]; summary [").append(summary);
         sb.append("]; detail [").append(detail);
@@ -544,8 +554,8 @@ public class Item implements Serializable {
         sb.append("]; cusTim01 [").append(cusTim01);
         sb.append("]; cusTim02 [").append(cusTim02);
         sb.append("]; cusTim03 [").append(cusTim03);
-        sb.append("]; history [").append(history);
-        sb.append("]; children [").append(children);
+        // sb.append("]; history [").append(history);
+        // sb.append("]; children [").append(children);
         sb.append("]; attachments [").append(attachments);
         sb.append("]");                
         return sb.toString();
