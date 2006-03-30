@@ -26,30 +26,6 @@
                 </source-folder>
             </folders>
             <ide-actions>
-                <action name="build">
-                    <target>compile</target>
-                </action>
-                <action name="clean">
-                    <target>clean</target>
-                </action>
-                <action name="javadoc">
-                    <target>javadoc</target>
-                </action>
-                <action name="run">
-                    <target>tomcat-deploy</target>
-                    <target>tomcat-start</target>
-                </action>
-                <action name="test">
-                    <target>test</target>
-                </action>
-                <action name="redeploy">
-                    <target>tomcat-deploy</target>
-                    <target>tomcat-restart</target>
-                </action>
-                <action name="rebuild">
-                    <target>clean</target>
-                    <target>compile</target>
-                </action>
                 <action name="test.single">
                     <target>test-single</target>
                     <context>
@@ -97,15 +73,7 @@
                         <location>build.xml</location>
                     </source-file>
                 </items>
-                <context-menu>
-                    <ide-action name="build"/>
-                    <ide-action name="clean"/>
-                    <ide-action name="javadoc"/>
-                    <ide-action name="run"/>
-                    <ide-action name="test"/>
-                    <ide-action name="redeploy"/>
-                    <ide-action name="rebuild"/>
-                </context-menu>
+                <context-menu/>
             </view>
             <subprojects/>
         </general-data>

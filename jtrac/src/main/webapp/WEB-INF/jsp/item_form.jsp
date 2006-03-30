@@ -75,6 +75,25 @@
         </tr>        
     </c:forEach>
     
+    <tr>    
+        <td class="label">
+            Assigned To
+            <font color="red">*</font>
+        </td>    
+        <td>
+            <spring:bind path="item.assignedTo">
+                <select name="${status.expression}">
+                    <option/>
+                    <c:forEach items="${userRoles}" var="userRole">
+                        <c:set var="user" value="${userRole.user}"/>
+                        <option value="${user.id}" <c:if test='${user == status.expression}'>selected='true'</c:if>>${user.name}</option>
+                    </c:forEach>   
+                </select>
+                <span class="error">${status.errorMessage}</span>
+            </spring:bind>
+        </td>
+    </tr>  
+    
     <tr>
         <td/>
         <td>

@@ -20,9 +20,12 @@ import info.jtrac.domain.Item;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
+import info.jtrac.domain.UserRole;
+import info.jtrac.util.UserEditor;
 import info.jtrac.util.ValidationUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
@@ -48,20 +51,26 @@ public class ItemFormAction extends AbstractFormAction {
         binder.registerCustomEditor(Integer.class, new CustomNumberEditor(Integer.class, true));
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
         binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
+        binder.registerCustomEditor(User.class, new UserEditor(jtrac));
     }    
     
     @Override
     public Object loadFormObject(RequestContext context) {
         String itemId = ValidationUtils.getParameter(context, "itemId");
+        Item item = null;
+        Space space = null;
         if (itemId != null) {
-            return jtrac.loadItem(Long.parseLong(itemId));
+            item = jtrac.loadItem(Long.parseLong(itemId));
+            space = item.getSpace();
         } else {
-            Item item = new Item();
+            item = new Item();
             String spaceId = ValidationUtils.getParameter(context, "spaceId");
-            Space space = jtrac.loadSpace(Integer.parseInt(spaceId));
-            context.getFlowScope().put("space", space);
-            return item;
+            space = jtrac.loadSpace(Integer.parseInt(spaceId));            
         }
+        context.getFlowScope().put("space", space);
+        List<UserRole> userRoles = jtrac.findUsersForSpace(space.getId());
+        context.getFlowScope().put("userRoles", userRoles);
+        return item;
     }    
     
     public Event itemFormHandler(RequestContext context) throws Exception {
