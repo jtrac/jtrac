@@ -38,80 +38,72 @@ public final class ItemUtils {
     
     public static String getAsHtml(Item item, HttpServletResponse response) {
         StringBuffer sb = new StringBuffer();
-        try {
-            sb.append("<table width='100%' class='jtrac'>");
-            sb.append("<tr>");
-            sb.append("  <td class='label'>ID</td>");
-            sb.append("  <td>" + item.getSequenceNum() + "-" + item.getSpace().getPrefixCode() + "</td>");
-            sb.append("</tr>");
-            sb.append("<tr>");
-            sb.append("  <td class='label'>Status</td>");
-            sb.append("  <td>" + item.getStatusText() + "</td>");
-            sb.append("  <td class='label'>Logged By</td>");
-            sb.append("  <td>" + item.getLoggedBy().getName() + "</td>");
-            sb.append("  <td class='label' width='15%'>Assigned To</td>");
-            sb.append("  <td>" + ( item.getAssignedTo() == null ? "" : item.getAssignedTo().getName() ) + "</td>");
-            sb.append("</tr>");        
-            sb.append("<tr class='alt'>");
-            sb.append("  <td class='label'>Summary</td>");
-            sb.append("  <td colspan='5'>" + item.getSummary() + "</td>");
-            sb.append("</tr>");
-            sb.append("<tr>");
-            sb.append("  <td class='label' valign='top'>Detail</td>");
-            sb.append("  <td colspan='5'>" + fixWhiteSpace(item.getDetail()) + "</td>");
-            sb.append("</tr>");
+        sb.append("<table width='100%' class='jtrac'>");
+        sb.append("<tr>");
+        sb.append("  <td class='label'>ID</td>");
+        sb.append("  <td>" + item.getSequenceNum() + "-" + item.getSpace().getPrefixCode() + "</td>");
+        sb.append("</tr>");
+        sb.append("<tr>");
+        sb.append("  <td class='label'>Status</td>");
+        sb.append("  <td>" + item.getStatusText() + "</td>");
+        sb.append("  <td class='label'>Logged By</td>");
+        sb.append("  <td>" + item.getLoggedBy().getName() + "</td>");
+        sb.append("  <td class='label' width='15%'>Assigned To</td>");
+        sb.append("  <td>" + ( item.getAssignedTo() == null ? "" : item.getAssignedTo().getName() ) + "</td>");
+        sb.append("</tr>");        
+        sb.append("<tr class='alt'>");
+        sb.append("  <td class='label'>Summary</td>");
+        sb.append("  <td colspan='5'>" + item.getSummary() + "</td>");
+        sb.append("</tr>");
+        sb.append("<tr>");
+        sb.append("  <td class='label' valign='top'>Detail</td>");
+        sb.append("  <td colspan='5'>" + fixWhiteSpace(item.getDetail()) + "</td>");
+        sb.append("</tr>");
 
-            int row = 0;
-            Map<Field.Name, Field> fields = item.getSpace().getMetadata().getFields();
-            for(Field.Name fieldName : item.getSpace().getMetadata().getFieldOrder()) {
-                Field field = fields.get(fieldName);
-                sb.append("<tr" + ( row % 2 == 0 ? " class='alt'" : "" ) + ">");
-                sb.append("  <td class='label'>" + field.getLabel() + "</td>");
-                sb.append("  <td colspan='5'>" + item.getDisplayText(fieldName) + "</td></tr>");
-                sb.append("</tr>");
-                row ++;
-            }
-
-            sb.append("</table>");
-            sb.append("<table class='jtrac'><tr><td><b>History</b></td></tr></table>");
-            sb.append("<table width='100%' class='jtrac'>");
-            sb.append("<tr>");
-            sb.append("  <th>Status</th><th>Logged By</th><th>Assigned To</th><th>Comment</th><th>Time Stamp</th>");        
+        int row = 0;
+        Map<Field.Name, Field> fields = item.getSpace().getMetadata().getFields();
+        for(Field.Name fieldName : item.getSpace().getMetadata().getFieldOrder()) {
+            Field field = fields.get(fieldName);
+            sb.append("<tr" + ( row % 2 == 0 ? " class='alt'" : "" ) + ">");
+            sb.append("  <td class='label'>" + field.getLabel() + "</td>");
+            sb.append("  <td colspan='5'>" + item.getDisplayText(fieldName) + "</td></tr>");
             sb.append("</tr>");
-
-            if (item.getHistory() != null) {
-                row = 0;        
-                for(History history : item.getHistory()) {
-                    System.out.println("*** history is: " + history);
-                    sb.append("<tr valign='top'" + ( row % 2 == 0 ? " class='alt'" : "" ) + ">");            
-                    sb.append("  <td>" + history.getStatusText() +"</td>");
-                    sb.append("  <td>" + history.getLoggedBy().getName() + "</td>");
-                    sb.append("  <td>" + history.getAssignedTo() == null ? "" : history.getAssignedTo().getName() + "</td>");
-                    sb.append("  <td>");
-                    Attachment attachment = history.getAttachment();
-                    if (attachment != null) {
-                        if (response != null) {
-                            String href = response.encodeURL("attachments/" + attachment.getFilePrefix() + attachment.getFileName());
-                            sb.append("<a target='_blank' href='" + href + "'>" + attachment.getFileName() + "</a>&nbsp;");
-                        } else {
-                            sb.append("(attachment:&nbsp" + attachment.getFileName() + ")&nbsp;");
-                        }                
-                    }
-                    sb.append(fixWhiteSpace(history.getComment()));            
-                    sb.append("  </td>");
-                    sb.append("  <td>" + history.getTimeStamp() + "</td>");            
-                    sb.append("</tr>");
-                    row++;
-                }
-            }
-            sb.append("</table>");
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Buffer content =[" + sb + "]");
-        } finally {
-            return sb.toString();
+            row ++;
         }
-                
+
+        sb.append("</table>");
+        sb.append("<table class='jtrac'><tr><td><b>History</b></td></tr></table>");
+        sb.append("<table width='100%' class='jtrac'>");
+        sb.append("<tr>");
+        sb.append("  <th>Status</th><th>Logged By</th><th>Assigned To</th><th>Comment</th><th>Time Stamp</th>");        
+        sb.append("</tr>");
+
+        if (item.getHistory() != null) {
+            row = 0;        
+            for(History history : item.getHistory()) {
+                sb.append("<tr valign='top'" + ( row % 2 == 0 ? " class='alt'" : "" ) + ">");            
+                sb.append("  <td>" + history.getStatusText() +"</td>");
+                sb.append("  <td>" + history.getLoggedBy().getName() + "</td>");
+                sb.append("  <td>" + ( history.getAssignedTo() == null ? "" : history.getAssignedTo().getName() ) + "</td>");
+                sb.append("  <td>");
+                Attachment attachment = history.getAttachment();
+                if (attachment != null) {
+                    if (response != null) {
+                        String href = response.encodeURL("attachments/" + attachment.getFilePrefix() + attachment.getFileName());
+                        sb.append("<a target='_blank' href='" + href + "'>" + attachment.getFileName() + "</a>&nbsp;");
+                    } else {
+                        sb.append("(attachment:&nbsp" + attachment.getFileName() + ")&nbsp;");
+                    }                
+                }
+                sb.append(fixWhiteSpace(history.getComment()));            
+                sb.append("  </td>");
+                sb.append("  <td>" + history.getTimeStamp() + "</td>");            
+                sb.append("</tr>");
+                row++;
+            }
+        }
+        sb.append("</table>");
+        return sb.toString();                        
     }
     
 }

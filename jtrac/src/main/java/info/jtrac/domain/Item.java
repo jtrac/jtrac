@@ -105,57 +105,63 @@ public class Item implements Serializable {
         return o == null ? "" : o + "";
     }
     
+    private String getCustomValue(Field.Name fieldName, Integer key) {
+        // using accessor for space, getSpace() is overridden in subclass History
+        return getSpace().getMetadata().getCustomValue(fieldName, key);
+    }
+    
     //================================================
     public String getStatusText() {
-        return space.getMetadata().getStatusValue(status);
+        // using accessor for space, getSpace() is overridden in subclass History
+        return getSpace().getMetadata().getStatusValue(status);
     }
     
     public String getSeverityText() {
-        return space.getMetadata().getCustomValue(SEVERITY, severity);
+        return getCustomValue(SEVERITY, severity);
     }
     
     public String getPriorityText() {
-        return space.getMetadata().getCustomValue(PRIORITY, priority);
+        return getCustomValue(PRIORITY, priority);
     }
     
     public String getCusInt01Text() {
-        return space.getMetadata().getCustomValue(CUS_INT_01, cusInt01);
+        return getCustomValue(CUS_INT_01, cusInt01);
     }
     
     public String getCusInt02Text() {
-        return space.getMetadata().getCustomValue(CUS_INT_02, cusInt02);
+        return getCustomValue(CUS_INT_02, cusInt02);
     }
     
     public String getCusInt03Text() {
-        return space.getMetadata().getCustomValue(CUS_INT_03, cusInt03);
+        return getCustomValue(CUS_INT_03, cusInt03);
     }
     
     public String getCusInt04Text() {
-        return space.getMetadata().getCustomValue(CUS_INT_04, cusInt04);
+        return getCustomValue(CUS_INT_04, cusInt04);
     }
     
     public String getCusInt05Text() {
-        return space.getMetadata().getCustomValue(CUS_INT_05, cusInt05);
+        return getCustomValue(CUS_INT_05, cusInt05);
     }
     
     public String getCusInt06Text() {
-        return space.getMetadata().getCustomValue(CUS_INT_06, cusInt06);
+        return getCustomValue(CUS_INT_06, cusInt06);
     }
     
     public String getCusInt07Text() {
-        return space.getMetadata().getCustomValue(CUS_INT_07, cusInt07);
+        return getCustomValue(CUS_INT_07, cusInt07);
     }
     
     public String getCusInt08Text() {
-        return space.getMetadata().getCustomValue(CUS_INT_08, cusInt08);
+        return getCustomValue(CUS_INT_08, cusInt08);
     }
     
     public String getCusInt09Text() {
-        return space.getMetadata().getCustomValue(CUS_INT_09, cusInt09);
+        return getCustomValue(CUS_INT_09, cusInt09);
     }
     
     public String getCusInt10Text() {
-        return space.getMetadata().getCustomValue(CUS_INT_10, cusInt10);
+        return getCustomValue(CUS_INT_10, cusInt10);
     }
     
     //======================================================
@@ -466,6 +472,51 @@ public class Item implements Serializable {
 
     public void setAttachments(Set<Attachment> attachments) {
         this.attachments = attachments;
+    }   
+    
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("id [").append(id);
+        sb.append("]; sequenceNum [").append(sequenceNum);
+        sb.append("]; type [").append(type);
+        // sb.append("]; parent [").append(parent); horrible recursive loop
+        sb.append("]; space [").append(space);
+        sb.append("]; summary [").append(summary);
+        sb.append("]; detail [").append(detail);
+        sb.append("]; loggedBy [").append(loggedBy);
+        sb.append("]; assignedTo [").append(assignedTo);
+        sb.append("]; timeStamp [").append(timeStamp);
+        sb.append("]; plannedEffort [").append(plannedEffort);
+        sb.append("]; status [").append(status);
+        sb.append("]; severity [").append(severity);
+        sb.append("]; priority [").append(priority);
+        sb.append("]; cusInt01 [").append(cusInt01);
+        sb.append("]; cusInt02 [").append(cusInt02);
+        sb.append("]; cusInt03 [").append(cusInt03);
+        sb.append("]; cusInt04 [").append(cusInt04);
+        sb.append("]; cusInt05 [").append(cusInt05);
+        sb.append("]; cusInt06 [").append(cusInt06);
+        sb.append("]; cusInt07 [").append(cusInt07);
+        sb.append("]; cusInt08 [").append(cusInt08);
+        sb.append("]; cusInt09 [").append(cusInt09);
+        sb.append("]; cusInt10 [").append(cusInt10);
+        sb.append("]; cusDbl01 [").append(cusDbl01);
+        sb.append("]; cusDbl02 [").append(cusDbl02);
+        sb.append("]; cusDbl03 [").append(cusDbl03);
+        sb.append("]; cusStr01 [").append(cusStr01);
+        sb.append("]; cusStr02 [").append(cusStr02);
+        sb.append("]; cusStr03 [").append(cusStr03);
+        sb.append("]; cusStr04 [").append(cusStr04);
+        sb.append("]; cusStr05 [").append(cusStr05);
+        sb.append("]; cusTim01 [").append(cusTim01);
+        sb.append("]; cusTim02 [").append(cusTim02);
+        sb.append("]; cusTim03 [").append(cusTim03);
+        sb.append("]; history [").append(history);
+        sb.append("]; children [").append(children);
+        sb.append("]; attachments [").append(attachments);
+        sb.append("]");                
+        return sb.toString();
     }
     
 }

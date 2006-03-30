@@ -67,6 +67,11 @@ public class History extends Item {
         setCusTim03(item.getCusTim03());
     }
     
+    @Override
+    public Space getSpace() {
+        return getParent().getSpace();
+    }            
+    
     public String getComment() {
         return comment;
     }
@@ -95,6 +100,10 @@ public class History extends Item {
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append(super.toString());
+        sb.append("comment [").append(comment);
+        sb.append("]; actualEffort [").append(actualEffort);
+        sb.append("]; attachment [").append(attachment);
+        sb.append("]");
         return sb.toString();
     }
     
