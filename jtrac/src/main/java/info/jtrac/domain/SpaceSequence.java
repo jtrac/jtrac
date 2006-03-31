@@ -28,8 +28,12 @@ import java.io.Serializable;
 public class SpaceSequence implements Serializable {
     
     private int id;
-    private long nextSeqNum;
-
+    private long nextSeqNum = 1;
+    
+    public long next() {
+        return nextSeqNum++;
+    }
+    
     public long getNextSeqNum() {
         return nextSeqNum;
     }

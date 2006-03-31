@@ -33,7 +33,7 @@ public class Space implements Serializable {
     private Integer type;
     private String prefixCode;
     private String description;
-    private SpaceSequence spaceSequence; 
+    private SpaceSequence spaceSequence = new SpaceSequence();
     private Metadata metadata = new Metadata();
     
     //=======================================================

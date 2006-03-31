@@ -20,6 +20,7 @@ import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
+import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 
@@ -42,6 +43,8 @@ public interface JtracDao {
     Space loadSpace(int id);
     List<Space> findSpacesByPrefixCode(String prefixCode);
     List<Space> findAllSpaces();
+    //===========================================
+    void storeSpaceSequence(SpaceSequence spaceSequence);
     //===========================================
     void storeUser(User user);
     User loadUser(int id);

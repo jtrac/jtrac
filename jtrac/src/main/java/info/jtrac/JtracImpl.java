@@ -22,6 +22,7 @@ import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.SpaceRole;
+import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import java.util.Date;
@@ -87,6 +88,9 @@ public class JtracImpl implements Jtrac {
             item.setHistory(new LinkedHashSet<History>());
         }
         item.getHistory().add(history);
+        SpaceSequence spaceSequence = item.getSpace().getSpaceSequence();
+        item.setSequenceNum(spaceSequence.next());
+        dao.storeSpaceSequence(spaceSequence);
         dao.storeItem(item);
     }
     
@@ -160,7 +164,7 @@ public class JtracImpl implements Jtrac {
     
     public void storeSpace(Space space) {
         dao.storeSpace(space);
-    }
+    }    
     
     public List<Space> findAllSpaces() {
         return dao.findAllSpaces();

@@ -21,6 +21,7 @@ import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
+import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import java.util.ArrayList;
@@ -76,6 +77,10 @@ public class HibernateJtracDao
     
     public Space loadSpace(int id) {
         return (Space) getHibernateTemplate().load(Space.class, id);
+    }
+    
+    public void storeSpaceSequence(SpaceSequence spaceSequence) {
+        getHibernateTemplate().merge(spaceSequence);
     }
     
     public List<Space> findSpacesByPrefixCode(String prefixCode) {

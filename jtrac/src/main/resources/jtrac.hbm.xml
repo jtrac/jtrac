@@ -130,15 +130,13 @@
         <property name="type" column="type"/>
         <property name="prefixCode" column="prefix_code" unique="true"/>         
         <property name="description" column="description" type="text"/>
-        <one-to-one name="spaceSequence"/>
+        <one-to-one name="spaceSequence" cascade="all"/>
         <many-to-one name="metadata" column="metadata_id" cascade="all"/>       
     </class>
     
     <class name="SpaceSequence" table="space_sequence">
-        <id name="id" column="space_id">
-            <generator class="foreign">
-                <param name="property">space</param>
-            </generator>
+        <id name="id" column="id">
+            <generator class="native"/>
         </id>        
         <property name="nextSeqNum" column="next_seq_num"/>
     </class>

@@ -39,7 +39,7 @@ public final class ItemUtils {
     public static String getAsHtml(Item item, HttpServletResponse response) {
         StringBuffer sb = new StringBuffer();
         sb.append("<table width='100%' class='jtrac'>");
-        sb.append("<tr>");
+        sb.append("<tr class='alt'>");
         sb.append("  <td class='label'>ID</td>");
         sb.append("  <td>" + item.getSequenceNum() + "-" + item.getSpace().getPrefixCode() + "</td>");
         sb.append("</tr>");
@@ -79,7 +79,7 @@ public final class ItemUtils {
         sb.append("</tr>");
 
         if (item.getHistory() != null) {
-            row = 0;        
+            row = 1;        
             for(History history : item.getHistory()) {
                 sb.append("<tr valign='top'" + ( row % 2 == 0 ? " class='alt'" : "" ) + ">");            
                 sb.append("  <td>" + history.getStatusText() +"</td>");
