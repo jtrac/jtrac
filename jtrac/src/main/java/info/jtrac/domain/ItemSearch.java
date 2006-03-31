@@ -22,6 +22,8 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 /**
  * Object that holds filter criteria when searching for Items
@@ -36,6 +38,7 @@ public class ItemSearch implements Serializable {
     
     public ItemSearch(Space space) {
         columns = new LinkedHashMap<String, String>();
+        columns.put("refId", "ID");        
         columns.put("summary", "Summary");
         columns.put("loggedByText", "Logged By");
         columns.put("statusText", "Status");
@@ -49,7 +52,8 @@ public class ItemSearch implements Serializable {
     }
     
     public DetachedCriteria getCriteria() {
-        DetachedCriteria criteria = DetachedCriteria.forClass(Item.class);        
+        DetachedCriteria criteria = DetachedCriteria.forClass(Item.class, "item");        
+        criteria.addOrder(Order.desc("id"));
         return criteria;
     }
 

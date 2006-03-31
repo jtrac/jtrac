@@ -1,12 +1,12 @@
 /*
  * Copyright 2002-2005 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,12 +23,10 @@ import java.util.Set;
 import static info.jtrac.domain.Field.Name.*;
 
 /**
- * Generic Item object that can represent a defect, task, etc.
- * An Item is customized by the <code>Metadata</code> of
- * the <code>Space</code> that it belongs to.
+ * Abstract class that serves as base for both Item and History
  */
-public class Item implements Serializable {
-    
+public abstract class AbstractItem implements Serializable {
+
     private long id;
     private long sequenceNum;
     private Integer type;
@@ -66,10 +64,10 @@ public class Item implements Serializable {
     private Date cusTim02;
     private Date cusTim03;
     //=========================
-    
+
     private Set<History> history;
     private Set<Item> children;
-    private Set<Attachment> attachments;    
+    private Set<Attachment> attachments;
 
     // we could have used reflection but doing this way for performance
     public Object getValue(Field.Name fieldName) {
@@ -99,15 +97,15 @@ public class Item implements Serializable {
             case CUS_TIM_03: return cusTim03;
         }
         // should never reach here
-        return null;        
-    }    
-    
+        return null;
+    }
+
     // we could have used reflection but doing this way for performance
     public String getDisplayText(Field.Name fieldName) {
         switch(fieldName) {
             case SEVERITY: return getSeverityText();
             case PRIORITY: return getPriorityText();
-            case CUS_INT_01: return getCusInt01Text(); 
+            case CUS_INT_01: return getCusInt01Text();
             case CUS_INT_02: return getCusInt02Text();
             case CUS_INT_03: return getCusInt03Text();
             case CUS_INT_04: return getCusInt04Text();
@@ -132,86 +130,90 @@ public class Item implements Serializable {
         // should never reach here
         return "";
     }
-    
+
     private String getAsString(Object o) {
         return o == null ? "" : o + "";
     }
-    
+
     private String getCustomValue(Field.Name fieldName, Integer key) {
         // using accessor for space, getSpace() is overridden in subclass History
         return getSpace().getMetadata().getCustomValue(fieldName, key);
     }
-    
+
     //================================================
     public String getStatusText() {
         // using accessor for space, getSpace() is overridden in subclass History
         return getSpace().getMetadata().getStatusValue(status);
     }
-    
+
     public String getLoggedByText() {
         return loggedBy.getName();
     }
-    
+
     public String getAssignedToText() {
         return assignedTo == null ? "" : assignedTo.getName();
-    }    
-    
+    }
+
+    public String getRefId() {
+        return space.getPrefixCode() + "-" + id;
+    }
+
     //================================================
-    
+
     public String getSeverityText() {
         return getCustomValue(SEVERITY, severity);
     }
-    
+
     public String getPriorityText() {
         return getCustomValue(PRIORITY, priority);
     }
-    
+
     public String getCusInt01Text() {
         return getCustomValue(CUS_INT_01, cusInt01);
     }
-    
+
     public String getCusInt02Text() {
         return getCustomValue(CUS_INT_02, cusInt02);
     }
-    
+
     public String getCusInt03Text() {
         return getCustomValue(CUS_INT_03, cusInt03);
     }
-    
+
     public String getCusInt04Text() {
         return getCustomValue(CUS_INT_04, cusInt04);
     }
-    
+
     public String getCusInt05Text() {
         return getCustomValue(CUS_INT_05, cusInt05);
     }
-    
+
     public String getCusInt06Text() {
         return getCustomValue(CUS_INT_06, cusInt06);
     }
-    
+
     public String getCusInt07Text() {
         return getCustomValue(CUS_INT_07, cusInt07);
     }
-    
+
     public String getCusInt08Text() {
         return getCustomValue(CUS_INT_08, cusInt08);
     }
-    
+
     public String getCusInt09Text() {
         return getCustomValue(CUS_INT_09, cusInt09);
     }
-    
+
     public String getCusInt10Text() {
         return getCustomValue(CUS_INT_10, cusInt10);
     }
-    
+
     //======================================================
 
     public Integer getStatus() {
         return status;
-    }    
-    
+    }
+
     public Integer getSeverity() {
         return severity;
     }
@@ -305,15 +307,15 @@ public class Item implements Serializable {
     }
 
     //===============================================================
-    
+
     public void setStatus(Integer status) {
         this.status = status;
     }
 
     public void setSeverity(Integer severity) {
         this.severity = severity;
-    }    
-    
+    }
+
     public void setPriority(Integer priority) {
         this.priority = priority;
     }
@@ -337,11 +339,11 @@ public class Item implements Serializable {
     public void setCusInt05(Integer cusInt05) {
         this.cusInt05 = cusInt05;
     }
-   
+
     public void setCusInt06(Integer cusInt06) {
         this.cusInt06 = cusInt06;
     }
- 
+
     public void setCusInt07(Integer cusInt07) {
         this.cusInt07 = cusInt07;
     }
@@ -400,10 +402,10 @@ public class Item implements Serializable {
 
     public void setCusTim03(Date cusTim03) {
         this.cusTim03 = cusTim03;
-    }        
-    
+    }
+
     //=======================================================================
-    
+
     public long getId() {
         return id;
     }
@@ -491,7 +493,7 @@ public class Item implements Serializable {
     public void setPlannedEffort(Double plannedEffort) {
         this.plannedEffort = plannedEffort;
     }
-    
+
     public Set<History> getHistory() {
         return history;
     }
@@ -514,8 +516,8 @@ public class Item implements Serializable {
 
     public void setAttachments(Set<Attachment> attachments) {
         this.attachments = attachments;
-    }   
-    
+    }
+
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
@@ -557,8 +559,8 @@ public class Item implements Serializable {
         // sb.append("]; history [").append(history);
         // sb.append("]; children [").append(children);
         sb.append("]; attachments [").append(attachments);
-        sb.append("]");                
+        sb.append("]");
         return sb.toString();
     }
-    
+
 }

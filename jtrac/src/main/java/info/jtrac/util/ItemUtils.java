@@ -41,7 +41,7 @@ public final class ItemUtils {
         sb.append("<table width='100%' class='jtrac'>");
         sb.append("<tr class='alt'>");
         sb.append("  <td class='label'>ID</td>");
-        sb.append("  <td>" + item.getSequenceNum() + "-" + item.getSpace().getPrefixCode() + "</td>");
+        sb.append("  <td>" + item.getRefId() + "</td>");
         sb.append("</tr>");
         sb.append("<tr>");
         sb.append("  <td class='label'>Status</td>");

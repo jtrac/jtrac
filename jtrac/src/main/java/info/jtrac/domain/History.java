@@ -22,7 +22,7 @@ package info.jtrac.domain;
  * In this way for each Item, a History view is available which
  * shows the diffs, who made changes and when, etc.
  */
-public class History extends Item {
+public class History extends AbstractItem {
     
     private String comment;
     private Double actualEffort;
