@@ -6,10 +6,17 @@
 
 <c:set var="fields" value="${space.metadata.fields}"/>
 
+<script>
+function setFieldName(fieldName) {
+    document.spaceFieldsForm.fieldName.value = fieldName;
+}
+</script>
+
+<form name="spaceFieldsForm" method="post" action="<c:url value='flow.htm'/>">
+
 <table class="jtrac">
     <tr>
-        <th/>
-        <th/>
+        <th>Move</th>
         <th>Internal Name</th>
         <th>Type</th>
         <th>Optional</th>
@@ -25,8 +32,10 @@
             </c:choose>            
         </c:set>           
         <tr ${rowClass}>
-            <td><input type="submit" name="_eventId_up" value="/\"/></td>
-            <td><input type="submit" name="_eventId_down" value="\/"/></td>
+            <td>
+                <input type="submit" name="_eventId_up" value="/\" onClick="setFieldName('${fieldName}')"/>
+                <input type="submit" name="_eventId_down" value="\/" onClick="setFieldName('${fieldName}')"/>
+            </td>
             <c:set var="field" value="${fields[fieldName]}"/>
             <td>${field.name}</td>
             <td>${field.name.description}</td>
@@ -37,7 +46,7 @@
                     ${entry.value}<br/>
                 </c:forEach>
             </td>
-            <td><input type="submit" name="_eventId_edit" value="Edit"/></td>
+            <td><input type="submit" name="_eventId_edit" value="Edit" onClick="setFieldName('${fieldName}')"/></td>
         </tr>
     </c:forEach>
 </table>
@@ -46,18 +55,18 @@
 
 <span class="info">Choose type of custom field to add:</span>
 
-<form method="post" action="<c:url value='flow.htm'/>">
-    <select name="fieldType">
-        <c:forEach items="${space.metadata.availableFieldTypes}" var="entry">
-            <option value="${entry.key}">${entry.value}</option>
-        </c:forEach>
-    </select>
-    <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
-    <input type="submit" name="_eventId_add" value="Add Field"/>    
-    <p/>
-    <input type="submit" name="_eventId_back" value="Back"/>
-    <input type="submit" name="_eventId_next" value="Next"/>
-    <input type="hidden" name="fieldName"/>
+<select name="fieldType">
+    <c:forEach items="${space.metadata.availableFieldTypes}" var="entry">
+        <option value="${entry.key}">${entry.value}</option>
+    </c:forEach>
+</select>
+<input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
+<input type="submit" name="_eventId_add" value="Add Field"/>    
+<p/>
+<input type="submit" name="_eventId_back" value="Back"/>
+<input type="submit" name="_eventId_next" value="Next"/>
+<input type="hidden" name="fieldName"/>
+
 </form>
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>

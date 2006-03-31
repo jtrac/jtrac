@@ -10,4 +10,6 @@
 
 <a href="<c:url value='space_list.htm'/>">Spaces</a>
 
+<p/>
+
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>

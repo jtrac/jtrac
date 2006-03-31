@@ -158,8 +158,10 @@ public class Metadata implements Serializable {
     }        
     
     public void add(Field field) {
-        fields.put(field.getName(), field);
-        fieldOrder.add(field.getName());
+        fields.put(field.getName(), field); // will overwrite if exists
+        if (!fieldOrder.contains(field.getName())) { // but for List, need to check
+            fieldOrder.add(field.getName());
+        }
         for (Role role : roles.values()) {
             for (State state : role.getStates().values()) {
                 state.add(field.getName());

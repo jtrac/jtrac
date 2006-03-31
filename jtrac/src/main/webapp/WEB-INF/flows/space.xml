@@ -22,6 +22,12 @@
         <transition on="edit" to="spaceFieldForm">
             <action bean="spaceFormAction" method="spaceFieldEditHandler"/>
         </transition>
+        <transition on="up" to="spaceFieldsView">
+            <action bean="spaceFormAction" method="spaceFieldUpHandler"/>
+        </transition>
+        <transition on="down" to="spaceFieldsView">
+            <action bean="spaceFormAction" method="spaceFieldDownHandler"/>
+        </transition>         
         <transition on="next" to="spaceRolesView"/>     
     </view-state>
    

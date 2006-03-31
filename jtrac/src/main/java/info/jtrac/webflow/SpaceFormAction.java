@@ -23,6 +23,7 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import info.jtrac.util.ValidationUtils;
 import info.jtrac.webflow.FieldFormAction.FieldForm;
+import java.util.Collections;
 import java.util.List;
 import org.acegisecurity.context.SecurityContextHolder;
 
@@ -96,9 +97,25 @@ public class SpaceFormAction extends AbstractFormAction {
         return success();
     }
     
+    public Event spaceFieldUpHandler(RequestContext context) {
+        Space space = (Space) context.getFlowScope().get("space");
+        String fieldName = ValidationUtils.getParameter(context, "fieldName");
+        Collections.rotate(space.getMetadata().getFieldOrder(), -1);
+        context.getRequestScope().put("selectedFieldName", fieldName);
+        return success();
+    }
+    
+    public Event spaceFieldDownHandler(RequestContext context) {
+        Space space = (Space) context.getFlowScope().get("space");
+        String fieldName = ValidationUtils.getParameter(context, "fieldName");
+        Collections.rotate(space.getMetadata().getFieldOrder(), 1);
+        context.getRequestScope().put("selectedFieldName", fieldName);
+        return success();
+    }    
+    
     public Event spaceFieldAddHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
-        String fieldType = (String) context.getRequestParameters().get("fieldType");
+        String fieldType = ValidationUtils.getParameter(context, "fieldType");
         if (fieldType == null) {
             // no fields left, just return to the space details screen
             return error();
@@ -112,7 +129,7 @@ public class SpaceFormAction extends AbstractFormAction {
     
     public Event spaceFieldEditHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
-        String fieldName = (String) context.getRequestParameters().get("fieldName");    
+        String fieldName = ValidationUtils.getParameter(context, "fieldName");    
         Field field = space.getMetadata().getField(fieldName).getClone();
         FieldForm fieldForm = new FieldForm();
         fieldForm.setField(field);            
