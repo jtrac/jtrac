@@ -14,7 +14,7 @@ function setDeallocate(userId) {
 
 <table class="jtrac">
 
-    <tr><th>Login Name (Name)</th><th>Role</th><th>Remove</th></tr>
+    <tr><th>Login Name</th><th>Full Name</th><th>Role</th><th>Remove</th></tr>
     
     <c:forEach items="${userRoles}" var="userRole" varStatus="row">
         <c:set var="rowClass">
@@ -25,7 +25,8 @@ function setDeallocate(userId) {
         </c:set>    
 
         <tr>
-            <td>${userRole.user.loginName} (${userRole.user.name})</td>
+            <td>${userRole.user.loginName}</td>
+            <td>${userRole.user.name}</td>
             <td>${userRole.roleKey}</td>
             <td align="center">
                 <input type="submit" name="_eventId_deallocate" value="X" onClick="setDeallocate('${userRole.user.id}')"/>
@@ -57,7 +58,7 @@ function setDeallocate(userId) {
         <th>Role</th>
         <td>
             <select name="roleKey">
-                <c:forEach items="${space.metadata.roleSet}" var="role">
+                <c:forEach items="${space.metadata.roleList}" var="role">
                     <option>${role.name}</option>
                 </c:forEach>
             </select>

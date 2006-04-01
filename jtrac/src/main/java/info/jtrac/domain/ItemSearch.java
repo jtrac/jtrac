@@ -19,45 +19,33 @@ package info.jtrac.domain;
 import static info.jtrac.Constants.*;
 
 import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 
 /**
  * Object that holds filter criteria when searching for Items
  */
 public class ItemSearch implements Serializable {
     
-    private Map<String, String> columns;
+    private List<Field> fields;
     
     public ItemSearch() {
         
     }
     
     public ItemSearch(Space space) {
-        columns = new LinkedHashMap<String, String>();     
-        columns.put("summary", "Summary");
-        columns.put("loggedByText", "Logged By");
-        columns.put("statusText", "Status");
-        columns.put("assignedToText", "Assigned To");
-        Map<Field.Name, Field> fields = space.getMetadata().getFields();
-        for(Field.Name fieldName : space.getMetadata().getFieldOrder()) {
-            Field field = fields.get(fieldName);
-            columns.put(fieldName + "Text", field.getLabel());
-        }
-        columns.put("timeStamp", "Time Stamp");
-    }
+        fields = space.getMetadata().getFieldList();
+    }    
+    
+    public List<Field> getFields() {
+        return fields;
+    }    
     
     public DetachedCriteria getCriteria() {
         DetachedCriteria criteria = DetachedCriteria.forClass(Item.class, "item");        
         criteria.addOrder(Order.desc("id"));
         return criteria;
-    }
-
-    public Map<String, String> getColumns() {
-        return columns;
     }
     
 }

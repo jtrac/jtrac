@@ -21,12 +21,12 @@ import static info.jtrac.Constants.*;
 import info.jtrac.util.XmlUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +46,7 @@ import org.dom4j.Element;
  * - Label
  * - whether mandatory or not
  * - the option values (drop down list options)
- * - the option "key" values are stored in the database
+ * - the option "key" values are stored in the database (WITHOUT any relationships)
  * - the values corresponding to "key"s are resolved from the Metadata
  *   and not through a database join.
  *
@@ -75,11 +75,7 @@ public class Metadata implements Serializable {
     private Map<Field.Name, Field> fields;
     private Map<String, Role> roles;
     private Map<Integer, String> states;
-    private List<Field.Name> fieldOrder;
-    
-    public Metadata() {
-        init();
-    }
+    private List<Field.Name> fieldOrder;    
     
     private void init() {
         fields = new EnumMap<Field.Name, Field>(Field.Name.class);
@@ -147,6 +143,7 @@ public class Metadata implements Serializable {
     //====================================================================
     
     public void initRoles() {
+        init();
         states.put(State.NEW, "New");
         states.put(State.OPEN, "Open");
         states.put(State.CLOSED, "Closed");
@@ -189,7 +186,7 @@ public class Metadata implements Serializable {
     
     public void addRole(String name) {
         Role role = new Role(name);
-        for (Map.Entry<Integer, String> entry: states.entrySet()) {
+        for (Map.Entry<Integer, String> entry : states.entrySet()) {
             State state = new State(entry.getKey());
             state.add(fields.keySet());
             role.add(state);
@@ -232,14 +229,18 @@ public class Metadata implements Serializable {
     }    
     
     // to make JSTL easier
-    public Collection<Role> getRoleSet() {
+    public Collection<Role> getRoleList() {
         return roles.values();
     }
     
-    // to make JSTL easier
-    public Collection<Field> getFieldSet() {
-        return getFields().values();
-    }    
+    public List<Field> getFieldList() {
+        Map<Field.Name, Field> map = getFields();
+        List<Field> list = new ArrayList(fields.size());
+        for (Field.Name fieldName : getFieldOrder()) {
+            list.add(fields.get(fieldName));
+        }
+        return list;
+    } 
     
     public String getCustomValue(Field.Name fieldName, Integer key) {
         return getCustomValue(fieldName,  key + "");
@@ -274,6 +275,28 @@ public class Metadata implements Serializable {
     
     public int getStatesCount() {
         return states.size();
+    }
+    
+    /**
+     * logic for resolving the next possible transitions for a given role and state     
+     * - lookup Role by roleKey
+     * - for this Role, lookup state by key (integer)
+     * - for the State, iterate over transitions, get the label for each and add to map     
+     */        
+    public Map<Integer, String> getPermittedTransitions(List<String> roleKeys, int status) {
+        Map<Integer, String> map = new LinkedHashMap<Integer, String>();
+        for(String roleKey : roleKeys) {
+            Role role = roles.get(roleKey);
+            if (role != null) {
+                State state = role.getStates().get(status);
+                if (state != null) {
+                    for(int transition : state.getTransitions()) {
+                        map.put(transition, this.states.get(transition));
+                    }
+                }
+            }
+        }
+        return map;
     }
     
     //==================================================================

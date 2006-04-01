@@ -39,6 +39,7 @@
         <tr>
             <td class="label">
                 ${field.label}
+                <c:if test="${field.optional}">&nbsp;</c:if>
                 <c:if test="${!field.optional}"><font color="red">*</font></c:if>              
             </td>
             <c:set var="bindPath">item.${fieldName}</c:set>

@@ -16,12 +16,102 @@
 
 package info.jtrac.domain;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * This object represents a generic item which can be an issue, defect, task etc.
- * all logic is contained in the AbstractItem class, the separate inheritance
- * hierarchy for Item and History is to reduce confusion when using Hibernate queries
+ * some login for field accessors and conversion of keys to display values 
+ * is contained in the AbstractItem class
  */
 public class Item extends AbstractItem {
 
+    private Integer type;
+    private Space space;
+    private long sequenceNum;
+    
+    private Set<History> history;
+    private Set<Item> children;
+    private Set<Attachment> attachments;
+    private Set<ItemUser> itemUsers;
+    
+    public String getRefId() {
+        return getSpace().getPrefixCode() + "-" + sequenceNum;
+    }    
+    
+    public Map<Integer, String> getPermittedTransitions(User user) {
+        return user.getPermittedTransitions(space, getStatus());        
+    }
+    
+    //===========================================================
+    
+    @Override
+    public Space getSpace() {
+        return space;
+    }    
+    
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public void setSpace(Space space) {
+        this.space = space;
+    }    
+    
+    public long getSequenceNum() {
+        return sequenceNum;
+    }
+
+    public void setSequenceNum(long sequenceNum) {
+        this.sequenceNum = sequenceNum;
+    }     
+    
+    public Set<History> getHistory() {
+        return history;
+    }
+
+    public void setHistory(Set<History> history) {
+        this.history = history;
+    }
+
+    public Set<Item> getChildren() {
+        return children;
+    }
+
+    public void setChildren(Set<Item> children) {
+        this.children = children;
+    }
+
+    public Set<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(Set<Attachment> attachments) {
+        this.attachments = attachments;
+    }    
+    
+    public Set<ItemUser> getItemUsers() {
+        return itemUsers;
+    }
+
+    public void setItemUsers(Set<ItemUser> itemUsers) {
+        this.itemUsers = itemUsers;
+    }    
+    
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append(super.toString());
+        sb.append("type [").append(type);
+        sb.append("]; space [").append(space);
+        sb.append("]; sequenceNum [").append(sequenceNum);
+        sb.append("]");
+        return sb.toString();
+    }
     
 }

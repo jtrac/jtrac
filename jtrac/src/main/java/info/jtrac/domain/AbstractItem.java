@@ -18,26 +18,24 @@ package info.jtrac.domain;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
 
 import static info.jtrac.domain.Field.Name.*;
+import info.jtrac.util.DateUtils;
 
 /**
  * Abstract class that serves as base for both Item and History
+ * this contains the fields that are common to both and persisted
  */
-public abstract class AbstractItem implements Serializable {
+public abstract class AbstractItem implements Serializable {    
 
     private long id;
-    private long sequenceNum;
-    private Integer type;
-    private Item parent;
-    private Space space;
+    private Item parent; // slightly different meaning for Item and History
     private String summary;
     private String detail;
     private User loggedBy;
     private User assignedTo;
     private Date timeStamp;
-    private Double plannedEffort;
+    private Double plannedEffort;  
     //===========================
     private Integer status;
     private Integer severity;
@@ -62,13 +60,10 @@ public abstract class AbstractItem implements Serializable {
     private String cusStr05;
     private Date cusTim01;
     private Date cusTim02;
-    private Date cusTim03;
-    //=========================
+    private Date cusTim03;    
 
-    private Set<History> history;
-    private Set<Item> children;
-    private Set<Attachment> attachments;
 
+    
     // we could have used reflection but doing this way for performance
     public Object getValue(Field.Name fieldName) {
         switch(fieldName) {
@@ -99,117 +94,33 @@ public abstract class AbstractItem implements Serializable {
         // should never reach here
         return null;
     }
-
-    // we could have used reflection but doing this way for performance
-    public String getDisplayText(Field.Name fieldName) {
-        switch(fieldName) {
-            case SEVERITY: return getSeverityText();
-            case PRIORITY: return getPriorityText();
-            case CUS_INT_01: return getCusInt01Text();
-            case CUS_INT_02: return getCusInt02Text();
-            case CUS_INT_03: return getCusInt03Text();
-            case CUS_INT_04: return getCusInt04Text();
-            case CUS_INT_05: return getCusInt05Text();
-            case CUS_INT_06: return getCusInt06Text();
-            case CUS_INT_07: return getCusInt07Text();
-            case CUS_INT_08: return getCusInt08Text();
-            case CUS_INT_09: return getCusInt09Text();
-            case CUS_INT_10: return getCusInt10Text();
-            case CUS_DBL_01: return getAsString(cusDbl01);
-            case CUS_DBL_02: return getAsString(cusDbl02);
-            case CUS_DBL_03: return getAsString(cusDbl03);
-            case CUS_STR_01: return getAsString(cusStr01);
-            case CUS_STR_02: return getAsString(cusStr02);
-            case CUS_STR_03: return getAsString(cusStr03);
-            case CUS_STR_04: return getAsString(cusStr04);
-            case CUS_STR_05: return getAsString(cusStr05);
-            case CUS_TIM_01: return getAsString(cusTim01);
-            case CUS_TIM_02: return getAsString(cusTim02);
-            case CUS_TIM_03: return getAsString(cusTim03);
-        }
-        // should never reach here
-        return "";
-    }
-
-    private String getAsString(Object o) {
-        return o == null ? "" : o + "";
-    }
-
-    private String getCustomValue(Field.Name fieldName, Integer key) {
+    
+    // has to be overridden
+    public abstract Space getSpace();
+    
+    public String getCustomValue(Field.Name fieldName) {
         // using accessor for space, getSpace() is overridden in subclass History
-        return getSpace().getMetadata().getCustomValue(fieldName, key);
+        if (fieldName.getType() <= 3) {            
+            return getSpace().getMetadata().getCustomValue(fieldName, (Integer) getValue(fieldName));
+        } else {
+            Object o = getValue(fieldName);
+            if (o == null) {
+                return "";
+            }
+            if (o instanceof Date) {
+                return DateUtils.format((Date) o); 
+            }
+            return o.toString();
+        }
     }
 
-    //================================================
-    public String getStatusText() {
+    public String getStatusValue() {
         // using accessor for space, getSpace() is overridden in subclass History
         return getSpace().getMetadata().getStatusValue(status);
     }
-
-    public String getLoggedByText() {
-        return loggedBy.getName();
-    }
-
-    public String getAssignedToText() {
-        return assignedTo == null ? "" : assignedTo.getName();
-    }
-
-    public String getRefId() {
-        return space.getPrefixCode() + "-" + id;
-    }
-
-    //================================================
-
-    public String getSeverityText() {
-        return getCustomValue(SEVERITY, severity);
-    }
-
-    public String getPriorityText() {
-        return getCustomValue(PRIORITY, priority);
-    }
-
-    public String getCusInt01Text() {
-        return getCustomValue(CUS_INT_01, cusInt01);
-    }
-
-    public String getCusInt02Text() {
-        return getCustomValue(CUS_INT_02, cusInt02);
-    }
-
-    public String getCusInt03Text() {
-        return getCustomValue(CUS_INT_03, cusInt03);
-    }
-
-    public String getCusInt04Text() {
-        return getCustomValue(CUS_INT_04, cusInt04);
-    }
-
-    public String getCusInt05Text() {
-        return getCustomValue(CUS_INT_05, cusInt05);
-    }
-
-    public String getCusInt06Text() {
-        return getCustomValue(CUS_INT_06, cusInt06);
-    }
-
-    public String getCusInt07Text() {
-        return getCustomValue(CUS_INT_07, cusInt07);
-    }
-
-    public String getCusInt08Text() {
-        return getCustomValue(CUS_INT_08, cusInt08);
-    }
-
-    public String getCusInt09Text() {
-        return getCustomValue(CUS_INT_09, cusInt09);
-    }
-
-    public String getCusInt10Text() {
-        return getCustomValue(CUS_INT_10, cusInt10);
-    }
-
-    //======================================================
-
+    
+    //===================================================
+    
     public Integer getStatus() {
         return status;
     }
@@ -414,36 +325,12 @@ public abstract class AbstractItem implements Serializable {
         this.id = id;
     }
 
-    public long getSequenceNum() {
-        return sequenceNum;
-    }
-
-    public void setSequenceNum(long sequenceNum) {
-        this.sequenceNum = sequenceNum;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
     public Item getParent() {
         return parent;
     }
 
     public void setParent(Item parent) {
         this.parent = parent;
-    }
-
-    public Space getSpace() {
-        return space;
-    }
-
-    public void setSpace(Space space) {
-        this.space = space;
     }
 
     public String getSummary() {
@@ -492,47 +379,19 @@ public abstract class AbstractItem implements Serializable {
 
     public void setPlannedEffort(Double plannedEffort) {
         this.plannedEffort = plannedEffort;
-    }
-
-    public Set<History> getHistory() {
-        return history;
-    }
-
-    public void setHistory(Set<History> history) {
-        this.history = history;
-    }
-
-    public Set<Item> getChildren() {
-        return children;
-    }
-
-    public void setChildren(Set<Item> children) {
-        this.children = children;
-    }
-
-    public Set<Attachment> getAttachments() {
-        return attachments;
-    }
-
-    public void setAttachments(Set<Attachment> attachments) {
-        this.attachments = attachments;
-    }
-
+    }    
+    
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("id [").append(id);
-        sb.append("]; sequenceNum [").append(sequenceNum);
-        sb.append("]; type [").append(type);
         // sb.append("]; parent [").append(parent);
-        sb.append("]; space [").append(space);
         sb.append("]; summary [").append(summary);
         sb.append("]; detail [").append(detail);
         sb.append("]; loggedBy [").append(loggedBy);
-        sb.append("]; assignedTo [").append(assignedTo);
-        sb.append("]; timeStamp [").append(timeStamp);
-        sb.append("]; plannedEffort [").append(plannedEffort);
         sb.append("]; status [").append(status);
+        sb.append("]; assignedTo [").append(assignedTo);
+        sb.append("]; timeStamp [").append(timeStamp);        
         sb.append("]; severity [").append(severity);
         sb.append("]; priority [").append(priority);
         sb.append("]; cusInt01 [").append(cusInt01);
@@ -556,9 +415,6 @@ public abstract class AbstractItem implements Serializable {
         sb.append("]; cusTim01 [").append(cusTim01);
         sb.append("]; cusTim02 [").append(cusTim02);
         sb.append("]; cusTim03 [").append(cusTim03);
-        // sb.append("]; history [").append(history);
-        // sb.append("]; children [").append(children);
-        sb.append("]; attachments [").append(attachments);
         sb.append("]");
         return sb.toString();
     }

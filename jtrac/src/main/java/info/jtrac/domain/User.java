@@ -20,6 +20,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.acegisecurity.GrantedAuthority;
@@ -63,6 +65,16 @@ public class User implements UserDetails, Serializable {
             }
         }
         spaceRoles.removeAll(remove);
+    }
+    
+    public Map<Integer, String> getPermittedTransitions(Space space, int status) {
+        List<String> roleKeys = new ArrayList<String>();
+        for(SpaceRole sr : spaceRoles) {
+            if (sr.getSpace().equals(space)) {
+                roleKeys.add(sr.getRoleKey());
+            }
+        }
+        return space.getMetadata().getPermittedTransitions(roleKeys, status);
     }
     
     //============ ACEGI UserDetails implementation ===============

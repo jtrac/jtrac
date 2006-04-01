@@ -14,8 +14,8 @@
         <td>
             <select name="status">
                 <option/>
-                <c:forEach items="${item.space.metadata.states}" var="stateEntry">
-                    <option value="${stateEntry.key}">${stateEntry.value}</option>
+                <c:forEach items="${transitions}" var="transitionEntry">
+                    <option value="${transitionEntry.key}">${transitionEntry.value}</option>
                 </c:forEach>
             </select>
         </td>        

@@ -5,8 +5,8 @@
 <p/>
 
 <c:set var="states" value="${space.metadata.states}"/>
-<c:set var="roles" value="${space.metadata.roleSet}"/>
-<c:set var="fields" value="${space.metadata.fieldSet}"/>
+<c:set var="roles" value="${space.metadata.roleList}"/>
+<c:set var="fields" value="${space.metadata.fieldList}"/>
 <c:set var="rolesCount" value="${space.metadata.rolesCount}"/>
 <c:set var="fieldsCount" value="${space.metadata.fieldsCount}"/>
 <c:set var="statesCount" value="${space.metadata.statesCount}"/>

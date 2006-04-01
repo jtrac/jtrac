@@ -19,9 +19,11 @@ package info.jtrac.webflow;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.Space;
+import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import info.jtrac.util.ValidationUtils;
 import java.util.List;
+import org.acegisecurity.context.SecurityContextHolder;
 import org.springframework.webflow.Event;
 import org.springframework.webflow.RequestContext;
 import org.springframework.webflow.ScopeType;
@@ -46,9 +48,12 @@ public class ItemViewFormAction extends AbstractFormAction {
             long id = Long.parseLong(itemId);
             item = jtrac.loadItem(id);
         }
-        List<UserRole> userRoles = jtrac.findUsersForSpace(item.getSpace().getId());                
+        List<UserRole> userRoles = jtrac.findUsersForSpace(item.getSpace().getId());
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Space space = item.getSpace();
+        context.getFlowScope().put("transitions", item.getPermittedTransitions(user));
         context.getFlowScope().put("item", item);
-        context.getRequestScope().put("userRoles", userRoles);        
+        context.getFlowScope().put("userRoles", userRoles);        
         return new History();
     }     
     

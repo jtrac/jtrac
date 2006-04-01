@@ -15,22 +15,15 @@
         <br/>
 
         <table class="jtrac">
-        	<tr>
-        		<td class="info">Logout Successful.  Any active "remember me" sessions have been disabled.</td>
-        	</tr>
-        	<tr>
-        		<td><br/></td>
-    		</tr>
-        	<tr>
-        		<td class="info" align="center"><a href="<c:url value='login.htm'/>">Login</a></td>
-        	</tr>
-   		</table>
+            <tr>
+                <td class="info">Logout Successful.  Any active "remember me" sessions have been disabled.</td>
+            </tr>
+            <tr>
+                <td><br/></td>
+            </tr>
+            <tr>
+                <td class="info" align="center"><a href="<c:url value='login.htm'/>">Login</a></td>
+            </tr>
+        </table>        
         
-        <br/>
-        <br/>
-        <hr/>
-        
-        <table width="100%" class="jtrac"><tr class="alt"><td><br/></td></tr></table>
-        
-    </body>
-</html>
+<%@ include file="/WEB-INF/jsp/footer.jsp" %>

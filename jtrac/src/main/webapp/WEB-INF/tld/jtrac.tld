@@ -40,6 +40,22 @@
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-    </tag>    
+    </tag>
+    
+    <tag>
+        <name>itemlist</name>
+        <tag-class>info.jtrac.web.tag.ItemList</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>items</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>itemSearch</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>      
+    </tag>     
     
 </taglib>

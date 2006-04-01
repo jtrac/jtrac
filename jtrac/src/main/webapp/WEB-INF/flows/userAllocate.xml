@@ -11,6 +11,9 @@
         <transition on="next" to="userAllocateSpaceRole">
             <action bean="userFormAction" method="userAllocateSpaceRoleSetup"/>
         </transition>
+        <transition on="deallocate" to="userAllocateSpace">
+            <action bean="userFormAction" method="userDeallocateHandler"/>
+        </transition>        
         <transition on="cancel" to="userListView"/>
     </view-state>  
     

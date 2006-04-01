@@ -61,8 +61,8 @@ public class MetadataTest extends TestCase {
         assertEquals("New", m.getStatusValue(0));
         assertEquals("Open", m.getStatusValue(1));
         assertEquals("Closed", m.getStatusValue(99));
-        assertEquals("", m.getStatusValue(50));
-        
-    }
+        assertEquals("", m.getStatusValue(50));        
+    }    
+    
     
 }

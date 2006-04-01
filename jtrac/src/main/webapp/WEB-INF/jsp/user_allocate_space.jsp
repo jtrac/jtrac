@@ -1,10 +1,16 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
+<script>
+function setDeallocate(spaceId) {
+    document.userAllocateForm.deallocate.value = spaceId;
+}
+</script>
+
 <span class="info">Spaces allocated to User: ${user.loginName} (${user.name})</span>
 
 <p/>
 
-<form method="post" action="<c:url value='flow.htm'/>">
+<form name="userAllocateForm" method="post" action="<c:url value='flow.htm'/>">
 
 <table class="jtrac">
 
@@ -22,10 +28,7 @@
             <td>${spaceRole.space.prefixCode}</td>
             <td>${spaceRole.roleKey}</td>
             <td align="center">
-                <a href="<c:url value='flow.htm'>
-                    <c:param name='_eventId' value='deallocate'/>
-                    <c:param name='_flowExecutionKey' value='${flowExecutionKey}'/>
-                    <c:param name='spaceId' value='${spaceRole.space.id}'/></c:url>">(X)</a>                
+               <input type="submit" name="_eventId_deallocate" value="X" onClick="setDeallocate('${spaceRole.space.id}')"/>
             </td>
         </tr>
 
@@ -50,8 +53,8 @@
 <p/>
 
 <input type="submit" name="_eventId_cancel" value="Cancel"/>
-
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
+<input type="hidden" name="deallocate"/>
 
 </form>
 

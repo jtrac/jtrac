@@ -49,12 +49,6 @@
                     </td>
                 </tr>                                              
             </table>
-        </form>
+        </form>      
         
-        <br/>
-        <hr/>
-        
-        <table width="100%" class="jtrac"><tr class="alt"><td><br/></td></tr></table>
-        
-    </body>
-</html>
+<%@ include file="/WEB-INF/jsp/footer.jsp" %>
