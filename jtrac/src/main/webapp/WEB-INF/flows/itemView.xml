@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
+	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
+
+<flow start-state="itemViewForm">  
+    
+    <view-state id="itemViewForm" view="item_view_form">
+        <entry-actions>
+            <action bean="itemViewFormAction" method="setupForm"/>
+        </entry-actions>
+        <transition on="submit" to="itemViewForm">
+            <action bean="itemViewFormAction" method="itemViewHandler"/>
+        </transition>
+        <transition on="cancel" to="itemForm"/>
+    </view-state>  
+    
+    <end-state id="itemForm" view="item_form"/>
+    
+</flow>
+

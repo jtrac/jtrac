@@ -210,5 +210,17 @@ public class SpaceFormAction extends AbstractFormAction {
         SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
         return success();
     }    
+
+    public Event spaceDeallocateHandler(RequestContext context) {
+        String userId = ValidationUtils.getParameter(context, "deallocate");
+        int id = Integer.parseInt(userId);
+        User user = jtrac.loadUser(id);
+        Space space = (Space) context.getFlowScope().get("space");
+        user.removeSpace(space);
+        jtrac.storeUser(user);
+        // effectively forces the Acegi Security Context to reload
+        SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
+        return success();
+    }     
     
 }

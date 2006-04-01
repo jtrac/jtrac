@@ -12,7 +12,10 @@
 
     <table class="jtrac">
         <tr>
-            <td class="label">Login ID</td>
+            <td class="label">
+                Login ID
+                <font color="red">*</font>
+            </td>
             <spring:bind path="userForm.user.loginName">        
                 <td>
                     <input name="${status.expression}" value="${status.value}" id="focus" size="15"/>
@@ -21,7 +24,10 @@
             </spring:bind>
         </tr>
         <tr>
-            <td class="label">Full Name</td>
+            <td class="label">
+                Full Name
+                <font color="red">*</font>
+            </td>
             <spring:bind path="userForm.user.name">
                 <td>
                     <input name="${status.expression}" value="${status.value}" size="35"/>
@@ -30,7 +36,10 @@
             </spring:bind>
         </tr>
         <tr>
-            <td class="label">E Mail ID</td>
+            <td class="label">
+                E Mail ID
+                <font color="red">*</font>
+            </td>
             <spring:bind path="userForm.user.email">
                 <td>
                     <input name="${status.expression}" value="${status.value}" size="35"/>

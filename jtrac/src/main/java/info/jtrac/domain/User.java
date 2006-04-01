@@ -55,6 +55,16 @@ public class User implements UserDetails, Serializable {
         spaceRoles.add(new SpaceRole(space, roleKey));
     }
     
+    public void removeSpace(Space space) {
+        Set<SpaceRole> remove = new HashSet<SpaceRole>();
+        for(SpaceRole sr : spaceRoles) {
+            if (sr.getSpace().equals(space)) {
+                remove.add(sr);
+            }
+        }
+        spaceRoles.removeAll(remove);
+    }
+    
     //============ ACEGI UserDetails implementation ===============
     
     public boolean isAccountNonExpired() {

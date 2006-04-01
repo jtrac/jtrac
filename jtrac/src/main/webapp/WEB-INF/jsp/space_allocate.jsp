@@ -1,10 +1,14 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<form method="post" action="<c:url value='flow.htm'/>">
+<script>
+function setDeallocate(userId) {
+    document.spaceAllocateForm.deallocate.value = userId;
+}
+</script>
+
+<form name="spaceAllocateForm" method="post" action="<c:url value='flow.htm'/>">
 
 <span class="info">Users allocated to Space: ${space.prefixCode}</span>
-
-<input type="submit" name="_eventId_userCreate" value="Create New User"/>
 
 <p/>
 
@@ -24,10 +28,7 @@
             <td>${userRole.user.loginName} (${userRole.user.name})</td>
             <td>${userRole.roleKey}</td>
             <td align="center">
-                <a href="<c:url value='flow.htm'>
-                    <c:param name='_eventId' value='deallocate'/>
-                    <c:param name='_flowExecutionKey' value='${flowExecutionKey}'/>
-                    <c:param name='userId' value='${userRole.user.id}'/></c:url>">(X)</a>                
+                <input type="submit" name="_eventId_deallocate" value="X" onClick="setDeallocate('${userRole.user.id}')"/>
             </td>
         </tr>
 
@@ -39,7 +40,6 @@
 
 <span class="info">Choose User and Role to allocate:</span>
 
-
 <table class="jtrac">
         
     <tr>
@@ -49,7 +49,8 @@
                 <c:forEach items="${unallocatedUsers}" var="user">
                     <option value="${user.id}">${user.loginName} (${user.name})</option>
                 </c:forEach>
-            </select>        
+            </select>
+            <input type="submit" name="_eventId_userCreate" value="Create New User"/>
         </td>
     </tr>
     <tr>
@@ -69,7 +70,7 @@
 <p/>
 
 <input type="submit" name="_eventId_cancel" value="Cancel"/>
-
+<input type="hidden" name="deallocate"/>
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 
 </form>

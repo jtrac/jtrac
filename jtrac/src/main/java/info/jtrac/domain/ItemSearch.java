@@ -37,8 +37,7 @@ public class ItemSearch implements Serializable {
     }
     
     public ItemSearch(Space space) {
-        columns = new LinkedHashMap<String, String>();
-        columns.put("refId", "ID");        
+        columns = new LinkedHashMap<String, String>();     
         columns.put("summary", "Summary");
         columns.put("loggedByText", "Logged By");
         columns.put("statusText", "Status");

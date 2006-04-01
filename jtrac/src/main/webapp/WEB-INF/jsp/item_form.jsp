@@ -77,7 +77,7 @@
     
     <tr>    
         <td class="label">
-            Assigned To
+            Assign To
             <font color="red">*</font>
         </td>    
         <td>

@@ -11,6 +11,9 @@
         <transition on="allocate" to="spaceAllocate">
             <action bean="spaceFormAction" method="spaceAllocateHandler"/>
         </transition>
+        <transition on="deallocate" to="spaceAllocate">
+            <action bean="spaceFormAction" method="spaceDeallocateHandler"/>
+        </transition>        
         <transition on="cancel" to="spaceListView"/>
         <transition on="userCreate" to="userForm"/>
     </view-state>   

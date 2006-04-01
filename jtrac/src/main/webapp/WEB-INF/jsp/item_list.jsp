@@ -5,6 +5,7 @@
 <table class="jtrac">
 
 <tr>    
+    <th>ID</th>
 <c:forEach items="${itemSearch.columns}" var="columnEntry">
     <th>${columnEntry.value}</th>
 </c:forEach>    
@@ -18,6 +19,12 @@
         </c:choose>            
     </c:set>    
     <tr ${rowClass}>
+        <td>
+            <a href="<c:url value='flow.htm'>
+                <c:param name='_flowId' value='itemView'/>
+                <c:param name='itemId' value='${item.id}'/>                
+                </c:url>">${item.refId}</a>            
+        </td>
         <c:forEach items="${itemSearch.columns}" var="columnEntry">
             <td>${item[columnEntry.key]}</td>
         </c:forEach>          

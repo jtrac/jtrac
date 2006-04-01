@@ -1,16 +1,16 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Custom Fields for Space: ${space.prefixCode}</span>
-
-<p/>
-
-<c:set var="fields" value="${space.metadata.fields}"/>
-
 <script>
 function setFieldName(fieldName) {
     document.spaceFieldsForm.fieldName.value = fieldName;
 }
 </script>
+
+<span class="info">Custom Fields for Space: ${space.prefixCode}</span>
+
+<p/>
+
+<c:set var="fields" value="${space.metadata.fields}"/>
 
 <form name="spaceFieldsForm" method="post" action="<c:url value='flow.htm'/>">
 

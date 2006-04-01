@@ -10,7 +10,10 @@
             <td>${fieldForm.field.name}</td>
         </tr>
         <tr>
-            <td class="label">Label</td>
+            <td class="label">
+                Label
+                <font color="red">*</font>
+            </td>
             <spring:bind path="fieldForm.field.label">
                 <td>
                     <input name="${status.expression}" value="${status.value}"/>

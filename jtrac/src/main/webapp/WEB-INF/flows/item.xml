@@ -8,13 +8,18 @@
         <entry-actions>
             <action bean="itemFormAction" method="setupForm"/>
         </entry-actions>
-        <transition on="submit" to="itemView">
+        <transition on="submit" to="itemViewForm">
             <action bean="itemFormAction" method="bind"/>
             <action bean="itemFormAction" method="itemFormHandler"/>
         </transition>
     </view-state>    
     
-    <end-state id="itemView" view="item_view"/>    
+    <subflow-state id="itemViewForm" flow="itemView">
+        <attribute-mapper>
+            <input-mapping name="item"/>
+        </attribute-mapper>
+        <transition on="itemForm" to="itemForm"/>
+    </subflow-state>    
     
 </flow>
 

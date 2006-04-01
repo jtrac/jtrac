@@ -83,7 +83,7 @@
     - The flow id of the flow to start should be passed in 
     - using the "_flowId" request parameter
     -->
-    <bean id="flowController" class="org.springframework.webflow.executor.mvc.FlowController">
+    <bean id="flowController" class="org.springframework.webflow.executor.mvc.FlowController">       
         <property name="flowExecutor">
             <bean class="org.springframework.webflow.executor.FlowExecutorImpl">
                 <constructor-arg>
@@ -98,6 +98,10 @@
     <bean id="itemFormAction" class="info.jtrac.webflow.ItemFormAction">
         <property name="jtrac" ref="jtrac"/>
     </bean>    
+    
+    <bean id="itemViewFormAction" class="info.jtrac.webflow.ItemViewFormAction">
+        <property name="jtrac" ref="jtrac"/>
+    </bean>      
     
     <bean id="userFormAction" class="info.jtrac.webflow.UserFormAction">
         <property name="jtrac" ref="jtrac"/>

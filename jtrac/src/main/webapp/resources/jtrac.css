@@ -1,4 +1,4 @@
-body { font-size: 80%; font-family: Arial; background: url("greyback.gif"); }
+body { font-size: 80%; font-family: Arial; background: url("greyback.jpg"); }
 table.jtrac tr { font-size: 80%; }
 table.jtrac th, .label { background: #CCCCCC; padding-left: 0.2em; padding-right: 0.2em; }
 tr.center td { text-align: center; }
@@ -8,7 +8,7 @@ a:hover { color: red; }
 .multiselect { height: 12em; overflow: auto; background: white; text-align: left; border: solid thin; }
 .error { color: red; font-weight: bold; }
 .info { color: blue; font-weight: bold; }
-.alt, .header, .footer { background: #DEDEFF; } 
+.alt { background: #DEDEFF; } 
 .selected { background: #ADD8E6; }
 .bdr-bottom, tr.bdr-bottom td { border-bottom: thin solid grey; }
 .nav-table-outer, .nav-table-outer tr { font-size: 80%; background-color: #CCCCCC; }

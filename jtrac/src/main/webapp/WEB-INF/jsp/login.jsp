@@ -16,7 +16,7 @@
     </head>
     <body onLoad="setFocus()">
         
-        <table width="100%" class="jtrac"><tr class="header"><td>JTrac</td></tr></table>
+        <table width="100%" class="jtrac"><tr class="alt"><td>JTrac</td></tr></table>
         
         <hr/>
         <br/>  
@@ -54,7 +54,7 @@
         <br/>
         <hr/>
         
-        <table width="100%" class="jtrac"><tr class="footer"><td><br/></td></tr></table>
+        <table width="100%" class="jtrac"><tr class="alt"><td><br/></td></tr></table>
         
     </body>
 </html>

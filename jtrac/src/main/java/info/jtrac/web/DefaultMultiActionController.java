@@ -16,10 +16,13 @@
 
 package info.jtrac.web;
 
+import info.jtrac.domain.Item;
+import info.jtrac.domain.UserRole;
 import info.jtrac.util.SvnUtils;
 
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -71,7 +74,7 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
     public ModelAndView optionsHandler(HttpServletRequest request,
             HttpServletResponse response) {
         return new ModelAndView("options");
-    }    
+    }   
     
     public ModelAndView svnFormHandler(HttpServletRequest request,
             HttpServletResponse response) {

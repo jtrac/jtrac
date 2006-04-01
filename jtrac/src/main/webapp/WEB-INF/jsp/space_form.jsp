@@ -11,7 +11,10 @@
 
     <table class="jtrac">
         <tr>
-            <td class="label">Name</td>
+            <td class="label">
+                Name
+                <font color="red">*</font>
+            </td>
             <spring:bind path="space.prefixCode">
                 <td>
                     <input name="${status.expression}" value="${status.value}" id="focus"/>
