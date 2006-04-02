@@ -97,7 +97,7 @@ public class SpaceFormAction extends AbstractFormAction {
         return success();
     }
     
-    public Event spaceFieldUpHandler(RequestContext context) {
+    public Event fieldUpHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
         String fieldName = ValidationUtils.getParameter(context, "fieldName");
         Collections.rotate(space.getMetadata().getFieldOrder(), -1);
@@ -105,7 +105,7 @@ public class SpaceFormAction extends AbstractFormAction {
         return success();
     }
     
-    public Event spaceFieldDownHandler(RequestContext context) {
+    public Event fieldDownHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
         String fieldName = ValidationUtils.getParameter(context, "fieldName");
         Collections.rotate(space.getMetadata().getFieldOrder(), 1);
@@ -113,7 +113,7 @@ public class SpaceFormAction extends AbstractFormAction {
         return success();
     }    
     
-    public Event spaceFieldAddHandler(RequestContext context) {
+    public Event fieldAddHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
         String fieldType = ValidationUtils.getParameter(context, "fieldType");
         if (fieldType == null) {
@@ -127,7 +127,7 @@ public class SpaceFormAction extends AbstractFormAction {
         return success();
     }   
     
-    public Event spaceFieldEditHandler(RequestContext context) {
+    public Event fieldEditHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
         String fieldName = ValidationUtils.getParameter(context, "fieldName");    
         Field field = space.getMetadata().getField(fieldName).getClone();
@@ -137,7 +137,7 @@ public class SpaceFormAction extends AbstractFormAction {
         return success();
     }
     
-    public Event spaceFieldUpdateHandler(RequestContext context) {
+    public Event fieldUpdateHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
         FieldForm fieldForm = (FieldForm) context.getFlowScope().get("fieldForm");
         Field field = fieldForm.getField();
@@ -146,7 +146,7 @@ public class SpaceFormAction extends AbstractFormAction {
         return success();
     }
     
-    public Event spaceStateAddHandler(RequestContext context) throws Exception {
+    public Event stateAddHandler(RequestContext context) throws Exception {
         Space space = (Space) context.getFlowScope().get("space");
         String state = ValidationUtils.getParameter(context, "state");
         if (!ValidationUtils.isTitleCase(state)) {
@@ -160,7 +160,7 @@ public class SpaceFormAction extends AbstractFormAction {
         return success();
     }
     
-    public Event spaceRoleAddHandler(RequestContext context) throws Exception {
+    public Event roleAddHandler(RequestContext context) throws Exception {
         Space space = (Space) context.getFlowScope().get("space");
         String role = ValidationUtils.getParameter(context, "role");             
         if (!ValidationUtils.isAllUpperCase(role)) {
@@ -173,6 +173,48 @@ public class SpaceFormAction extends AbstractFormAction {
         space.getMetadata().addRole(role);
         return success();
     }
+    
+    public Event editStateHandler(RequestContext context) {
+        Space space = (Space) context.getFlowScope().get("space");
+        String stateKey = ValidationUtils.getParameter(context, "stateKey");
+        context.getRequestScope().put("state", space.getMetadata().getStates().get(Integer.parseInt(stateKey)));
+        context.getRequestScope().put("stateKey", stateKey);
+        return success();
+    }    
+    
+    public Event editStateSubmitHandler(RequestContext context) throws Exception {
+        String state = ValidationUtils.getParameter(context, "state");
+        String stateKey = ValidationUtils.getParameter(context, "stateKey");
+        if (!ValidationUtils.isTitleCase(state)) {
+            Errors errors = getFormErrors(context);
+            errors.reject("error.spaceRoles.state.badchars", 
+                    "State name has to start with a capital letter followed by lower-case letters.");
+            context.getRequestScope().put("state", state);
+            context.getRequestScope().put("stateKey", stateKey);
+            return error();
+        }                
+        Space space = (Space) context.getFlowScope().get("space");
+        space.getMetadata().getStates().put(Integer.parseInt(stateKey), state);
+        return success();
+    }     
+    
+    public Event editTransitionHandler(RequestContext context) {
+        Space space = (Space) context.getFlowScope().get("space");
+        String stateKey = ValidationUtils.getParameter(context, "stateKey");
+        String roleKey = ValidationUtils.getParameter(context, "roleKey");
+        String transitionKey = ValidationUtils.getParameter(context, "transitionKey");
+        space.getMetadata().toggleTransition(Integer.parseInt(stateKey), roleKey, Integer.parseInt(transitionKey));
+        return success();
+    }
+    
+    public Event editMaskHandler(RequestContext context) {
+        Space space = (Space) context.getFlowScope().get("space");
+        String stateKey = ValidationUtils.getParameter(context, "stateKey");
+        String roleKey = ValidationUtils.getParameter(context, "roleKey");
+        String fieldKey = ValidationUtils.getParameter(context, "fieldKey");
+        space.getMetadata().switchMask(Integer.parseInt(stateKey), roleKey, fieldKey);        
+        return success();
+    }    
     
     public Event spaceSaveHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");

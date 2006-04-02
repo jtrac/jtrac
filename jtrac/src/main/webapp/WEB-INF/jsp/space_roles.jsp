@@ -1,5 +1,23 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
+<script>
+function editState(stateKey) {
+    document.spaceRolesForm.stateKey.value = stateKey;
+}
+function editTransition(stateKey, roleKey, transitionKey) {
+    document.spaceRolesForm.stateKey.value = stateKey;
+    document.spaceRolesForm.roleKey.value = roleKey;
+    document.spaceRolesForm.transitionKey.value = transitionKey;
+}
+function editMask(stateKey, roleKey, fieldKey) {
+    document.spaceRolesForm.stateKey.value = stateKey;
+    document.spaceRolesForm.roleKey.value = roleKey;
+    document.spaceRolesForm.fieldKey.value = fieldKey;
+}
+</script>
+
+<p/>
+
 <span class="info">Space Roles and State-Transitions (Workflow) for Space: ${space.prefixCode}</span>
 
 <p/>
@@ -11,14 +29,14 @@
 <c:set var="fieldCount" value="${space.metadata.fieldCount}"/>
 <c:set var="stateCount" value="${space.metadata.stateCount}"/>
 
-<form method="post" action="<c:url value='flow.htm'/>">
+<form name="spaceRolesForm" method="post" action="<c:url value='flow.htm'/>">
 
 <table class="jtrac">
     <tr>
         <td/>
         <td/>
         <th colspan="${stateCount - 1}">Next Allowed State</th>
-        <th colspan="${fieldCount}">Field Level Permissions</th>        
+        <th colspan="${fieldCount}">Field Level Permissions<br/>E=Edit, V=view, H=hide</th>        
     </tr>
     <tr class="center alt">
         <th>State</th>
@@ -29,7 +47,7 @@
             </c:if>
         </c:forEach>
         <c:forEach items="${fields}" var="field">
-            <td>${field.label}</td>
+            <td class="info">${field.label}</td>
         </c:forEach>      
     </tr>    
     <c:forEach items="${states}" var="mapEntry" varStatus="row">
@@ -38,10 +56,7 @@
         </c:set>
         <c:forEach items="${roles}" var="role" varStatus="innerRow">
             <c:set var="innerRowClass">
-                <c:choose>
-                    <c:when test="${selectedStatus == mapEntry.key && selectedRole == role.name}">selected</c:when>
-                    <c:when test="${innerRow.count % 2 == 0}">alt</c:when>
-                </c:choose>            
+                <c:if test="${innerRow.count % 2 == 0}">alt</c:if>                
             </c:set>
             <c:set var="lastRole">
                 <c:if test="${innerRow.count == roleCount}">bdr-bottom</c:if>
@@ -49,24 +64,48 @@
            <c:set var="roleState" value="${role.states[mapEntry.key]}"/>
             <tr class="center ${innerRowClass} ${lastRole}">
                 <c:if test="${innerRow.count == 1}">
-                    <td rowspan="${roleCount}" class="bdr-bottom ${rowClass}">${states[roleState.status]}</td>
+                    <td rowspan="${roleCount}" class="bdr-bottom ${rowClass}">
+                        <c:choose>
+                            <c:when test="${mapEntry.key == 0}">${states[mapEntry.key]}</c:when>
+                            <c:otherwise>
+                                <input type="submit" name="_eventId_editState" 
+                                    value="${states[roleState.status]}" onClick="editState('${mapEntry.key}')" title="rename"/>
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
                 </c:if>
                 <td>${role.name}</td>
                 <c:forEach items="${states}" var="innerMapEntry">
                     <c:if test="${innerMapEntry.key != 0}">
+                        <c:set var="showTransition">
+                            <c:choose>
+                                <c:when test="${!empty roleState.transitionMap[innerMapEntry.key]}">Y</c:when>
+                                <c:otherwise>&nbsp;&nbsp;&nbsp;</c:otherwise>
+                            </c:choose>
+                        </c:set>
                         <td>
-                            <c:if test="${!empty roleState.transitionMap[innerMapEntry.key]}">X</c:if>&nbsp;
+                            <c:choose>
+                                <c:when test="${mapEntry.key == 0 || mapEntry.key == 99}">${showTransition}</c:when>
+                                <c:otherwise>
+                                    <input type="submit" name="_eventId_editTransition" value="${showTransition}"
+                                        onClick="editTransition('${mapEntry.key}', '${role.name}', '${innerMapEntry.key}')" title="toggle"/>
+                                </c:otherwise>
+                            </c:choose>                            
                         </td>
                     </c:if>
                 </c:forEach>
                 <c:forEach items="${fields}" var="field">
                     <c:set var="mask" value="${roleState.fields[field.name]}"/>
+                    <c:set var="showMask">
+                        <c:choose>
+                            <c:when test="${mask == 0}">H</c:when>
+                            <c:when test="${mask == 1}">V</c:when>
+                            <c:when test="${mask == 2}">E</c:when>
+                        </c:choose>
+                    </c:set>
                     <td>
-                        <select name="TODO">
-                            <option value="0" <c:if test='${mask == 0}'>selected='true'</c:if>>Hide</option>
-                            <option value="1" <c:if test='${mask == 1}'>selected='true'</c:if>>View</option>
-                            <option value="2" <c:if test='${mask == 2}'>selected='true'</c:if>>Edit</option>
-                        </select>
+                        <input type="submit" name="_eventId_editMask" value="${showMask}"
+                            onClick="editMask('${mapEntry.key}', '${role.name}', '${field.name}')" title="switch"/>
                     </td>
                 </c:forEach>                
             </tr>
@@ -96,6 +135,11 @@
         <td><input type="submit" name="_eventId_save" value="Save"/></td> 
     </tr>
 </table>
+
+<input type="hidden" name="stateKey"/>
+<input type="hidden" name="roleKey"/>
+<input type="hidden" name="transitionKey"/>
+<input type="hidden" name="fieldKey"/>
 
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 

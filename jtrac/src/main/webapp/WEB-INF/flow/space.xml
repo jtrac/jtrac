@@ -17,16 +17,16 @@
     <view-state id="spaceFieldsView" view="space_fields">
 	<transition on="back" to="spaceForm"/>
         <transition on="add" to="spaceFieldForm">
-            <action bean="spaceFormAction" method="spaceFieldAddHandler"/>
+            <action bean="spaceFormAction" method="fieldAddHandler"/>
         </transition>
         <transition on="edit" to="spaceFieldForm">
-            <action bean="spaceFormAction" method="spaceFieldEditHandler"/>
+            <action bean="spaceFormAction" method="fieldEditHandler"/>
         </transition>
         <transition on="up" to="spaceFieldsView">
-            <action bean="spaceFormAction" method="spaceFieldUpHandler"/>
+            <action bean="spaceFormAction" method="fieldUpHandler"/>
         </transition>
         <transition on="down" to="spaceFieldsView">
-            <action bean="spaceFormAction" method="spaceFieldDownHandler"/>
+            <action bean="spaceFormAction" method="fieldDownHandler"/>
         </transition>         
         <transition on="next" to="spaceRolesView"/>     
     </view-state>
@@ -40,22 +40,38 @@
         <transition on="done" to="spaceFieldsView">
             <action bean="fieldFormAction" method="bindAndValidate"/>
             <action bean="fieldFormAction" method="fieldUpdateHandler"/>
-            <action bean="spaceFormAction" method="spaceFieldUpdateHandler"/>
+            <action bean="spaceFormAction" method="fieldUpdateHandler"/>
         </transition>        
     </view-state>
  
     <view-state id="spaceRolesView" view="space_roles">
         <transition on="back" to="spaceFieldsView"/>       
         <transition on="addState" to="spaceRolesView">
-            <action bean="spaceFormAction" method="spaceStateAddHandler"/>
+            <action bean="spaceFormAction" method="stateAddHandler"/>
         </transition>
         <transition on="addRole" to="spaceRolesView">
-            <action bean="spaceFormAction" method="spaceRoleAddHandler"/>
+            <action bean="spaceFormAction" method="roleAddHandler"/>
         </transition>
+        <transition on="editState" to="spaceStateEditForm">
+            <action bean="spaceFormAction" method="editStateHandler"/>
+        </transition>
+        <transition on="editTransition" to="spaceRolesView">
+            <action bean="spaceFormAction" method="editTransitionHandler"/>
+        </transition>
+        <transition on="editMask" to="spaceRolesView">
+            <action bean="spaceFormAction" method="editMaskHandler"/>
+        </transition>          
         <transition on="save" to="spaceAllocateFlow">
             <action bean="spaceFormAction" method="spaceSaveHandler"/>
         </transition>
     </view-state>  
+    
+    <view-state id="spaceStateEditForm" view="space_state_edit">      
+        <transition on="cancel" to="spaceRolesView"/>
+        <transition on="submit" to="spaceRolesView">
+            <action bean="spaceFormAction" method="editStateSubmitHandler"/>
+        </transition>        
+    </view-state>    
     
     <subflow-state id="spaceAllocateFlow" flow="spaceAllocate">
         <attribute-mapper>

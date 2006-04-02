@@ -305,6 +305,31 @@ public class Metadata implements Serializable {
         return map;
     }
     
+    private State getRoleState(String roleKey, int stateKey) {
+        Role role = roles.get(roleKey);
+        return role.getStates().get(stateKey);
+    }
+    
+    public void toggleTransition(int stateKey, String roleKey, int transitionKey) {
+        State state = getRoleState(roleKey, stateKey);
+        if (state.getTransitions().contains(transitionKey)) {
+            state.getTransitions().remove(transitionKey);
+        } else {
+            state.getTransitions().add(transitionKey);
+        }
+    }
+    
+    public void switchMask(int stateKey, String roleKey, String fieldName) {
+        State state = getRoleState(roleKey, stateKey);
+        Field.Name name = Field.convertToName(fieldName);        
+        Integer mask = state.getFields().get(name);
+        switch(mask) {
+            case 0: state.getFields().put(name, 1); return;
+            case 1: state.getFields().put(name, 2); return;
+            case 2: state.getFields().put(name, 0); return;
+        }
+    }
+    
     //==================================================================
     
     public String getName() {
