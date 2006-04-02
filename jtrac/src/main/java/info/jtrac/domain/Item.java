@@ -22,7 +22,7 @@ import java.util.Set;
 
 /**
  * This object represents a generic item which can be an issue, defect, task etc.
- * some login for field accessors and conversion of keys to display values 
+ * some logic for field accessors and conversion of keys to display values 
  * is contained in the AbstractItem class
  */
 public class Item extends AbstractItem {

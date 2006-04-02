@@ -5,8 +5,9 @@
 
 <beans>
 
-    <!-- Configurer that replaces ${...} placeholders with values from a properties file -->
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <!-- Configurer that replaces ${...} placeholders with values from a properties file
+         we use a custom Configurer that extends the Spring PropertyPlaceholderConfigurer -->
+    <bean class="info.jtrac.util.JtracConfigurer" init-method="setup">        
         <property name="location" value="file:${jtrac.home}/jtrac.properties"/>
     </bean>
 
@@ -15,6 +16,7 @@
         <property name="passwordEncoder" ref="passwordEncoder"/>
     </bean>    
     
+    <!-- Configurer tha -->
     <bean id="passwordEncoder" class="org.acegisecurity.providers.encoding.Md5PasswordEncoder"/>
     
     <!-- local DataSource that works in any environment -->
