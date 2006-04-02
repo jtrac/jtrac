@@ -324,9 +324,9 @@ public class Metadata implements Serializable {
         Field.Name name = Field.convertToName(fieldName);        
         Integer mask = state.getFields().get(name);
         switch(mask) {
-            case 0: state.getFields().put(name, 1); return;
-            case 1: state.getFields().put(name, 2); return;
-            case 2: state.getFields().put(name, 0); return;
+            // case State.MASK_HIDE: state.getFields().put(name, State.MASK_VIEW); return; HIDE SUPPORT IN FUTURE
+            case State.MASK_VIEW: state.getFields().put(name, State.MASK_EDIT); return;
+            case State.MASK_EDIT: state.getFields().put(name, State.MASK_VIEW); return;
         }
     }
     

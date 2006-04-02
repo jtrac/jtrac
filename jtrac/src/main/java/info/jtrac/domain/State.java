@@ -50,8 +50,9 @@ public class State implements Serializable {
     public static final int OPEN = 1;
     public static final int CLOSED = 99;
     
-    private static final int MASK_VIEW = 1;
-    private static final int MASK_EDIT = 2;
+    public static final int MASK_HIDE = 0;
+    public static final int MASK_VIEW = 1;
+    public static final int MASK_EDIT = 2;
     
     public State() {
         // zero arg constructor

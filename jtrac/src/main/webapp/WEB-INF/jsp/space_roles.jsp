@@ -36,7 +36,7 @@ function editMask(stateKey, roleKey, fieldKey) {
         <td/>
         <td/>
         <th colspan="${stateCount - 1}">Next Allowed State</th>
-        <th colspan="${fieldCount}">Field Level Permissions<br/>E=Edit, V=view, H=hide</th>        
+        <th colspan="${fieldCount}">Field Level Permissions<br/>E=Edit, V=view</th> <%-- H=hide support in future --%>        
     </tr>
     <tr class="center alt">
         <th>State</th>
@@ -49,8 +49,9 @@ function editMask(stateKey, roleKey, fieldKey) {
         <c:forEach items="${fields}" var="field">
             <td class="info">${field.label}</td>
         </c:forEach>      
-    </tr>    
-    <c:forEach items="${states}" var="mapEntry" varStatus="row">
+    </tr>
+    <%-- end table headings --%>
+    <c:forEach items="${states}" var="stateRowEntry" varStatus="row">
         <c:set var="rowClass">
             <c:if test="${row.count % 2 == 0}">alt</c:if>
         </c:set>
@@ -61,34 +62,34 @@ function editMask(stateKey, roleKey, fieldKey) {
             <c:set var="lastRole">
                 <c:if test="${innerRow.count == roleCount}">bdr-bottom</c:if>
             </c:set>
-           <c:set var="roleState" value="${role.states[mapEntry.key]}"/>
+           <c:set var="roleState" value="${role.states[stateRowEntry.key]}"/>
             <tr class="center ${innerRowClass} ${lastRole}">
                 <c:if test="${innerRow.count == 1}">
                     <td rowspan="${roleCount}" class="bdr-bottom ${rowClass}">
                         <c:choose>
-                            <c:when test="${mapEntry.key == 0}">${states[mapEntry.key]}</c:when>
+                            <c:when test="${stateRowEntry.key == 0 || stateRowEntry.key == 99}">${states[stateRowEntry.key]}</c:when>
                             <c:otherwise>
                                 <input type="submit" name="_eventId_editState" 
-                                    value="${states[roleState.status]}" onClick="editState('${mapEntry.key}')" title="rename"/>
+                                    value="${states[roleState.status]}" onClick="editState('${stateRowEntry.key}')" title="rename"/>
                             </c:otherwise>
                         </c:choose>
                     </td>
                 </c:if>
                 <td>${role.name}</td>
-                <c:forEach items="${states}" var="innerMapEntry">
-                    <c:if test="${innerMapEntry.key != 0}">
+                <c:forEach items="${states}" var="stateColEntry">
+                    <c:if test="${stateColEntry.key != 0}">
                         <c:set var="showTransition">
                             <c:choose>
-                                <c:when test="${!empty roleState.transitionMap[innerMapEntry.key]}">Y</c:when>
+                                <c:when test="${!empty roleState.transitionMap[stateColEntry.key]}">Y</c:when>
                                 <c:otherwise>&nbsp;&nbsp;&nbsp;</c:otherwise>
                             </c:choose>
                         </c:set>
                         <td>
                             <c:choose>
-                                <c:when test="${mapEntry.key == 0 || mapEntry.key == 99}">${showTransition}</c:when>
+                                <c:when test="${stateRowEntry.key == 0 || stateRowEntry.key == 99}">${showTransition}</c:when>
                                 <c:otherwise>
                                     <input type="submit" name="_eventId_editTransition" value="${showTransition}"
-                                        onClick="editTransition('${mapEntry.key}', '${role.name}', '${innerMapEntry.key}')" title="toggle"/>
+                                        onClick="editTransition('${stateRowEntry.key}', '${role.name}', '${stateColEntry.key}')" title="toggle"/>
                                 </c:otherwise>
                             </c:choose>                            
                         </td>
@@ -105,7 +106,7 @@ function editMask(stateKey, roleKey, fieldKey) {
                     </c:set>
                     <td>
                         <input type="submit" name="_eventId_editMask" value="${showMask}"
-                            onClick="editMask('${mapEntry.key}', '${role.name}', '${field.name}')" title="switch"/>
+                            onClick="editMask('${stateRowEntry.key}', '${role.name}', '${field.name}')" title="toggle"/>
                     </td>
                 </c:forEach>                
             </tr>
