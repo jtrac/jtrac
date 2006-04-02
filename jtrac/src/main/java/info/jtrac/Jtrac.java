@@ -16,6 +16,7 @@
 
 package info.jtrac;
 
+import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
@@ -34,6 +35,7 @@ import org.acegisecurity.userdetails.UserDetailsService;
 public interface Jtrac extends UserDetailsService {
       
     void storeItem(Item item);
+    void storeHistoryForItem(Item item, History history);
     Item loadItem(long id);
     List<Item> findItems(ItemSearch itemSearch);
     //========================================================

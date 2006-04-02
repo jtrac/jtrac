@@ -53,11 +53,11 @@ public class MetadataTest extends TestCase {
     public void testInitRolesThenAddRolesAndStates() {
         Metadata m = new Metadata();
         m.initRoles();
-        assertEquals("New, Open and Closed available by default", 3, m.getStatesCount());
-        assertEquals("DEFAULT available by default", 1, m.getRolesCount());        
+        assertEquals("New, Open and Closed available by default", 3, m.getStateCount());
+        assertEquals("DEFAULT available by default", 1, m.getRoleCount());        
         Field f = new Field(Field.Name.CUS_INT_01);
         m.add(f);
-        assertEquals(1, m.getFieldsCount());
+        assertEquals(1, m.getFieldCount());
         assertEquals("New", m.getStatusValue(0));
         assertEquals("Open", m.getStatusValue(1));
         assertEquals("Closed", m.getStatusValue(99));

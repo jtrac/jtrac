@@ -12,30 +12,36 @@
     <tr>
         <td class="label">New Status</td>
         <td>
-            <select name="status">
-                <option/>
-                <c:forEach items="${transitions}" var="transitionEntry">
-                    <option value="${transitionEntry.key}">${transitionEntry.value}</option>
-                </c:forEach>
-            </select>
+            <spring:bind path="history.status">
+                <select name="${status.expression}">
+                    <option/>
+                    <c:forEach items="${transitions}" var="transitionEntry">
+                        <option value="${transitionEntry.key}" <c:if test='${transitionEntry.key == status.value}'>selected="true"</c:if>>${transitionEntry.value}</option>
+                    </c:forEach>
+                </select>
+                <span class="error">${status.errorMessage}</span>
+            </spring:bind>
         </td>        
     </tr>
     <tr>
-        <td class="label">Assign To</td>
+        <td class="label">Assign To</td>       
         <td>
-            <select name="assignedTo">
-                <option/>
-                <c:forEach items="${userRoles}" var="userRole">
-                    <c:set var="user" value="${userRole.user}"/>
-                    <option value="${user.id}">${user.name}</option>
-                </c:forEach>   
-            </select>
+            <spring:bind path="history.assignedTo">
+                <select name="${status.expression}">
+                    <option/>
+                    <c:forEach items="${userRoles}" var="userRole">
+                        <c:set var="user" value="${userRole.user}"/>
+                        <option value="${user.id}" <c:if test='${user.id == status.value}'>selected="true"</c:if>>${user.name}</option>
+                    </c:forEach>  
+                </select>
+                <span class="error">${status.errorMessage}</span>
+            </spring:bind> 
         </td>        
     </tr>
      <tr>
         <td class="label">Comment</td>
         <td>
-            <textarea name="comment" rows="6" cols="70"></textarea>
+            <textarea name="comment" rows="6" cols="70">${history.comment}</textarea>
         </td>        
     </tr>
      <tr>

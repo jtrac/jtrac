@@ -19,11 +19,20 @@ package info.jtrac.webflow;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.Space;
+import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
+import info.jtrac.util.UserEditor;
 import info.jtrac.util.ValidationUtils;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import org.acegisecurity.context.SecurityContextHolder;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.beans.propertyeditors.CustomNumberEditor;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.validation.DataBinder;
+import org.springframework.validation.Errors;
 import org.springframework.webflow.Event;
 import org.springframework.webflow.RequestContext;
 import org.springframework.webflow.ScopeType;
@@ -39,6 +48,15 @@ public class ItemViewFormAction extends AbstractFormAction {
         setFormObjectName("history");        
         setFormObjectScope(ScopeType.REQUEST);        
     }
+    
+    @Override
+    protected void initBinder(RequestContext request, DataBinder binder) {
+        binder.registerCustomEditor(Integer.class, new CustomNumberEditor(Integer.class, true));
+        binder.registerCustomEditor(Double.class, new CustomNumberEditor(Double.class, true));
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
+        binder.registerCustomEditor(User.class, new UserEditor(jtrac));
+    }    
     
     @Override
     public Object loadFormObject(RequestContext context) {
@@ -59,6 +77,24 @@ public class ItemViewFormAction extends AbstractFormAction {
     
     public Event itemViewHandler(RequestContext context) throws Exception {
         History history = (History) getFormObject(context);
+        Errors errors = getFormErrors(context);
+        if (history.getStatus() != null) {
+            if (history.getStatus() != State.CLOSED && history.getAssignedTo() == null) {
+                errors.rejectValue("assignedTo", "error.history.assignedTo.required", "Required if Status other than Closed.");
+            }
+        } else {
+            if (history.getAssignedTo() != null) {
+                errors.rejectValue("status", "error.history.status.required", "Required if changing Status.");
+            }
+        }
+        if (errors.hasErrors()) {
+            return error();
+        }        
+        Item item = (Item) context.getFlowScope().get("item");
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        history.setLoggedBy(user);
+        jtrac.storeHistoryForItem(item, history);
+        resetForm(context);
         return success();
     }
     

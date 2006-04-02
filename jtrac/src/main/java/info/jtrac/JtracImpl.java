@@ -23,10 +23,10 @@ import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.SpaceRole;
 import info.jtrac.domain.SpaceSequence;
+import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import java.util.Date;
-import java.util.LinkedHashSet;
 
 import java.util.List;
 import java.util.Random;
@@ -84,13 +84,27 @@ public class JtracImpl implements Jtrac {
             item.setTimeStamp(now);
         }
         history.setTimeStamp(now);
-        if (item.getHistory() == null) {
-            item.setHistory(new LinkedHashSet<History>());
-        }
-        item.getHistory().add(history);
+        item.add(history);
         SpaceSequence spaceSequence = item.getSpace().getSpaceSequence();
         item.setSequenceNum(spaceSequence.next());
         dao.storeSpaceSequence(spaceSequence);
+        dao.storeItem(item);
+    }
+    
+    public void storeHistoryForItem(Item item, History history) {
+        if (history.getStatus() != null) {
+            item.setStatus(history.getStatus());
+            if (history.getStatus() == State.CLOSED) {
+                item.setAssignedTo(null);
+                history.setAssignedTo(null);
+            } else {
+                if(history.getAssignedTo() != null) {
+                    item.setAssignedTo(history.getAssignedTo());
+                }
+            }           
+        }        
+        history.setTimeStamp(new Date());
+        item.add(history);
         dao.storeItem(item);
     }
     

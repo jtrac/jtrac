@@ -33,7 +33,6 @@ public class History extends AbstractItem {
     }
     
     public History(Item item) {
-        setParent(item);
         setSummary(item.getSummary());
         setDetail(item.getDetail());
         setLoggedBy(item.getLoggedBy());
@@ -100,7 +99,7 @@ public class History extends AbstractItem {
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append(super.toString());
-        sb.append("comment [").append(comment);
+        sb.append("; comment [").append(comment);
         sb.append("]; actualEffort [").append(actualEffort);
         sb.append("]; attachment [").append(attachment);
         sb.append("]");

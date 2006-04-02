@@ -77,6 +77,10 @@ public class Metadata implements Serializable {
     private Map<Integer, String> states;
     private List<Field.Name> fieldOrder;    
     
+    public Metadata() {
+        init();
+    }
+    
     private void init() {
         fields = new EnumMap<Field.Name, Field>(Field.Name.class);
         roles = new HashMap<String, Role>();
@@ -143,7 +147,6 @@ public class Metadata implements Serializable {
     //====================================================================
     
     public void initRoles() {
-        init();
         states.put(State.NEW, "New");
         states.put(State.OPEN, "Open");
         states.put(State.CLOSED, "Closed");
@@ -258,6 +261,9 @@ public class Metadata implements Serializable {
     }
     
     public String getStatusValue(Integer key) {
+        if (key == null) {
+            return "";
+        }
         String s = states.get(key);
         if (s == null) {
             return "";
@@ -265,15 +271,15 @@ public class Metadata implements Serializable {
         return s;
     }
     
-    public int getRolesCount() {
+    public int getRoleCount() {
         return roles.size();
     }
     
-    public int getFieldsCount() {
+    public int getFieldCount() {
         return getFields().size();
     }
     
-    public int getStatesCount() {
+    public int getStateCount() {
         return states.size();
     }
     

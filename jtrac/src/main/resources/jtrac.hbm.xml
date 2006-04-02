@@ -15,20 +15,20 @@
         <property name="sequenceNum" column="sequence_num"/>
         <property name="timeStamp" column="time_stamp"/>
         <property name="plannedEffort" column="planned_effort"/>
-        <set name="children" table="items" order-by="id" cascade="all">
-            <key column="id"/>
+        <set name="children" order-by="id" cascade="all">
+            <key column="parent_id"/>
             <one-to-many class="Item"/>
         </set>         
-        <set name="history" table="history" order-by="id" cascade="all">
-            <key column="id"/>
+        <set name="history" order-by="id" cascade="all" inverse="true">
+            <key column="item_id"/>
             <one-to-many class="History"/>
         </set>        
         <set name="itemUsers" cascade="all">
-            <key column="id"/>
+            <key column="item_id"/>
             <one-to-many class="ItemUser"/>
         </set>         
-        <set name="attachments" table="attachments" cascade="all">
-            <key column="id"/>
+        <set name="attachments" cascade="all">
+            <key column="item_id"/>
             <one-to-many class="Attachment"/>
         </set>                 
         <!-- identical to History -->

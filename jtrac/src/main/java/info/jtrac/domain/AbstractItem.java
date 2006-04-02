@@ -61,8 +61,6 @@ public abstract class AbstractItem implements Serializable {
     private Date cusTim01;
     private Date cusTim02;
     private Date cusTim03;    
-
-
     
     // we could have used reflection but doing this way for performance
     public Object getValue(Field.Name fieldName) {
@@ -385,7 +383,7 @@ public abstract class AbstractItem implements Serializable {
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("id [").append(id);
-        // sb.append("]; parent [").append(parent);
+        sb.append("]; parent [").append(parent == null ? "" : parent.getId());
         sb.append("]; summary [").append(summary);
         sb.append("]; detail [").append(detail);
         sb.append("]; loggedBy [").append(loggedBy);

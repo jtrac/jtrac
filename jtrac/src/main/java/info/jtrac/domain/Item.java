@@ -16,7 +16,7 @@
 
 package info.jtrac.domain;
 
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -42,6 +42,14 @@ public class Item extends AbstractItem {
     
     public Map<Integer, String> getPermittedTransitions(User user) {
         return user.getPermittedTransitions(space, getStatus());        
+    }
+    
+    public void add(History h) {
+        if (this.history == null) {
+            this.history = new LinkedHashSet<History>();
+        }
+        h.setParent(this);
+        this.history.add(h);
     }
     
     //===========================================================
@@ -107,7 +115,7 @@ public class Item extends AbstractItem {
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append(super.toString());
-        sb.append("type [").append(type);
+        sb.append("; type [").append(type);
         sb.append("]; space [").append(space);
         sb.append("]; sequenceNum [").append(sequenceNum);
         sb.append("]");

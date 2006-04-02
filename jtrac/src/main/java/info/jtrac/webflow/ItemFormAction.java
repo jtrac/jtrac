@@ -74,7 +74,7 @@ public class ItemFormAction extends AbstractFormAction {
         List<UserRole> userRoles = jtrac.findUsersForSpace(space.getId());
         context.getFlowScope().put("userRoles", userRoles);
         return item;
-    }    
+    }
     
     public Event itemFormHandler(RequestContext context) throws Exception {
         Item item = (Item) getFormObject(context);

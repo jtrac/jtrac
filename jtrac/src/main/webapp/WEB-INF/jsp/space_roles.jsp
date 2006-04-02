@@ -7,9 +7,9 @@
 <c:set var="states" value="${space.metadata.states}"/>
 <c:set var="roles" value="${space.metadata.roleList}"/>
 <c:set var="fields" value="${space.metadata.fieldList}"/>
-<c:set var="rolesCount" value="${space.metadata.rolesCount}"/>
-<c:set var="fieldsCount" value="${space.metadata.fieldsCount}"/>
-<c:set var="statesCount" value="${space.metadata.statesCount}"/>
+<c:set var="roleCount" value="${space.metadata.roleCount}"/>
+<c:set var="fieldCount" value="${space.metadata.fieldCount}"/>
+<c:set var="stateCount" value="${space.metadata.stateCount}"/>
 
 <form method="post" action="<c:url value='flow.htm'/>">
 
@@ -17,8 +17,8 @@
     <tr>
         <td/>
         <td/>
-        <th colspan="${statesCount - 1}">Next Allowed State</th>
-        <th colspan="${fieldsCount}">Field Level Permissions</th>        
+        <th colspan="${stateCount - 1}">Next Allowed State</th>
+        <th colspan="${fieldCount}">Field Level Permissions</th>        
     </tr>
     <tr class="center alt">
         <th>State</th>
@@ -44,12 +44,12 @@
                 </c:choose>            
             </c:set>
             <c:set var="lastRole">
-                <c:if test="${innerRow.count == rolesCount}">bdr-bottom</c:if>
+                <c:if test="${innerRow.count == roleCount}">bdr-bottom</c:if>
             </c:set>
            <c:set var="roleState" value="${role.states[mapEntry.key]}"/>
             <tr class="center ${innerRowClass} ${lastRole}">
                 <c:if test="${innerRow.count == 1}">
-                    <td rowspan="${rolesCount}" class="bdr-bottom ${rowClass}">${states[roleState.status]}</td>
+                    <td rowspan="${roleCount}" class="bdr-bottom ${rowClass}">${states[roleState.status]}</td>
                 </c:if>
                 <td>${role.name}</td>
                 <c:forEach items="${states}" var="innerMapEntry">

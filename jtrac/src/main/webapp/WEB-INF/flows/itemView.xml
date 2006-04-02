@@ -9,6 +9,7 @@
             <action bean="itemViewFormAction" method="setupForm"/>
         </entry-actions>
         <transition on="submit" to="itemViewForm">
+            <action bean="itemViewFormAction" method="bind"/>
             <action bean="itemViewFormAction" method="itemViewHandler"/>
         </transition>
         <transition on="cancel" to="itemForm"/>
