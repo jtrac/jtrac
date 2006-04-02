@@ -88,7 +88,7 @@
             <bean class="org.springframework.webflow.executor.FlowExecutorImpl">
                 <constructor-arg>
                     <bean class="org.springframework.webflow.registry.XmlFlowRegistryFactoryBean">
-                        <property name="flowLocations" value="/WEB-INF/flows/*.xml"/>
+                        <property name="flowLocations" value="/WEB-INF/flow/*.xml"/>
                     </bean>				
                 </constructor-arg>
             </bean>    	
