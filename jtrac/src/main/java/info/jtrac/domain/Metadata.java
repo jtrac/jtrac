@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -328,6 +329,27 @@ public class Metadata implements Serializable {
             case State.MASK_VIEW: state.getFields().put(name, State.MASK_EDIT); return;
             case State.MASK_EDIT: state.getFields().put(name, State.MASK_VIEW); return;
         }
+    }
+    
+    public List<Field> getEditableFields(Collection<String> roleKeys, Collection<Integer> ss) { 
+        Set<Field> fs = new HashSet<Field>();
+        for(String roleKey : roleKeys) {
+            for(Integer status : ss) {
+                State state = getRoleState(roleKey, status);
+                for(Map.Entry<Field.Name, Integer> entry : state.getFields().entrySet()) {
+                    if (entry.getValue() == 2) {
+                        fs.add(fields.get(entry.getKey()));
+                    }
+                }
+            }
+        }
+        List<Field> result = getFieldList();
+        result.retainAll(fs);
+        return result;
+    }
+    
+    public List<Field> getEditableFields() {
+        return getEditableFields(roles.keySet(), states.keySet());
     }
     
     //==================================================================

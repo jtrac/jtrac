@@ -17,6 +17,7 @@
 package info.jtrac.domain;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -42,6 +43,10 @@ public class Item extends AbstractItem {
     
     public Map<Integer, String> getPermittedTransitions(User user) {
         return user.getPermittedTransitions(space, getStatus());        
+    }
+    
+    public List<Field> getEditableFieldList(User user) {
+        return user.getEditableFieldList(space, getStatus());
     }
     
     public void add(History h) {

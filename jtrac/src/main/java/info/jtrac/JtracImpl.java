@@ -16,6 +16,7 @@
 
 package info.jtrac;
 
+import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
@@ -102,7 +103,13 @@ public class JtracImpl implements Jtrac {
                     item.setAssignedTo(history.getAssignedTo());
                 }
             }           
-        }        
+        }
+        for(Field field : item.getEditableFieldList(history.getLoggedBy())) {
+            Object value = history.getValue(field.getName());
+            if (value != null) {
+                item.setValue(field.getName(), value);
+            }
+        }
         history.setTimeStamp(new Date());
         item.add(history);
         dao.storeItem(item);

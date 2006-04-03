@@ -12,8 +12,8 @@
             /WEB-INF/applicationContext.xml
             /WEB-INF/applicationContext-acegi.xml
         </param-value>
-    </context-param>
-
+    </context-param>  
+    
     <!-- used by Spring Log4jConfigListener -->
     <context-param>
         <param-name>log4jConfigLocation</param-name>

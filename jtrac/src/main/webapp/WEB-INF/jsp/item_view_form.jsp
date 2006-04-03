@@ -9,6 +9,18 @@
 <form method="post" action="<c:url value='flow.htm'/>">
 
 <table class="jtrac">
+        
+    <c:forEach items="${editableFields}" var="field">
+        <tr>
+            <td class="label">
+                ${field.label}            
+            </td>
+            <spring:bind path="history.${field.name}">
+                <%@ include file="/WEB-INF/jsp/item_form_include.jsp" %>               
+            </spring:bind>
+        </tr>        
+    </c:forEach>    
+    
     <tr>
         <td class="label">New Status</td>
         <td>
@@ -39,9 +51,14 @@
         </td>        
     </tr>
      <tr>
-        <td class="label">Comment</td>
+        <td class="label">
+            Comment
+            <font color="red">*</font></td>
         <td>
-            <textarea name="comment" rows="6" cols="70">${history.comment}</textarea>
+            <spring:bind path="history.comment">
+                <textarea name="${status.expression}" rows="6" cols="70">${status.value}</textarea>
+                <span class="error">${status.errorMessage}</span>
+            </spring:bind>
         </td>        
     </tr>
      <tr>

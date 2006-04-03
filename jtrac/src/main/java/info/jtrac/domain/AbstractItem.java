@@ -93,6 +93,35 @@ public abstract class AbstractItem implements Serializable {
         return null;
     }
     
+    // we could have used reflection but doing this way for performance
+    public void setValue(Field.Name fieldName, Object value) {
+        switch(fieldName) {
+            case SEVERITY: severity = (Integer) value; break;
+            case PRIORITY: priority = (Integer) value; break;
+            case CUS_INT_01: cusInt01 = (Integer) value; break;
+            case CUS_INT_02: cusInt02 = (Integer) value; break;
+            case CUS_INT_03: cusInt03 = (Integer) value; break;
+            case CUS_INT_04: cusInt04 = (Integer) value; break;
+            case CUS_INT_05: cusInt05 = (Integer) value; break;
+            case CUS_INT_06: cusInt06 = (Integer) value; break;
+            case CUS_INT_07: cusInt07 = (Integer) value; break;
+            case CUS_INT_08: cusInt08 = (Integer) value; break;
+            case CUS_INT_09: cusInt09 = (Integer) value; break;
+            case CUS_INT_10: cusInt10 = (Integer) value; break;
+            case CUS_DBL_01: cusDbl01 = (Double) value; break;
+            case CUS_DBL_02: cusDbl02 = (Double) value; break;
+            case CUS_DBL_03: cusDbl03 = (Double) value; break;
+            case CUS_STR_01: cusStr01 = (String) value; break;
+            case CUS_STR_02: cusStr02 = (String) value; break;
+            case CUS_STR_03: cusStr03 = (String) value; break;
+            case CUS_STR_04: cusStr04 = (String) value; break;
+            case CUS_STR_05: cusStr05 = (String) value; break;
+            case CUS_TIM_01: cusTim01 = (Date) value ; break;
+            case CUS_TIM_02: cusTim02 = (Date) value; break;
+            case CUS_TIM_03: cusTim03 = (Date) value;
+        }
+    }    
+    
     // has to be overridden
     public abstract Space getSpace();
     

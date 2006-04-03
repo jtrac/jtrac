@@ -19,6 +19,7 @@ package info.jtrac.domain;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -67,14 +68,22 @@ public class User implements UserDetails, Serializable {
         spaceRoles.removeAll(remove);
     }
     
-    public Map<Integer, String> getPermittedTransitions(Space space, int status) {
+    private List<String> getRoleKeys(Space space) {
         List<String> roleKeys = new ArrayList<String>();
         for(SpaceRole sr : spaceRoles) {
             if (sr.getSpace().equals(space)) {
                 roleKeys.add(sr.getRoleKey());
             }
         }
-        return space.getMetadata().getPermittedTransitions(roleKeys, status);
+        return roleKeys;
+    }
+    
+    public Map<Integer, String> getPermittedTransitions(Space space, int status) {
+        return space.getMetadata().getPermittedTransitions(getRoleKeys(space), status);
+    }
+    
+    public List<Field> getEditableFieldList(Space space, int status) {
+        return space.getMetadata().getEditableFields(getRoleKeys(space), Collections.singletonList(status));
     }
     
     //============ ACEGI UserDetails implementation ===============

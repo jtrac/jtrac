@@ -7,9 +7,7 @@
 
     <!-- Configurer that replaces ${...} placeholders with values from a properties file
          we use a custom Configurer that extends the Spring PropertyPlaceholderConfigurer -->
-    <bean class="info.jtrac.util.JtracConfigurer" init-method="setup">        
-        <property name="location" value="file:${jtrac.home}/jtrac.properties"/>
-    </bean>
+    <bean class="info.jtrac.util.JtracConfigurer"/>        
 
     <bean id="jtrac" class="info.jtrac.JtracImpl">
         <property name="dao" ref="dao"/>

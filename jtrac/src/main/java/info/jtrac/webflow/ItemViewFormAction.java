@@ -16,6 +16,7 @@
 
 package info.jtrac.webflow;
 
+import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.Space;
@@ -70,6 +71,7 @@ public class ItemViewFormAction extends AbstractFormAction {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Space space = item.getSpace();
         context.getFlowScope().put("transitions", item.getPermittedTransitions(user));
+        context.getFlowScope().put("editableFields", item.getEditableFieldList(user));
         context.getFlowScope().put("item", item);
         context.getFlowScope().put("userRoles", userRoles);        
         return new History();
@@ -87,11 +89,14 @@ public class ItemViewFormAction extends AbstractFormAction {
                 errors.rejectValue("status", "error.history.status.required", "Required if changing Status.");
             }
         }
+        if (history.getComment() == null) {
+            errors.rejectValue("comment", ValidationUtils.ERROR_EMPTY_CODE, ValidationUtils.ERROR_EMPTY_MSG);
+        }
         if (errors.hasErrors()) {
             return error();
-        }        
+        }
         Item item = (Item) context.getFlowScope().get("item");
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();        
         history.setLoggedBy(user);
         jtrac.storeHistoryForItem(item, history);
         resetForm(context);

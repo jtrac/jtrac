@@ -104,9 +104,14 @@ function editMask(stateKey, roleKey, fieldKey) {
                             <c:when test="${mask == 2}">E</c:when>
                         </c:choose>
                     </c:set>
-                    <td>
-                        <input type="submit" name="_eventId_editMask" value="${showMask}"
-                            onClick="editMask('${stateRowEntry.key}', '${role.name}', '${field.name}')" title="toggle"/>
+                    <td>                           
+                      <c:choose>
+                            <c:when test="${stateRowEntry.key == 0 || stateRowEntry.key == 99}">${showMask}</c:when>
+                            <c:otherwise>
+                                <input type="submit" name="_eventId_editMask" value="${showMask}"
+                                    onClick="editMask('${stateRowEntry.key}', '${role.name}', '${field.name}')" title="toggle"/>
+                            </c:otherwise>
+                        </c:choose>                             
                     </td>
                 </c:forEach>                
             </tr>

@@ -24,26 +24,27 @@ import java.io.Writer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
+import org.springframework.core.io.FileSystemResource;
 
 /**
  * Custom extension of the Spring PropertyPlaceholderConfigurer that
  * creates a jtrac.home System property if required and also creates
- * a default jtrac.properties file for HSQLDB
+ * a default jtrac.properties file for HSQLDB - useful for those who want
+ * to quickly evaluate JTrac.  Just dropping the war into a servlet container
+ * would work without the need to even configure a datasource.
+ * 
+ * This class would effectively do nothing if 
+ * 1) a "jtrac.home" system property has been set
+ * 2) a "jtrac.properties" file exists in jtrac.home
+ *
+ * Note that later on during startup, the HibernateJtracDao would check if 
+ * database tables exist, and if not, would proceed to create them
  */
 public class JtracConfigurer extends PropertyPlaceholderConfigurer {
     
     private final Log logger = LogFactory.getLog(getClass());
     
-    /**
-     * Check is system property "jtrac.home" is set
-     * if not, assume jtrac.home = ${user.dir}/.jtrac and 
-     * create jtrac.home, as well as a default jtrac.properties for HSQLDB 
-     * Note that the database will be created automatically if it does not exist
-     * by HibernateJtracDao
-     *
-     * This method is fired by an "init-method" attribute in the Spring bean definition
-     */    
-    public void setup() throws Exception {
+    public JtracConfigurer() throws Exception {
         String jtracHome = System.getProperty("jtrac.home");
         if (jtracHome == null) {                        
             jtracHome = System.getProperty("user.home") + "/.jtrac";
@@ -80,7 +81,7 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer {
         } else {
             logger.info("'jtrac.properties' file exists: '" + propFile.getPath() + "'");
         }            
-        
+        setLocation(new FileSystemResource(propFile));
     }
     
 }

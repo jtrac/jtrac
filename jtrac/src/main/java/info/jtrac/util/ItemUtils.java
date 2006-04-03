@@ -20,6 +20,7 @@ import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
@@ -75,7 +76,11 @@ public final class ItemUtils {
         sb.append("<table class='jtrac'><tr><td><b>History</b></td></tr></table>");
         sb.append("<table width='100%' class='jtrac'>");
         sb.append("<tr>");
-        sb.append("  <th>Logged By</th><th>Status</th><th>Assigned To</th><th>Comment</th><th>Time Stamp</th>");        
+        sb.append("  <th>Logged By</th><th>Status</th><th>Assigned To</th><th>Comment</th><th>Time Stamp</th>");
+        List<Field> editable = item.getSpace().getMetadata().getEditableFields();
+        for(Field field : editable) {
+            sb.append("<th>" + field.getLabel() + "</th>");
+        }
         sb.append("</tr>");
 
         if (item.getHistory() != null) {
@@ -97,7 +102,10 @@ public final class ItemUtils {
                 }
                 sb.append(fixWhiteSpace(history.getComment()));            
                 sb.append("  </td>");
-                sb.append("  <td>" + history.getTimeStamp() + "</td>");            
+                sb.append("  <td>" + history.getTimeStamp() + "</td>"); 
+                for(Field field : editable) {
+                    sb.append("<td>" + history.getCustomValue(field.getName()) + "</td>");
+                }                
                 sb.append("</tr>");
                 row++;
             }

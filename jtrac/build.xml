@@ -40,7 +40,12 @@
             <fileset dir="${m2.repo}" includes="${runtime.jars}" casesensitive="false"/>         
         </copy>
     </target>
-    	
+    
+    <target name="war" depends="war-exploded">
+        <copy todir="target/${war.name}/WEB-INF" file="etc/log4j.properties" overwrite="true"/>
+        <zip destfile="target/${war.name}.war" basedir="target/${war.name}"/>
+    </target>    
+    
     <!-- ========================== TEST ============================ -->
 	
     <target name="all" depends="clean, compile-test">

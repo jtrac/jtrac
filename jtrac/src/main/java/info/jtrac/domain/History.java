@@ -40,30 +40,9 @@ public class History extends AbstractItem {
         // setTimeStamp(item.getTimeStamp());
         setPlannedEffort(item.getPlannedEffort());
         //==========================
-        setStatus(item.getStatus());
-        setSeverity(item.getSeverity());
-        setPriority(item.getPriority());
-        setCusInt01(item.getCusInt01());
-        setCusInt02(item.getCusInt02());
-        setCusInt03(item.getCusInt03());
-        setCusInt04(item.getCusInt04());
-        setCusInt05(item.getCusInt05());
-        setCusInt06(item.getCusInt06());
-        setCusInt07(item.getCusInt07());
-        setCusInt08(item.getCusInt08());
-        setCusInt09(item.getCusInt09());
-        setCusInt10(item.getCusInt10());
-        setCusDbl01(item.getCusDbl01());
-        setCusDbl02(item.getCusDbl02());
-        setCusDbl03(item.getCusDbl03());
-        setCusStr01(item.getCusStr01());
-        setCusStr02(item.getCusStr02());
-        setCusStr03(item.getCusStr03());
-        setCusStr04(item.getCusStr04());
-        setCusStr05(item.getCusStr05());
-        setCusTim01(item.getCusTim01());
-        setCusTim02(item.getCusTim02());
-        setCusTim03(item.getCusTim03());
+        for(Field.Name fieldName : Field.Name.values()) {
+            setValue(fieldName, item.getValue(fieldName));
+        }
     }
     
     @Override
