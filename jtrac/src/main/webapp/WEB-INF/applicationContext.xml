@@ -25,7 +25,7 @@
         </property>        
         <property name="transactionAttributes">
             <props>
-                <prop key="store*">PROPAGATION_REQUIRED</prop>                
+                <prop key="store*">PROPAGATION_REQUIRED</prop>
             </props>
         </property>        
     </bean>   
@@ -34,13 +34,13 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>        
     
-    <!-- local DataSource that works in any environment -->
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">    
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.SingleConnectionDataSource">
         <property name="driverClassName" value="${database.driver}"/>
         <property name="url" value="${database.url}"/>
         <property name="username" value="${database.username}"/>
         <property name="password" value="${database.password}"/>
-    </bean>
+        <property name="suppressClose" value="true"/>
+    </bean>     
 
     <!-- Hibernate SessionFactory -->
     <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">

@@ -7,9 +7,10 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import java.util.List;
 import java.util.Map;
+import javax.sql.DataSource;
 
 import org.acegisecurity.GrantedAuthority;
-
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.AbstractTransactionalDataSourceSpringContextTests;
 
 /**
@@ -23,19 +24,20 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
     private Jtrac jtrac;
     private JtracDao dao;
 
-    // magically autowired by Spring JUnit helper
+    // magically autowired by Spring JUnit helper / extension
     public void setDao(JtracDao dao) {
         this.dao = dao;
     }
 
-    //  magically autowired by Spring JUnit helper
+    //  magically autowired by Spring JUnit helper / extension
     public void setJtrac(Jtrac jtrac) {
         this.jtrac = jtrac;
     }
 
     protected String[] getConfigLocations() {
         System.setProperty("jtrac.home", "target/home");
-        return new String[] { "file:src/main/webapp/WEB-INF/applicationContext.xml" };
+        return new String[] {
+            "file:src/main/webapp/WEB-INF/applicationContext.xml" };
     }
 
     //==============================================================================
@@ -104,12 +106,12 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         assertEquals(2, gas.length);
         assertEquals("ROLE_USER", gas[0].getAuthority());
         assertEquals("ROLE_TEST_SPACE", gas[1].getAuthority());
-        
+
         List<UserRole> userRoles = dao.findUsersForSpace(space.getId());
         assertEquals(1, userRoles.size());
         UserRole ur = userRoles.get(0);
         assertEquals("test", ur.getUser().getLoginName());
-        assertEquals("ROLE_TEST", ur.getRoleKey());        
+        assertEquals("ROLE_TEST", ur.getRoleKey());
 
     }
 
