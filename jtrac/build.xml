@@ -51,8 +51,7 @@
     <target name="all" depends="clean, compile-test">
         <checkstyle-macro/>
         <style in="target/reports/checkstyle.xml" out="target/reports/checkstyle.html" 
-        style="etc/checkstyle-noframes-sorted.xsl"/>     
-        <delete dir="home/db"/>        
+        style="etc/checkstyle-noframes-sorted.xsl"/>        
         <antcall target="test-coverage"/>
     </target>
 	

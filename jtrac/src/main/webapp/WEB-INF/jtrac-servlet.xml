@@ -5,11 +5,9 @@
 
 <beans> 
 
-    <!-- ============================ VIEW RESOLVER ============================== -->
     <!--
-    - This sets up a uniform way to map the view logical name (with JSTL support)
-    - to the actual web resource (jsp).  If we need a more complex mapping
-    - it can be done through a resource bundle
+    - This sets up a uniform short-cut way to map the view logical name (with JSTL support)
+    - to the actual web resource (jsp).  A more complex mapping can be done with a resource bundle
     -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
@@ -17,11 +15,7 @@
         <property name="suffix" value=".jsp"/>
     </bean>
     
-    <!-- ======================== URL TO HANDLER MAPPING ============================ -->
-    <!--
-    - This bean is an explicit URL mapper that is used by the "jtrac" DispatcherServlet
-    - It is used instead of the spring default BeanNameUrlHandlerMapping.
-    -->
+    <!-- explicit URL mapper used by the "jtrac" DispatcherServlet -->    
     <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <property name="interceptors">
             <list>
@@ -35,25 +29,26 @@
             <props>
                 <prop key="/flow.htm">flowController</prop>
                 <!-- =========================================== -->
-                <prop key="/login.htm">defaultController</prop>                
-                <prop key="/logout.htm">defaultController</prop>
-                <prop key="/dashboard.htm">defaultController</prop>
-                <prop key="/options.htm">defaultController</prop>
+                <prop key="/dashboard.htm">urlController</prop>
+                <prop key="/options.htm">urlController</prop>
+                <prop key="/svn_form.htm">urlController</prop>
                 <!-- =========================================== -->
+                <prop key="/login.htm">defaultController</prop>                
+                <prop key="/logout.htm">defaultController</prop>                
                 <prop key="/user_list.htm">defaultController</prop>
                 <prop key="/space_list.htm">defaultController</prop>
-                <prop key="/svn_form.htm">defaultController</prop>
                 <prop key="/svn_view.htm">defaultController</prop>
                 <prop key="/chart/svn_commits_per_committer.jpg">defaultController</prop>
             </props>
         </property>
     </bean>    
     
-    <!-- =========================== SPRING MVC ============================= -->
+    <!-- for cases where a JSP view can be directly rendered without invoking any backend methods  -->      
+    <bean id="urlController" class="org.springframework.web.servlet.mvc.UrlFilenameViewController"/>
     
     <!--
-    - This bean is a MultiActionController that manages miscellaneous 
-    - view rendering e.g. simple hyperlinks that do not need a FormController
+    - This is a MultiActionController that manages simple view rendering where backend services 
+    - are invoked but there is no need for form binding or a FormController
     -->
     <bean id="defaultController" class="info.jtrac.web.DefaultMultiActionController">
         <property name="methodNameResolver">
@@ -63,11 +58,8 @@
                     <props>
                         <prop key="/login.htm">loginHandler</prop>
                         <prop key="/logout.htm">logoutHandler</prop>
-                        <prop key="/dashboard.htm">dashboardHandler</prop>
-                        <prop key="/options.htm">optionsHandler</prop>
                         <prop key="/user_list.htm">userListHandler</prop>
                         <prop key="/space_list.htm">spaceListHandler</prop>
-                        <prop key="/svn_form.htm">svnFormHandler</prop>
                         <prop key="/svn_view.htm">svnViewHandler</prop>
                         <prop key="/chart/svn_commits_per_committer.jpg">svnCommitsPerCommitterChartHandler</prop>
                     </props>
@@ -89,11 +81,11 @@
                 <constructor-arg>
                     <bean class="org.springframework.webflow.registry.XmlFlowRegistryFactoryBean">
                         <property name="flowLocations" value="/WEB-INF/flow/*.xml"/>
-                    </bean>				
+                    </bean>             
                 </constructor-arg>
-            </bean>    	
+            </bean>     
         </property>
-    </bean>    	    
+    </bean>         
     
     <bean id="itemFormAction" class="info.jtrac.webflow.ItemFormAction">
         <property name="jtrac" ref="jtrac"/>

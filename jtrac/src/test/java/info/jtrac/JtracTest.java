@@ -18,9 +18,9 @@ import org.springframework.test.AbstractTransactionalDataSourceSpringContextTest
  * Tests assume that a database is available, and with HSQLDB around this is not
  * an issue.
  */
-public class JtracImplTest extends AbstractTransactionalDataSourceSpringContextTests {
+public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests {
 
-    private JtracImpl jtrac;
+    private Jtrac jtrac;
     private JtracDao dao;
 
     // magically autowired by Spring JUnit helper
@@ -29,12 +29,12 @@ public class JtracImplTest extends AbstractTransactionalDataSourceSpringContextT
     }
 
     //  magically autowired by Spring JUnit helper
-    public void setJtrac(JtracImpl jtrac) {
+    public void setJtrac(Jtrac jtrac) {
         this.jtrac = jtrac;
     }
 
     protected String[] getConfigLocations() {
-        System.setProperty("jtrac.home", "home");
+        System.setProperty("jtrac.home", "target/home");
         return new String[] { "file:src/main/webapp/WEB-INF/applicationContext.xml" };
     }
 
