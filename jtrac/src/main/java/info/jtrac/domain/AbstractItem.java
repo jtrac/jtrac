@@ -62,7 +62,7 @@ public abstract class AbstractItem implements Serializable {
     private Date cusTim02;
     private Date cusTim03;    
     
-    // we could have used reflection but doing this way for performance
+    // we could have used reflection or a Map but doing this way for performance
     public Object getValue(Field.Name fieldName) {
         switch(fieldName) {
             case SEVERITY: return severity;
@@ -93,7 +93,7 @@ public abstract class AbstractItem implements Serializable {
         return null;
     }
     
-    // we could have used reflection but doing this way for performance
+    // we could have used reflection or a Map but doing this way for performance
     public void setValue(Field.Name fieldName, Object value) {
         switch(fieldName) {
             case SEVERITY: severity = (Integer) value; break;
@@ -122,7 +122,7 @@ public abstract class AbstractItem implements Serializable {
         }
     }    
     
-    // has to be overridden
+    // must override, History behaves differently from Item
     public abstract Space getSpace();
     
     public String getCustomValue(Field.Name fieldName) {

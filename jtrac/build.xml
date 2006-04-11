@@ -220,7 +220,7 @@
     </target>
 	
     <!-- target for remote debugging -->
-    <target name="tomcat-start-debug">
+    <target name="tomcat-start-debug" depends="tomcat-deploy">
         <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
             <jvmarg line="-Djtrac.home=home"/>
             <jvmarg line="-Dcatalina.home=${tomcat.home}"/>
@@ -231,7 +231,7 @@
     </target>    
     
     <!-- target for NetBeans Profiler on Windows -->
-    <target name="tomcat-start-profiler">
+    <target name="tomcat-start-profiler" depends="tomcat-deploy">
         <property name="nbprof.home" value="${netbeans.home}/../profiler1/lib"/>
         <property name="agent.path" value="${nbprof.home}/deployed/jdk15/windows/profilerinterface.dll=${nbprof.home},5140"/>
         <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
