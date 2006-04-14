@@ -108,7 +108,7 @@ public class Field implements Serializable {
                 case 2: return "Priority (Drop Down)";             
                 case 3: return "Drop Down List";
                 case 4: return "Decimal Number";
-                case 5: return "Free Text";
+                case 5: return "Free Text Field";
                 case 6: return "Date Field";
                 default: throw new RuntimeException("Unknown type " + type);
             }
