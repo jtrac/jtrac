@@ -29,13 +29,7 @@
         <property name="filterInvocationDefinitionSource">
             <value>
                 PATTERN_TYPE_APACHE_ANT
-                /index.jsp=
-                /test/**=
-                /resources/**=
-                /calendar/**=
-                /chart/*=
-                /svn_*=
-                /**=httpFilter,authenticationFilter,rememberMeFilter,anonFilter,authorizationFilter
+                /**=httpFilter,authenticationFilter,rememberMeFilter,anonFilter,exceptionTranslationFilter,authorizationFilter
             </value>
         </property>
     </bean>
@@ -52,6 +46,7 @@
     </bean>             
 
     <bean id="rememberMeFilter" class="org.acegisecurity.ui.rememberme.RememberMeProcessingFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
         <property name="rememberMeServices" ref="rememberMeServices"/>
     </bean>
    
@@ -65,36 +60,41 @@
         <property name="userAttribute" value="anonymousUser,ROLE_ANONYMOUS"/>
     </bean> 
     
-    <bean id="authorizationFilter" class="org.acegisecurity.intercept.web.SecurityEnforcementFilter">
-        <property name="filterSecurityInterceptor">
-            <bean class="org.acegisecurity.intercept.web.FilterSecurityInterceptor">
-                <property name="authenticationManager" ref="authenticationManager"/>
-                <property name="accessDecisionManager">
-                    <bean class="org.acegisecurity.vote.AffirmativeBased">
-                        <property name="allowIfAllAbstainDecisions" value="false"/>
-                        <property name="decisionVoters">
-                            <list>
-                                <bean class="org.acegisecurity.vote.RoleVoter"/>
-                            </list>
-                        </property>
-                    </bean>		      
-                </property>     
-                <property name="objectDefinitionSource">
-                    <value>
-                        PATTERN_TYPE_APACHE_ANT
-                        /login.htm*=ROLE_ANONYMOUS,ROLE_USER
-                        /logout.htm=ROLE_ANONYMOUS,ROLE_USER
-                        /**=ROLE_USER
-                    </value>
+    <bean name="authorizationFilter" class="org.acegisecurity.intercept.web.FilterSecurityInterceptor">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="accessDecisionManager">
+            <bean class="org.acegisecurity.vote.AffirmativeBased">
+                <property name="allowIfAllAbstainDecisions" value="false"/>
+                <property name="decisionVoters">
+                    <list>
+                        <bean class="org.acegisecurity.vote.RoleVoter"/>
+                    </list>
                 </property>
-            </bean>      
+            </bean>		      
+        </property>     
+        <property name="objectDefinitionSource">
+            <value>
+                PATTERN_TYPE_APACHE_ANT
+                /index.jsp=ROLE_ANONYMOUS,ROLE_USER
+                /test/**=ROLE_ANONYMOUS,ROLE_USER
+                /resources/**=ROLE_ANONYMOUS,ROLE_USER
+                /calendar/**=ROLE_ANONYMOUS,ROLE_USER
+                /chart/*=ROLE_ANONYMOUS,ROLE_USER
+                /svn_*=ROLE_ANONYMOUS,ROLE_USER                 
+                /login.htm*=ROLE_ANONYMOUS,ROLE_USER
+                /logout.htm=ROLE_ANONYMOUS,ROLE_USER
+                /**=ROLE_USER
+            </value>
         </property>
+    </bean>
+    
+    <bean id="exceptionTranslationFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
         <property name="authenticationEntryPoint">
             <bean class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
                 <property name="loginFormUrl" value="/login.htm"/>
             </bean>      
         </property>
-    </bean>   
+    </bean>
     
 </beans>
 
