@@ -1,12 +1,13 @@
 // beanshell script to create a properties file designed to seamlesslly
 // integrate Maven with an Ant build file and even a Netbeans project.xml
-// requires the "bshrunner" Maven plugin available in the JTrac Subversion repository
+// requires the "bshrunner" Maven plugin.
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
 
-// functions
-writePath(artifacts, relative) {
+// function to write out JAR paths into standard java properties file format
+// =========================================================================
+writePath(artifacts, useRelativePaths) {
     for (Artifact a : artifacts) {
         f = a.getFile();
         if (f == null) {
@@ -15,7 +16,7 @@ writePath(artifacts, relative) {
             f = a.getFile();
         }
         p = f.getPath().substring(len).replace('\\','/');
-        if (relative) {
+        if (useRelativePaths) {
             out.write("\\\n    " + p + ",");
         } else {
             out.write("\\\n    ${m2.repo}/" + p + ":");
@@ -24,6 +25,8 @@ writePath(artifacts, relative) {
     out.write('\n');
 }
 
+// function to resolve dependencies for the given artifact details using Maven, on the fly
+// =======================================================================================
 resolveDependencies(groupId, artifactId, version) {
     pomArtifact = artifactFactory.createArtifact(groupId, artifactId, version, "", "jar"); 
     pomProject = mavenProjectBuilder.buildFromRepository(pomArtifact, remoteArtifactRepositories, localRepository);    
@@ -34,6 +37,9 @@ resolveDependencies(groupId, artifactId, version) {
     artifacts.add(pomArtifact);
     return artifacts;      
 }
+
+// main flow
+// =========
 
 os = new FileOutputStream("build-deps.properties");
 out = new PrintWriter(os);      
