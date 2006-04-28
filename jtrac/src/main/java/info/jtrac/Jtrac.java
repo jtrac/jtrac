@@ -35,12 +35,10 @@ import org.acegisecurity.userdetails.UserDetailsService;
  */
 public interface Jtrac extends UserDetailsService {
       
-    void storeItem(Item item);
+    void storeItem(Item item, Attachment attachment);
     void storeHistoryForItem(Item item, History history);
     Item loadItem(long id);
     List<Item> findItems(ItemSearch itemSearch);
-    //========================================================
-    void storeAttachment(Attachment attachment);
     //========================================================
     void storeUser(User user);
     List<User> findAllUsers();

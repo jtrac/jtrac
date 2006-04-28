@@ -16,6 +16,17 @@
 
 package info.jtrac.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLDecoder;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * Utils that deal with Attachments, upload / download and
  * file name String manipulation
@@ -29,6 +40,39 @@ public class AttachmentUtils {
             index = path.lastIndexOf('\\');
         }
         return (index != -1 ? path.substring(index + 1) : path);
+    }
+    
+    public static void download(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        
+        String fileName = URLDecoder.decode(cleanFileName(request.getRequestURI()), "UTF-8");
+        String filePrefix = request.getParameter("filePrefix");
+        File file = new File(System.getProperty("jtrac.home") + "/attachments/" + filePrefix + "_" + fileName);        
+        if (file.canRead()) {
+            InputStream in = null;
+            OutputStream out = null;
+            try {
+                in = new FileInputStream(file);
+                if (in != null) {
+                    out = new BufferedOutputStream(response.getOutputStream());
+                    in = new BufferedInputStream(in);
+                    // will always force browser to download file
+                    // user can click 'Open' for convenience in the case of IE and
+                    // standard MS Office documents
+                    String contentType = "application/unknow";
+                    response.setHeader(
+                            "Content-Disposition",
+                            "attachment; filename=\"" + fileName + "\"");
+                    int c;
+                    while ((c = in.read()) != -1)
+                        out.write(c);
+                    return;
+                }
+            } finally {
+                in.close();
+                out.close();
+            }
+        }
+        response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
     
 }

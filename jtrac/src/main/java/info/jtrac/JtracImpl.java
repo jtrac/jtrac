@@ -79,8 +79,14 @@ public class JtracImpl implements Jtrac {
         return passwordEncoder.encodePassword(clearText, null);
     }
     
-    public void storeItem(Item item) {
-        History history = new History(item);
+    public void storeItem(Item item, Attachment attachment) {
+        History history = new History(item);        
+        if (attachment != null) {
+            dao.storeAttachment(attachment);
+            attachment.setFilePrefix(attachment.getId());
+            item.add(attachment);
+            history.setAttachment(attachment);
+        }
         Date now = new Date();
         if (item.getTimeStamp() == null) {
             item.setTimeStamp(now);
@@ -122,10 +128,6 @@ public class JtracImpl implements Jtrac {
     
     public List<Item> findItems(ItemSearch itemSearch) {
         return dao.findItems(itemSearch);
-    }
-    
-    public void storeAttachment(Attachment attachment) {
-        dao.storeAttachment(attachment);
     }
     
     // =========  acegi UserDetailsService implementation ==========

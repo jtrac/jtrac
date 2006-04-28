@@ -107,17 +107,18 @@ public class ItemFormAction extends AbstractFormAction {
         ServletExternalContext servletContext = (ServletExternalContext) context.getLastEvent().getSource();
         MultipartHttpServletRequest request = (MultipartHttpServletRequest) servletContext.getRequest();
         MultipartFile multipartFile = request.getFile("file");
+        Attachment attachment = null;
         if (!multipartFile.isEmpty()) {
             String fileName = AttachmentUtils.cleanFileName(multipartFile.getOriginalFilename());
-            Attachment attachment = new Attachment();
-            attachment.setFileName(fileName);
-            jtrac.storeAttachment(attachment);
-            File file = new File(System.getProperty("jtrac.home") + "/attachments/" + attachment.getId() + "_" + fileName);
-            attachment.setFilePrefix(attachment.getId());
-            multipartFile.transferTo(file);         
+            attachment = new Attachment();
+            attachment.setFileName(fileName);      
             item.add(attachment);
         }
-        jtrac.storeItem(item);
+        jtrac.storeItem(item, attachment);
+        if (attachment != null) {
+            File file = new File(System.getProperty("jtrac.home") + "/attachments/" + attachment.getFilePrefix() + "_" + attachment.getFileName());
+            multipartFile.transferTo(file);
+        }
         return success();
     }        
     

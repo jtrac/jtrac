@@ -16,13 +16,11 @@
 
 package info.jtrac.web;
 
-import info.jtrac.domain.Item;
-import info.jtrac.domain.UserRole;
+import info.jtrac.util.AttachmentUtils;
 import info.jtrac.util.SvnUtils;
 
 import java.io.OutputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -74,6 +72,11 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
         Map<String, Integer> commitsPerCommitter = SvnUtils.getCommitsPerCommitter(SvnUtils.getRepository(url, username, password));
         request.getSession().setAttribute("commitsPerCommitter", commitsPerCommitter);
         return new ModelAndView("svn_view");
+    }    
+
+    public ModelAndView attachmentViewHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        AttachmentUtils.download(request, response);
+        return null;
     }
 
     public ModelAndView svnCommitsPerCommitterChartHandler(HttpServletRequest request,
