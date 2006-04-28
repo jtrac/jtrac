@@ -17,6 +17,7 @@
 package info.jtrac.hibernate;
 
 import info.jtrac.JtracDao;
+import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
@@ -62,6 +63,10 @@ public class HibernateJtracDao
     public List<Item> findItems(ItemSearch itemSearch) {
         return getHibernateTemplate().findByCriteria(itemSearch.getCriteria());
     }
+    
+    public void storeAttachment(Attachment attachment) {
+        getHibernateTemplate().merge(attachment);
+    }    
     
     public void storeMetadata(Metadata metadata) {
         getHibernateTemplate().merge(metadata);

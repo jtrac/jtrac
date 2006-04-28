@@ -16,14 +16,17 @@
 
 package info.jtrac.webflow;
 
+import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
+import info.jtrac.util.AttachmentUtils;
 import info.jtrac.util.UserEditor;
 import info.jtrac.util.ValidationUtils;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -33,9 +36,12 @@ import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.Errors;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.webflow.Event;
 import org.springframework.webflow.RequestContext;
 import org.springframework.webflow.ScopeType;
+import org.springframework.webflow.context.servlet.ServletExternalContext;
 
 /**
  * Multiaction that backs the "Item Create / Edit" flow
@@ -96,6 +102,20 @@ public class ItemFormAction extends AbstractFormAction {
         }
         if (errors.hasErrors()) {
             return error();
+        }
+        
+        ServletExternalContext servletContext = (ServletExternalContext) context.getLastEvent().getSource();
+        MultipartHttpServletRequest request = (MultipartHttpServletRequest) servletContext.getRequest();
+        MultipartFile multipartFile = request.getFile("file");
+        if (!multipartFile.isEmpty()) {
+            String fileName = AttachmentUtils.cleanFileName(multipartFile.getOriginalFilename());
+            Attachment attachment = new Attachment();
+            attachment.setFileName(fileName);
+            jtrac.storeAttachment(attachment);
+            File file = new File(System.getProperty("jtrac.home") + "/attachments/" + attachment.getId() + "_" + fileName);
+            attachment.setFilePrefix(attachment.getId());
+            multipartFile.transferTo(file);         
+            item.add(attachment);
         }
         jtrac.storeItem(item);
         return success();

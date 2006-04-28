@@ -57,6 +57,13 @@ public class Item extends AbstractItem {
         this.history.add(h);
     }
     
+    public void add(Attachment attachment) {
+        if (attachments == null) {
+            attachments = new LinkedHashSet<Attachment>();
+        }
+        attachments.add(attachment);
+    }
+    
     //===========================================================
     
     @Override

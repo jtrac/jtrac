@@ -16,6 +16,7 @@
 
 package info.jtrac;
 
+import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
@@ -121,6 +122,10 @@ public class JtracImpl implements Jtrac {
     
     public List<Item> findItems(ItemSearch itemSearch) {
         return dao.findItems(itemSearch);
+    }
+    
+    public void storeAttachment(Attachment attachment) {
+        dao.storeAttachment(attachment);
     }
     
     // =========  acegi UserDetailsService implementation ==========

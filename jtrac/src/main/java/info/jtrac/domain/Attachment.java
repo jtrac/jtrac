@@ -31,11 +31,10 @@ import java.io.Serializable;
 public class Attachment implements Serializable {
     
     private long id;
-    private Item item;
     private Attachment previous;
     private long filePrefix;
     private String fileName;
-
+    
     public String getFileName() {
         return fileName;
     }
@@ -50,14 +49,6 @@ public class Attachment implements Serializable {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public Item getItem() {
-        return item;
-    }
-
-    public void setItem(Item item) {
-        this.item = item;
     }
 
     public Attachment getPrevious() {

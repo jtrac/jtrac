@@ -16,6 +16,7 @@
 
 package info.jtrac;
 
+import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
@@ -35,6 +36,8 @@ public interface JtracDao {
     void storeItem(Item item);
     Item loadItem(long id);
     List<Item> findItems(ItemSearch itemSearch);
+    //===========================================
+    void storeAttachment(Attachment attachment);
     //===========================================
     void storeMetadata(Metadata metadata);
     Metadata loadMetadata(int id);

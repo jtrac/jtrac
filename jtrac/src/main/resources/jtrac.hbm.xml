@@ -169,10 +169,9 @@
         <id name="id" column="id">
             <generator class="native"/>
         </id>
-        <many-to-one name="item" column="item_id" not-null="true"/>
         <many-to-one name="previous" column="previous_id"/>
-        <property name="filePrefix" column="file_prefix"/>
         <property name="fileName" column="file_name"/>
+        <property name="filePrefix" column="file_prefix"/>
     </class>    
     
 </hibernate-mapping>

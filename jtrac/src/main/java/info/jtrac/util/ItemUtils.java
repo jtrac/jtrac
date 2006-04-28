@@ -94,7 +94,7 @@ public final class ItemUtils {
                 Attachment attachment = history.getAttachment();
                 if (attachment != null) {
                     if (response != null) {
-                        String href = response.encodeURL("attachments/" + attachment.getFilePrefix() + attachment.getFileName());
+                        String href = response.encodeURL("attachments/" + attachment.getFilePrefix() + "_" + attachment.getFileName());
                         sb.append("<a target='_blank' href='" + href + "'>" + attachment.getFileName() + "</a>&nbsp;");
                     } else {
                         sb.append("(attachment:&nbsp" + attachment.getFileName() + ")&nbsp;");
