@@ -94,7 +94,7 @@
                     <tr>
                         <td>
                             <spring:bind path="item.itemUsers">
-                                <jtrac:multiselect name="${status.expression}" list="${userRoles}" selected="${item.itemUsers}"/>
+                                <jtrac:multiselect name="${status.expression}" list="${userRoles}" selected="${status.value}"/>
                             </spring:bind>
                         </td>
                     </tr>

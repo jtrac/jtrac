@@ -6,8 +6,13 @@
 
 <p/>
 
-<form method="post" action="<c:url value='flow.htm'/>">
+<form method="post" action="<c:url value='flow.htm'/>" enctype="multipart/form-data">
 
+<table class="bdr-collapse" width="100%">
+
+<tr>
+<td>    
+    
 <table class="jtrac">
         
     <c:forEach items="${editableFields}" var="field">
@@ -57,7 +62,7 @@
         <td>
             <spring:bind path="history.comment">
                 <textarea name="${status.expression}" rows="6" cols="70">${status.value}</textarea>
-                <span class="error">${status.errorMessage}</span>
+                <br/><span class="error">${status.errorMessage}</span>
             </spring:bind>
         </td>        
     </tr>
@@ -67,6 +72,27 @@
             <input type="submit" name="_eventId_submit" value="Submit"/>
         </td>        
     </tr>  
+</table>
+
+</td>
+
+<td valign="top">
+    <table class="jtrac">
+        <tr><th>Notify By E-mail</th></tr>
+        <tr>
+            <td>
+                <spring:bind path="history.itemUsers">
+                    <jtrac:multiselect name="${status.expression}" list="${userRoles}" selected="${status.value}"/>
+                </spring:bind>
+            </td>
+        </tr>
+        <tr><th>Attachment</th></tr>
+        <tr><td><input type="file" name="file"/></td></tr>
+    </table>
+</td>
+
+</tr>
+
 </table>
 
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>

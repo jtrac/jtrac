@@ -35,7 +35,7 @@ public class Item extends AbstractItem {
     private Set<History> history;
     private Set<Item> children;
     private Set<Attachment> attachments;
-    private Set<ItemUser> itemUsers;
+
     
     public String getRefId() {
         return getSpace().getPrefixCode() + "-" + sequenceNum;
@@ -113,15 +113,7 @@ public class Item extends AbstractItem {
 
     public void setAttachments(Set<Attachment> attachments) {
         this.attachments = attachments;
-    }    
-    
-    public Set<ItemUser> getItemUsers() {
-        return itemUsers;
-    }
-
-    public void setItemUsers(Set<ItemUser> itemUsers) {
-        this.itemUsers = itemUsers;
-    }    
+    }      
     
     @Override
     public String toString() {

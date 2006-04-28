@@ -21,6 +21,7 @@ import java.util.Date;
 
 import static info.jtrac.domain.Field.Name.*;
 import info.jtrac.util.DateUtils;
+import java.util.Set;
 
 /**
  * Abstract class that serves as base for both Item and History
@@ -61,6 +62,8 @@ public abstract class AbstractItem implements Serializable {
     private Date cusTim01;
     private Date cusTim02;
     private Date cusTim03;    
+    
+    private Set<ItemUser> itemUsers;    
     
     // we could have used reflection or a Map but doing this way for performance
     public Object getValue(Field.Name fieldName) {
@@ -407,6 +410,14 @@ public abstract class AbstractItem implements Serializable {
     public void setPlannedEffort(Double plannedEffort) {
         this.plannedEffort = plannedEffort;
     }    
+    
+    public Set<ItemUser> getItemUsers() {
+        return itemUsers;
+    }
+
+    public void setItemUsers(Set<ItemUser> itemUsers) {
+        this.itemUsers = itemUsers;
+    }      
     
     @Override
     public String toString() {

@@ -16,15 +16,19 @@
 
 package info.jtrac.webflow;
 
-import info.jtrac.domain.Field;
+import info.jtrac.domain.Attachment;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
+import info.jtrac.util.AttachmentUtils;
+import info.jtrac.util.ItemUserEditor;
 import info.jtrac.util.UserEditor;
 import info.jtrac.util.ValidationUtils;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -34,9 +38,12 @@ import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.Errors;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.webflow.Event;
 import org.springframework.webflow.RequestContext;
 import org.springframework.webflow.ScopeType;
+import org.springframework.webflow.context.servlet.ServletExternalContext;
 
 /**
  * Multiaction that participates in the "Space Create / Edit" flow
@@ -57,11 +64,15 @@ public class ItemViewFormAction extends AbstractFormAction {
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
         binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
         binder.registerCustomEditor(User.class, new UserEditor(jtrac));
+        binder.registerCustomEditor(ItemUser.class, new ItemUserEditor(jtrac));
     }    
     
     @Override
     public Object loadFormObject(RequestContext context) {
         Item item = (Item) context.getFlowScope().get("item");
+        if (item == null) {
+            item = (Item) context.getRequestScope().get("item");
+        }
         if (item == null) {
             String itemId = ValidationUtils.getParameter(context, "itemId");
             long id = Long.parseLong(itemId);
@@ -74,7 +85,9 @@ public class ItemViewFormAction extends AbstractFormAction {
         context.getFlowScope().put("editableFields", item.getEditableFieldList(user));
         context.getFlowScope().put("item", item);
         context.getFlowScope().put("userRoles", userRoles);        
-        return new History();
+        History history = new History();
+        history.setItemUsers(item.getItemUsers());
+        return history;
     }     
     
     public Event itemViewHandler(RequestContext context) throws Exception {
@@ -98,7 +111,24 @@ public class ItemViewFormAction extends AbstractFormAction {
         Item item = (Item) context.getFlowScope().get("item");
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();        
         history.setLoggedBy(user);
-        jtrac.storeHistoryForItem(item, history);
+        
+        ServletExternalContext servletContext = (ServletExternalContext) context.getLastEvent().getSource();
+        MultipartHttpServletRequest request = (MultipartHttpServletRequest) servletContext.getRequest();
+        MultipartFile multipartFile = request.getFile("file");
+        Attachment attachment = null;
+        if (!multipartFile.isEmpty()) {
+            String fileName = AttachmentUtils.cleanFileName(multipartFile.getOriginalFilename());
+            attachment = new Attachment();
+            attachment.setFileName(fileName);
+        }        
+        
+        jtrac.storeHistoryForItem(item, history, attachment);
+        
+        if (attachment != null) {
+            File file = new File(System.getProperty("jtrac.home") + "/attachments/" + attachment.getFilePrefix() + "_" + attachment.getFileName());
+            multipartFile.transferTo(file);
+        }        
+        
         resetForm(context);
         return success();
     }

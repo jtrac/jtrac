@@ -53,7 +53,7 @@ public class ItemFormAction extends AbstractFormAction {
     public ItemFormAction() {
         setFormObjectClass(Item.class);
         setFormObjectName("item");
-        setFormObjectScope(ScopeType.FLOW);
+        setFormObjectScope(ScopeType.REQUEST);
     }
     
     @Override
@@ -77,7 +77,11 @@ public class ItemFormAction extends AbstractFormAction {
         } else {
             item = new Item();
             String spaceId = ValidationUtils.getParameter(context, "spaceId");
-            space = jtrac.loadSpace(Integer.parseInt(spaceId));            
+            if (spaceId == null) {
+                space = (Space) context.getFlowScope().get("space");
+            } else {
+                space = jtrac.loadSpace(Integer.parseInt(spaceId));
+            }
         }
         context.getFlowScope().put("space", space);
         List<UserRole> userRoles = jtrac.findUsersForSpace(space.getId());
@@ -114,8 +118,7 @@ public class ItemFormAction extends AbstractFormAction {
         if (!multipartFile.isEmpty()) {
             String fileName = AttachmentUtils.cleanFileName(multipartFile.getOriginalFilename());
             attachment = new Attachment();
-            attachment.setFileName(fileName);      
-            item.add(attachment);
+            attachment.setFileName(fileName);
         }
         jtrac.storeItem(item, attachment);
         if (attachment != null) {

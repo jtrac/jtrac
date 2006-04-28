@@ -99,7 +99,7 @@ public class JtracImpl implements Jtrac {
         dao.storeItem(item);
     }
     
-    public void storeHistoryForItem(Item item, History history) {
+    public void storeHistoryForItem(Item item, History history, Attachment attachment) {
         if (history.getStatus() != null) {
             item.setStatus(history.getStatus());
             if (history.getStatus() == State.CLOSED) {
@@ -117,7 +117,14 @@ public class JtracImpl implements Jtrac {
                 item.setValue(field.getName(), value);
             }
         }
+        item.setItemUsers(history.getItemUsers());
         history.setTimeStamp(new Date());
+        if (attachment != null) {
+            dao.storeAttachment(attachment);
+            attachment.setFilePrefix(attachment.getId());
+            item.add(attachment);
+            history.setAttachment(attachment);
+        }        
         item.add(history);
         dao.storeItem(item);
     }

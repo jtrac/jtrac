@@ -36,7 +36,7 @@ import org.acegisecurity.userdetails.UserDetailsService;
 public interface Jtrac extends UserDetailsService {
       
     void storeItem(Item item, Attachment attachment);
-    void storeHistoryForItem(Item item, History history);
+    void storeHistoryForItem(Item item, History history, Attachment attachment);
     Item loadItem(long id);
     List<Item> findItems(ItemSearch itemSearch);
     //========================================================
