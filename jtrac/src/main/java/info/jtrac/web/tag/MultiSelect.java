@@ -16,6 +16,9 @@
 
 package info.jtrac.web.tag;
 
+import info.jtrac.domain.ItemUser;
+import info.jtrac.domain.User;
+import info.jtrac.domain.UserRole;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -26,8 +29,8 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 public class MultiSelect extends SimpleTagSupport {
     
-    private Set selected;
-    private List list;
+    private Set<ItemUser> selected;
+    private List<UserRole> list;
     private String name;
     
     public void setName(String name) {
@@ -40,6 +43,7 @@ public class MultiSelect extends SimpleTagSupport {
         this.selected = selected;
     }
     
+    @Override
     public void doTag() {
         try {
             PageContext pageContext = (PageContext) getJspContext();
@@ -48,12 +52,24 @@ public class MultiSelect extends SimpleTagSupport {
                 out.println("<div class='multiselect'>");
                 StringBuffer sb = new StringBuffer();
                 boolean hasSelected = false;
-                // loop
+
+                for(UserRole userRole : list) {
+                    User user = userRole.getUser();
+                    if (selected != null && selected.contains(new ItemUser(user))) {
+                        hasSelected = true;
+                        out.print("<input type='checkbox' name='" + name + "' value='" + user.getId() + "'");
+                        out.println(" checked='true'/>" + user.getName() + "<br/>");
+                    } else {
+                        sb.append("<input type='checkbox' name='" + name + "' value='" + user.getId() + "'");
+                        sb.append("/>" + user.getName() + "<br/>\n");
+                    }
+                }          
+                
                 if (hasSelected) {
                     out.println("<hr/>");
                 }
-                sb.append("</div>");
                 out.print(sb);
+                sb.append("</div>");
             }
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);

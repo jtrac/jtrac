@@ -19,11 +19,13 @@ package info.jtrac.webflow;
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import info.jtrac.util.AttachmentUtils;
+import info.jtrac.util.ItemUserEditor;
 import info.jtrac.util.UserEditor;
 import info.jtrac.util.ValidationUtils;
 import java.io.File;
@@ -61,6 +63,7 @@ public class ItemFormAction extends AbstractFormAction {
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
         binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
         binder.registerCustomEditor(User.class, new UserEditor(jtrac));
+        binder.registerCustomEditor(ItemUser.class, new ItemUserEditor(jtrac));
     }    
     
     @Override

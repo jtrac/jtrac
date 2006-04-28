@@ -42,7 +42,7 @@
 <td>
     <table class="bdr-collapse" width="100%">
         <tr>
-            <td>
+            <td valign="top">
                 <table class="jtrac">
 
                     <c:forEach items="${space.metadata.fieldList}" var="field">
@@ -90,11 +90,16 @@
 
             <td align="right">
                 <table class="jtrac">
+                    <tr><th>Notify By E-mail</th></tr>
                     <tr>
                         <td>
-                            <input type="file" name="file"/>
+                            <spring:bind path="item.itemUsers">
+                                <jtrac:multiselect name="${status.expression}" list="${userRoles}" selected="${item.itemUsers}"/>
+                            </spring:bind>
                         </td>
                     </tr>
+                    <tr><th>Attachment</th></tr>
+                    <tr><td><input type="file" name="file"/></td></tr>
                 </table>
             </td>
         </tr>
