@@ -120,7 +120,9 @@ public class ItemFormAction extends AbstractFormAction {
             attachment = new Attachment();
             attachment.setFileName(fileName);
         }
+        
         jtrac.storeItem(item, attachment);
+        
         if (attachment != null) {
             File file = new File(System.getProperty("jtrac.home") + "/attachments/" + attachment.getFilePrefix() + "_" + attachment.getFileName());
             multipartFile.transferTo(file);

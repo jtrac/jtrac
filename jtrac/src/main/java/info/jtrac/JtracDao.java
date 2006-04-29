@@ -57,6 +57,7 @@ public interface JtracDao {
     List<User> findUsersByEmail(String email);
     List<UserRole> findUsersForSpace(int spaceId);
     //===========================================
+    List<Config> findAllConfig();
     void storeConfig(Config config);
     Config loadConfig(String key);
     

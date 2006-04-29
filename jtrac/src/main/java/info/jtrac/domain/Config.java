@@ -17,6 +17,8 @@
 package info.jtrac.domain;
 
 import java.io.Serializable;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Simple name value pair to hold configuration parameters
@@ -26,5 +28,43 @@ public class Config implements Serializable {
     
     private String key;
     private String value;
+
+    private static final Set<String> keys;
+    
+    // set up a static set of valid config key names
+    static {
+        keys = new LinkedHashSet<String>();
+        keys.add("smtp.server.host");
+        keys.add("smtp.server.port");
+    }
+    
+    public static Set<String> getKeys() {
+        return keys;
+    }
+    
+    public Config() {
+        // zero arg constructor
+    }
+    
+    public Config(String key, String value) {
+        this.key = key;
+        this.value = value;
+    }
+    
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
     
 }

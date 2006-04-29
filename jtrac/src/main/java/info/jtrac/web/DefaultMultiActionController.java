@@ -16,6 +16,7 @@
 
 package info.jtrac.web;
 
+import info.jtrac.domain.Config;
 import info.jtrac.util.AttachmentUtils;
 import info.jtrac.util.SvnUtils;
 
@@ -100,6 +101,13 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
 
     public ModelAndView spaceListHandler(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("space_list", "spaces", jtrac.findAllSpaces());
-    }
+    }    
 
+    public ModelAndView configListHandler(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+        model.put("configMap", jtrac.loadAllConfig());
+        model.put("configKeys", Config.getKeys());
+        return new ModelAndView("config_list", model);
+    }      
+    
 }

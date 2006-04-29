@@ -1,5 +1,6 @@
 package info.jtrac;
 
+import info.jtrac.domain.Config;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
@@ -7,15 +8,14 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import java.util.List;
 import java.util.Map;
-import javax.sql.DataSource;
 
 import org.acegisecurity.GrantedAuthority;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.AbstractTransactionalDataSourceSpringContextTests;
 
 /**
  * JUnit test cases for the business implementation as well as the DAO, combined into
  * one class so that the Spring application context needs to be loaded only once
+ * which is taken care of by the Spring JUnit helper / extensions
  * Tests assume that a database is available, and with HSQLDB around this is not
  * an issue.
  */
@@ -66,9 +66,9 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
 
     public void testMetadataInsertAndLoad() {
         Metadata m1 = getMetadata();
-        dao.storeMetadata(m1);
+        jtrac.storeMetadata(m1);
         assertTrue(m1.getId() > 0);
-        Metadata m2 = dao.loadMetadata(m1.getId());
+        Metadata m2 = jtrac.loadMetadata(m1.getId());
         assertTrue(m2 != null);
         Map<Field.Name, Field> fields = m2.getFields();
         assertTrue(fields.size() == 2);
@@ -78,8 +78,8 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         User user = new User();
         user.setLoginName("test");
         user.setEmail("test@jtrac.com");
-        dao.storeUser(user);
-        User user1 = dao.findUsersByLoginName("test").get(0);
+        jtrac.storeUser(user);
+        User user1 = jtrac.loadUser("test");
         assertTrue(user1.getEmail().equals("test@jtrac.com"));
         User user2 = dao.findUsersByEmail("test@jtrac.com").get(0);
         assertTrue(user2.getLoginName().equals("test"));
@@ -92,22 +92,22 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         Metadata metadata = getMetadata();
 
         space.setMetadata(metadata);
-        dao.storeSpace(space);
+        jtrac.storeSpace(space);
 
         User user = new User();
         user.setLoginName("test");
 
         user.addSpaceRole(space, "ROLE_TEST");
-        dao.storeUser(user);
+        jtrac.storeUser(user);
 
-        User u1 = dao.findUsersByLoginName("test").get(0);
+        User u1 = jtrac.loadUser("test");
 
         GrantedAuthority[] gas = u1.getAuthorities();
         assertEquals(2, gas.length);
         assertEquals("ROLE_USER", gas[0].getAuthority());
         assertEquals("ROLE_TEST_SPACE", gas[1].getAuthority());
 
-        List<UserRole> userRoles = dao.findUsersForSpace(space.getId());
+        List<UserRole> userRoles = jtrac.findUsersForSpace(space.getId());
         assertEquals(1, userRoles.size());
         UserRole ur = userRoles.get(0);
         assertEquals("test", ur.getUser().getLoginName());
@@ -115,4 +115,11 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
 
     }
 
+    public void testConfigStoreAndLoad() {
+        Config config = new Config("testKey", "testValue");
+        jtrac.storeConfig(config);
+        Config c = jtrac.loadConfig("testKey");
+        assertEquals("testValue", c.getValue());
+    }
+    
 }

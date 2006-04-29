@@ -17,6 +17,7 @@
 package info.jtrac;
 
 import info.jtrac.domain.Attachment;
+import info.jtrac.domain.Config;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
@@ -26,6 +27,7 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 
 import java.util.List;
+import java.util.Map;
 
 
 import org.acegisecurity.userdetails.UserDetailsService;
@@ -58,5 +60,9 @@ public interface Jtrac extends UserDetailsService {
     //========================================================
     String generatePassword();
     String encodeClearText(String clearText);
+    //========================================================
+    Map<String, String> loadAllConfig();
+    void storeConfig(Config config);
+    Config loadConfig(String key);    
     
 }

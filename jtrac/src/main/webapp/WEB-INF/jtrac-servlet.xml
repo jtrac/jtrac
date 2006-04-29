@@ -42,6 +42,7 @@
                 <prop key="/logout.htm">defaultController</prop>                
                 <prop key="/user_list.htm">defaultController</prop>
                 <prop key="/space_list.htm">defaultController</prop>
+                <prop key="/config_list.htm">defaultController</prop>
                 <prop key="/svn_view.htm">defaultController</prop>
                 <prop key="/attachments/*">defaultController</prop>
                 <prop key="/chart/svn_commits_per_committer.jpg">defaultController</prop>
@@ -66,6 +67,7 @@
                         <prop key="/logout.htm">logoutHandler</prop>
                         <prop key="/user_list.htm">userListHandler</prop>
                         <prop key="/space_list.htm">spaceListHandler</prop>
+                        <prop key="/config_list.htm">configListHandler</prop>
                         <prop key="/svn_view.htm">svnViewHandler</prop>
                         <prop key="/attachments/*">attachmentViewHandler</prop>
                         <prop key="/chart/svn_commits_per_committer.jpg">svnCommitsPerCommitterChartHandler</prop>
@@ -114,6 +116,10 @@
     
     <bean id="itemSearchFormAction" class="info.jtrac.webflow.ItemSearchFormAction">
         <property name="jtrac" ref="jtrac"/>
-    </bean>      
+    </bean>
+      
+    <bean id="configFormAction" class="info.jtrac.webflow.ConfigFormAction">
+        <property name="jtrac" ref="jtrac"/>
+    </bean>    
         
 </beans>

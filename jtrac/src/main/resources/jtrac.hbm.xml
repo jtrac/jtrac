@@ -175,7 +175,7 @@
     </class>    
     
     <class name="Config" table="config">
-        <id name="key" column="key">                    
+        <id name="key" column="key"/>                    
         <property name="value" column="value"/>
     </class>       
     

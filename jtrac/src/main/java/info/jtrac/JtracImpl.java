@@ -17,6 +17,7 @@
 package info.jtrac;
 
 import info.jtrac.domain.Attachment;
+import info.jtrac.domain.Config;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
@@ -29,8 +30,10 @@ import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import java.util.Date;
+import java.util.HashMap;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 
@@ -220,6 +223,23 @@ public class JtracImpl implements Jtrac {
     
     public Metadata loadMetadata(int id) {
         return dao.loadMetadata(id);
+    }
+    
+    public Map<String, String> loadAllConfig() {
+        List<Config> list = dao.findAllConfig();
+        Map<String, String> allConfig = new HashMap<String, String>(list.size());
+        for (Config c : list) {
+            allConfig.put(c.getKey(), c.getValue());
+        }
+        return allConfig;
+    }
+    
+    public void storeConfig(Config config) {
+        dao.storeConfig(config);
+    }
+    
+    public Config loadConfig(String key) {
+        return dao.loadConfig(key);
     }
     
 }

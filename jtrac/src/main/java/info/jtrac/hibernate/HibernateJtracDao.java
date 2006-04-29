@@ -143,12 +143,16 @@ public class HibernateJtracDao
         return userRoles;
     }
     
+    public List<Config> findAllConfig() {
+        return getHibernateTemplate().loadAll(Config.class);
+    }    
+    
     public void storeConfig(Config config) {
         getHibernateTemplate().merge(config);
     }
     
     public Config loadConfig(String key) {
-        return (Config) getHibernateTemplate().load(Config.class, key);
+        return (Config) getHibernateTemplate().get(Config.class, key);
     }    
         
     public void createSchema() {        

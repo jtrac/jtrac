@@ -12,4 +12,8 @@
 
 <p/>
 
+<a href="<c:url value='config_list.htm'/>">Config</a>
+
+<p/>
+
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>
