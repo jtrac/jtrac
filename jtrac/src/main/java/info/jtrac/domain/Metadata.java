@@ -63,7 +63,7 @@ import org.dom4j.Element;
  * 4) the order in which the fields are displayed
  * on the data entry screens and the query result screens etc.
  *
- * Metadata can be inherited, and this allows for "reuse"
+ * Metadata can be inherited, and this allows for "reuse" TODO
  */
 public class Metadata implements Serializable {    
     
