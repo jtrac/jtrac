@@ -4,7 +4,7 @@
 
     <property file="build.properties"/>
     <property file="build-deps.properties"/>	
-    <property name="war.name" value="jtrac"/>    	
+    <property name="war.name" value="jtrac"/>   	
 	
     <target name="clean">
         <delete includeemptydirs="true" failonerror="false">
@@ -23,7 +23,10 @@
 	
     <target name="compile">
         <mkdir dir="target/classes"/>
-        <javac srcdir="src/main/java" destdir="target/classes" debug="true" classpath="${test.jars}"/>
+        <condition property="debug" value="false" else="true">            
+            <isset property="production"/>
+        </condition>
+        <javac srcdir="src/main/java" destdir="target/classes" debug="${debug}" classpath="${test.jars}"/>
         <copy todir="target/classes">
             <fileset dir="src/main/resources"/>
         </copy>              
@@ -39,9 +42,13 @@
         <copy todir="target/${war.name}/WEB-INF/lib" flatten="true">
             <fileset dir="${m2.repo}" includes="${runtime.jars}" casesensitive="false"/>         
         </copy>
-    </target>
+    </target>  
     
-    <target name="war" depends="war-exploded">
+    <target name="set-production-flag">
+        <property name="production" value="true"/>
+    </target>    
+    
+    <target name="war" depends="clean, set-production-flag, war-exploded">
         <copy todir="target/${war.name}/WEB-INF" file="etc/log4j.properties" overwrite="true"/>
         <zip destfile="target/${war.name}.war" basedir="target/${war.name}"/>
     </target>    

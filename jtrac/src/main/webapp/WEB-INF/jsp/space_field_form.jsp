@@ -42,7 +42,7 @@
                 <td class="label">Add Option</td>
                 <td>
                     <spring:bind path="fieldForm.option">
-                        <input name="${status.expression}" value="${status.value}"/>
+                        <input name="${status.expression}" value="${status.value}" id="focus"/>
                         <input type="submit" name="_eventId_update" value="Update"/>
                         <span class="error">${status.errorMessage}</span>
                     </spring:bind>                    
@@ -61,7 +61,5 @@
     </table>
 
 </form>
-
-
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>
