@@ -164,8 +164,8 @@
     <!-- =========================== DOC ============================ -->
 	
     <target name="javadoc">
-        <mkdir dir="target/doc/api"/>
-        <javadoc destdir="target/doc/api" windowtitle="JTrac" use="true" defaultexcludes="true" breakiterator="true">
+        <mkdir dir="target/api"/>
+        <javadoc destdir="target/api" windowtitle="JTrac" use="true" defaultexcludes="true" breakiterator="true">
             <packageset dir="src/main/java"/>           
             <doctitle><![CDATA[<h1>JTrac API Documentation</h1>]]></doctitle>
             <bottom><![CDATA[<i>JTrac</i> - <a href="http://jtrac.info">http://jtrac.info</a>]]></bottom>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<book>
+  <bookinfo>
+    <title>JTrac</title>
+
+    <subtitle>Reference Documentation</subtitle>
+
+    <releaseinfo>1.9.0</releaseinfo>
+
+    <authorgroup>
+      <author>
+        <firstname>Peter</firstname>
+        <surname>Thomas</surname>
+      </author>
+    </authorgroup>
+  </bookinfo>
+
+  <toc/>
+
+  <preface id="preface">
+    <title>Preface</title>
+
+    <para>This document is a reference guide for <ulink url="http://jtrac.info">JTrac</ulink>
+    - the generic issue tracking application.  This document serves not only as a user-guide
+    but as a reference for developers interested in contributing to JTrac or extending it.
+    </para>
+
+    <para>This documentation has been generated using the DocBook configuration 
+    used by the <ulink url="http://www.springframework.org">Spring Framework</ulink> development team. 
+    This particular alternative DocBook approach was originally developed by Chris Bauer of the
+    <ulink url="http://www.hibernate.org">Hibernate</ulink> project.
+    </para>
+  </preface>
+
+  <chapter id="introduction">
+    <title>Introduction</title>
+
+    <sect1 id="introduction-history">
+      <title>History</title>
+
+      <para>TODO history
+      </para>
+    </sect1>
+
+    <sect1 id="introduction-overview">
+      <title>Overview</title>
+
+      <para>para1</para>
+
+      <para>para2</para>
+
+	  <para>
+		<mediaobject>
+			<imageobject role="html">
+				<imagedata align="center" fileref="images/test.gif" format="GIF"/>
+			</imageobject>
+			<caption>
+			  <para>Figure 1: Caption</para>
+			</caption>
+		</mediaobject>
+	  </para>
+
+      <sect2 id="introduction-why">
+        <title>Why</title>
+
+        <para>para1</para>
+
+        <para>para2</para>
+      </sect2>
+    </sect1>
+    
+  </chapter>
+</book>
