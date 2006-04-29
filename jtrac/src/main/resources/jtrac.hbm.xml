@@ -174,5 +174,10 @@
         <property name="filePrefix" column="file_prefix"/>
     </class>    
     
+    <class name="Config" table="config">
+        <id name="key" column="key">                    
+        <property name="value" column="value"/>
+    </class>       
+    
 </hibernate-mapping>
 

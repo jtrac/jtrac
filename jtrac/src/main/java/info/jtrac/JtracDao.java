@@ -17,6 +17,7 @@
 package info.jtrac;
 
 import info.jtrac.domain.Attachment;
+import info.jtrac.domain.Config;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
@@ -56,5 +57,7 @@ public interface JtracDao {
     List<User> findUsersByEmail(String email);
     List<UserRole> findUsersForSpace(int spaceId);
     //===========================================
-
+    void storeConfig(Config config);
+    Config loadConfig(String key);
+    
 }

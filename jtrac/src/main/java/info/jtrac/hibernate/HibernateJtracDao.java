@@ -18,6 +18,7 @@ package info.jtrac.hibernate;
 
 import info.jtrac.JtracDao;
 import info.jtrac.domain.Attachment;
+import info.jtrac.domain.Config;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
@@ -142,6 +143,14 @@ public class HibernateJtracDao
         return userRoles;
     }
     
+    public void storeConfig(Config config) {
+        getHibernateTemplate().merge(config);
+    }
+    
+    public Config loadConfig(String key) {
+        return (Config) getHibernateTemplate().load(Config.class, key);
+    }    
+        
     public void createSchema() {        
         try {
             getHibernateTemplate().find("from Item item where item.id = 1");
