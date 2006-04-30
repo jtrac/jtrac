@@ -20,11 +20,11 @@ import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
-import info.jtrac.util.UserEditor;
 import info.jtrac.util.ValidationUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import org.acegisecurity.context.SecurityContextHolder;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -55,12 +55,20 @@ public class ItemSearchFormAction extends AbstractFormAction {
     @Override
     public Object loadFormObject(RequestContext context) {
         String spaceId = ValidationUtils.getParameter(context, "spaceId");
-        Space space = jtrac.loadSpace(Integer.parseInt(spaceId));            
-        context.getFlowScope().put("space", space);
-        List<UserRole> userRoles = jtrac.findUsersForSpace(space.getId());
-        context.getFlowScope().put("userRoles", userRoles);        
-        return new ItemSearch(space);
-    }      
+        ItemSearch itemSearch = null;
+        if (spaceId == null) {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            List<User> users = jtrac.findUsersForUser(user);
+            context.getFlowScope().put("users", users);
+            itemSearch = new ItemSearch();
+        } else {
+            Space space = jtrac.loadSpace(Integer.parseInt(spaceId));
+            itemSearch = new ItemSearch(space);
+            List<User> users = jtrac.findUsersForSpace(space.getId());
+            context.getFlowScope().put("users", users);
+        }
+        return itemSearch;
+    }     
     
     public Event itemSearchFormHandler(RequestContext context) throws Exception {
         ItemSearch itemSearch = (ItemSearch) getFormObject(context);

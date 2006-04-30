@@ -27,6 +27,7 @@ import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -129,9 +131,9 @@ public class HibernateJtracDao
                         Restrictions.eq("email", email)).list();
             }
         });
-    }
+    }       
     
-    public List<UserRole> findUsersForSpace(int spaceId) {
+    public List<UserRole> findUserRolesForSpace(int spaceId) {
         List<Object[]> rawList = getHibernateTemplate().find("select user, spaceRole.roleKey from User user" + 
                 " join user.spaceRoles as spaceRole where spaceRole.space.id = ?", spaceId);
         List<UserRole> userRoles = new ArrayList<UserRole>();
@@ -142,6 +144,17 @@ public class HibernateJtracDao
         }
         return userRoles;
     }
+    
+    public List<User> findUsersForSpace(int spaceId) {
+        return getHibernateTemplate().find("select user from User user join user.spaceRoles as spaceRole" + 
+                " where spaceRole.space.id = ?", spaceId);
+    }     
+    
+    public List<User> findUsersForSpaceSet(Collection<Space> spaces) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(User.class);
+        criteria.createCriteria("spaceRoles").add(Restrictions.in("space", spaces));
+        return getHibernateTemplate().findByCriteria(criteria);
+    }      
     
     public List<Config> findAllConfig() {
         return getHibernateTemplate().loadAll(Config.class);

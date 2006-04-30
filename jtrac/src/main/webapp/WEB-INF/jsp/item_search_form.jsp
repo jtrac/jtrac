@@ -126,10 +126,10 @@
                     <td>
                         <select name="loggedBySet" size="8" multiple="true">
                             <c:set var="loggedByMap" value="${searchMap['loggedBySet']}"/>
-                            <c:forEach items="${userRoles}" var="userRole">
-                                <c:set var="thisKey">${userRole.user.id}</c:set>
+                            <c:forEach items="${users}" var="user">
+                                <c:set var="thisKey">${user.id}</c:set>
                                 <option value="${thisKey}" <c:if test="${loggedByMap[thisKey]}">selected="true"</c:if>>
-                                    ${userRole.user.name}
+                                    ${user.name}
                                 </option>
                             </c:forEach>				
                         </select>		
@@ -144,10 +144,10 @@
                     <td>
                         <select name="assignedToSet" size="8" multiple="true">
                             <c:set var="assignedToMap" value="${searchMap['assignedToSet']}"/>
-                            <c:forEach items="${userRoles}" var="userRole">
-                                <c:set var="thisKey">${userRole.user.id}</c:set>
+                            <c:forEach items="${users}" var="user">
+                                <c:set var="thisKey">${user.id}</c:set>
                                 <option value="${thisKey}" <c:if test="${assignedToMap[thisKey]}">selected="true"</c:if>>
-                                    ${userRole.user.name}
+                                    ${user.name}
                                 </option>
                             </c:forEach>				
                         </select>		

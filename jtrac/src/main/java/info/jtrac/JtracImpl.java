@@ -29,12 +29,16 @@ import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 
 import org.acegisecurity.providers.encoding.PasswordEncoder;
@@ -175,13 +179,29 @@ public class JtracImpl implements Jtrac {
         return dao.findAllUsers();
     }
     
-    public List<UserRole> findUsersForSpace(int spaceId) {
+    public List<User> findUsersForSpace(int spaceId) {
         return dao.findUsersForSpace(spaceId);
+        // return dao.findUsersForSpaceSet(Collections.singleton(dao.loadSpace(spaceId)));
+    }      
+    
+    public List<UserRole> findUserRolesForSpace(int spaceId) {
+        return dao.findUserRolesForSpace(spaceId);
     }   
+    
+    public List<User> findUsersForUser(User user) {
+        Collection<Space> spaces = new HashSet<Space>(user.getSpaceRoles().size());
+        for (SpaceRole sr : user.getSpaceRoles()) {
+            spaces.add(sr.getSpace());
+        }
+        // must be a better way to make this unique?
+        List<User> users = dao.findUsersForSpaceSet(spaces);
+        Set<User> userSet = new HashSet<User>(users);
+        return new ArrayList<User>(userSet);
+    }     
     
     public List<User> findUnallocatedUsersForSpace(int spaceId) {
         List<User> users = findAllUsers();
-        List<UserRole> userRoles = findUsersForSpace(spaceId);
+        List<UserRole> userRoles = findUserRolesForSpace(spaceId);
         for(UserRole userRole : userRoles) {
             users.remove(userRole.getUser());
         }

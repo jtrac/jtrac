@@ -25,6 +25,7 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
+import java.util.Collection;
 
 import java.util.List;
 
@@ -55,7 +56,9 @@ public interface JtracDao {
     List<User> findAllUsers();
     List<User> findUsersByLoginName(String loginName);
     List<User> findUsersByEmail(String email);
-    List<UserRole> findUsersForSpace(int spaceId);
+    List<User> findUsersForSpace(int spaceId);
+    List<UserRole> findUserRolesForSpace(int spaceId);    
+    List<User> findUsersForSpaceSet(Collection<Space> spaces);
     //===========================================
     List<Config> findAllConfig();
     void storeConfig(Config config);

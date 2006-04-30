@@ -230,7 +230,7 @@ public class SpaceFormAction extends AbstractFormAction {
             space = jtrac.loadSpace(id);           
             context.getFlowScope().put("space", space);
         }
-        List<UserRole> userRoles = jtrac.findUsersForSpace(space.getId());
+        List<UserRole> userRoles = jtrac.findUserRolesForSpace(space.getId());
         context.getRequestScope().put("userRoles", userRoles);
         context.getRequestScope().put("unallocatedUsers", jtrac.findUnallocatedUsersForSpace(space.getId()));
         return success();

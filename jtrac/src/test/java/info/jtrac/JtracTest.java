@@ -107,11 +107,17 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         assertEquals("ROLE_USER", gas[0].getAuthority());
         assertEquals("ROLE_TEST_SPACE", gas[1].getAuthority());
 
-        List<UserRole> userRoles = jtrac.findUsersForSpace(space.getId());
+        List<UserRole> userRoles = jtrac.findUserRolesForSpace(space.getId());
         assertEquals(1, userRoles.size());
         UserRole ur = userRoles.get(0);
         assertEquals("test", ur.getUser().getLoginName());
         assertEquals("ROLE_TEST", ur.getRoleKey());
+        
+        List<User> users = jtrac.findUsersForUser(u1);
+        assertEquals(1, users.size());
+        
+        List<User> users2 = jtrac.findUsersForSpace(space.getId());
+        assertEquals(1, users2.size());
 
     }
 

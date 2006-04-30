@@ -25,11 +25,12 @@
             <td><a href="<c:url value='dashboard.htm'/>">DASHBOARD</a></td>
             <c:if test="${!empty space && space.id != 0}">
                 <td>${space.prefixCode}</td>
-                <td><a href="<c:url value='flow.htm?_flowId=item&spaceId=${space.id}'/>">NEW</a>
-                </td>
-                <td><a href="<c:url value='flow.htm?_flowId=itemSearch&spaceId=${space.id}'/>">SEARCH</a>
-                </td>                
+                <td><a href="<c:url value='flow.htm?_flowId=item&spaceId=${space.id}'/>">NEW</a></td>
+                <td><a href="<c:url value='flow.htm?_flowId=itemSearch&spaceId=${space.id}'/>">SEARCH</a></td>                
             </c:if>
+            <c:if test="${empty space}">
+                <td><a href="<c:url value='flow.htm?_flowId=itemSearch'/>">SEARCH</a>                
+            </c:if>            
         </tr>
     </table>
 </td>

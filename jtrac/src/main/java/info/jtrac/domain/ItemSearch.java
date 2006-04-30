@@ -82,7 +82,7 @@ public class ItemSearch implements Serializable {
     private Date cusTim03End;            
     
     public DetachedCriteria getCriteria() {
-        DetachedCriteria criteria = DetachedCriteria.forClass(Item.class, "item");
+        DetachedCriteria criteria = DetachedCriteria.forClass(Item.class);
         if (space == null) {
             // TODO
         } else {
@@ -137,7 +137,13 @@ public class ItemSearch implements Serializable {
         }
         if (cusInt10Set != null) {
             criteria.add(Restrictions.in("cusInt10", cusInt10Set));        
-        }         
+        }
+        if (loggedDateStart != null) {
+            criteria.add(Restrictions.ge("timeStamp", loggedDateStart));
+        }
+        if (loggedDateEnd != null) {
+            criteria.add(Restrictions.le("timeStamp", loggedDateEnd));
+        }      
         return criteria;
     }    
     

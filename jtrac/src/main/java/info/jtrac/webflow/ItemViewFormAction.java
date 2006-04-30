@@ -78,7 +78,7 @@ public class ItemViewFormAction extends AbstractFormAction {
             long id = Long.parseLong(itemId);
             item = jtrac.loadItem(id);
         }
-        List<UserRole> userRoles = jtrac.findUsersForSpace(item.getSpace().getId());
+        List<UserRole> userRoles = jtrac.findUserRolesForSpace(item.getSpace().getId());
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Space space = item.getSpace();
         context.getFlowScope().put("transitions", item.getPermittedTransitions(user));
