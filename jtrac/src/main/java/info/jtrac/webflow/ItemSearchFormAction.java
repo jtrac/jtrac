@@ -49,8 +49,7 @@ public class ItemSearchFormAction extends AbstractFormAction {
         binder.registerCustomEditor(Integer.class, new CustomNumberEditor(Integer.class, true));
         binder.registerCustomEditor(Double.class, new CustomNumberEditor(Double.class, true));
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
-        binder.registerCustomEditor(User.class, new UserEditor(jtrac));       
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));      
     }     
     
     @Override

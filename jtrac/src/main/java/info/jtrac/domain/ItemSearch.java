@@ -35,25 +35,26 @@ public class ItemSearch implements Serializable {
     private List<Field> fields; // column names
     private Space space; // if null, means aggregate across all spaces
     
-    private int rowsPerPage;
-    private String sortFieldName;    
-    private boolean sortDescending;
+    private int rowsPerPage = 25;
+    private String sortFieldName = "itemId";    
+    private boolean sortDescending = true;
     private boolean showHistory;
     private boolean showDescription;
     
     private String refId;
     private String summary;
-    private String loggedDateStart;
-    private String loggedDateEnd;
-    private String historyDateStart;
-    private String historyDateEnd;
+    
+    private Date loggedDateStart;
+    private Date loggedDateEnd;
+    private Date historyDateStart;
+    private Date historyDateEnd;
 
     private Set<Integer> spaceSet;
     private Set<Integer> statusSet;
     private Set<Integer> severitySet;
     private Set<Integer> prioritySet;
-    private Set<User> loggedBySet;
-    private Set<User> assignedToSet;
+    private Set<Integer> loggedBySet;
+    private Set<Integer> assignedToSet;
 
     private Set<Integer> cusInt01Set;
     private Set<Integer> cusInt02Set;
@@ -104,7 +105,8 @@ public class ItemSearch implements Serializable {
         }
         Map map = new HashMap(s.size());
         for (Object o : s) {
-            map.put(o, new Boolean(true));
+            // ugly toString hack to make JSTL / EL get map value by key easier
+            map.put(o.toString(), new Boolean(true));
         }
         return map;
     }   
@@ -235,35 +237,35 @@ public class ItemSearch implements Serializable {
         this.summary = summary;
     }
 
-    public String getLoggedDateStart() {
+    public Date getLoggedDateStart() {
         return loggedDateStart;
     }
 
-    public void setLoggedDateStart(String loggedDateStart) {
+    public void setLoggedDateStart(Date loggedDateStart) {
         this.loggedDateStart = loggedDateStart;
     }
 
-    public String getLoggedDateEnd() {
+    public Date getLoggedDateEnd() {
         return loggedDateEnd;
     }
 
-    public void setLoggedDateEnd(String loggedDateEnd) {
+    public void setLoggedDateEnd(Date loggedDateEnd) {
         this.loggedDateEnd = loggedDateEnd;
     }
 
-    public String getHistoryDateStart() {
+    public Date getHistoryDateStart() {
         return historyDateStart;
     }
 
-    public void setHistoryDateStart(String historyDateStart) {
+    public void setHistoryDateStart(Date historyDateStart) {
         this.historyDateStart = historyDateStart;
     }
 
-    public String getHistoryDateEnd() {
+    public Date getHistoryDateEnd() {
         return historyDateEnd;
     }
 
-    public void setHistoryDateEnd(String historyDateEnd) {
+    public void setHistoryDateEnd(Date historyDateEnd) {
         this.historyDateEnd = historyDateEnd;
     }
 
@@ -299,19 +301,19 @@ public class ItemSearch implements Serializable {
         this.prioritySet = prioritySet;
     }
 
-    public Set<User> getLoggedBySet() {
+    public Set<Integer> getLoggedBySet() {
         return loggedBySet;
     }
 
-    public void setLoggedBySet(Set<User> loggedBySet) {
+    public void setLoggedBySet(Set<Integer> loggedBySet) {
         this.loggedBySet = loggedBySet;
     }
 
-    public Set<User> getAssignedToSet() {
+    public Set<Integer> getAssignedToSet() {
         return assignedToSet;
     }
 
-    public void setAssignedToSet(Set<User> assignedToSet) {
+    public void setAssignedToSet(Set<Integer> assignedToSet) {
         this.assignedToSet = assignedToSet;
     }
 

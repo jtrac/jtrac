@@ -108,8 +108,9 @@
                     <td>
                         <select name="statusSet" size="8" multiple="true">
                             <c:set var="statusMap" value="${searchMap['statusSet']}"/>
-                            <c:forEach items="${itemSearch.statusOptions}" var="entry">	
-                                <option value="${entry.key}" <c:if test="${statusMap[entry.key]}">selected="true"</c:if>>
+                            <c:forEach items="${itemSearch.statusOptions}" var="entry">
+                                <c:set var="thisKey">${entry.key}</c:set>
+                                <option value="${thisKey}" <c:if test="${statusMap[thisKey]}">selected="true"</c:if>>
                                     ${entry.value}
                                 </option>
                             </c:forEach>				
@@ -125,8 +126,9 @@
                     <td>
                         <select name="loggedBySet" size="8" multiple="true">
                             <c:set var="loggedByMap" value="${searchMap['loggedBySet']}"/>
-                            <c:forEach items="${userRoles}" var="userRole">                                
-                                <option value="${userRole.user.id}" <c:if test="${loggedByMap[userRole.user.id]}">selected="true"</c:if>>
+                            <c:forEach items="${userRoles}" var="userRole">
+                                <c:set var="thisKey">${userRole.user.id}</c:set>
+                                <option value="${thisKey}" <c:if test="${loggedByMap[thisKey]}">selected="true"</c:if>>
                                     ${userRole.user.name}
                                 </option>
                             </c:forEach>				
@@ -142,8 +144,9 @@
                     <td>
                         <select name="assignedToSet" size="8" multiple="true">
                             <c:set var="assignedToMap" value="${searchMap['assignedToSet']}"/>
-                            <c:forEach items="${userRoles}" var="userRole">                                
-                                <option value="${userRole.user.id}" <c:if test="${assignedToMap[userRole.user.id]}">selected="true"</c:if>>
+                            <c:forEach items="${userRoles}" var="userRole">
+                                <c:set var="thisKey">${userRole.user.id}</c:set>
+                                <option value="${thisKey}" <c:if test="${assignedToMap[thisKey]}">selected="true"</c:if>>
                                     ${userRole.user.name}
                                 </option>
                             </c:forEach>				
