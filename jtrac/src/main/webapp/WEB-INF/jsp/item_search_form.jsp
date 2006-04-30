@@ -38,10 +38,10 @@
             </select>
         </td>
         <td/>	
-        <th <c:if test="${itemSearch.sortFieldName != 'itemId'}">class="selected"</c:if>>Sort On Column</th>
+        <th <c:if test="${itemSearch.sortFieldName != 'id'}">class="selected"</c:if>>Sort On Column</th>
         <td>
             <select name="sortFieldName">
-                <option value="itemId" <c:if test="${itemSearch.sortFieldName == 'itemId'}">selected="true"</c:if>>ID</option>
+                <option value="id" <c:if test="${itemSearch.sortFieldName == 'id'}">selected="true"</c:if>>ID</option>
                 <c:forEach items="${itemSearch.fields}" var="field">
                     <option value="${field.name}" <c:if test="${itemSearch.sortFieldName == field.name}">selected="true"</c:if>>
                         ${field.label}

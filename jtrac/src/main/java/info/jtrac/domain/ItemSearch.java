@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 /**
  * Object that holds filter criteria when searching for Items
@@ -36,7 +37,7 @@ public class ItemSearch implements Serializable {
     private Space space; // if null, means aggregate across all spaces
     
     private int rowsPerPage = 25;
-    private String sortFieldName = "itemId";    
+    private String sortFieldName = "id";    
     private boolean sortDescending = true;
     private boolean showHistory;
     private boolean showDescription;
@@ -80,6 +81,68 @@ public class ItemSearch implements Serializable {
     private Date cusTim03Start;
     private Date cusTim03End;            
     
+    public DetachedCriteria getCriteria() {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Item.class, "item");
+        if (space == null) {
+            // TODO
+        } else {
+            criteria.add(Restrictions.eq("space", space));
+        }
+        if (sortDescending) {
+            criteria.addOrder(Order.desc(sortFieldName));
+        } else {
+            criteria.addOrder(Order.asc(sortFieldName));
+        }
+        if (statusSet != null) {
+            criteria.add(Restrictions.in("status", statusSet));        
+        }
+        if (severitySet != null) {
+            criteria.add(Restrictions.in("severity", severitySet));        
+        }
+        if (prioritySet != null) {
+            criteria.add(Restrictions.in("priority", prioritySet));        
+        }
+        if (loggedBySet != null) {
+            criteria.add(Restrictions.in("loggedBy.id", loggedBySet));        
+        }
+        if (assignedToSet != null) {
+            criteria.add(Restrictions.in("assignedTo.id", assignedToSet));        
+        }
+        if (cusInt01Set != null) {
+            criteria.add(Restrictions.in("cusInt01", cusInt01Set));        
+        }
+        if (cusInt02Set != null) {
+            criteria.add(Restrictions.in("cusInt02", cusInt02Set));        
+        }
+        if (cusInt03Set != null) {
+            criteria.add(Restrictions.in("cusInt03", cusInt03Set));        
+        }
+        if (cusInt04Set != null) {
+            criteria.add(Restrictions.in("cusInt04", cusInt04Set));        
+        }
+        if (cusInt05Set != null) {
+            criteria.add(Restrictions.in("cusInt05", cusInt05Set));        
+        }
+        if (cusInt06Set != null) {
+            criteria.add(Restrictions.in("cusInt06", cusInt06Set));        
+        }
+        if (cusInt07Set != null) {
+            criteria.add(Restrictions.in("cusInt07", cusInt07Set));        
+        }
+        if (cusInt08Set != null) {
+            criteria.add(Restrictions.in("cusInt08", cusInt08Set));        
+        }
+        if (cusInt09Set != null) {
+            criteria.add(Restrictions.in("cusInt09", cusInt09Set));        
+        }
+        if (cusInt10Set != null) {
+            criteria.add(Restrictions.in("cusInt10", cusInt10Set));        
+        }         
+        return criteria;
+    }    
+    
+    //=========================================================================
+    
     public ItemSearch() {
         // TODO
     }
@@ -91,12 +154,6 @@ public class ItemSearch implements Serializable {
     
     public List<Field> getFields() {
         return fields;
-    }    
-    
-    public DetachedCriteria getCriteria() {
-        DetachedCriteria criteria = DetachedCriteria.forClass(Item.class, "item");        
-        criteria.addOrder(Order.desc("id"));        
-        return criteria;
     }
     
     private Map setToMap(Set s) {
