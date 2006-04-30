@@ -57,7 +57,7 @@
             Show Description&nbsp;<input type="checkbox" name="showDescription" value="true" <c:if test="${itemSearch.showDescription}">checked="true"</c:if>/>
         </th>	
         <th <c:if test="${itemSearch.showHistory}">class="selected"</c:if>>Show History&nbsp;<input type="checkbox" name="showHistory" value="true" <c:if test="${itemSearch.showHistory}">checked="true"</c:if>/></th>
-        <td><input type="submit" name="reset" value="Reset"/></td>
+        <td><input type="submit" name="_eventId_reset" value="Reset"/></td>
     </tr>
 </table>
 
@@ -67,7 +67,7 @@
     <tr>
         <c:if test="${empty itemSearch.space}">
             <td>
-                <table>
+                <table class="jtrac">
                     <tr><th <c:if test="${!empty itemSearch.severitySet}">class="selected"</c:if>>Severity</th></tr>
                     <tr>						
                         <td>
@@ -84,7 +84,7 @@
                 </table>
             </td>
             <td>
-                <table>
+                <table class="jtrac">
                     <tr><th <c:if test="${!empty itemSearch.prioritySet}">class="selected"</c:if>>Priority</th></tr>
                     <tr>			
                         <td>
@@ -102,7 +102,7 @@
             </td>
         </c:if>
         <td>
-            <table>
+            <table class="jtrac">
                 <tr><th <c:if test="${!empty itemSearch.statusSet}">class="selected"</c:if>>Status</th></tr>
                 <tr>			
                     <td>
@@ -119,7 +119,7 @@
             </table>
         </td>
         <td>
-            <table>
+            <table class="jtrac">
                 <tr><th <c:if test="${!empty itemSearch.loggedBySet}">class="selected"</c:if>>Logged By</th></tr>
                 <tr>	
                     <td>
@@ -136,7 +136,7 @@
             </table>
         </td>
         <td>
-            <table>
+            <table class="jtrac">
                 <tr><th <c:if test="${!empty itemSearch.assignedToSet}">class="selected"</c:if>>Assigned To</th></tr>
                 <tr>	
                     <td>
@@ -153,7 +153,7 @@
             </table>
         </td>
         <td>
-            <table>
+            <table class="jtrac">
                 <c:forTokens items="loggedDate,historyDate" delims="," var="field">
                     <tr>
                         <th colspan="2">
@@ -165,7 +165,7 @@
                     </tr>
                     <c:forTokens items="Start,End" delims="," var="suffix">
                         <c:set var="path">${field}${suffix}</c:set>
-                        <c:set var="bindPath">itemFilter.${path}</c:set>
+                        <c:set var="bindPath">itemSearch.${path}</c:set>
                         <spring:bind path="${bindPath}">						
                             <tr>
                                 <th <c:if test="${!empty searchMap[path]}">class="selected"</c:if>>
@@ -196,28 +196,30 @@
     </tr>
 </table>
 
-<table>
+<c:set var="fieldMap" value="${itemSearch.fieldMap}"/>
+
+<table class="bdr-collapse">
     <tr>
-        <c:if test="${!empty selectedTrackerId}">
-            <c:set var="metadata" value="${tracker.metadata}"/> 
-            <c:forTokens items="severityId,priorityId,cusInt01,cusInt02,cusInt03,cusInt04,cusInt05,cusInt06,cusInt07,cusInt08,cusInt09,cusInt10" delims="," var="name">
-                <c:set var="field" value="${metadata[name]}"/>
+        <c:if test="${!empty itemSearch.space}">             
+            <c:forTokens items="severity,priority,cusInt01,cusInt02,cusInt03,cusInt04,cusInt05,cusInt06,cusInt07,cusInt08,cusInt09,cusInt10" delims="," var="name">
+                <c:set var="field" value="${fieldMap[name]}"/>
+                <c:set var="nameSet">${name}Set</c:set>
+                <c:set var="optionsMap" value="${searchMap[nameSet]}"/>
                 <c:if test="${!empty field}">
                     <td>
-                        <table>
+                        <table class="jtrac">
                             <tr>
-                                <th <c:if test="${selectedMap[name]}">class="selected"</c:if>>
+                                
+                                <th <c:if test="${!empty optionsMap}">class="selected"</c:if>>
                                     <c:out value="${field.label}"/>
                                 </th>
                             </tr>
                             <tr>
                                 <td>
-                                    <select name="<c:out value="${name}"/>Array" size="8" multiple="true">
-                                        <c:set var="thisMap" value="${filterMap[name]}"/>
-                                        <c:forEach items="${field.options}" var="option">
-                                            <c:set var="value"><c:out value="${option.key}"/></c:set>
-                                            <option value="<c:out value="${value}"/>" 
-                                            <c:if test="${thisMap[value]}">selected="true"</c:if>><c:out value="${option.value}"/></option>
+                                    <select name="${nameSet}" size="8" multiple="true">                                        
+                                        <c:forEach items="${field.options}" var="entry">
+                                            <option value="${entry.key}" 
+                                            <c:if test="${optionsMap[entry.key]}">selected="true"</c:if>>${entry.value}</option>
                                         </c:forEach>				
                                     </select>						
                                 </td>
@@ -230,45 +232,42 @@
     </tr>
 </table>
 
-<table>
+<table class="bdr-collapse">
     <tr valign="top">
 
-        <c:if test="${!empty selectedTrackerId}">
+        <c:if test="${!empty itemSearch.space}">
             <td>
-                <table>
+                <table class="jtrac">
                     <c:forTokens items="cusTim01,cusTim02,cusTim03" delims="," var="name">
-                        <c:set var="field" value="${metadata[name]}"/>
+                        <c:set var="field" value="${fieldMap[name]}"/>
                         <c:if test="${!empty field}">
                             <tr>
-                                <th colspan="2">
-                                    <c:out value="${field.label}"/>
-                                </th>
+                                <th colspan="2">${field.label}</th>
                             </tr>
                             <c:forTokens items="Start,End" delims="," var="suffix">
-                                <c:set var="path"><c:out value="${name}"/><c:out value="${suffix}"/></c:set>
-                                <c:set var="bindPath">itemFilter.<c:out value="${path}"/></c:set>
+                                <c:set var="path">${name}${suffix}</c:set>
+                                <c:set var="bindPath">itemSearch.${path}</c:set>
                                 <spring:bind path="${bindPath}">						
                                     <tr>
-                                        <th <c:if test="${!empty filterMap[path]}">class="selected"</c:if>>
+                                        <th <c:if test="${!empty status.value}">class="selected"</c:if>>
                                             <c:choose>
                                                 <c:when test="${suffix=='Start'}">On / After</c:when>
                                                 <c:when test="${suffix=='End'}">On / Before</c:when>
                                             </c:choose>
                                         </th>
                                         <td>
-                                            <input name="<c:out value="${path}"/>" 
-                                            value="<c:out value="${filterMap[path]}"/>" id="<c:out value="${path}"/>" size="8"/>
-                                            <button type="reset" id="<c:out value="${path}"/>Button">...</button>
+                                            <input name="${path}" value="${status.value}" id="${path}" size="8"/>
+                                            <button type="reset" id="${path}Button">...</button>
                                             <script type="text/javascript">
                                                 Calendar.setup({
-                                                inputField     :    "<c:out value="${path}"/>",
+                                                inputField     :    "${path}",
                                                 ifFormat       :    "%Y-%m-%d",
-                                                button         :    "<c:out value="${path}"/>Button",
+                                                button         :    "${path}Button",
                                                 step           :    1
                                                 });
                                             </script>								
                                         </td>
-                                        <td class="error"><c:out value="${status.errorMessage}"/></td>
+                                        <td class="error">${status.errorMessage}</td>
                                     </tr>
                                 </spring:bind>
                             </c:forTokens>
@@ -278,19 +277,19 @@
             </td>
         </c:if>
 
-        <c:if test="${empty selectedTrackerId}">
+        <c:if test="${empty itemSearch.space}">
             <td>
-                <table>
-                    <tr><th <c:if test="${selectedMap['trackerId']}">class="selected"</c:if>>Tracker</th></tr>
+                <table class="jtrac">
+                    <tr><th <c:if test="${!empty itemSearch.spaceSet}">class="selected"</c:if>>Tracker</th></tr>
                     <tr>				
                         <td>
-                            <select name="trackerIdArray" size="8" multiple="true">
-                                <c:set var="trackerMap" value="${filterMap['trackerId']}"/>
-                                <c:forEach items="${userSession.trackerIds}" var="trackerId">	
-                                    <option value="<c:out value="${trackerId}"/>" <c:if test="${trackerMap[trackerId]}">selected="true"</c:if>>
-                                        <c:out value="${trackerId}"/>
+                            <select name="spaceSet" size="8" multiple="true">
+                                <c:set var="spaceMap" value="${searchMap['spaceSet']}"/>
+                                <c:forEach items="${itemSearch.spaceOptions}" var="entry">	
+                                    <option value="${entry.key}" <c:if test="${spaceMap[entry.key]}">selected="true"</c:if>>
+                                        ${entry.value}
                                     </option>
-                                </c:forEach>				
+                                </c:forEach>					
                             </select>
                         </td>
                     </tr>
@@ -299,21 +298,21 @@
         </c:if>
 
         <td>
-            <table>
+            <table class="jtrac">
                 <tr>
-                    <th <c:if test="${!empty itemFilter.title}">class="selected"</c:if>>Title</th>
-                    <td><input name="title" value="<c:out value="${itemFilter.title}"/>"/></td>
+                    <th <c:if test="${!empty itemSearch.summary}">class="selected"</c:if>>Summary</th>
+                    <td><input name="title" value="${itemSearch.summary}"/></td>
                 </tr>
-                <c:if test="${!empty selectedTrackerId}">
+                <c:if test="${!empty itemSearch.space}">
                     <c:forTokens items="cusStr01,cusStr02,cusStr03,cusStr04,cusStr05" delims="," var="name">
-                        <c:set var="field" value="${metadata[name]}"/>
+                        <c:set var="field" value="${fieldMap[name]}"/>
                         <c:if test="${!empty field}">
                             <tr>
-                                <th <c:if test="${!empty filterMap[name]}">class="selected"</c:if>>
-                                    <c:out value="${field.label}"/>
+                                <th <c:if test="${!empty itemSearch[field.name]}">class="selected"</c:if>>
+                                    ${field.label}
                                 </th>
                                 <td>
-                                    <input name="<c:out value="${name}"/>" value="<c:out value="${filterMap[name]}"/>"/>
+                                    <input name="${field.name}" value="${itemSearch[field.name]}"/>
                                 </td>
                                 <td/>
                             </tr>
@@ -323,13 +322,12 @@
             </table>
         </td>
         <td>
-            <input type="submit" name="query" value="Query" id="focus"/>
+            <input type="submit" name="_eventId_search" value="Search"/>
         </td>
 
     </tr>
 </table>
 
-<input type="submit" name="_eventId_search" value="Search"/>
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 
 </form>

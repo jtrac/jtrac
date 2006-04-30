@@ -36,7 +36,7 @@ public class ItemSearch implements Serializable {
     private Space space; // if null, means aggregate across all spaces
     
     private int rowsPerPage;
-    private Field.Name sortFieldName;    
+    private String sortFieldName;    
     private boolean sortDescending;
     private boolean showHistory;
     private boolean showDescription;
@@ -150,6 +150,21 @@ public class ItemSearch implements Serializable {
         return space.getMetadata().getStates();        
     }
     
+    public Map<Integer, String> getSpaceOptions() {
+        return null;
+    }
+    
+    public Map<String, Field> getFieldMap() {
+        if (space == null) {
+            return null;
+        }
+        Map<String, Field> fieldMap = new HashMap<String, Field>(space.getMetadata().getFieldCount());
+        for (Field f : space.getMetadata().getFields().values()) {
+            fieldMap.put(f.getName().toString(), f);
+        }
+        return fieldMap;
+    }
+    
     //=====================================================================
 
     public void setFields(List<Field> fields) {
@@ -172,11 +187,11 @@ public class ItemSearch implements Serializable {
         this.rowsPerPage = rowsPerPage;
     }
 
-    public Field.Name getSortFieldName() {
+    public String getSortFieldName() {
         return sortFieldName;
     }
 
-    public void setSortFieldName(Field.Name sortFieldName) {
+    public void setSortFieldName(String sortFieldName) {
         this.sortFieldName = sortFieldName;
     }
 
