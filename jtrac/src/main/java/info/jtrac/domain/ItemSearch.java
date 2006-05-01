@@ -32,6 +32,9 @@ import org.hibernate.criterion.Restrictions;
 
 /**
  * Object that holds filter criteria when searching for Items
+ * and also creates a Hibernate Criteria query to pass to the DAO
+ * Spring MVC automagically binds most of the screen selections
+ * on to the large bunch of instance variables of this class
  */
 public class ItemSearch implements Serializable {
     
@@ -39,7 +42,9 @@ public class ItemSearch implements Serializable {
     private Space space; // if null, means aggregate across all spaces
     private User user; // this will be set in the case space is null
     
-    private int rowsPerPage = 25;
+    private int pageSize = 25;
+    private int currentPage = 1;
+    private long totalSize;   
     private String sortFieldName = "id";    
     private boolean sortDescending = true;
     private boolean showHistory;
@@ -84,8 +89,20 @@ public class ItemSearch implements Serializable {
     private Date cusTim03Start;
     private Date cusTim03End;            
     
+    // have to do this as "order by" clause conflicts with "count (*)" clause
+    // DAO has to use getCriteriaForCount() separately
     public DetachedCriteria getCriteria() {
-        DetachedCriteria criteria = DetachedCriteria.forClass(Item.class);
+        DetachedCriteria criteria = getCriteriaForCount();
+        if (sortDescending) {
+            criteria.addOrder(Order.desc(sortFieldName));
+        } else {
+            criteria.addOrder(Order.asc(sortFieldName));
+        }
+        return criteria;
+    }    
+    
+    public DetachedCriteria getCriteriaForCount() {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Item.class);      
         if (space == null) {
             if (spaceSet == null) {
                 criteria.add(Restrictions.in("space", user.getSpaces()));
@@ -94,11 +111,6 @@ public class ItemSearch implements Serializable {
             }
         } else {
             criteria.add(Restrictions.eq("space", space));
-        }
-        if (sortDescending) {
-            criteria.addOrder(Order.desc(sortFieldName));
-        } else {
-            criteria.addOrder(Order.asc(sortFieldName));
         }
         if (statusSet != null) {
             criteria.add(Restrictions.in("status", statusSet));        
@@ -151,8 +163,8 @@ public class ItemSearch implements Serializable {
         if (loggedDateEnd != null) {
             criteria.add(Restrictions.le("timeStamp", loggedDateEnd));
         }      
-        return criteria;
-    }    
+        return criteria;        
+    }
     
     //=========================================================================
     
@@ -263,14 +275,22 @@ public class ItemSearch implements Serializable {
         this.space = space;
     }
 
-    public int getRowsPerPage() {
-        return rowsPerPage;
+    public int getPageSize() {
+        return pageSize;
     }
 
-    public void setRowsPerPage(int rowsPerPage) {
-        this.rowsPerPage = rowsPerPage;
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 
+    public int getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
+    }    
+    
     public String getSortFieldName() {
         return sortFieldName;
     }
@@ -566,5 +586,21 @@ public class ItemSearch implements Serializable {
     public void setCusTim03End(Date cusTim03End) {
         this.cusTim03End = cusTim03End;
     }        
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public long getTotalSize() {
+        return totalSize;
+    }
+
+    public void setTotalSize(long totalSize) {
+        this.totalSize = totalSize;
+    }
     
 }

@@ -33,9 +33,11 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -64,7 +66,21 @@ public class HibernateJtracDao
     }
     
     public List<Item> findItems(ItemSearch itemSearch) {
-        return getHibernateTemplate().findByCriteria(itemSearch.getCriteria());
+        int pageSize = itemSearch.getPageSize();
+        if (pageSize == -1) {
+            List<Item> list = getHibernateTemplate().findByCriteria(itemSearch.getCriteria());
+            itemSearch.setTotalSize(list.size());
+            return list;
+        } else {
+            // pagination            
+            int firstResult = pageSize * (itemSearch.getCurrentPage() - 1);                     
+            List<Item> list = getHibernateTemplate().findByCriteria(itemSearch.getCriteria(), firstResult, pageSize);
+            DetachedCriteria criteria = itemSearch.getCriteriaForCount();
+            criteria.setProjection(Projections.rowCount());
+            Integer count = (Integer) getHibernateTemplate().findByCriteria(criteria).get(0);            
+            itemSearch.setTotalSize(count);
+            return list;
+        }
     }
     
     public void storeAttachment(Attachment attachment) {

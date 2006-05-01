@@ -24,11 +24,11 @@
 
 <table class="jtrac">
     <tr>
-        <th <c:if test="${itemSearch.rowsPerPage != 25}">class="selected"</c:if>>Results / page</th>
+        <th <c:if test="${itemSearch.pageSize != 25}">class="selected"</c:if>>Results / page</th>
         <td>
-            <select name="rowsPerPage">
+            <select name="pageSize">
                 <c:forTokens items="5,10,15,25,50,100,-1" delims="," var="size">
-                    <option value="${size}" <c:if test="${itemSearch.rowsPerPage == size}">selected="true"</c:if>>
+                    <option value="${size}" <c:if test="${itemSearch.pageSize == size}">selected="true"</c:if>>
                         <c:choose>
                             <c:when test="${size == -1}">No Limit</c:when>
                             <c:otherwise>${size}</c:otherwise>
