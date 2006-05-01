@@ -21,6 +21,7 @@ import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import java.io.IOException;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
@@ -43,8 +44,22 @@ public class ItemList extends SimpleTagSupport {
     public void doTag() {
         PageContext pageContext = (PageContext) getJspContext();
         HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
+        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();        
         JspWriter out = pageContext.getOut();
         try {
+            // pagination
+            long resultCount = itemSearch.getResultCount();
+            out.println("<span class='info'>" + resultCount + " record(s) found.</span><p/>");
+            int pageSize = itemSearch.getPageSize();
+            if (pageSize != -1) {
+                long pageCount = resultCount / pageSize;
+                String baseUrl = "flow.htm?_flowExecutionKey=" + request.getAttribute("flowExecutionKey") + "&_eventId=page";
+                for(int i = 0; i < pageCount; i++) {
+                    String url = baseUrl + "&page=" + i;
+                    out.println("<a href='" + response.encodeURL(url) + "'>" + (i + 1) +"</a>&nbsp;");
+                }
+                out.println("<p/>");
+            }            
             out.println("<table class='jtrac'>");
             out.println("<tr>");
             out.println("  <th>ID</th>");

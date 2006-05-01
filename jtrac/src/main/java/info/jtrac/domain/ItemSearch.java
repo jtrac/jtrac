@@ -43,8 +43,8 @@ public class ItemSearch implements Serializable {
     private User user; // this will be set in the case space is null
     
     private int pageSize = 25;
-    private int currentPage = 1;
-    private long totalSize;   
+    private int currentPage;
+    private long resultCount;   
     private String sortFieldName = "id";    
     private boolean sortDescending = true;
     private boolean showHistory;
@@ -595,12 +595,12 @@ public class ItemSearch implements Serializable {
         this.user = user;
     }
 
-    public long getTotalSize() {
-        return totalSize;
+    public long getResultCount() {
+        return resultCount;
     }
 
-    public void setTotalSize(long totalSize) {
-        this.totalSize = totalSize;
+    public void setResultCount(long resultCount) {
+        this.resultCount = resultCount;
     }
     
 }

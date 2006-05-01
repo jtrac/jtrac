@@ -69,16 +69,16 @@ public class HibernateJtracDao
         int pageSize = itemSearch.getPageSize();
         if (pageSize == -1) {
             List<Item> list = getHibernateTemplate().findByCriteria(itemSearch.getCriteria());
-            itemSearch.setTotalSize(list.size());
+            itemSearch.setResultCount(list.size());
             return list;
         } else {
             // pagination            
-            int firstResult = pageSize * (itemSearch.getCurrentPage() - 1);                     
+            int firstResult = pageSize * itemSearch.getCurrentPage();                     
             List<Item> list = getHibernateTemplate().findByCriteria(itemSearch.getCriteria(), firstResult, pageSize);
             DetachedCriteria criteria = itemSearch.getCriteriaForCount();
             criteria.setProjection(Projections.rowCount());
             Integer count = (Integer) getHibernateTemplate().findByCriteria(criteria).get(0);            
-            itemSearch.setTotalSize(count);
+            itemSearch.setResultCount(count);
             return list;
         }
     }

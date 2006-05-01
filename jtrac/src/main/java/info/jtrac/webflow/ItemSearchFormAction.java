@@ -74,6 +74,14 @@ public class ItemSearchFormAction extends AbstractFormAction {
         ItemSearch itemSearch = (ItemSearch) getFormObject(context);
         context.getRequestScope().put("items", jtrac.findItems(itemSearch));
         return success();
-    }        
+    }
+    
+    public Event itemPageHandler(RequestContext context) throws Exception {
+        String page = ValidationUtils.getParameter(context, "page");
+        ItemSearch itemSearch = (ItemSearch) getFormObject(context);
+        itemSearch.setCurrentPage(Integer.parseInt(page));
+        context.getRequestScope().put("items", jtrac.findItems(itemSearch));
+        return success();
+    }    
     
 }
