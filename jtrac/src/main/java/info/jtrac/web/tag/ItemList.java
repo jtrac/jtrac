@@ -64,7 +64,7 @@ public class ItemList extends SimpleTagSupport {
                 if (currentPage == 0) {
                     sb.append("&lt;&lt;&nbsp;&nbsp;");
                 } else {
-                    sb.append("<a href='" + response.encodeURL(baseUrl + "&page=0") + "'>&lt;&lt;</a>&nbsp;&nbsp;");
+                    sb.append("<a href='" + response.encodeURL(baseUrl + "&page=" + (currentPage - 1)) + "'>&lt;&lt;</a>&nbsp;&nbsp;");
                 }
                 for(int i = 0; i < pageCount; i++) {                    
                     if (currentPage == i) {

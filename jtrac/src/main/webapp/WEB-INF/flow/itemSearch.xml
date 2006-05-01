@@ -23,9 +23,7 @@
         </transition>        
     </view-state>
     
-    <view-state id="itemSearchExportView" view="item_search_export">
-        <transition on="back" to="itemListView"/>
-    </view-state>
+    <end-state id="itemSearchExportView" view="externalRedirect:excel_export.htm"/>
     
 </flow>
 

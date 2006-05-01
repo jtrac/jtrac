@@ -17,12 +17,15 @@
 package info.jtrac.web;
 
 import info.jtrac.domain.Config;
+import info.jtrac.domain.ItemSearch;
 import info.jtrac.util.AttachmentUtils;
+import info.jtrac.util.ExcelUtils;
 import info.jtrac.util.SvnUtils;
 
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.ServletOutputStream;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -108,6 +111,20 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
         model.put("configMap", jtrac.loadAllConfig());
         model.put("configKeys", Config.getKeys());
         return new ModelAndView("config_list", model);
-    }      
+    }
+    
+    public ModelAndView excelExportHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        ItemSearch itemSearch = (ItemSearch) request.getAttribute("itemSearch");
+        int pageSize = itemSearch.getPageSize();
+        itemSearch.setPageSize(-1);
+        ExcelUtils eu = new ExcelUtils(jtrac.findItems(itemSearch), itemSearch);
+        itemSearch.setPageSize(pageSize);
+        response.setContentType("application/unknow");
+        response.setHeader("Content-Disposition", "inline;filename=jtrac-export.xls");
+        ServletOutputStream out = response.getOutputStream();
+        eu.exportToExcel().write(out);
+        out.flush();        
+        return null;        
+    }       
     
 }

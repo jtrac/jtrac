@@ -85,6 +85,9 @@ public class ExcelUtils {
     }    
     
     private void setDate(int row, int col, Date date) {
+        if (date == null) {
+            return;
+        }
         HSSFCell cell = getCell(row, col);
         cell.setCellValue(date);
         cell.setCellStyle(csDate);        
@@ -138,6 +141,7 @@ public class ExcelUtils {
             setText(row, col++, item.getLoggedBy().getName());
             setText(row, col++, item.getStatusValue());
             setText(row, col++, ( item.getAssignedTo() == null ? "" : item.getAssignedTo().getName() ));
+            
             for(Field field : fields) {                
                 if (field.getName().getType() == 4) { // double
                     setDouble(row, col++, (Double) item.getValue(field.getName()));
@@ -147,6 +151,7 @@ public class ExcelUtils {
                     setText(row, col++, item.getCustomValue(field.getName()));
                 }               
             }
+            
             setDate(row, col++, item.getTimeStamp());            
         }
         return wb;

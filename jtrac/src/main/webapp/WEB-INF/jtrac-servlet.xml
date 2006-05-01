@@ -43,7 +43,8 @@
                 <prop key="/user_list.htm">defaultController</prop>
                 <prop key="/space_list.htm">defaultController</prop>
                 <prop key="/config_list.htm">defaultController</prop>
-                <prop key="/svn_view.htm">defaultController</prop>                
+                <prop key="/svn_view.htm">defaultController</prop>
+                <prop key="/excel_export.htm">defaultController</prop> 
                 <prop key="/attachments/*">defaultController</prop>
                 <prop key="/chart/svn_commits_per_committer.jpg">defaultController</prop>
             </props>
@@ -69,6 +70,7 @@
                         <prop key="/space_list.htm">spaceListHandler</prop>
                         <prop key="/config_list.htm">configListHandler</prop>
                         <prop key="/svn_view.htm">svnViewHandler</prop>
+                        <prop key="/excel_export.htm">excelExportHandler</prop>
                         <prop key="/attachments/*">attachmentViewHandler</prop>
                         <prop key="/chart/svn_commits_per_committer.jpg">svnCommitsPerCommitterChartHandler</prop>
                     </props>
