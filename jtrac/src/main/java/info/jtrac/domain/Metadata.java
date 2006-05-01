@@ -331,20 +331,23 @@ public class Metadata implements Serializable {
         }
     }
     
-    public List<Field> getEditableFields(Collection<String> roleKeys, Collection<Integer> ss) { 
+    public List<Field> getEditableFields(Collection<String> roleKeys, Collection<Integer> ss) {
         Set<Field> fs = new HashSet<Field>();
         for(String roleKey : roleKeys) {
             for(Integer status : ss) {
+                if (status == State.NEW) {
+                    continue; // we are looking for editable after creating NEW
+                }
                 State state = getRoleState(roleKey, status);
                 for(Map.Entry<Field.Name, Integer> entry : state.getFields().entrySet()) {
-                    if (entry.getValue() == 2) {
+                    if (entry.getValue() == State.MASK_EDIT) {
                         fs.add(fields.get(entry.getKey()));
                     }
                 }
             }
         }
         List<Field> result = getFieldList();
-        result.retainAll(fs);
+        result.retainAll(fs); // just to retain the order of the fields
         return result;
     }
     

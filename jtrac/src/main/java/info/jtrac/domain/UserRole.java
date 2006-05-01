@@ -21,7 +21,7 @@ import java.io.Serializable;
 /**
  * Class that exists purely to hold a name value pair of 
  * User <--> role, used when retrieving the list of Users mapped
- * to a Space since the roleKey corresponding to each User is also
+ * to a Space and where the roleKey corresponding to each User is also
  * required.
  */
 public class UserRole implements Serializable {

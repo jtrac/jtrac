@@ -54,9 +54,9 @@
             <input type="hidden" name="_sortDescending"/>
         </th>
         <td/>
-        <th <c:if test="${itemSearch.showDescription}">class="selected"</c:if>>
-            Show Description&nbsp;<input type="checkbox" name="showDescription" value="true" <c:if test="${itemSearch.showDescription}">checked="true"</c:if>/>
-            <input type="hidden" name="_showDescription"/>
+        <th <c:if test="${itemSearch.showDetail}">class="selected"</c:if>>
+            Show Detail&nbsp;<input type="checkbox" name="showDetail" value="true" <c:if test="${itemSearch.showDetail}">checked="true"</c:if>/>
+            <input type="hidden" name="_showDetail"/>
         </th>	
         <th <c:if test="${itemSearch.showHistory}">class="selected"</c:if>>
             Show History&nbsp;<input type="checkbox" name="showHistory" value="true" <c:if test="${itemSearch.showHistory}">checked="true"</c:if>/>
@@ -162,12 +162,12 @@
         </td>
         <td>
             <table class="jtrac">
-                <c:forTokens items="loggedDate,historyDate" delims="," var="field">
+                <c:forTokens items="createdDate,modifiedDate" delims="," var="field">
                     <tr>
                         <th colspan="2">
                             <c:choose>
-                                <c:when test="${field=='loggedDate'}">Created Date</c:when>
-                                <c:when test="${field=='historyDate'}">Updated Date</c:when>
+                                <c:when test="${field=='createdDate'}">Created Date</c:when>
+                                <c:when test="${field=='modifiedDate'}">History Updated Date</c:when>
                             </c:choose>
                         </th>
                     </tr>

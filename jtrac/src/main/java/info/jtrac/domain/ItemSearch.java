@@ -48,15 +48,15 @@ public class ItemSearch implements Serializable {
     private String sortFieldName = "id";    
     private boolean sortDescending;
     private boolean showHistory;
-    private boolean showDescription;
+    private boolean showDetail;
     
     private String refId;
     private String summary;
     
-    private Date loggedDateStart;
-    private Date loggedDateEnd;
-    private Date historyDateStart;
-    private Date historyDateEnd;
+    private Date createdDateStart;
+    private Date createdDateEnd;
+    private Date modifiedDateStart;
+    private Date modifiedDateEnd;
 
     private Set<Integer> spaceSet;
     private Set<Integer> statusSet;
@@ -157,12 +157,20 @@ public class ItemSearch implements Serializable {
         if (cusInt10Set != null) {
             criteria.add(Restrictions.in("cusInt10", cusInt10Set));        
         }
-        if (loggedDateStart != null) {
-            criteria.add(Restrictions.ge("timeStamp", loggedDateStart));
+        if (createdDateStart != null) {
+            criteria.add(Restrictions.ge("timeStamp", createdDateStart));
         }
-        if (loggedDateEnd != null) {
-            criteria.add(Restrictions.le("timeStamp", loggedDateEnd));
-        }      
+        if (createdDateEnd != null) {
+            criteria.add(Restrictions.le("timeStamp", createdDateEnd));
+        }
+        if (modifiedDateStart != null) {
+            criteria.createCriteria("history").add(Restrictions.ge("timeStamp", modifiedDateStart));
+            showHistory = true;
+        }
+        if (modifiedDateEnd != null) {
+            criteria.createCriteria("history").add(Restrictions.le("timeStamp", modifiedDateEnd));
+            showHistory = true;
+        }        
         return criteria;        
     }
     
@@ -321,12 +329,12 @@ public class ItemSearch implements Serializable {
         this.showHistory = showHistory;
     }
 
-    public boolean isShowDescription() {
-        return showDescription;
+    public boolean isShowDetail() {
+        return showDetail;
     }
 
-    public void setShowDescription(boolean showDescription) {
-        this.showDescription = showDescription;
+    public void setShowDetail(boolean showDetail) {
+        this.showDetail = showDetail;
     }
 
     public String getRefId() {
@@ -345,36 +353,36 @@ public class ItemSearch implements Serializable {
         this.summary = summary;
     }
 
-    public Date getLoggedDateStart() {
-        return loggedDateStart;
+    public Date getCreatedDateStart() {
+        return createdDateStart;
     }
 
-    public void setLoggedDateStart(Date loggedDateStart) {
-        this.loggedDateStart = loggedDateStart;
+    public void setCreatedDateStart(Date createdDateStart) {
+        this.createdDateStart = createdDateStart;
     }
 
-    public Date getLoggedDateEnd() {
-        return loggedDateEnd;
+    public Date getCreatedDateEnd() {
+        return createdDateEnd;
     }
 
-    public void setLoggedDateEnd(Date loggedDateEnd) {
-        this.loggedDateEnd = loggedDateEnd;
+    public void setCreatedDateEnd(Date createdDateEnd) {
+        this.createdDateEnd = createdDateEnd;
     }
 
-    public Date getHistoryDateStart() {
-        return historyDateStart;
+    public Date getModifiedDateStart() {
+        return modifiedDateStart;
     }
 
-    public void setHistoryDateStart(Date historyDateStart) {
-        this.historyDateStart = historyDateStart;
+    public void setModifiedDateStart(Date modifiedDateStart) {
+        this.modifiedDateStart = modifiedDateStart;
     }
 
-    public Date getHistoryDateEnd() {
-        return historyDateEnd;
+    public Date getModifiedDateEnd() {
+        return modifiedDateEnd;
     }
 
-    public void setHistoryDateEnd(Date historyDateEnd) {
-        this.historyDateEnd = historyDateEnd;
+    public void setModifiedDateEnd(Date modifiedDateEnd) {
+        this.modifiedDateEnd = modifiedDateEnd;
     }
 
     public Set<Integer> getSpaceSet() {

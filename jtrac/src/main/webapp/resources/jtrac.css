@@ -15,3 +15,4 @@ a:hover { color: red; }
 .nav-table td { font-weight: bold; background-color: #DEDEFF; padding-left: 1em; padding-right: 1em; }
 .bdr-collapse { border-collapse: collapse; }
 .bdr-collapse td { padding: 0px 0px 0px 0px; }
+.page-links { font-weight: bold }

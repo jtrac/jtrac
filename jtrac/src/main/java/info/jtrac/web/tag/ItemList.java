@@ -17,6 +17,7 @@
 package info.jtrac.web.tag;
 
 import info.jtrac.domain.Field;
+import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import java.io.IOException;
@@ -48,29 +49,58 @@ public class ItemList extends SimpleTagSupport {
         JspWriter out = pageContext.getOut();
         try {
             // pagination
+            StringBuffer sb = new StringBuffer();
             long resultCount = itemSearch.getResultCount();
-            out.println("<span class='info'>" + resultCount + " record(s) found.</span><p/>");
+            sb.append("<span class='info'>" + resultCount + " record(s) found.</span>");
             int pageSize = itemSearch.getPageSize();
-            double pageCount = 0;
+            int pageCount = 0;
             if (pageSize != -1) {
-                pageCount = Math.ceil((double) resultCount / pageSize);
+                pageCount = (int) Math.ceil((double) resultCount / pageSize);
             }
-            if (pageCount > 1) {            
+            if (pageCount > 1) {
+                sb.append("&nbsp;&nbsp;<span class='page-links'>");
                 String baseUrl = "flow.htm?_flowExecutionKey=" + request.getAttribute("flowExecutionKey") + "&_eventId=page";
-                for(int i = 0; i < pageCount; i++) {
-                    String url = baseUrl + "&page=" + i;
-                    out.println("<a href='" + response.encodeURL(url) + "'>" + (i + 1) +"</a>&nbsp;");
+                int currentPage = itemSearch.getCurrentPage();
+                if (currentPage == 0) {
+                    sb.append("&lt;&lt;&nbsp;&nbsp;");
+                } else {
+                    sb.append("<a href='" + response.encodeURL(baseUrl + "&page=0") + "'>&lt;&lt;</a>&nbsp;&nbsp;");
                 }
-                out.println("<p/>");
-            }            
+                for(int i = 0; i < pageCount; i++) {                    
+                    if (currentPage == i) {
+                        sb.append((i + 1) +"&nbsp;&nbsp;");
+                    } else {
+                        String url = baseUrl + "&page=" + i;
+                        sb.append("<a href='" + response.encodeURL(url) + "'>" + (i + 1) +"</a>&nbsp;&nbsp;");
+                    }
+                }
+                if (currentPage == pageCount - 1) {
+                    sb.append("&gt;&gt;");
+                } else {
+                    sb.append("<a href='" + response.encodeURL(baseUrl + "&page=" + (currentPage + 1)) + "'>&gt;&gt;</a>");  
+                }                
+                sb.append("</span>");
+            }
+            // write out record count + pagination
+            out.println(sb + "<p/>");
+            
+            boolean showDetail = itemSearch.isShowDetail();
+            boolean showHistory = itemSearch.isShowHistory();
+            List<Field> fields = itemSearch.getFields();
+            
             out.println("<table class='jtrac'>");
             out.println("<tr>");
             out.println("  <th>ID</th>");
             out.println("  <th>Summary</th>");
+            
+            if (showDetail) {
+                out.println("  <th>Detail</th>");
+            }
+            
             out.println("  <th>Logged By</th>");
             out.println("  <th>Status</th>");
             out.println("  <th>Assigned To</th>");
-            for(Field field : itemSearch.getFields()) {
+            for(Field field : fields) {
                 out.println("  <th>" + field.getLabel() + "</th>");
             }
             out.println("  <th>Time Stamp</th>");
@@ -81,17 +111,49 @@ public class ItemList extends SimpleTagSupport {
                 String href = response.encodeURL("flow.htm?_flowId=itemView&itemId=" + item.getId());
                 out.println("  <td><a href='" + href + "'>" + item.getRefId() + "</a></td>");
                 out.println("  <td>" + item.getSummary() + "</td>");
+                
+                if (showDetail) {
+                    out.println("  <td>" + item.getDetail() + "</td>");
+                }                
+                
                 out.println("  <td>" + item.getLoggedBy().getName() + "</td>");
                 out.println("  <td>" + item.getStatusValue() + "</td>");
                 out.println("  <td>" + ( item.getAssignedTo() == null ? "" : item.getAssignedTo().getName() ) + "</td>");
-                for(Field field : itemSearch.getFields()) {
+                for(Field field : fields) {
                     out.println("  <td>" + item.getCustomValue(field.getName()) + "</td>");
                 }
                 out.println("  <td>" + item.getTimeStamp() + "</td>");
                 out.println("</tr>");
+                
+                if (showHistory) {
+                    boolean first = true;
+                    for (History history : item.getHistory()) {
+                        if (first) {
+                            first = false;
+                            continue;
+                        }
+                        out.println("<tr>");
+                        out.println("<td/>"); // ID
+                        out.println("  <td>" + ( history.getSummary() == null ? "" : history.getSummary() ) + "</td>");
+                        if (showDetail) {
+                            out.println("  <td>" + ( history.getComment() == null ? "" : history.getComment() ) + "</td>");
+                        }                         
+                        out.println("  <td>" + history.getLoggedBy().getName() + "</td>");
+                        out.println("  <td>" + history.getStatusValue() + "</td>");
+                        out.println("  <td>" + ( history.getAssignedTo() == null ? "" : history.getAssignedTo().getName() ) + "</td>");
+                        for(Field field : fields) {
+                            out.println("  <td>" + history.getCustomValue(field.getName()) + "</td>");
+                        }
+                        out.println("  <td>" + history.getTimeStamp() + "</td>");
+                        out.println("</tr>");                                                
+                    }
+                }
+                
                 count++;
             }
             out.println("</table>");
+            // re write out record count + pagination
+            out.println("<p/>" + sb);            
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }        
