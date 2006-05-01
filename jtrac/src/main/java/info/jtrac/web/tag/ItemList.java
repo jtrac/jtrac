@@ -51,8 +51,11 @@ public class ItemList extends SimpleTagSupport {
             long resultCount = itemSearch.getResultCount();
             out.println("<span class='info'>" + resultCount + " record(s) found.</span><p/>");
             int pageSize = itemSearch.getPageSize();
+            double pageCount = 0;
             if (pageSize != -1) {
-                long pageCount = resultCount / pageSize;
+                pageCount = Math.ceil((double) resultCount / pageSize);
+            }
+            if (pageCount > 1) {            
                 String baseUrl = "flow.htm?_flowExecutionKey=" + request.getAttribute("flowExecutionKey") + "&_eventId=page";
                 for(int i = 0; i < pageCount; i++) {
                     String url = baseUrl + "&page=" + i;

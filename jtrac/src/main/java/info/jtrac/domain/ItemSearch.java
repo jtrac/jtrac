@@ -46,7 +46,7 @@ public class ItemSearch implements Serializable {
     private int currentPage;
     private long resultCount;   
     private String sortFieldName = "id";    
-    private boolean sortDescending = true;
+    private boolean sortDescending;
     private boolean showHistory;
     private boolean showDescription;
     
@@ -166,18 +166,24 @@ public class ItemSearch implements Serializable {
         return criteria;        
     }
     
-    //=========================================================================
+    //=========================================================================    
+    
+    public ItemSearch() {
+        // zero arg constructor
+    }
     
     public ItemSearch(User user) {
         this.user = user;
         fields = new ArrayList<Field>();
         fields.add(new Field(Field.Name.SEVERITY));
         fields.add(new Field(Field.Name.PRIORITY));
+        this.sortDescending = true;
     }
     
     public ItemSearch(Space space) {
         this.fields = space.getMetadata().getFieldList();
         this.space = space;
+        this.sortDescending = true;
     }    
     
     private Map setToMap(Set s) {

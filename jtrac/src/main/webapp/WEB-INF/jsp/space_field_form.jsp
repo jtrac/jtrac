@@ -26,6 +26,7 @@
             <td>
                 <spring:bind path="fieldForm.field.optional">
                     <input type="checkbox" name="${status.expression}" <c:if test='${status.value}'>checked="true"</c:if>/>
+                    <input type="hidden" name="_${status.expression}"/>
                 </spring:bind>
             </td>
         </tr>

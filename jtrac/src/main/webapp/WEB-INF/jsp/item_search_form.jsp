@@ -51,12 +51,17 @@
         </td>
         <th <c:if test="${!itemSearch.sortDescending}">class="selected"</c:if>>
             <input type="checkbox" name="sortDescending" value="true" <c:if test="${itemSearch.sortDescending}">checked="true"</c:if>/>&nbsp;Descending
+            <input type="hidden" name="_sortDescending"/>
         </th>
         <td/>
         <th <c:if test="${itemSearch.showDescription}">class="selected"</c:if>>
             Show Description&nbsp;<input type="checkbox" name="showDescription" value="true" <c:if test="${itemSearch.showDescription}">checked="true"</c:if>/>
+            <input type="hidden" name="_showDescription"/>
         </th>	
-        <th <c:if test="${itemSearch.showHistory}">class="selected"</c:if>>Show History&nbsp;<input type="checkbox" name="showHistory" value="true" <c:if test="${itemSearch.showHistory}">checked="true"</c:if>/></th>
+        <th <c:if test="${itemSearch.showHistory}">class="selected"</c:if>>
+            Show History&nbsp;<input type="checkbox" name="showHistory" value="true" <c:if test="${itemSearch.showHistory}">checked="true"</c:if>/>
+            <input type="hidden" name="_showHistory"/>
+        </th>
         <td><input type="submit" name="_eventId_reset" value="Reset"/></td>
     </tr>
 </table>
