@@ -46,6 +46,11 @@ public class History extends AbstractItem {
     }
     
     @Override
+    public String getRefId() {
+        return getParent().getRefId();
+    }      
+    
+    @Override
     public Space getSpace() {
         return getParent().getSpace();
     }            

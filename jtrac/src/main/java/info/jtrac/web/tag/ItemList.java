@@ -16,9 +16,9 @@
 
 package info.jtrac.web.tag;
 
+import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
-import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import java.io.IOException;
 import java.util.List;
@@ -30,10 +30,10 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 public class ItemList extends SimpleTagSupport {
     
-    private List<Item> items;
+    private List<AbstractItem> items;
     private ItemSearch itemSearch;
     
-    public void setItems(List<Item> items) {
+    public void setItems(List<AbstractItem> items) {
         this.items = items;
     }
     
@@ -106,14 +106,19 @@ public class ItemList extends SimpleTagSupport {
             out.println("  <th>Time Stamp</th>");
             out.println("</tr>");
             int count = 1;
-            for(Item item : items) {
+            for(AbstractItem item : items) {
                 out.println("<tr" + ( count % 2 == 0 ? " class='alt'" : "" ) + ">");
                 String href = response.encodeURL("flow.htm?_flowId=itemView&itemId=" + item.getId());
                 out.println("  <td><a href='" + href + "'>" + item.getRefId() + "</a></td>");
-                out.println("  <td>" + item.getSummary() + "</td>");
+                out.println("  <td>" + ( item.getSummary() == null ? "" : item.getSummary() ) + "</td>");
                 
                 if (showDetail) {
-                    out.println("  <td>" + item.getDetail() + "</td>");
+                    if (showHistory) {
+                        History h = (History) item;
+                        out.println("  <td>" + ( h.getComment() == null ? "" : h.getComment() ) + "</td>");
+                    } else {
+                        out.println("  <td>" + item.getDetail() + "</td>");
+                    }
                 }                
                 
                 out.println("  <td>" + item.getLoggedBy().getName() + "</td>");
@@ -124,31 +129,6 @@ public class ItemList extends SimpleTagSupport {
                 }
                 out.println("  <td>" + item.getTimeStamp() + "</td>");
                 out.println("</tr>");
-                
-                if (showHistory) {
-                    boolean first = true;
-                    for (History history : item.getHistory()) {
-                        if (first) {
-                            first = false;
-                            continue;
-                        }
-                        out.println("<tr>");
-                        out.println("<td/>"); // ID
-                        out.println("  <td>" + ( history.getSummary() == null ? "" : history.getSummary() ) + "</td>");
-                        if (showDetail) {
-                            out.println("  <td>" + ( history.getComment() == null ? "" : history.getComment() ) + "</td>");
-                        }                         
-                        out.println("  <td>" + history.getLoggedBy().getName() + "</td>");
-                        out.println("  <td>" + history.getStatusValue() + "</td>");
-                        out.println("  <td>" + ( history.getAssignedTo() == null ? "" : history.getAssignedTo().getName() ) + "</td>");
-                        for(Field field : fields) {
-                            out.println("  <td>" + history.getCustomValue(field.getName()) + "</td>");
-                        }
-                        out.println("  <td>" + history.getTimeStamp() + "</td>");
-                        out.println("</tr>");                                                
-                    }
-                }
-                
                 count++;
             }
             out.println("</table>");

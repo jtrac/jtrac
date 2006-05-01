@@ -36,7 +36,7 @@ public class Item extends AbstractItem {
     private Set<Item> children;
     private Set<Attachment> attachments;
 
-    
+    @Override
     public String getRefId() {
         return getSpace().getPrefixCode() + "-" + sequenceNum;
     }    

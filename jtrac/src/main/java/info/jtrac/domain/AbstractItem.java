@@ -127,6 +127,7 @@ public abstract class AbstractItem implements Serializable {
     
     // must override, History behaves differently from Item
     public abstract Space getSpace();
+    public abstract String getRefId();    
     
     public String getCustomValue(Field.Name fieldName) {
         // using accessor for space, getSpace() is overridden in subclass History

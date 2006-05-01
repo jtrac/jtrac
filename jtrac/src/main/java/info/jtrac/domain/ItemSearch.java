@@ -20,6 +20,8 @@ import static info.jtrac.Constants.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -97,21 +99,26 @@ public class ItemSearch implements Serializable {
             criteria.addOrder(Order.desc(sortFieldName));
         } else {
             criteria.addOrder(Order.asc(sortFieldName));
-        }
+        }        
         return criteria;
     }    
     
     public DetachedCriteria getCriteriaForCount() {
-        DetachedCriteria criteria = DetachedCriteria.forClass(Item.class);      
-        if (space == null) {
-            if (spaceSet == null) {
-                criteria.add(Restrictions.in("space", user.getSpaces()));
-            } else {
-                criteria.add(Restrictions.in("space.id", spaceSet));
-            }
-        } else {
-            criteria.add(Restrictions.eq("space", space));
+        
+        if (modifiedDateStart != null || modifiedDateEnd != null) {
+            showHistory = true;
         }
+        
+        DetachedCriteria criteria = null;
+        
+        if (showHistory == true) {
+            criteria = DetachedCriteria.forClass(History.class);
+            criteria.createCriteria("parent").add(Restrictions.in("space.id", getSpaceIdSet()));                                   
+        } else {
+            criteria = DetachedCriteria.forClass(Item.class);
+            criteria.add(Restrictions.in("space.id", getSpaceIdSet()));          
+        }
+
         if (statusSet != null) {
             criteria.add(Restrictions.in("status", statusSet));        
         }
@@ -164,14 +171,29 @@ public class ItemSearch implements Serializable {
             criteria.add(Restrictions.le("timeStamp", createdDateEnd));
         }
         if (modifiedDateStart != null) {
-            criteria.createCriteria("history").add(Restrictions.ge("timeStamp", modifiedDateStart));
-            showHistory = true;
+            criteria.add(Restrictions.ge("timeStamp", modifiedDateStart));
         }
         if (modifiedDateEnd != null) {
-            criteria.createCriteria("history").add(Restrictions.le("timeStamp", modifiedDateEnd));
-            showHistory = true;
+            criteria.add(Restrictions.le("timeStamp", modifiedDateEnd));            
         }        
         return criteria;        
+    }
+    
+    private Collection<Integer> getSpaceIdSet() {
+        if (space == null) {
+            if (spaceSet != null) {
+                return spaceSet;
+            }
+            Set<Integer> spaceIdSet = new HashSet<Integer>(user.getSpaceRoles().size());
+            for (SpaceRole sr : user.getSpaceRoles()) {
+                if (sr.getSpace() != null) {
+                    spaceIdSet.add(sr.getSpace().getId());
+                }
+            }
+            return spaceIdSet;
+        } else {
+            return Collections.singleton(space.getId());        
+        }
     }
     
     //=========================================================================    

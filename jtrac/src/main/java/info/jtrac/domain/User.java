@@ -67,16 +67,6 @@ public class User implements UserDetails, Serializable {
         }
         spaceRoles.removeAll(remove);
     }
-   
-    public Set<Space> getSpaces() {
-        Set<Space> spaces = new HashSet<Space>(spaceRoles.size());
-        for(SpaceRole sr : spaceRoles) {
-            if (sr.getSpace() != null) {
-                spaces.add(sr.getSpace());
-            }
-        }
-        return spaces;
-    }
     
     private List<String> getRoleKeys(Space space) {
         List<String> roleKeys = new ArrayList<String>();
