@@ -288,8 +288,9 @@
                         <td>
                             <select name="spaceSet" size="8" multiple="true">
                                 <c:set var="spaceMap" value="${searchMap['spaceSet']}"/>
-                                <c:forEach items="${itemSearch.spaceOptions}" var="entry">	
-                                    <option value="${entry.key}" <c:if test="${spaceMap[entry.key]}">selected="true"</c:if>>
+                                <c:forEach items="${itemSearch.spaceOptions}" var="entry">
+                                    <c:set var="thisKey">${entry.key}</c:set>
+                                    <option value="${thisKey}" <c:if test="${spaceMap[thisKey]}">selected="true"</c:if>>
                                         ${entry.value}
                                     </option>
                                 </c:forEach>					

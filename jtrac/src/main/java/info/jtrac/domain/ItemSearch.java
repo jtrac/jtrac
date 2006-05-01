@@ -19,8 +19,10 @@ package info.jtrac.domain;
 import static info.jtrac.Constants.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,8 +35,9 @@ import org.hibernate.criterion.Restrictions;
  */
 public class ItemSearch implements Serializable {
     
-    private List<Field> fields; // column names
+    private List<Field> fields; // columns in order
     private Space space; // if null, means aggregate across all spaces
+    private User user; // this will be set in the case space is null
     
     private int rowsPerPage = 25;
     private String sortFieldName = "id";    
@@ -84,7 +87,11 @@ public class ItemSearch implements Serializable {
     public DetachedCriteria getCriteria() {
         DetachedCriteria criteria = DetachedCriteria.forClass(Item.class);
         if (space == null) {
-            // TODO
+            if (spaceSet == null) {
+                criteria.add(Restrictions.in("space", user.getSpaces()));
+            } else {
+                criteria.add(Restrictions.in("space.id", spaceSet));
+            }
         } else {
             criteria.add(Restrictions.eq("space", space));
         }
@@ -149,18 +156,17 @@ public class ItemSearch implements Serializable {
     
     //=========================================================================
     
-    public ItemSearch() {
-        // TODO
+    public ItemSearch(User user) {
+        this.user = user;
+        fields = new ArrayList<Field>();
+        fields.add(new Field(Field.Name.SEVERITY));
+        fields.add(new Field(Field.Name.PRIORITY));
     }
     
     public ItemSearch(Space space) {
-        fields = space.getMetadata().getFieldList();
+        this.fields = space.getMetadata().getFieldList();
         this.space = space;
     }    
-    
-    public List<Field> getFields() {
-        return fields;
-    }
     
     private Map setToMap(Set s) {
         if (s == null) {
@@ -216,7 +222,16 @@ public class ItemSearch implements Serializable {
     }
     
     public Map<Integer, String> getSpaceOptions() {
-        return null;
+        if (user == null) {
+            return null;
+        }
+        Map<Integer, String> map = new HashMap<Integer, String>(user.getSpaceRoles().size());
+        for(SpaceRole sr : user.getSpaceRoles()) {
+            if (sr.getSpace() != null) {
+                map.put(sr.getSpace().getId(), sr.getSpace().getPrefixCode());
+            }
+        }
+        return map;
     }
     
     public Map<String, Field> getFieldMap() {
@@ -236,6 +251,10 @@ public class ItemSearch implements Serializable {
         this.fields = fields;
     }
 
+    public List<Field> getFields() {
+        return fields;
+    }    
+    
     public Space getSpace() {
         return space;
     }

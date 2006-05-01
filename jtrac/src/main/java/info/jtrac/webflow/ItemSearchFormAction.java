@@ -60,7 +60,7 @@ public class ItemSearchFormAction extends AbstractFormAction {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             List<User> users = jtrac.findUsersForUser(user);
             context.getFlowScope().put("users", users);
-            itemSearch = new ItemSearch();
+            itemSearch = new ItemSearch(user);
         } else {
             Space space = jtrac.loadSpace(Integer.parseInt(spaceId));
             itemSearch = new ItemSearch(space);
