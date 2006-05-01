@@ -116,7 +116,12 @@
             <artifactId>spring-binding</artifactId>
             <version>1.0-ea</version>
             <scope>runtime</scope>          
-        </dependency>       
+        </dependency>
+        <dependency>
+            <groupId>poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>2.5.1-final-20040804</version>            
+        </dependency>        
         <dependency>
             <groupId>org.tmate</groupId>
             <artifactId>javasvn</artifactId>

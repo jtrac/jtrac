@@ -99,7 +99,7 @@ public class ItemViewFormAction extends AbstractFormAction {
             }
         } else {
             if (history.getAssignedTo() != null) {
-                errors.rejectValue("status", "error.history.status.required", "Required if changing Status.");
+                errors.rejectValue("status", "error.history.status.required", "Required if assigning.");
             }
         }
         if (history.getComment() == null) {

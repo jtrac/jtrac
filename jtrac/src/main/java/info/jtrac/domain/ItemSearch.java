@@ -116,7 +116,14 @@ public class ItemSearch implements Serializable {
             criteria.createCriteria("parent").add(Restrictions.in("space.id", getSpaceIdSet()));                                   
         } else {
             criteria = DetachedCriteria.forClass(Item.class);
-            criteria.add(Restrictions.in("space.id", getSpaceIdSet()));          
+            criteria.add(Restrictions.in("space.id", getSpaceIdSet()));
+            // Item created date filter takes effect only here if set i.e. when showHistory == false            
+            if (createdDateStart != null) {
+                criteria.add(Restrictions.ge("timeStamp", createdDateStart));
+            }
+            if (createdDateEnd != null) {
+                criteria.add(Restrictions.le("timeStamp", createdDateEnd));
+            }                        
         }
 
         if (statusSet != null) {
@@ -164,12 +171,6 @@ public class ItemSearch implements Serializable {
         if (cusInt10Set != null) {
             criteria.add(Restrictions.in("cusInt10", cusInt10Set));        
         }
-        if (createdDateStart != null) {
-            criteria.add(Restrictions.ge("timeStamp", createdDateStart));
-        }
-        if (createdDateEnd != null) {
-            criteria.add(Restrictions.le("timeStamp", createdDateEnd));
-        }
         if (modifiedDateStart != null) {
             criteria.add(Restrictions.ge("timeStamp", modifiedDateStart));
         }
@@ -179,6 +180,7 @@ public class ItemSearch implements Serializable {
         return criteria;        
     }
     
+    // private routine to help with the space "in" clause
     private Collection<Integer> getSpaceIdSet() {
         if (space == null) {
             if (spaceSet != null) {

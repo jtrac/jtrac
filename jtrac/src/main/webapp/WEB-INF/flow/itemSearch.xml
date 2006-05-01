@@ -16,8 +16,15 @@
     
     <view-state id="itemListView" view="item_list">
         <transition on="page" to="itemListView">
-            <action bean="itemSearchFormAction" method="itemPageHandler"/>
+            <action bean="itemSearchFormAction" method="itemSearchPageHandler"/>
         </transition>
+        <transition on="export" to="itemSearchExportView">
+            <action bean="itemSearchFormAction" method="itemSearchExportHandler"/>
+        </transition>        
+    </view-state>
+    
+    <view-state id="itemSearchExportView" view="item_search_export">
+        <transition on="back" to="itemListView"/>
     </view-state>
     
 </flow>

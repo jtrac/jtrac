@@ -19,11 +19,13 @@ package info.jtrac.webflow;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
-import info.jtrac.domain.UserRole;
+import info.jtrac.util.ExcelUtils;
 import info.jtrac.util.ValidationUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
@@ -32,6 +34,7 @@ import org.springframework.validation.DataBinder;
 import org.springframework.webflow.Event;
 import org.springframework.webflow.RequestContext;
 import org.springframework.webflow.ScopeType;
+import org.springframework.webflow.context.servlet.ServletExternalContext;
 
 /**
  * Multiaction that backs the "Item Search" flow
@@ -66,6 +69,7 @@ public class ItemSearchFormAction extends AbstractFormAction {
             itemSearch = new ItemSearch(space);
             List<User> users = jtrac.findUsersForSpace(space.getId());
             context.getFlowScope().put("users", users);
+            context.getFlowScope().put("space", space);
         }
         return itemSearch;
     }     
@@ -76,11 +80,27 @@ public class ItemSearchFormAction extends AbstractFormAction {
         return success();
     }
     
-    public Event itemPageHandler(RequestContext context) throws Exception {
+    public Event itemSearchPageHandler(RequestContext context) throws Exception {
         String page = ValidationUtils.getParameter(context, "page");
         ItemSearch itemSearch = (ItemSearch) getFormObject(context);
         itemSearch.setCurrentPage(Integer.parseInt(page));
         context.getRequestScope().put("items", jtrac.findItems(itemSearch));
+        return success();
+    }
+    
+    public Event itemSearchExportHandler(RequestContext context) throws Exception {
+        ItemSearch itemSearch = (ItemSearch) getFormObject(context);
+        int pageSize = itemSearch.getPageSize();
+        itemSearch.setPageSize(-1);
+        ExcelUtils eu = new ExcelUtils(jtrac.findItems(itemSearch), itemSearch);
+        itemSearch.setPageSize(pageSize);
+        ServletExternalContext servletContext = (ServletExternalContext) context.getLastEvent().getSource();
+        HttpServletResponse response = servletContext.getResponse();
+        response.setContentType("application/unknow");
+        response.setHeader("Content-Disposition", "inline;filename=jtrac-export.xls");
+        ServletOutputStream out = response.getOutputStream();
+        eu.exportToExcel().write(out);
+        out.flush();
         return success();
     }    
     

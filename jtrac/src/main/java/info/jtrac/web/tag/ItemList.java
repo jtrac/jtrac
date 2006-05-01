@@ -82,7 +82,10 @@ public class ItemList extends SimpleTagSupport {
                 sb.append("</span>");
             }
             // write out record count + pagination
-            out.println(sb + "<p/>");
+            out.println(sb);
+            
+            String exportUrl = "flow.htm?_flowExecutionKey=" + request.getAttribute("flowExecutionKey") + "&_eventId=export";
+            out.println("<a href='" + exportUrl + "'>(export to excel)</a><p/>");
             
             boolean showDetail = itemSearch.isShowDetail();
             boolean showHistory = itemSearch.isShowHistory();

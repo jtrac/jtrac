@@ -167,9 +167,9 @@ public class HibernateJtracDao
     }     
     
     public List<User> findUsersForSpaceSet(Collection<Space> spaces) {
-        DetachedCriteria criteria = DetachedCriteria.forClass(User.class);
+        Criteria criteria = getSession().createCriteria(User.class);        
         criteria.createCriteria("spaceRoles").add(Restrictions.in("space", spaces));
-        return getHibernateTemplate().findByCriteria(criteria);
+        return criteria.list();
     }      
     
     public List<Config> findAllConfig() {
