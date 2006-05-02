@@ -86,6 +86,7 @@
     - The flow id of the flow to start should be passed in 
     - using the "_flowId" request parameter
     -->
+    <!--
     <bean id="flowController" class="org.springframework.webflow.executor.mvc.FlowController">       
         <property name="flowExecutor">
             <bean class="org.springframework.webflow.executor.FlowExecutorImpl">
@@ -96,7 +97,27 @@
                 </constructor-arg>
             </bean>     
         </property>
-    </bean>         
+    </bean>
+    -->
+    
+    <bean name="flowController" class="org.springframework.webflow.executor.mvc.FlowController">
+        <property name="flowExecutor" ref="flowExecutor"/>
+    </bean>
+
+    <!-- Launches new flow executions and resumes existing executions. -->	
+    <bean id="flowExecutor" class="org.springframework.webflow.executor.FlowExecutorImpl">
+        <constructor-arg ref="repositoryFactory"/>
+    </bean>
+
+    <!-- Creates, saves, and restores managed flow executions -->
+    <bean id="repositoryFactory" class="org.springframework.webflow.execution.repository.continuation.ContinuationFlowExecutionRepositoryFactory">
+        <constructor-arg ref="flowRegistry"/>
+    </bean>
+
+    <!-- Creates the registry of flow definitions for this application -->
+    <bean name="flowRegistry" class="org.springframework.webflow.registry.XmlFlowRegistryFactoryBean">
+        <property name="flowLocations" value="/WEB-INF/flow/*.xml"/>
+    </bean>    
     
     <bean id="itemFormAction" class="info.jtrac.webflow.ItemFormAction">
         <property name="jtrac" ref="jtrac"/>
