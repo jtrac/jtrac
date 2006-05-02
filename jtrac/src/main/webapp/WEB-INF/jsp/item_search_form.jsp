@@ -160,7 +160,7 @@
                 </tr>
             </table>
         </td>
-        <td>
+        <td valign="top">
             <table class="jtrac">
                 <c:forTokens items="createdDate,modifiedDate" delims="," var="field">
                     <tr>

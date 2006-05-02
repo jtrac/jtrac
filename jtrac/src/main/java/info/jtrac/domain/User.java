@@ -86,6 +86,20 @@ public class User implements UserDetails, Serializable {
         return space.getMetadata().getEditableFields(getRoleKeys(space), Collections.singletonList(status));
     }
     
+    public Set<Space> getSpaces() {
+        Set<Space> spaces = new HashSet<Space>(spaceRoles.size());
+        for (SpaceRole sr : spaceRoles) {
+            if (sr.getSpace() != null) {
+                spaces.add(sr.getSpace());
+            }
+        }
+        return spaces;
+    }
+    
+    public int getSpaceCount() {
+        return getSpaces().size();
+    }
+    
     //============ ACEGI UserDetails implementation ===============
     
     public boolean isAccountNonExpired() {

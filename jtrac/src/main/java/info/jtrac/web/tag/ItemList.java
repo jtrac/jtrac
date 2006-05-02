@@ -47,45 +47,46 @@ public class ItemList extends SimpleTagSupport {
         HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();        
         JspWriter out = pageContext.getOut();
-        try {
+        try {                        
+            
             // pagination
+            String baseUrl = "flow.htm?_flowExecutionKey=" + request.getAttribute("flowExecutionKey");
             StringBuffer sb = new StringBuffer();
             long resultCount = itemSearch.getResultCount();
-            sb.append("<span class='info'>" + resultCount + " record(s) found.</span>");
+            sb.append("<span class='info'>" + resultCount + " record(s) found.</span>&nbsp;&nbsp;");
             int pageSize = itemSearch.getPageSize();
             int pageCount = 0;
             if (pageSize != -1) {
                 pageCount = (int) Math.ceil((double) resultCount / pageSize);
             }
             if (pageCount > 1) {
-                sb.append("&nbsp;&nbsp;<span class='page-links'>");
-                String baseUrl = "flow.htm?_flowExecutionKey=" + request.getAttribute("flowExecutionKey") + "&_eventId=page";
+                String pageBaseUrl = baseUrl + "&_eventId=page&page=";
+                sb.append("<span class='page-links'>");                
                 int currentPage = itemSearch.getCurrentPage();
                 if (currentPage == 0) {
                     sb.append("&lt;&lt;&nbsp;&nbsp;");
                 } else {
-                    sb.append("<a href='" + response.encodeURL(baseUrl + "&page=" + (currentPage - 1)) + "'>&lt;&lt;</a>&nbsp;&nbsp;");
+                    sb.append("<a href='" + response.encodeURL(baseUrl + (currentPage - 1)) + "'>&lt;&lt;</a>&nbsp;&nbsp;");
                 }
                 for(int i = 0; i < pageCount; i++) {                    
                     if (currentPage == i) {
                         sb.append((i + 1) +"&nbsp;&nbsp;");
                     } else {
-                        String url = baseUrl + "&page=" + i;
+                        String url = baseUrl + i;
                         sb.append("<a href='" + response.encodeURL(url) + "'>" + (i + 1) +"</a>&nbsp;&nbsp;");
                     }
                 }
                 if (currentPage == pageCount - 1) {
                     sb.append("&gt;&gt;");
                 } else {
-                    sb.append("<a href='" + response.encodeURL(baseUrl + "&page=" + (currentPage + 1)) + "'>&gt;&gt;</a>");  
+                    sb.append("<a href='" + response.encodeURL(baseUrl + (currentPage + 1)) + "'>&gt;&gt;</a>");  
                 }                
                 sb.append("</span>");
             }
             // write out record count + pagination
-            out.println(sb);
-            
-            String exportUrl = "flow.htm?_flowExecutionKey=" + request.getAttribute("flowExecutionKey") + "&_eventId=export";
-            out.println("<a href='" + exportUrl + "'>(export to excel)</a><p/>");
+            out.println("<table class='jtrac bdr-collapse' width='100%'><tr><td>" + sb + "</td>");
+                                    
+            out.println("<td align='right'><a href='" + baseUrl + "&_eventId=export" + "'>(export to excel)</a></td></tr></table><p/>");
             
             boolean showDetail = itemSearch.isShowDetail();
             boolean showHistory = itemSearch.isShowHistory();
