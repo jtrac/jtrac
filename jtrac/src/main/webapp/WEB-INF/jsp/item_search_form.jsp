@@ -331,7 +331,7 @@
             </table>
         </td>
         <td>
-            <input type="submit" name="_eventId_search" value="Search"/>
+            <input type="submit" name="_eventId_search" value="Search"/>            
         </td>
 
     </tr>
@@ -340,5 +340,7 @@
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 
 </form>
+
+${_conversationId}
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>

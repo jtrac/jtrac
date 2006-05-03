@@ -86,7 +86,7 @@ public class ItemList extends SimpleTagSupport {
             // write out record count + pagination
             out.println("<table class='jtrac bdr-collapse' width='100%'><tr><td>" + sb + "</td>");
                                     
-            out.println("<td align='right'><a href='" + baseUrl + "&_eventId=export" + "'>(export to excel)</a></td></tr></table><p/>");
+            out.println("<td align='right'><a href='item_list_excel.htm?_flowExecutionKey=" + request.getAttribute("flowExecutionKey") + "'>(export to excel)</a></td></tr></table><p/>");
             
             boolean showDetail = itemSearch.isShowDetail();
             boolean showHistory = itemSearch.isShowHistory();

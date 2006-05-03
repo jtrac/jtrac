@@ -44,7 +44,7 @@
                 <prop key="/space_list.htm">defaultController</prop>
                 <prop key="/config_list.htm">defaultController</prop>
                 <prop key="/svn_view.htm">defaultController</prop>
-                <prop key="/excel_export.htm">defaultController</prop> 
+                <prop key="/item_list_excel.htm">defaultController</prop> 
                 <prop key="/attachments/*">defaultController</prop>
                 <prop key="/chart/svn_commits_per_committer.jpg">defaultController</prop>
             </props>
@@ -70,7 +70,7 @@
                         <prop key="/space_list.htm">spaceListHandler</prop>
                         <prop key="/config_list.htm">configListHandler</prop>
                         <prop key="/svn_view.htm">svnViewHandler</prop>
-                        <prop key="/excel_export.htm">excelExportHandler</prop>
+                        <prop key="/item_list_excel.htm">itemListExcelHandler</prop>
                         <prop key="/attachments/*">attachmentViewHandler</prop>
                         <prop key="/chart/svn_commits_per_committer.jpg">svnCommitsPerCommitterChartHandler</prop>
                     </props>
@@ -78,6 +78,7 @@
             </bean>        
         </property>
         <property name="jtrac" ref="jtrac"/>
+        <property name="flowExecutionRepositoryFactory" ref="repositoryFactory"/>
     </bean>    
     
     <!-- ======================== SPRING WEB FLOW ============================ -->
@@ -104,20 +105,26 @@
         <property name="flowExecutor" ref="flowExecutor"/>
     </bean>
 
-    <!-- Launches new flow executions and resumes existing executions. -->	
     <bean id="flowExecutor" class="org.springframework.webflow.executor.FlowExecutorImpl">
         <constructor-arg ref="repositoryFactory"/>
     </bean>
 
-    <!-- Creates, saves, and restores managed flow executions -->
-    <bean id="repositoryFactory" class="org.springframework.webflow.execution.repository.continuation.ContinuationFlowExecutionRepositoryFactory">
+    <bean id="repositoryFactory" class="org.springframework.webflow.execution.repository.support.SimpleFlowExecutionRepositoryFactory">
         <constructor-arg ref="flowRegistry"/>
+        <!--
+        <property name="listenerLoader">
+            <bean class="org.springframework.webflow.execution.ConditionalFlowExecutionListenerLoader">
+                <property name="listener">
+                    <bean class="info.jtrac.webflow.JtracFlowExecutionListener"/>
+                </property>
+            </bean>
+        </property> 
+        -->        
     </bean>
 
-    <!-- Creates the registry of flow definitions for this application -->
     <bean name="flowRegistry" class="org.springframework.webflow.registry.XmlFlowRegistryFactoryBean">
         <property name="flowLocations" value="/WEB-INF/flow/*.xml"/>
-    </bean>    
+    </bean> 
     
     <bean id="itemFormAction" class="info.jtrac.webflow.ItemFormAction">
         <property name="jtrac" ref="jtrac"/>

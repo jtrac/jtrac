@@ -91,7 +91,7 @@ public class ItemFormAction extends AbstractFormAction {
     
     public Event itemFormHandler(RequestContext context) throws Exception {
         Item item = (Item) getFormObject(context);
-        Space space = (Space) context.getFlowScope().get("space");
+        Space space = (Space) context.getFlowScope().get("space");        
         item.setSpace(space);
         if (item.getId() == 0) {
             item.setStatus(State.OPEN);

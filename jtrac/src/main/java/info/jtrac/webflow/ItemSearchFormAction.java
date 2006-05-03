@@ -68,8 +68,7 @@ public class ItemSearchFormAction extends AbstractFormAction {
             Space space = jtrac.loadSpace(Integer.parseInt(spaceId));
             itemSearch = new ItemSearch(space);
             List<User> users = jtrac.findUsersForSpace(space.getId());
-            context.getFlowScope().put("users", users);
-            context.getFlowScope().put("space", space);
+            context.getFlowScope().put("users", users);            
         }
         return itemSearch;
     }     

@@ -2,7 +2,7 @@
 <!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
 	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
 
-<flow start-state="itemForm">  
+<flow start-state="itemForm">        
     
     <view-state id="itemForm" view="item_form">
         <entry-actions>
