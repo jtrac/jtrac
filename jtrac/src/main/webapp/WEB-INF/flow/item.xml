@@ -18,10 +18,11 @@
         <attribute-mapper>
             <input-mapper>
                 <mapping source="flowScope.item" target="item"/>
+                <!-- just for displaying navigation in header.jsp -->
                 <mapping source="flowScope.space" target="space"/>
             </input-mapper>
         </attribute-mapper>
-        <transition on="itemForm" to="itemForm"/>
+        <transition on="itemListView" to="itemForm"/>
     </subflow-state>    
     
 </flow>

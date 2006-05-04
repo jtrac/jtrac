@@ -12,15 +12,28 @@
             <action bean="itemSearchFormAction" method="bind"/>
             <action bean="itemSearchFormAction" method="itemSearchFormHandler"/>
         </transition>     
-        <transition on="reset" to="itemSearchForm"/>       
     </view-state>    
     
     <view-state id="itemListView" view="item_list">
         <transition on="page" to="itemListView">
             <action bean="itemSearchFormAction" method="itemSearchPageHandler"/>
         </transition>
-        <transition on="export" to="itemSearchExportView"/>
+        <transition on="view" to="itemViewForm"/>
+        <transition on="back" to="itemSearchForm"/>
     </view-state>
+    
+    <subflow-state id="itemViewForm" flow="itemView">
+        <attribute-mapper>
+            <input-mapper>                
+                <!-- just for displaying navigation in header.jsp -->
+                <mapping source="flowScope.space" target="space"/>
+                <mapping source="flowScope.itemSearch" target="itemSearch"/>
+            </input-mapper>
+        </attribute-mapper>
+        <transition on="itemListView" to="itemListView">
+            <action bean="itemSearchFormAction" method="itemSearchFormHandler"/>
+        </transition>
+    </subflow-state>      
     
 </flow>
 

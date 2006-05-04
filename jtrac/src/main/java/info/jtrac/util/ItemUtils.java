@@ -26,6 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Utilities to convert an Item into HTML etc.
+ * The getAsHtml() routine is used to diplay an item - within a tag lib for JSP
+ * And we are able to re-use this to send HTML e-mail etc.
  */
 public final class ItemUtils {
     
@@ -38,7 +40,7 @@ public final class ItemUtils {
     }
     
     public static String getAsHtml(Item item, HttpServletResponse response) {
-        StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer();          
         sb.append("<table width='100%' class='jtrac'>");
         sb.append("<tr class='alt'>");
         sb.append("  <td class='label'>ID</td>");
@@ -49,8 +51,8 @@ public final class ItemUtils {
         sb.append("  <td>" + item.getStatusValue() + "</td>");
         sb.append("  <td class='label'>Logged By</td>");
         sb.append("  <td>" + item.getLoggedBy().getName() + "</td>");
-        sb.append("  <td class='label' width='15%'>Assigned To</td>");
-        sb.append("  <td>" + ( item.getAssignedTo() == null ? "" : item.getAssignedTo().getName() ) + "</td>");
+        sb.append("  <td class='label'>Assigned To</td>");
+        sb.append("  <td width='15%'>" + ( item.getAssignedTo() == null ? "" : item.getAssignedTo().getName() ) + "</td>");
         sb.append("</tr>");        
         sb.append("<tr class='alt'>");
         sb.append("  <td class='label'>Summary</td>");

@@ -4,6 +4,11 @@
 
 <flow start-state="itemViewForm">      
     
+    <input-mapper>
+        <mapping source="space" target="flowScope.space"/>
+        <mapping source="itemSearch" target="flowScope.itemSearch"/>
+    </input-mapper>    
+    
     <view-state id="itemViewForm" view="item_view_form">
         <entry-actions>
             <action bean="itemViewFormAction" method="setupForm"/>
@@ -12,10 +17,10 @@
             <action bean="itemViewFormAction" method="bind"/>
             <action bean="itemViewFormAction" method="itemViewHandler"/>
         </transition>
-        <transition on="cancel" to="itemForm"/>
-    </view-state>  
+        <transition on="back" to="itemListView"/>        
+    </view-state>    
     
-    <end-state id="itemForm" view="item_form"/>
+    <end-state id="itemListView" view="item_list"/>
     
 </flow>
 

@@ -62,7 +62,6 @@
             Show History&nbsp;<input type="checkbox" name="showHistory" value="true" <c:if test="${itemSearch.showHistory}">checked="true"</c:if>/>
             <input type="hidden" name="_showHistory"/>
         </th>
-        <td><input type="submit" name="_eventId_reset" value="Reset"/></td>
     </tr>
 </table>
 
@@ -84,6 +83,7 @@
                                     </option>
                                 </c:forEach>				
                             </select>
+                            <input type="hidden" name="_severitySet"/>
                         </td>
                     </tr>
                 </table>
@@ -101,6 +101,7 @@
                                     </option>
                                 </c:forEach>				
                             </select>
+                            <input type="hidden" name="_prioritySet"/>
                         </td>
                     </tr>
                 </table>
@@ -120,6 +121,7 @@
                                 </option>
                             </c:forEach>				
                         </select>
+                        <input type="hidden" name="_statusSet"/>
                     </td>
                 </tr>
             </table>
@@ -137,7 +139,8 @@
                                     ${user.name}
                                 </option>
                             </c:forEach>				
-                        </select>		
+                        </select>
+                        <input type="hidden" name="_loggedBySet"/>
                     </td>
                 </tr>
             </table>
@@ -155,7 +158,8 @@
                                     ${user.name}
                                 </option>
                             </c:forEach>				
-                        </select>		
+                        </select>
+                        <input type="hidden" name="_assignedToSet"/>
                     </td>
                 </tr>
             </table>
@@ -229,7 +233,8 @@
                                             <option value="${entry.key}" 
                                             <c:if test="${optionsMap[entry.key]}">selected="true"</c:if>>${entry.value}</option>
                                         </c:forEach>				
-                                    </select>						
+                                    </select>
+                                    <input type="hidden" name="_${nameSet}"/>
                                 </td>
                             </tr>
                         </table>
@@ -300,6 +305,7 @@
                                     </option>
                                 </c:forEach>					
                             </select>
+                            <input type="hidden" name="_spaceSet"/>
                         </td>
                     </tr>
                 </table>

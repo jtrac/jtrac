@@ -1,5 +1,9 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
+<c:if test="${!empty itemSearch}">
+    <a href="<c:url value='flow.htm?_flowExecutionKey=${flowExecutionKey}&_eventId=back'/>">(back)</a>
+</c:if>
+ 
 <p/>
 
 <jtrac:itemview item="${item}"/>

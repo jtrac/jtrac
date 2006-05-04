@@ -50,43 +50,43 @@ public class ItemList extends SimpleTagSupport {
         try {                        
             
             // pagination
-            String baseUrl = "flow.htm?_flowExecutionKey=" + request.getAttribute("flowExecutionKey");
+            String flowUrlParam = "_flowExecutionKey=" + request.getAttribute("flowExecutionKey");
+            String flowUrl = "flow.htm?" + flowUrlParam;
             StringBuffer sb = new StringBuffer();
-            long resultCount = itemSearch.getResultCount();
-            sb.append("<span class='info'>" + resultCount + " record(s) found.</span>&nbsp;&nbsp;");
+            long resultCount = itemSearch.getResultCount();            
+            sb.append("<a href='" + flowUrl + "&_eventId=back' title='Modify Search'>" + resultCount + " record(s) found.</a>&nbsp;&nbsp;");
             int pageSize = itemSearch.getPageSize();
             int pageCount = 0;
             if (pageSize != -1) {
                 pageCount = (int) Math.ceil((double) resultCount / pageSize);
             }
             if (pageCount > 1) {
-                String pageBaseUrl = baseUrl + "&_eventId=page&page=";
+                String pageUrl = flowUrl + "&_eventId=page&page=";
                 sb.append("<span class='page-links'>");                
                 int currentPage = itemSearch.getCurrentPage();
                 if (currentPage == 0) {
                     sb.append("&lt;&lt;&nbsp;&nbsp;");
                 } else {
-                    sb.append("<a href='" + response.encodeURL(baseUrl + (currentPage - 1)) + "'>&lt;&lt;</a>&nbsp;&nbsp;");
+                    sb.append("<a href='" + response.encodeURL(pageUrl + (currentPage - 1)) + "'>&lt;&lt;</a>&nbsp;&nbsp;");
                 }
                 for(int i = 0; i < pageCount; i++) {                    
                     if (currentPage == i) {
                         sb.append((i + 1) +"&nbsp;&nbsp;");
                     } else {
-                        String url = baseUrl + i;
-                        sb.append("<a href='" + response.encodeURL(url) + "'>" + (i + 1) +"</a>&nbsp;&nbsp;");
+                        sb.append("<a href='" + response.encodeURL(pageUrl + i) + "'>" + (i + 1) +"</a>&nbsp;&nbsp;");
                     }
                 }
                 if (currentPage == pageCount - 1) {
                     sb.append("&gt;&gt;");
                 } else {
-                    sb.append("<a href='" + response.encodeURL(baseUrl + (currentPage + 1)) + "'>&gt;&gt;</a>");  
+                    sb.append("<a href='" + response.encodeURL(pageUrl + (currentPage + 1)) + "'>&gt;&gt;</a>");  
                 }                
                 sb.append("</span>");
             }
             // write out record count + pagination
             out.println("<table class='jtrac bdr-collapse' width='100%'><tr><td>" + sb + "</td>");
                                     
-            out.println("<td align='right'><a href='item_list_excel.htm?_flowExecutionKey=" + request.getAttribute("flowExecutionKey") + "'>(export to excel)</a></td></tr></table><p/>");
+            out.println("<td align='right'><a href='item_list_excel.htm?" + flowUrlParam + "'>(export to excel)</a></td></tr></table><p/>");
             
             boolean showDetail = itemSearch.isShowDetail();
             boolean showHistory = itemSearch.isShowHistory();
@@ -110,9 +110,10 @@ public class ItemList extends SimpleTagSupport {
             out.println("  <th>Time Stamp</th>");
             out.println("</tr>");
             int count = 1;
+            String itemUrl = flowUrl + "&_eventId=view&itemId=";
             for(AbstractItem item : items) {
                 out.println("<tr" + ( count % 2 == 0 ? " class='alt'" : "" ) + ">");
-                String href = response.encodeURL("flow.htm?_flowId=itemView&itemId=" + item.getId());
+                String href = response.encodeURL(itemUrl + item.getId());
                 out.println("  <td><a href='" + href + "'>" + item.getRefId() + "</a></td>");
                 out.println("  <td>" + ( item.getSummary() == null ? "" : item.getSummary() ) + "</td>");
                 
