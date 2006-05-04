@@ -180,14 +180,14 @@
                         <c:set var="bindPath">itemSearch.${path}</c:set>
                         <spring:bind path="${bindPath}">						
                             <tr>
-                                <th <c:if test="${!empty searchMap[path]}">class="selected"</c:if>>
+                                <th <c:if test="${!empty status.value}">class="selected"</c:if>>
                                     <c:choose>
                                         <c:when test="${suffix=='Start'}">On / After</c:when>
                                         <c:when test="${suffix=='End'}">On / Before</c:when>
                                     </c:choose>
                                 </th>
                                 <td>
-                                    <input name="${path}" value="${searchMap[path]}" id="${path}" size="8"/>
+                                    <input name="${status.expression}" value="${status.value}" id="${path}" size="8"/>
                                     <button type="reset" id="${path}Button">...</button>
                                     <script type="text/javascript">
                                         Calendar.setup({

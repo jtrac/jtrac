@@ -23,7 +23,7 @@
     <table class="nav-table">
         <tr>		
             <td><a href="<c:url value='dashboard.htm'/>">DASHBOARD</a></td>
-            <c:if test="${!empty space && space.id != 0}">
+            <c:if test="${!empty space && _flowId != 'space'}">
                 <td>${space.prefixCode}</td>
                 <td><a href="<c:url value='flow.htm?_flowId=item&spaceId=${space.id}'/>">NEW</a></td>
                 <td><a href="<c:url value='flow.htm?_flowId=itemSearch&spaceId=${space.id}'/>">SEARCH</a></td>                

@@ -6,7 +6,7 @@
 
 <table class="jtrac">
 
-    <tr><th>Key</th><th>Value</th><th/></tr>
+    <tr><th>Key</th><th>Value</th><th>(edit)</th></tr>
 
     <c:forEach items="${configKeys}" var="configKey" varStatus="row">
         <c:set var="rowClass">
