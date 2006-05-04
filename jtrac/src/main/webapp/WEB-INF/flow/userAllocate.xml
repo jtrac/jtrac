@@ -4,6 +4,10 @@
 
 <flow start-state="userAllocateSpace"> 
 
+    <input-mapper>
+        <mapping source="user" target="flowScope.user"/>
+    </input-mapper>      
+    
     <view-state id="userAllocateSpace" view="user_allocate_space">
         <entry-actions>
             <action bean="userFormAction" method="userAllocateSpaceSetup"/>

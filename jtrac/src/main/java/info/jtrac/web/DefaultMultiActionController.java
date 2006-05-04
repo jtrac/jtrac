@@ -46,7 +46,7 @@ import org.springframework.webflow.context.servlet.ServletExternalContext;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.repository.FlowExecutionKey;
 import org.springframework.webflow.execution.repository.FlowExecutionRepository;
-import org.springframework.webflow.executor.FlowExecutionKeyFormatter;
+import org.springframework.webflow.executor.support.FlowExecutionKeyFormatter;
 
 public class DefaultMultiActionController extends AbstractMultiActionController {
 

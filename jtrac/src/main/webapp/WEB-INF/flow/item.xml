@@ -16,8 +16,10 @@
     
     <subflow-state id="itemViewForm" flow="itemView">
         <attribute-mapper>
-            <input-mapping name="item"/>
-            <input-mapping name="space"/>
+            <input-mapper>
+                <mapping source="flowScope.item" target="item"/>
+                <mapping source="flowScope.space" target="space"/>
+            </input-mapper>
         </attribute-mapper>
         <transition on="itemForm" to="itemForm"/>
     </subflow-state>    

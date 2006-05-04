@@ -4,6 +4,10 @@
 
 <flow start-state="userForm">
 
+    <input-mapper>
+        <mapping source="space" target="flowScope.space"/>
+    </input-mapper>    
+    
     <view-state id="userForm" view="user_form">
         <entry-actions>
             <action bean="userFormAction" method="setupForm"/>
@@ -21,13 +25,17 @@
     
     <subflow-state id="userAllocateFlow" flow="userAllocate">
         <attribute-mapper>
-            <input-mapping value="${requestScope.userForm.user}" as="user"/>
+            <input-mapper>
+                <mapping source="requestScope.userForm.user" target="user"/>
+            </input-mapper>
         </attribute-mapper>
         <transition on="userListView" to="userListView"/>
     </subflow-state>
     
     <end-state id="userListView" view="externalRedirect:user_list.htm">
-        <output-attribute name="space"/>
+        <output-mapper>
+            <mapping source="flowScope.space" target="space"/>
+        </output-mapper>
     </end-state>
 
 </flow>

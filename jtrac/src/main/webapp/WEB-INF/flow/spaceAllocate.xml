@@ -4,6 +4,10 @@
 
 <flow start-state="spaceAllocate"> 
 
+    <input-mapper>
+        <mapping source="space" target="flowScope.space"/>
+    </input-mapper>    
+    
     <view-state id="spaceAllocate" view="space_allocate">
         <entry-actions>
             <action bean="spaceFormAction" method="spaceAllocateSetup"/>
@@ -20,7 +24,9 @@
 
     <subflow-state id="userForm" flow="user">
         <attribute-mapper>
-            <input-mapping name="space"/>
+            <input-mapper>
+                <mapping source="flowScope.space" target="space"/>
+            </input-mapper>
         </attribute-mapper>
         <transition on="userListView" to="spaceAllocate"/>
     </subflow-state>       

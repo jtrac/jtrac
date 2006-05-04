@@ -73,9 +73,11 @@
         </transition>        
     </view-state>    
     
-    <subflow-state id="spaceAllocateFlow" flow="spaceAllocate">
+    <subflow-state id="spaceAllocateFlow" flow="spaceAllocate">        
         <attribute-mapper>
-            <input-mapping name="space"/>
+            <input-mapper>
+                <mapping source="flowScope.space" target="space"/>
+            </input-mapper>
         </attribute-mapper>
         <transition on="spaceListView" to="spaceListView"/>
     </subflow-state>        
