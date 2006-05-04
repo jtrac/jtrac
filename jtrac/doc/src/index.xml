@@ -3,74 +3,135 @@
 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
 
 <book>
-  <bookinfo>
-    <title>JTrac</title>
+    <bookinfo>
+        <title>JTrac</title>
+        <subtitle>JTrac Reference Documentation</subtitle>
+        <releaseinfo>2.0-EA1</releaseinfo>
+        <authorgroup>
+            <author>
+                <firstname>Peter</firstname>
+                <surname>Thomas</surname>
+            </author>
+        </authorgroup>
+    </bookinfo>
 
-    <subtitle>Reference Documentation</subtitle>
+    <toc/>
 
-    <releaseinfo>1.9.0</releaseinfo>
+    <preface id="preface">
+        <title>Preface</title>
 
-    <authorgroup>
-      <author>
-        <firstname>Peter</firstname>
-        <surname>Thomas</surname>
-      </author>
-    </authorgroup>
-  </bookinfo>
+        <para>
+            This document is a reference guide for <ulink url="http://jtrac.info">JTrac</ulink>
+            - the generic issue tracking web-application.  This document is not only a user-guide
+            but also useful as a reference for developers interested in contributing to JTrac or extending it.
+        </para>
 
-  <toc/>
+        <para>
+            This documentation has been generated using the DocBook configuration 
+            used by the <ulink url="http://www.springframework.org">Spring Framework</ulink> development team. 
+            This particular simplified DocBook helper package was originally developed by Chris Bauer of the
+            <ulink url="http://www.hibernate.org">Hibernate</ulink> project.  Thanks go out to all those who
+            perfected this very handy approach.
+        </para>
+    </preface>
 
-  <preface id="preface">
-    <title>Preface</title>
+    <chapter id="introduction">
+        <title>Introduction</title>
 
-    <para>This document is a reference guide for <ulink url="http://jtrac.info">JTrac</ulink>
-    - the generic issue tracking application.  This document serves not only as a user-guide
-    but as a reference for developers interested in contributing to JTrac or extending it.
-    </para>
+        <sect1 id="introduction-about">
+            <title>About</title>
+            <para>
+                JTrac is a generic issue-tracking web-application that can be easily customized by adding 
+                custom fields and drop-downs. Features include customizable workflow, field level permissions, 
+                e-mail integration, file attachments and a detailed history view.
+            </para>                        
+        </sect1>        
+        
+        <sect1 id="introduction-features">
+            <title>Features</title>
+            <sect2 id="introduction-features-customfields">
+                <title>Custom Fields</title>
+                <para>
+                    You can easily add the following types of custom fields to a tracker project.
+                    JTrac can be used to effectively track various kinds of things such as Bugs, Action Items and Tasks.
+                    <itemizedlist>
+                        <listitem>
+                            <para>Drop Down List</para>
+                        </listitem>
+                        <listitem>
+                            <para>Free Text Field</para>
+                        </listitem>
+                        <listitem>
+                            <para>Date Picker</para>
+                        </listitem>
+                        <listitem>
+                            <para>(Decimal) Number</para>
+                        </listitem>                                
+                    </itemizedlist>
+                <para>
+                    A future version of JTrac will support "nested" items under a first-level "parent" item.
+                    This will allow users to split tasks into sub-tasks.  This also opens up possibilities for 
+                    JTrac to become a requirements capture tool or a general-purpose review record
+                    tool or even a test-case management tool.
+                </para>                    
+                </para>
+            </sect2>
+            <sect2 id="introduction-features-customworkflow">
+                <title>Custom Workflow</title>
+                <para>
+                    Each tracker project that you create can have a different workflow.  JTrac allows for 
+                    complete customization of the tracker-item lifecycle, right down to the names of
+                    each intermediate state.  You can even configure whether or not field value editing is
+                    permitted for each state - and that too at a field-level.
+                </para>
+            </sect2>
+            <sect2 id="introduction-features-customroles">
+                <title>Custom Roles</title>
+                <para>
+                    JTrac customization does not stop at workflow - you can also define different roles for each tracker
+                    project that you set up.  This allows for tremendous flexibility - for example you could define that
+                    a "DEVELOPER" role can only mark "Assigned" items as "Fixed" and that only a "TESTER" role has the
+                    power to mark a "Fixed" item as "Closed".  JTrac allows you complete control over the workflow and
+                    you can easily tweak it to fit your existing process rather than the other way around.
+                </para>
+                <para>
+                    Also, field-level permissions can be mapped to roles.  This allows for even more flexibility - for
+                    example, you can set a project up so that only a "MANAGER" can change the "Severity" level after a
+                    bug is submitted.
+                </para>
+                <para>
+                    In a future version of JTrac, the ability to even hide fields depending on the role and status
+                    will be implemented.  The design for this is already in place.
+                </para>                  
+            </sect2>             
+        </sect1>
 
-    <para>This documentation has been generated using the DocBook configuration 
-    used by the <ulink url="http://www.springframework.org">Spring Framework</ulink> development team. 
-    This particular alternative DocBook approach was originally developed by Chris Bauer of the
-    <ulink url="http://www.hibernate.org">Hibernate</ulink> project.
-    </para>
-  </preface>
+        <sect1 id="introduction-overview">
+            <title>Overview</title>
 
-  <chapter id="introduction">
-    <title>Introduction</title>
+            <para>para1</para>
 
-    <sect1 id="introduction-history">
-      <title>History</title>
+            <para>para2</para>
 
-      <para>TODO history
-      </para>
-    </sect1>
+            <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="images/test.gif" format="GIF"/>
+                    </imageobject>
+                    <caption>
+                        <para>Figure 1: Caption</para>
+                    </caption>
+                </mediaobject>
+            </para>
 
-    <sect1 id="introduction-overview">
-      <title>Overview</title>
+            <sect2 id="introduction-why">
+                <title>Why</title>
 
-      <para>para1</para>
+                <para>para1</para>
 
-      <para>para2</para>
-
-	  <para>
-		<mediaobject>
-			<imageobject role="html">
-				<imagedata align="center" fileref="images/test.gif" format="GIF"/>
-			</imageobject>
-			<caption>
-			  <para>Figure 1: Caption</para>
-			</caption>
-		</mediaobject>
-	  </para>
-
-      <sect2 id="introduction-why">
-        <title>Why</title>
-
-        <para>para1</para>
-
-        <para>para2</para>
-      </sect2>
-    </sect1>
+                <para>para2</para>
+            </sect2>
+        </sect1>
     
-  </chapter>
+    </chapter>
 </book>

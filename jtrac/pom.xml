@@ -4,7 +4,7 @@
     <groupId>info.jtrac</groupId>
     <artifactId>jtrac</artifactId>
     <packaging>war</packaging>
-    <version>1.9.0</version>
+    <version>2.0-EA1</version>
     <name>JTrac</name>
     <url>http://jtrac.info</url>
     <dependencies>
