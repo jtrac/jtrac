@@ -5,7 +5,7 @@
 <book>
     <bookinfo>
         <title>JTrac</title>
-        <subtitle>JTrac Reference Documentation</subtitle>
+        <subtitle>Reference Documentation</subtitle>
         <releaseinfo>2.0-EA1</releaseinfo>
         <authorgroup>
             <author>
@@ -19,16 +19,14 @@
 
     <preface id="preface">
         <title>Preface</title>
-
         <para>
             This document is a reference guide for <ulink url="http://jtrac.info">JTrac</ulink>
             - the generic issue tracking web-application.  This document is not only a user-guide
-            but also useful as a reference for developers interested in contributing to JTrac or extending it.
+            but can also serve as a reference for developers interested in contributing to JTrac.
         </para>
-
         <para>
             This documentation has been generated using the DocBook configuration 
-            used by the <ulink url="http://www.springframework.org">Spring Framework</ulink> development team. 
+            used by the <ulink url="http://www.springframework.org">Spring</ulink> development team. 
             This particular simplified DocBook helper package was originally developed by Chris Bauer of the
             <ulink url="http://www.hibernate.org">Hibernate</ulink> project.  Thanks go out to all those who
             perfected this very handy approach.
@@ -44,16 +42,35 @@
                 JTrac is a generic issue-tracking web-application that can be easily customized by adding 
                 custom fields and drop-downs. Features include customizable workflow, field level permissions, 
                 e-mail integration, file attachments and a detailed history view.
-            </para>                        
+            </para>
+            <para>
+                JTrac was created after the author felt that he could write a much better alternative to a 
+                commercial defect tracking tool that he was having to use. Development started in 2004. 
+                There have been quite a few releases already and a small but growing base of satisfied users exist 
+                who are friends and colleagues of the author. JTrac is ideal for issue tracking but is so generic 
+                that you can use it to track well - almost anything.
+            </para>
+            <para>
+                JTrac development used to be hosted at <ulink url="https://jtrac.dev.java.net"/> but moved to SourceForge 
+                in early 2006. The older working version was based on Spring JDBC and MS Access and is not being maintained
+                any more.  JTrac was completely re-written to use Hibernate for persistence and the Acegi security framework
+                for Spring and it now uses the latest Java 5.0 and JSP 2.0 features. 
+            </para>            
         </sect1>        
         
         <sect1 id="introduction-features">
             <title>Features</title>
+                <para>                    
+                    JTrac has all the features you would expect from a standard issue-tracking application such as 
+                    file-attachments support and e-mail integration.  However, the powerful customization options,
+                    especially in the areas of workflow and field-level permissions make JTrac compare favorably to
+                    commercial tools, leave alone free and open-source ones.
+                </para>             
             <sect2 id="introduction-features-customfields">
                 <title>Custom Fields</title>
-                <para>
-                    You can easily add the following types of custom fields to a tracker project.
+                <para>                    
                     JTrac can be used to effectively track various kinds of things such as Bugs, Action Items and Tasks.
+                    You can easily add the following types of custom fields to a tracker project:
                     <itemizedlist>
                         <listitem>
                             <para>Drop Down List</para>
@@ -67,14 +84,18 @@
                         <listitem>
                             <para>(Decimal) Number</para>
                         </listitem>                                
-                    </itemizedlist>
-                <para>
-                    A future version of JTrac will support "nested" items under a first-level "parent" item.
-                    This will allow users to split tasks into sub-tasks.  This also opens up possibilities for 
-                    JTrac to become a requirements capture tool or a general-purpose review record
-                    tool or even a test-case management tool.
-                </para>                    
+                    </itemizedlist>                   
                 </para>
+                <para>
+                    <mediaobject>
+                        <imageobject role="html">
+                            <imagedata align="center" fileref="images/custom-fields.png"/>
+                        </imageobject>
+                        <caption>
+                            <para>Setting up custom fields for a project</para>
+                        </caption>
+                    </mediaobject>
+                </para>                
             </sect2>
             <sect2 id="introduction-features-customworkflow">
                 <title>Custom Workflow</title>
@@ -84,6 +105,26 @@
                     each intermediate state.  You can even configure whether or not field value editing is
                     permitted for each state - and that too at a field-level.
                 </para>
+                <para>
+                    <mediaobject>
+                        <imageobject role="html">
+                            <imagedata align="center" fileref="images/custom-workflow-before.png"/>
+                        </imageobject>
+                        <caption>
+                            <para>Default workflow - before customization</para>
+                        </caption>
+                    </mediaobject>
+                </para>
+                <para>
+                    <mediaobject>
+                        <imageobject role="html">
+                            <imagedata align="center" fileref="images/custom-workflow-after.png"/>
+                        </imageobject>
+                        <caption>
+                            <para>An example of a customized workflow</para>
+                        </caption>
+                    </mediaobject>
+                </para>                  
             </sect2>
             <sect2 id="introduction-features-customroles">
                 <title>Custom Roles</title>
@@ -98,40 +139,26 @@
                     Also, field-level permissions can be mapped to roles.  This allows for even more flexibility - for
                     example, you can set a project up so that only a "MANAGER" can change the "Severity" level after a
                     bug is submitted.
-                </para>
-                <para>
-                    In a future version of JTrac, the ability to even hide fields depending on the role and status
-                    will be implemented.  The design for this is already in place.
-                </para>                  
+                </para>                
             </sect2>             
-        </sect1>
-
-        <sect1 id="introduction-overview">
-            <title>Overview</title>
-
-            <para>para1</para>
-
-            <para>para2</para>
-
-            <para>
-                <mediaobject>
-                    <imageobject role="html">
-                        <imagedata align="center" fileref="images/test.gif" format="GIF"/>
-                    </imageobject>
-                    <caption>
-                        <para>Figure 1: Caption</para>
-                    </caption>
-                </mediaobject>
-            </para>
-
-            <sect2 id="introduction-why">
-                <title>Why</title>
-
-                <para>para1</para>
-
-                <para>para2</para>
-            </sect2>
         </sect1>
     
     </chapter>
+    
+    <chapter id="roadmap">
+        <title>Roadmap</title>
+        <sect1 id="roadmap">
+            <para>
+                In a future version of JTrac, the ability to even hide fields depending on the role and status
+                will be implemented.  The design for this is already in place.
+            </para>              
+            <para>
+                JTrac will support "nested" items under a first-level "parent" item and the design
+                and database schema for this is already in place.  This will allow users to split tasks into sub-tasks 
+                and opens up other possibilities.  One of the plans in the roadmap is to build JTrac into a full-fledged
+                requirements capture tool complete with test-case management and traceability.
+            </para>
+        </sect1>
+    </chapter>
+    
 </book>
