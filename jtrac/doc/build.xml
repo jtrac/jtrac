@@ -11,7 +11,17 @@
         <delete includeemptydirs="true" failonerror="false">
             <fileset dir="${dist.doc.dir}"/>
         </delete>      
-    </target>    
+    </target>
+    
+    <target name="dist">
+    	<mkdir dir="target"/>    
+        <zip destfile="target/jtrac.zip">            
+            <zipfileset dir="target" includes="jtrac.war" prefix="war"/>
+            <zipfileset dir="target/site/doc" prefix="doc"/>
+            <zipfileset dir="src" prefix="src" excludes="src/site/**/*"/>                        
+	    <zipfileset dir="." includes="*.txt,*.xml,.*/*,*.properties"/>	    
+        </zip>      	
+    </target>
     
     <target name="copy-images">
         <mkdir dir="${dist.doc.dir}/images"/>

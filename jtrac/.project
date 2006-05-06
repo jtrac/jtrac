@@ -1,6 +1,8 @@
 <projectDescription>
   <name>jtrac</name>
-  <comment/>
+  <comment>JTrac is a generic issue-tracking web-application that can be easily customized by adding custom fields 
+        and drop-downs. Features include customizable workflow, field level permissions, e-mail integration, 
+        file attachments and a detailed history view.</comment>
   <projects/>
   <buildSpec>
     <buildCommand>

@@ -64,7 +64,8 @@
             </para>
             <para>
                 As the version number implies, 2.0-EA1 is intended purely as an Early Access release, in order to get 
-                as much feedback as possible from interested users.
+                as much feedback as possible from interested users.  One of the highlights of this release is the usage
+                of Spring WebFlow 1.0-RC1, which was just released last week.
             </para>
             <para>
                 JTrac is not yet recommended for production usage.  The main reason is that there may be some 
@@ -84,8 +85,8 @@
             <title>Overview</title>
             <para>                    
                 JTrac has all the features you would expect from a standard issue-tracking application such as 
-                file-attachments support and e-mail integration.  And with powerful customization options,
-                especially in the areas of workflow and field-level permissions, JTrac compares favorably to
+                support for file-attachments and e-mail integration.  JTrac offers powerful customization options,
+                especially in the areas of workflow and field-level permissions and compares well to even
                 commercial tools.
             </para>             
             <sect2 id="features-customfields">
@@ -124,8 +125,8 @@
                 <para>
                     Each tracker project that you create can have a different workflow.  JTrac allows for 
                     complete customization of the tracker-item lifecycle, right down to the names of
-                    each intermediate state.  You can even configure whether or not field value editing is
-                    permitted for each state - and that too at a field-level.
+                    each intermediate state.  You can even configure whether or not changing of values is
+                    permitted given the current state within the workflow - and that too at a field-level.
                 </para>
                 <para>
                     <mediaobject>
@@ -152,7 +153,7 @@
                 <title>Custom Roles</title>
                 <para>
                     JTrac customization does not stop at workflow - you can also define different roles for each tracker
-                    project that you set up.  This allows for tremendous flexibility - for example you could define that
+                    project that you set up.  This allows for power and flexibility - for example you could define that
                     a "DEVELOPER" role can only mark "Assigned" items as "Fixed" and that only a "TESTER" role has the
                     power to mark a "Fixed" item as "Closed".  JTrac allows you complete control over the workflow and
                     you can easily tweak it to fit your existing process rather than the other way around.
@@ -166,15 +167,16 @@
             <sect2 id="features-easytoinstall">
                 <title>Easy to Install</title>
                 <para>
-                    Since JTrac uses Hibernate it can support any database.  Any servlet version 2.4 compliant container
-                    such as Apache Tomcat 5.5.X is sufficient to run JTrac.
+                    Since JTrac uses Hibernate and so it can support any database.  Any servlet version 2.4 compliant container
+                    such as Apache Tomcat 5.5.X is sufficient to run JTrac.  JTrac requires Java 5.0 but has minimal
+                    installation requirements otherwise.
                 </para>
                 <para>
                     One of the useful features of JTrac is that it is distributed as a WAR file and you can be up
                     and running by just deploying the WAR file.  The JTrac web-application checks the 
                     environment on startup and if a configured database is not detected, HSQLDB is used by default.
                     This means that you can easily evaluate JTrac - just drop the WAR file into your servlet engine
-                    and you can straight away log in to the application.
+                    and you can immediately sign on into the application.
                 </para>                
             </sect2>
             <sect2 id="features-search">
@@ -238,7 +240,7 @@
             <title>Custom Installation</title>
             <para>                    
                 To change the location of "jtrac.home" you need to set a Java system property called "jtrac.home"
-                to a valid path on the server.
+                to a valid path on the server.  This has to be in place after the servlet-engine (e.g. Tomcat) starts.
             </para> 
         </sect1>            
     </chapter>      
@@ -249,9 +251,9 @@
             <title>Do we really need another issue tracker?</title>
             <para>
                 There are indeed quite a few issue trackers available, both commercial and open source.
-                JTrac already has flexible workflow capabilities and offers control over field-level permissions that 
-                most other open-source issue trackers lack.  JTrac is designed to be able to handle requirements management
-                in the future and this is seen to be an area where there aren't many open source tools that support
+                JTrac has flexible workflow capabilities and offers a rare level of control over field-level 
+                permissions. JTrac is designed to be able to handle requirements management in the future 
+                and this an area where there is a clear lack of open source tools that support
                 the needs of agile development teams.
             </para>
             <para>
@@ -262,9 +264,17 @@
         <sect1 id="faq-architecture">
             <title>What is the JTrac architecture like?</title>
             <para>
-                JTrac is built using the Spring Framework as far as possible and uses Spring WebFlow as far as possible
-                within the MVC layer.  Also the Acegi security framewok for Spring has been used.  JTrac thus is a 
-                "light-weight" Java EE application that just requires any version 2.4 compliant servlet engine.
+                JTrac is built using the Spring Framework as far as possible and mostly uses Spring WebFlow
+                within the MVC layer apart from Spring MVC.  Also the Acegi security framewok for Spring has been used.  
+                JTrac is effectively a "light-weight" Java EE application and any version 2.4 compliant servlet engine is
+                sufficient for deployment.
+            </para>
+            <para>
+                The presentation layer is JSP and JSTL based with a minimal amount of Javascript.  AJAX features will be 
+                introduced into the screens going forward but only where it adds value.  The DWR framework is most likely
+                to be the AJAX framework of choice.
+            </para>            
+            <para>
                 Hibernate is used for data persistence.  This allows for JTrac to be database neutral and any database
                 supported by Hibernate can be used.
             </para>
@@ -291,6 +301,21 @@
             </para>
         </sect1>
         <sect1>
+            <title>Custom Validation</title>
+            <para>
+                Using Beanshell, users will be able to add custom validation routines for item entry.  Even conditional
+                validation across fields will be possible.
+            </para>
+        </sect1>
+        <sect1>
+            <title>Custom Scheduled Jobs</title>
+            <para>
+                Again using Beanshell, users should be able to define routines to execute periodically, say at a pre-determined
+                time every day.  This would allow triggers for events such as slippage of a "due-date" field.
+                This can be combined with e-mail notifications.
+            </para>
+        </sect1>         
+        <sect1>
             <title>Wiki Engine</title>            
             <para>
                 There is a plan to embed a wiki-engine into JTrac.  This will supplement the requirements management
@@ -302,8 +327,8 @@
             <para>
                 Integration with Subversion has already been implemented using the JavaSVN library and this will
                 enable effective integration of bug reports with commit history in the future.
-                You can try out an the existing experimental support by going to the following url 
-                http://[hostname]/jtrac/svn_form.htm                
+                You can try out an the existing experimental support by going to the following url of your JTrac
+                installation: http://[hostname]/jtrac/svn_form.htm                
             </para>
             <para>
                 <mediaobject>
@@ -314,8 +339,23 @@
                         <para>Experimental Subversion support: commits per user report</para>
                     </caption>
                 </mediaobject>
-            </para>               
+            </para>            
         </sect1>
+        <sect1>            
+            <title>Tags</title>            
+            <para>
+                A one-to-many data model for being able to tag items will be introduced before JTrac goes into 
+                version 2.0 final.
+            </para>
+        </sect1>
+        <sect1>            
+            <title>RSS Feeds</title>            
+            <para>
+                RSS feeds will be introduced at the dashboard level for items and even for Subversion 
+                repository information.
+            </para>
+        </sect1>
+
     </chapter>
     
 </book>

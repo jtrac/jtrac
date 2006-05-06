@@ -26,6 +26,13 @@
         <url>http://svn.sourceforge.net/viewcvs.cgi/j-trac/trunk/jtrac</url>
     </scm>
 
+    <distributionManagement>
+        <site>
+            <id>website</id>
+            <url>scp://shell.sourceforge.net/home/groups/j/j-/j-trac/htdocs</url>
+        </site>
+    </distributionManagement>    
+    
     <mailingLists>
       <mailingList>
           <name>JTrac Mailing List</name>      
