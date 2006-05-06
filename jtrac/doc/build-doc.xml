@@ -3,7 +3,9 @@
 <project name="jtrac-doc" basedir=".." default="doc">
 
     <property name="doc.src.dir" value="doc"/>    
-    <property name="dist.doc.dir" value="target/doc"/>    
+    <property name="dist.doc.dir" value="target/site/doc"/>    
+    
+    <target name="doc" depends="clean, doc-html, doc-html-single, doc-pdf"/>
     
     <target name="clean">
         <delete includeemptydirs="true" failonerror="false">
@@ -11,11 +13,15 @@
         </delete>      
     </target>    
     
-    <target name="doc-pdf">
-        <mkdir dir="${dist.doc.dir}/pdf/images"/>
-        <copy todir="${dist.doc.dir}/pdf/images"> 
+    <target name="copy-images">
+        <mkdir dir="${dist.doc.dir}/images"/>
+        <copy todir="${dist.doc.dir}/images"> 
             <fileset dir="${doc.src.dir}/src/images"/>
-        </copy>     
+        </copy>        
+    </target>
+    
+    <target name="doc-pdf" depends="copy-images">
+        <mkdir dir="${dist.doc.dir}/pdf"/>    
         <java classname="com.icl.saxon.StyleSheet" fork="true">
             <classpath>
                 <fileset dir="${doc.src.dir}/lib">
@@ -34,17 +40,13 @@
                 </fileset>
             </classpath>
             <arg value="${dist.doc.dir}/pdf/docbook_fop.tmp"/>
-            <arg value="${dist.doc.dir}/pdf/reference.pdf"/>
+            <arg value="${dist.doc.dir}/pdf/jtrac-doc.pdf"/>
         </java>
-        <delete file="${dist.doc.dir}/pdf/docbook_fop.tmp"/>
-        <delete dir="${dist.doc.dir}/pdf/images"/>
+        <delete file="${dist.doc.dir}/pdf/docbook_fop.tmp"/>        
     </target>
     
-    <target name="doc-html">
-        <mkdir dir="${dist.doc.dir}/html/images"/>
-        <copy todir="${dist.doc.dir}/html/images">
-            <fileset dir="${doc.src.dir}/src/images"/>
-        </copy>
+    <target name="doc-html" depends="copy-images">
+        <mkdir dir="${dist.doc.dir}/html"/>
         <java classname="com.icl.saxon.StyleSheet" fork="true" dir="${dist.doc.dir}/html">
             <classpath>
                 <fileset dir="${doc.src.dir}/lib">
@@ -56,11 +58,8 @@
         </java>
     </target>
 
-    <target name="doc-html-single">
-        <mkdir dir="${dist.doc.dir}/html_single/images"/>
-        <copy todir="${dist.doc.dir}/html_single/images">
-            <fileset dir="${doc.src.dir}/src/images"/>
-        </copy>
+    <target name="doc-html-single" depends="copy-images">
+        <mkdir dir="${dist.doc.dir}/html-single"/>
         <java classname="com.icl.saxon.StyleSheet" fork="true">
             <classpath>
                 <fileset dir="${doc.src.dir}/lib">
@@ -68,12 +67,10 @@
                 </fileset>
             </classpath>
             <arg value="-o"/>
-            <arg value="${dist.doc.dir}/html_single/index.html"/>
+            <arg value="${dist.doc.dir}/html-single/index.html"/>
             <arg value="${doc.src.dir}/src/index.xml"/>
             <arg value="${doc.src.dir}/styles/html.xsl"/>
         </java>
-    </target>
-    
-    <target name="doc" depends="clean, doc-html, doc-html-single, doc-pdf"/>
+    </target>   
     
 </project>    

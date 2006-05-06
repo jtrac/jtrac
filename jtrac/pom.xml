@@ -1,12 +1,51 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    
     <modelVersion>4.0.0</modelVersion>
     <groupId>info.jtrac</groupId>
     <artifactId>jtrac</artifactId>
     <packaging>war</packaging>
     <version>2.0-EA1</version>
     <name>JTrac</name>
+    <description>
+        JTrac is a generic issue-tracking web-application that can be easily customized by adding custom fields 
+        and drop-downs. Features include customizable workflow, field level permissions, e-mail integration, 
+        file attachments and a detailed history view.
+    </description>
     <url>http://jtrac.info</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:svn:https://svn.sourceforge.net/svnroot/j-trac/trunk/jtrac</connection>
+        <url>http://svn.sourceforge.net/viewcvs.cgi/j-trac/trunk/jtrac</url>
+    </scm>
+
+    <mailingLists>
+      <mailingList>
+          <name>JTrac Mailing List</name>      
+          <archive>https://lists.sourceforge.net/lists/listinfo/j-trac-users</archive>
+      </mailingList>
+      <mailingList>
+          <name>JTrac Forums</name>
+          <archive>http://sourceforge.net/forum/?group_id=162983</archive>
+      </mailingList>
+    </mailingLists>    
+    
+    <developers>
+        <developer>
+            <name>Peter Thomas</name>
+            <id>ptrthomas</id>
+            <url>http://ptrthomas.wordpress.com</url>                        
+            <timezone>+5.5</timezone>
+        </developer>
+    </developers>
+  
     <dependencies>
         <!-- spring-webflow, spring-binding need to be manually installed -->
         <dependency>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Maven">
+    <bannerLeft>    
+    <href>http://jtrac.info</href>
+    <src>doc/images/jtrac-logo.png</src>    
+    </bannerLeft>    
+    <bannerRight>
+        <href>http://sourceforge.net</href>
+        <src>http://sflogo.sourceforge.net/sflogo.php?group_id=162983&amp;type=7</src>
+    </bannerRight>
+    <body>
+        <links>
+            <item name="JTrac @ SourceForge" href="http://sourceforge.net/projects/j-trac" />            
+            <item name="Downloads" href="http://sourceforge.net/project/showfiles.php?group_id=162983"/>
+            <item name="Author" href="http://ptrthomas.wordpress.com"/>
+        </links>
+        <menu name="JTrac">
+            <item name="Home" href="index.html"/>
+            <item name="SourceForge Area" href="http://sourceforge.net/projects/j-trac"/>
+            <item name="Downloads" href="http://sourceforge.net/project/showfiles.php?group_id=162983"/>            
+        </menu>
+        <menu name="Documentation">
+            <item name="HTML" href="doc/html/index.html"/>
+            <item name="HTML (single file)" href="doc/html-single/index.html"/>
+            <item name="PDF" href="doc/pdf/jtrac-doc.pdf"/>           
+        </menu>
+        <menu name="Project Info">
+            <item name="License" href="license.html"/>
+            <item name="Forums / Lists" href="mail-lists.html"/>
+            <item name="Source Code" href="source-repository.html"/>
+            <item name="Developers" href="team-list.html"/>            
+        </menu>
+    </body>
+</project>
