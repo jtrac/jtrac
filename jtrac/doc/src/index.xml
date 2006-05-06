@@ -35,7 +35,6 @@
 
     <chapter id="introduction">
         <title>Introduction</title>
-
         <sect1 id="introduction-about">
             <title>About</title>
             <para>
@@ -58,13 +57,33 @@
             </para>            
         </sect1>        
         
+        <sect1 id="introduction-releasenotes">
+            <title>Release Notes</title>
+            <para>
+                Version 2.0-EA1
+            </para>
+            <para>
+                As the version number implies, 2.0-EA1 is intended purely as an Early Access release, in order to get 
+                as much feedback as possible from interested users.
+            </para>
+            <para>
+                JTrac is not yet recommended for production usage.  The main reason is that there may be some 
+                more changes to the database schema.  JTrac 2.0 final should be available by the end of June 2006.
+            </para>
+            <para>
+                You are encouraged to try out JTrac and communicate your feedback and interest in future versions
+                to the JTrac development team.  Note that you can be up and running with JTrac by just dropping
+                the WAR file into your servlet engine - which makes it extremely easy to evaluate.                
+            </para>          
+        </sect1>         
+        
         <sect1 id="introduction-features">
             <title>Features</title>
                 <para>                    
                     JTrac has all the features you would expect from a standard issue-tracking application such as 
-                    file-attachments support and e-mail integration.  However, the powerful customization options,
-                    especially in the areas of workflow and field-level permissions make JTrac compare favorably to
-                    commercial tools, leave alone free and open-source ones.
+                    file-attachments support and e-mail integration.  And with powerful customization options,
+                    especially in the areas of workflow and field-level permissions, JTrac compares favorably to
+                    commercial tools.
                 </para>             
             <sect2 id="introduction-features-customfields">
                 <title>Custom Fields</title>
@@ -140,14 +159,122 @@
                     example, you can set a project up so that only a "MANAGER" can change the "Severity" level after a
                     bug is submitted.
                 </para>                
-            </sect2>             
-        </sect1>
-    
+            </sect2>
+            <sect2 id="introduction-features-easytoinstall">
+                <title>Easy to Install</title>
+                <para>
+                    Since JTrac uses Hibernate it can support any database.  Any servlet version 2.4 compliant container
+                    such as Apache Tomcat 5.5.X is sufficient to run JTrac.
+                </para>
+                <para>
+                    One of the useful features of JTrac is that it is distributed as a WAR file and you can be up
+                    and running by just deploying the WAR file.  The JTrac web-application checks the 
+                    environment on startup and if a configured database is not detected, HSQLDB is used by default.
+                    This means that you can easily evaluate JTrac - just drop the WAR file into your servlet engine
+                    and you can straight away log in to the application.
+                </para>                
+            </sect2>
+            <sect2 id="introduction-features-search">
+                <title>Flexible Search Options</title>
+            </sect2>
+            <sect2 id="introduction-features-excel">
+                <title>Export to Excel</title>
+            </sect2>
+            <sect2 id="introduction-features-attachments">
+                <title>Attachments Support</title>
+            </sect2>            
+            <sect2 id="introduction-features-navigation">
+                <title>Simple Navigation</title>
+            </sect2>
+            <sect2 id="introduction-features-email">
+                <title>E-mail Integration</title>
+                <para>
+                    (Note that this is not yet implemented in version 2.0-EA1.)
+                </para>
+                <para>
+                    All status changes for an item will trigger e-mail notifications by default.
+                    You can choose to add multiple users into a "notify list" at the time of raising a new item
+                    or updating the history for an item.
+                </para>
+                <para>
+                    <mediaobject>
+                        <imageobject role="html">
+                            <imagedata align="center" fileref="images/notify-list.png"/>
+                        </imageobject>
+                        <caption>
+                            <para>Add multiple users to a "notify list" while creating or updating an item</para>
+                        </caption>
+                    </mediaobject>
+                </para>                 
+            </sect2>               
+        </sect1>    
     </chapter>
+    
+    <chapter id="installation">
+        <title>Installation</title>
+        <sect1 id="installation-main">
+            <sect2 id="installation-quick">
+                <title>Quick Installation</title>
+                <para>                    
+                    JTrac has an extremely convenient "quick-install" option where it does not require any
+                    external database to be available.
+                </para>                  
+                <para>                    
+                    Once you obtain "jtrac.war" from the release package or the JTrac download site you can
+                    easily start it in any servlet 2.4 compliant container.  For example, if you have 
+                    Apache Tomcat 5.5.X, you can either copy the WAR file into the [tomcat home]/webapps folder 
+                    or choose to upload the WAR file through the Tomcat console.
+                </para>
+                <para>                    
+                    JTrac saves database information and uploaded attachments into a directory on the server.
+                    This directory is logically called the "jtrac.home".  When you do a "quick-install" of JTrac
+                    by just deploying the WAR file, JTrac creates a ".jtrac" folder in the user home folder and
+                    uses that location as the home directory.
+                </para>                 
+            </sect2>
+            <sect2 id="installation-custom">
+                <title>Custom Installation</title>
+                <para>                    
+                    To change the location of "jtrac.home" you need to set a Java system property called "jtrac.home"
+                    to a valid path on the server.
+                </para> 
+            </sect2>            
+        </sect1>
+    </chapter>      
+    
+    <chapter id="faq">
+        <title>FAQ</title>
+        <sect1 id="faq-main">
+            <sect2 id="faq-why">
+                <title>Why yet another issue tracker?</title>
+                <para>
+                    There are indeed quite a few issue trackers available, both commercial and open source.
+                    JTrac already has flexible workflow capabilities and offers control over field-level permissions that 
+                    most other open-source issue trackers lack.  JTrac is designed to be able to handle requirements management
+                    in the future and this is seen to be an area where there aren't many open source tools that support
+                    the needs of agile development teams.
+                </para>
+                <para>
+                    JTrac is also written from the ground up to make use of the very best and latest in Java.  For example
+                    JTrac is developed using JDK 5.0 features and is targeted at JSP 2.0 and above.
+                </para>               
+            </sect2>
+            <sect2 id="faq-architecture">
+                <title>What is the JTrac architecture like?</title>
+                <para>
+                    JTrac is built using the Spring Framework as far as possible and uses Spring WebFlow as far as possible
+                    within the MVC layer.  Also the Acegi security framewok for Spring has been used.  JTrac thus is a 
+                    "light-weight" Java EE application that just requires any version 2.4 compliant servlet engine.
+                    Hibernate is used for data persistence.  This allows for JTrac to be database neutral and any database
+                    supported by Hibernate can be used.
+                </para>
+            </sect2>            
+        </sect1>
+    </chapter>    
     
     <chapter id="roadmap">
         <title>Roadmap</title>
-        <sect1 id="roadmap">
+        <sect1 id="roadmap-main">
             <para>
                 In a future version of JTrac, the ability to even hide fields depending on the role and status
                 will be implemented.  The design for this is already in place.
@@ -156,8 +283,29 @@
                 JTrac will support "nested" items under a first-level "parent" item and the design
                 and database schema for this is already in place.  This will allow users to split tasks into sub-tasks 
                 and opens up other possibilities.  One of the plans in the roadmap is to build JTrac into a full-fledged
-                requirements capture tool complete with test-case management and traceability.
+                requirements capture tool complete with test-case management and traceability.  JTrac can then be used to
+                manage either XP (eXtreme Programming) or Use Case driven projects.
             </para>
+            <para>
+                There is a plan to embed a wiki-engine into JTrac.  This will supplement the requirements management
+                road map.
+            </para>
+            <para>
+                Integration with Subversion has already been implemented using the JavaSVN library and this will
+                enable effective integration of bug reports with commit history in the future.
+                You can try out an the existing experimental support by going to the following url 
+                http://[hostname]/jtrac/svn_form.htm                
+            </para>
+            <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="images/svn-view.png"/>
+                    </imageobject>
+                    <caption>
+                        <para>Experimental Subversion support: commits per user report</para>
+                    </caption>
+                </mediaobject>
+            </para>               
         </sect1>
     </chapter>
     
