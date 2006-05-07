@@ -25,8 +25,8 @@ import org.acegisecurity.GrantedAuthority;
 /**
  * Class that exists purely to hold a "ternary" mapping of 
  * user <--> space <--> role.
- * the jTrac authorization (access control) scheme works as follows:
- * if space is null, that means that this is a "global" jTrac role
+ * the JTrac authorization (access control) scheme works as follows:
+ * if space is null, that means that this is a "global" JTrac role
  * if space is not null, this role applies for the user to that
  * space, and the getAuthority() method used by Acegi returns the 
  * role key appended with "_" + spacePrefixCode

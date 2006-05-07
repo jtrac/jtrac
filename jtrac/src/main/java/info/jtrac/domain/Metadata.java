@@ -336,7 +336,7 @@ public class Metadata implements Serializable {
         for(String roleKey : roleKeys) {
             for(Integer status : ss) {
                 if (status == State.NEW) {
-                    continue; // we are looking for editable after creating NEW
+                    continue; // we are looking only for editable after the NEW
                 }
                 State state = getRoleState(roleKey, status);
                 for(Map.Entry<Field.Name, Integer> entry : state.getFields().entrySet()) {

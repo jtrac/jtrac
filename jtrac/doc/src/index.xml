@@ -167,7 +167,7 @@
             <sect2 id="features-easytoinstall">
                 <title>Easy to Install</title>
                 <para>
-                    Since JTrac uses Hibernate and so it can support any database.  Any servlet version 2.4 compliant container
+                    JTrac uses Hibernate and so it can support any database.  Any servlet version 2.4 compliant container
                     such as Apache Tomcat 5.5.X is sufficient to run JTrac.  JTrac requires Java 5.0 but has minimal
                     installation requirements otherwise.
                 </para>
@@ -180,17 +180,94 @@
                 </para>                
             </sect2>
             <sect2 id="features-search">
-                <title>Flexible Search Options</title>
+                <title>Search Custom Fields</title>
+                <para>
+                    The intuitive search screen (shown below) allows for easy execution of common queries such as
+                    find all items "logged by" or "assigned to" a user (or users).  JTrac allows for filtering even
+                    on custom fields.
+                </para>
+                <para>
+                    You can navigate back to the search setup screen from the search results screen and have the
+                    search parameters still active.  This is useful when trying to tweak complex queries by 
+                    trial and error.
+                </para>                
+                <para>
+                    <mediaobject>
+                        <imageobject role="html">
+                            <imagedata align="center" fileref="../images/search.png"/>
+                        </imageobject>
+                        <caption>
+                            <para>The search screen - which allows filtering on custom fields</para>
+                        </caption>
+                    </mediaobject>
+                </para>                
+            </sect2>            
+            <sect2 id="features-searchall">
+                <title>Search Across All Projects</title>
+                <para>
+                    In addition to be able to search within a single space (project) JTrac allows for searching across
+                    all (or a sub set of) projects that a user is mapped to.  The "Search All" option appears for users
+                    that have been mapped to more than one space (project).
+                </para>
+                <para>
+                    <mediaobject>
+                        <imageobject role="html">
+                            <imagedata align="center" fileref="../images/search-all.png"/>
+                        </imageobject>
+                        <caption>
+                            <para>The "Search All" option appears when you navigate to the Dashboard</para>
+                        </caption>
+                    </mediaobject>
+                </para>                 
             </sect2>
             <sect2 id="features-excel">
                 <title>Export to Excel</title>
+                <para>
+                    JTrac is able to export the results of any search (or all items in a Space) as an Excel Sheet.
+                    The link for this appears at the top right of the search results screen.
+                </para>
+                <para>
+                    <mediaobject>
+                        <imageobject role="html">
+                            <imagedata align="center" fileref="../images/excel-link.png"/>
+                        </imageobject>
+                        <caption>
+                            <para>Download search results as an excel sheet</para>
+                        </caption>
+                    </mediaobject>
+                </para>                
             </sect2>
             <sect2 id="features-attachments">
                 <title>Attachments Support</title>
+                <para>
+                    You can upload file attachments at the time of creating of an item or as many times
+                    as required after an item has been created.
+                </para>                
             </sect2>            
+            <sect2 id="features-history">
+                <title>Detailed History View</title>
+                <para>
+                    JTrac provides a very detailed history view that completely captures all comments or status
+                    changes for an item.
+                </para>
+                <para>
+                    <mediaobject>
+                        <imageobject role="html">
+                            <imagedata align="center" fileref="../images/history.png"/>
+                        </imageobject>
+                        <caption>
+                            <para>When viewing a single item, the history can be seen in detail</para>
+                        </caption>
+                    </mediaobject>
+                </para>                  
+            </sect2>
             <sect2 id="features-navigation">
                 <title>Simple Navigation</title>
-            </sect2>
+                <para>
+                    Most users will use only four screens in JTrac: Create, View, Search and Search Results.
+                    Navigation has been designed with usability and simplicity in mind.
+                </para>                 
+            </sect2>            
             <sect2 id="features-email">
                 <title>E-mail Integration</title>
                 <para>
@@ -234,7 +311,10 @@
                 This directory is logically called the "jtrac.home".  When you do a "quick-install" of JTrac
                 by just deploying the WAR file, JTrac creates a ".jtrac" folder in the user home folder and
                 uses that location as the home directory.
-            </para>                 
+            </para>
+            <para>                    
+		When you log in to JTrac for the first time use "admin" for both the username as well as password.
+            </para>             
         </sect1>
         <sect1 id="installation-custom">
             <title>Custom Installation</title>
@@ -271,7 +351,7 @@
             </para>
             <para>
                 The presentation layer is JSP and JSTL based with a minimal amount of Javascript.  AJAX features will be 
-                introduced into the screens going forward but only where it adds value.  The DWR framework is most likely
+                introduced into the screens going forward but only where there is value add.  The DWR framework is likely
                 to be the AJAX framework of choice.
             </para>            
             <para>
@@ -283,14 +363,14 @@
     
     <chapter id="roadmap">
         <title>Roadmap</title>
-        <sect1 id="roadmap-main">
+        <sect1 id="roadmap-hide">
             <title>Field-Level "Hide" Permissions</title>
             <para>
                 In a future version of JTrac, the ability to even hide fields depending on the role and status
                 will be implemented.  The design for this is already in place.
             </para>
         </sect1>
-        <sect1>
+        <sect1 id="roadmap-nested">
             <title>Nested Items</title>
             <para>
                 JTrac will support "nested" items under a first-level "parent" item and the design
@@ -300,34 +380,40 @@
                 manage either XP (eXtreme Programming) or Use Case driven projects.
             </para>
         </sect1>
-        <sect1>
+        <sect1 id="roadmap-validation">
             <title>Custom Validation</title>
             <para>
                 Using Beanshell, users will be able to add custom validation routines for item entry.  Even conditional
                 validation across fields will be possible.
             </para>
         </sect1>
-        <sect1>
+        <sect1 id="roadmap-scheduler">
             <title>Custom Scheduled Jobs</title>
             <para>
                 Again using Beanshell, users should be able to define routines to execute periodically, say at a pre-determined
                 time every day.  This would allow triggers for events such as slippage of a "due-date" field.
                 This can be combined with e-mail notifications.
             </para>
+        </sect1>
+        <sect1 id="roadmap-savedsearches">
+            <title>Saved Searches</title>            
+            <para>
+                It should be possible for users to save search filters and re-use them.
+            </para>
         </sect1>         
-        <sect1>
+        <sect1 id="roadmap-wiki">
             <title>Wiki Engine</title>            
             <para>
                 There is a plan to embed a wiki-engine into JTrac.  This will supplement the requirements management
                 road map.
             </para>
         </sect1>
-        <sect1>
+        <sect1 id="roadmap-svn">
             <title>Subversion Integration</title>            
             <para>
                 Integration with Subversion has already been implemented using the JavaSVN library and this will
                 enable effective integration of bug reports with commit history in the future.
-                You can try out an the existing experimental support by going to the following url of your JTrac
+                You can try out the existing experimental support by going to the following url of your JTrac
                 installation: http://[hostname]/jtrac/svn_form.htm                
             </para>
             <para>
@@ -341,21 +427,26 @@
                 </mediaobject>
             </para>            
         </sect1>
-        <sect1>            
+        <sect1 id="roadmap-tags">            
             <title>Tags</title>            
             <para>
                 A one-to-many data model for being able to tag items will be introduced before JTrac goes into 
                 version 2.0 final.
             </para>
         </sect1>
-        <sect1>            
+        <sect1 id="roadmap-feeds">            
             <title>RSS Feeds</title>            
             <para>
                 RSS feeds will be introduced at the dashboard level for items and even for Subversion 
                 repository information.
             </para>
         </sect1>
-
+        <sect1 id="roadmap-i18n">            
+            <title>Internationalization</title>            
+            <para>
+                Multi language support to be added.
+            </para>
+        </sect1>
     </chapter>
     
 </book>

@@ -293,7 +293,7 @@
         <c:if test="${empty itemSearch.space}">
             <td>
                 <table class="jtrac">
-                    <tr><th <c:if test="${!empty itemSearch.spaceSet}">class="selected"</c:if>>Tracker</th></tr>
+                    <tr><th <c:if test="${!empty itemSearch.spaceSet}">class="selected"</c:if>>Space</th></tr>
                     <tr>				
                         <td>
                             <select name="spaceSet" size="8" multiple="true">

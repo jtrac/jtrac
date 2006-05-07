@@ -34,14 +34,14 @@
     </distributionManagement>    
     
     <mailingLists>
-      <mailingList>
-          <name>JTrac Mailing List</name>      
-          <archive>https://lists.sourceforge.net/lists/listinfo/j-trac-users</archive>
-      </mailingList>
-      <mailingList>
-          <name>JTrac Forums</name>
-          <archive>http://sourceforge.net/forum/?group_id=162983</archive>
-      </mailingList>
+        <mailingList>
+            <name>JTrac Forums</name>
+            <archive>http://sourceforge.net/forum?group_id=162983</archive>
+        </mailingList>        
+        <mailingList>
+            <name>JTrac Mailing List</name>      
+            <archive>https://lists.sourceforge.net/lists/listinfo/j-trac-users</archive>
+        </mailingList>
     </mailingLists>    
     
     <developers>

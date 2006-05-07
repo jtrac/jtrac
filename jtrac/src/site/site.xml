@@ -27,7 +27,7 @@
         <menu name="Project Info">
             <item name="License" href="license.html"/>
             <item name="Dependencies" href="dependencies.html"/>
-            <item name="Forums / Lists" href="mail-lists.html"/>
+            <item name="Lists / Forums" href="mail-lists.html"/>
             <item name="Source Repository" href="source-repository.html"/>
             <item name="Developers" href="team-list.html"/>            
         </menu>

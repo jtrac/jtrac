@@ -127,7 +127,7 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
         FlowExecution flow = repository.getFlowExecution(key);        
         ItemSearch itemSearch = (ItemSearch) flow.getActiveSession().getScope().get("itemSearch");
         int pageSize = itemSearch.getPageSize();
-        itemSearch.setPageSize(-1);
+        itemSearch.setPageSize(-1); // temporarily switch off paging of results 
         ExcelUtils eu = new ExcelUtils(jtrac.findItems(itemSearch), itemSearch);
         itemSearch.setPageSize(pageSize);
         response.setContentType("application/unknow");

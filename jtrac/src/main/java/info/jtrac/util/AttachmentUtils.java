@@ -58,10 +58,8 @@ public class AttachmentUtils {
                     // will always force browser to download file
                     // user can click 'Open' for convenience in the case of IE and
                     // standard MS Office documents
-                    String contentType = "application/unknow";
-                    response.setHeader(
-                            "Content-Disposition",
-                            "attachment; filename=\"" + fileName + "\"");
+                    response.setContentType("application/unknow");
+                    response.setHeader("Content-Disposition", "inline;filename=" + fileName);
                     int c;
                     while ((c = in.read()) != -1)
                         out.write(c);
