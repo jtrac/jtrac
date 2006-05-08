@@ -99,6 +99,7 @@
 
 </table>
 
+<input type="hidden" name="itemId" value="${item.id}"/>
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 
 </form>

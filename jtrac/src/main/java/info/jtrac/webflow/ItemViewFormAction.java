@@ -69,21 +69,21 @@ public class ItemViewFormAction extends AbstractFormAction {
     
     @Override
     public Object loadFormObject(RequestContext context) {
-        Item item = (Item) context.getFlowScope().get("item");
-        if (item == null) {
+        Item item = null;
+        String itemId = ValidationUtils.getParameter(context, "itemId");
+        if (itemId != null) {            
+            item = jtrac.loadItem(Long.parseLong(itemId));            
+        } else {
             item = (Item) context.getRequestScope().get("item");
-        }
-        if (item == null) {
-            String itemId = ValidationUtils.getParameter(context, "itemId");
-            long id = Long.parseLong(itemId);
-            item = jtrac.loadItem(id);
         }
         List<UserRole> userRoles = jtrac.findUserRolesForSpace(item.getSpace().getId());
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Space space = item.getSpace();
         context.getFlowScope().put("transitions", item.getPermittedTransitions(user));
         context.getFlowScope().put("editableFields", item.getEditableFieldList(user));
-        context.getFlowScope().put("item", item);
+        // not flow because of weird Hibernate Lazy loading issues
+        // hidden field "itemId" added to item_view_form.jsp
+        context.getRequestScope().put("item", item);
         context.getFlowScope().put("userRoles", userRoles);        
         History history = new History();
         history.setItemUsers(item.getItemUsers());
@@ -108,7 +108,7 @@ public class ItemViewFormAction extends AbstractFormAction {
         if (errors.hasErrors()) {
             return error();
         }
-        Item item = (Item) context.getFlowScope().get("item");
+        Item item = (Item) context.getRequestScope().get("item");
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();        
         history.setLoggedBy(user);
         
