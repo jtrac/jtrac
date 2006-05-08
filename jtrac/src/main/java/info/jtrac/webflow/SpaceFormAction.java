@@ -101,7 +101,15 @@ public class SpaceFormAction extends AbstractFormAction {
     public Event fieldUpHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
         String fieldName = ValidationUtils.getParameter(context, "fieldName");
-        Collections.rotate(space.getMetadata().getFieldOrder(), -1);
+        List<Field.Name> fieldOrder = space.getMetadata().getFieldOrder();
+        int index = fieldOrder.indexOf(Field.convertToName(fieldName));
+        int swapIndex = index - 1;
+        if (swapIndex < 0 && fieldOrder.size() > 1) {
+            swapIndex = fieldOrder.size() - 1;
+        }
+        if (index != swapIndex) {
+            Collections.swap(fieldOrder, index, swapIndex);
+        }                
         context.getRequestScope().put("selectedFieldName", fieldName);
         return success();
     }
@@ -109,7 +117,15 @@ public class SpaceFormAction extends AbstractFormAction {
     public Event fieldDownHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
         String fieldName = ValidationUtils.getParameter(context, "fieldName");
-        Collections.rotate(space.getMetadata().getFieldOrder(), 1);
+        List<Field.Name> fieldOrder = space.getMetadata().getFieldOrder();
+        int index = fieldOrder.indexOf(Field.convertToName(fieldName));
+        int swapIndex = index + 1;
+        if (swapIndex == fieldOrder.size() ) {
+            swapIndex = 0;
+        }
+        if (index != swapIndex) {
+            Collections.swap(fieldOrder, index, swapIndex);
+        }
         context.getRequestScope().put("selectedFieldName", fieldName);
         return success();
     }    
