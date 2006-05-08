@@ -19,7 +19,9 @@
             <action bean="itemSearchFormAction" method="itemSearchPageHandler"/>
         </transition>
         <transition on="view" to="itemViewForm"/>
-        <transition on="back" to="itemSearchForm"/>
+        <transition on="back" to="itemSearchForm">
+            <action bean="itemSearchFormAction" method="itemSearchBackHandler"/>
+        </transition>
     </view-state>
     
     <subflow-state id="itemViewForm" flow="itemView">

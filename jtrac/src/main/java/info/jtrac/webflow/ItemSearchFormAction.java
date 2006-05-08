@@ -89,20 +89,10 @@ public class ItemSearchFormAction extends AbstractFormAction {
         return success();
     }
     
-    public Event itemSearchExportHandler(RequestContext context) throws Exception {
+    public Event itemSearchBackHandler(RequestContext context) throws Exception {        
         ItemSearch itemSearch = (ItemSearch) getFormObject(context);
-        int pageSize = itemSearch.getPageSize();
-        itemSearch.setPageSize(-1);
-        ExcelUtils eu = new ExcelUtils(jtrac.findItems(itemSearch), itemSearch);
-        itemSearch.setPageSize(pageSize);
-        ServletExternalContext servletContext = (ServletExternalContext) context.getLastEvent().getSource();
-        HttpServletResponse response = servletContext.getResponse();
-        response.setContentType("application/unknow");
-        response.setHeader("Content-Disposition", "inline;filename=jtrac-export.xls");
-        ServletOutputStream out = response.getOutputStream();
-        eu.exportToExcel().write(out);
-        out.flush();
+        itemSearch.setCurrentPage(0);        
         return success();
-    }    
+    }
     
 }
