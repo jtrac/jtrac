@@ -17,6 +17,7 @@
 package info.jtrac.web.tag;
 
 import info.jtrac.domain.AbstractItem;
+import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.ItemSearch;
@@ -113,14 +114,25 @@ public class ItemList extends SimpleTagSupport {
             String itemUrl = flowUrl + "&_eventId=view&itemId=";
             for(AbstractItem item : items) {
                 out.println("<tr" + ( count % 2 == 0 ? " class='alt'" : "" ) + ">");
-                String href = response.encodeURL(itemUrl + item.getId());
+                String href = null;
+                if (showHistory) {
+                    href = response.encodeURL(itemUrl + item.getParent().getId());
+                } else {
+                    href = response.encodeURL(itemUrl + item.getId());
+                }                
                 out.println("  <td><a href='" + href + "'>" + item.getRefId() + "</a></td>");
                 out.println("  <td>" + ( item.getSummary() == null ? "" : item.getSummary() ) + "</td>");
                 
                 if (showDetail) {
                     if (showHistory) {
                         History h = (History) item;
-                        out.println("  <td>" + ( h.getComment() == null ? "" : h.getComment() ) + "</td>");
+                        out.println("  <td>");                        
+                        Attachment attachment = h.getAttachment();
+                        if (attachment != null) {
+                            String attHref = response.encodeURL("attachments/" + attachment.getFileName() +"?filePrefix=" + attachment.getFilePrefix());
+                            out.println("<a target='_blank' href='" + attHref + "'>" + attachment.getFileName() + "</a>&nbsp;");             
+                        }                                                
+                        out.println(( h.getComment() == null ? "" : h.getComment() ) + "</td>");
                     } else {
                         out.println("  <td>" + item.getDetail() + "</td>");
                     }
