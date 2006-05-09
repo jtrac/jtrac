@@ -65,6 +65,11 @@ public class HibernateJtracDao
         return (Item) getHibernateTemplate().load(Item.class, id);
     }
     
+    public List<Item> findItems(long sequenceNum, String prefixCode) {
+        Object[] params = new Object[] { sequenceNum, prefixCode };
+        return getHibernateTemplate().find("from Item item where item.sequenceNum = ? and item.space.prefixCode = ?", params);        
+    }
+    
     public List<Item> findItems(ItemSearch itemSearch) {
         int pageSize = itemSearch.getPageSize();
         if (pageSize == -1) {

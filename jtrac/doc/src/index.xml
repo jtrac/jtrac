@@ -345,7 +345,7 @@
             <title>What is the JTrac architecture like?</title>
             <para>
                 JTrac is built using the Spring Framework as far as possible and mostly uses Spring WebFlow
-                within the MVC layer apart from Spring MVC.  Also the Acegi security framewok for Spring has been used.  
+                within the MVC layer apart from Spring MVC.  Also the Acegi security framework for Spring has been used.  
                 JTrac is effectively a "light-weight" Java EE application and any version 2.4 compliant servlet engine is
                 sufficient for deployment.
             </para>

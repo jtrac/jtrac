@@ -14,13 +14,13 @@
     </target>
     
     <target name="dist">
-    	<mkdir dir="target"/>    
+        <mkdir dir="target"/>    
         <zip destfile="target/jtrac.zip">            
             <zipfileset dir="target" includes="jtrac.war" prefix="war"/>
             <zipfileset dir="target/site/doc" prefix="doc"/>
-            <zipfileset dir="src" prefix="src" excludes="src/site/**/*"/>                        
-	    <zipfileset dir="." includes="*.txt,*.xml,.*/*,*.properties"/>	    
-        </zip>      	
+            <zipfileset dir="src" prefix="src"/>                        
+        <zipfileset dir="." includes="*.txt,*.xml,.*/*,*.properties"/>      
+        </zip>          
     </target>
     
     <target name="copy-images">

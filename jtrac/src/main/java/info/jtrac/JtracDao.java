@@ -37,6 +37,7 @@ public interface JtracDao {
 
     void storeItem(Item item);
     Item loadItem(long id);
+    List<Item> findItems(long sequenceNum, String prefixCode);
     List<Item> findItems(ItemSearch itemSearch);
     //===========================================
     void storeAttachment(Attachment attachment);

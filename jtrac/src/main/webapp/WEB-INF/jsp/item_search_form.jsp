@@ -6,17 +6,15 @@
 
 <table class="jtrac">
     <tr>
-        <td class="info">View Item by Id</td>
-        <spring:bind path="itemSearch.refId">
-            <td>
-                <input name="${status.expression}" value="${status.value}"/>
-                <input type="submit" name="_eventId_view" value="View"/>                			
-            </td>
-            <td>
-                <div class="error"><c:out value="${status.errorMessage}"/></div>
-                Use the Search button (below) to search for items.
-            </td>
-        </spring:bind>		
+        <td class="info">View Item by Id</td>        
+        <td>
+            <input name="refId" value="${refId}"/>
+            <input type="submit" name="_eventId_view" value="View"/>                			
+        </td>
+        <td>
+            <span class="error"><c:out value="${refIdError}"/></span>
+            Use the Search button (below) to search for items.
+        </td>        		
     </tr>
 </table>
 

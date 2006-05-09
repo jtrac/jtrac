@@ -140,6 +140,14 @@ public class JtracImpl implements Jtrac {
         return dao.loadItem(id);
     }
     
+    public Item loadItem(long sequenceNum, String prefixCode) {
+        List<Item> items = dao.findItems(sequenceNum, prefixCode);
+        if (items.size() == 0) {
+            return null;
+        }
+        return items.get(0);
+    }
+    
     public List<Item> findItems(ItemSearch itemSearch) {
         return dao.findItems(itemSearch);
     }

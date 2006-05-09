@@ -11,7 +11,10 @@
         <transition on="search" to="itemListView">
             <action bean="itemSearchFormAction" method="bind"/>
             <action bean="itemSearchFormAction" method="itemSearchFormHandler"/>
-        </transition>     
+        </transition>
+        <transition on="view" to="itemViewForm">            
+            <action bean="itemSearchFormAction" method="itemSearchViewHandler"/>
+        </transition>      
     </view-state>    
     
     <view-state id="itemListView" view="item_list">
@@ -30,6 +33,8 @@
                 <!-- just for displaying navigation in header.jsp -->
                 <mapping source="flowScope.space" target="space"/>
                 <mapping source="flowScope.itemSearch" target="itemSearch"/>
+                <!-- just for disabling navigation in item_view_form.jsp -->
+                <mapping source="flowScope.isView" target="isView"/>
             </input-mapper>
         </attribute-mapper>
         <transition on="itemListView" to="itemListView">

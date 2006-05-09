@@ -16,16 +16,14 @@
 
 package info.jtrac.webflow;
 
+import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
-import info.jtrac.util.ExcelUtils;
 import info.jtrac.util.ValidationUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
@@ -34,7 +32,6 @@ import org.springframework.validation.DataBinder;
 import org.springframework.webflow.Event;
 import org.springframework.webflow.RequestContext;
 import org.springframework.webflow.ScopeType;
-import org.springframework.webflow.context.servlet.ServletExternalContext;
 
 /**
  * Multiaction that backs the "Item Search" flow
@@ -94,5 +91,40 @@ public class ItemSearchFormAction extends AbstractFormAction {
         itemSearch.setCurrentPage(0);        
         return success();
     }
+    
+    public Event itemSearchViewHandler(RequestContext context) throws Exception {        
+        String refId = ValidationUtils.getParameter(context, "refId");
+        if (refId == null) {
+            context.getRequestScope().put("refIdError", ValidationUtils.ERROR_EMPTY_MSG);
+            return error();
+        }
+        // TODO make this flexible, sense current space etc.
+        int pos = refId.indexOf('-');
+        if (pos == -1) {
+            context.getRequestScope().put("refId", refId);
+            context.getRequestScope().put("refIdError", "Invalid ID");
+            return error();            
+        }
+        long sequenceNum;
+        try {
+            sequenceNum = Long.parseLong(refId.substring(pos + 1));
+        } catch (NumberFormatException e) {
+            context.getRequestScope().put("refId", refId);
+            context.getRequestScope().put("refIdError", "Invalid ID");
+            return error();             
+        }
+        String prefixCode = refId.substring(0, pos);
+        logger.debug("sequenceNum = '" + sequenceNum + "', prefixCode = '" + prefixCode + "'");
+        Item item = jtrac.loadItem(sequenceNum, prefixCode);
+        if (item == null) {
+            context.getRequestScope().put("refId", refId);
+            context.getRequestScope().put("refIdError", "Item not found");
+            return error();             
+        }
+        context.getRequestScope().put("item", item);
+        // just for disabling the "back" link
+        context.getFlowScope().put("isView", true);
+        return success();
+    }    
     
 }

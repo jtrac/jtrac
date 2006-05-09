@@ -40,7 +40,7 @@ public class ValidationUtils {
         if (value == null || value.trim().equals("")) {
             return null;
         }
-        return value;
+        return value.trim();
     }
     
     public static boolean isAllUpperCase(String input) {
