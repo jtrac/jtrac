@@ -113,7 +113,7 @@ public class ItemSearchFormAction extends AbstractFormAction {
             context.getRequestScope().put("refIdError", "Invalid ID");
             return error();             
         }
-        String prefixCode = refId.substring(0, pos);
+        String prefixCode = refId.substring(0, pos).toUpperCase();
         logger.debug("sequenceNum = '" + sequenceNum + "', prefixCode = '" + prefixCode + "'");
         Item item = jtrac.loadItem(sequenceNum, prefixCode);
         if (item == null) {
