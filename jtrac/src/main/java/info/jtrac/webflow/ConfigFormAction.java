@@ -43,11 +43,11 @@ public class ConfigFormAction extends AbstractFormAction {
     @Override
     public Object loadFormObject(RequestContext context) {
         String key = ValidationUtils.getParameter(context, "key");
-        Config config = jtrac.loadConfig(key);
-        if (config == null) {
-            config = new Config(key, null);
+        String value = jtrac.loadConfig(key);
+        if (value == null) {
+            return new Config(key, null);
         }
-        return config;
+        return new Config(key, value);
     }
     
     public Event configFormHandler(RequestContext context) throws Exception {

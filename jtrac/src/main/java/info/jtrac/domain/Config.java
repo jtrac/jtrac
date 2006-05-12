@@ -34,8 +34,11 @@ public class Config implements Serializable {
     // set up a static set of valid config key names
     static {
         keys = new LinkedHashSet<String>();
-        keys.add("smtp.server.host");
-        keys.add("smtp.server.port");
+        keys.add("mail.server.host");
+        keys.add("mail.server.port");
+        keys.add("mail.subject.prefix");
+        keys.add("mail.from");
+        keys.add("jtrac.url.base");        
     }
     
     public static Set<String> getKeys() {

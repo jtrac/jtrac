@@ -66,6 +66,6 @@ public interface Jtrac extends UserDetailsService {
     //========================================================
     Map<String, String> loadAllConfig();
     void storeConfig(Config config);
-    Config loadConfig(String key);    
+    String loadConfig(String key);    
     
 }

@@ -266,8 +266,12 @@ public class JtracImpl implements Jtrac {
         dao.storeConfig(config);
     }
     
-    public Config loadConfig(String key) {
-        return dao.loadConfig(key);
+    public String loadConfig(String key) {
+        Config config = dao.loadConfig(key);
+        if (config == null) {
+            return null;
+        }
+        return config.getKey();
     }
     
 }

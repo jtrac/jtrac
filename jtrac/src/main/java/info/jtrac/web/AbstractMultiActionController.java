@@ -41,7 +41,7 @@ public abstract class AbstractMultiActionController extends MultiActionControlle
     protected final Log logger = LogFactory.getLog(getClass());
     
     protected Jtrac jtrac;
-    protected FlowExecutionRepositoryFactory flowExecutionRepositoryFactory;
+    private FlowExecutionRepositoryFactory flowExecutionRepositoryFactory;
     
     // just for getFlowExecution (see below)
     private FlowExecutorArgumentExtractor flowExecutorArgumentExtractor = new FlowExecutorArgumentExtractor();

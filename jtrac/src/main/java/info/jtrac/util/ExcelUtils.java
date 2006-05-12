@@ -107,6 +107,7 @@ public class ExcelUtils {
         int row = 0;
         int col = 0;
         
+        // begin header row
         setHeader(row, col++, "ID");
         setHeader(row, col++, "Summary");
                 
@@ -124,8 +125,10 @@ public class ExcelUtils {
         
         setHeader(row, col++, "Time Stamp");        
         
+        // iterate over list
         for(AbstractItem item : items) {
-            row++; col = 0;            
+            row++; col = 0; 
+            // begin data row
             setText(row, col++, item.getRefId());
             setText(row, col++, item.getSummary());
             

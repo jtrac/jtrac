@@ -124,8 +124,8 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
     public void testConfigStoreAndLoad() {
         Config config = new Config("testKey", "testValue");
         jtrac.storeConfig(config);
-        Config c = jtrac.loadConfig("testKey");
-        assertEquals("testValue", c.getValue());
+        String value = jtrac.loadConfig("testKey");
+        assertEquals("testValue", value);
     }
     
 }
