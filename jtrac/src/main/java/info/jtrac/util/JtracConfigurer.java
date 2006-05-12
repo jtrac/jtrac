@@ -38,7 +38,7 @@ import org.springframework.core.io.FileSystemResource;
  * 2) a "jtrac.properties" file exists in jtrac.home
  *
  * Note that later on during startup, the HibernateJtracDao would check if 
- * database tables exist, and if not, would proceed to create them
+ * database tables exist, and if they dont, would proceed to create them
  */
 public class JtracConfigurer extends PropertyPlaceholderConfigurer {
     

@@ -42,11 +42,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.WebUtils;
-import org.springframework.webflow.context.servlet.ServletExternalContext;
 import org.springframework.webflow.execution.FlowExecution;
-import org.springframework.webflow.execution.repository.FlowExecutionKey;
-import org.springframework.webflow.execution.repository.FlowExecutionRepository;
-import org.springframework.webflow.executor.support.FlowExecutionKeyFormatter;
 
 public class DefaultMultiActionController extends AbstractMultiActionController {
 
@@ -118,13 +114,8 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
         return new ModelAndView("config_list", model);
     }
     
-    public ModelAndView itemListExcelHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String flowExecutionKey = request.getParameter("_flowExecutionKey");
-        ServletExternalContext ctx = new ServletExternalContext(getServletContext(), request, response);
-        FlowExecutionRepository repository = flowExecutionRepositoryFactory.getRepository(ctx);
-        FlowExecutionKeyFormatter formatter = new FlowExecutionKeyFormatter();
-        FlowExecutionKey key = (FlowExecutionKey) formatter.parseValue(flowExecutionKey, null);
-        FlowExecution flow = repository.getFlowExecution(key);        
+    public ModelAndView itemListExcelHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {        
+        FlowExecution flow = getFlowExecution(request, response);        
         ItemSearch itemSearch = (ItemSearch) flow.getActiveSession().getScope().get("itemSearch");
         int pageSize = itemSearch.getPageSize();
         itemSearch.setPageSize(-1); // temporarily switch off paging of results 

@@ -88,7 +88,22 @@
                 support for file-attachments and e-mail integration.  JTrac offers powerful customization options,
                 especially in the areas of workflow and field-level permissions and compares well to even
                 commercial tools.
-            </para>             
+            </para>
+            <sect2 id="features-easytoinstall">
+                <title>Easy to Install</title>
+                <para>
+                    JTrac uses Hibernate and so it can support any database.  Any servlet version 2.4 compliant container
+                    such as Apache Tomcat 5.5.X is sufficient to run JTrac.  JTrac requires Java 5.0 but has minimal
+                    installation requirements otherwise.
+                </para>
+                <para>
+                    One of the useful features of JTrac is that it is distributed as a WAR file and you can be up
+                    and running by just deploying the WAR file.  The JTrac web-application checks the 
+                    environment on startup and if a configured database is not detected, HSQLDB is used by default.
+                    This means that you can easily evaluate JTrac - just drop the WAR file into your servlet engine
+                    and you can immediately sign on into the application.
+                </para>                
+            </sect2>            
             <sect2 id="features-customfields">
                 <title>Custom Fields</title>
                 <para>                    
@@ -162,21 +177,6 @@
                     Also, field-level permissions can be mapped to roles.  This allows for even more flexibility - for
                     example, you can set a project up so that only a "MANAGER" can change the "Severity" level after a
                     bug is submitted.
-                </para>                
-            </sect2>
-            <sect2 id="features-easytoinstall">
-                <title>Easy to Install</title>
-                <para>
-                    JTrac uses Hibernate and so it can support any database.  Any servlet version 2.4 compliant container
-                    such as Apache Tomcat 5.5.X is sufficient to run JTrac.  JTrac requires Java 5.0 but has minimal
-                    installation requirements otherwise.
-                </para>
-                <para>
-                    One of the useful features of JTrac is that it is distributed as a WAR file and you can be up
-                    and running by just deploying the WAR file.  The JTrac web-application checks the 
-                    environment on startup and if a configured database is not detected, HSQLDB is used by default.
-                    This means that you can easily evaluate JTrac - just drop the WAR file into your servlet engine
-                    and you can immediately sign on into the application.
                 </para>                
             </sect2>
             <sect2 id="features-search">
@@ -313,7 +313,7 @@
                 uses that location as the home directory.
             </para>
             <para>                    
-		When you log in to JTrac for the first time use "admin" for both the username as well as password.
+        When you log in to JTrac for the first time use "admin" for both the username as well as password.
             </para>             
         </sect1>
         <sect1 id="installation-custom">
