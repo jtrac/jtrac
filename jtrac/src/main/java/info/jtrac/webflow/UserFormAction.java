@@ -117,13 +117,7 @@ public class UserFormAction extends AbstractFormAction {
             Errors errors = getFormErrors(context);
             errors.rejectValue("user.loginName", "error.user.loginName.exists", "Login ID already exists");
             return error();
-        }
-        String password = user.getPassword();
-        if (password == null) {
-            user.setPassword(jtrac.generatePassword());
-        } else {
-            user.setPassword(jtrac.encodeClearText(password));
-        }        
+        }       
         jtrac.storeUser(user);
         return success();
     }

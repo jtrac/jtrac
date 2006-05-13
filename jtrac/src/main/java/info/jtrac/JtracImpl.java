@@ -29,6 +29,7 @@ import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
+import info.jtrac.util.EmailUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -56,9 +57,12 @@ public class JtracImpl implements Jtrac {
     
     private JtracDao dao;
     private PasswordEncoder passwordEncoder;
+    private EmailUtils emailUtils;
     
     public void setDao(JtracDao dao) {
         this.dao = dao;
+        // performs one time init on Spring assisted startup        
+        setEmailUtils();
     }
     
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
@@ -86,6 +90,24 @@ public class JtracImpl implements Jtrac {
         return passwordEncoder.encodePassword(clearText, null);
     }
     
+    /**
+     * initialize the email adapter
+     */
+    private void setEmailUtils() {
+        String host = loadConfig("mail.server.host");
+        if (host == null) {
+            logger.warn("'mail.server.host' config is null, mail adapter not initialized");
+            return;
+        }
+        String port = loadConfig("mail.server.port");       
+        String url = loadConfig("jtrac.url.base");
+        String from = loadConfig("mail.from");
+        String prefix = loadConfig("mail.subject.prefix");
+        this.emailUtils = new EmailUtils(host, port, url, from, prefix);
+    }      
+    
+    //==========================================================================
+    
     public void storeItem(Item item, Attachment attachment) {
         History history = new History(item);        
         if (attachment != null) {
@@ -104,6 +126,9 @@ public class JtracImpl implements Jtrac {
         item.setSequenceNum(spaceSequence.next());
         dao.storeSpaceSequence(spaceSequence);
         dao.storeItem(item);
+        if (emailUtils != null) {
+            emailUtils.send(item);
+        }
     }
     
     public void storeHistoryForItem(Item item, History history, Attachment attachment) {
@@ -134,6 +159,9 @@ public class JtracImpl implements Jtrac {
         }        
         item.add(history);
         dao.storeItem(item);
+        if (emailUtils != null) {
+            emailUtils.send(item);
+        }
     }
     
     public Item loadItem(long id) {
@@ -179,8 +207,26 @@ public class JtracImpl implements Jtrac {
         return users.get(0);
     }
   
-    public void storeUser(User user) {                
+    public void storeUser(User user) {
+        boolean newUser = false;
+        String password = user.getPassword();
+        if (password == null) {
+            if (user.getId() == 0) {
+                newUser = true;
+                user.setPassword(generatePassword());
+            }
+        } else {
+            user.setPassword(encodeClearText(password));
+        }                 
         dao.storeUser(user);
+        if (emailUtils != null) {
+            if (password != null) {
+                emailUtils.sendUserPassword(user, false);
+            }
+            if (newUser) {
+                emailUtils.sendUserPassword(user, true);
+            }
+        }
     }
     
     public List<User> findAllUsers() {
@@ -264,6 +310,9 @@ public class JtracImpl implements Jtrac {
     
     public void storeConfig(Config config) {
         dao.storeConfig(config);
+        // ugly hack, TODO make smarter in future
+        // email adapter to be re-initialized
+        setEmailUtils();
     }
     
     public String loadConfig(String key) {
