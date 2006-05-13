@@ -126,7 +126,7 @@ public class JtracImpl implements Jtrac {
         item.setSequenceNum(spaceSequence.next());
         dao.storeSpaceSequence(spaceSequence);
         dao.storeItem(item);
-        if (emailUtils != null) {
+        if (item.isSendNotifications() && emailUtils != null) {
             emailUtils.send(item);
         }
     }
@@ -159,7 +159,7 @@ public class JtracImpl implements Jtrac {
         }        
         item.add(history);
         dao.storeItem(item);
-        if (emailUtils != null) {
+        if (item.isSendNotifications() && emailUtils != null) {
             emailUtils.send(item);
         }
     }

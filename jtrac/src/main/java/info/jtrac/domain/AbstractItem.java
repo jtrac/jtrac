@@ -63,7 +63,8 @@ public abstract class AbstractItem implements Serializable {
     private Date cusTim02;
     private Date cusTim03;    
     
-    private Set<ItemUser> itemUsers;    
+    private Set<ItemUser> itemUsers;
+    private boolean sendNotifications = true;
     
     // we could have used reflection or a Map but doing this way for performance
     public Object getValue(Field.Name fieldName) {
@@ -419,6 +420,14 @@ public abstract class AbstractItem implements Serializable {
     public void setItemUsers(Set<ItemUser> itemUsers) {
         this.itemUsers = itemUsers;
     }      
+    
+    public boolean isSendNotifications() {
+        return sendNotifications;
+    }
+
+    public void setSendNotifications(boolean sendNotifications) {
+        this.sendNotifications = sendNotifications;
+    }    
     
     @Override
     public String toString() {

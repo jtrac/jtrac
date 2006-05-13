@@ -74,6 +74,9 @@
         <td/>
         <td>
             <input type="submit" name="_eventId_submit" value="Submit"/>
+            <input type="checkbox" name="sendNotifications" value="true" <c:if test="${history.sendNotifications}">checked="true"</c:if>/>
+            send e-mail notifications
+            <input type="hidden" name="_sendNotifications"/>            
         </td>        
     </tr>  
 </table>
