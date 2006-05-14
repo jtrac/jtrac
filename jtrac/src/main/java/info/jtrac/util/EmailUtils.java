@@ -40,25 +40,12 @@ public class EmailUtils {
     public EmailUtils(String host, String port, String url, String from, String prefix) {
         logger.debug("initializing email adapter: host = '" + host + "', port = '" + 
                 port + "', url = '" + url + "', from = '" + from + "', prefix = '" + prefix + "'");        
-        if (prefix == null) {
-            this.prefix = "[jtrac]";
-        } else {
-            this.prefix = prefix;
-        }         
-        if (from == null) {
-            this.from = "jtrac";
-        } else {
-            this.from = from;
-        }
-        if (url == null) {
-            this.url = "http://localhost/jtrac/";
-        } else {
-            if (!url.endsWith("/")) {
-                this.url = url + "/";
-            } else {
-                this.url = url;
-            }            
-        }
+        this.prefix = prefix == null ? "[jtrac]" : prefix;
+        this.from = from == null ? "jtrac" : from;
+        this.url = url == null ?  "http://localhost/jtrac/" : url;
+        if (!url.endsWith("/")) {
+            this.url = url + "/";
+        }          
 
         int p = 25;
         if (port != null) {

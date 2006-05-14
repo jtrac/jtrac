@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
 <p>
-    <c:if test="${!empty itemSearch && !empty isView}">
+    <c:if test="${!empty calledBySearch}">
         <a href="<c:url value='flow.htm?_flowExecutionKey=${flowExecutionKey}&_eventId=back'/>">(back)</a>
     </c:if>
 </p>

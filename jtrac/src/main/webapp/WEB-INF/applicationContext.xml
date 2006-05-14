@@ -26,6 +26,8 @@
         <property name="transactionAttributes">
             <props>
                 <prop key="store*">PROPAGATION_REQUIRED</prop>
+                <prop key="allocate">PROPAGATION_REQUIRED</prop>
+                <prop key="deallocate">PROPAGATION_REQUIRED</prop>
             </props>
         </property>        
     </bean>   

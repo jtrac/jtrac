@@ -51,6 +51,8 @@ public interface Jtrac extends UserDetailsService {
     List<UserRole> findUserRolesForSpace(int spaceId);
     List<User> findUsersForUser(User user);
     List<User> findUnallocatedUsersForSpace(int spaceId);
+    void allocate(User user, Space space, String roleKey);
+    void deallocate(User user, Space space);
     //========================================================
     void storeSpace(Space space);
     Space loadSpace(int id);

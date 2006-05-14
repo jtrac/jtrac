@@ -13,7 +13,7 @@
             <action bean="itemSearchFormAction" method="itemSearchFormHandler"/>
         </transition>
         <transition on="view" to="itemViewForm">            
-            <action bean="itemSearchFormAction" method="itemSearchViewHandler"/>
+            <action bean="itemSearchFormAction" method="itemSearchViewByRefIdHandler"/>
         </transition>      
     </view-state>    
     
@@ -21,7 +21,9 @@
         <transition on="page" to="itemListView">
             <action bean="itemSearchFormAction" method="itemSearchPageHandler"/>
         </transition>
-        <transition on="view" to="itemViewForm"/>
+        <transition on="view" to="itemViewForm">            
+            <action bean="itemSearchFormAction" method="itemSearchViewByIdHandler"/>
+        </transition>
         <transition on="back" to="itemSearchForm">
             <action bean="itemSearchFormAction" method="itemSearchBackHandler"/>
         </transition>
@@ -33,8 +35,8 @@
                 <!-- just for displaying navigation in header.jsp -->
                 <mapping source="flowScope.space" target="space"/>
                 <mapping source="flowScope.itemSearch" target="itemSearch"/>
-                <!-- just for disabling navigation in item_view_form.jsp -->
-                <mapping source="flowScope.isView" target="isView"/>
+                <!-- just for enabling "back" navigation in item_view_form.jsp -->
+                <mapping source="flowScope.calledBySearch" target="calledBySearch"/>
             </input-mapper>
         </attribute-mapper>
         <transition on="itemListView" to="itemListView">

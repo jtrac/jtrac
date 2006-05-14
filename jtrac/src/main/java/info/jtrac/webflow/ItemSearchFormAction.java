@@ -92,7 +92,12 @@ public class ItemSearchFormAction extends AbstractFormAction {
         return success();
     }
     
-    public Event itemSearchViewHandler(RequestContext context) throws Exception {        
+    public Event itemSearchViewByIdHandler(RequestContext context) throws Exception {        
+        context.getRequestScope().put("calledBySearch", true);
+        return success();
+    }    
+    
+    public Event itemSearchViewByRefIdHandler(RequestContext context) throws Exception {        
         String refId = ValidationUtils.getParameter(context, "refId");
         if (refId == null) {
             context.getRequestScope().put("refIdError", ValidationUtils.ERROR_EMPTY_MSG);
@@ -122,8 +127,6 @@ public class ItemSearchFormAction extends AbstractFormAction {
             return error();             
         }
         context.getRequestScope().put("item", item);
-        // just for disabling the "back" link
-        context.getFlowScope().put("isView", true);
         return success();
     }    
     

@@ -54,8 +54,9 @@ public class ItemList extends SimpleTagSupport {
             String flowUrlParam = "_flowExecutionKey=" + request.getAttribute("flowExecutionKey");
             String flowUrl = "flow.htm?" + flowUrlParam;
             StringBuffer sb = new StringBuffer();
-            long resultCount = itemSearch.getResultCount();            
-            sb.append("<a href='" + flowUrl + "&_eventId=back' title='Modify Search'>" + resultCount + " record(s) found.</a>&nbsp;&nbsp;");
+            long resultCount = itemSearch.getResultCount(); 
+            String plural = resultCount == 1 ? "" : "s";
+            sb.append("<a href='" + flowUrl + "&_eventId=back' title='Modify Search'>" + resultCount + " record" + plural + " found.</a>&nbsp;&nbsp;");
             int pageSize = itemSearch.getPageSize();
             int pageCount = 0;
             if (pageSize != -1) {

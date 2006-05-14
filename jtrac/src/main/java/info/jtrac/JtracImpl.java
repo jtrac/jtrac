@@ -262,6 +262,16 @@ public class JtracImpl implements Jtrac {
         return users;
     }     
     
+    public void allocate(User user, Space space, String roleKey) {        
+        user.addSpaceRole(space, roleKey);
+        dao.storeUser(user);      
+    }
+    
+    public void deallocate(User user, Space space) {        
+        user.removeSpace(space);
+        dao.storeUser(user);      
+    }    
+    
     public Space loadSpace(int id) {
         return dao.loadSpace(id);
     }

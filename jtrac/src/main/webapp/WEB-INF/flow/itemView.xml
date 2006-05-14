@@ -7,6 +7,7 @@
     <input-mapper>
         <mapping source="space" target="flowScope.space"/>
         <mapping source="itemSearch" target="flowScope.itemSearch"/>
+        <mapping source="calledBySearch" target="flowScope.calledBySearch"/>
     </input-mapper>    
     
     <view-state id="itemViewForm" view="item_view_form">

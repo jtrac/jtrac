@@ -41,7 +41,7 @@ public class UserFormAction extends AbstractFormAction {
         setFormObjectName("userForm");
         setFormObjectScope(ScopeType.REQUEST);
         setValidator(new UserFormValidator());
-    }
+    }    
     
     @Override
     public Object loadFormObject(RequestContext context) {
@@ -149,10 +149,9 @@ public class UserFormAction extends AbstractFormAction {
         User user = (User) context.getFlowScope().get("user");
         Space space = (Space) context.getFlowScope().get("space");
         String roleKey = ValidationUtils.getParameter(context, "roleKey");
-        user.addSpaceRole(space, roleKey);
-        jtrac.storeUser(user);
+        jtrac.allocate(user, space, roleKey);
         // effectively forces the Acegi Security Context to reload
-        SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
+        SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);  
         return success();
     }    
 
@@ -161,8 +160,7 @@ public class UserFormAction extends AbstractFormAction {
         int id = Integer.parseInt(spaceId);
         Space space = jtrac.loadSpace(id);
         User user = (User) context.getFlowScope().get("user");        
-        user.removeSpace(space);
-        jtrac.storeUser(user);
+        jtrac.deallocate(user, space);
         // effectively forces the Acegi Security Context to reload
         SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
         return success();
