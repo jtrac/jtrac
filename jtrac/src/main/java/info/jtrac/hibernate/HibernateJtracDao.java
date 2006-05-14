@@ -198,6 +198,7 @@ public class HibernateJtracDao
             User user = new User();
             user.setLoginName("admin");
             user.setName("Admin User");
+            user.setEmail("jtrac.admin");
             user.setPassword("21232f297a57a5a743894a0e4a801fc3");
             user.addSpaceRole(null, "ROLE_ADMIN");
             getSession().save(user);

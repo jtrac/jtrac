@@ -320,7 +320,7 @@ public class JtracImpl implements Jtrac {
         if (config == null) {
             return null;
         }
-        return config.getKey();
+        return config.getValue();
     }
     
 }

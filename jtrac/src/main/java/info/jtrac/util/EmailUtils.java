@@ -38,11 +38,17 @@ public class EmailUtils {
     private String url;
     
     public EmailUtils(String host, String port, String url, String from, String prefix) {
+        logger.debug("initializing email adapter: host = '" + host + "', port = '" + 
+                port + "', url = '" + url + "', from = '" + from + "', prefix = '" + prefix + "'");        
         if (prefix == null) {
             this.prefix = "[jtrac]";
+        } else {
+            this.prefix = prefix;
         }         
         if (from == null) {
             this.from = "jtrac";
+        } else {
+            this.from = from;
         }
         if (url == null) {
             this.url = "http://localhost/jtrac/";
@@ -59,12 +65,13 @@ public class EmailUtils {
            try {
                p = Integer.parseInt(port);
            } catch (NumberFormatException e) {
-               logger.error("mail.server.port not an integer : '" + port + "', defaulting to 25");
+               logger.warn("mail.server.port not an integer : '" + port + "', defaulting to 25");
            }
         }
         sender = new JavaMailSenderImpl();
         sender.setHost(host);
         sender.setPort(p);
+        logger.debug("email sender initialized: host = '" + host + "', port = '" + p + "'");
     }
 
     /**
@@ -78,12 +85,12 @@ public class EmailUtils {
     private void sendInNewThread(final MimeMessage message) {
         new Thread(){
             public void run() {
-                logger.debug("*** send mail thread start");
+                logger.debug("send mail thread start");
                 try {
                     sender.send(message);
-                    logger.debug("*** send mail thread successfull");
+                    logger.debug("send mail thread successfull");
                 } catch (Exception e) {
-                    logger.error("*** send mail thread failed: " + e);                   
+                    logger.error("send mail thread failed: " + e);                   
                 }
             }
         }.start();
@@ -117,6 +124,7 @@ public class EmailUtils {
     }
     
     public void send(Item item) {
+        logger.debug("attempting to send mail for item update");
         // prepare message content
         StringBuffer sb = new StringBuffer();
         String anchor = getItemViewAnchor(item);
@@ -153,7 +161,8 @@ public class EmailUtils {
         }              
     }
     
-    public void sendUserPassword(User user, boolean newUser) {        
+    public void sendUserPassword(User user, boolean newUser) {
+        logger.debug("attempting to send mail for user password");
         MimeMessage message = sender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
         try {
