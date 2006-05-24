@@ -22,7 +22,6 @@ writePath(artifacts, useRelativePaths) {
             out.write("\\\n    ${m2.repo}/" + p + ":");
         }
     }
-    out.write('\n');
 }
 
 // function to resolve dependencies for the given artifact details using Maven, on the fly
@@ -52,16 +51,26 @@ out.write("test.jars=");
 testArtifacts = project.getDependencyArtifacts();
 testArtifacts.addAll(project.getTestArtifacts());
 writePath(testArtifacts, false);
+watijDir = "E:/peter/opt/watij-2.2.1";
+out.write("\\\n    " + watijDir + "/watij.jar:");
+watijLibDir = new File(watijDir + "/lib");
+for (File f : watijLibDir.listFiles()) {
+    out.write("\\\n    " + f.getPath().replace('\\','/') + ":");
+}
+out.write("\n");
 //==============================
 out.write("runtime.jars=");
 writePath(project.getArtifacts(), true);
+out.write("\n");
 //==============================
 out.write("checkstyle.jars=");
 writePath(resolveDependencies("checkstyle", "checkstyle", "4.1"), false);
+out.write("\n");
 //==============================
 out.write("emma.jars=");            
 emmaDeps = resolveDependencies("emma", "emma", "2.0.5312");
 emmaAntDeps = resolveDependencies("emma", "emma_ant", "2.0.5312");
 emmaDeps.addAll(emmaAntDeps);
 writePath(emmaDeps, false);
+out.write("\n");
 out.close();
