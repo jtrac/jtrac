@@ -288,7 +288,10 @@
             </plugin>
             <plugin>
                 <groupId>info.jtrac</groupId>
-                <artifactId>maven-bshrunner-plugin</artifactId>             
+                <artifactId>maven-bshrunner-plugin</artifactId>
+                <configuration>
+                    <file>etc/build-deps-gen.bsh</file>
+                </configuration>
             </plugin>           
         </plugins>
     </build>

@@ -5,6 +5,15 @@
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
 
+// function to return relative path given the base dir and the target file
+// =========================================================================
+getRelativePath(base, file) {
+    basePath = base.replace('\\','/');
+    len = basePath.length() + 1;
+    if (basePath.endsWith("/")) len--;
+    return file.getPath().substring(len).replace('\\','/');
+}
+
 // function to write out JAR paths into standard java properties file format
 // =========================================================================
 writePath(artifacts, useRelativePaths) {
@@ -15,7 +24,7 @@ writePath(artifacts, useRelativePaths) {
             artifactResolver.resolve(a, remoteArtifactRepositories, localRepository);
             f = a.getFile();
         }
-        p = f.getPath().substring(len).replace('\\','/');
+        p = getRelativePath(baseDir, f);
         if (useRelativePaths) {
             out.write("\\\n    " + p + ",");
         } else {
@@ -37,35 +46,50 @@ resolveDependencies(groupId, artifactId, version) {
     return artifacts;      
 }
 
+// initialize user-custom properties from build.properties
+// =======================================================
+is = new FileInputStream("build.properties");
+props = new Properties();
+props.load(is);
+is.close();
+
+watijHome = props.getProperty("watij.home");
+
+
 // main flow
 // =========
-
 os = new FileOutputStream("build-deps.properties");
 out = new PrintWriter(os);      
-baseDir = localRepository.getBasedir().replace('\\','/');
-len = baseDir.length() + 1;                         
+baseDir = localRepository.getBasedir().replace('\\','/');                       
 out.write("# *** generated file - not created by hand! ***\n");
 out.write("m2.repo=" + baseDir + "\n");
+out.write("watij.home=" + watijHome + "\n");
+
 //==============================
 out.write("test.jars=");
 testArtifacts = project.getDependencyArtifacts();
 testArtifacts.addAll(project.getTestArtifacts());
 writePath(testArtifacts, false);
-watijDir = "E:/peter/opt/watij-2.2.1";
-out.write("\\\n    " + watijDir + "/watij.jar:");
-watijLibDir = new File(watijDir + "/lib");
-for (File f : watijLibDir.listFiles()) {
-    out.write("\\\n    " + f.getPath().replace('\\','/') + ":");
+
+if (watijHome != null) {    
+    out.write("\\\n    ${watij.home}/watij.jar:");
+    watijLibDir = new File(watijHome + "/lib");
+    for (File f : watijLibDir.listFiles()) {        
+        out.write("\\\n    ${watij.home}/" + getRelativePath(watijHome, f) + ":");
+    }
 }
 out.write("\n");
+
 //==============================
 out.write("runtime.jars=");
 writePath(project.getArtifacts(), true);
 out.write("\n");
+
 //==============================
 out.write("checkstyle.jars=");
 writePath(resolveDependencies("checkstyle", "checkstyle", "4.1"), false);
 out.write("\n");
+
 //==============================
 out.write("emma.jars=");            
 emmaDeps = resolveDependencies("emma", "emma", "2.0.5312");
