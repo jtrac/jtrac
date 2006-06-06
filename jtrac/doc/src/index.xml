@@ -6,7 +6,7 @@
     <bookinfo>
         <title>JTrac</title>
         <subtitle>User / Developer Guide</subtitle>
-        <releaseinfo>2.0-EA1</releaseinfo>
+        <releaseinfo>2.0-RC1</releaseinfo>
         <authorgroup>
             <author>
                 <firstname>Peter</firstname>
@@ -60,16 +60,13 @@
         <sect1 id="introduction-releasenotes">
             <title>Release Notes</title>
             <para>
-                Version 2.0-EA1
+                Version 2.0-RC1
             </para>
             <para>
-                As the version number implies, 2.0-EA1 is intended purely as an Early Access release, in order to get 
-                as much feedback as possible from interested users.  One of the highlights of this release is the usage
-                of Spring WebFlow 1.0-RC1, which was just released last week.
-            </para>
-            <para>
-                JTrac is not yet recommended for production usage.  The main reason is that there may be some 
-                more changes to the database schema.  JTrac 2.0 final should be available by the end of June 2006.
+                As the version number implies, 2.0-RC1 is not yet final and thus not recommended for production.
+                The intention is to get as much feedback as possible from interested users and there may be
+                minor changes to the database schema before the 2.0 milestone.  
+                JTrac 2.0 final should be available by the end of June 2006.
             </para>
             <para>
                 You are encouraged to try out JTrac and communicate your feedback and interest in future versions
@@ -293,7 +290,20 @@
     </chapter>
     
     <chapter id="installation">
-        <title>Installation</title>            
+        <title>Installation</title>
+        <sect1 id="installation-prerequisites">
+            <title>Prerequisites</title>
+            <para>    
+                <itemizedlist>
+                    <listitem>
+                        <para>Java 5.0</para>
+                    </listitem>
+                    <listitem>
+                        <para>Servlet 2.4 compliant container</para>
+                    </listitem>                               
+                </itemizedlist>                   
+            </para>
+        </sect1>        
         <sect1 id="installation-quick">
             <title>Quick Installation</title>
             <para>                    
@@ -358,7 +368,7 @@
                 Hibernate is used for data persistence.  This allows for JTrac to be database neutral and any database
                 supported by Hibernate can be used.
             </para>
-        </sect1>            
+        </sect1>       
     </chapter>    
     
     <chapter id="roadmap">

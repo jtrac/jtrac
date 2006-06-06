@@ -17,7 +17,8 @@
         <menu name="JTrac">
             <item name="Home" href="index.html"/>
             <item name="Features" href="doc/html/features.html"/>            
-            <item name="Download" href="http://sourceforge.net/project/showfiles.php?group_id=162983&amp;package_id=184104"/>            
+            <item name="Download" href="http://sourceforge.net/project/showfiles.php?group_id=162983&amp;package_id=184104"/>
+            <item name="Installation" href="doc/html/installation.html"/>
         </menu>
         <menu name="Documentation">
             <item name="HTML" href="doc/html/index.html"/>
