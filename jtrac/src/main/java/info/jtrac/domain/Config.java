@@ -26,40 +26,40 @@ import java.util.Set;
  */
 public class Config implements Serializable {
     
-    private String key;
+    private String param;
     private String value;
 
-    private static final Set<String> keys;
+    private static final Set<String> params;
     
     // set up a static set of valid config key names
     static {
-        keys = new LinkedHashSet<String>();
-        keys.add("mail.server.host");
-        keys.add("mail.server.port");
-        keys.add("mail.subject.prefix");
-        keys.add("mail.from");
-        keys.add("jtrac.url.base");        
+        params = new LinkedHashSet<String>();
+        params.add("mail.server.host");
+        params.add("mail.server.port");
+        params.add("mail.subject.prefix");
+        params.add("mail.from");
+        params.add("jtrac.url.base");        
     }
     
-    public static Set<String> getKeys() {
-        return keys;
+    public static Set<String> getParams() {
+        return params;
     }
     
     public Config() {
         // zero arg constructor
     }
     
-    public Config(String key, String value) {
-        this.key = key;
+    public Config(String param, String value) {
+        this.param = param;
         this.value = value;
     }
     
-    public String getKey() {
-        return key;
+    public String getParam() {
+        return param;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setParam(String param) {
+        this.param = param;
     }
 
     public String getValue() {

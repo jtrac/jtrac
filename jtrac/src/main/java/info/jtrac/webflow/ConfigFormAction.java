@@ -42,12 +42,12 @@ public class ConfigFormAction extends AbstractFormAction {
     
     @Override
     public Object loadFormObject(RequestContext context) {
-        String key = ValidationUtils.getParameter(context, "key");
-        String value = jtrac.loadConfig(key);
+        String param = ValidationUtils.getParameter(context, "param");
+        String value = jtrac.loadConfig(param);
         if (value == null) {
-            return new Config(key, null);
+            return new Config(param, null);
         }
-        return new Config(key, value);
+        return new Config(param, value);
     }
     
     public Event configFormHandler(RequestContext context) throws Exception {

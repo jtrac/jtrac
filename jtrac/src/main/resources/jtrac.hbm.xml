@@ -11,8 +11,8 @@
         </id>
         <property name="type" column="type"/>
         <many-to-one name="parent" column="parent_id"/>
-        <many-to-one name="space" column="space_id" not-null="true"/>
-        <property name="sequenceNum" column="sequence_num"/>
+        <many-to-one name="space" column="space_id" not-null="true" index="space_id_idx"/>
+        <property name="sequenceNum" column="sequence_num" index="sequence_num_idx"/>
         <property name="timeStamp" column="time_stamp"/>
         <property name="plannedEffort" column="planned_effort"/>
         <set name="children" order-by="id" cascade="all">
@@ -32,12 +32,12 @@
             <one-to-many class="Attachment"/>
         </set>                 
         <!-- identical to History -->
-        <many-to-one name="loggedBy" column="logged_by" not-null="true"/>
-        <many-to-one name="assignedTo" column="assigned_to"/>        
+        <many-to-one name="loggedBy" column="logged_by" not-null="true" index="logged_by_idx"/>
+        <many-to-one name="assignedTo" column="assigned_to" index="assigned_to_idx"/>        
         <property name="summary" column="summary"/>        
         <property name="detail" column="detail" type="text"/>
-        <property name="status" column="status"/>
-        <property name="severity" column="severity"/>
+        <property name="status" column="status" index="status_idx"/>
+        <property name="severity" column="severity" index="severity_idx"/>
         <property name="priority" column="priority"/>        
         <property name="cusDbl01" column="cus_dbl_01"/>
         <property name="cusDbl02" column="cus_dbl_02"/>
@@ -116,7 +116,7 @@
         </id>        
         <property name="type" column="type"/>         
         <many-to-one name="parent" column="parent"/>
-        <property name="loginName" column="login_name" unique="true"/>
+        <property name="loginName" column="login_name" unique="true" index="login_name_idx"/>
         <property name="name" column="name"/>
         <property name="password" column="password"/>
         <property name="email" column="email"/>
@@ -175,7 +175,7 @@
     </class>    
     
     <class name="Config" table="config">
-        <id name="key" column="key"/>                    
+        <id name="param" column="param"/>                    
         <property name="value" column="value"/>
     </class>       
     

@@ -110,7 +110,7 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
     public ModelAndView configListHandler(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("configMap", jtrac.loadAllConfig());
-        model.put("configKeys", Config.getKeys());
+        model.put("configParams", Config.getParams());
         return new ModelAndView("config_list", model);
     }
     

@@ -185,8 +185,8 @@ public class HibernateJtracDao
         getHibernateTemplate().merge(config);
     }
     
-    public Config loadConfig(String key) {
-        return (Config) getHibernateTemplate().get(Config.class, key);
+    public Config loadConfig(String param) {
+        return (Config) getHibernateTemplate().get(Config.class, param);
     }    
         
     public void createSchema() {        

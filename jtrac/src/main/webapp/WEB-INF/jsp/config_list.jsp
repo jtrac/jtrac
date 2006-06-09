@@ -6,27 +6,24 @@
 
 <table class="jtrac">
 
-    <tr><th>Key</th><th>Value</th><th>(edit)</th></tr>
+    <tr><th>Param</th><th>Value</th><th>(edit)</th></tr>
 
-    <c:forEach items="${configKeys}" var="configKey" varStatus="row">
+    <c:forEach items="${configParams}" var="configParam" varStatus="row">
         <c:set var="rowClass">
             <c:choose>
-                <c:when test="${selectedConfigKey == configKey}">class="selected"</c:when>
+                <c:when test="${selectedConfigParam == configParam}">class="selected"</c:when>
                 <c:when test="${row.count % 2 == 0}">class="alt"</c:when>
             </c:choose>            
         </c:set>
         <tr ${rowClass}>
             <td>
-                ${configKey}
+                ${configParam}
             </td>
             <td>
-                ${configMap[configKey]}
+                ${configMap[configParam]}
             </td>
             <td align="center">
-                <a href="<c:url value='flow.htm'>
-                    <c:param name='_flowId' value='config'/>
-                    <c:param name='key' value='${configKey}'/>
-                    </c:url>">(+)</a>
+                <a href="<c:url value='flow.htm?_flowId=config&param=${configParam}'/>">(+)</a>
             </td>            
         </tr>
     </c:forEach>

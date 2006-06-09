@@ -313,7 +313,7 @@ public class JtracImpl implements Jtrac {
         List<Config> list = dao.findAllConfig();
         Map<String, String> allConfig = new HashMap<String, String>(list.size());
         for (Config c : list) {
-            allConfig.put(c.getKey(), c.getValue());
+            allConfig.put(c.getParam(), c.getValue());
         }
         return allConfig;
     }
@@ -325,8 +325,8 @@ public class JtracImpl implements Jtrac {
         setEmailUtils();
     }
     
-    public String loadConfig(String key) {
-        Config config = dao.loadConfig(key);
+    public String loadConfig(String param) {
+        Config config = dao.loadConfig(param);
         if (config == null) {
             return null;
         }

@@ -8,10 +8,10 @@
     
     <table class="jtrac">
         <tr>
-            <td class="label">${config.key}</td>        
+            <td class="label">${config.param}</td>        
             <td>
                 <spring:bind path="config.value">
-                    <input name="${status.expression}" value="${status.value}"/>
+                    <input name="${status.expression}" value="${status.value}" id="focus"/>
                     <input type="submit" name="_eventId_submit" value="Submit"/>
                     <span class="error">${status.errorMessage}</span>
                 </spring:bind>
@@ -19,7 +19,7 @@
         </tr>    
     </table>       
     
-    <input type="hidden" name="key" value="${config.key}"/>
+    <input type="hidden" name="param" value="${config.param}"/>
     
     <input type="hidden" name="stateKey" value="${stateKey}"/>
     <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
