@@ -71,11 +71,17 @@ testArtifacts = project.getDependencyArtifacts();
 testArtifacts.addAll(project.getTestArtifacts());
 writePath(testArtifacts, false);
 
-if (watijHome != null) {    
+if (watijHome == null) {
+    print("*** warning: ${watij.home} is null");
+} else {
     out.write("\\\n    ${watij.home}/watij.jar:");
     watijLibDir = new File(watijHome + "/lib");
-    for (File f : watijLibDir.listFiles()) {        
-        out.write("\\\n    ${watij.home}/" + getRelativePath(watijHome, f) + ":");
+    if (!watijLibDir.exists()) {
+        print("*** warning: " + watijLibDir + " does not exist");
+    } else {
+        for (File f : watijLibDir.listFiles()) {        
+	    out.write("\\\n    ${watij.home}/" + getRelativePath(watijHome, f) + ":");
+        }
     }
 }
 out.write("\n");
