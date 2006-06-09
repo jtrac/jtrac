@@ -43,7 +43,7 @@ public class EmailUtils {
         this.prefix = prefix == null ? "[jtrac]" : prefix;
         this.from = from == null ? "jtrac" : from;
         this.url = url == null ?  "http://localhost/jtrac/" : url;
-        if (!url.endsWith("/")) {
+        if (!this.url.endsWith("/")) {
             this.url = url + "/";
         }          
 
