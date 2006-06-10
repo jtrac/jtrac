@@ -405,6 +405,14 @@
                 This can be combined with e-mail notifications.
             </para>
         </sect1>
+        <sect1 id="roadmap-email">
+            <title>Submit By Email</title>
+            <para>
+		JTrac should be able to monitor an e-mail account and incoming e-mail should trigger
+		creation / updation of items.  It would be handy to have attachments submitted through
+		email also.
+            </para>
+        </sect1>        
         <sect1 id="roadmap-savedsearches">
             <title>Saved Searches</title>            
             <para>
