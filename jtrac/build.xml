@@ -246,6 +246,7 @@
             <jvmarg line="-Dfile.encoding=UTF-8"/>
             <jvmarg line="-Djtrac.home=home"/>
             <jvmarg line="-agentpath:${agent.path}"/>
+            <jvmarg line="-Xmx512m"/>
         </java>
     </target> 	
               
