@@ -1,40 +1,15 @@
-// beanshell script to create a properties file designed to seamlesslly
-// integrate Maven with an Ant build file and even a Netbeans project.xml
-// requires the "bshrunner" Maven plugin.
-
+/** 
+ * beanshell script to auto-generate a standard properties file from a
+ * valid Maven 2 project (pom.xml).  The properties file once generated
+ * will contain all information about dependencies and can be used by
+ * an Ant script as well as a NetBeans project
+ */
+ 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
 
-// function to return relative path given the base dir and the target file
-// =========================================================================
-getRelativePath(base, file) {
-    basePath = base.replace('\\','/');
-    len = basePath.length() + 1;
-    if (basePath.endsWith("/")) len--;
-    return file.getPath().substring(len).replace('\\','/');
-}
-
-// function to write out JAR paths into standard java properties file format
-// =========================================================================
-writePath(artifacts, useRelativePaths) {
-    for (Artifact a : artifacts) {
-        f = a.getFile();
-        if (f == null) {
-            print("*** resolving artifact: " + a);
-            artifactResolver.resolve(a, remoteArtifactRepositories, localRepository);
-            f = a.getFile();
-        }
-        p = getRelativePath(baseDir, f);
-        if (useRelativePaths) {
-            out.write("\\\n    " + p + ",");
-        } else {
-            out.write("\\\n    ${m2.repo}/" + p + ":");
-        }
-    }
-}
-
-// function to resolve dependencies for the given artifact details using Maven, on the fly
-// =======================================================================================
+/* function to resolve dependencies for the given artifact details using Maven, on the fly */
+/* ======================================================================================= */
 resolveDependencies(groupId, artifactId, version) {
     pomArtifact = artifactFactory.createArtifact(groupId, artifactId, version, "", "jar"); 
     pomProject = mavenProjectBuilder.buildFromRepository(pomArtifact, remoteArtifactRepositories, localRepository);    
@@ -46,8 +21,47 @@ resolveDependencies(groupId, artifactId, version) {
     return artifacts;      
 }
 
-// initialize user-custom properties from build.properties
-// =======================================================
+/* convert a collection of maven artifacts into a collection of files */
+/* ================================================================== */
+getFiles(artifacts) {
+    files = new ArrayList();
+    for (Artifact a : artifacts) {
+        f = a.getFile();
+        if (f == null) {
+            print("*** resolving artifact: " + a);
+            artifactResolver.resolve(a, remoteArtifactRepositories, localRepository);
+            f = a.getFile();
+        }
+        files.add(f);
+    }
+    return files;
+}
+
+/* function to return relative path given base path and the target file */
+/* ==================================================================== */
+getRelativePath(file, basePath) {
+    p = basePath.replace('\\','/');
+    len = p.length() + 1;
+    if (p.endsWith("/")) len--;
+    return file.getPath().substring(len).replace('\\','/');
+}
+
+/* write out path entries for the given bunch of files */
+/* =================================================== */
+writePaths(files, basePath, baseKey) {    
+    for(f : files) {
+        p = getRelativePath(f, basePath);
+        out.write("\\\n    ");
+        if (baseKey == null) {
+	    out.write(p + ",");
+        } else {
+	    out.write(baseKey + "/" + p + ":");
+        }        
+    }
+}
+
+// ======================================================================
+
 is = new FileInputStream("build.properties");
 props = new Properties();
 props.load(is);
@@ -55,9 +69,6 @@ is.close();
 
 watijHome = props.getProperty("watij.home");
 
-
-// main flow
-// =========
 os = new FileOutputStream("build-deps.properties");
 out = new PrintWriter(os);      
 baseDir = localRepository.getBasedir().replace('\\','/');                       
@@ -65,42 +76,46 @@ out.write("# *** generated file - not created by hand! ***\n");
 out.write("m2.repo=" + baseDir + "\n");
 out.write("watij.home=" + watijHome + "\n");
 
-//==============================
+// ===============================
+
 out.write("test.jars=");
 testArtifacts = project.getDependencyArtifacts();
 testArtifacts.addAll(project.getTestArtifacts());
-writePath(testArtifacts, false);
+writePaths(getFiles(testArtifacts), baseDir, "${m2.repo}");
 
 if (watijHome == null) {
     print("*** warning: ${watij.home} is null");
 } else {
-    out.write("\\\n    ${watij.home}/watij.jar:");
     watijLibDir = new File(watijHome + "/lib");
     if (!watijLibDir.exists()) {
         print("*** warning: " + watijLibDir + " does not exist");
     } else {
-        for (File f : watijLibDir.listFiles()) {        
-	    out.write("\\\n    ${watij.home}/" + getRelativePath(watijHome, f) + ":");
-        }
+        watijFiles = new ArrayList();
+    	watijFiles.addAll(Arrays.asList(watijLibDir.listFiles()));
+    	watijFiles.add(new File(watijHome + "/watij.jar"));
+	writePaths(watijFiles, watijHome, "${watij.home}");
     }
 }
 out.write("\n");
 
-//==============================
+// ==============================
+
 out.write("runtime.jars=");
-writePath(project.getArtifacts(), true);
+writePaths(getFiles(project.getArtifacts()), baseDir, null);
 out.write("\n");
 
-//==============================
+// ==============================
+
 out.write("checkstyle.jars=");
-writePath(resolveDependencies("checkstyle", "checkstyle", "4.1"), false);
+writePaths(getFiles(resolveDependencies("checkstyle", "checkstyle", "4.1")), baseDir, "${m2.repo}");
 out.write("\n");
 
-//==============================
+// ==============================
+
 out.write("emma.jars=");            
 emmaDeps = resolveDependencies("emma", "emma", "2.0.5312");
 emmaAntDeps = resolveDependencies("emma", "emma_ant", "2.0.5312");
 emmaDeps.addAll(emmaAntDeps);
-writePath(emmaDeps, false);
+writePaths(getFiles(emmaDeps), baseDir, "${m2.repo}");
 out.write("\n");
 out.close();
