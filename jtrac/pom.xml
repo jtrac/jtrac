@@ -84,7 +84,7 @@
         <dependency>
             <groupId>org.acegisecurity</groupId>
             <artifactId>acegi-security</artifactId>
-            <version>1.0.0-RC2</version>
+            <version>1.0.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>
@@ -106,7 +106,7 @@
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-context</artifactId>
                 </exclusion>                
-            </exclusions>            
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -156,27 +156,12 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring</artifactId>
-            <version>2.0-m4</version>
+            <version>2.0-m5</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-hibernate3</artifactId>
-            <version>2.0-m4</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.transaction</groupId>
-                    <artifactId>jta</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-jdbc</artifactId>
-                </exclusion>                
-            </exclusions>            
-        </dependency>        
-        <dependency>
-            <groupId>org.springframework</groupId>
             <artifactId>spring-mock</artifactId>
-            <version>2.0-m4</version>
+            <version>2.0-m5</version>
             <scope>test</scope>
         </dependency>        
         <dependency>
