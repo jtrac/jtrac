@@ -37,6 +37,7 @@
                 <prop key="/dashboard.htm">urlController</prop>
                 <prop key="/options.htm">urlController</prop>
                 <prop key="/svn_form.htm">urlController</prop>
+                <prop key="/exception.htm">urlController</prop>
                 <!-- =========================================== -->
                 <prop key="/login.htm">defaultController</prop>                
                 <prop key="/logout.htm">defaultController</prop>                

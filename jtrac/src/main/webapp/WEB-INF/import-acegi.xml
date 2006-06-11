@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!-- Acegi security configuration as Spring context -->
+
+<beans>	          
+    
+    <bean id="filterChainProxy" class="org.acegisecurity.util.FilterChainProxy">
+        <property name="filterInvocationDefinitionSource">
+            <value>
+                PATTERN_TYPE_APACHE_ANT
+                /**=httpSessionFilter,authenticationFilter,rememberMeFilter,anonFilter,exceptionTranslationFilter,authorizationFilter
+            </value>
+        </property>
+    </bean>    
+    
+    <bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
+        <property name="providers">
+            <list>
+                <bean class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
+                    <property name="userDetailsService" ref="jtrac"/>
+                    <property name="passwordEncoder" ref="passwordEncoder"/>
+                </bean> 
+                <bean class="org.acegisecurity.providers.anonymous.AnonymousAuthenticationProvider">
+                    <property name="key" value="jtrac-anon"/>
+                </bean>
+                <bean class="org.acegisecurity.providers.rememberme.RememberMeAuthenticationProvider">
+                    <property name="key" value="jtrac-reme"/>
+                </bean>		   
+            </list>
+        </property>
+    </bean>
+  
+    <bean id="authenticationFilter" class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="authenticationFailureUrl" value="/login.htm?error=true"/>
+        <property name="defaultTargetUrl" value="/dashboard.htm"/>
+        <property name="filterProcessesUrl" value="/j_acegi_security_check"/>
+        <property name="rememberMeServices" ref="rememberMeServices"/>
+    </bean>   
+              
+    <bean id="exceptionTranslationFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
+        <property name="authenticationEntryPoint">
+            <bean class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
+                <property name="loginFormUrl" value="/login.htm"/>
+            </bean>      
+        </property>
+    </bean>
+    
+    <bean id="rememberMeFilter" class="org.acegisecurity.ui.rememberme.RememberMeProcessingFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="rememberMeServices" ref="rememberMeServices"/>
+    </bean>
+   
+    <bean id="rememberMeServices" class="org.acegisecurity.ui.rememberme.TokenBasedRememberMeServices">
+        <property name="userDetailsService" ref="jtrac"/>
+        <property name="key" value="jtrac-reme"/>
+    </bean>      
+           
+</beans>
+
+

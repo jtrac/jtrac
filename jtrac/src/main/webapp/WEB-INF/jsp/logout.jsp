@@ -22,7 +22,7 @@
                 <td><br/></td>
             </tr>
             <tr>
-                <td class="info" align="center"><a href="<c:url value='login.htm'/>">Login</a></td>
+                <td class="info" align="center"><a href="<c:url value='/'/>">Login</a></td>
             </tr>
         </table>        
         
