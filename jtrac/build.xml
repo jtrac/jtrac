@@ -216,6 +216,7 @@
             <jvmarg line="-Dcatalina.home=${tomcat.home}"/>
             <jvmarg line="-Dfile.encoding=UTF-8"/>
             <jvmarg line="-Djtrac.home=home"/>
+            <!-- <jvmarg line="-Djcifs.util.loglevel=10"/> -->
         </java>
     </target>
 	

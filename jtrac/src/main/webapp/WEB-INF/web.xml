@@ -57,7 +57,17 @@
         <servlet-name>jtrac</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <load-on-startup>2</load-on-startup>
-    </servlet>  
+    </servlet>
+    
+    <servlet>
+        <servlet-name>casproxy</servlet-name>
+        <servlet-class>edu.yale.its.tp.cas.proxy.ProxyTicketReceptor</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>casproxy</servlet-name>
+        <url-pattern>/casProxy/*</url-pattern>
+    </servlet-mapping>    
     
     <servlet-mapping>
         <servlet-name>jtrac</servlet-name>
