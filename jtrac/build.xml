@@ -180,8 +180,15 @@
     </target>
 	
     <!-- ========================= TOMCAT =========================== -->
-           
-    <target name="tomcat-clean">
+    
+    <target name="tomcat-clean">   
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="${tomcat.home}/work/Catalina/localhost/${war.name}"/>
+            <fileset dir="${tomcat.home}/webapps/${war.name}"/>                            
+        </delete>     
+    </target>
+    
+    <target name="tomcat-clean-all">
         <input message="All tomcat webapps [${tomcat.home}/webapps] will be deleted.  Are you sure?"
             validargs="y,n" addproperty="do.clean"/>
         <condition property="do.abort">
@@ -200,16 +207,7 @@
         <copy todir="${tomcat.home}/webapps/${war.name}">
             <fileset dir="target/${war.name}"/>
         </copy>
-    </target>     
-    
-    <target name="tomcat-reload" depends="war-exploded">
-        <taskdef name="tomcat-reload-task" classname="org.apache.catalina.ant.ReloadTask" 
-        	classpath="${tomcat.home}/server/lib/catalina-ant.jar"/>     	
-        <tomcat-reload-task url="${tomcat.manager.url}" 
-			username="${tomcat.manager.username}" 
-			password="${tomcat.manager.password}" 
-			path="/${war.name}"/>	
-    </target>	
+    </target>    
 	
     <target name="tomcat-start" depends="tomcat-deploy">
         <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
