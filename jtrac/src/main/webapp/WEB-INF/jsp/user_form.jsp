@@ -47,13 +47,15 @@
                 </td>
             </spring:bind>
         </tr>
-        <tr>
-            <td/>
-            <td>
-                A password will be generated and e-mailed by default.<br/>
-                The fields below are optional.
-            </td>
-        </tr>
+        <c:if test="${userForm.user.id == 0}">
+            <tr>
+                <td/>
+                <td>
+                    A password will be generated and e-mailed by default.<br/>
+                    The fields below are optional.
+                </td>
+            </tr>
+        </c:if>
         <tr>
             <td class="label">Password</td>
             <spring:bind path="userForm.user.password">

@@ -148,28 +148,19 @@ public class EmailUtils {
         }              
     }
     
-    public void sendUserPassword(User user, boolean newUser) {
+    public void sendUserPassword(User user, String clearText) {
         logger.debug("attempting to send mail for user password");
         MimeMessage message = sender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
         try {
             helper.setTo(user.getEmail());
-            if (newUser) {
-                helper.setSubject(prefix + " User ID created by Admin");
-            } else {
-                helper.setSubject(prefix + " Password reset by Admin");
-            }
+            helper.setSubject(prefix + " JTrac login details");
             StringBuffer sb = new StringBuffer();
-            sb.append("<p>Hi " + user.getName()+ ",</p>");
-            if (newUser) {
-                sb.append("<p>A User ID has been created for you in JTrac.</p>");
-            } else {
-                sb.append("<p>Your JTrac password has been reset by the Administrator.</p>");
-            }
-            sb.append("<p>Your login details are as follows:</p>");
+            sb.append("<p>Hi " + user.getName()+ ",</p>");      
+            sb.append("<p>Your JTrac login details have been created / updated as follows:</p>");           
             sb.append("<table class='jtrac'>");
             sb.append("<tr><th>Login Name</th><td>" + user.getLoginName() + "</td></tr>");
-            sb.append("<tr><th>Password</th><td>" + user.getPassword() + "</td></tr>");
+            sb.append("<tr><th>Password</th><td>" + clearText + "</td></tr>");
             sb.append("</table>");
             sb.append("<p>Use the link below to log in:</p>");       
             sb.append("<p><a href='" + url + "'>" + url + "</a></p>");

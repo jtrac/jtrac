@@ -219,11 +219,10 @@ public class JtracImpl implements Jtrac {
             // TODO need to avoid duplicating controller code here by using a "UserAlreadyExistsException"
             User temp = loadUser(user.getId());
             user.setPassword(temp.getPassword()); // avoid zapping password
-        }
-        boolean newUser = user.getId() == 0;
+        }        
         dao.storeUser(user);
         if (emailUtils != null && clearText != null) {                
-            emailUtils.sendUserPassword(user, newUser);
+            emailUtils.sendUserPassword(user, clearText);
         }
     }
     
