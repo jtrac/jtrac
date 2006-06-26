@@ -208,11 +208,13 @@ public class JtracImpl implements Jtrac {
     }
   
     public void storeUser(User user) {
-        String password = user.getPassword();
-        if (user.getPassword() != null) {            
-            user.setPassword(encodeClearText(password));
+        String clearText = null;
+        if (user.getPassword() != null) {
+            clearText = user.getPassword();
+            user.setPassword(encodeClearText(clearText));
         } else if (user.getId() == 0) {
-            user.setPassword(generatePassword());         
+            clearText = generatePassword();
+            user.setPassword(encodeClearText(clearText));         
         } else { // existing user and password was not edited            
             // TODO need to avoid duplicating controller code here by using a "UserAlreadyExistsException"
             User temp = loadUser(user.getId());
@@ -220,7 +222,7 @@ public class JtracImpl implements Jtrac {
         }
         boolean newUser = user.getId() == 0;
         dao.storeUser(user);
-        if (emailUtils != null && password != null) {                
+        if (emailUtils != null && clearText != null) {                
             emailUtils.sendUserPassword(user, newUser);
         }
     }

@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Create New User</span>
+<span class="info">Edit User</span>
 
 <p/>
 
