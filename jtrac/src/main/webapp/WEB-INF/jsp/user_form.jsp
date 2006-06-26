@@ -50,7 +50,7 @@
         <tr>
             <td/>
             <td>
-                A password will be generated and e-mailed to the new user by default.<br/>
+                A password will be generated and e-mailed by default.<br/>
                 The fields below are optional.
             </td>
         </tr>

@@ -4,6 +4,10 @@
 
 <p/>
 
+<a href="<c:url value='flow.htm?_flowId=user&userId=${principal.id}'/>">Profile</a>
+
+<p/>
+
 <a href="<c:url value='user_list.htm'/>">Users</a>
 
 <p/>

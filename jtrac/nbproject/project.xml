@@ -10,6 +10,11 @@
             </properties>
             <folders>
                 <source-folder>
+                    <label>webapp</label>
+                    <type>doc_root</type>
+                    <location>src/main/webapp</location>
+                </source-folder>
+                <source-folder>
                     <label>src/main/java</label>
                     <type>java</type>
                     <location>src/main/java</location>
@@ -18,11 +23,6 @@
                     <label>src/test/java</label>
                     <type>java</type>
                     <location>src/test/java</location>
-                </source-folder>
-                <source-folder>
-                    <label>webapp</label>
-                    <type>doc_root</type>
-                    <location>src/main/webapp</location>
                 </source-folder>
             </folders>
             <ide-actions>
@@ -53,14 +53,6 @@
             </ide-actions>
             <view>
                 <items>
-                    <source-folder style="packages">
-                        <label>src</label>
-                        <location>src/main/java</location>
-                    </source-folder>                   
-                    <source-folder style="packages">
-                        <label>test</label>
-                        <location>src/test/java</location>
-                    </source-folder>
                     <source-folder style="tree">
                         <label>webapp</label>
                         <location>src/main/webapp</location>
@@ -68,7 +60,15 @@
                     <source-folder style="tree">
                         <label>resources</label>
                         <location>src/main/resources</location>
-                    </source-folder>                     
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>src/main/java</label>
+                        <location>src/main/java</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>src/test/java</label>
+                        <location>src/test/java</location>
+                    </source-folder>
                     <source-file>
                         <location>build.xml</location>
                     </source-file>
@@ -81,20 +81,21 @@
             <compilation-unit>
                 <package-root>src/main/java</package-root>
                 <classpath mode="compile">${test.jars}</classpath>
+                <built-to>target/classes</built-to>
                 <source-level>1.5</source-level>
             </compilation-unit>
             <compilation-unit>
                 <package-root>src/test/java</package-root>
                 <unit-tests/>
                 <classpath mode="compile">${test.jars}</classpath>
+                <built-to>target/test-classes</built-to>
                 <source-level>1.5</source-level>
             </compilation-unit>
         </java-data>
         <web-data xmlns="http://www.netbeans.org/ns/freeform-project-web/1">
             <web-module>
                 <doc-root>src/main/webapp</doc-root>
-                <classpath>${test.jars}</classpath>
-                <context-path/>
+                <classpath>target/classes;${test.jars}</classpath>
                 <j2ee-spec-level>1.4</j2ee-spec-level>
             </web-module>
         </web-data>
