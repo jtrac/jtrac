@@ -35,7 +35,7 @@ public class FieldFormAction extends AbstractFormAction {
     public FieldFormAction() {
         setFormObjectClass(FieldForm.class);
         setFormObjectName("fieldForm");
-        setBindOnSetupForm(false);
+        // setBindOnSetupForm(false);
         setFormObjectScope(ScopeType.FLOW);
         setValidator(new FieldFormValidator());
     }

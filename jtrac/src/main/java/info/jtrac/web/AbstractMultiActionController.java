@@ -61,8 +61,8 @@ public abstract class AbstractMultiActionController extends MultiActionControlle
     protected FlowExecution getFlowExecution(HttpServletRequest request, HttpServletResponse response) {        
         ExternalContext externalContext = new ServletExternalContext(getServletContext(), request, response);
         FlowExecutionRepository repository = flowExecutionRepositoryFactory.getRepository(externalContext);        
-        FlowExecutionKey flowExecutionKey = flowExecutorArgumentExtractor.extractFlowExecutionKey(externalContext);
-        return repository.getFlowExecution(flowExecutionKey);        
+        String flowExecutionKey = flowExecutorArgumentExtractor.extractFlowExecutionKey(externalContext);
+        return repository.getFlowExecution(repository.parseFlowExecutionKey(flowExecutionKey));        
     }
     
 }

@@ -6,7 +6,7 @@
 <beans>
     
     <!-- change this to "import-acegi.xml" or "import-acegi-cas.xml" as required -->
-    <import resource="import-acegi-cas.xml"/> 
+    <import resource="import-acegi.xml"/> 
     
     <!-- Automatically receives AuthenticationEvent messages -->
     <bean id="loggerListener" class="org.acegisecurity.event.authentication.LoggerListener"/>    

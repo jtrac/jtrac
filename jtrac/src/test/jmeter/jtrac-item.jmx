@@ -42,14 +42,13 @@
       </ThreadGroup>
       <hashTree>
         <ConfigTestElement>
-          <stringProp name="HTTPSampler.path"></stringProp>
           <stringProp name="TestElement.gui_class">org.apache.jmeter.protocol.http.config.gui.HttpDefaultsGui</stringProp>
+          <stringProp name="HTTPSampler.path"></stringProp>
           <stringProp name="TestElement.test_class">org.apache.jmeter.config.ConfigTestElement</stringProp>
           <stringProp name="TestElement.name">HTTP Request Defaults</stringProp>
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <boolProp name="TestElement.enabled">true</boolProp>
-          <stringProp name="HTTPSampler.port">8080</stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="org.apache.jmeter.config.Arguments">
             <stringProp name="TestElement.gui_class">org.apache.jmeter.protocol.http.gui.HTTPArgumentsPanel</stringProp>
             <stringProp name="TestElement.test_class">org.apache.jmeter.config.Arguments</stringProp>
@@ -57,6 +56,7 @@
             <stringProp name="TestElement.name">User Defined Variables</stringProp>
             <boolProp name="TestElement.enabled">true</boolProp>
           </elementProp>
+          <stringProp name="HTTPSampler.port">8080</stringProp>
         </ConfigTestElement>
         <hashTree/>
         <CookieManager>
@@ -143,8 +143,8 @@
             <stringProp name="TestElement.name">regex flowExecutionKey</stringProp>
             <boolProp name="TestElement.enabled">true</boolProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-            <stringProp name="RegexExtractor.match_number"></stringProp>
             <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.match_number"></stringProp>
             <stringProp name="RegexExtractor.refname">flowExecutionKey</stringProp>
           </RegexExtractor>
           <hashTree/>
@@ -205,8 +205,8 @@
             <stringProp name="TestElement.name">regex flowExecutionKey</stringProp>
             <boolProp name="TestElement.enabled">true</boolProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-            <stringProp name="RegexExtractor.match_number"></stringProp>
             <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.match_number"></stringProp>
             <stringProp name="RegexExtractor.refname">flowExecutionKey</stringProp>
           </RegexExtractor>
           <hashTree/>
@@ -260,8 +260,8 @@
             <stringProp name="TestElement.name">regex flowExecutionKey</stringProp>
             <boolProp name="TestElement.enabled">true</boolProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-            <stringProp name="RegexExtractor.match_number"></stringProp>
             <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.match_number"></stringProp>
             <stringProp name="RegexExtractor.refname">flowExecutionKey</stringProp>
           </RegexExtractor>
           <hashTree/>
@@ -315,8 +315,8 @@
             <stringProp name="TestElement.name">regex flowExecutionKey</stringProp>
             <boolProp name="TestElement.enabled">true</boolProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-            <stringProp name="RegexExtractor.match_number"></stringProp>
             <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.match_number"></stringProp>
             <stringProp name="RegexExtractor.refname">flowExecutionKey</stringProp>
           </RegexExtractor>
           <hashTree/>
@@ -378,23 +378,23 @@
         <hashTree/>
         <LoopController>
           <stringProp name="TestElement.gui_class">org.apache.jmeter.control.gui.LoopControlPanel</stringProp>
-          <stringProp name="TestElement.test_class">org.apache.jmeter.control.LoopController</stringProp>
           <stringProp name="LoopController.loops">100</stringProp>
+          <stringProp name="TestElement.test_class">org.apache.jmeter.control.LoopController</stringProp>
           <stringProp name="TestElement.name">Loop Controller</stringProp>
           <boolProp name="TestElement.enabled">true</boolProp>
           <boolProp name="LoopController.continue_forever">true</boolProp>
         </LoopController>
         <hashTree>
           <CounterConfig>
-            <stringProp name="CounterConfig.start">1</stringProp>
             <stringProp name="TestElement.gui_class">org.apache.jmeter.modifiers.gui.CounterConfigGui</stringProp>
+            <stringProp name="CounterConfig.start">1</stringProp>
             <stringProp name="CounterConfig.incr">1</stringProp>
-            <stringProp name="CounterConfig.name">count</stringProp>
             <stringProp name="TestElement.test_class">org.apache.jmeter.modifiers.CounterConfig</stringProp>
+            <stringProp name="CounterConfig.name">count</stringProp>
             <stringProp name="TestElement.name">Counter</stringProp>
             <boolProp name="CounterConfig.per_user">true</boolProp>
-            <stringProp name="CounterConfig.end">100</stringProp>
             <boolProp name="TestElement.enabled">true</boolProp>
+            <stringProp name="CounterConfig.end">100</stringProp>
           </CounterConfig>
           <hashTree/>
           <HTTPSampler>
@@ -431,8 +431,8 @@
               <stringProp name="TestElement.name">regex flowExecutionKey</stringProp>
               <boolProp name="TestElement.enabled">true</boolProp>
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-              <stringProp name="RegexExtractor.match_number"></stringProp>
               <stringProp name="RegexExtractor.template">$1$</stringProp>
+              <stringProp name="RegexExtractor.match_number"></stringProp>
               <stringProp name="RegexExtractor.refname">flowExecutionKey</stringProp>
             </RegexExtractor>
             <hashTree/>
@@ -501,7 +501,7 @@
             <stringProp name="TestElement.name">item_form_submit</stringProp>
             <stringProp name="HTTPSampler.monitor">false</stringProp>
             <stringProp name="HTTPSampler.domain"></stringProp>
-            <stringProp name="HTTPSampler.FILE_NAME">E:\peter\jtrac-trunk\jtrac\src\test\jmeter\emptyfile.txt</stringProp>
+            <stringProp name="HTTPSampler.FILE_NAME">C:\peter\jtrac-trunk\jtrac\src\test\jmeter\emptyfile.txt</stringProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           </HTTPSampler>
           <hashTree/>
