@@ -24,6 +24,8 @@ import java.io.Serializable;
 
 import static info.jtrac.Constants.*;
 import org.acegisecurity.context.SecurityContextHolder;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.validation.DataBinder;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -42,6 +44,11 @@ public class UserFormAction extends AbstractFormAction {
         setFormObjectScope(ScopeType.REQUEST);
         setValidator(new UserFormValidator());
     }    
+    
+    @Override
+    protected void initBinder(RequestContext request, DataBinder binder) {
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+    }     
     
     @Override
     public Object loadFormObject(RequestContext context) {

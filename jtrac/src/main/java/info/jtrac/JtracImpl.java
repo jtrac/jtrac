@@ -207,24 +207,20 @@ public class JtracImpl implements Jtrac {
         return users.get(0);
     }
   
-    public void storeUser(User user) {
-        boolean newUser = false;
+    public void storeUser(User user) {        
         String password = user.getPassword();
         if (password == null) {
             if (user.getId() == 0) {
-                newUser = true;
                 user.setPassword(generatePassword());
             }
-        } else {
+        } else {            
             user.setPassword(encodeClearText(password));
-        }                 
+        }
+        boolean newUser = user.getId() == 0;
         dao.storeUser(user);
         if (emailUtils != null) {
-            if (password != null) {
-                emailUtils.sendUserPassword(user, false);
-            }
-            if (newUser) {
-                emailUtils.sendUserPassword(user, true);
+            if (password != null) {                
+                emailUtils.sendUserPassword(user, newUser);
             }
         }
     }
