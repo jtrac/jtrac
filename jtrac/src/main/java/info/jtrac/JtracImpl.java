@@ -207,21 +207,21 @@ public class JtracImpl implements Jtrac {
         return users.get(0);
     }
   
-    public void storeUser(User user) {        
+    public void storeUser(User user) {
         String password = user.getPassword();
-        if (password == null) {
-            if (user.getId() == 0) {
-                user.setPassword(generatePassword());
-            }
-        } else {            
+        if (user.getPassword() != null) {            
             user.setPassword(encodeClearText(password));
+        } else if (user.getId() == 0) {
+            user.setPassword(generatePassword());         
+        } else { // existing user and password was not edited            
+            // TODO need to avoid duplicating controller code here by using a "UserAlreadyExistsException"
+            User temp = loadUser(user.getId());
+            user.setPassword(temp.getPassword()); // avoid zapping password
         }
         boolean newUser = user.getId() == 0;
         dao.storeUser(user);
-        if (emailUtils != null) {
-            if (password != null) {                
-                emailUtils.sendUserPassword(user, newUser);
-            }
+        if (emailUtils != null && password != null) {                
+            emailUtils.sendUserPassword(user, newUser);
         }
     }
     

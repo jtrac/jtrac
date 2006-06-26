@@ -23,6 +23,7 @@ import info.jtrac.util.ValidationUtils;
 import java.io.Serializable;
 
 import static info.jtrac.Constants.*;
+import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.validation.DataBinder;
@@ -104,7 +105,7 @@ public class UserFormAction extends AbstractFormAction {
             UserForm userForm = (UserForm) o;
             ValidationUtils.rejectIfEmpty(errors, "user.loginName", "user.name", "user.email");
             if (!ValidationUtils.isAllLowerCase(userForm.getUser().getLoginName())) {
-                errors.rejectValue("loginName", "error.userForm.loginName.badchars", 
+                errors.rejectValue("user.loginName", "error.userForm.user.loginName.badchars", 
                         "Only lower case letters and numeric characters allowed.");
             }
             String password = userForm.getUser().getPassword();
@@ -116,6 +117,22 @@ public class UserFormAction extends AbstractFormAction {
         }        
     }   
     
+    /**
+     * routine to refresh the security context only if user == principal
+     * required to do the following
+     * - authorization changes to take effect without having to logoff and re-login
+     * - cosmetic changes (such as change to name) to take effect
+     */
+    private void refreshSecurityContextIfPrincipal(User user) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User u = (User) authentication.getPrincipal();
+        if (u.getId() == user.getId()) {
+            // forces the Acegi Security Context to reload
+            logger.debug("user matches principal, refreshing security context");
+            authentication.setAuthenticated(false);             
+        }
+    }
+    
     public Event userFormHandler(RequestContext context) throws Exception {
         UserForm userForm = (UserForm) getFormObject(context);
         User user = userForm.getUser();
@@ -126,6 +143,7 @@ public class UserFormAction extends AbstractFormAction {
             return error();
         }       
         jtrac.storeUser(user);
+        refreshSecurityContextIfPrincipal(user);
         return success();
     }
     
@@ -157,8 +175,7 @@ public class UserFormAction extends AbstractFormAction {
         Space space = (Space) context.getFlowScope().get("space");
         String roleKey = ValidationUtils.getParameter(context, "roleKey");
         jtrac.allocate(user, space, roleKey);
-        // effectively forces the Acegi Security Context to reload
-        SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);  
+        refreshSecurityContextIfPrincipal(user);
         return success();
     }    
 
@@ -168,8 +185,7 @@ public class UserFormAction extends AbstractFormAction {
         Space space = jtrac.loadSpace(id);
         User user = (User) context.getFlowScope().get("user");        
         jtrac.deallocate(user, space);
-        // effectively forces the Acegi Security Context to reload
-        SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
+        refreshSecurityContextIfPrincipal(user);
         return success();
     }     
     
