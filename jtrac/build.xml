@@ -111,6 +111,7 @@
                     <path path="target/test-classes"/>
                     <path path="${test.jars}"/>                
                     <path path="${emma.jars}"/>
+                    <path path="src/main/webapp/WEB-INF"/> <!-- for log4j.properties -->
                 </classpath>
                 <jvmarg value="-Demma.coverage.out.file=${basedir}/target/coverage.emma"/>
                 <jvmarg value="-Demma.coverage.out.merge=true"/>
