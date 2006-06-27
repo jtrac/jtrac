@@ -24,7 +24,7 @@ function setDeallocate(userId) {
             </c:choose>            
         </c:set>    
 
-        <tr>
+        <tr ${rowClass}>
             <td>${userRole.user.loginName}</td>
             <td>${userRole.user.name}</td>
             <td>${userRole.roleKey}</td>

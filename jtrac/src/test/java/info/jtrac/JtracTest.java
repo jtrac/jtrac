@@ -6,10 +6,13 @@ import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.acegisecurity.GrantedAuthority;
+import org.acegisecurity.userdetails.UserDetails;
 import org.springframework.test.AbstractTransactionalDataSourceSpringContextTests;
 
 /**
@@ -126,6 +129,36 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         jtrac.storeConfig(config);
         String value = jtrac.loadConfig("testParam");
         assertEquals("testValue", value);
+    }
+    
+    public void testStoreAndLoadUserWithAdminRole() {
+        User user = new User();
+        user.setLoginName("test");
+        user.addSpaceRole(null, "ROLE_ADMIN");
+        jtrac.storeUser(user);
+        
+        UserDetails ud = jtrac.loadUserByUsername("test");
+        
+        Set<String> set = new HashSet<String>();
+        for (GrantedAuthority ga : ud.getAuthorities()) {
+            set.add(ga.getAuthority());
+        }
+        
+        assertEquals(2, set.size());
+        assertTrue(set.contains("ROLE_USER"));
+        assertTrue(set.contains("ROLE_ADMIN"));
+        
+    }
+    
+    public void testDefaultAdminUserHasAdminRole() {
+        UserDetails ud = jtrac.loadUserByUsername("admin");
+        Set<String> set = new HashSet<String>();
+        for (GrantedAuthority ga : ud.getAuthorities()) {
+            set.add(ga.getAuthority());
+        }        
+        assertEquals(2, set.size());
+        assertTrue(set.contains("ROLE_USER"));
+        assertTrue(set.contains("ROLE_ADMIN"));        
     }
     
 }

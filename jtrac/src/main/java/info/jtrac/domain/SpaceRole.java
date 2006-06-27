@@ -88,6 +88,7 @@ public class SpaceRole implements GrantedAuthority, Serializable {
         sb.append("id [").append(id);
         sb.append("]; space [").append(space);
         sb.append("]; roleKey [").append(roleKey);
+        sb.append("]; authority [").append(getAuthority());
         sb.append("]");
         return sb.toString();
     }

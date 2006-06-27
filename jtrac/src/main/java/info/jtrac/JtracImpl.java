@@ -31,6 +31,7 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import info.jtrac.util.EmailUtils;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -192,7 +193,9 @@ public class JtracImpl implements Jtrac {
             throw new UsernameNotFoundException("User not found for '" + loginName + "'");
         }
         logger.debug("acegi: loadUserByUserName success for '" + loginName + "'");
-        return users.get(0);
+        User user = users.get(0);
+        logger.debug("spaceRoles: " + user.getSpaceRoles());
+        return user;
     }
     
     public User loadUser(int id) {
@@ -207,20 +210,32 @@ public class JtracImpl implements Jtrac {
         return users.get(0);
     }
   
-    public void storeUser(User user) {
+    public void storeUser(User user) {        
         String clearText = null;
-        if (user.getPassword() != null) {
-            clearText = user.getPassword();
-            user.setPassword(encodeClearText(clearText));
-        } else if (user.getId() == 0) {
-            clearText = generatePassword();
-            user.setPassword(encodeClearText(clearText));         
-        } else { // existing user and password was not edited            
-            // TODO need to avoid duplicating controller code here by using a "UserAlreadyExistsException"
+        if (user.getId() == 0) {
+            if (user.getPassword() == null) {
+                clearText = generatePassword();
+                user.setPassword(encodeClearText(clearText));
+            } else {
+                // password was provided by Admin.  Maybe e-mail is not available
+                // we don't set clearText, so no email will be sent
+                user.setPassword(encodeClearText(user.getPassword()));
+            }            
+            dao.storeUser(user);
+        } else {
+            // the User object passed in may be incomplete, just bound from an HTML form
+            // load actual user from database, which retains for e.g. the spaceRoles
             User temp = loadUser(user.getId());
-            user.setPassword(temp.getPassword()); // avoid zapping password
-        }        
-        dao.storeUser(user);
+            // apply edits from the GUI
+            temp.setEmail(user.getEmail());        
+            temp.setLoginName(user.getLoginName());
+            temp.setName(user.getName());
+            if (user.getPassword() != null) {
+                clearText = user.getPassword();
+                temp.setPassword(encodeClearText(clearText));                
+            }
+            dao.storeUser(temp);
+        }
         if (emailUtils != null && clearText != null) {                
             emailUtils.sendUserPassword(user, clearText);
         }

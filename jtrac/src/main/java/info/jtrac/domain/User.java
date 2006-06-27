@@ -113,7 +113,7 @@ public class User implements UserDetails, Serializable {
     public GrantedAuthority[] getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         authorities.add(new SpaceRole(null, "ROLE_USER"));
-        for (SpaceRole sr : spaceRoles) {
+        for (SpaceRole sr : spaceRoles) {            
             authorities.add(sr);
         }
         return authorities.toArray(new GrantedAuthority[authorities.size()]);

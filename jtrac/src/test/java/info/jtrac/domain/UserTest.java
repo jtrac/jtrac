@@ -1,11 +1,9 @@
 package info.jtrac.domain;
 
 
-import info.jtrac.domain.Space;
-import info.jtrac.domain.User;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -23,12 +21,21 @@ public class UserTest extends TestCase {
         
         u.addSpaceRole(s1, "ROLE_ONE-ONE");
         u.addSpaceRole(s1, "ROLE_ONE-TWO");
+        u.addSpaceRole(null, "ROLE_ADMIN");
         
         GrantedAuthority[] gas = u.getAuthorities();
-        assertEquals(3, gas.length);
-        assertEquals("ROLE_USER", gas[0].getAuthority());
-        assertEquals("ROLE_ONE-ONE_SPACE-ONE", gas[1].getAuthority());
-        assertEquals("ROLE_ONE-TWO_SPACE-ONE", gas[2].getAuthority());
+        
+        Set<String> set = new HashSet<String>();
+        for(GrantedAuthority ga : gas) {
+            set.add(ga.getAuthority());
+        }        
+        
+        assertEquals(4, gas.length);
+        
+        assertTrue(set.contains("ROLE_USER"));
+        assertTrue(set.contains("ROLE_ONE-ONE_SPACE-ONE"));
+        assertTrue(set.contains("ROLE_ONE-TWO_SPACE-ONE"));
+        assertTrue(set.contains("ROLE_ADMIN"));
      
     }
     

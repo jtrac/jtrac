@@ -8,24 +8,26 @@
     <c:set var="count" value="0"/>
     
     <c:forEach items="${principal.spaceRoles}" var="spaceRole">
-        <tr><td>&nbsp;</td></tr>
-        <tr class="nav-table">
-            <td>${spaceRole.space.prefixCode}</td>
-            <td>${spaceRole.roleKey}</td>
-            <td>
-                <a href="<c:url value='flow.htm'>
-                    <c:param name='_flowId' value='item'/>
-                    <c:param name='spaceId' value='${spaceRole.space.id}'/>
-                    </c:url>">NEW</a>                
-            </td>
-            <td>
-                <a href="<c:url value='flow.htm'>
-                    <c:param name='_flowId' value='itemSearch'/>
-                    <c:param name='spaceId' value='${spaceRole.space.id}'/>
-                    </c:url>">SEARCH</a>               
-            </td>
-        </tr>
-        <c:set var="count" value="${count + 1}"/>
+        <c:if test="${!empty spaceRole.space}">
+            <tr><td>&nbsp;</td></tr>
+            <tr class="nav-table">
+                <td>${spaceRole.space.prefixCode}</td>
+                <td>${spaceRole.roleKey}</td>
+                <td>
+                    <a href="<c:url value='flow.htm'>
+                        <c:param name='_flowId' value='item'/>
+                        <c:param name='spaceId' value='${spaceRole.space.id}'/>
+                        </c:url>">NEW</a>                
+                </td>
+                <td>
+                    <a href="<c:url value='flow.htm'>
+                        <c:param name='_flowId' value='itemSearch'/>
+                        <c:param name='spaceId' value='${spaceRole.space.id}'/>
+                        </c:url>">SEARCH</a>               
+                </td>
+            </tr>
+            <c:set var="count" value="${count + 1}"/>
+        </c:if>
     </c:forEach>
     
 </table>    
