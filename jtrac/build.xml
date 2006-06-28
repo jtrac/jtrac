@@ -44,11 +44,12 @@
         </copy>
     </target>  
     
-    <target name="set-production-flag">
+    <target name="set-production-flag">        
         <property name="production" value="true"/>
     </target>    
     
-    <target name="war" depends="clean, set-production-flag, war-exploded">
+    <!-- TODO call "set-production-flag" after clean for version 2.0 final onwards -->
+    <target name="war" depends="clean, war-exploded">
         <copy todir="target/${war.name}/WEB-INF" file="etc/log4j.properties" overwrite="true"/>
         <zip destfile="target/${war.name}.war" basedir="target/${war.name}"/>
     </target>    

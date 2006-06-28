@@ -75,7 +75,7 @@ public final class ItemUtils {
         }
 
         sb.append("</table>");
-        sb.append("<table class='jtrac'><tr><td><b>History</b></td></tr></table>");
+        sb.append("&nbsp;<b>History</b>");
         sb.append("<table width='100%' class='jtrac'>");
         sb.append("<tr>");
         sb.append("  <th>Logged By</th><th>Status</th><th>Assigned To</th><th>Comment</th><th>Time Stamp</th>");

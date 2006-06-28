@@ -71,7 +71,7 @@ public class User implements UserDetails, Serializable {
     private List<String> getRoleKeys(Space space) {
         List<String> roleKeys = new ArrayList<String>();
         for(SpaceRole sr : spaceRoles) {
-            if (sr.getSpace().equals(space)) {
+            if (sr.getSpace() != null && sr.getSpace().equals(space)) {
                 roleKeys.add(sr.getRoleKey());
             }
         }
