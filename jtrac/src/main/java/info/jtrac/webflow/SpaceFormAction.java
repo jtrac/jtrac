@@ -82,6 +82,10 @@ public class SpaceFormAction extends AbstractFormAction {
                 errors.rejectValue("prefixCode", "error.space.prefixCode.tooshort",
                         "Length should be at least 3 characters.");
             }
+            if (prefixCode.length() > 10) {
+                errors.rejectValue("prefixCode", "error.space.prefixCode.toolong",
+                        "Length should be less than 10 characters.");
+            }            
             if (!ValidationUtils.isAllUpperCase(prefixCode)) {
                 errors.rejectValue("prefixCode", "error.space.prefixCode.badchars",
                         "Only capital letters and numeric characters allowed.");

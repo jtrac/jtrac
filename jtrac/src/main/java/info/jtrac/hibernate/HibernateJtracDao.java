@@ -37,6 +37,7 @@ import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.jdbc.BadSqlGrammarException;
@@ -117,7 +118,7 @@ public class HibernateJtracDao
     }
     
     public List<Space> findAllSpaces() {
-        return getHibernateTemplate().loadAll(Space.class);
+        return getHibernateTemplate().find("from Space space order by space.prefixCode");
     }
     
     public void storeUser(User user) {
@@ -129,7 +130,7 @@ public class HibernateJtracDao
     }
     
     public List<User> findAllUsers() {
-        return getHibernateTemplate().loadAll(User.class);
+        return getHibernateTemplate().find("from User user order by user.name");
     }
     
     public List<User> findUsersByLoginName(final String loginName) {
@@ -156,7 +157,7 @@ public class HibernateJtracDao
     
     public List<UserRole> findUserRolesForSpace(int spaceId) {
         List<Object[]> rawList = getHibernateTemplate().find("select user, spaceRole.roleKey from User user" + 
-                " join user.spaceRoles as spaceRole where spaceRole.space.id = ?", spaceId);
+                " join user.spaceRoles as spaceRole where spaceRole.space.id = ? order by user.name", spaceId);
         List<UserRole> userRoles = new ArrayList<UserRole>();
         for (Object[] userRole : rawList) {
             User user = (User) userRole[0];
@@ -168,12 +169,12 @@ public class HibernateJtracDao
     
     public List<User> findUsersForSpace(int spaceId) {
         return getHibernateTemplate().find("select user from User user join user.spaceRoles as spaceRole" + 
-                " where spaceRole.space.id = ?", spaceId);
+                " where spaceRole.space.id = ? order by user.name", spaceId);
     }     
     
     public List<User> findUsersForSpaceSet(Collection<Space> spaces) {
         Criteria criteria = getSession().createCriteria(User.class);        
-        criteria.createCriteria("spaceRoles").add(Restrictions.in("space", spaces));
+        criteria.createCriteria("spaceRoles").add(Restrictions.in("space", spaces)).addOrder(Order.asc("name"));
         return criteria.list();
     }      
     
