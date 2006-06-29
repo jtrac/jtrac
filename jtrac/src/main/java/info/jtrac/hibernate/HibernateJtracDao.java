@@ -109,8 +109,17 @@ public class HibernateJtracDao
         return (Space) getHibernateTemplate().load(Space.class, id);
     }
     
-    public void storeSpaceSequence(SpaceSequence spaceSequence) {
+    public SpaceSequence loadSpaceSequence(int id) {
+        // note the use of get() not load()
+        // see JtracImpl.storeItem() for complete picture
+        return (SpaceSequence) getHibernateTemplate().get(SpaceSequence.class, id);
+    }    
+    
+    public void storeSpaceSequence(SpaceSequence spaceSequence) {        
         getHibernateTemplate().merge(spaceSequence);
+        // very important, needed to guarantee unique sequenceNum on item insert !
+        // see JtracImpl.storeItem() for complete picture
+        getHibernateTemplate().flush();
     }
     
     public List<Space> findSpacesByPrefixCode(String prefixCode) {

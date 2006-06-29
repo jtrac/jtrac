@@ -51,6 +51,7 @@ public interface JtracDao {
     List<Space> findAllSpaces();
     //===========================================
     void storeSpaceSequence(SpaceSequence spaceSequence);
+    SpaceSequence loadSpaceSequence(int id);
     //===========================================
     void storeUser(User user);
     User loadUser(int id);

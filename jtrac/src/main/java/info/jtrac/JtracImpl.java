@@ -123,7 +123,11 @@ public class JtracImpl implements Jtrac {
         }
         history.setTimeStamp(now);
         item.add(history);
-        SpaceSequence spaceSequence = item.getSpace().getSpaceSequence();
+        // SpaceSequence spaceSequence = item.getSpace().getSpaceSequence();
+        // very important - have to do this to guarantee unique sequenceNum !
+        // see HibernateJtracDao.loadSpaceSequence() and storeSpaceSequence() for complete picture
+        int ssId = item.getSpace().getSpaceSequence().getId();
+        SpaceSequence spaceSequence = dao.loadSpaceSequence(ssId);  //uses hibernate.get() not load()
         item.setSequenceNum(spaceSequence.next());
         dao.storeSpaceSequence(spaceSequence);
         dao.storeItem(item);
