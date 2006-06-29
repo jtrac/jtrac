@@ -29,6 +29,21 @@
         </init-param>
     </filter>
 
+    <!-- see http://wiki.apache.org/tomcat/Tomcat/UTF-8 -->
+    <filter>
+      <filter-name>Charset Filter</filter-name>
+      <filter-class>info.jtrac.util.CharsetFilter</filter-class>
+      <init-param>
+          <param-name>requestEncoding</param-name>
+          <param-value>UTF-8</param-value>
+      </init-param>
+    </filter>
+
+    <filter-mapping>
+      <filter-name>Charset Filter</filter-name>
+      <url-pattern>/*</url-pattern>
+    </filter-mapping>    
+    
     <filter-mapping>
         <filter-name>acegiSecurityFilter</filter-name>
         <url-pattern>/*</url-pattern>
