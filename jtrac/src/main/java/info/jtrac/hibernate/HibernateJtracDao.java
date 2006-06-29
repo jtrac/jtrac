@@ -183,7 +183,7 @@ public class HibernateJtracDao
     
     public List<User> findUsersForSpaceSet(Collection<Space> spaces) {
         Criteria criteria = getSession().createCriteria(User.class);        
-        criteria.createCriteria("spaceRoles").add(Restrictions.in("space", spaces)).addOrder(Order.asc("name"));
+        criteria.createCriteria("spaceRoles").add(Restrictions.in("space", spaces));
         return criteria.list();
     }      
     
