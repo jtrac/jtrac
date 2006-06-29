@@ -47,7 +47,7 @@ public final class ItemUtils {
         sb.append("  <td colspan='5'>" + item.getRefId() + "</td>");
         sb.append("</tr>");
         sb.append("<tr>");
-        sb.append("  <td class='label'>Status</td>");
+        sb.append("  <td class='label' width='20%'>Status</td>");
         sb.append("  <td>" + item.getStatusValue() + "</td>");
         sb.append("  <td class='label'>Logged By</td>");
         sb.append("  <td>" + item.getLoggedBy().getName() + "</td>");
