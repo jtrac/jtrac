@@ -1,5 +1,5 @@
 <%@ page session="true" contentType="text/html; charset=UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="/WEB-INF/tld/c.tld" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="authz" uri="http://acegisecurity.org/authz" %>
 <%@ taglib prefix="jtrac" uri="/WEB-INF/tld/jtrac.tld" %>
