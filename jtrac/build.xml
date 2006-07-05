@@ -90,14 +90,15 @@
     <target name="test-single" depends="compile-test">
     	<!-- files property expected from netbeans -->
         <fail unless="files">no files selected!</fail>      
-        <test-macro files="${files}" emmaEnabled="true"/>      
+        <test-macro includes="${files}" emmaEnabled="true" excludes=""/>      
     </target>    
     
     <taskdef resource="emma_ant.properties" classpath="${emma.jars}"/>
     
     <macrodef name="test-macro">
-        <attribute name="files" default="**/*Test.java"/>
+        <attribute name="includes" default="**/*Test.java"/>
         <attribute name="emmaEnabled" default="false"/>
+        <attribute name="excludes" default="**/watij/**/*"/>
         <sequential>
             <mkdir dir="target/reports"/>
             <emma enabled="@{emmaEnabled}">                    
@@ -119,7 +120,7 @@
                 <formatter type="brief" usefile="false"/>
                 <formatter type="xml"/>            
                 <batchtest todir="target/reports">
-                    <fileset dir="src/test/java" includes="@{files}"/>
+                    <fileset dir="src/test/java" includes="@{includes}" excludes="@{excludes}"/>
                 </batchtest>
             </junit>
             <emma enabled="@{emmaEnabled}">
