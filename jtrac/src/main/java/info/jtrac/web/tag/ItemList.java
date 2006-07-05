@@ -113,15 +113,28 @@ public class ItemList extends SimpleTagSupport {
             out.println("</tr>");
             int count = 1;
             String itemUrl = flowUrl + "&_eventId=view&itemId=";
+            String itemId = request.getParameter("itemId");
+            int selected = 0;
+            if (itemId != null) {
+                selected = Integer.parseInt(itemId);
+            }
             for(AbstractItem item : items) {
-                out.println("<tr" + ( count % 2 == 0 ? " class='alt'" : "" ) + ">");
+                String rowClass = "";
+                String bookmark = "";
+                if (selected != 0 && item.getId() == selected) {
+                    rowClass = " class='selected'";
+                    bookmark = "<a name='goto'/>";
+                } else if (count % 2 == 0) {
+                    rowClass = " class='alt'";
+                }
+                out.println("<tr" + rowClass + ">");
                 String href = null;
                 if (showHistory) {
                     href = response.encodeURL(itemUrl + item.getParent().getId());
                 } else {
                     href = response.encodeURL(itemUrl + item.getId());
                 }                
-                out.println("  <td><a href='" + href + "'>" + item.getRefId() + "</a></td>");
+                out.println("  <td>" + bookmark + "<a href='" + href + "'>" + item.getRefId() + "</a></td>");
                 out.println("  <td>" + ( item.getSummary() == null ? "" : item.getSummary() ) + "</td>");
                 
                 if (showDetail) {

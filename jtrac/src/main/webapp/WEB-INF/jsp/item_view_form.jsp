@@ -2,7 +2,7 @@
 
 <p>
     <c:if test="${!empty calledBySearch}">
-        <a href="<c:url value='flow.htm?_flowExecutionKey=${flowExecutionKey}&_eventId=back'/>">(back)</a>
+        <a href="<c:url value='flow.htm?_flowExecutionKey=${flowExecutionKey}&_eventId=back&itemId=${item.id}#goto'/>">(back)</a>
     </c:if>
 </p>
 
