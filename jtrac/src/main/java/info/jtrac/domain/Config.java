@@ -26,7 +26,7 @@ import java.util.Set;
  */
 public class Config implements Serializable {
     
-    private String param;
+    private String param;  // someone reported that "key" is a reserved word in MySQL
     private String value;
 
     private static final Set<String> params;

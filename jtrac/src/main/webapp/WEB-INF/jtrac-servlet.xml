@@ -34,13 +34,13 @@
             <props>
                 <prop key="/flow.htm">flowController</prop>
                 <!-- =========================================== -->
-                <prop key="/dashboard.htm">urlController</prop>
                 <prop key="/options.htm">urlController</prop>
                 <prop key="/svn_form.htm">urlController</prop>
                 <prop key="/exception.htm">urlController</prop>
                 <!-- =========================================== -->
                 <prop key="/login.htm">defaultController</prop>                
-                <prop key="/logout.htm">defaultController</prop>                
+                <prop key="/logout.htm">defaultController</prop>
+                <prop key="/dashboard.htm">defaultController</prop>
                 <prop key="/user_list.htm">defaultController</prop>
                 <prop key="/space_list.htm">defaultController</prop>
                 <prop key="/config_list.htm">defaultController</prop>
@@ -67,6 +67,7 @@
                     <props>
                         <prop key="/login.htm">loginHandler</prop>
                         <prop key="/logout.htm">logoutHandler</prop>
+                        <prop key="/dashboard.htm">dashboardHandler</prop>
                         <prop key="/user_list.htm">userListHandler</prop>
                         <prop key="/space_list.htm">spaceListHandler</prop>
                         <prop key="/config_list.htm">configListHandler</prop>

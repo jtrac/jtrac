@@ -29,7 +29,7 @@
                 <td><a href="<c:url value='flow.htm?_flowId=itemSearch&spaceId=${space.id}'/>">SEARCH</a></td>                
             </c:if>
             <c:if test="${empty space && principal.spaceCount > 1}">
-                <td><a href="<c:url value='flow.htm?_flowId=itemSearch'/>">SEARCH ALL</a>                
+                <td><a href="<c:url value='flow.htm?_flowId=itemSearch'/>">SEARCH ALL</a></td>               
             </c:if>            
         </tr>
     </table>

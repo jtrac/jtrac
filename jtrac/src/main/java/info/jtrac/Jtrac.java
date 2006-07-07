@@ -18,6 +18,7 @@ package info.jtrac;
 
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Config;
+import info.jtrac.domain.Counts;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
@@ -53,6 +54,8 @@ public interface Jtrac extends UserDetailsService {
     List<User> findUnallocatedUsersForSpace(int spaceId);
     void allocate(User user, Space space, String roleKey);
     void deallocate(User user, Space space);
+    //========================================================
+    Counts loadCountsForUser(int userId);
     //========================================================
     void storeSpace(Space space);
     Space loadSpace(int id);

@@ -2,10 +2,12 @@ package info.jtrac;
 
 import info.jtrac.domain.Config;
 import info.jtrac.domain.Field;
+import info.jtrac.domain.Item;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
+import info.jtrac.domain.Counts;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -23,38 +25,38 @@ import org.springframework.test.AbstractTransactionalDataSourceSpringContextTest
  * an issue.
  */
 public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests {
-
+    
     private Jtrac jtrac;
     private JtracDao dao;
-
+    
     // magically autowired by Spring JUnit helper / extension
     public void setDao(JtracDao dao) {
         this.dao = dao;
     }
-
+    
     //  magically autowired by Spring JUnit helper / extension
     public void setJtrac(Jtrac jtrac) {
         this.jtrac = jtrac;
     }
-
+    
     protected String[] getConfigLocations() {
         System.setProperty("jtrac.home", "target/home");
         return new String[] {
             "file:src/main/webapp/WEB-INF/applicationContext.xml" };
     }
-
+    
     //==============================================================================
-
+    
     public void testGeneratedPasswordIsAlwaysDifferent() {
         String p1 = jtrac.generatePassword();
         String p2 = jtrac.generatePassword();
         assertTrue(!p1.equals(p2));
     }
-
+    
     public void testEncodeClearTextPassword() {
         assertEquals("21232f297a57a5a743894a0e4a801fc3", jtrac.encodeClearText("admin"));
     }
-
+    
     private Metadata getMetadata() {
         Metadata metadata = new Metadata();
         String xmlString = "<metadata><fields>"
@@ -64,9 +66,9 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         metadata.setXml(xmlString);
         return metadata;
     }
-
+    
     //========================== DAO TESTS ==============================
-
+    
     public void testMetadataInsertAndLoad() {
         Metadata m1 = getMetadata();
         jtrac.storeMetadata(m1);
@@ -76,7 +78,7 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         Map<Field.Name, Field> fields = m2.getFields();
         assertTrue(fields.size() == 2);
     }
-
+    
     public void testUserInsertAndLoad() {
         User user = new User();
         user.setLoginName("test");
@@ -87,29 +89,29 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         User user2 = dao.findUsersByEmail("test@jtrac.com").get(0);
         assertTrue(user2.getLoginName().equals("test"));
     }
-
+    
     public void testUserSpaceRolesInsert() {
         Space space = new Space();
         space.setPrefixCode("SPACE");
         space.setDescription("test description");
         Metadata metadata = getMetadata();
-
+        
         space.setMetadata(metadata);
         jtrac.storeSpace(space);
-
+        
         User user = new User();
         user.setLoginName("test");
-
+        
         user.addSpaceRole(space, "ROLE_TEST");
         jtrac.storeUser(user);
-
+        
         User u1 = jtrac.loadUser("test");
-
+        
         GrantedAuthority[] gas = u1.getAuthorities();
         assertEquals(2, gas.length);
         assertEquals("ROLE_USER", gas[0].getAuthority());
         assertEquals("ROLE_TEST_SPACE", gas[1].getAuthority());
-
+        
         List<UserRole> userRoles = jtrac.findUserRolesForSpace(space.getId());
         assertEquals(1, userRoles.size());
         UserRole ur = userRoles.get(0);
@@ -121,9 +123,9 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         
         List<User> users2 = jtrac.findUsersForSpace(space.getId());
         assertEquals(1, users2.size());
-
+        
     }
-
+    
     public void testConfigStoreAndLoad() {
         Config config = new Config("testParam", "testValue");
         jtrac.storeConfig(config);
@@ -155,10 +157,44 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         Set<String> set = new HashSet<String>();
         for (GrantedAuthority ga : ud.getAuthorities()) {
             set.add(ga.getAuthority());
-        }        
+        }
         assertEquals(2, set.size());
         assertTrue(set.contains("ROLE_USER"));
-        assertTrue(set.contains("ROLE_ADMIN"));        
+        assertTrue(set.contains("ROLE_ADMIN"));
     }
+    
+    public void testItemInsertAndCounts() {
+        Space s = new Space();
+        s.setPrefixCode("TEST");
+        jtrac.storeSpace(s);
+        User u = new User();
+        u.setLoginName("test");
+        u.addSpaceRole(s, "DEFAULT");
+        jtrac.storeUser(u);
+        Item i = new Item();
+        i.setSpace(s);
+        i.setAssignedTo(u);
+        i.setLoggedBy(u);
+        i.setStatus(99);
+        jtrac.storeItem(i, null);
+        assertEquals(1, i.getSequenceNum());
+        
+        Counts total = jtrac.loadCountsForUser(u.getId());
+        assertEquals(1, total.getAssignedTo());
+        assertEquals(1, total.getLoggedBy());
+        assertEquals(0, total.getOpen());
+        assertEquals(1, total.getClosed());
+        assertEquals(1, total.getTotal());
+        
+        Map<Integer, Counts> counts = total.getCounts();
+        assertEquals(1, counts.size());
+        Counts c = counts.get(s.getId());
+        assertEquals(1, c.getLoggedBy());
+        assertEquals(1, c.getAssignedTo());        
+        assertEquals(0, c.getOpen());
+        assertEquals(1, c.getClosed());        
+        assertEquals(1, c.getTotal());
+    }
+    
     
 }

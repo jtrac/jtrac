@@ -18,6 +18,7 @@ package info.jtrac.web;
 
 import info.jtrac.domain.Config;
 import info.jtrac.domain.ItemSearch;
+import info.jtrac.domain.User;
 import info.jtrac.util.AttachmentUtils;
 import info.jtrac.util.ExcelUtils;
 import info.jtrac.util.SvnUtils;
@@ -32,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.acegisecurity.AuthenticationException;
+import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.ui.AbstractProcessingFilter;
 import org.acegisecurity.ui.rememberme.TokenBasedRememberMeServices;
 import org.acegisecurity.ui.webapp.AuthenticationProcessingFilter;
@@ -46,8 +48,7 @@ import org.springframework.webflow.execution.FlowExecution;
 
 public class DefaultMultiActionController extends AbstractMultiActionController {
 
-    public ModelAndView loginHandler(HttpServletRequest request,
-            HttpServletResponse response) {
+    public ModelAndView loginHandler(HttpServletRequest request, HttpServletResponse response) {
         String message = null;
         if (request.getParameter("error") != null) {
             AuthenticationException ae = (AuthenticationException) WebUtils.getSessionAttribute(request, AbstractProcessingFilter.ACEGI_SECURITY_LAST_EXCEPTION_KEY);
@@ -60,8 +61,7 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
         return new ModelAndView("login", model);
     }
 
-    public ModelAndView logoutHandler(HttpServletRequest request,
-            HttpServletResponse response) {
+    public ModelAndView logoutHandler(HttpServletRequest request, HttpServletResponse response) {
         request.getSession().invalidate();
         Cookie terminate = new Cookie(TokenBasedRememberMeServices.ACEGI_SECURITY_HASHED_REMEMBER_ME_COOKIE_KEY, null);
         terminate.setMaxAge(0);
@@ -69,8 +69,12 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
         return new ModelAndView("logout");
     }
 
-    public ModelAndView svnViewHandler(HttpServletRequest request,
-            HttpServletResponse response) {
+    public ModelAndView dashboardHandler(HttpServletRequest request, HttpServletResponse response) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();        
+        return new ModelAndView("dashboard", "counts", jtrac.loadCountsForUser(user.getId()));
+    }   
+    
+    public ModelAndView svnViewHandler(HttpServletRequest request, HttpServletResponse response) {
         String url = request.getParameter("url");
         String username = request.getParameter("username");
         String password = request.getParameter("password");

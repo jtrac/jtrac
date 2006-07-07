@@ -406,7 +406,7 @@ public class Metadata implements Serializable {
 
     public Map<Integer, String> getStates() {
         return states;
-    }   
+    }
     
     public List<Field.Name> getFieldOrder() {
         return fieldOrder;

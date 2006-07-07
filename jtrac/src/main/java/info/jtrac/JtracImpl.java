@@ -18,6 +18,7 @@ package info.jtrac;
 
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Config;
+import info.jtrac.domain.Counts;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
@@ -31,7 +32,6 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import info.jtrac.util.EmailUtils;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -287,6 +287,14 @@ public class JtracImpl implements Jtrac {
         user.removeSpace(space);
         dao.storeUser(user);      
     }    
+    
+    //==========================================================================
+    
+    public Counts loadCountsForUser(int userId) {
+        return dao.loadCountsForUser(userId);
+    }
+    
+    //==========================================================================
     
     public Space loadSpace(int id) {
         return dao.loadSpace(id);

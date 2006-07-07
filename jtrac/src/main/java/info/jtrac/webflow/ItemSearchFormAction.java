@@ -19,11 +19,16 @@ package info.jtrac.webflow;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
+import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.util.ValidationUtils;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
@@ -71,6 +76,38 @@ public class ItemSearchFormAction extends AbstractFormAction {
         }
         return itemSearch;
     }     
+    
+    /**
+     * used only when "quick search" is invoked from the dashboard
+     * note that the itemSearch form object and the space in the context 
+     * are elegantly initialized in the setupForm / loadFormObject sequence
+     * refer to WEB-INF/flow/itemSearch.xml
+     */
+    public Event itemListViewSetup(RequestContext context) throws Exception {        
+        String type = ValidationUtils.getParameter(context, "type");
+        ItemSearch itemSearch = (ItemSearch) getFormObject(context);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Set<Integer> set = Collections.singleton(new Integer(user.getId()));
+        Space space = (Space) context.getFlowScope().get("space");
+        if (type.equals("loggedBy")) {
+            itemSearch.setLoggedBySet(set);
+        } else if (type.equals("assignedTo")) {
+            itemSearch.setAssignedToSet(set);
+        } else if (type.equals("open")) {
+            if (space == null) {
+                itemSearch.setStatusSet(Collections.singleton(new Integer(State.OPEN)));
+            } else {
+                // is mutable so caution
+                Set<Integer> temp = new HashSet(space.getMetadata().getStates().keySet());
+                temp.remove(State.NEW);
+                temp.remove(State.CLOSED);
+                itemSearch.setStatusSet(temp);                
+            }            
+        } else if (type.equals("closed")) {
+            itemSearch.setStatusSet(Collections.singleton(new Integer(State.CLOSED)));
+        }
+        return success();
+    }    
     
     public Event itemSearchFormHandler(RequestContext context) throws Exception {
         ItemSearch itemSearch = (ItemSearch) getFormObject(context);

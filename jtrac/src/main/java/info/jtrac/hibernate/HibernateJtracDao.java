@@ -24,8 +24,10 @@ import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.SpaceSequence;
+import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
+import info.jtrac.domain.Counts;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -37,11 +39,11 @@ import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -63,7 +65,7 @@ public class HibernateJtracDao
     }
     
     public Item loadItem(long id) {
-        return (Item) getHibernateTemplate().load(Item.class, id);
+        return (Item) getHibernateTemplate().get(Item.class, id);
     }
     
     public List<Item> findItems(long sequenceNum, String prefixCode) {
@@ -98,7 +100,7 @@ public class HibernateJtracDao
     }
     
     public Metadata loadMetadata(int id) {
-        return (Metadata) getHibernateTemplate().load(Metadata.class, id);
+        return (Metadata) getHibernateTemplate().get(Metadata.class, id);
     }    
     
     public void storeSpace(Space space) {
@@ -106,7 +108,7 @@ public class HibernateJtracDao
     }
     
     public Space loadSpace(int id) {
-        return (Space) getHibernateTemplate().load(Space.class, id);
+        return (Space) getHibernateTemplate().get(Space.class, id);
     }
     
     public SpaceSequence loadSpaceSequence(int id) {
@@ -135,7 +137,7 @@ public class HibernateJtracDao
     }
     
     public User loadUser(int id) {
-        return (User) getHibernateTemplate().load(User.class, id);
+        return (User) getHibernateTemplate().get(User.class, id);
     }
     
     public List<User> findAllUsers() {
@@ -175,6 +177,33 @@ public class HibernateJtracDao
         }
         return userRoles;
     }
+    
+    public Counts loadCountsForUser(int userId) {
+        Counts c = new Counts();
+        HibernateTemplate ht = getHibernateTemplate();
+        List<Object[]> loggedByList = ht.find("select item.space.id, count(item) from Item item" +
+                " where item.loggedBy.id = ? group by item.space.id", userId);
+        List<Object[]> assignedToList = ht.find("select item.space.id, count(item) from Item item" +
+                " where item.assignedTo.id = ? group by item.space.id", userId);
+        List<Object[]> statusList = ht.find("select item.space.id, item.status, count(item) from Item item" +
+                " group by item.space.id, item.status");        
+        for(Object[] oa : loggedByList) {
+            c.addLoggedBy((Integer) oa[0], (Integer) oa[1]);
+        }        
+        for(Object[] oa : assignedToList) {
+            c.addAssignedTo((Integer) oa[0], (Integer) oa[1]);
+        }
+        for(Object[] oa : statusList) {
+            int i = (Integer) oa[1];
+            if (i == State.CLOSED) {
+                c.addClosed((Integer) oa[0], (Integer) oa[2]);
+            } else {
+                c.addOpen((Integer) oa[0], (Integer) oa[2]);
+            }
+        }             
+        return c;
+    }
+    
     
     public List<User> findUsersForSpace(int spaceId) {
         return getHibernateTemplate().find("select user from User user join user.spaceRoles as spaceRole" + 

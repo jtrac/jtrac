@@ -2,7 +2,19 @@
 <!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
 	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
 
-<flow start-state="itemSearchForm">  
+<flow start-state="checkIfDashboardSearch">  
+    
+    <decision-state id="checkIfDashboardSearch">
+        <if test="${requestParameters.type == null}" then="itemSearchForm" else="itemListViewSetup"/>
+    </decision-state>
+    
+    <action-state id="itemListViewSetup">
+        <action bean="itemSearchFormAction" method="setupForm"/>            
+        <transition on="success" to="itemListView">
+            <action bean="itemSearchFormAction" method="itemListViewSetup"/>
+            <action bean="itemSearchFormAction" method="itemSearchFormHandler"/>
+        </transition>
+    </action-state>
     
     <view-state id="itemSearchForm" view="item_search_form">
         <entry-actions>
