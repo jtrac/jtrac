@@ -48,7 +48,7 @@
                 <mapping source="flowScope.space" target="space"/>
                 <mapping source="flowScope.itemSearch" target="itemSearch"/>
                 <!-- just for enabling "back" navigation in item_view_form.jsp -->
-                <mapping source="flowScope.calledBySearch" target="calledBySearch"/>
+                <mapping source="requestScope.calledBySearch" target="calledBySearch"/>
             </input-mapper>
         </attribute-mapper>
         <transition on="itemListView" to="itemListView">

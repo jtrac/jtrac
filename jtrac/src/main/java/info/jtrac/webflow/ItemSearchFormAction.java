@@ -129,7 +129,10 @@ public class ItemSearchFormAction extends AbstractFormAction {
         return success();
     }
     
-    public Event itemSearchViewByIdHandler(RequestContext context) throws Exception {        
+    public Event itemSearchViewByIdHandler(RequestContext context) throws Exception {
+        // there may be a better way to do this within the flow definition file
+        // but this is a "marker" for switching on the "back" hyperlink
+        // see the "input-mapper" sections in WEB-INF/flow/itemSearch.xml and itemView.xml
         context.getRequestScope().put("calledBySearch", true);
         return success();
     }    

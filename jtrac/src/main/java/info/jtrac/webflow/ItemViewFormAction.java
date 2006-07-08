@@ -81,7 +81,7 @@ public class ItemViewFormAction extends AbstractFormAction {
         Space space = item.getSpace();
         context.getFlowScope().put("transitions", item.getPermittedTransitions(user));
         context.getFlowScope().put("editableFields", item.getEditableFieldList(user));
-        // not flow because of weird Hibernate Lazy loading issues
+        // not flow scope because of weird Hibernate Lazy loading issues
         // hidden field "itemId" added to item_view_form.jsp
         context.getRequestScope().put("item", item);
         context.getFlowScope().put("userRoles", userRoles);        
