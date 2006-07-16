@@ -29,20 +29,11 @@
                         <bean class="org.acegisecurity.vote.RoleVoter"/>
                     </list>
                 </property>
-            </bean>		      
+            </bean>           
         </property>     
         <property name="objectDefinitionSource">
             <value>
                 PATTERN_TYPE_APACHE_ANT
-                /index.jsp=ROLE_ANONYMOUS,ROLE_USER
-                /error_cas.htm=ROLE_ANONYMOUS,ROLE_USER
-                /test/**=ROLE_ANONYMOUS,ROLE_USER
-                /resources/**=ROLE_ANONYMOUS,ROLE_USER
-                /calendar/**=ROLE_ANONYMOUS,ROLE_USER
-                /chart/*=ROLE_ANONYMOUS,ROLE_USER
-                /svn_*=ROLE_ANONYMOUS,ROLE_USER                 
-                /login.htm*=ROLE_ANONYMOUS,ROLE_USER
-                /logout.htm=ROLE_ANONYMOUS,ROLE_USER
                 /**=ROLE_USER
             </value>
         </property>
