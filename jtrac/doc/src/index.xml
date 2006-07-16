@@ -65,8 +65,11 @@
             <para>
                 As the version number implies, 2.0-RC1 is not yet final and thus not recommended for production.
                 The intention is to get as much feedback as possible from interested users and there may be
-                minor changes to the database schema before the 2.0 milestone.  
-                JTrac 2.0 final should be available by the end of June 2006.
+                minor changes to the database schema before the 2.0 milestone.
+            </para>
+            <para>
+                JTrac 2.0 final should be available by the end of July 2006. Development has been slower than 
+                expected and the earlier target of June 2006 has admittedly not been met.                
             </para>
             <para>
                 You are encouraged to try out JTrac and communicate your feedback and interest in future versions
@@ -78,7 +81,7 @@
     
     <chapter id="features">
         <title>Features</title>
-        <sect1 id="features-main">                
+        <sect1 id="features-overview">                
             <title>Overview</title>
             <para>                    
                 JTrac has all the features you would expect from a standard issue-tracking application such as 
@@ -86,207 +89,226 @@
                 especially in the areas of workflow and field-level permissions and compares well to even
                 commercial tools.
             </para>
-            <sect2 id="features-easytoinstall">
-                <title>Easy to Install</title>
-                <para>
-                    JTrac uses Hibernate and so it can support any database.  Any servlet version 2.4 compliant container
-                    such as Apache Tomcat 5.5.X is sufficient to run JTrac.  JTrac requires Java 5.0 but has minimal
-                    installation requirements otherwise.
-                </para>
-                <para>
-                    One of the useful features of JTrac is that it is distributed as a WAR file and you can be up
-                    and running by just deploying the WAR file.  The JTrac web-application checks the 
-                    environment on startup and if a configured database is not detected, HSQLDB is used by default.
-                    This means that you can easily evaluate JTrac - just drop the WAR file into your servlet engine
-                    and you can immediately sign on into the application.
-                </para>                
-            </sect2>            
-            <sect2 id="features-customfields">
-                <title>Custom Fields</title>
-                <para>                    
-                    JTrac can be used to effectively track various kinds of things such as Bugs, Action Items and Tasks.
-                    You can easily add the following types of custom fields to a tracker project:
-                    <itemizedlist>
-                        <listitem>
-                            <para>Drop Down List</para>
-                        </listitem>
-                        <listitem>
-                            <para>Free Text Field</para>
-                        </listitem>
-                        <listitem>
-                            <para>Date Picker</para>
-                        </listitem>
-                        <listitem>
-                            <para>(Decimal) Number</para>
-                        </listitem>                                
-                    </itemizedlist>                   
-                </para>
-                <para>
-                    <mediaobject>
-                        <imageobject role="html">
-                            <imagedata align="center" fileref="../images/custom-fields.png"/>
-                        </imageobject>
-                        <caption>
-                            <para>Setting up custom fields for a project</para>
-                        </caption>
-                    </mediaobject>
-                </para>                
-            </sect2>
-            <sect2 id="features-customworkflow">
-                <title>Custom Workflow</title>
-                <para>
-                    Each tracker project that you create can have a different workflow.  JTrac allows for 
-                    complete customization of the tracker-item lifecycle, right down to the names of
-                    each intermediate state.  You can even configure whether or not changing of values is
-                    permitted given the current state within the workflow - and that too at a field-level.
-                </para>
-                <para>
-                    <mediaobject>
-                        <imageobject role="html">
-                            <imagedata align="center" fileref="../images/custom-workflow-before.png"/>
-                        </imageobject>
-                        <caption>
-                            <para>Default workflow - before customization</para>
-                        </caption>
-                    </mediaobject>
-                </para>
-                <para>
-                    <mediaobject>
-                        <imageobject role="html">
-                            <imagedata align="center" fileref="../images/custom-workflow-after.png"/>
-                        </imageobject>
-                        <caption>
-                            <para>An example of a customized workflow</para>
-                        </caption>
-                    </mediaobject>
-                </para>                  
-            </sect2>
-            <sect2 id="features-customroles">
-                <title>Custom Roles</title>
-                <para>
-                    JTrac customization does not stop at workflow - you can also define different roles for each tracker
-                    project that you set up.  This allows for power and flexibility - for example you could define that
-                    a "DEVELOPER" role can only mark "Assigned" items as "Fixed" and that only a "TESTER" role has the
-                    power to mark a "Fixed" item as "Closed".  JTrac allows you complete control over the workflow and
-                    you can easily tweak it to fit your existing process rather than the other way around.
-                </para>
-                <para>
-                    Also, field-level permissions can be mapped to roles.  This allows for even more flexibility - for
-                    example, you can set a project up so that only a "MANAGER" can change the "Severity" level after a
-                    bug is submitted.
-                </para>                
-            </sect2>
-            <sect2 id="features-search">
-                <title>Search Custom Fields</title>
-                <para>
-                    The intuitive search screen (shown below) allows for easy execution of common queries such as
-                    find all items "logged by" or "assigned to" a user (or users).  JTrac allows for filtering even
-                    on custom fields.
-                </para>
-                <para>
-                    You can navigate back to the search setup screen from the search results screen and have the
-                    search parameters still active.  This is useful when trying to tweak complex queries by 
-                    trial and error.
-                </para>                
-                <para>
-                    <mediaobject>
-                        <imageobject role="html">
-                            <imagedata align="center" fileref="../images/search.png"/>
-                        </imageobject>
-                        <caption>
-                            <para>The search screen - which allows filtering on custom fields</para>
-                        </caption>
-                    </mediaobject>
-                </para>                
-            </sect2>            
-            <sect2 id="features-searchall">
-                <title>Search Across All Projects</title>
-                <para>
-                    In addition to be able to search within a single space (project) JTrac allows for searching across
-                    all (or a sub set of) projects that a user is mapped to.  The "Search All" option appears for users
-                    that have been mapped to more than one space (project).
-                </para>
-                <para>
-                    <mediaobject>
-                        <imageobject role="html">
-                            <imagedata align="center" fileref="../images/search-all.png"/>
-                        </imageobject>
-                        <caption>
-                            <para>The "Search All" option appears when you navigate to the Dashboard</para>
-                        </caption>
-                    </mediaobject>
-                </para>                 
-            </sect2>
-            <sect2 id="features-excel">
-                <title>Export to Excel</title>
-                <para>
-                    JTrac is able to export the results of any search (or all items in a Space) as an Excel Sheet.
-                    The link for this appears at the top right of the search results screen.
-                </para>
-                <para>
-                    <mediaobject>
-                        <imageobject role="html">
-                            <imagedata align="center" fileref="../images/excel-link.png"/>
-                        </imageobject>
-                        <caption>
-                            <para>Download search results as an excel sheet</para>
-                        </caption>
-                    </mediaobject>
-                </para>                
-            </sect2>
-            <sect2 id="features-attachments">
-                <title>Attachments Support</title>
-                <para>
-                    You can upload file attachments at the time of creating of an item or as many times
-                    as required after an item has been created.
-                </para>                
-            </sect2>            
-            <sect2 id="features-history">
-                <title>Detailed History View</title>
-                <para>
-                    JTrac provides a very detailed history view that completely captures all comments or status
-                    changes for an item.
-                </para>
-                <para>
-                    <mediaobject>
-                        <imageobject role="html">
-                            <imagedata align="center" fileref="../images/history.png"/>
-                        </imageobject>
-                        <caption>
-                            <para>When viewing a single item, the history can be seen in detail</para>
-                        </caption>
-                    </mediaobject>
-                </para>                  
-            </sect2>
-            <sect2 id="features-navigation">
-                <title>Simple Navigation</title>
-                <para>
-                    Most users will use only four screens in JTrac: Create, View, Search and Search Results.
-                    Navigation has been designed with usability and simplicity in mind.
-                </para>                 
-            </sect2>            
-            <sect2 id="features-email">
-                <title>E-mail Integration</title>
-                <para>
-                    (Note that this is not yet implemented in version 2.0-EA1.)
-                </para>
-                <para>
-                    All status changes for an item will trigger e-mail notifications by default.
-                    You can choose to add multiple users into a "notify list" at the time of raising a new item
-                    or updating the history for an item.
-                </para>
-                <para>
-                    <mediaobject>
-                        <imageobject role="html">
-                            <imagedata align="center" fileref="../images/notify-list.png"/>
-                        </imageobject>
-                        <caption>
-                            <para>Add multiple users to a "notify list" while creating or updating an item</para>
-                        </caption>
-                    </mediaobject>
-                </para>                 
-            </sect2>               
-        </sect1>    
+        </sect1>
+        <sect1 id="features-easytoinstall">
+            <title>Easy to Install</title>
+            <para>
+                JTrac uses Hibernate and so it can support any database.  Any servlet version 2.4 compliant container
+                such as Apache Tomcat 5.5.X is sufficient to run JTrac.  JTrac requires Java 5.0 but has minimal
+                installation requirements otherwise.
+            </para>
+            <para>
+                One of the useful features of JTrac is that it is distributed as a WAR file and you can be up
+                and running by just deploying the WAR file.  The JTrac web-application checks the 
+                environment on startup and if a configured database is not detected, HSQLDB is used by default.
+                This means that you can easily evaluate JTrac - just drop the WAR file into your servlet engine
+                and you can immediately sign on into the application.
+            </para>                
+        </sect1>            
+        <sect1 id="features-customfields">
+            <title>Custom Fields</title>
+            <para>                    
+                JTrac can be used to effectively track various kinds of things such as Bugs, Action Items and Tasks.
+                You can easily add the following types of custom fields to a tracker project:
+                <itemizedlist>
+                    <listitem>
+                        <para>Drop Down List</para>
+                    </listitem>
+                    <listitem>
+                        <para>Free Text Field</para>
+                    </listitem>
+                    <listitem>
+                        <para>Date Picker</para>
+                    </listitem>
+                    <listitem>
+                        <para>(Decimal) Number</para>
+                    </listitem>                                
+                </itemizedlist>                   
+            </para>
+            <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="../images/custom-fields.png"/>
+                    </imageobject>
+                    <caption>
+                        <para>Setting up custom fields for a project</para>
+                    </caption>
+                </mediaobject>
+            </para>                
+        </sect1>
+        <sect1 id="features-customworkflow">
+            <title>Custom Workflow</title>
+            <para>
+                Each tracker project that you create can have a different workflow.  JTrac allows for 
+                complete customization of the tracker-item lifecycle, right down to the names of
+                each intermediate state.  You can even configure whether or not changing of values is
+                permitted given the current state within the workflow - and that too at a field-level.
+            </para>
+            <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="../images/custom-workflow-before.png"/>
+                    </imageobject>
+                    <caption>
+                        <para>Default workflow - before customization</para>
+                    </caption>
+                </mediaobject>
+            </para>
+            <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="../images/custom-workflow-after.png"/>
+                    </imageobject>
+                    <caption>
+                        <para>An example of a customized workflow</para>
+                    </caption>
+                </mediaobject>
+            </para>                  
+        </sect1>
+        <sect1 id="features-customroles">
+            <title>Custom Roles</title>
+            <para>
+                JTrac customization does not stop at workflow - you can also define different roles for each tracker
+                project that you set up.  This allows for power and flexibility - for example you could define that
+                a "DEVELOPER" role can only mark "Assigned" items as "Fixed" and that only a "TESTER" role has the
+                power to mark a "Fixed" item as "Closed".  JTrac allows you complete control over the workflow and
+                you can easily tweak it to fit your existing process rather than the other way around.
+            </para>
+            <para>
+                Also, field-level permissions can be mapped to roles.  This allows for even more flexibility - for
+                example, you can set a project up so that only a "MANAGER" can change the "Severity" level after a
+                bug is submitted.
+            </para>                
+        </sect1>
+        <sect1 id="features-search">
+            <title>Search Custom Fields</title>
+            <para>
+                The intuitive search screen (shown below) allows for easy execution of common queries such as
+                find all items "logged by" or "assigned to" a user (or users).  JTrac allows for filtering even
+                on custom fields.
+            </para>
+            <para>
+                You can navigate back to the search setup screen from the search results screen and have the
+                search parameters still active.  This is useful when trying to tweak complex queries by 
+                trial and error.
+            </para>                
+            <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="../images/search.png"/>
+                    </imageobject>
+                    <caption>
+                        <para>The search screen - which allows filtering on custom fields</para>
+                    </caption>
+                </mediaobject>
+            </para>                
+        </sect1>            
+        <sect1 id="features-searchall">
+            <title>Search Across All Projects</title>
+            <para>
+                In addition to be able to search within a single space (project) JTrac allows for searching across
+                all (or a sub set of) projects that a user is mapped to.  The "Search All" option appears for users
+                that have been mapped to more than one space (project).
+            </para>
+            <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="../images/search-all.png"/>
+                    </imageobject>
+                    <caption>
+                        <para>The "Search All" option appears when you navigate to the Dashboard</para>
+                    </caption>
+                </mediaobject>
+            </para>                 
+        </sect1>
+        <sect1 id="features-dashboard">
+            <title>Dashboard</title>
+            <para>
+                The default view when you log into JTrac is a very handy dashboard view that provides the most 
+                requested statistics at a glance. You can click on any of the numbers to immediately bring up 
+                the search results view listing the items matched. For example, clicking on the count of items 
+                "Logged By Me" would immediately display the list of items initiated by the currently logged in user.
+            </para>
+            <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="../images/dashboard.png"/>
+                    </imageobject>
+                    <caption>
+                        <para>Statistics at a glance and search results available with just one click</para>
+                    </caption>
+                </mediaobject>
+            </para>                 
+        </sect1>        
+        <sect1 id="features-excel">
+            <title>Export to Excel</title>
+            <para>
+                JTrac is able to export the results of any search (or all items in a Space) as an Excel Sheet.
+                The link for this appears at the top right of the search results screen.
+            </para>
+            <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="../images/excel-link.png"/>
+                    </imageobject>
+                    <caption>
+                        <para>Download search results as an excel sheet</para>
+                    </caption>
+                </mediaobject>
+            </para>                
+        </sect1>
+        <sect1 id="features-attachments">
+            <title>Attachments Support</title>
+            <para>
+                You can upload file attachments at the time of creating of an item or as many times
+                as required after an item has been created.
+            </para>                
+        </sect1>            
+        <sect1 id="features-history">
+            <title>Detailed History View</title>
+            <para>
+                JTrac provides a very detailed history view that completely captures all comments or status
+                changes for an item.
+            </para>
+            <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="../images/history.png"/>
+                    </imageobject>
+                    <caption>
+                        <para>When viewing a single item, the history can be seen in detail</para>
+                    </caption>
+                </mediaobject>
+            </para>                  
+        </sect1>
+        <sect1 id="features-navigation">
+            <title>Simple Navigation</title>
+            <para>
+                Most users will use only four screens in JTrac: Create, View, Search and Search Results.
+                Navigation has been designed with usability and simplicity in mind.
+            </para>                 
+        </sect1>            
+        <sect1 id="features-email">
+            <title>E-mail Integration</title>
+            <para>
+                (Note that this is not yet implemented in version 2.0-EA1.)
+            </para>
+            <para>
+                All status changes for an item will trigger e-mail notifications by default.
+                You can choose to add multiple users into a "notify list" at the time of raising a new item
+                or updating the history for an item.
+            </para>
+            <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="../images/notify-list.png"/>
+                    </imageobject>
+                    <caption>
+                        <para>Add multiple users to a "notify list" while creating or updating an item</para>
+                    </caption>
+                </mediaobject>
+            </para>                 
+        </sect1>                
     </chapter>
     
     <chapter id="installation">
@@ -408,9 +430,9 @@
         <sect1 id="roadmap-email">
             <title>Submit By Email</title>
             <para>
-		JTrac should be able to monitor an e-mail account and incoming e-mail should trigger
-		creation / updation of items.  It would be handy to have attachments submitted through
-		email also.
+        JTrac should be able to monitor an e-mail account and incoming e-mail should trigger
+        creation / updation of items.  It would be handy to have attachments submitted through
+        email also.
             </para>
         </sect1>        
         <sect1 id="roadmap-savedsearches">
@@ -465,6 +487,29 @@
                 Multi language support to be added.
             </para>
         </sect1>
+        <sect1 id="roadmap-import">            
+            <title>Import from other tools</title>            
+            <para>
+                Import from other issue tracking systems (such as BugZilla) to be considered.
+            </para>
+        </sect1>
+        <sect1 id="roadmap-cas">            
+            <title>CAS (Single Sign On)</title>            
+            <para>
+                Since JTrac uses the Acegi security framework, it would be easy to configure it 
+                to use an existing CAS installation for implementing Single Sign On. In fact most 
+                of the configuration is in place and only needs to be documented.
+            </para>
+        </sect1>
+        <sect1 id="roadmap-installer">            
+            <title>Easier Installer</title>            
+            <para>
+                Even with the option to just drop in the war file and be up and running, it would 
+                be much more convenient if JTrac came with an installer or even an embedded web-container 
+                such as Tomcat or Jetty. Currently you need some level of Java web-container experience 
+                in order to use JTrac.
+            </para>
+        </sect1>      
     </chapter>
     
 </book>
