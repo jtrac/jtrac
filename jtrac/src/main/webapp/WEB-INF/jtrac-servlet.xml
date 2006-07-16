@@ -29,26 +29,16 @@
                 </bean>
             </list>
         </property>
-        <property name="alwaysUseFullPath" value="true"/>
-        <property name="mappings">
-            <props>
-                <prop key="/flow.htm">flowController</prop>
+        <property name="urlMap">
+            <map>
+                <entry key="/flow.htm" value-ref="flowController"/>
                 <!-- =========================================== -->
-                <prop key="/options.htm">urlController</prop>
-                <prop key="/svn_form.htm">urlController</prop>
-                <prop key="/exception.htm">urlController</prop>
+                <entry key="/options.htm" value-ref="urlController"/>
+                <entry key="/svn_form.htm" value-ref="urlController"/>
+                <entry key="/exception.htm" value-ref="urlController"/>
                 <!-- =========================================== -->
-                <prop key="/login.htm">defaultController</prop>                
-                <prop key="/logout.htm">defaultController</prop>
-                <prop key="/dashboard.htm">defaultController</prop>
-                <prop key="/user_list.htm">defaultController</prop>
-                <prop key="/space_list.htm">defaultController</prop>
-                <prop key="/config_list.htm">defaultController</prop>
-                <prop key="/svn_view.htm">defaultController</prop>
-                <prop key="/item_list_excel.htm">defaultController</prop> 
-                <prop key="/attachments/*">defaultController</prop>
-                <prop key="/chart/svn_commits_per_committer.jpg">defaultController</prop>
-            </props>
+                <entry key="/*" value-ref="defaultController"/>               
+            </map>
         </property>
     </bean>    
     
@@ -85,24 +75,6 @@
     
     <!-- ======================== SPRING WEB FLOW ============================ -->
     
-    <!-- common web flow controller for all spring web flows 
-    - The flow id of the flow to start should be passed in 
-    - using the "_flowId" request parameter
-    -->
-    <!--
-    <bean id="flowController" class="org.springframework.webflow.executor.mvc.FlowController">       
-        <property name="flowExecutor">
-            <bean class="org.springframework.webflow.executor.FlowExecutorImpl">
-                <constructor-arg>
-                    <bean class="org.springframework.webflow.registry.XmlFlowRegistryFactoryBean">
-                        <property name="flowLocations" value="/WEB-INF/flow/*.xml"/>
-                    </bean>             
-                </constructor-arg>
-            </bean>     
-        </property>
-    </bean>
-    -->
-    
     <bean name="flowController" class="org.springframework.webflow.executor.mvc.FlowController">
         <property name="flowExecutor" ref="flowExecutor"/>
     </bean>
@@ -112,21 +84,14 @@
     </bean>
 
     <bean id="repositoryFactory" class="org.springframework.webflow.execution.repository.support.DefaultFlowExecutionRepositoryFactory">
-        <constructor-arg ref="flowRegistry"/>
-        <!--
-        <property name="listenerLoader">
-            <bean class="org.springframework.webflow.execution.ConditionalFlowExecutionListenerLoader">
-                <property name="listener">
-                    <bean class="info.jtrac.webflow.JtracFlowExecutionListener"/>
-                </property>
-            </bean>
-        </property> 
-        -->        
+        <constructor-arg ref="flowRegistry"/>      
     </bean>
 
     <bean name="flowRegistry" class="org.springframework.webflow.registry.XmlFlowRegistryFactoryBean">
         <property name="flowLocations" value="/WEB-INF/flow/*.xml"/>
-    </bean> 
+    </bean>
+    
+    <!-- ======================== CONTROLLERS ============================ -->
     
     <bean id="itemFormAction" class="info.jtrac.webflow.ItemFormAction">
         <property name="jtrac" ref="jtrac"/>
