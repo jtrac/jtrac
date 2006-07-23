@@ -1,0 +1,36 @@
+    -----
+    open source and customizable issue-tracking in Java
+
+
+About
+
+    JTrac is an open source and highly customizable issue-tracking web-application written in Java.
+
+* Features
+
+    * Add custom fields and drop downs
+    
+    * Customizable workflow
+    
+    * Field-level permissions
+    
+    * Detailed history view
+    
+    * E-mail integration
+    
+    * File attachments    
+    
+    * Dashboard view    
+    
+    * Search wizard    
+    
+    * Excel export
+    
+    * Support for all popular databases
+    
+ Please see the {{{doc/html/features.html}feature documentation}} for more...
+ 
+* Technology
+
+    JTrac is a lightweight Java EE application built using the {{{http://www.springframework.org/}Spring Framework}}
+    and {{{http://www.hibernate.org/}Hibernate}}.

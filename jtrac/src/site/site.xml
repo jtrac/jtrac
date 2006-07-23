@@ -23,14 +23,13 @@
         </menu>
         <menu name="Documentation">
             <item name="HTML" href="doc/html/index.html"/>
-            <item name="HTML (single page)" href="doc/html-single/index.html"/>
             <item name="PDF" href="doc/pdf/jtrac-doc.pdf"/>
         </menu>
         <menu name="Project">
             <item name="License" href="license.html"/>
             <item name="Dependencies" href="dependencies.html"/>
             <item name="SourceForge" href="http://sourceforge.net/projects/j-trac"/>
-            <item name="Statistics" href="http://sourceforge.net/project/stats/?group_id=162983&ugn=j-trac"/>
+            <item name="Statistics" href="http://sourceforge.net/project/stats/?group_id=162983&amp;ugn=j-trac"/>
             <item name="Forums" href="http://sourceforge.net/forum/forum.php?forum_id=552477"/>
             <item name="Tracker" href="http://sourceforge.net/tracker/?group_id=162983&amp;atid=825941"/>
             <item name="Subversion" href="source-repository.html"/>
