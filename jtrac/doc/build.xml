@@ -27,6 +27,10 @@
         <mkdir dir="${dist.doc.dir}/images"/>
         <copy todir="${dist.doc.dir}/images"> 
             <fileset dir="${doc.src.dir}/src/images"/>
+        </copy>
+        <mkdir dir="${dist.doc.dir}/styles"/>
+        <copy todir="${dist.doc.dir}/styles"> 
+            <fileset dir="${doc.src.dir}/styles" includes="*.css"/>
         </copy>        
     </target>
     

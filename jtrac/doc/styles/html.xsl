@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 
 <!-- 
-
-    This is the XSL HTML configuration file for the Hibernate
-    Reference Documentation. 
     
-    It took me days to figure out this stuff and fix most of
-    the obvious bugs in the DocBook XSL distribution, so if you
-    use this stylesheet, give some credit back to the Hibernate
-    project.
+    This is the XSL HTML configuration file for the JTrac
+    documentation.  It is adapted from the one used by the Spring Framework team.
+    We thank and credit the Spring Framework development and documentation team.
     
-    christian.bauer@bluemars.de
+    http://springframework.cvs.sourceforge.net/springframework/spring/docs/reference/styles/
+    
+    The Spring team in turn credits Christian Bauer of the Hibernate project
+    team for writing the original stylesheet upon which this one
+    is based.
+    
 -->
-
 <!DOCTYPE xsl:stylesheet [
     <!ENTITY db_xsl_path        "../lib/docbook-xsl/">
     <!ENTITY callout_gfx_path   "../images/callouts/">
@@ -78,10 +78,9 @@
     <xsl:param name="admon.graphics">'1'</xsl:param>
     <xsl:param name="admon.graphics.path">&admon_gfx_path;</xsl:param>
 
-<!--###################################################
+    <!--###################################################
                           Misc
-    ################################################### -->   
-
+    ################################################### -->
     <!-- Placement of titles -->
     <xsl:param name="formal.title.placement">
         figure after
@@ -89,6 +88,23 @@
         equation before
         table before
         procedure before
-    </xsl:param>    
-    
+    </xsl:param>
+    <xsl:template match="author" mode="titlepage.mode">
+        <xsl:if test="name(preceding-sibling::*[1]) = 'author'">
+            <xsl:text>, </xsl:text>
+        </xsl:if>
+        <span class="{name(.)}">
+            <xsl:call-template name="person.name" />
+            <xsl:apply-templates mode="titlepage.mode" select="./contrib" />
+            <xsl:apply-templates mode="titlepage.mode" select="./affiliation" />
+        </span>
+    </xsl:template>
+    <xsl:template match="authorgroup" mode="titlepage.mode">
+        <div class="{name(.)}">
+            <h2>Authors</h2>
+            <p/>
+            <xsl:apply-templates mode="titlepage.mode" />
+        </div>
+    </xsl:template>
+  
 </xsl:stylesheet>

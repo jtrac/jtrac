@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="JTrac">
     <bannerLeft>    
-    <href>http://jtrac.info</href>
-    <src>doc/images/jtrac-logo.png</src>    
+        <href>http://jtrac.info</href>
+        <src>doc/images/jtrac-logo.png</src>    
     </bannerLeft>    
     <bannerRight>
         <href>http://sourceforge.net</href>
@@ -17,8 +17,9 @@
         <menu name="JTrac">
             <item name="Home" href="index.html"/>
             <item name="Features" href="doc/html/features.html"/>            
-            <item name="Download" href="http://sourceforge.net/project/showfiles.php?group_id=162983&amp;package_id=184104"/>
             <item name="Installation" href="doc/html/installation.html"/>
+            <item name="FAQ" href="doc/html/faq.html"/>
+            <item name="Download" href="http://sourceforge.net/project/showfiles.php?group_id=162983&amp;package_id=184104"/>
         </menu>
         <menu name="Documentation">
             <item name="HTML" href="doc/html/index.html"/>
@@ -28,7 +29,8 @@
         <menu name="Project">
             <item name="License" href="license.html"/>
             <item name="Dependencies" href="dependencies.html"/>
-            <item name="SourceForge" href="http://sourceforge.net/projects/j-trac"/>                        
+            <item name="SourceForge" href="http://sourceforge.net/projects/j-trac"/>
+            <item name="Statistics" href="http://sourceforge.net/project/stats/?group_id=162983&ugn=j-trac"/>
             <item name="Forums" href="http://sourceforge.net/forum/forum.php?forum_id=552477"/>
             <item name="Tracker" href="http://sourceforge.net/tracker/?group_id=162983&amp;atid=825941"/>
             <item name="Subversion" href="source-repository.html"/>
