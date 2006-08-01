@@ -23,6 +23,8 @@ import info.jtrac.domain.Item;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.util.HtmlUtils;
+import org.springframework.web.util.WebUtils;
 
 /**
  * Utilities to convert an Item into HTML etc.
@@ -31,16 +33,16 @@ import javax.servlet.http.HttpServletResponse;
  */
 public final class ItemUtils {
     
-    private static String fixWhiteSpace(String text) {        
+    private static String fixWhiteSpace(String text) {
         if (text == null) {
             return "";
         }
-        String temp = new String(text);
-        return temp.replaceAll("\n", "<br/>").replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");        
+        String temp = HtmlUtils.htmlEscape(text);  
+        return temp.replaceAll("\n", "<br/>").replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
     }
     
     public static String getAsHtml(Item item, HttpServletResponse response) {
-        StringBuffer sb = new StringBuffer();          
+        StringBuffer sb = new StringBuffer();
         sb.append("<table width='100%' class='jtrac'>");
         sb.append("<tr class='alt'>");
         sb.append("  <td class='label'>ID</td>");
@@ -53,16 +55,16 @@ public final class ItemUtils {
         sb.append("  <td>" + item.getLoggedBy().getName() + "</td>");
         sb.append("  <td class='label'>Assigned To</td>");
         sb.append("  <td width='15%'>" + ( item.getAssignedTo() == null ? "" : item.getAssignedTo().getName() ) + "</td>");
-        sb.append("</tr>");        
+        sb.append("</tr>");
         sb.append("<tr class='alt'>");
         sb.append("  <td class='label'>Summary</td>");
-        sb.append("  <td colspan='5'>" + item.getSummary() + "</td>");
+        sb.append("  <td colspan='5'>" + HtmlUtils.htmlEscape(item.getSummary()) + "</td>");
         sb.append("</tr>");
         sb.append("<tr>");
         sb.append("  <td class='label' valign='top'>Detail</td>");
         sb.append("  <td colspan='5'>" + fixWhiteSpace(item.getDetail()) + "</td>");
         sb.append("</tr>");
-
+        
         int row = 0;
         Map<Field.Name, Field> fields = item.getSpace().getMetadata().getFields();
         for(Field.Name fieldName : item.getSpace().getMetadata().getFieldOrder()) {
@@ -73,7 +75,7 @@ public final class ItemUtils {
             sb.append("</tr>");
             row ++;
         }
-
+        
         sb.append("</table>");
         sb.append("&nbsp;<b>History</b>");
         sb.append("<table width='100%' class='jtrac'>");
@@ -84,9 +86,9 @@ public final class ItemUtils {
             sb.append("<th>" + field.getLabel() + "</th>");
         }
         sb.append("</tr>");
-
+        
         if (item.getHistory() != null) {
-            row = 1;        
+            row = 1;
             for(History history : item.getHistory()) {
                 sb.append("<tr valign='top'" + ( row % 2 == 0 ? " class='alt'" : "" ) + ">");
                 sb.append("  <td>" + history.getLoggedBy().getName() + "</td>");
@@ -100,20 +102,20 @@ public final class ItemUtils {
                         sb.append("<a target='_blank' href='" + href + "'>" + attachment.getFileName() + "</a>&nbsp;");
                     } else {
                         sb.append("(attachment:&nbsp" + attachment.getFileName() + ")&nbsp;");
-                    }                
+                    }
                 }
-                sb.append(fixWhiteSpace(history.getComment()));            
+                sb.append(fixWhiteSpace(history.getComment()));
                 sb.append("  </td>");
-                sb.append("  <td>" + history.getTimeStamp() + "</td>"); 
+                sb.append("  <td>" + history.getTimeStamp() + "</td>");
                 for(Field field : editable) {
                     sb.append("<td>" + history.getCustomValue(field.getName()) + "</td>");
-                }                
+                }
                 sb.append("</tr>");
                 row++;
             }
         }
         sb.append("</table>");
-        return sb.toString();                        
+        return sb.toString();
     }
     
 }

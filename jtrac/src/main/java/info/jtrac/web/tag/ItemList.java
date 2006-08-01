@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
+import org.springframework.web.util.HtmlUtils;
 
 public class ItemList extends SimpleTagSupport {
     
@@ -40,21 +41,21 @@ public class ItemList extends SimpleTagSupport {
     
     public void setItemSearch(ItemSearch itemSearch) {
         this.itemSearch = itemSearch;
-    }        
+    }
     
     @Override
     public void doTag() {
         PageContext pageContext = (PageContext) getJspContext();
         HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();        
+        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         JspWriter out = pageContext.getOut();
-        try {                        
+        try {
             
             // pagination
             String flowUrlParam = "_flowExecutionKey=" + request.getAttribute("flowExecutionKey");
             String flowUrl = "flow.htm?" + flowUrlParam;
             StringBuffer sb = new StringBuffer();
-            long resultCount = itemSearch.getResultCount(); 
+            long resultCount = itemSearch.getResultCount();
             String plural = resultCount == 1 ? "" : "s";
             sb.append("<a href='" + flowUrl + "&_eventId=back' title='Modify Search'>" + resultCount + " record" + plural + " found.</a>&nbsp;&nbsp;");
             int pageSize = itemSearch.getPageSize();
@@ -64,14 +65,14 @@ public class ItemList extends SimpleTagSupport {
             }
             if (pageCount > 1) {
                 String pageUrl = flowUrl + "&_eventId=page&page=";
-                sb.append("<span class='page-links'>");                
+                sb.append("<span class='page-links'>");
                 int currentPage = itemSearch.getCurrentPage();
                 if (currentPage == 0) {
                     sb.append("&lt;&lt;&nbsp;&nbsp;");
                 } else {
                     sb.append("<a href='" + response.encodeURL(pageUrl + (currentPage - 1)) + "'>&lt;&lt;</a>&nbsp;&nbsp;");
                 }
-                for(int i = 0; i < pageCount; i++) {                    
+                for(int i = 0; i < pageCount; i++) {
                     if (currentPage == i) {
                         sb.append((i + 1) +"&nbsp;&nbsp;");
                     } else {
@@ -81,13 +82,13 @@ public class ItemList extends SimpleTagSupport {
                 if (currentPage == pageCount - 1) {
                     sb.append("&gt;&gt;");
                 } else {
-                    sb.append("<a href='" + response.encodeURL(pageUrl + (currentPage + 1)) + "'>&gt;&gt;</a>");  
-                }                
+                    sb.append("<a href='" + response.encodeURL(pageUrl + (currentPage + 1)) + "'>&gt;&gt;</a>");
+                }
                 sb.append("</span>");
             }
             // write out record count + pagination
             out.println("<table class='jtrac bdr-collapse' width='100%'><tr><td>" + sb + "</td>");
-                                    
+            
             out.println("<td align='right'><a href='item_list_excel.htm?" + flowUrlParam + "'>(export to excel)</a></td></tr></table><p/>");
             
             boolean showDetail = itemSearch.isShowDetail();
@@ -133,24 +134,24 @@ public class ItemList extends SimpleTagSupport {
                     href = response.encodeURL(itemUrl + item.getParent().getId());
                 } else {
                     href = response.encodeURL(itemUrl + item.getId());
-                }                
+                }
                 out.println("  <td>" + bookmark + "<a href='" + href + "'>" + item.getRefId() + "</a></td>");
-                out.println("  <td>" + ( item.getSummary() == null ? "" : item.getSummary() ) + "</td>");
+                out.println("  <td>" + ( item.getSummary() == null ? "" : HtmlUtils.htmlEscape(item.getSummary()) ) + "</td>");
                 
                 if (showDetail) {
                     if (showHistory) {
                         History h = (History) item;
-                        out.println("  <td>");                        
+                        out.println("  <td>");
                         Attachment attachment = h.getAttachment();
                         if (attachment != null) {
                             String attHref = response.encodeURL("attachments/" + attachment.getFileName() +"?filePrefix=" + attachment.getFilePrefix());
-                            out.println("<a target='_blank' href='" + attHref + "'>" + attachment.getFileName() + "</a>&nbsp;");             
-                        }                                                
-                        out.println(( h.getComment() == null ? "" : h.getComment() ) + "</td>");
+                            out.println("<a target='_blank' href='" + attHref + "'>" + attachment.getFileName() + "</a>&nbsp;");
+                        }
+                        out.println(( h.getComment() == null ? "" : HtmlUtils.htmlEscape(h.getComment()) ) + "</td>");
                     } else {
                         out.println("  <td>" + item.getDetail() + "</td>");
                     }
-                }                
+                }
                 
                 out.println("  <td>" + item.getLoggedBy().getName() + "</td>");
                 out.println("  <td>" + item.getStatusValue() + "</td>");
@@ -164,10 +165,10 @@ public class ItemList extends SimpleTagSupport {
             }
             out.println("</table>");
             // re write out record count + pagination
-            out.println("<p/>" + sb);            
+            out.println("<p/>" + sb);
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
-        }        
+        }
     }
     
 }
