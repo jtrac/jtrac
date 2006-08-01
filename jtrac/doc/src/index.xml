@@ -225,7 +225,7 @@
             <title>Dashboard</title>
             <para>
                 The default view when you log into JTrac is a very handy dashboard view that provides the most 
-                requested statistics at a glance. You can click on any of the numbers to immediately bring up 
+                frequently used statistics at a glance. You can click on any of the numbers to immediately bring up 
                 the search results view listing the items matched. For example, clicking on the count of items 
                 "Logged By Me" would immediately display the list of items initiated by the currently logged in user.
             </para>
@@ -291,9 +291,6 @@
         <sect1 id="features-email">
             <title>E-mail Integration</title>
             <para>
-                (Note that this is not yet implemented in version 2.0-EA1.)
-            </para>
-            <para>
                 All status changes for an item will trigger e-mail notifications by default.
                 You can choose to add multiple users into a "notify list" at the time of raising a new item
                 or updating the history for an item.
@@ -307,7 +304,22 @@
                         <para>Add multiple users to a "notify list" while creating or updating an item</para>
                     </caption>
                 </mediaobject>
-            </para>                 
+            </para>
+            <para>
+                The e-mail content is very nicely formatted HTML and is laid out in the same way as how the screen looks
+                within JTrac when viewing an item.  Users do not need to get used to a different or possibly
+                less pleasing format such as plain-text.
+            </para>
+            <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="../images/email-notification.png"/>
+                    </imageobject>
+                    <caption>
+                        <para>Example of an e-mail sent by JTrac</para>
+                    </caption>
+                </mediaobject>
+            </para>            
         </sect1>                
     </chapter>
     
@@ -390,7 +402,7 @@
                 Hibernate is used for data persistence.  This allows for JTrac to be database neutral and any database
                 supported by Hibernate can be used.
             </para>
-        </sect1>       
+        </sect1>     
     </chapter>    
     
     <chapter id="roadmap">
