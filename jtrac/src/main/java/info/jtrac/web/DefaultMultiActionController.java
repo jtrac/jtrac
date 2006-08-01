@@ -47,7 +47,7 @@ import org.springframework.web.util.WebUtils;
 import org.springframework.webflow.execution.FlowExecution;
 
 public class DefaultMultiActionController extends AbstractMultiActionController {
-
+    
     public ModelAndView loginHandler(HttpServletRequest request, HttpServletResponse response) {
         String message = null;
         if (request.getParameter("error") != null) {
@@ -70,7 +70,8 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
     }
 
     public ModelAndView dashboardHandler(HttpServletRequest request, HttpServletResponse response) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();        
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        applyCacheSeconds(response, 0, true);
         return new ModelAndView("dashboard", "counts", jtrac.loadCountsForUser(user.getId()));
     }   
     
