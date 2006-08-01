@@ -93,7 +93,10 @@ public class ExcelUtils {
         cell.setCellStyle(csDate);        
     }
     
-    private void setDouble(int row, int col, double value) {
+    private void setDouble(int row, int col, Double value) {
+        if (value == null) {
+            return;
+        }        
         HSSFCell cell = getCell(row, col);
         cell.setCellValue(value);          
     }    
