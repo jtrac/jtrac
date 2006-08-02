@@ -51,7 +51,7 @@ public class ItemList extends SimpleTagSupport {
         JspWriter out = pageContext.getOut();
         try {
             
-            // pagination
+            //=============================== PAGINATION =====================================
             String flowUrlParam = "_flowExecutionKey=" + request.getAttribute("flowExecutionKey");
             String flowUrl = "flow.htm?" + flowUrlParam;
             StringBuffer sb = new StringBuffer();
@@ -87,10 +87,10 @@ public class ItemList extends SimpleTagSupport {
                 sb.append("</span>");
             }
             // write out record count + pagination
-            out.println("<table class='jtrac bdr-collapse' width='100%'><tr><td>" + sb + "</td>");
-            
+            out.println("<table class='jtrac bdr-collapse' width='100%'><tr><td>" + sb + "</td>");            
             out.println("<td align='right'><a href='item_list_excel.htm?" + flowUrlParam + "'>(export to excel)</a></td></tr></table><p/>");
             
+            //=============================== TABLE HEADER =====================================
             boolean showDetail = itemSearch.isShowDetail();
             boolean showHistory = itemSearch.isShowHistory();
             List<Field> fields = itemSearch.getFields();
@@ -119,6 +119,7 @@ public class ItemList extends SimpleTagSupport {
             if (itemId != null) {
                 selected = Integer.parseInt(itemId);
             }
+            //=============================== ITERATE =====================================
             for(AbstractItem item : items) {
                 String rowClass = "";
                 String bookmark = "";
@@ -149,7 +150,7 @@ public class ItemList extends SimpleTagSupport {
                         }
                         out.println(( h.getComment() == null ? "" : HtmlUtils.htmlEscape(h.getComment()) ) + "</td>");
                     } else {
-                        out.println("  <td>" + item.getDetail() + "</td>");
+                        out.println("  <td>" + (item.getDetail() == null ? "" : HtmlUtils.htmlEscape(item.getDetail())) + "</td>");
                     }
                 }
                 
@@ -164,7 +165,7 @@ public class ItemList extends SimpleTagSupport {
                 count++;
             }
             out.println("</table>");
-            // re write out record count + pagination
+            // again write out record count + pagination
             out.println("<p/>" + sb);
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
