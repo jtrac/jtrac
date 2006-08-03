@@ -120,7 +120,7 @@ public class EmailUtils {
         sb.append(anchor);
         // prepare message
         MimeMessage message = sender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);        
+        MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");        
         try {
             helper.setText(addHeaderAndFooter(sb), true);
             helper.setSubject(getSubject(item));
