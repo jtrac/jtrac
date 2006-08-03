@@ -23,7 +23,7 @@
         </menu>
         <menu name="Documentation">
             <item name="HTML" href="doc/html/index.html"/>
-            <item name="PDF" href="doc/pdf/jtrac-doc.pdf"/>
+            <item name="PDF" href="doc/pdf/jtrac-doc.zip"/>
         </menu>
         <menu name="Project">
             <item name="License" href="license.html"/>
