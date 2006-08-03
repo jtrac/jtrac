@@ -151,7 +151,7 @@ public class EmailUtils {
     public void sendUserPassword(User user, String clearText) {
         logger.debug("attempting to send mail for user password");
         MimeMessage message = sender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
+        MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");
         try {
             helper.setTo(user.getEmail());
             helper.setSubject(prefix + " JTrac login details");
