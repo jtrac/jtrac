@@ -82,6 +82,8 @@
         <servlet-class>edu.yale.its.tp.cas.proxy.ProxyTicketReceptor</servlet-class>
     </servlet>
     
+    <!-- JSPC_TOKEN -->
+    
     <servlet-mapping>
         <servlet-name>casproxy</servlet-name>
         <url-pattern>/casProxy/*</url-pattern>

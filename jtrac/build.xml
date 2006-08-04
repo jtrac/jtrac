@@ -49,10 +49,14 @@
     </target>    
     
     <!-- TODO call "set-production-flag" after clean for version 2.0 final onwards -->
-    <target name="war" depends="clean, war-exploded">
+    <target name="war" depends="clean, jspc">
         <copy todir="target/${war.name}/WEB-INF" file="etc/log4j.properties" overwrite="true"/>
-        <zip destfile="target/${war.name}.war" basedir="target/${war.name}"/>
-    </target>    
+        <zip destfile="target/${war.name}.war" basedir="target/${war.name}">
+            <exclude name="**/WEB-INF/*.generated"/>
+            <exclude name="**/WEB-INF/jsp/**"/>
+            <exclude name="**/WEB-INF/src/**"/>          
+        </zip>
+    </target>
     
     <!-- ========================== TEST ============================ -->
 	
@@ -182,6 +186,56 @@
         </javadoc>
     </target>
 	
+    <!-- ========================== JSPC ============================ -->
+    
+    <target name="jspc" depends="war-exploded">
+        <taskdef classname="org.apache.jasper.JspC" name="jasper2"> 
+            <classpath id="jspc.classpath"> 
+                <pathelement location="${java.home}/../lib/tools.jar"/> 
+                <fileset dir="${tomcat.home}/bin"> 
+                    <include name="*.jar"/> 
+                </fileset> 
+                <fileset dir="${tomcat.home}/server/lib"> 
+                    <include name="*.jar"/> 
+                </fileset> 
+                <fileset dir="${tomcat.home}/common/lib"> 
+                    <include name="*.jar"/> 
+                </fileset>
+                <path path="src/main/webapp/WEB-INF"/> <!-- for log4j.properties -->
+            </classpath> 
+        </taskdef> 
+        <jasper2 validateXml="false" uriroot="target/${war.name}" 
+            webXmlFragment="target/${war.name}/WEB-INF/web.xml.generated" 
+            outputDir="target/${war.name}/WEB-INF/src"/>
+        <javac destdir="target/${war.name}/WEB-INF/classes"
+            optimize="off"
+            debug="on" failonerror="false"
+            srcdir="target/${war.name}/WEB-INF/src" 
+            excludes="**/*.smap">
+            <classpath>
+                <pathelement location="target/${war.name}/WEB-INF/classes"/>
+                <fileset dir="target/${war.name}/WEB-INF/lib">
+                    <include name="*.jar"/>
+                </fileset>
+                <pathelement location="${tomcat.home}/common/classes"/>
+                <fileset dir="${tomcat.home}/common/lib">
+                    <include name="*.jar"/>
+                </fileset>
+                <pathelement location="${tomcat.home}/shared/classes"/>
+                <fileset dir="${tomcat.home}/shared/lib">
+                    <include name="*.jar"/>
+                </fileset>
+                <fileset dir="${tomcat.home}/bin"> 
+                    <include name="*.jar"/> 
+                </fileset> 
+            </classpath>
+            <include name="**"/>
+            <exclude name="tags/**"/>
+        </javac>             
+        <loadfile property="web.xml.generated" srcFile="target/${war.name}/WEB-INF/web.xml.generated"/>
+        <replace file="target/${war.name}/WEB-INF/web.xml" value="${web.xml.generated}" token="&lt;!-- JSPC_TOKEN --&gt;"/>        
+    </target>
+    
     <!-- ========================= TOMCAT =========================== -->
     
     <target name="tomcat-clean">   
@@ -206,9 +260,13 @@
         </delete> 	
     </target>
     
-    <target name="tomcat-deploy" depends="war-exploded">  
+    <target name="tomcat-deploy" depends="jspc">  
         <copy todir="${tomcat.home}/webapps/${war.name}">
-            <fileset dir="target/${war.name}"/>
+            <fileset dir="target/${war.name}">
+                <exclude name="**/WEB-INF/*.generated"/>
+                <exclude name="**/WEB-INF/jsp/**"/>
+                <exclude name="**/WEB-INF/src/**"/>
+            </fileset>
         </copy>
     </target>    
 	
