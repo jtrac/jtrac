@@ -5,7 +5,7 @@
     <groupId>info.jtrac</groupId>
     <artifactId>jtrac</artifactId>
     <packaging>war</packaging>
-    <version>2.0-EA1</version>
+    <version>2.0-RC2</version>
     <name>JTrac</name>
     <description>
         JTrac is a generic issue-tracking web-application that can be easily customized by adding custom fields 
@@ -25,7 +25,7 @@
         <connection>scm:svn:https://svn.sourceforge.net/svnroot/j-trac/trunk/jtrac</connection>
         <url>http://svn.sourceforge.net/viewcvs.cgi/j-trac/trunk/jtrac</url>
     </scm>
-
+    
     <distributionManagement>
         <site>
             <id>website</id>
@@ -335,6 +335,14 @@
                 <artifactId>maven-bshrunner-plugin</artifactId>
                 <configuration>
                     <file>etc/build-deps-gen.bsh</file>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <configuration>
+                    <templateDirectory>file:///E:/peter/jtrac-trunk/jtrac/src/site/resources/template/</templateDirectory>
+                    <template>maven-site.vm</template>
                 </configuration>
             </plugin>           
         </plugins>
