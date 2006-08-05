@@ -109,7 +109,8 @@
                 <instr instrpath="target/classes" 
                 outdir="target/instr-classes" 
                 metadatafile="target/metadata.emma" merge="true"/>
-            </emma>            
+            </emma>
+            <copy file="etc/build.log4j.properties" tofile="target/classes/log4j.properties"/>
             <junit fork="true" dir="." tempdir="target">
                 <classpath>
                     <path path="target/instr-classes"/>
@@ -117,7 +118,6 @@
                     <path path="target/test-classes"/>
                     <path path="${test.jars}"/>                
                     <path path="${emma.jars}"/>
-                    <path path="src/main/webapp/WEB-INF"/> <!-- for log4j.properties -->
                 </classpath>
                 <jvmarg value="-Demma.coverage.out.file=${basedir}/target/coverage.emma"/>
                 <jvmarg value="-Demma.coverage.out.merge=true"/>
@@ -201,7 +201,6 @@
                 <fileset dir="${tomcat.home}/common/lib"> 
                     <include name="*.jar"/> 
                 </fileset>
-                <path path="src/main/webapp/WEB-INF"/> <!-- for log4j.properties -->
             </classpath> 
         </taskdef> 
         <jasper2 validateXml="false" uriroot="target/${war.name}" 
@@ -234,6 +233,49 @@
         </javac>             
         <loadfile property="web.xml.generated" srcFile="target/${war.name}/WEB-INF/web.xml.generated"/>
         <replace file="target/${war.name}/WEB-INF/web.xml" value="${web.xml.generated}" token="&lt;!-- JSPC_TOKEN --&gt;"/>        
+    </target>
+    
+    <!-- ========================= JETTY ============================ -->    
+    
+    <target name="jetty-deploy" depends="jspc">      
+        <copy todir="target/jetty/webapp">
+            <fileset dir="target/${war.name}">
+                <exclude name="**/WEB-INF/*.generated"/>
+                <exclude name="**/WEB-INF/jsp/**"/>
+                <exclude name="**/WEB-INF/src/**"/>
+            </fileset>
+        </copy>
+    </target>
+    
+    <target name="jetty-setup">
+        <copy todir="target/jetty/lib" flatten="true">
+            <fileset dir="${m2.repo}" includes="${jetty.jars}" casesensitive="false"/>
+        </copy>
+        <copy todir="target/jetty" flatten="true">
+            <fileset dir="${m2.repo}" includes="${jetty.start}" casesensitive="false"/>
+            <mapper type="merge" to="start.jar"/>
+        </copy>
+        <copy todir="target/jetty/etc">
+            <fileset dir="etc">
+                <include name="jetty.xml"/>
+                <include name="webdefault.xml"/>
+            </fileset>
+        </copy>        
+        <mkdir dir="target/jetty/logs"/>
+        <mkdir dir="target/jetty/work"/>        
+    </target>
+    
+    <target name="jetty-start" depends="jetty-setup, jetty-deploy">
+        <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
+            <jvmarg line="-Dfile.encoding=UTF-8"/>
+            <jvmarg line="-Djtrac.home=${basedir}/home"/>
+        </java>
+    </target>
+   
+    <target name="jetty-stop">
+        <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">            
+            <arg line="--stop"/>
+        </java>        
     </target>
     
     <!-- ========================= TOMCAT =========================== -->

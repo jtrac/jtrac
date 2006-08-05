@@ -8,10 +8,16 @@
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
 
-/* function to resolve dependencies for the given artifact details using Maven, on the fly */
-/* ======================================================================================= */
+/* instantiate and download if required a single artifact using Maven, on the fly */
+/* ============================================================================== */
+getArtifact(groupId, artifactId, version) {
+    return artifactFactory.createArtifact(groupId, artifactId, version, "", "jar");      
+}
+
+/* resolve dependencies for the given artifact details using Maven, on the fly */
+/* =========================================================================== */
 resolveDependencies(groupId, artifactId, version) {
-    pomArtifact = artifactFactory.createArtifact(groupId, artifactId, version, "", "jar"); 
+    pomArtifact = getArtifact(groupId, artifactId, version); 
     pomProject = mavenProjectBuilder.buildFromRepository(pomArtifact, remoteArtifactRepositories, localRepository);    
     artifacts = pomProject.createArtifacts(artifactFactory, Artifact.SCOPE_TEST, new ScopeArtifactFilter(Artifact.SCOPE_TEST));
     for (Artifact a : artifacts) {
@@ -21,18 +27,23 @@ resolveDependencies(groupId, artifactId, version) {
     return artifacts;      
 }
 
+/* resolve single artifact to file */
+/* =============================== */
+resolveArtifact(artifact) {
+    f = artifact.getFile();
+    if (f != null) return f;
+    print("*** resolving artifact: " + artifact);
+    artifactResolver.resolve(artifact, remoteArtifactRepositories, localRepository);
+    return artifact.getFile();    
+}
+
+
 /* convert a collection of maven artifacts into a collection of files */
 /* ================================================================== */
 getFiles(artifacts) {
     files = new ArrayList();
     for (Artifact a : artifacts) {
-        f = a.getFile();
-        if (f == null) {
-            print("*** resolving artifact: " + a);
-            artifactResolver.resolve(a, remoteArtifactRepositories, localRepository);
-            f = a.getFile();
-        }
-        files.add(f);
+        files.add(resolveArtifact(a));
     }
     return files;
 }
@@ -118,4 +129,25 @@ emmaAntDeps = resolveDependencies("emma", "emma_ant", "2.0.5312");
 emmaDeps.addAll(emmaAntDeps);
 writePaths(getFiles(emmaDeps), baseDir, "${m2.repo}");
 out.write("\n");
+
+// ==============================
+
+out.write("jetty.jars=");
+jettyDeps = resolveDependencies("org.mortbay.jetty", "jetty", "6.0.0rc0");
+jettyJsp = getArtifact("org.mortbay.jetty", "jsp-2.1", "6.0.0rc0");
+jettyJspApi = getArtifact("org.mortbay.jetty", "jsp-api-2.1", "6.0.0rc0");
+jettyDeps.add(jettyJsp);
+jettyDeps.add(jettyJspApi);
+writePaths(getFiles(jettyDeps), baseDir, null);
+out.write("\n");
+
+// ==============================
+
+out.write("jetty.start=");
+jettyStart = getArtifact("org.mortbay.jetty", "start", "6.0.0rc0");
+out.write(getRelativePath(resolveArtifact(jettyStart), baseDir));
+out.write("\n");
+
+// ==============================
+
 out.close();
