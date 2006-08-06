@@ -21,6 +21,20 @@
    THIRD PARTY SOFTWARE (licenses provided as hyperlinks)
    ======================================================================
 
+   This product includes software developed by the Jetty Project
+   (http://www.mortbay.org/jetty/).
+   
+   * jetty-util
+   * jsp-2.1
+   * jsp-api-2.1
+   * servlet-api-2.5
+   * jetty
+   * start
+   
+     [ http://www.mortbay.org/jetty/LICENSE.TXT ]
+   
+   ======================================================================
+
    This product includes software developed by the Spring Framework
    Project (http://www.springframework.org).
    
