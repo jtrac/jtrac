@@ -18,7 +18,7 @@
    peter_t3@yahoo.com 
    
    ======================================================================
-   THIRD PARTY SOFTWARE (licenses provided as hyperlinks)
+   THIRD PARTY SOFTWARE (licenses provided as valid URL references)
    ======================================================================
 
    This product includes software developed by the Jetty Project
