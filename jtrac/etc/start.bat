@@ -1,0 +1,1 @@
+java -Djetty.port=80 -Djtrac.home=data -Dfile.encoding=UTF-8 -jar start.jar

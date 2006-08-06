@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <project name="jtrac" basedir=".">
 
     <property file="build.properties"/>
@@ -48,6 +47,8 @@
         <property name="production" value="true"/>
     </target>    
     
+    <!-- ========================== DIST ============================ -->
+    
     <!-- TODO call "set-production-flag" after clean for version 2.0 final onwards -->
     <target name="war" depends="clean, jspc">
         <copy todir="target/${war.name}/WEB-INF" file="etc/log4j.properties" overwrite="true"/>
@@ -56,6 +57,14 @@
             <exclude name="**/WEB-INF/jsp/**"/>
             <exclude name="**/WEB-INF/src/**"/>          
         </zip>
+    </target>
+    
+    <target name="dist" depends="war, jetty-setup">
+        <zip destfile="target/jtrac.zip">
+            <zipfileset dir="target" includes="*.war" prefix="jtrac"/>
+            <zipfileset dir="target/dist" prefix="jtrac"/>
+            <zipfileset dir="etc" includes="*.bat" prefix="jtrac"/>
+        </zip>         
     </target>
     
     <!-- ========================== TEST ============================ -->
@@ -238,7 +247,7 @@
     <!-- ========================= JETTY ============================ -->    
     
     <target name="jetty-deploy" depends="jspc">      
-        <copy todir="target/jetty/webapp">
+        <copy todir="target/dist/webapp">
             <fileset dir="target/${war.name}">
                 <exclude name="**/WEB-INF/*.generated"/>
                 <exclude name="**/WEB-INF/jsp/**"/>
@@ -248,32 +257,33 @@
     </target>
     
     <target name="jetty-setup">
-        <copy todir="target/jetty/lib" flatten="true">
+        <copy todir="target/dist/lib" flatten="true">
             <fileset dir="${m2.repo}" includes="${jetty.jars}" casesensitive="false"/>
         </copy>
-        <copy todir="target/jetty" flatten="true">
+        <copy todir="target/dist" flatten="true">
             <fileset dir="${m2.repo}" includes="${jetty.start}" casesensitive="false"/>
             <mapper type="merge" to="start.jar"/>
         </copy>
-        <copy todir="target/jetty/etc">
+        <copy todir="target/dist/etc">
             <fileset dir="etc">
                 <include name="jetty.xml"/>
                 <include name="webdefault.xml"/>
             </fileset>
         </copy>        
-        <mkdir dir="target/jetty/logs"/>
-        <mkdir dir="target/jetty/work"/>        
+        <mkdir dir="target/dist/logs"/>
+        <mkdir dir="target/dist/work"/>        
     </target>
     
     <target name="jetty-start" depends="jetty-setup, jetty-deploy">
-        <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
+        <java jar="target/dist/start.jar" fork="true" dir="target/dist">
             <jvmarg line="-Dfile.encoding=UTF-8"/>
             <jvmarg line="-Djtrac.home=${basedir}/home"/>
+            <jvmarg line="-Djtrac.webapp=webapp"/>
         </java>
     </target>
    
     <target name="jetty-stop">
-        <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">            
+        <java jar="target/dist/start.jar" fork="true" dir="target/dist">            
             <arg line="--stop"/>
         </java>        
     </target>
