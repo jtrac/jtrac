@@ -60,10 +60,12 @@
     </target>
     
     <target name="dist" depends="war, jetty-setup">
+        <ant antfile="doc/build.xml"/>
         <zip destfile="target/jtrac.zip">
             <zipfileset dir="target" includes="*.war" prefix="jtrac"/>
             <zipfileset dir="target/dist" prefix="jtrac"/>
             <zipfileset dir="etc" includes="*.bat" prefix="jtrac"/>
+            <zipfileset dir="target/site/doc" prefix="jtrac/doc"/>            
         </zip>         
     </target>
     
@@ -268,6 +270,7 @@
             <fileset dir="etc">
                 <include name="jetty.xml"/>
                 <include name="webdefault.xml"/>
+                <include name="wrapper.conf"/>
             </fileset>
         </copy>        
         <mkdir dir="target/dist/logs"/>

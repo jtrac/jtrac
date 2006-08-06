@@ -6,7 +6,7 @@
     <bookinfo>
         <title>JTrac</title>
         <subtitle>User / Developer Guide</subtitle>
-        <releaseinfo>2.0-RC1</releaseinfo>
+        <releaseinfo>2.0-RC2</releaseinfo>
         <authorgroup>
             <author>
                 <firstname>Peter</firstname>
@@ -58,24 +58,27 @@
         </sect1>        
         
         <sect1 id="introduction-releasenotes">
-            <title>Release Notes</title>
+            <title>Release Notes: Version 2.0-RC2</title>
             <para>
-                Version 2.0-RC1
-            </para>
-            <para>
-                As the version number implies, 2.0-RC1 is not yet final and thus not recommended for production.
+                As the version number implies, 2.0-RC2 is not yet final and thus not recommended for production.
                 The intention is to get as much feedback as possible from interested users and there may be
                 minor changes to the database schema before the 2.0 milestone.
             </para>
             <para>
-                JTrac 2.0 final should be available by the end of July 2006. Development has been slower than 
-                expected and the earlier target of June 2006 has admittedly not been met.                
+                JTrac 2.0 final should be available by the end of August 2006. Development has been slower than 
+                expected and the earlier target of June 2006 has admittedly not been met.
             </para>
             <para>
                 You are encouraged to try out JTrac and communicate your feedback and interest in future versions
-                to the JTrac development team.  Note that you can be up and running with JTrac by just dropping
-                the WAR file into your servlet engine - which makes it extremely easy to evaluate.                
-            </para>          
+                to the JTrac development team.  Note that you can be up and running with just Java 5 as a prerequisite
+                as JTrac comes bundled with a small-footprint web-application server (Jetty).  JTrac also uses
+                an embedded database by default which makes it extremely easy to evaluate.
+            </para>
+            <para>
+                Please see the <link linkend="installation">installation</link> section of this documentation for 
+                more details like how you can drop the WAR file into a server of your choice and immediately 
+                start using JTrac.                
+            </para>
         </sect1>         
     </chapter>
     
@@ -93,16 +96,16 @@
         <sect1 id="features-easytoinstall">
             <title>Easy to Install</title>
             <para>
-                JTrac uses Hibernate and so it can support any database.  Any servlet version 2.4 compliant container
-                such as Apache Tomcat 5.5.X is sufficient to run JTrac.  JTrac requires Java 5.0 but has minimal
-                installation requirements otherwise.
+                One of the useful features of JTrac is that it is distributed with an embedded web-application server 
+                (Jetty) that has a very small footprint (~1.3 MB).  If you have Java 5 installed you can be up and 
+                running after downloading and extracting JTrac - by simply using the provided start and stop scripts.  
+                JTrac scans its environment on startup and if a configured database is not detected, HSQLDB is used 
+                by default.  Also, if you already have a web-application server that you wish to use (such as Tomcat) 
+                you can drop in just the single WAR file provided and immediately sign on into the application.
             </para>
             <para>
-                One of the useful features of JTrac is that it is distributed as a WAR file and you can be up
-                and running by just deploying the WAR file.  The JTrac web-application checks the 
-                environment on startup and if a configured database is not detected, HSQLDB is used by default.
-                This means that you can easily evaluate JTrac - just drop the WAR file into your servlet engine
-                and you can immediately sign on into the application.
+                Please see the <link linkend="installation">installation</link> section of this documentation for 
+                more details.  JTrac uses Hibernate and so it can support any database.    
             </para>                
         </sect1>            
         <sect1 id="features-customfields">
@@ -328,25 +331,74 @@
         <sect1 id="installation-prerequisites">
             <title>Prerequisites</title>
             <para>    
-                <itemizedlist>
-                    <listitem>
-                        <para>Java 5.0</para>
-                    </listitem>
-                    <listitem>
-                        <para>Servlet 2.4 compliant container</para>
-                    </listitem>                               
-                </itemizedlist>                   
+                All you require in order to start using JTrac is Java 5.  Only a JRE (Java Runtime Environment)
+                is required and not the full-blown JDK (Java Development Kit).
             </para>
+            <para>    
+                You can download Java from <ulink url="http://www.java.com/download"/>.  Once you have Java installed
+                you can verify that your system is ready to run JTrac by opening a command prompt and typing the
+                following command:
+            </para>
+            <para>
+                <programlisting>
+
+java -version
+                </programlisting>
+            </para>
+            <para>
+                If the system responds with a java version that is 1.5 or greater, you are ready to download and run JTrac.
+            </para>            
         </sect1>        
         <sect1 id="installation-quick">
             <title>Quick Installation</title>
             <para>                    
-                JTrac has an extremely convenient "quick-install" option where it does not require any
-                external database to be available.
+                Once you have Java you can start using JTrac right away because you do not need to configure a web-application 
+                server or a database.  JTrac embeds both of these to make it easy for you to evaluate JTrac.
             </para>                  
-            <para>                    
-                Once you obtain "jtrac.war" from the release package or the JTrac download site you can
-                easily start it in any servlet 2.4 compliant container.  For example, if you have 
+            <para>            
+                <itemizedlist>
+                    <listitem>
+                        <para>
+                            First, download the latest release from  
+                            <ulink url="http://sourceforge.net/project/showfiles.php?group_id=162983&amp;package_id=184104">
+                            the JTrac downloads area</ulink>.                            
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>Extract the zip file into a directory of your choice.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Double-click on "start.bat" to start JTrac.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Point your web-browser to <ulink url="http://localhost/jtrac"/></para>
+                    </listitem>
+                    <listitem>
+                        <para>Sign on with the user name "admin" and password "admin"</para>
+                    </listitem>
+                    <listitem>
+                        <para>Start using JTrac.</para>
+                    </listitem>                                 
+                </itemizedlist>                 
+            </para>
+            <para>
+                Note that you can use the "stop.bat" script to stop the application.
+                (If you are using Linux we are quite sure that you would be able to port these scripts to what you need
+                and kindly don't forget to contribute the scripts to the JTrac project with your feedback ;)
+            </para>
+            <para>
+                JTrac by default will use a "data" directory that it will automatically create
+                within the root (jtrac) folder.  The data directory will contain the files needed by HSQLDB
+                (the embedded database) as well as hold uploaded attachments.  The "start.bat" file configures the 
+                Jetty server to use port 80 which you can easily change by editing "start.bat".  You may need to do this 
+                if for example JTrac does not start because a web-server (like Apache or IIS) is already running on port 80.
+            </para>           
+        </sect1>
+        <sect1 id="installation-war">
+            <title>Using only the WAR file</title>
+            <para>
+                JTrac is designed so that can deploy the WAR file into your existing web-application server.
+                Note that you need a servlet 2.4 compliant container.  For example, if you have 
                 Apache Tomcat 5.5.X, you can either copy the WAR file into the [tomcat home]/webapps folder 
                 or choose to upload the WAR file through the Tomcat console.
             </para>
@@ -355,18 +407,92 @@
                 This directory is logically called the "jtrac.home".  When you do a "quick-install" of JTrac
                 by just deploying the WAR file, JTrac creates a ".jtrac" folder in the user home folder and
                 uses that location as the home directory.
-            </para>
-            <para>                    
-        When you log in to JTrac for the first time use "admin" for both the username as well as password.
-            </para>             
+            </para>            
         </sect1>
         <sect1 id="installation-custom">
             <title>Custom Installation</title>
             <para>                    
                 To change the location of "jtrac.home" you need to set a Java system property called "jtrac.home"
                 to a valid path on the server.  This has to be in place after the servlet-engine (e.g. Tomcat) starts.
-            </para> 
-        </sect1>            
+                Please look at the contents of "start.bat" to see an example of how the appropriate JVM (Java Virtual Machine)
+                parameters can be set when deploying JTrac.
+            </para>
+            <para>                    
+                You can configure the database that JTrac uses by editing the "jtrac.properties" file that JTrac expects
+                within the "jtrac.home" folder.  Note that if JTrac does not find a "jtrac.properties" file in the
+                expected location, JTrac creates a fresh one which is pre-configured for HSQLDB.  The contents of this file
+                are as follows:                
+            </para>
+            <para>
+                <programlisting>
+
+database.driver=org.hsqldb.jdbcDriver
+database.url=jdbc:hsqldb:file:${jtrac.home}/db/jtrac
+database.username=sa
+database.password=
+hibernate.dialect=org.hibernate.dialect.HSQLDialect
+hibernate.show_sql=false
+                </programlisting>
+            </para>
+            <para>
+                You can change the database values and the hibernate dialect to match the settings of a 
+                database that you have already.  When JTrac starts, it will connect to the database and
+                create the schema if one does not already exist.
+            </para>
+        </sect1>
+        <sect1 id="installation-windowsservice">
+            <title>Installing as a Windows Service</title>
+            <para>                    
+                If you choose to use the bundled Jetty web-application server, you can easily install
+                JTrac as a Windows service so that it can start automatically when the host machine is
+                switched on.
+            </para>
+            <para>
+                You can do this by using the <ulink url="http://wrapper.tanukisoftware.org/">Java Service Wrapper</ulink>
+                project.  For convenience, the JTrac distribution contains a "wrapper.conf" file in the "etc"
+                folder that is pre-configured for the Java Service Wrapper.  But first you have to download the 
+                Java Service Wrapper distribution separately.
+            </para>
+            <para>
+                Place some of the files from the Java Service Wrapper distribution into the JTrac folder structure
+                as follows:
+                <itemizedlist>
+                    <listitem>
+                        <para>From the "bin" folder, copy "wrapper.exe" to the "jtrac" root folder</para>
+                    </listitem>
+                    <listitem>
+                        <para>From the "lib" folder, copy "wrapper.jar" and "wrapper.dll" into the "jtrac/etc" folder</para>
+                    </listitem>                               
+                </itemizedlist>                 
+            </para>
+            <para>
+                To install JTrac as a windows service, open a command prompt, change to the "jtrac" directory
+                (where you extracted the JTrac distribution) and run the following command:
+            </para>
+            <para>
+                <programlisting>
+
+wrapper.exe -i etc/wrapper.conf
+                </programlisting>
+            </para>
+            <para>
+                This will install a windows service called "JTrac-Jetty".  You can now go to the Windows -
+                Control Panel --> Administrative Tools --> Services dialog to start the "JTrac-Jetty" service.
+                Note that this service is configured to automatically start when Windows starts, by default.
+                To remove the service, you can use the following command:
+            </para>
+            <para>
+                <programlisting>
+
+wrapper.exe -r etc/wrapper.conf
+                </programlisting>
+            </para>
+            <para>
+                When running as a service under the Java Service Wrapper", you can look at the
+                "wrapper.log" file in the "jtrac/logs" folder for troubleshooting.  Note that the 
+                [jtrac.home] folder would contain the application log called "jtrac.log" as well.
+            </para>
+        </sect1>
     </chapter>      
     
     <chapter id="faq">
