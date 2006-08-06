@@ -65,7 +65,8 @@
             <zipfileset dir="target" includes="*.war" prefix="jtrac"/>
             <zipfileset dir="target/dist" prefix="jtrac"/>
             <zipfileset dir="etc" includes="*.bat" prefix="jtrac"/>
-            <zipfileset dir="target/site/doc" prefix="jtrac/doc"/>            
+            <zipfileset dir="target/site/doc" prefix="jtrac/doc"/>
+            <zipfileset dir="." includes="*.txt" prefix="jtrac"/>
         </zip>         
     </target>
     

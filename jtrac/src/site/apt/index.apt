@@ -16,17 +16,19 @@ About
     
     * Detailed history view
     
-    * E-mail integration
+    * E-mail notifications
     
-    * File attachments    
+    * File attachments
     
-    * Dashboard view    
+    * Search and filter even on custom fields    
     
-    * Search wizard    
+    * Dashboard view of statistics
     
-    * Excel export
+    * Export data and search results to Excel   
     
     * Support for all popular databases
+    
+    * Embedded database and web-app server - download and start using right away!
     
  Please see the {{{doc/html/features.html}feature documentation}} for more...
  

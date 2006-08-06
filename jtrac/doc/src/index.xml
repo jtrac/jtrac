@@ -397,10 +397,10 @@ java -version
         <sect1 id="installation-war">
             <title>Using only the WAR file</title>
             <para>
-                JTrac is designed so that can deploy the WAR file into your existing web-application server.
-                Note that you need a servlet 2.4 compliant container.  For example, if you have 
-                Apache Tomcat 5.5.X, you can either copy the WAR file into the [tomcat home]/webapps folder 
-                or choose to upload the WAR file through the Tomcat console.
+                JTrac is designed so that you can be up and running by just deploying the WAR file into your 
+                existing web-application server.  Note that you need a servlet 2.4 compliant container.  
+                For example, if you have Apache Tomcat 5.5.X, you can either copy the WAR file into the 
+                [tomcat.home]/webapps folder or choose to upload the WAR file through the Tomcat console.
             </para>
             <para>                    
                 JTrac saves database information and uploaded attachments into a directory on the server.

@@ -3,9 +3,6 @@
    == Version 2.0, in this case for the JTrac distribution             ==
    ======================================================================
 
-   This product includes software developed by the Spring Framework
-   Project (http://www.springframework.org).
-
    The end-user documentation included with a redistribution, if any,
    must include the following acknowledgement:
 
@@ -19,3 +16,142 @@
    endorse or promote products derived from this software without
    prior written permission. For written permission, please contact
    peter_t3@yahoo.com 
+   
+   ======================================================================
+   THIRD PARTY SOFTWARE (licenses provided as hyperlinks)
+   ======================================================================
+
+   This product includes software developed by the Spring Framework
+   Project (http://www.springframework.org).
+   
+   * spring
+   * spring-webflow
+   * spring-binding
+   
+     [ http://www.apache.org/licenses/LICENSE-2.0 ]
+   
+   ======================================================================
+   
+   This product includes software developed by the Acegi Security
+   System for Spring Project (http://acegisecurity.org).
+
+   * acegi-security [ http://www.apache.org/licenses/LICENSE-2.0 ]  
+   
+   ======================================================================
+   
+   This product includes software developed by
+   The Apache Software Foundation (http://www.apache.org/).
+   
+   * commons-logging
+   * geronimo-spec-jta
+   * jstl
+   * standard
+   * commons-collections
+   * oro
+   * commons-io
+   * commons-codec
+   * commons-fileupload
+   * commons-lang
+   * poi
+   * log4j
+   
+     [ http://www.apache.org/licenses/LICENSE-2.0 ]
+   
+   ======================================================================
+      
+   This product includes software developed by the Hibernate project
+   (http://www.hibernate.org/).   
+   
+   * hibernate [ http://www.opensource.org/licenses/lgpl-license.php ]
+   
+   ======================================================================   
+   
+   This product includes software developed by the Jaxen project
+   (http://jaxen.org/).
+   
+   * jaxen [ http://jaxen.org/license.html ]
+   
+   ======================================================================
+   
+   This product includes software developed by the JA-SIG Collaborative
+   (http://www.ja-sig.org/).
+   
+   * casclient [ http://www.ja-sig.org/products/cas/overview/license/index.html ]
+   
+   ======================================================================
+   
+   This product includes software developed by the Code Generation Library
+   (CGLIB) project (http://cglib.sourceforge.net/).   
+   
+   * cglib [ http://cglib.sourceforge.net/license.html ]
+   
+   ======================================================================
+      
+   This product includes software developed by the EHCACHE project
+   (http://ehcache.sourceforge.net/).   
+   
+   * ehcache [ http://ehcache.sourceforge.net/license.html ]
+   
+   ======================================================================
+   
+   This product includes software developed by the ASM project
+   (http://asm.objectweb.org/).    
+   
+   * asm [ http://asm.objectweb.org/license.html ]
+   
+   ======================================================================
+   
+   This product includes software developed by the OpenSymphony Group 
+   (http://www.opensymphony.com/).
+   
+   * ognl [ http://www.opensymphony.com/ognl/license.action ]
+   
+   ======================================================================
+   
+   This product includes software developed by the JavaSVN project 
+   (http://tmate.org/svn/).
+   
+   * javasvn [ http://tmate.org/svn/license.html ]
+   
+   ======================================================================
+   
+   This product includes software developed by the ANTLR project 
+   (http://www.antlr.org/).
+      
+   * antlr [ http://www.antlr.org/license.html ]
+   
+   ======================================================================   
+   
+   This product includes software developed by the HSQLDB project 
+   (http://www.hsqldb.org/).
+      
+   * hsqldb [ http://www.hsqldb.org/web/hsqlLicense.html ]
+   
+   ======================================================================     
+   
+   This product includes software developed by the JFree project 
+   (http://www.jfree.org/).
+      
+   * jcommon
+   * jfreechart [ http://www.opensource.org/licenses/lgpl-license.php ]
+   
+   ======================================================================      
+   
+   This product includes software developed by the dom4j project 
+   (http://www.dom4j.org/).
+      
+   * dom4j [ http://www.dom4j.org/license.html ]   
+   
+   ======================================================================    
+   
+   The following binaries bundled and included in the distribution are 
+   covered under the Sun Microsystems, Inc Binary Code License Agreement.
+   
+   * JavaBeans Activation Framework  - activation-1.1.jar
+     [ http://java.sun.com/products/javabeans/jaf/downloads/index.html ]
+     
+   * JavaMail API and Implementation - mail-1.4.jar
+     [ http://java.sun.com/products/javamail/downloads/index.html]
+     
+   =======================================================================
+   
