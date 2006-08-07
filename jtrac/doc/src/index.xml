@@ -477,7 +477,7 @@ wrapper.exe -i etc/wrapper.conf
             </para>
             <para>
                 This will install a windows service called "JTrac-Jetty".  You can now go to the Windows -
-                Control Panel --> Administrative Tools --> Services dialog to start the "JTrac-Jetty" service.
+                Control Panel :: Administrative Tools :: Services dialog to start the "JTrac-Jetty" service.
                 Note that this service is configured to automatically start when Windows starts, by default.
                 To remove the service, you can use the following command:
             </para>
@@ -488,7 +488,7 @@ wrapper.exe -r etc/wrapper.conf
                 </programlisting>
             </para>
             <para>
-                When running as a service under the Java Service Wrapper", you can look at the
+                When running as a service under the Java Service Wrapper, you can look at the
                 "wrapper.log" file in the "jtrac/logs" folder for troubleshooting.  Note that the 
                 [jtrac.home] folder would contain the application log called "jtrac.log" as well.
             </para>
@@ -638,16 +638,7 @@ wrapper.exe -r etc/wrapper.conf
                 to use an existing CAS installation for implementing Single Sign On. In fact most 
                 of the configuration is in place and only needs to be documented.
             </para>
-        </sect1>
-        <sect1 id="roadmap-installer">            
-            <title>Easier Installer</title>            
-            <para>
-                Even with the option to just drop in the war file and be up and running, it would 
-                be much more convenient if JTrac came with an installer or even an embedded web-container 
-                such as Tomcat or Jetty. Currently you need some level of Java web-container experience 
-                in order to use JTrac.
-            </para>
-        </sect1>      
+        </sect1>     
     </chapter>
     
 </book>
