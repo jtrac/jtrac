@@ -4,74 +4,6 @@
  * will contain all information about dependencies and can be used by
  * an Ant script as well as a NetBeans project
  */
- 
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
-
-/* instantiate and download if required a single artifact using Maven, on the fly */
-/* ============================================================================== */
-getArtifact(groupId, artifactId, version) {
-    return artifactFactory.createArtifact(groupId, artifactId, version, "", "jar");      
-}
-
-/* resolve dependencies for the given artifact details using Maven, on the fly */
-/* =========================================================================== */
-resolveDependencies(groupId, artifactId, version) {
-    pomArtifact = getArtifact(groupId, artifactId, version); 
-    pomProject = mavenProjectBuilder.buildFromRepository(pomArtifact, remoteArtifactRepositories, localRepository);    
-    artifacts = pomProject.createArtifacts(artifactFactory, Artifact.SCOPE_TEST, new ScopeArtifactFilter(Artifact.SCOPE_TEST));
-    for (Artifact a : artifacts) {
-        artifactResolver.resolve(a, remoteArtifactRepositories, localRepository);
-    }
-    artifacts.add(pomArtifact);
-    return artifacts;      
-}
-
-/* resolve single artifact to file */
-/* =============================== */
-resolveArtifact(artifact) {
-    f = artifact.getFile();
-    if (f != null) return f;
-    print("*** resolving artifact: " + artifact);
-    artifactResolver.resolve(artifact, remoteArtifactRepositories, localRepository);
-    return artifact.getFile();    
-}
-
-
-/* convert a collection of maven artifacts into a collection of files */
-/* ================================================================== */
-getFiles(artifacts) {
-    files = new ArrayList();
-    for (Artifact a : artifacts) {
-        files.add(resolveArtifact(a));
-    }
-    return files;
-}
-
-/* function to return relative path given base path and the target file */
-/* ==================================================================== */
-getRelativePath(file, basePath) {
-    p = basePath.replace('\\','/');
-    len = p.length() + 1;
-    if (p.endsWith("/")) len--;
-    return file.getPath().substring(len).replace('\\','/');
-}
-
-/* write out path entries for the given bunch of files */
-/* =================================================== */
-writePaths(files, basePath, baseKey) {    
-    for(f : files) {
-        p = getRelativePath(f, basePath);
-        out.write("\\\n    ");
-        if (baseKey == null) {
-	    out.write(p + ",");
-        } else {
-	    out.write(baseKey + "/" + p + ":");
-        }        
-    }
-}
-
-// ======================================================================
 
 is = new FileInputStream("build.properties");
 props = new Properties();
@@ -82,7 +14,7 @@ watijHome = props.getProperty("watij.home");
 
 os = new FileOutputStream("build-deps.properties");
 out = new PrintWriter(os);      
-baseDir = localRepository.getBasedir().replace('\\','/');                       
+baseDir = mvn.getBaseDir();                       
 out.write("# *** generated file - not created by hand! ***\n");
 out.write("m2.repo=" + baseDir + "\n");
 out.write("watij.home=" + watijHome + "\n");
@@ -92,7 +24,8 @@ out.write("watij.home=" + watijHome + "\n");
 out.write("test.jars=");
 testArtifacts = project.getDependencyArtifacts();
 testArtifacts.addAll(project.getTestArtifacts());
-writePaths(getFiles(testArtifacts), baseDir, "${m2.repo}");
+out.write(mvn.getPaths(mvn.getFiles(testArtifacts), baseDir, "${m2.repo}"));
+
 
 if (watijHome == null) {
     print("*** warning: ${watij.home} is null");
@@ -102,9 +35,9 @@ if (watijHome == null) {
         print("*** warning: " + watijLibDir + " does not exist");
     } else {
         watijFiles = new ArrayList();
-    	watijFiles.addAll(Arrays.asList(watijLibDir.listFiles()));
-    	watijFiles.add(new File(watijHome + "/watij.jar"));
-	writePaths(watijFiles, watijHome, "${watij.home}");
+        watijFiles.addAll(Arrays.asList(watijLibDir.listFiles()));
+        watijFiles.add(new File(watijHome + "/watij.jar"));
+        out.write(mvn.getPaths(watijFiles, watijHome, "${watij.home}"));
     }
 }
 out.write("\n");
@@ -112,40 +45,40 @@ out.write("\n");
 // ==============================
 
 out.write("runtime.jars=");
-writePaths(getFiles(project.getArtifacts()), baseDir, null);
+out.write(mvn.getPaths(mvn.getFiles(project.getArtifacts()), baseDir, null));
 out.write("\n");
 
 // ==============================
 
 out.write("checkstyle.jars=");
-writePaths(getFiles(resolveDependencies("checkstyle", "checkstyle", "4.1")), baseDir, "${m2.repo}");
+out.write(mvn.getPaths(mvn.getFiles("checkstyle", "checkstyle", "4.1"), baseDir, "${m2.repo}"));
 out.write("\n");
 
 // ==============================
 
 out.write("emma.jars=");            
-emmaDeps = resolveDependencies("emma", "emma", "2.0.5312");
-emmaAntDeps = resolveDependencies("emma", "emma_ant", "2.0.5312");
+emmaDeps = mvn.resolveDependencies("emma", "emma", "2.0.5312");
+emmaAntDeps = mvn.resolveDependencies("emma", "emma_ant", "2.0.5312");
 emmaDeps.addAll(emmaAntDeps);
-writePaths(getFiles(emmaDeps), baseDir, "${m2.repo}");
+out.write(mvn.getPaths(mvn.getFiles(emmaDeps), baseDir, "${m2.repo}"));
 out.write("\n");
 
 // ==============================
 
 out.write("jetty.jars=");
-jettyDeps = resolveDependencies("org.mortbay.jetty", "jetty", "6.0.0rc0");
-jettyJsp = getArtifact("org.mortbay.jetty", "jsp-2.1", "6.0.0rc0");
-jettyJspApi = getArtifact("org.mortbay.jetty", "jsp-api-2.1", "6.0.0rc0");
+jettyDeps = mvn.resolveDependencies("org.mortbay.jetty", "jetty", "6.0.0rc0");
+jettyJsp = mvn.getArtifact("org.mortbay.jetty", "jsp-2.1", "6.0.0rc0");
+jettyJspApi = mvn.getArtifact("org.mortbay.jetty", "jsp-api-2.1", "6.0.0rc0");
 jettyDeps.add(jettyJsp);
 jettyDeps.add(jettyJspApi);
-writePaths(getFiles(jettyDeps), baseDir, null);
+out.write(mvn.getPaths(mvn.getFiles(jettyDeps), baseDir, null));
 out.write("\n");
 
 // ==============================
 
 out.write("jetty.start=");
-jettyStart = getArtifact("org.mortbay.jetty", "start", "6.0.0rc0");
-out.write(getRelativePath(resolveArtifact(jettyStart), baseDir));
+jettyStart = mvn.getArtifact("org.mortbay.jetty", "start", "6.0.0rc0");
+out.write(mvn.getRelativePath(mvn.resolveArtifact(jettyStart), baseDir));
 out.write("\n");
 
 // ==============================
