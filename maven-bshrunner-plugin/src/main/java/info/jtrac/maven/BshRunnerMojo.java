@@ -73,8 +73,10 @@ public class BshRunnerMojo extends AbstractMojo {
 
 	public void execute() throws MojoExecutionException {
 
-		if (file == null) {
-			file = System.getProperty("bsh.file");
+		String temp = System.getProperty("bsh.file");
+
+		if (temp != null) {
+			file = temp;
 		}
 
 		if (file == null) {
