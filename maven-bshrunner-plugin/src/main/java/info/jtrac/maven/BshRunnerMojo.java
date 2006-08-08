@@ -137,7 +137,7 @@ public class BshRunnerMojo extends AbstractMojo {
 	    Iterator i = artifacts.iterator();
 	    while(i.hasNext()) {
 	    	Artifact a = (Artifact) i.next();
-	        artifactResolver.resolve(a, remoteArtifactRepositories, localRepository);
+	        resolveArtifact(a);
 	    }
 	    artifacts.add(pomArtifact);
 	    return artifacts;      
@@ -148,8 +148,10 @@ public class BshRunnerMojo extends AbstractMojo {
 	 */
 	public File resolveArtifact(Artifact artifact) throws Exception {
 	    File f = artifact.getFile();
-	    if (f != null) return f;
-	    getLog().info("*** resolving artifact: " + artifact);
+	    if (f != null) {
+	    	return f;
+	    }
+	    getLog().info("resolving artifact: " + artifact);
 	    artifactResolver.resolve(artifact, remoteArtifactRepositories, localRepository);
 	    return artifact.getFile();    
 	}	
@@ -180,7 +182,9 @@ public class BshRunnerMojo extends AbstractMojo {
 	public String getRelativePath(File file, String basePath) {
 	    String p = basePath.replace('\\','/');
 	    int len = p.length() + 1;
-	    if (p.endsWith("/")) len--;
+	    if (p.endsWith("/")) {
+	    	len--;
+	    }
 	    return file.getPath().substring(len).replace('\\','/');
 	}
 	
@@ -190,17 +194,17 @@ public class BshRunnerMojo extends AbstractMojo {
 	public String getPaths(Collection files, String basePath, String baseKey) {
 		StringBuffer sb = new StringBuffer();
 		Iterator i = files.iterator();
-		while(i.hasNext()) {
+		while (i.hasNext()) {
 			File f = (File) i.next();
-	        String p = getRelativePath(f, basePath);
-	        sb.append("\\\n    ");
-	        if (baseKey == null) {
-		    sb.append(p + ",");
-	        } else {
-		    sb.append(baseKey + "/" + p + ":");
-	        }        
-	    }
-	    return sb.toString();
+			String p = getRelativePath(f, basePath);
+			sb.append("\\\n    ");
+			if (baseKey == null) {
+				sb.append(p + ",");
+			} else {
+				sb.append(baseKey + "/" + p + ":");
+			}
+		}
+		return sb.toString();
 	}
 	
 }
