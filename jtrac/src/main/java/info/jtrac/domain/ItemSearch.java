@@ -112,19 +112,45 @@ public class ItemSearch implements Serializable {
         
         if (showHistory == true) {
             criteria = DetachedCriteria.forClass(History.class);
+            
+            // apply restrictions to parent, this is an inner join
             criteria.createCriteria("parent").add(Restrictions.in("space.id", getSpaceIdSet()));
+            
+            if (createdDateStart != null) {
+                criteria.createCriteria("parent").add(Restrictions.ge("timeStamp", createdDateStart));
+            }
+
+            if (createdDateEnd != null) {
+                criteria.createCriteria("parent").add(Restrictions.le("timeStamp", createdDateEnd));
+            }              
+            // end parent
+            
+            if (modifiedDateStart != null) {
+                criteria.add(Restrictions.ge("timeStamp", modifiedDateStart));
+            }
+            if (modifiedDateEnd != null) {
+                criteria.add(Restrictions.le("timeStamp", modifiedDateEnd));
+            }
+            
         } else {
             criteria = DetachedCriteria.forClass(Item.class);
-            criteria.add(Restrictions.in("space.id", getSpaceIdSet()));
-            // Item created date filter takes effect only here if set i.e. when showHistory == false
+            criteria.add(Restrictions.in("space.id", getSpaceIdSet()));  
+            
+            // see the difference above in the if clause
             if (createdDateStart != null) {
                 criteria.add(Restrictions.ge("timeStamp", createdDateStart));
             }
+
             if (createdDateEnd != null) {
                 criteria.add(Restrictions.le("timeStamp", createdDateEnd));
-            }
+            }               
+            
         }
-        
+        //======================================================================
+        if (summary != null) {
+            criteria.add(Restrictions.like("summary", "%" + summary + "%"));
+        }           
+        //======================================================================
         if (statusSet != null) {
             criteria.add(Restrictions.in("status", statusSet));
         }
@@ -140,6 +166,7 @@ public class ItemSearch implements Serializable {
         if (assignedToSet != null) {
             criteria.add(Restrictions.in("assignedTo.id", assignedToSet));
         }
+        //======================================================================
         if (cusInt01Set != null) {
             criteria.add(Restrictions.in("cusInt01", cusInt01Set));
         }
@@ -170,12 +197,42 @@ public class ItemSearch implements Serializable {
         if (cusInt10Set != null) {
             criteria.add(Restrictions.in("cusInt10", cusInt10Set));
         }
-        if (modifiedDateStart != null) {
-            criteria.add(Restrictions.ge("timeStamp", modifiedDateStart));
+        //======================================================================
+        if (cusStr01 != null) {
+            criteria.add(Restrictions.like("cusStr01", "%" + cusStr01 + "%"));
+        }                 
+        if (cusStr02 != null) {
+            criteria.add(Restrictions.like("cusStr02", "%" + cusStr02 + "%"));
+        }          
+        if (cusStr03 != null) {
+            criteria.add(Restrictions.like("cusStr03", "%" + cusStr03 + "%"));
         }
-        if (modifiedDateEnd != null) {
-            criteria.add(Restrictions.le("timeStamp", modifiedDateEnd));
+        if (cusStr04 != null) {
+            criteria.add(Restrictions.like("cusStr04", "%" + cusStr04 + "%"));
         }
+        if (cusStr05 != null) {
+            criteria.add(Restrictions.like("cusStr05", "%" + cusStr05 + "%"));
+        }
+        //======================================================================
+        if (cusTim01Start != null) {
+            criteria.add(Restrictions.ge("cusTim01", cusTim01Start));
+        }
+        if (cusTim01End != null) {
+            criteria.add(Restrictions.le("cusTim01", cusTim01End));
+        }
+        if (cusTim02Start != null) {
+            criteria.add(Restrictions.ge("cusTim02", cusTim02Start));
+        }
+        if (cusTim02End != null) {
+            criteria.add(Restrictions.le("cusTim02", cusTim02End));
+        }
+        if (cusTim03Start != null) {
+            criteria.add(Restrictions.ge("cusTim03", cusTim03Start));
+        }
+        if (cusTim03End != null) {
+            criteria.add(Restrictions.le("cusTim03", cusTim03End));
+        }         
+        //======================================================================
         return criteria;
     }
     

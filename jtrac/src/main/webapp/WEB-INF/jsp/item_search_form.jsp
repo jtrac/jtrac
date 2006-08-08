@@ -314,7 +314,7 @@
             <table class="jtrac">
                 <tr>
                     <th <c:if test="${!empty itemSearch.summary}">class="selected"</c:if>>Summary</th>
-                    <td><input name="title" value="${itemSearch.summary}"/></td>
+                    <td><input name="summary" value="${itemSearch.summary}"/></td>
                 </tr>
                 <c:if test="${!empty itemSearch.space}">
                     <c:forTokens items="cusStr01,cusStr02,cusStr03,cusStr04,cusStr05" delims="," var="name">
