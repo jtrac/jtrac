@@ -181,6 +181,9 @@ public class HibernateJtracDao
     
     public Counts loadCountsForUser(User user) {
         Set<Space> spaces = user.getSpaces();
+        if (spaces.size() == 0) {
+            return null;
+        }
         StringBuffer sb = new StringBuffer();
         sb.append('(');
         for (Space s : spaces) {
