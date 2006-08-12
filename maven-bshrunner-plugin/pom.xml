@@ -2,10 +2,10 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>info.jtrac</groupId>
-    <artifactId>maven-bshrunner-plugin</artifactId>
+    <artifactId>maven-antprops-plugin</artifactId>
     <packaging>maven-plugin</packaging>
     <version>1.0</version>
-    <name>beanshell script runner</name>
+    <name>ant build properties file generator</name>
     <dependencies>
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -16,11 +16,6 @@
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-project</artifactId>
             <version>2.0.4</version>
-        </dependency>       
-        <dependency>
-            <groupId>bsh</groupId>
-            <artifactId>bsh</artifactId>
-            <version>2.0b1</version>
-        </dependency>       
+        </dependency>      
     </dependencies> 
 </project>
