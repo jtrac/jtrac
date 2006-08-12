@@ -6,7 +6,7 @@
 <hibernate-mapping package="info.jtrac.domain">
 
     <class name="Item" table="items">
-        <id name="id" type="long" column="id">
+        <id name="id" column="id">
             <generator class="native"/>
         </id>
         <property name="type" column="type"/>
@@ -63,7 +63,7 @@
     </class>
 
     <class name="ItemUser" table="item_users">
-        <id name="id" type="long" column="id">
+        <id name="id" column="id">
             <generator class="native"/>
         </id>
         <many-to-one name="user" column="user_id" not-null="true"/>
@@ -71,7 +71,7 @@
     </class>     
     
     <class name="History" table="history">
-        <id name="id" type="long" column="id">
+        <id name="id" column="id">
             <generator class="native"/>
         </id>        
         <many-to-one name="parent" column="item_id" not-null="true"/>
@@ -111,7 +111,7 @@
     </class>    
     
     <class name="User" table="users">
-        <id name="id" type="long" column="id">
+        <id name="id" column="id">
             <generator class="native"/>
         </id>        
         <property name="type" column="type"/>         
@@ -129,7 +129,7 @@
     </class>
 	
     <class name="SpaceRole" table="user_space_roles">
-        <id name="id" type="long" column="id">
+        <id name="id" column="id">
             <generator class="native"/>
         </id>
         <many-to-one name="space" column="space_id"/>
@@ -137,7 +137,7 @@
     </class>    
     
     <class name="Space" table="spaces">
-        <id name="id" type="long" column="id">
+        <id name="id" column="id">
             <generator class="native"/>
         </id>
         <property name="type" column="type"/>
@@ -148,14 +148,14 @@
     </class>
     
     <class name="SpaceSequence" table="space_sequence">
-        <id name="id" type="long" column="id">
+        <id name="id" column="id">
             <generator class="native"/>
         </id>        
         <property name="nextSeqNum" column="next_seq_num"/>
     </class>
     
     <class name="Metadata" table="metadata">
-        <id name="id" type="long" column="id">
+        <id name="id" column="id">
             <generator class="native"/>
         </id>
         <property name="type" column="type"/>         
@@ -166,7 +166,7 @@
     </class>    
     
     <class name="Attachment" table="attachments">
-        <id name="id" type="long" column="id">
+        <id name="id" column="id">
             <generator class="native"/>
         </id>
         <many-to-one name="previous" column="previous_id"/>
