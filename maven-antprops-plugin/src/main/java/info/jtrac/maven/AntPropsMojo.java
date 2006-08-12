@@ -84,12 +84,18 @@ public class AntPropsMojo extends AbstractMojo {
     /**
      * @parameter
      */
-    private List additionalJars;
+    private List testJars;
+    
+    /**
+     * @parameter
+     */    
+    private List extraPaths;
     
     //======================== PRIVATE ===============================
     
 	private Map buildProperties = new LinkedHashMap();
-	private Map buildClassPaths = new LinkedHashMap();
+	private Map extraClassPaths = new LinkedHashMap();
+	private Set testPaths;
 	private Set runtimeFiles;
     
     //========================== MAIN ================================
@@ -105,8 +111,18 @@ public class AntPropsMojo extends AbstractMojo {
 			Set testArtifacts = project.getDependencyArtifacts();
 			testArtifacts.addAll(project.getTestArtifacts());
 			Collection testFiles = getFiles(testArtifacts);
-			Set testPaths = getRelativePaths(testFiles, repoBaseDir);
-			buildClassPaths.put("test.jars", testPaths);
+			testPaths = getRelativePaths(testFiles, repoBaseDir);			
+			//========================================================
+			for (Iterator i = extraPaths.iterator(); i.hasNext(); ) {
+				ExtraPath ep = (ExtraPath) i.next();
+				Set paths = new TreeSet();
+				for (Iterator j = ep.getDependencies().iterator(); j.hasNext(); ) {
+					Dependency d = (Dependency) j.next();
+					Collection files = getFiles(d.getGroupId(), d.getArtifactId(), d.getVersion());
+					paths.addAll(getRelativePaths(files, repoBaseDir));
+				}
+				extraClassPaths.put(ep.getName(), paths);
+			}			
 			//========================================================
 			writeAntPropsFile();
 		} catch (Exception e) {
@@ -220,32 +236,41 @@ public class AntPropsMojo extends AbstractMojo {
 		}
 		out.write("\n\n");
 		//===========================================================
-		for (Iterator i = buildClassPaths.entrySet().iterator(); i.hasNext(); ) {
+		out.write("test.jars=");
+		for (Iterator i = testPaths.iterator(); i.hasNext(); ) {
+			String path = (String) i.next();
+			out.write("\\\n    ${m2.repo}/" + path + ":");
+		}
+		for (Iterator i = testJars.iterator(); i.hasNext(); ) {
+			String path = (String) i.next();
+			File file = new File(path);
+			if (!file.exists()) {
+				getLog().warn("additionalJar path: '" + path + "' does not exist");
+				continue;
+			}
+			if (file.isDirectory()) {
+				File[] files = file.listFiles();
+				for (int x = 0; x < files.length; x++) {
+					out.write("\\\n    " + files[x].getPath().replace('\\','/') + ":");
+				}
+			} else {
+				out.write("\\\n    " + path + ":");
+			}				
+		}
+		out.write("\n\n");
+		//===============================================================
+		for (Iterator i = extraClassPaths.entrySet().iterator(); i.hasNext(); ) {
 			Map.Entry entry = (Map.Entry) i.next();
-			out.write(entry.getKey() + "=");
+			String name = (String) entry.getKey();
+			out.write(name + "=");
 			Set paths = (Set) entry.getValue();
 			for (Iterator j = paths.iterator(); j.hasNext(); ) {
 				String path = (String) j.next();
 				out.write("\\\n    ${m2.repo}/" + path + ":");
 			}
-			for (Iterator j = additionalJars.iterator(); j.hasNext(); ) {
-				String path = (String) j.next();
-				File file = new File(path);
-				if (!file.exists()) {
-					getLog().warn("additionalJar path: '" + path + "' does not exist");
-					continue;
-				}
-				if (file.isDirectory()) {
-					File[] files = file.listFiles();
-					for (int x = 0; x < files.length; x++) {
-						out.write("\\\n    " + files[x].getPath().replace('\\','/') + ":");
-					}
-				} else {
-					out.write("\\\n    " + path + ":");
-				}				
-			}
 			out.write("\n\n");
 		}
+		//===============================================================
 		out.close();
 		os.close();
 	}
