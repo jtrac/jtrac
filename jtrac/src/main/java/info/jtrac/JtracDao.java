@@ -44,26 +44,26 @@ public interface JtracDao {
     void storeAttachment(Attachment attachment);
     //===========================================
     void storeMetadata(Metadata metadata);
-    Metadata loadMetadata(int id);
+    Metadata loadMetadata(long id);
     //===========================================
     void storeSpace(Space space);
-    Space loadSpace(int id);
+    Space loadSpace(long id);
     List<Space> findSpacesByPrefixCode(String prefixCode);
     List<Space> findAllSpaces();
     //===========================================
     void storeSpaceSequence(SpaceSequence spaceSequence);
-    SpaceSequence loadSpaceSequence(int id);
+    SpaceSequence loadSpaceSequence(long id);
     //===========================================
     void storeUser(User user);
-    User loadUser(int id);
+    User loadUser(long id);
     List<User> findAllUsers();
     List<User> findUsersByLoginName(String loginName);
     List<User> findUsersByEmail(String email);
-    List<User> findUsersForSpace(int spaceId);
-    List<UserRole> findUserRolesForSpace(int spaceId);
+    List<User> findUsersForSpace(long spaceId);
+    List<UserRole> findUserRolesForSpace(long spaceId);
     List<User> findUsersForSpaceSet(Collection<Space> spaces);
     //===========================================
-    Counts loadCountsForUser(int userId);
+    Counts loadCountsForUser(long userId);
     List<Config> findAllConfig();
     void storeConfig(Config config);
     Config loadConfig(String key);

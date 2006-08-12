@@ -99,7 +99,7 @@ public class HibernateJtracDao
         getHibernateTemplate().merge(metadata);
     }
     
-    public Metadata loadMetadata(int id) {
+    public Metadata loadMetadata(long id) {
         return (Metadata) getHibernateTemplate().get(Metadata.class, id);
     }    
     
@@ -107,11 +107,11 @@ public class HibernateJtracDao
         getHibernateTemplate().merge(space);
     }
     
-    public Space loadSpace(int id) {
+    public Space loadSpace(long id) {
         return (Space) getHibernateTemplate().get(Space.class, id);
     }
     
-    public SpaceSequence loadSpaceSequence(int id) {
+    public SpaceSequence loadSpaceSequence(long id) {
         // note the use of get() not load()
         // see JtracImpl.storeItem() for complete picture
         return (SpaceSequence) getHibernateTemplate().get(SpaceSequence.class, id);
@@ -136,7 +136,7 @@ public class HibernateJtracDao
         getHibernateTemplate().merge(user);
     }
     
-    public User loadUser(int id) {
+    public User loadUser(long id) {
         return (User) getHibernateTemplate().get(User.class, id);
     }
     
@@ -166,7 +166,7 @@ public class HibernateJtracDao
         });
     }       
     
-    public List<UserRole> findUserRolesForSpace(int spaceId) {
+    public List<UserRole> findUserRolesForSpace(long spaceId) {
         List<Object[]> rawList = getHibernateTemplate().find("select user, spaceRole.roleKey from User user" + 
                 " join user.spaceRoles as spaceRole where spaceRole.space.id = ? order by user.name", spaceId);
         List<UserRole> userRoles = new ArrayList<UserRole>();
@@ -178,7 +178,7 @@ public class HibernateJtracDao
         return userRoles;
     }
     
-    public Counts loadCountsForUser(int userId) {
+    public Counts loadCountsForUser(long userId) {
         Counts c = new Counts();
         HibernateTemplate ht = getHibernateTemplate();
         List<Object[]> loggedByList = ht.find("select item.space.id, count(item) from Item item" +
@@ -188,24 +188,24 @@ public class HibernateJtracDao
         List<Object[]> statusList = ht.find("select item.space.id, item.status, count(item) from Item item" +
                 " group by item.space.id, item.status");        
         for(Object[] oa : loggedByList) {
-            c.addLoggedBy((Integer) oa[0], (Integer) oa[1]);
+            c.addLoggedBy((Long) oa[0], (Integer) oa[1]);
         }        
         for(Object[] oa : assignedToList) {
-            c.addAssignedTo((Integer) oa[0], (Integer) oa[1]);
+            c.addAssignedTo((Long) oa[0], (Integer) oa[1]);
         }
         for(Object[] oa : statusList) {
             int i = (Integer) oa[1];
             if (i == State.CLOSED) {
-                c.addClosed((Integer) oa[0], (Integer) oa[2]);
+                c.addClosed((Long) oa[0], (Integer) oa[2]);
             } else {
-                c.addOpen((Integer) oa[0], (Integer) oa[2]);
+                c.addOpen((Long) oa[0], (Integer) oa[2]);
             }
         }             
         return c;
     }
     
     
-    public List<User> findUsersForSpace(int spaceId) {
+    public List<User> findUsersForSpace(long spaceId) {
         return getHibernateTemplate().find("select user from User user join user.spaceRoles as spaceRole" + 
                 " where spaceRole.space.id = ? order by user.name", spaceId);
     }     

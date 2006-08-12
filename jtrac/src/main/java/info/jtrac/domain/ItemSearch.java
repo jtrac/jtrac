@@ -59,12 +59,12 @@ public class ItemSearch implements Serializable {
     private Date modifiedDateStart;
     private Date modifiedDateEnd;
     
-    private Set<Integer> spaceSet;
+    private Set<Long> spaceSet;
     private Set<Integer> statusSet;
     private Set<Integer> severitySet;
     private Set<Integer> prioritySet;
-    private Set<Integer> loggedBySet;
-    private Set<Integer> assignedToSet;
+    private Set<Long> loggedBySet;
+    private Set<Long> assignedToSet;
     
     private Set<Integer> cusInt01Set;
     private Set<Integer> cusInt02Set;
@@ -237,12 +237,12 @@ public class ItemSearch implements Serializable {
     }
     
     // private routine to help with the space "in" clause
-    private Collection<Integer> getSpaceIdSet() {
+    private Collection<Long> getSpaceIdSet() {
         if (space == null) {
             if (spaceSet != null) {
                 return spaceSet;
             }
-            Set<Integer> spaceIdSet = new HashSet<Integer>(user.getSpaceRoles().size());
+            Set<Long> spaceIdSet = new HashSet<Long>(user.getSpaceRoles().size());
             for (SpaceRole sr : user.getSpaceRoles()) {
                 if (sr.getSpace() != null) {
                     spaceIdSet.add(sr.getSpace().getId());
@@ -337,7 +337,7 @@ public class ItemSearch implements Serializable {
         Map<Integer, String> map = new HashMap<Integer, String>(user.getSpaceRoles().size());
         for(SpaceRole sr : user.getSpaceRoles()) {
             if (sr.getSpace() != null) {
-                map.put(sr.getSpace().getId(), sr.getSpace().getPrefixCode());
+                map.put((int) sr.getSpace().getId(), sr.getSpace().getPrefixCode());
             }
         }
         return map;
@@ -460,11 +460,11 @@ public class ItemSearch implements Serializable {
         this.modifiedDateEnd = modifiedDateEnd;
     }
     
-    public Set<Integer> getSpaceSet() {
+    public Set<Long> getSpaceSet() {
         return spaceSet;
     }
     
-    public void setSpaceSet(Set<Integer> spaceSet) {
+    public void setSpaceSet(Set<Long> spaceSet) {
         this.spaceSet = spaceSet;
     }
     
@@ -492,19 +492,19 @@ public class ItemSearch implements Serializable {
         this.prioritySet = prioritySet;
     }
     
-    public Set<Integer> getLoggedBySet() {
+    public Set<Long> getLoggedBySet() {
         return loggedBySet;
     }
     
-    public void setLoggedBySet(Set<Integer> loggedBySet) {
+    public void setLoggedBySet(Set<Long> loggedBySet) {
         this.loggedBySet = loggedBySet;
     }
     
-    public Set<Integer> getAssignedToSet() {
+    public Set<Long> getAssignedToSet() {
         return assignedToSet;
     }
     
-    public void setAssignedToSet(Set<Integer> assignedToSet) {
+    public void setAssignedToSet(Set<Long> assignedToSet) {
         this.assignedToSet = assignedToSet;
     }
     

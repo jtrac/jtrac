@@ -174,7 +174,7 @@ public class UserFormAction extends AbstractFormAction {
         User user = (User) context.getFlowScope().get("user");
         Space space = (Space) context.getFlowScope().get("space");
         String roleKey = ValidationUtils.getParameter(context, "roleKey");
-        jtrac.allocate(user, space, roleKey);
+        jtrac.storeUserSpaceAllocation(user, space, roleKey);
         refreshSecurityContextIfPrincipal(user);
         return success();
     }    
@@ -184,7 +184,7 @@ public class UserFormAction extends AbstractFormAction {
         int id = Integer.parseInt(spaceId);
         Space space = jtrac.loadSpace(id);
         User user = (User) context.getFlowScope().get("user");        
-        jtrac.deallocate(user, space);
+        jtrac.removeUserSpaceAllocation(user, space);
         refreshSecurityContextIfPrincipal(user);
         return success();
     }     

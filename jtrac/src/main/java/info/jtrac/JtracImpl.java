@@ -126,7 +126,7 @@ public class JtracImpl implements Jtrac {
         // SpaceSequence spaceSequence = item.getSpace().getSpaceSequence();
         // very important - have to do this to guarantee unique sequenceNum !
         // see HibernateJtracDao.loadSpaceSequence() and storeSpaceSequence() for complete picture
-        int ssId = item.getSpace().getSpaceSequence().getId();
+        long ssId = item.getSpace().getSpaceSequence().getId();
         SpaceSequence spaceSequence = dao.loadSpaceSequence(ssId);  //uses hibernate.get() not load()
         item.setSequenceNum(spaceSequence.next());
         dao.storeSpaceSequence(spaceSequence);
@@ -202,7 +202,7 @@ public class JtracImpl implements Jtrac {
         return user;
     }
     
-    public User loadUser(int id) {
+    public User loadUser(long id) {
         return dao.loadUser(id);
     }
     
@@ -249,12 +249,12 @@ public class JtracImpl implements Jtrac {
         return dao.findAllUsers();
     }
     
-    public List<User> findUsersForSpace(int spaceId) {
+    public List<User> findUsersForSpace(long spaceId) {
         return dao.findUsersForSpace(spaceId);
         // return dao.findUsersForSpaceSet(Collections.singleton(dao.loadSpace(spaceId)));
     }      
     
-    public List<UserRole> findUserRolesForSpace(int spaceId) {
+    public List<UserRole> findUserRolesForSpace(long spaceId) {
         return dao.findUserRolesForSpace(spaceId);
     }   
     
@@ -269,7 +269,7 @@ public class JtracImpl implements Jtrac {
         return new ArrayList<User>(userSet);
     }     
     
-    public List<User> findUnallocatedUsersForSpace(int spaceId) {
+    public List<User> findUnallocatedUsersForSpace(long spaceId) {
         List<User> users = findAllUsers();
         List<UserRole> userRoles = findUserRolesForSpace(spaceId);
         for(UserRole userRole : userRoles) {
@@ -278,25 +278,25 @@ public class JtracImpl implements Jtrac {
         return users;
     }     
     
-    public void allocate(User user, Space space, String roleKey) {        
+    public void storeUserSpaceAllocation(User user, Space space, String roleKey) {        
         user.addSpaceRole(space, roleKey);
         dao.storeUser(user);      
     }
     
-    public void deallocate(User user, Space space) {        
+    public void removeUserSpaceAllocation(User user, Space space) {        
         user.removeSpace(space);
         dao.storeUser(user);      
     }    
     
     //==========================================================================
     
-    public Counts loadCountsForUser(int userId) {
+    public Counts loadCountsForUser(long userId) {
         return dao.loadCountsForUser(userId);
     }
     
     //==========================================================================
     
-    public Space loadSpace(int id) {
+    public Space loadSpace(long id) {
         return dao.loadSpace(id);
     }
     
@@ -316,7 +316,7 @@ public class JtracImpl implements Jtrac {
         return dao.findAllSpaces();
     }
     
-    public List<Space> findUnallocatedSpacesForUser(int userId) {
+    public List<Space> findUnallocatedSpacesForUser(long userId) {
         List<Space> spaces = findAllSpaces();
         User user = loadUser(userId);
         for(SpaceRole spaceRole : user.getSpaceRoles()) {
@@ -329,7 +329,7 @@ public class JtracImpl implements Jtrac {
         dao.storeMetadata(metadata);
     }
     
-    public Metadata loadMetadata(int id) {
+    public Metadata loadMetadata(long id) {
         return dao.loadMetadata(id);
     }
     

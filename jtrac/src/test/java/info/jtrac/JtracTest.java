@@ -186,7 +186,7 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         assertEquals(1, total.getClosed());
         assertEquals(1, total.getTotal());
         
-        Map<Integer, Counts> counts = total.getCounts();
+        Map<Long, Counts> counts = total.getCounts();
         assertEquals(1, counts.size());
         Counts c = counts.get(s.getId());
         assertEquals(1, c.getLoggedBy());

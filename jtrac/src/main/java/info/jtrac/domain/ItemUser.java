@@ -29,7 +29,7 @@ import java.io.Serializable;
  */
 public class ItemUser implements Serializable {
     
-    private int id;
+    private long id;
     private User user;
     private int type;
     
@@ -48,11 +48,11 @@ public class ItemUser implements Serializable {
 
     //=================================================
     
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

@@ -27,7 +27,7 @@ import java.io.Serializable;
  */
 public class SpaceSequence implements Serializable {
     
-    private int id;
+    private long id;
     private long nextSeqNum = 1;
     
     public long next() {
@@ -42,11 +42,11 @@ public class SpaceSequence implements Serializable {
         this.nextSeqNum = nextSeqNum;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

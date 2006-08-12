@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public class Counts implements Serializable {
     
-    private Map<Integer, Counts> counts = new HashMap<Integer, Counts>();
+    private Map<Long, Counts> counts = new HashMap<Long, Counts>();
     
     private int loggedBy;
     private int assignedTo;
@@ -33,7 +33,7 @@ public class Counts implements Serializable {
     private int closed;
     private int total;
     
-    private Counts getCounts(int spaceId) {
+    private Counts getCounts(long spaceId) {
         Counts c = counts.get(spaceId);
         if (c == null) {
             c = new Counts();
@@ -42,19 +42,19 @@ public class Counts implements Serializable {
         return c;
     }
     
-    public void addLoggedBy(int spaceId, int count) {
+    public void addLoggedBy(long spaceId, int count) {
         Counts c = getCounts(spaceId);
         c.setLoggedBy(count);
         loggedBy += count;
     }
     
-    public void addAssignedTo(int spaceId, int count) {
+    public void addAssignedTo(long spaceId, int count) {
         Counts c = getCounts(spaceId);
         c.setAssignedTo(count);
         assignedTo += count;       
     }
     
-    public void addOpen(int spaceId, int count) {
+    public void addOpen(long spaceId, int count) {
         Counts c = getCounts(spaceId);
         c.setOpen(count);
         c.setTotal(c.getTotal() + count);
@@ -62,7 +62,7 @@ public class Counts implements Serializable {
         total += count;        
     }
     
-    public void addClosed(int spaceId, int count) {
+    public void addClosed(long spaceId, int count) {
         Counts c = getCounts(spaceId);
         c.setClosed(count);
         c.setTotal(c.getTotal() + count);
@@ -112,11 +112,11 @@ public class Counts implements Serializable {
         this.total = total;
     }
     
-    public Map<Integer, Counts> getCounts() {
+    public Map<Long, Counts> getCounts() {
         return counts;
     }
     
-    public void setCounts(Map<Integer, Counts> counts) {
+    public void setCounts(Map<Long, Counts> counts) {
         this.counts = counts;
     }
     

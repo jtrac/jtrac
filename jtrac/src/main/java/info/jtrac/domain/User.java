@@ -41,7 +41,7 @@ import org.acegisecurity.userdetails.UserDetails;
  */
 public class User implements UserDetails, Serializable {
     
-    private int id;
+    private long id;
     private Integer type;
     private User parent;
     private String loginName;
@@ -190,11 +190,11 @@ public class User implements UserDetails, Serializable {
         this.metadata = metadata;
     }
     
-    public int getId() {
+    public long getId() {
         return id;
     }
     
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
     

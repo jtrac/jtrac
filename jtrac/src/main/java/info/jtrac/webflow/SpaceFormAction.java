@@ -268,7 +268,7 @@ public class SpaceFormAction extends AbstractFormAction {
         User user = jtrac.loadUser(id);
         Space space = (Space) context.getFlowScope().get("space");
         String roleKey = ValidationUtils.getParameter(context, "roleKey");
-        jtrac.allocate(user, space, roleKey);
+        jtrac.storeUserSpaceAllocation(user, space, roleKey);
         // effectively forces the Acegi Security Context to reload
         SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
         return success();
@@ -279,7 +279,7 @@ public class SpaceFormAction extends AbstractFormAction {
         int id = Integer.parseInt(userId);
         User user = jtrac.loadUser(id);
         Space space = (Space) context.getFlowScope().get("space");
-        jtrac.deallocate(user, space);
+        jtrac.removeUserSpaceAllocation(user, space);
         // effectively forces the Acegi Security Context to reload
         SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
         return success();

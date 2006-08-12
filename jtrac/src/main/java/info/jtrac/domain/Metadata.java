@@ -67,7 +67,7 @@ import org.dom4j.Element;
  */
 public class Metadata implements Serializable {    
     
-    private int id;
+    private long id;
     private Integer type;
     private String name;
     private String description;
@@ -373,11 +373,11 @@ public class Metadata implements Serializable {
         this.description = description;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

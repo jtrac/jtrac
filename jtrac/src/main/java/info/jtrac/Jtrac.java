@@ -46,25 +46,25 @@ public interface Jtrac extends UserDetailsService {
     //========================================================
     void storeUser(User user);
     List<User> findAllUsers();
-    User loadUser(int id);
+    User loadUser(long id);
     User loadUser(String loginName);
-    List<User> findUsersForSpace(int spaceId);
-    List<UserRole> findUserRolesForSpace(int spaceId);
+    List<User> findUsersForSpace(long spaceId);
+    List<UserRole> findUserRolesForSpace(long spaceId);
     List<User> findUsersForUser(User user);
-    List<User> findUnallocatedUsersForSpace(int spaceId);
-    void allocate(User user, Space space, String roleKey);
-    void deallocate(User user, Space space);
+    List<User> findUnallocatedUsersForSpace(long spaceId);
+    void storeUserSpaceAllocation(User user, Space space, String roleKey);
+    void removeUserSpaceAllocation(User user, Space space);
     //========================================================
-    Counts loadCountsForUser(int userId);
+    Counts loadCountsForUser(long userId);
     //========================================================
     void storeSpace(Space space);
-    Space loadSpace(int id);
+    Space loadSpace(long id);
     Space loadSpace(String prefixCode);
     List<Space> findAllSpaces();
-    List<Space> findUnallocatedSpacesForUser(int userId);
+    List<Space> findUnallocatedSpacesForUser(long userId);
     //========================================================
     void storeMetadata(Metadata metadata);
-    Metadata loadMetadata(int id);
+    Metadata loadMetadata(long id);
     //========================================================
     String generatePassword();
     String encodeClearText(String clearText);

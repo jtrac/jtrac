@@ -33,7 +33,7 @@ import org.acegisecurity.GrantedAuthority;
  */
 public class SpaceRole implements GrantedAuthority, Serializable {
     
-    private int id;
+    private long id;
     private Space space;
     private String roleKey;    
     
@@ -74,11 +74,11 @@ public class SpaceRole implements GrantedAuthority, Serializable {
         this.space = space;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
     

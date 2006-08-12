@@ -87,7 +87,7 @@ public class ItemSearchFormAction extends AbstractFormAction {
         String type = ValidationUtils.getParameter(context, "type");
         ItemSearch itemSearch = (ItemSearch) getFormObject(context);
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Set<Integer> set = Collections.singleton(new Integer(user.getId()));
+        Set<Long> set = Collections.singleton(user.getId());
         Space space = (Space) context.getFlowScope().get("space");
         if (type.equals("loggedBy")) {
             itemSearch.setLoggedBySet(set);
