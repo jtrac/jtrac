@@ -179,7 +179,7 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         jtrac.storeItem(i, null);
         assertEquals(1, i.getSequenceNum());
         
-        Counts total = jtrac.loadCountsForUser(u.getId());
+        Counts total = jtrac.loadCountsForUser(u);
         assertEquals(1, total.getAssignedTo());
         assertEquals(1, total.getLoggedBy());
         assertEquals(0, total.getOpen());
