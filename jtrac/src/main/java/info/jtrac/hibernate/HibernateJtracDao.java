@@ -1,12 +1,12 @@
 /*
  * Copyright 2002-2005 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -59,7 +60,7 @@ public class HibernateJtracDao
     public void setSchemaHelper(SchemaHelper schemaHelper) {
         this.schemaHelper = schemaHelper;
     }
-
+    
     public void storeItem(Item item) {
         getHibernateTemplate().merge(item);
     }
@@ -70,7 +71,7 @@ public class HibernateJtracDao
     
     public List<Item> findItems(long sequenceNum, String prefixCode) {
         Object[] params = new Object[] { sequenceNum, prefixCode };
-        return getHibernateTemplate().find("from Item item where item.sequenceNum = ? and item.space.prefixCode = ?", params);        
+        return getHibernateTemplate().find("from Item item where item.sequenceNum = ? and item.space.prefixCode = ?", params);
     }
     
     public List<Item> findItems(ItemSearch itemSearch) {
@@ -80,12 +81,12 @@ public class HibernateJtracDao
             itemSearch.setResultCount(list.size());
             return list;
         } else {
-            // pagination            
-            int firstResult = pageSize * itemSearch.getCurrentPage();                     
+            // pagination
+            int firstResult = pageSize * itemSearch.getCurrentPage();
             List<Item> list = getHibernateTemplate().findByCriteria(itemSearch.getCriteria(), firstResult, pageSize);
             DetachedCriteria criteria = itemSearch.getCriteriaForCount();
             criteria.setProjection(Projections.rowCount());
-            Integer count = (Integer) getHibernateTemplate().findByCriteria(criteria).get(0);            
+            Integer count = (Integer) getHibernateTemplate().findByCriteria(criteria).get(0);
             itemSearch.setResultCount(count);
             return list;
         }
@@ -93,7 +94,7 @@ public class HibernateJtracDao
     
     public void storeAttachment(Attachment attachment) {
         getHibernateTemplate().merge(attachment);
-    }    
+    }
     
     public void storeMetadata(Metadata metadata) {
         getHibernateTemplate().merge(metadata);
@@ -101,7 +102,7 @@ public class HibernateJtracDao
     
     public Metadata loadMetadata(long id) {
         return (Metadata) getHibernateTemplate().get(Metadata.class, id);
-    }    
+    }
     
     public void storeSpace(Space space) {
         getHibernateTemplate().merge(space);
@@ -115,9 +116,9 @@ public class HibernateJtracDao
         // note the use of get() not load()
         // see JtracImpl.storeItem() for complete picture
         return (SpaceSequence) getHibernateTemplate().get(SpaceSequence.class, id);
-    }    
+    }
     
-    public void storeSpaceSequence(SpaceSequence spaceSequence) {        
+    public void storeSpaceSequence(SpaceSequence spaceSequence) {
         getHibernateTemplate().merge(spaceSequence);
         // very important, needed to guarantee unique sequenceNum on item insert !
         // see JtracImpl.storeItem() for complete picture
@@ -164,10 +165,10 @@ public class HibernateJtracDao
                         Restrictions.eq("email", email)).list();
             }
         });
-    }       
+    }
     
     public List<UserRole> findUserRolesForSpace(long spaceId) {
-        List<Object[]> rawList = getHibernateTemplate().find("select user, spaceRole.roleKey from User user" + 
+        List<Object[]> rawList = getHibernateTemplate().find("select user, spaceRole.roleKey from User user" +
                 " join user.spaceRoles as spaceRole where spaceRole.space.id = ? order by user.name", spaceId);
         List<UserRole> userRoles = new ArrayList<UserRole>();
         for (Object[] userRole : rawList) {
@@ -178,18 +179,26 @@ public class HibernateJtracDao
         return userRoles;
     }
     
-    public Counts loadCountsForUser(long userId) {
+    public Counts loadCountsForUser(User user) {
+        Set<Space> spaces = user.getSpaces();
+        StringBuffer sb = new StringBuffer();
+        sb.append('(');
+        for (Space s : spaces) {
+            sb.append(s.getId());
+            sb.append(',');
+        }
+        sb.setCharAt(sb.length() - 1, ')');
         Counts c = new Counts();
         HibernateTemplate ht = getHibernateTemplate();
         List<Object[]> loggedByList = ht.find("select item.space.id, count(item) from Item item" +
-                " where item.loggedBy.id = ? group by item.space.id", userId);
+                " where item.loggedBy.id = ? group by item.space.id", user.getId());
         List<Object[]> assignedToList = ht.find("select item.space.id, count(item) from Item item" +
-                " where item.assignedTo.id = ? group by item.space.id", userId);
+                " where item.assignedTo.id = ? group by item.space.id", user.getId());
         List<Object[]> statusList = ht.find("select item.space.id, item.status, count(item) from Item item" +
-                " group by item.space.id, item.status");        
+                " where item.space.id in " + sb.toString() + " group by item.space.id, item.status");
         for(Object[] oa : loggedByList) {
             c.addLoggedBy((Long) oa[0], (Integer) oa[1]);
-        }        
+        }
         for(Object[] oa : assignedToList) {
             c.addAssignedTo((Long) oa[0], (Integer) oa[1]);
         }
@@ -200,25 +209,25 @@ public class HibernateJtracDao
             } else {
                 c.addOpen((Long) oa[0], (Integer) oa[2]);
             }
-        }             
+        }
         return c;
     }
     
     
     public List<User> findUsersForSpace(long spaceId) {
-        return getHibernateTemplate().find("select user from User user join user.spaceRoles as spaceRole" + 
+        return getHibernateTemplate().find("select user from User user join user.spaceRoles as spaceRole" +
                 " where spaceRole.space.id = ? order by user.name", spaceId);
-    }     
+    }
     
     public List<User> findUsersForSpaceSet(Collection<Space> spaces) {
-        Criteria criteria = getSession().createCriteria(User.class);        
+        Criteria criteria = getSession().createCriteria(User.class);
         criteria.createCriteria("spaceRoles").add(Restrictions.in("space", spaces));
         return criteria.list();
-    }      
+    }
     
     public List<Config> findAllConfig() {
         return getHibernateTemplate().loadAll(Config.class);
-    }    
+    }
     
     public void storeConfig(Config config) {
         getHibernateTemplate().merge(config);
@@ -226,9 +235,9 @@ public class HibernateJtracDao
     
     public Config loadConfig(String param) {
         return (Config) getHibernateTemplate().get(Config.class, param);
-    }    
-        
-    public void createSchema() {        
+    }
+    
+    public void createSchema() {
         try {
             getHibernateTemplate().find("from Item item where item.id = 1");
         } catch (BadSqlGrammarException e) {
@@ -240,12 +249,12 @@ public class HibernateJtracDao
             user.setEmail("jtrac.admin");
             user.setPassword("21232f297a57a5a743894a0e4a801fc3");
             user.addSpaceRole(null, "ROLE_ADMIN");
-            logger.info("inserting default admin user into database");            
+            logger.info("inserting default admin user into database");
             storeUser(user);
             logger.info("schema creation complete");
             return;
         }
         logger.info("database schema exists, normal startup");
-    }        
+    }
     
 }

@@ -55,7 +55,7 @@ public interface Jtrac extends UserDetailsService {
     void storeUserSpaceAllocation(User user, Space space, String roleKey);
     void removeUserSpaceAllocation(User user, Space space);
     //========================================================
-    Counts loadCountsForUser(long userId);
+    Counts loadCountsForUser(User user);
     //========================================================
     void storeSpace(Space space);
     Space loadSpace(long id);

@@ -290,8 +290,8 @@ public class JtracImpl implements Jtrac {
     
     //==========================================================================
     
-    public Counts loadCountsForUser(long userId) {
-        return dao.loadCountsForUser(userId);
+    public Counts loadCountsForUser(User user) {
+        return dao.loadCountsForUser(user);
     }
     
     //==========================================================================
