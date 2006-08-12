@@ -24,6 +24,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -97,6 +98,7 @@ public class AntPropsMojo extends AbstractMojo {
 	private Map extraClassPaths = new LinkedHashMap();
 	private Set testPaths;
 	private Set runtimeFiles;
+	private Set filesets = new HashSet();
     
     //========================== MAIN ================================
     
@@ -116,12 +118,21 @@ public class AntPropsMojo extends AbstractMojo {
 			for (Iterator i = extraPaths.iterator(); i.hasNext(); ) {
 				ExtraPath ep = (ExtraPath) i.next();
 				Set paths = new TreeSet();
+				Collection files = new ArrayList();
 				for (Iterator j = ep.getDependencies().iterator(); j.hasNext(); ) {
 					Dependency d = (Dependency) j.next();
-					Collection files = getFiles(d.getGroupId(), d.getArtifactId(), d.getVersion());
-					paths.addAll(getRelativePaths(files, repoBaseDir));
+					if (d.isResolve()) {
+						files.addAll(getFiles(d.getGroupId(), d.getArtifactId(), d.getVersion()));
+					} else {
+						Artifact a = getArtifact(d.getGroupId(), d.getArtifactId(), d.getVersion());
+						files.add(resolveArtifact(a));
+					}
 				}
+				paths.addAll(getRelativePaths(files, repoBaseDir));
 				extraClassPaths.put(ep.getName(), paths);
+				if (ep.isFileset()) {
+					filesets.add(ep.getName());
+				}
 			}			
 			//========================================================
 			writeAntPropsFile();
@@ -262,11 +273,16 @@ public class AntPropsMojo extends AbstractMojo {
 		for (Iterator i = extraClassPaths.entrySet().iterator(); i.hasNext(); ) {
 			Map.Entry entry = (Map.Entry) i.next();
 			String name = (String) entry.getKey();
+			boolean isFileset = filesets.contains(name);
 			out.write(name + "=");
 			Set paths = (Set) entry.getValue();
 			for (Iterator j = paths.iterator(); j.hasNext(); ) {
 				String path = (String) j.next();
-				out.write("\\\n    ${m2.repo}/" + path + ":");
+				if (isFileset) {
+					out.write("\\\n    " + path + ",");
+				} else {
+					out.write("\\\n    ${m2.repo}/" + path + ":");
+				}
 			}
 			out.write("\n\n");
 		}

@@ -24,10 +24,9 @@ package info.jtrac.maven;
 public class Dependency {
 
 	private String groupId;
-
 	private String artifactId;
-
 	private String version;
+	private boolean resolve = true;
 
 	public String getArtifactId() {
 		return artifactId;
@@ -40,5 +39,9 @@ public class Dependency {
 	public String getVersion() {
 		return version;
 	}
+
+	public boolean isResolve() {
+		return resolve;
+	}	
 
 }

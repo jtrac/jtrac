@@ -27,6 +27,7 @@ public class ExtraPath {
 	
 	private String name;
 	private List dependencies;
+	private boolean fileset;
 	
 	public List getDependencies() {
 		return dependencies;
@@ -35,5 +36,9 @@ public class ExtraPath {
 	public String getName() {
 		return name;
 	}
+
+	public boolean isFileset() {
+		return fileset;
+	}	
 
 }
