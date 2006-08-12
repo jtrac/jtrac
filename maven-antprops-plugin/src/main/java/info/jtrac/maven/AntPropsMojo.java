@@ -17,9 +17,7 @@
 package info.jtrac.maven;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -30,7 +28,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -45,18 +42,13 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
 
 /**
- * @goal antprops
+ * @goal generate
  * @requiresDependencyResolution runtime
  * @description ant build properties file generator
  */
 public class AntPropsMojo extends AbstractMojo {
 
 	//======================== MOJO ===============================
-    /**
-     * @parameter
-     */
-    private String file;
-
     /**
      * @parameter expression="${project}"
      */
@@ -87,18 +79,23 @@ public class AntPropsMojo extends AbstractMojo {
      */
     private MavenProjectBuilder mavenProjectBuilder;
     
+    //======================== CONFIG ================================
+    
+    /**
+     * @parameter
+     */
+    private List additionalJars;
+    
     //======================== PRIVATE ===============================
     
-    private Properties props;
 	private Map buildProperties = new LinkedHashMap();
 	private Map buildClassPaths = new LinkedHashMap();
-	private Set runtimeFiles;  
-	private String repoBaseDir;
+	private Set runtimeFiles;
     
     //========================== MAIN ================================
     
 	public void execute() throws MojoExecutionException {
-		repoBaseDir = localRepository.getBasedir().replace('\\','/');
+		String repoBaseDir = localRepository.getBasedir().replace('\\','/');
 		try {
 			buildProperties.put("m2.repo", repoBaseDir);
 			//========================================================
@@ -200,23 +197,6 @@ public class AntPropsMojo extends AbstractMojo {
 			paths.add(path);
 		}
 		return paths;
-	}	
-	
-	/**
-	 * load properties from given file
-	 */
-	private void loadPropertiesFromFile(String fileName) throws Exception {		
-		InputStream is = new FileInputStream(fileName);
-		props = new Properties();
-		props.load(is);		
-		is.close();
-	}
-	
-	/**
-	 * get property, file has to have been loaded before calling
-	 */
-	private String getProperty(String key) {
-		return props.getProperty(key);
 	}
 	
 	/**
@@ -247,6 +227,22 @@ public class AntPropsMojo extends AbstractMojo {
 			for (Iterator j = paths.iterator(); j.hasNext(); ) {
 				String path = (String) j.next();
 				out.write("\\\n    ${m2.repo}/" + path + ":");
+			}
+			for (Iterator j = additionalJars.iterator(); j.hasNext(); ) {
+				String path = (String) j.next();
+				File file = new File(path);
+				if (!file.exists()) {
+					getLog().warn("additionalJar path: '" + path + "' does not exist");
+					continue;
+				}
+				if (file.isDirectory()) {
+					File[] files = file.listFiles();
+					for (int x = 0; x < files.length; x++) {
+						out.write("\\\n    " + files[x].getPath().replace('\\','/') + ":");
+					}
+				} else {
+					out.write("\\\n    " + path + ":");
+				}				
 			}
 			out.write("\n\n");
 		}

@@ -2,18 +2,17 @@
   <classpathentry kind="src" path="src/main/java"/>
   <classpathentry kind="output" path="target/classes"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-project/2.0.4/maven-project-2.0.4.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/codehaus/plexus/plexus-utils/1.1/plexus-utils-1.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-profile/2.0.4/maven-profile-2.0.4.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-artifact/2.0.4/maven-artifact-2.0.4.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-repository-metadata/2.0.4/maven-repository-metadata-2.0.4.jar"/>
-  <classpathentry kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/codehaus/plexus/plexus-container-default/1.0-alpha-9/plexus-container-default-1.0-alpha-9.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-artifact-manager/2.0.4/maven-artifact-manager-2.0.4.jar"/>
   <classpathentry kind="var" path="M2_REPO/classworlds/classworlds/1.1-alpha-2/classworlds-1.1-alpha-2.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/codehaus/plexus/plexus-utils/1.1/plexus-utils-1.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-model/2.0.4/maven-model-2.0.4.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-settings/2.0.4/maven-settings-2.0.4.jar"/>
+  <classpathentry kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/maven/wagon/wagon-provider-api/1.0-alpha-6/wagon-provider-api-1.0-alpha-6.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-project/2.0.4/maven-project-2.0.4.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-plugin-api/2.0.4/maven-plugin-api-2.0.4.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-profile/2.0.4/maven-profile-2.0.4.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/codehaus/plexus/plexus-container-default/1.0-alpha-9/plexus-container-default-1.0-alpha-9.jar"/>
-  <classpathentry kind="var" path="M2_REPO/bsh/bsh/2.0b1/bsh-2.0b1.jar"/>
 </classpath>
