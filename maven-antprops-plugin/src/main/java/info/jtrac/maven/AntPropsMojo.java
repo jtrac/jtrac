@@ -17,7 +17,9 @@
 package info.jtrac.maven;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -29,6 +31,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -85,7 +88,7 @@ public class AntPropsMojo extends AbstractMojo {
     /**
      * @parameter
      */
-    private List testJars;
+    private List testPaths;
     
     /**
      * @parameter
@@ -96,14 +99,14 @@ public class AntPropsMojo extends AbstractMojo {
     
 	private Map buildProperties = new LinkedHashMap();
 	private Map extraClassPaths = new LinkedHashMap();
-	private Set testPaths;
+	private Map testClassPaths = new LinkedHashMap();
 	private Set runtimeFiles;
 	private Set filesets = new HashSet();
     
     //========================== MAIN ================================
     
 	public void execute() throws MojoExecutionException {
-		String repoBaseDir = localRepository.getBasedir().replace('\\','/');
+		String repoBaseDir = localRepository.getBasedir().replace('\\','/');					
 		try {
 			buildProperties.put("m2.repo", repoBaseDir);
 			//========================================================
@@ -113,7 +116,42 @@ public class AntPropsMojo extends AbstractMojo {
 			Set testArtifacts = project.getDependencyArtifacts();
 			testArtifacts.addAll(project.getTestArtifacts());
 			Collection testFiles = getFiles(testArtifacts);
-			testPaths = getRelativePaths(testFiles, repoBaseDir);			
+			testClassPaths.put("m2.repo", getRelativePaths(testFiles, repoBaseDir));			
+			//========================================================
+			Properties props = loadProperties();
+			for (Iterator i = testPaths.iterator(); i.hasNext(); ) {
+				TestPath testPath = (TestPath) i.next();
+				String baseDirProperty = testPath.getBaseDirProperty();
+				String baseDirPath = props.getProperty(baseDirProperty);
+				if (baseDirPath == null) {
+					getLog().warn("baseDirProperty + '" + baseDirProperty + "' does not exist in build.properties");
+					break;
+				}
+				File baseDir = new File(baseDirPath);
+				if (!baseDir.exists() || !baseDir.isDirectory()) {
+					getLog().warn("path + '" + baseDirPath + "' is not valid directory");
+					break;
+				}
+				buildProperties.put(baseDirProperty, baseDirPath);
+				Set filePaths = new TreeSet();
+				for (Iterator j = testPath.getPaths().iterator(); j.hasNext(); ) {
+					String path = (String) j.next();
+					File file = new File(baseDirPath + "/" + path);
+					if (!file.exists()) {
+						getLog().warn("additional test path: '" + file.getPath() + "' does not exist");
+						continue;
+					}
+					if (file.isDirectory()) {
+						File[] files = file.listFiles();
+						for (int x = 0; x < files.length; x++) {
+							filePaths.add(getRelativePath(files[x], baseDir.getPath()));
+						}
+					} else {
+						filePaths.add(getRelativePath(file, baseDir.getPath()));
+					}					
+				}
+				testClassPaths.put(baseDirProperty, filePaths);
+			}			
 			//========================================================
 			for (Iterator i = extraPaths.iterator(); i.hasNext(); ) {
 				ExtraPath ep = (ExtraPath) i.next();
@@ -227,6 +265,22 @@ public class AntPropsMojo extends AbstractMojo {
 	}
 	
 	/**
+	 * load properties from file
+	 */
+	private Properties loadProperties() throws Exception {
+		InputStream is = null;
+		Properties props = null;
+		try {
+			is = new FileInputStream("build.properties");
+			props = new Properties();
+			props.load(is);
+		} finally {
+			is.close();
+		}
+		return props;
+	}	
+	
+	/**
 	 * generate properties file with dependency information, ready to use by ant
 	 */
 	private void writeAntPropsFile() throws Exception {
@@ -248,25 +302,14 @@ public class AntPropsMojo extends AbstractMojo {
 		out.write("\n\n");
 		//===========================================================
 		out.write("test.jars=");
-		for (Iterator i = testPaths.iterator(); i.hasNext(); ) {
-			String path = (String) i.next();
-			out.write("\\\n    ${m2.repo}/" + path + ":");
-		}
-		for (Iterator i = testJars.iterator(); i.hasNext(); ) {
-			String path = (String) i.next();
-			File file = new File(path);
-			if (!file.exists()) {
-				getLog().warn("additionalJar path: '" + path + "' does not exist");
-				continue;
+		for (Iterator i = testClassPaths.entrySet().iterator(); i.hasNext(); ) {
+			Map.Entry entry = (Map.Entry) i.next();			
+			String key = (String) entry.getKey();
+			Set paths = (Set) entry.getValue();
+			for (Iterator j = paths.iterator(); j.hasNext(); ) {
+				String path = (String) j.next();
+				out.write("\\\n    ${" + key + "}/" + path + ":");
 			}
-			if (file.isDirectory()) {
-				File[] files = file.listFiles();
-				for (int x = 0; x < files.length; x++) {
-					out.write("\\\n    " + files[x].getPath().replace('\\','/') + ":");
-				}
-			} else {
-				out.write("\\\n    " + path + ":");
-			}				
 		}
 		out.write("\n\n");
 		//===============================================================
