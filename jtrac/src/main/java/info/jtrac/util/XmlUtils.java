@@ -77,7 +77,9 @@ public final class XmlUtils {
     }
     
     public static Document getNewDocument(String rootElementName) {
-        return DocumentHelper.createDocument(getNewElement(rootElementName));
+        Document d = DocumentHelper.createDocument();
+        d.addElement(rootElementName);
+        return d;
     }
     
 }

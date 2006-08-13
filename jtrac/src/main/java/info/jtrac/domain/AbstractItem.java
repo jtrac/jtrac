@@ -22,12 +22,13 @@ import java.util.Date;
 import static info.jtrac.domain.Field.Name.*;
 import info.jtrac.util.DateUtils;
 import java.util.Set;
+import org.springmodules.lucene.index.core.DocumentCreator;
 
 /**
  * Abstract class that serves as base for both Item and History
  * this contains the fields that are common to both and persisted
  */
-public abstract class AbstractItem implements Serializable {    
+public abstract class AbstractItem implements Serializable, DocumentCreator {    
 
     private long id;
     private Item parent; // slightly different meaning for Item and History

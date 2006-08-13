@@ -16,6 +16,8 @@
 
 package info.jtrac.domain;
 
+import org.apache.lucene.document.Document;
+
 /**
  * Any updates to an Item (even a new insert) causes a snapshot of
  * the item to be stored in the History table.
@@ -43,6 +45,18 @@ public class History extends AbstractItem {
         for(Field.Name fieldName : Field.Name.values()) {
             setValue(fieldName, item.getValue(fieldName));
         }
+    }
+    
+    /**
+     * Lucene DocumentCreator implementation
+     */
+    public Document createDocument() {
+        Document d = new Document();
+        d.add(org.apache.lucene.document.Field.Keyword("id", getId() + ""));
+        d.add(org.apache.lucene.document.Field.Keyword("summary", getSummary()));
+        d.add(org.apache.lucene.document.Field.Keyword("detail", getDetail()));
+        d.add(org.apache.lucene.document.Field.Keyword("comment", comment));
+        return d;
     }
     
     @Override

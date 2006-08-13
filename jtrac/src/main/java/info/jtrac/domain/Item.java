@@ -20,6 +20,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.apache.lucene.document.Document;
 
 /**
  * This object represents a generic item which can be an issue, defect, task etc.
@@ -63,6 +64,17 @@ public class Item extends AbstractItem {
         }
         attachments.add(attachment);
     }
+    
+    /**
+     * Lucene DocumentCreator implementation
+     */
+    public Document createDocument() {
+        Document d = new Document();
+        d.add(org.apache.lucene.document.Field.Keyword("id", getId() + ""));
+        d.add(org.apache.lucene.document.Field.Keyword("summary", getSummary()));
+        d.add(org.apache.lucene.document.Field.Keyword("detail", getDetail()));
+        return d;
+    }    
     
     //===========================================================
     
