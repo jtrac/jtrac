@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="jtrac" basedir=".">
-
+    
+    <!-- example build.properties    
+    tomcat.home=C:/peter/opt/apache-tomcat-5.5.16
+    mvn.executable=C:/peter/opt/maven-2.0.4/bin/mvn.bat
+    watij.home=C:/peter/opt/watij-2.2.2 
+    -->
+    
     <property file="build.properties"/>
     <property file="build-deps.properties"/>	
     <property name="war.name" value="jtrac"/>   	
@@ -46,6 +52,21 @@
     <target name="set-production-flag">        
         <property name="production" value="true"/>
     </target>    
+    
+    <!-- ========================= HIBERNATE =========================== -->
+
+    <target name="hbm-export" depends="compile">
+        <java classname="org.hibernate.tool.hbm2ddl.SchemaExport" fork="true">
+            <classpath>
+                <path path="${test.jars}"/>
+                <path path="target/classes"/>        	
+            </classpath>			
+            <jvmarg line="-Dhibernate.dialect=org.hibernate.dialect.SybaseDialect"/>
+            <arg line="--text"/>
+            <arg line="--output=target/schema.sql"/>
+            <arg line="src/main/resources/*.hbm.xml"/>
+        </java>
+    </target>	    
     
     <!-- ========================== DIST ============================ -->
     
@@ -150,6 +171,18 @@
         </sequential>
     </macrodef>
 	
+    <!-- ======================== MAVEN ============================ -->
+
+    <target name="mvn-antprops">
+        <input message="Connect to external repositories?" validargs="y,n" addproperty="do.online"/>
+        <condition property="offline.flag" value="-o" else="">
+            <equals arg1="n" arg2="${do.online}"/>
+        </condition>		
+        <exec executable="${mvn.executable}">
+            <arg line="antprops:generate ${offline.flag}"/>
+        </exec>
+    </target>    
+    
     <!-- ======================= CHECKSTYLE ========================= -->	
 	
     <taskdef resource="checkstyletask.properties" classpath="${checkstyle.jars}"/>	                	
@@ -249,7 +282,7 @@
     
     <!-- ========================= JETTY ============================ -->    
     
-    <target name="jetty-deploy" depends="jspc">      
+    <target name="jetty-deploy" depends="jetty-setup, jspc">      
         <copy todir="target/jetty/webapp">
             <fileset dir="target/${war.name}">
                 <exclude name="**/WEB-INF/*.generated"/>
@@ -278,7 +311,7 @@
         <mkdir dir="target/jetty/work"/>        
     </target>
     
-    <target name="jetty-start" depends="jetty-setup, jetty-deploy">
+    <target name="jetty-start" depends="jetty-deploy">
         <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
             <jvmarg line="-Dfile.encoding=UTF-8"/>
             <jvmarg line="-Djtrac.home=${basedir}/home"/>
@@ -290,80 +323,29 @@
         <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">            
             <arg line="--stop"/>
         </java>        
-    </target>
-    
-    <!-- ========================= TOMCAT =========================== -->
-    
-    <target name="tomcat-clean">   
-        <delete includeemptydirs="true" failonerror="false">
-            <fileset dir="${tomcat.home}/work/Catalina/localhost/${war.name}"/>
-            <fileset dir="${tomcat.home}/webapps/${war.name}"/>                            
-        </delete>     
-    </target>
-    
-    <target name="tomcat-clean-all">
-        <input message="All tomcat webapps [${tomcat.home}/webapps] will be deleted.  Are you sure?"
-            validargs="y,n" addproperty="do.clean"/>
-        <condition property="do.abort">
-            <equals arg1="n" arg2="${do.clean}"/>
-        </condition>
-        <fail if="do.abort">aborted by user.</fail>        
-        <delete includeemptydirs="true" failonerror="false">
-            <fileset dir="${tomcat.home}/work"/>
-            <fileset dir="${tomcat.home}/webapps">
-                <exclude name="ROOT/**"/>
-            </fileset>
-        </delete> 	
-    </target>
-    
-    <target name="tomcat-deploy" depends="jspc">  
-        <copy todir="${tomcat.home}/webapps/${war.name}">
-            <fileset dir="target/${war.name}">
-                <exclude name="**/WEB-INF/*.generated"/>
-                <exclude name="**/WEB-INF/jsp/**"/>
-                <exclude name="**/WEB-INF/src/**"/>
-            </fileset>
-        </copy>
     </target>    
 	
-    <target name="tomcat-start" depends="tomcat-deploy">
-        <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
-            <jvmarg line="-Dcatalina.home=${tomcat.home}"/>
+    <target name="jetty-start-debug" depends="jetty-deploy">
+        <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
             <jvmarg line="-Dfile.encoding=UTF-8"/>
-            <jvmarg line="-Djtrac.home=home"/>
-            <!-- <jvmarg line="-Djcifs.util.loglevel=10"/> -->
-        </java>
-    </target>
-	
-    <target name="tomcat-stop">
-        <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
-            <jvmarg line="-Dcatalina.home=${tomcat.home}"/>
-            <arg line="stop"/>
-        </java>
-    </target>
-	
-    <!-- target for remote debugging -->
-    <target name="tomcat-start-debug" depends="tomcat-deploy">
-        <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
-            <jvmarg line="-Djtrac.home=home"/>
-            <jvmarg line="-Dcatalina.home=${tomcat.home}"/>
-            <jvmarg line="-Dfile.encoding=UTF-8"/>
+            <jvmarg line="-Djtrac.home=${basedir}/home"/>
+            <jvmarg line="-Djtrac.webapp=webapp"/>
             <jvmarg line="-Xdebug"/>
-            <jvmarg line="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"/>
+            <jvmarg line="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"/>            
         </java>
-    </target>    
-    
+    </target> 
+       
     <!-- target for NetBeans Profiler on Windows -->
-    <target name="tomcat-start-profiler" depends="tomcat-deploy">
+    <target name="jetty-start-profile" depends="jetty-deploy">
         <property name="nbprof.home" value="${netbeans.home}/../profiler1/lib"/>
-        <property name="agent.path" value="${nbprof.home}/deployed/jdk15/windows/profilerinterface.dll=${nbprof.home},5140"/>
-        <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
-            <jvmarg line="-Dcatalina.home=${tomcat.home}"/>
+        <property name="agent.path" value="${nbprof.home}/deployed/jdk15/windows/profilerinterface.dll=${nbprof.home},5140"/>        
+        <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
             <jvmarg line="-Dfile.encoding=UTF-8"/>
-            <jvmarg line="-Djtrac.home=home"/>
+            <jvmarg line="-Djtrac.home=${basedir}/home"/>
+            <jvmarg line="-Djtrac.webapp=webapp"/>
             <jvmarg line="-agentpath:${agent.path}"/>
-            <jvmarg line="-Xmx512m"/>
+            <jvmarg line="-Xmx512m"/>            
         </java>
-    </target> 	
+    </target>	
               
 </project>
