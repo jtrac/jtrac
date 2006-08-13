@@ -106,6 +106,12 @@ public class AntPropsMojo extends AbstractMojo {
     //========================== MAIN ================================
     
 	public void execute() throws MojoExecutionException {
+		if (testPaths == null) {
+			testPaths = new ArrayList();
+		}
+		if (extraPaths == null) {
+			extraPaths = new ArrayList();
+		}
 		String repoBaseDir = localRepository.getBasedir().replace('\\','/');					
 		try {
 			buildProperties.put("m2.repo", repoBaseDir);
