@@ -42,7 +42,9 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
     protected String[] getConfigLocations() {
         System.setProperty("jtrac.home", "target/home");
         return new String[] {
-            "file:src/main/webapp/WEB-INF/applicationContext.xml" };
+            "file:src/main/webapp/WEB-INF/applicationContext.xml",
+            "file:src/main/webapp/WEB-INF/applicationContext-lucene.xml"
+        };
     }
     
     //==============================================================================

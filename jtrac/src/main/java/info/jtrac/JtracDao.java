@@ -26,6 +26,7 @@ import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import info.jtrac.domain.Counts;
+import info.jtrac.domain.History;
 import java.util.Collection;
 
 import java.util.List;
@@ -38,6 +39,7 @@ public interface JtracDao {
     
     void storeItem(Item item);
     Item loadItem(long id);
+    History loadHistory(long id);
     List<Item> findItems(long sequenceNum, String prefixCode);
     List<Item> findItems(ItemSearch itemSearch);
     //===========================================

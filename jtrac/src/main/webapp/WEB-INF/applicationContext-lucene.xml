@@ -5,16 +5,31 @@
 
 <beans>
     
-    <bean id="fsDirectory" class="org.springmodules.lucene.index.support.FSDirectoryFactoryBean">
-        <property name="location" value="${jtrac.home}/indexes"/>
+    <bean id="indexDirectory" class="org.springmodules.lucene.index.support.FSDirectoryFactoryBean">
+        <property name="location" value="file:///${jtrac.home}/indexes"/>
+        <property name="create" value="true"/>
     </bean>
     
     <bean id="indexFactory" class="org.springmodules.lucene.index.support.SimpleIndexFactoryBean">
-        <property name="directory" ref="fsDirectory"/>
-        <property name="analyzer">
-            <bean class="org.apache.lucene.analysis.SimpleAnalyzer"/>
-        </property>
-    </bean>    
+        <property name="directory" ref="indexDirectory"/>
+        <property name="analyzer" ref="analyzer"/>
+    </bean>
+    
+    <bean id="indexAccessor" class="info.jtrac.lucene.Indexer">
+        <property name="indexFactory" ref="indexFactory"/>
+    </bean>
+    
+    <bean id="searcherFactory" class="org.springmodules.lucene.search.factory.SimpleSearcherFactory">
+        <property name="directory" ref="indexDirectory"/>
+    </bean>
+    
+    <bean id="indexSearcher" class="info.jtrac.lucene.IndexSearcher">
+        <property name="searcherFactory" ref="searcherFactory"/>
+        <property name="analyzer" ref="analyzer"/>
+        <property name="dao" ref="dao"/>
+    </bean>
+    
+    <bean id="analyzer" class="org.apache.lucene.analysis.SimpleAnalyzer"/>
            
 </beans>
 

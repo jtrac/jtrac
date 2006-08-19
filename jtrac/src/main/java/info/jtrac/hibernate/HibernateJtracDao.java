@@ -28,6 +28,7 @@ import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import info.jtrac.domain.Counts;
+import info.jtrac.domain.History;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -67,6 +68,10 @@ public class HibernateJtracDao
     
     public Item loadItem(long id) {
         return (Item) getHibernateTemplate().get(Item.class, id);
+    }
+    
+    public History loadHistory(long id) {
+        return (History) getHibernateTemplate().get(History.class, id);
     }
     
     public List<Item> findItems(long sequenceNum, String prefixCode) {

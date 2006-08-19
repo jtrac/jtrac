@@ -181,6 +181,10 @@ public class JtracImpl implements Jtrac {
         return items.get(0);
     }
     
+    public History loadHistory(long id) {
+        return dao.loadHistory(id);
+    }
+    
     public List<Item> findItems(ItemSearch itemSearch) {
         return dao.findItems(itemSearch);
     }
