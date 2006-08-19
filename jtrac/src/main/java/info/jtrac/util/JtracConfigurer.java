@@ -66,14 +66,7 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer {
             logger.info("directory does not exist, created '" + attachmentsFile.getPath() + "'");
         } else {
             logger.info("directory already exists: '" + attachmentsFile.getPath() + "'");
-        }
-        File indexesFile = new File(jtracHome + "/indexes");
-        if (!indexesFile.exists()) {
-            indexesFile.mkdir();
-            logger.info("directory does not exist, created '" + indexesFile.getPath() + "'");
-        } else {
-            logger.info("directory already exists: '" + indexesFile.getPath() + "'");
-        }         
+        }        
         File propFile = new File(homeFile.getPath() + "/jtrac.properties");
         if (!propFile.exists()) {                
             propFile.createNewFile();

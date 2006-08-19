@@ -53,6 +53,7 @@ public class History extends AbstractItem {
     public Document createDocument() {
         Document d = new Document();
         d.add(org.apache.lucene.document.Field.UnIndexed("id", getId() + ""));
+        d.add(org.apache.lucene.document.Field.UnIndexed("itemId", getParent().getId() + ""));
         d.add(org.apache.lucene.document.Field.UnIndexed("type", "history"));
         d.add(org.apache.lucene.document.Field.UnStored("summary", getSummary()));
         d.add(org.apache.lucene.document.Field.UnStored("detail", getDetail()));

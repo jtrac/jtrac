@@ -16,8 +16,6 @@
 
 package info.jtrac.lucene;
 
-import info.jtrac.JtracDao;
-import info.jtrac.domain.Item;
 import java.util.List;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
@@ -30,19 +28,19 @@ import org.springmodules.lucene.search.support.LuceneSearchSupport;
  * Uses Spring Modules Lucene support, provides Lucene Index Searching support
  * in classic Spring Template style
  */
-public class IndexSearcher extends LuceneSearchSupport {    
+public class IndexSearcher extends LuceneSearchSupport {
     
-    private JtracDao dao;
-    
-    public void setDao(JtracDao dao) {
-        this.dao = dao;
-    }
-    
-    public List<Item> findItemsContainingText(String text) throws ParseException {       
+    public List<Long> findItemIdsContainingText(String text) {       
         LuceneSearchTemplate template = getTemplate();
         QueryParser parser = new QueryParser("detail", getAnalyzer());
-        Query query = parser.parse(text);
-        HitExtractor hitExtractor = new ItemHitExtractor(dao);
+        Query query;
+        try {
+            query = parser.parse(text);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        HitExtractor hitExtractor = new ItemIdHitExtractor();
         return template.search(query, hitExtractor);        
     }
 

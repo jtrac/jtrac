@@ -8,6 +8,7 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import info.jtrac.domain.Counts;
+import info.jtrac.domain.State;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -177,7 +178,7 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         i.setSpace(s);
         i.setAssignedTo(u);
         i.setLoggedBy(u);
-        i.setStatus(99);
+        i.setStatus(State.CLOSED);
         jtrac.storeItem(i, null);
         assertEquals(1, i.getSequenceNum());
         
@@ -197,6 +198,5 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         assertEquals(1, c.getClosed());        
         assertEquals(1, c.getTotal());
     }
-    
     
 }

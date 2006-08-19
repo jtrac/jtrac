@@ -16,40 +16,29 @@
 
 package info.jtrac.lucene;
 
-import info.jtrac.JtracDao;
-import info.jtrac.domain.History;
-import info.jtrac.domain.Item;
 import org.apache.lucene.document.Document;
 import org.springmodules.lucene.search.core.HitExtractor;
 
 /**
  * Uses Spring Modules Lucene support
- * converts a search "hit" into our domain object
+ * converts a search "hit" into an Item id, which we
+ * can later use to load the actual object
  */
-public class ItemHitExtractor implements HitExtractor {
+public class ItemIdHitExtractor implements HitExtractor {
     
-    private JtracDao dao;
-    
-    public ItemHitExtractor(JtracDao dao) {
-        this.dao = dao;
-    }
-    
-    public Item mapHit(int i, Document document, float f) {
+    public Long mapHit(int i, Document document, float f) {
         String id = document.get("id");
         if (id == null) {
             return null;
         }        
         String type = document.get("type");
-        Item item = null;
         if (type.equals("item")) {
-            item = dao.loadItem(new Long(id));
+            return new Long(id);
         } else if (type.equals("history")) {
-            History h = dao.loadHistory(new Long(id));
-            if (h != null) {
-                item = h.getParent();
-            }
+            String itemId = document.get("itemId");
+            return new Long(itemId);
         }
-        return item;
+        return null;
     }
  
 }

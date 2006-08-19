@@ -17,7 +17,7 @@
 package info.jtrac.lucene;
 
 import info.jtrac.domain.AbstractItem;
-import java.util.List;
+import java.util.Collection;
 import org.springmodules.lucene.index.support.LuceneIndexSupport;
 
 /**
@@ -26,10 +26,14 @@ import org.springmodules.lucene.index.support.LuceneIndexSupport;
  */
 public class Indexer extends LuceneIndexSupport {
     
-    public void index(List<AbstractItem> items) {
+    public void index(Collection<AbstractItem> items) {
         for (AbstractItem e : items) {
             getTemplate().addDocument(e);
         }
+    }
+    
+    public void index(AbstractItem item) {
+        getTemplate().addDocument(item);
     }
 
 }
