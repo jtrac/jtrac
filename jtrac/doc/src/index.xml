@@ -52,8 +52,9 @@
             <para>
                 JTrac development used to be hosted at <ulink url="https://jtrac.dev.java.net"/> but moved to SourceForge 
                 in early 2006. The older working version was based on Spring JDBC and MS Access and is not being maintained
-                any more.  JTrac was completely re-written to use Hibernate for persistence and the Acegi security framework
-                for Spring and it now uses the latest Java 5.0 and JSP 2.0 features. 
+                any more.  JTrac was completely re-written to use <ulink url="http://www.hibernate.org/">Hibernate</ulink>
+                for persistence and the <ulink url="http://www.acegisecurity.org/">Acegi Security</ulink> framework for Spring 
+                and it now uses the latest Java 5.0 and JSP 2.0 features. 
             </para>            
         </sect1>        
         
@@ -71,8 +72,9 @@
             <para>
                 You are encouraged to try out JTrac and communicate your feedback and interest in future versions
                 to the JTrac development team.  Note that you can be up and running with just Java 5 as a prerequisite
-                as JTrac comes bundled with a small-footprint web-application server (Jetty).  JTrac also uses
-                an embedded database by default which makes it extremely easy to evaluate.
+                as JTrac comes bundled with a small-footprint web-application server called 
+                <ulink url="http://jetty.mortbay.org/">Jetty</ulink>. JTrac also uses an embedded database called 
+                <ulink url="http://www.hsqldb.org/">HSQLDB</ulink> by default which makes it extremely easy to evaluate.
             </para>
             <para>
                 Please see the <link linkend="installation">installation</link> section of this documentation for 
@@ -97,15 +99,18 @@
             <title>Easy to Install</title>
             <para>
                 One of the useful features of JTrac is that it is distributed with an embedded web-application server 
-                (Jetty) that has a very small footprint (~1.3 MB).  If you have Java 5 installed you can be up and 
-                running after downloading and extracting JTrac - by simply using the provided start and stop scripts.  
-                JTrac scans its environment on startup and if a configured database is not detected, HSQLDB is used 
-                by default.  Also, if you already have a web-application server that you wish to use (such as Tomcat) 
-                you can drop in just the single WAR file provided and immediately sign on into the application.
+                (<ulink url="http://jetty.mortbay.org/">Jetty</ulink>) that has a very small footprint (~1.3 MB).  
+                If you have Java 5 installed you can be up and running after downloading and extracting JTrac - by 
+                simply using the provided start and stop scripts.  JTrac scans its environment on startup and if a 
+                configured database is not detected, <ulink url="http://www.hsqldb.org/">HSQLDB</ulink> is used by 
+                default.  Also, if you already have a web-application server that you wish to use (such as 
+                <ulink url="http://tomcat.apache.org/">Tomcat</ulink>) you can drop in just the single WAR file 
+                provided and immediately sign on into the application.
             </para>
             <para>
                 Please see the <link linkend="installation">installation</link> section of this documentation for 
-                more details.  JTrac uses Hibernate and so it can support any database.    
+                more details.  JTrac uses <ulink url="http://www.hibernate.org">Hibernate</ulink> and so it can 
+                support any database.    
             </para>                
         </sect1>            
         <sect1 id="features-customfields">
@@ -287,7 +292,7 @@
         <sect1 id="features-navigation">
             <title>Simple Navigation</title>
             <para>
-                Most users will use only four screens in JTrac: Create, View, Search and Search Results.
+                Most users will use only five screens in JTrac: Dashboard, Create, View, Search and Results.
                 Navigation has been designed with usability and simplicity in mind.
             </para>                 
         </sect1>            
@@ -353,7 +358,8 @@ java -version
             <title>Quick Installation</title>
             <para>                    
                 Once you have Java you can start using JTrac right away because you do not need to configure a web-application 
-                server or a database.  JTrac embeds both of these to make it easy for you to evaluate JTrac.
+                server or a database.  JTrac embeds both of these (<ulink url="http://jetty.mortbay.org/">Jetty</ulink> and 
+                <ulink url="http://www.hsqldb.org/">HSQLDB</ulink>) to make it easy for you to evaluate JTrac.
             </para>                  
             <para>            
                 <itemizedlist>
@@ -399,8 +405,9 @@ java -version
             <para>
                 JTrac is designed so that you can be up and running by just deploying the WAR file into your 
                 existing web-application server.  Note that you need a servlet 2.4 compliant container.  
-                For example, if you have Apache Tomcat 5.5.X, you can either copy the WAR file into the 
-                [tomcat.home]/webapps folder or choose to upload the WAR file through the Tomcat console.
+                For example, if you have <ulink url="http://tomcat.apache.org/">Apache Tomcat</ulink> 5.5.X, 
+                you can either copy the WAR file into the [tomcat.home]/webapps folder or choose to upload 
+                the WAR file through the Tomcat console.
             </para>
             <para>                    
                 JTrac saves database information and uploaded attachments into a directory on the server.
@@ -443,9 +450,9 @@ hibernate.show_sql=false
         <sect1 id="installation-windowsservice">
             <title>Installing as a Windows Service</title>
             <para>                    
-                If you choose to use the bundled Jetty web-application server, you can easily install
-                JTrac as a Windows service so that it can start automatically when the host machine is
-                switched on.
+                If you choose to use the bundled <ulink url="http://jetty.mortbay.org/">Jetty</ulink> web-application 
+                server, you can easily install JTrac as a Windows service so that it can start automatically when 
+                the host machine is switched on.
             </para>
             <para>
                 You can do this by using the <ulink url="http://wrapper.tanukisoftware.org/">Java Service Wrapper</ulink>
@@ -514,19 +521,20 @@ wrapper.exe -r etc/wrapper.conf
         <sect1 id="faq-architecture">
             <title>What is the JTrac architecture like?</title>
             <para>
-                JTrac is built using the Spring Framework as far as possible and mostly uses Spring WebFlow
-                within the MVC layer apart from Spring MVC.  Also the Acegi security framework for Spring has been used.  
-                JTrac is effectively a "light-weight" Java EE application and any version 2.4 compliant servlet engine is
-                sufficient for deployment.
+                JTrac is built using the <ulink url="http://www.springframework.org">Spring Framework</ulink> as far as 
+                possible and mostly uses 
+                <ulink url="http://opensource.atlassian.com/confluence/spring/display/WEBFLOW/Home">Spring WebFlow</ulink>
+                within the MVC layer apart from Spring MVC.  Also the <ulink url="http://www.acegisecurity.org/">Acegi Security</ulink>
+                framework for Spring has been used.  JTrac is effectively a "light-weight" Java EE application and any 
+                version 2.4 compliant servlet engine is sufficient for deployment.
             </para>
             <para>
                 The presentation layer is JSP and JSTL based with a minimal amount of Javascript.  AJAX features will be 
-                introduced into the screens going forward but only where there is value add.  The DWR framework is likely
-                to be the AJAX framework of choice.
+                introduced into the screens going forward but only where there is value add.
             </para>            
             <para>
-                Hibernate is used for data persistence.  This allows for JTrac to be database neutral and any database
-                supported by Hibernate can be used.
+                <ulink url="http://www.hibernate.org/">Hibernate</ulink> is used for data persistence.  This allows for 
+                JTrac to be database neutral and any database supported by Hibernate can be used.
             </para>
         </sect1>     
     </chapter>    
@@ -553,8 +561,8 @@ wrapper.exe -r etc/wrapper.conf
         <sect1 id="roadmap-validation">
             <title>Custom Validation</title>
             <para>
-                Using Beanshell, users will be able to add custom validation routines for item entry.  Even conditional
-                validation across fields will be possible.
+                Using <ulink url="http://www.beanshell.org/">Beanshell</ulink>, users will be able to add custom validation 
+                routines for item entry.  Even conditional validation across fields will be possible.
             </para>
         </sect1>
         <sect1 id="roadmap-scheduler">
@@ -568,9 +576,9 @@ wrapper.exe -r etc/wrapper.conf
         <sect1 id="roadmap-email">
             <title>Submit By Email</title>
             <para>
-        JTrac should be able to monitor an e-mail account and incoming e-mail should trigger
-        creation / updation of items.  It would be handy to have attachments submitted through
-        email also.
+                JTrac should be able to monitor an e-mail account and incoming e-mail should trigger
+                creation / updation of items.  It would be handy to have attachments submitted through
+                email also.
             </para>
         </sect1>        
         <sect1 id="roadmap-savedsearches">
@@ -589,10 +597,10 @@ wrapper.exe -r etc/wrapper.conf
         <sect1 id="roadmap-svn">
             <title>Subversion Integration</title>            
             <para>
-                Integration with Subversion has already been implemented using the JavaSVN library and this will
-                enable effective integration of bug reports with commit history in the future.
-                You can try out the existing experimental support by going to the following url of your JTrac
-                installation: http://[hostname]/jtrac/svn_form.htm                
+                Integration with <ulink url="http://subversion.tigris.org/">Subversion</ulink> has already been implemented 
+                using the <ulink url="http://tmate.org/svn/">JavaSVN</ulink> library and this will enable effective 
+                integration of bug reports with commit history in the future. You can try out the existing experimental 
+                support by going to the following url of your JTrac installation: http://[hostname]/jtrac/svn_form.htm                
             </para>
             <para>
                 <mediaobject>
@@ -634,11 +642,19 @@ wrapper.exe -r etc/wrapper.conf
         <sect1 id="roadmap-cas">            
             <title>CAS (Single Sign On)</title>            
             <para>
-                Since JTrac uses the Acegi security framework, it would be easy to configure it 
-                to use an existing CAS installation for implementing Single Sign On. In fact most 
-                of the configuration is in place and only needs to be documented.
+                Since JTrac uses the <ulink url="http://www.acegisecurity.org/">Acegi Security</ulink> 
+                framework, it would be easy to configure it to use an existing 
+                <ulink url="http://www.ja-sig.org/products/cas/">Central Authentication Service</ulink> (CAS) installation 
+                for implementing Single Sign On. In fact most of the configuration is in place and only needs to be documented.
             </para>
-        </sect1>     
+        </sect1>
+        <sect1 id="roadmap-xmlapi">            
+            <title>XML API</title>            
+            <para>
+                JTrac should be able to expose a remote XML API (SOAP or REST) so that core functionality can be 
+                invoked / integrated with other systems.
+            </para>
+        </sect1>      
     </chapter>
     
 </book>
