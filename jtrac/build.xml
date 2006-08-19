@@ -61,10 +61,10 @@
                 <path path="${test.jars}"/>
                 <path path="target/classes"/>        	
             </classpath>			
-            <jvmarg line="-Dhibernate.dialect=org.hibernate.dialect.SybaseDialect"/>
-            <arg line="--text"/>
-            <arg line="--output=target/schema.sql"/>
-            <arg line="src/main/resources/*.hbm.xml"/>
+            <jvmarg value="-Dhibernate.dialect=org.hibernate.dialect.SybaseDialect"/>
+            <arg value="--text"/>
+            <arg value="--output=target/schema.sql"/>
+            <arg value="src/main/resources/*.hbm.xml"/>
         </java>
     </target>	    
     
@@ -313,25 +313,25 @@
     
     <target name="jetty-start" depends="jetty-deploy">
         <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
-            <jvmarg line="-Dfile.encoding=UTF-8"/>
-            <jvmarg line="-Djtrac.home=${basedir}/home"/>
-            <jvmarg line="-Djtrac.webapp=webapp"/>
+            <jvmarg value="-Dfile.encoding=UTF-8"/>
+            <jvmarg value="-Djtrac.home=${basedir}/home"/>
+            <jvmarg value="-Djtrac.webapp=webapp"/>
         </java>
     </target>
    
     <target name="jetty-stop">
         <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">            
-            <arg line="--stop"/>
+            <arg value="--stop"/>
         </java>        
     </target>    
 	
     <target name="jetty-start-debug" depends="jetty-deploy">
         <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
-            <jvmarg line="-Dfile.encoding=UTF-8"/>
-            <jvmarg line="-Djtrac.home=${basedir}/home"/>
-            <jvmarg line="-Djtrac.webapp=webapp"/>
-            <jvmarg line="-Xdebug"/>
-            <jvmarg line="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"/>            
+            <jvmarg value="-Dfile.encoding=UTF-8"/>
+            <jvmarg value="-Djtrac.home=${basedir}/home"/>
+            <jvmarg value="-Djtrac.webapp=webapp"/>
+            <jvmarg value="-Xdebug"/>
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"/>            
         </java>
     </target> 
        
@@ -340,11 +340,11 @@
         <property name="nbprof.home" value="${netbeans.home}/../profiler1/lib"/>
         <property name="agent.path" value="${nbprof.home}/deployed/jdk15/windows/profilerinterface.dll=${nbprof.home},5140"/>        
         <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
-            <jvmarg line="-Dfile.encoding=UTF-8"/>
-            <jvmarg line="-Djtrac.home=${basedir}/home"/>
-            <jvmarg line="-Djtrac.webapp=webapp"/>
-            <jvmarg line="-agentpath:${agent.path}"/>
-            <jvmarg line="-Xmx512m"/>            
+            <jvmarg value="-Dfile.encoding=UTF-8"/>
+            <jvmarg value="-Djtrac.home=${basedir}/home"/>
+            <jvmarg value="-Djtrac.webapp=webapp"/>
+            <jvmarg value="-agentpath:${agent.path}"/>
+            <jvmarg value="-Xmx512m"/>            
         </java>
     </target>	
               
