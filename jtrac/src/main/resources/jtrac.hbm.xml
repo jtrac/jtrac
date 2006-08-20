@@ -15,7 +15,7 @@
         <property name="sequenceNum" column="sequence_num" index="sequence_num_idx"/>
         <property name="timeStamp" column="time_stamp"/>
         <property name="plannedEffort" column="planned_effort"/>
-        <set name="children" order-by="id" cascade="all">
+        <set name="children" order-by="id" cascade="all" inverse="true">
             <key column="parent_id"/>
             <one-to-many class="Item"/>
         </set>         
