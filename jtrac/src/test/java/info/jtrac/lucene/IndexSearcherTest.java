@@ -20,10 +20,8 @@ public class IndexSearcherTest extends TestCase {
         }
         File file = new File("target/home/indexes");
         if (!file.exists()) {
-            System.out.println("indexes dir does not exist, creating");
             file.mkdir();
-        } else {
-            System.out.println("indexes dir exists, cleaning");
+        } else {            
             for (File f : file.listFiles()) {
                 f.delete();
             }
