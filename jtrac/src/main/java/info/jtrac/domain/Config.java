@@ -36,6 +36,8 @@ public class Config implements Serializable {
         params = new LinkedHashSet<String>();
         params.add("mail.server.host");
         params.add("mail.server.port");
+        params.add("mail.server.username");
+        params.add("mail.server.password");
         params.add("mail.subject.prefix");
         params.add("mail.from");
         params.add("jtrac.url.base");        

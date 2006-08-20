@@ -20,6 +20,7 @@ import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.User;
 import java.util.Date;
+import java.util.Properties;
 import javax.mail.internet.MimeMessage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,7 +38,7 @@ public class EmailUtils {
     private String from;
     private String url;
     
-    public EmailUtils(String host, String port, String url, String from, String prefix) {
+    public EmailUtils(String host, String port, String url, String from, String prefix, String userName, String password) {
         logger.debug("initializing email adapter: host = '" + host + "', port = '" + 
                 port + "', url = '" + url + "', from = '" + from + "', prefix = '" + prefix + "'");        
         this.prefix = prefix == null ? "[jtrac]" : prefix;
@@ -46,7 +47,6 @@ public class EmailUtils {
         if (!this.url.endsWith("/")) {
             this.url = url + "/";
         }          
-
         int p = 25;
         if (port != null) {
            try {
@@ -58,6 +58,14 @@ public class EmailUtils {
         sender = new JavaMailSenderImpl();
         sender.setHost(host);
         sender.setPort(p);
+        if (userName != null) {
+            // authentication requested
+            Properties props = new Properties();
+            props.put("mail.smtp.auth", "true");
+            sender.setJavaMailProperties(props);
+            sender.setUsername(userName);
+            sender.setPassword(password);
+        }
         logger.debug("email sender initialized: host = '" + host + "', port = '" + p + "'");
     }
 

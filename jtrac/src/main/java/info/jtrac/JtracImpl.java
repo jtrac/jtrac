@@ -118,7 +118,9 @@ public class JtracImpl implements Jtrac {
         String url = loadConfig("jtrac.url.base");
         String from = loadConfig("mail.from");
         String prefix = loadConfig("mail.subject.prefix");
-        this.emailUtils = new EmailUtils(host, port, url, from, prefix);
+        String userName = loadConfig("mail.server.username");
+        String password = loadConfig("mail.server.password");
+        this.emailUtils = new EmailUtils(host, port, url, from, prefix, userName, password);
     }      
     
     //==========================================================================
@@ -392,7 +394,11 @@ public class JtracImpl implements Jtrac {
         if (config == null) {
             return null;
         }
-        return config.getValue();
+        String value = config.getValue();
+        if (value == null || value.trim().equals("")) {
+            return null;
+        }
+        return value;
     }
     
 }
