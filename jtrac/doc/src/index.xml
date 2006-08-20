@@ -536,6 +536,15 @@ wrapper.exe -r etc/wrapper.conf
                 <ulink url="http://www.hibernate.org/">Hibernate</ulink> is used for data persistence.  This allows for 
                 JTrac to be database neutral and any database supported by Hibernate can be used.
             </para>
+        </sect1>
+        <sect1 id="faq-version">
+            <title>Why start with version 2.0?  What about 1.0?</title>
+            <para>
+                There was an earlier version of JTrac which used to be hosted at <ulink url="https://jtrac.dev.java.net"/>
+                That project was called "jTrac" (with a lowercase 'j') and it was based on Spring JDBC and MS Access.                
+                JTrac has now been completely re-written to use Hibernate, Spring WebFlow and Acegi - and the 2.0 version
+                number reflects this.
+            </para>
         </sect1>     
     </chapter>    
     
