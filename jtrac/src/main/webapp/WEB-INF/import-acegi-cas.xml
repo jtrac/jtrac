@@ -9,6 +9,13 @@
         <property name="filterInvocationDefinitionSource">
             <value>
                 PATTERN_TYPE_APACHE_ANT
+                /resources/*=httpSessionFilter
+                /calendar/**=httpSessionFilter
+                /error_cas.htm=httpSessionFilter
+                /chart/*=httpSessionFilter
+                /svn_*=httpSessionFilter                 
+                /login.htm*=httpSessionFilter
+                /logout.htm=httpSessionFilter                
                 /**=httpSessionFilter,authenticationFilter,anonFilter,exceptionTranslationFilter,authorizationFilter
             </value>
         </property>

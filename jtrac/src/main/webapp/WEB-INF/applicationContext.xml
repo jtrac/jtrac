@@ -21,6 +21,8 @@
             <bean class="info.jtrac.JtracImpl">
                 <property name="dao" ref="dao"/>
                 <property name="passwordEncoder" ref="passwordEncoder"/>
+                <property name="indexer" ref="indexer"/>
+                <property name="indexSearcher" ref="indexSearcher"/>
             </bean>
         </property>        
         <property name="transactionAttributes">

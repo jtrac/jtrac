@@ -11,6 +11,7 @@
         <param-value>
             /WEB-INF/applicationContext.xml
             /WEB-INF/applicationContext-acegi.xml
+            /WEB-INF/applicationContext-lucene.xml
         </param-value>
     </context-param>  
     

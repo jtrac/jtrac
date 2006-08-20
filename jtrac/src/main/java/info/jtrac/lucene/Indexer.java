@@ -24,16 +24,10 @@ import org.springmodules.lucene.index.support.LuceneIndexSupport;
  * Uses Spring Modules Lucene support, provides Lucene Indexing support
  * in classic Spring Template style
  */
-public class Indexer extends LuceneIndexSupport {
-    
-    public void index(Collection<AbstractItem> items) {
-        for (AbstractItem e : items) {
-            getTemplate().addDocument(e);
-        }
-    }
+public class Indexer extends LuceneIndexSupport {    
     
     public void index(AbstractItem item) {
         getTemplate().addDocument(item);
     }
-
+    
 }

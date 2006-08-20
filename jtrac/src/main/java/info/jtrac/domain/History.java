@@ -55,9 +55,23 @@ public class History extends AbstractItem {
         d.add(org.apache.lucene.document.Field.UnIndexed("id", getId() + ""));
         d.add(org.apache.lucene.document.Field.UnIndexed("itemId", getParent().getId() + ""));
         d.add(org.apache.lucene.document.Field.UnIndexed("type", "history"));
-        d.add(org.apache.lucene.document.Field.UnStored("summary", getSummary()));
-        d.add(org.apache.lucene.document.Field.UnStored("detail", getDetail()));
-        d.add(org.apache.lucene.document.Field.UnStored("comment", comment));
+        StringBuffer sb = new StringBuffer();
+        if (getSummary() != null) {
+            sb.append(getSummary());
+        }        
+        if (getDetail() != null) {
+            if (sb.length() > 0) {
+                sb.append(" | ");
+            }
+            sb.append(getDetail());
+        }
+        if (comment != null) {
+            if (sb.length() > 0) {
+                sb.append(" | ");
+            }
+            sb.append(comment);
+        }        
+        d.add(org.apache.lucene.document.Field.UnStored("text", sb.toString()));
         return d;
     }
     

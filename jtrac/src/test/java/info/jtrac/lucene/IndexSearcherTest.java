@@ -1,8 +1,10 @@
 package info.jtrac.lucene;
 
 import info.jtrac.domain.Item;
+import java.io.File;
 import java.util.List;
 import junit.framework.TestCase;
+import org.apache.lucene.store.FSDirectory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
@@ -12,11 +14,25 @@ public class IndexSearcherTest extends TestCase {
     
     @Override
     public void setUp() {
-        System.setProperty("jtrac.home", "target/home");
-        context = new FileSystemXmlApplicationContext("src/main/webapp/WEB-INF/applicationContext-lucene.xml");
+        File home = new File("target/home");
+        if (!home.exists()) {
+            home.mkdir();
+        }
+        File file = new File("target/home/indexes");
+        if (!file.exists()) {
+            System.out.println("indexes dir does not exist, creating");
+            file.mkdir();
+        } else {
+            System.out.println("indexes dir exists, cleaning");
+            for (File f : file.listFiles()) {
+                f.delete();
+            }
+        }
+        System.setProperty("jtrac.home", home.getAbsolutePath());
+        context = new FileSystemXmlApplicationContext("src/main/webapp/WEB-INF/applicationContext-lucene.xml");    
     }
     
-    public void testFindItemIdsBySearchingWithinSummaryAndDetailFields() {
+    public void testFindItemIdsBySearchingWithinSummaryAndDetailFields() {       
         Item item = new Item();
         item.setId(1);
         item.setSummary("this is a test summary");
@@ -26,8 +42,10 @@ public class IndexSearcherTest extends TestCase {
         IndexSearcher searcher = (IndexSearcher) context.getBean("indexSearcher");
         List list = searcher.findItemIdsContainingText("lazy");
         assertEquals(1, list.size());
-        list = searcher.findItemIdsContainingText("foobar");
+        list = searcher.findItemIdsContainingText("foo");
         assertEquals(0, list.size());
+        list = searcher.findItemIdsContainingText("summary");
+        assertEquals(1, list.size());
     }
     
 }

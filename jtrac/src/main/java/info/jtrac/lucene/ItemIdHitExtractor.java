@@ -26,19 +26,20 @@ import org.springmodules.lucene.search.core.HitExtractor;
  */
 public class ItemIdHitExtractor implements HitExtractor {
     
-    public Long mapHit(int i, Document document, float f) {
-        String id = document.get("id");
-        if (id == null) {
-            return null;
-        }        
+    public Long mapHit(int i, Document document, float f) {              
         String type = document.get("type");
+        if (type == null) {
+            return null;
+        }
         if (type.equals("item")) {
+            String id = document.get("id");
             return new Long(id);
         } else if (type.equals("history")) {
             String itemId = document.get("itemId");
             return new Long(itemId);
+        } else {
+            throw new RuntimeException("Unexpected lucene search result: " + document);
         }
-        return null;
     }
  
 }

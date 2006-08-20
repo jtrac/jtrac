@@ -32,7 +32,7 @@ public class IndexSearcher extends LuceneSearchSupport {
     
     public List<Long> findItemIdsContainingText(String text) {       
         LuceneSearchTemplate template = getTemplate();
-        QueryParser parser = new QueryParser("detail", getAnalyzer());
+        QueryParser parser = new QueryParser("text", getAnalyzer());
         Query query;
         try {
             query = parser.parse(text);

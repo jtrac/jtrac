@@ -11,8 +11,6 @@
                 PATTERN_TYPE_APACHE_ANT
                 /resources/*=httpSessionFilter
                 /calendar/**=httpSessionFilter
-                /index.jsp=httpSessionFilter
-                /error_cas.htm=httpSessionFilter
                 /chart/*=httpSessionFilter
                 /svn_*=httpSessionFilter                 
                 /login.htm*=httpSessionFilter

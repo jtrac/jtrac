@@ -16,6 +16,7 @@
 
 package info.jtrac;
 
+import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Config;
 import info.jtrac.domain.Item;
@@ -42,6 +43,7 @@ public interface JtracDao {
     History loadHistory(long id);
     List<Item> findItems(long sequenceNum, String prefixCode);
     List<Item> findItems(ItemSearch itemSearch);
+    List<AbstractItem> findAllItems();
     //===========================================
     void storeAttachment(Attachment attachment);
     //===========================================

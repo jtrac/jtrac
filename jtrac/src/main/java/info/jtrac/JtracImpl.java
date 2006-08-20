@@ -16,6 +16,7 @@
 
 package info.jtrac;
 
+import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Config;
 import info.jtrac.domain.Counts;
@@ -30,6 +31,8 @@ import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
+import info.jtrac.lucene.IndexSearcher;
+import info.jtrac.lucene.Indexer;
 import info.jtrac.util.EmailUtils;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,6 +62,8 @@ public class JtracImpl implements Jtrac {
     private JtracDao dao;
     private PasswordEncoder passwordEncoder;
     private EmailUtils emailUtils;
+    private Indexer indexer;
+    private IndexSearcher indexSearcher;
     
     public void setDao(JtracDao dao) {
         this.dao = dao;
@@ -68,7 +73,15 @@ public class JtracImpl implements Jtrac {
     
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
-    } 
+    }
+
+    public void setIndexSearcher(IndexSearcher indexSearcher) {
+        this.indexSearcher = indexSearcher;
+    }
+
+    public void setIndexer(Indexer indexer) {
+        this.indexer = indexer;
+    }    
     
     private final Log logger = LogFactory.getLog(getClass());
     
@@ -187,6 +200,13 @@ public class JtracImpl implements Jtrac {
     
     public List<Item> findItems(ItemSearch itemSearch) {
         return dao.findItems(itemSearch);
+    }
+    
+    public void reIndex() {
+        List<AbstractItem> items = dao.findAllItems();
+        for (AbstractItem item : items) {
+            indexer.index(item);
+        }
     }
     
     // =========  acegi UserDetailsService implementation ==========

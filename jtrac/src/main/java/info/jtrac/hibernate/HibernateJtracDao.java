@@ -17,6 +17,7 @@
 package info.jtrac.hibernate;
 
 import info.jtrac.JtracDao;
+import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Config;
 import info.jtrac.domain.Item;
@@ -97,6 +98,10 @@ public class HibernateJtracDao
         }
     }
     
+    public List<AbstractItem> findAllItems() {
+        return getHibernateTemplate().loadAll(AbstractItem.class);
+    }
+    
     public void storeAttachment(Attachment attachment) {
         getHibernateTemplate().merge(attachment);
     }
@@ -118,8 +123,6 @@ public class HibernateJtracDao
     }
     
     public SpaceSequence loadSpaceSequence(long id) {
-        // note the use of get() not load()
-        // see JtracImpl.storeItem() for complete picture
         return (SpaceSequence) getHibernateTemplate().get(SpaceSequence.class, id);
     }
     

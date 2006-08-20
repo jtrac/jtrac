@@ -72,8 +72,17 @@ public class Item extends AbstractItem {
         Document d = new Document();
         d.add(org.apache.lucene.document.Field.UnIndexed("id", getId() + ""));
         d.add(org.apache.lucene.document.Field.UnIndexed("type", "item"));
-        d.add(org.apache.lucene.document.Field.UnStored("summary", getSummary()));
-        d.add(org.apache.lucene.document.Field.UnStored("detail", getDetail()));
+        StringBuffer sb = new StringBuffer();
+        if (getSummary() != null) {
+            sb.append(getSummary());
+        }        
+        if (getDetail() != null) {
+            if (sb.length() > 0) {
+                sb.append(" | ");
+            }
+            sb.append(getDetail());
+        }
+        d.add(org.apache.lucene.document.Field.UnStored("text", sb.toString()));
         return d;
     }    
     

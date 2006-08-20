@@ -6,7 +6,7 @@
 <beans>
     
     <bean id="indexDirectory" class="org.springmodules.lucene.index.support.FSDirectoryFactoryBean">
-        <property name="location" value="${jtrac.home}/indexes"/>
+        <property name="location" value="file:///${jtrac.home}/indexes"/>
     </bean>
     
     <bean id="indexFactory" class="org.springmodules.lucene.index.support.SimpleIndexFactoryBean">
