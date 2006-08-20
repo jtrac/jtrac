@@ -313,7 +313,7 @@
         <td>
             <table class="jtrac">
                 <tr>
-                    <th <c:if test="${!empty itemSearch.summary}">class="selected"</c:if>>Summary</th>
+                    <th <c:if test="${!empty itemSearch.summary}">class="selected"</c:if>>Summary / Detail</th>
                     <td><input name="summary" value="${itemSearch.summary}"/></td>
                 </tr>
                 <c:if test="${!empty itemSearch.space}">

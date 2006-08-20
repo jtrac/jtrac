@@ -53,6 +53,7 @@ public class ItemSearch implements Serializable {
     private boolean showDetail;
     
     private String summary;
+    private Collection<Long> itemIds;
     
     private Date createdDateStart;
     private Date createdDateEnd;
@@ -102,40 +103,34 @@ public class ItemSearch implements Serializable {
         return criteria;
     }
     
-    public DetachedCriteria getCriteriaForCount() {
-        
+    public DetachedCriteria getCriteriaForCount() {        
         if (modifiedDateStart != null || modifiedDateEnd != null) {
             showHistory = true;
-        }
-        
-        DetachedCriteria criteria = null;
-        
+        }        
+        DetachedCriteria criteria = null;        
         if (showHistory == true) {
-            criteria = DetachedCriteria.forClass(History.class);
-            
-            // apply restrictions to parent, this is an inner join
-            criteria.createCriteria("parent").add(Restrictions.in("space.id", getSpaceIdSet()));
-            
+            criteria = DetachedCriteria.forClass(History.class);           
+            // apply restrictions to parent, this is an inner join =============
+            criteria.createCriteria("parent").add(Restrictions.in("space.id", getSpaceIdSet()));            
             if (createdDateStart != null) {
                 criteria.createCriteria("parent").add(Restrictions.ge("timeStamp", createdDateStart));
             }
-
             if (createdDateEnd != null) {
                 criteria.createCriteria("parent").add(Restrictions.le("timeStamp", createdDateEnd));
             }              
-            // end parent
-            
+            //==================================================================            
             if (modifiedDateStart != null) {
                 criteria.add(Restrictions.ge("timeStamp", modifiedDateStart));
             }
             if (modifiedDateEnd != null) {
                 criteria.add(Restrictions.le("timeStamp", modifiedDateEnd));
-            }
-            
+            }            
         } else {
             criteria = DetachedCriteria.forClass(Item.class);
-            criteria.add(Restrictions.in("space.id", getSpaceIdSet()));  
-            
+            criteria.add(Restrictions.in("space.id", getSpaceIdSet()));              
+            if (itemIds != null) {
+                criteria.add(Restrictions.in("id", itemIds));
+            }            
             // see the difference above in the if clause
             if (createdDateStart != null) {
                 criteria.add(Restrictions.ge("timeStamp", createdDateStart));
@@ -145,11 +140,7 @@ public class ItemSearch implements Serializable {
                 criteria.add(Restrictions.le("timeStamp", createdDateEnd));
             }               
             
-        }
-        //======================================================================
-        if (summary != null) {
-            criteria.add(Restrictions.like("summary", "%" + summary + "%"));
-        }           
+        }         
         //======================================================================
         if (statusSet != null) {
             criteria.add(Restrictions.in("status", statusSet));
@@ -459,6 +450,14 @@ public class ItemSearch implements Serializable {
     public void setModifiedDateEnd(Date modifiedDateEnd) {
         this.modifiedDateEnd = modifiedDateEnd;
     }
+    
+    public Collection<Long> getItemIds() {
+        return itemIds;
+    }
+    
+    public void setItemIds(Collection<Long> itemIds) {
+        this.itemIds = itemIds;
+    }    
     
     public Set<Long> getSpaceSet() {
         return spaceSet;

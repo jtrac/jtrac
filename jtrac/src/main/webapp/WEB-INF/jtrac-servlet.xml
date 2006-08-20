@@ -58,6 +58,7 @@
                         <prop key="/login.htm">loginHandler</prop>
                         <prop key="/logout.htm">logoutHandler</prop>
                         <prop key="/dashboard.htm">dashboardHandler</prop>
+                        <prop key="/reindex.htm">reindexHandler</prop>
                         <prop key="/user_list.htm">userListHandler</prop>
                         <prop key="/space_list.htm">spaceListHandler</prop>
                         <prop key="/config_list.htm">configListHandler</prop>

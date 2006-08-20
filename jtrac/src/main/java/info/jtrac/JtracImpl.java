@@ -36,6 +36,7 @@ import info.jtrac.lucene.Indexer;
 import info.jtrac.util.EmailUtils;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -144,6 +145,8 @@ public class JtracImpl implements Jtrac {
         item.setSequenceNum(spaceSequence.next());
         dao.storeSpaceSequence(spaceSequence);
         dao.storeItem(item);
+        indexer.index(item);
+        indexer.index(history);
         if (item.isSendNotifications() && emailUtils != null) {
             emailUtils.send(item);
         }
@@ -177,6 +180,7 @@ public class JtracImpl implements Jtrac {
         }        
         item.add(history);
         dao.storeItem(item);
+        indexer.index(history);
         if (item.isSendNotifications() && emailUtils != null) {
             emailUtils.send(item);
         }
@@ -199,10 +203,20 @@ public class JtracImpl implements Jtrac {
     }
     
     public List<Item> findItems(ItemSearch itemSearch) {
+        String summary = itemSearch.getSummary();
+        if (summary != null) {
+            List<Long> hits = indexSearcher.findItemIdsContainingText(summary);
+            if (hits.size() == 0) {
+                itemSearch.setResultCount(0);
+                return Collections.<Item>emptyList();
+            }
+            itemSearch.setItemIds(hits);            
+        }
         return dao.findItems(itemSearch);
     }
     
     public void reIndex() {
+        indexer.clearIndexes();
         List<AbstractItem> items = dao.findAllItems();
         for (AbstractItem item : items) {
             indexer.index(item);

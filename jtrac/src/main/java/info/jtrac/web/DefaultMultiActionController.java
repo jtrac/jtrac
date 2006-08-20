@@ -74,6 +74,11 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
         applyCacheSeconds(response, 0, true);
         return new ModelAndView("dashboard", "counts", jtrac.loadCountsForUser(user));
     }   
+
+    public ModelAndView reindexHandler(HttpServletRequest request, HttpServletResponse response) {
+        jtrac.reIndex();
+        return new ModelAndView("options", "message", "Indexes Rebuilt Successfully");
+    }     
     
     public ModelAndView svnViewHandler(HttpServletRequest request, HttpServletResponse response) {
         String url = request.getParameter("url");
