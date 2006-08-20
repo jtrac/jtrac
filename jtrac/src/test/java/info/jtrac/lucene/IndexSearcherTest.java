@@ -30,12 +30,16 @@ public class IndexSearcherTest extends TestCase {
         context = new FileSystemXmlApplicationContext("src/main/webapp/WEB-INF/applicationContext-lucene.xml");    
     }
     
-    public void testFindItemIdsBySearchingWithinSummaryAndDetailFields() {       
+    public void testFindItemIdsBySearchingWithinSummaryAndDetailFields() throws Exception {       
         Item item = new Item();
         item.setId(1);
         item.setSummary("this is a test summary");
         item.setDetail("the quick brown fox jumped over the lazy dogs");
         Indexer indexer = (Indexer) context.getBean("indexer");
+        // ensures code coverage of clearIndexes method
+        File file = new File("target/home/indexes/foo.bar");
+        file.createNewFile();
+        indexer.clearIndexes();
         indexer.index(item);
         IndexSearcher searcher = (IndexSearcher) context.getBean("indexSearcher");
         List list = searcher.findItemIdsContainingText("lazy");
