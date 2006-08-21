@@ -19,11 +19,10 @@
     
     <target name="clean-db">
         <delete includeemptydirs="true" failonerror="false">
-            <fileset dir="home/db"/>
-        </delete>
-        <delete failonerror="false">
-            <fileset dir="home" includes="*.log.*"/>
-        </delete>         
+            <fileset dir="home">
+                <exclude name="jtrac.properties"/>
+            </fileset>
+        </delete>        
     </target>    
 	
     <target name="compile">
