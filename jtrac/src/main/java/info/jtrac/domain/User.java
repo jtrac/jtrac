@@ -58,14 +58,9 @@ public class User implements UserDetails, Serializable {
         spaceRoles.add(new SpaceRole(space, roleKey));
     }
     
-    public void removeSpace(Space space) {
-        Set<SpaceRole> remove = new HashSet<SpaceRole>();
-        for(SpaceRole sr : spaceRoles) {
-            if (sr.getSpace().equals(space)) {
-                remove.add(sr);
-            }
-        }
-        spaceRoles.removeAll(remove);
+    public void removeSpaceRole(Space space, String roleKey) {
+        SpaceRole sr = new SpaceRole(space, roleKey);
+        spaceRoles.remove(sr);
     }
     
     private List<String> getRoleKeys(Space space) {

@@ -30,6 +30,7 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import info.jtrac.domain.Counts;
 import info.jtrac.domain.History;
+import info.jtrac.domain.SpaceRole;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -42,6 +43,7 @@ import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.jdbc.BadSqlGrammarException;
@@ -121,6 +123,10 @@ public class HibernateJtracDao
     public Space loadSpace(long id) {
         return (Space) getHibernateTemplate().get(Space.class, id);
     }
+    
+    public SpaceRole loadSpaceRole(long id) {
+        return (SpaceRole) getHibernateTemplate().get(SpaceRole.class, id);
+    }    
     
     public SpaceSequence loadSpaceSequence(long id) {
         return (SpaceSequence) getHibernateTemplate().get(SpaceSequence.class, id);
@@ -223,16 +229,16 @@ public class HibernateJtracDao
         }
         return c;
     }
-    
-    
+        
     public List<User> findUsersForSpace(long spaceId) {
-        return getHibernateTemplate().find("select user from User user join user.spaceRoles as spaceRole" +
-                " where spaceRole.space.id = ? order by user.name", spaceId);
+        return getHibernateTemplate().find("select distinct user from User user join user.spaceRoles as spaceRole" 
+                + " where spaceRole.space.id = ? order by user.name", spaceId);
     }
     
     public List<User> findUsersForSpaceSet(Collection<Space> spaces) {
         Criteria criteria = getSession().createCriteria(User.class);
         criteria.createCriteria("spaceRoles").add(Restrictions.in("space", spaces));
+        criteria.addOrder(Order.asc("name"));
         return criteria.list();
     }
     

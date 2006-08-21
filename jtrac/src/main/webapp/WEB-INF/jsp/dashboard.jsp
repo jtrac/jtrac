@@ -18,7 +18,7 @@
     <c:set var="spaceCount" value="0"/>
     
     <c:forEach items="${principal.spaceRoles}" var="spaceRole">
-        <c:if test="${!empty spaceRole.space}">
+        <c:if test="${!empty spaceRole.space && spaceRole.roleKey != 'ROLE_ADMIN'}">
             <c:set var="spaceId" value="${spaceRole.space.id}"/>
             <tr><td>&nbsp;</td></tr>
             <tr class="nav-table">

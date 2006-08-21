@@ -28,7 +28,7 @@ function setDeallocate(spaceId) {
             <td>${spaceRole.space.prefixCode}</td>
             <td>${spaceRole.roleKey}</td>
             <td align="center">
-               <input type="submit" name="_eventId_deallocate" value="X" onClick="setDeallocate('${spaceRole.space.id}')"/>
+               <input type="submit" name="_eventId_deallocate" value="X" onClick="setDeallocate('${spaceRole.id}')"/>
             </td>
         </tr>
 

@@ -30,16 +30,16 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 public class MultiSelect extends SimpleTagSupport {
     
     private Set<ItemUser> selected;
-    private List<UserRole> list;
+    private List<User> list;
     private String name;
     
     public void setName(String name) {
         this.name = name;
     }
-    public void setList(List list) {
+    public void setList(List<User> list) {
         this.list = list;
     }
-    public void setSelected(Set selected) {
+    public void setSelected(Set<ItemUser> selected) {
         this.selected = selected;
     }
     
@@ -53,8 +53,7 @@ public class MultiSelect extends SimpleTagSupport {
                 StringBuffer sb = new StringBuffer();
                 boolean hasSelected = false;
 
-                for(UserRole userRole : list) {
-                    User user = userRole.getUser();
+                for(User user : list) {
                     if (selected != null && selected.contains(new ItemUser(user))) {
                         hasSelected = true;
                         out.print("<input type='checkbox' name='" + name + "' value='" + user.getId() + "'");

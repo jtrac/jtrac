@@ -13,6 +13,8 @@
     </select>   
     
     <input type="submit" name="_eventId_allocate" value="Allocate"/>
+    <input type="checkbox" name="admin" value="true"/>
+    Also add as Admin for this space.
     
     <p/>
     

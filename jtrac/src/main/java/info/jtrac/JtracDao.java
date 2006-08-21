@@ -28,6 +28,7 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import info.jtrac.domain.Counts;
 import info.jtrac.domain.History;
+import info.jtrac.domain.SpaceRole;
 import java.util.Collection;
 
 import java.util.List;
@@ -52,6 +53,7 @@ public interface JtracDao {
     //===========================================
     void storeSpace(Space space);
     Space loadSpace(long id);
+    SpaceRole loadSpaceRole(long id);
     List<Space> findSpacesByPrefixCode(String prefixCode);
     List<Space> findAllSpaces();
     //===========================================

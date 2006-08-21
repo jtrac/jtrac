@@ -76,7 +76,7 @@ public class ItemViewFormAction extends AbstractFormAction {
         } else {
             item = (Item) context.getRequestScope().get("item");
         }
-        List<UserRole> userRoles = jtrac.findUserRolesForSpace(item.getSpace().getId());
+        List<User> users = jtrac.findUsersForSpace(item.getSpace().getId());
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Space space = item.getSpace();
         context.getFlowScope().put("transitions", item.getPermittedTransitions(user));
@@ -84,7 +84,7 @@ public class ItemViewFormAction extends AbstractFormAction {
         // not flow scope because of weird Hibernate Lazy loading issues
         // hidden field "itemId" added to item_view_form.jsp
         context.getRequestScope().put("item", item);
-        context.getFlowScope().put("userRoles", userRoles);        
+        context.getFlowScope().put("users", users);        
         History history = new History();
         history.setItemUsers(item.getItemUsers());
         return history;

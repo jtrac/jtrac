@@ -1,8 +1,9 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
 <script>
-function setDeallocate(userId) {
-    document.spaceAllocateForm.deallocate.value = userId;
+function setDeallocate(userId, roleKey) {
+    document.spaceAllocateForm.deallocateUserId.value = userId;
+    document.spaceAllocateForm.deallocateRoleKey.value = roleKey;
 }
 </script>
 
@@ -29,7 +30,8 @@ function setDeallocate(userId) {
             <td>${userRole.user.name}</td>
             <td>${userRole.roleKey}</td>
             <td align="center">
-                <input type="submit" name="_eventId_deallocate" value="X" onClick="setDeallocate('${userRole.user.id}')"/>
+                <input type="submit" name="_eventId_deallocate" value="X" 
+                    onClick="setDeallocate('${userRole.user.id}', '${userRole.roleKey}')"/>
             </td>
         </tr>
 
@@ -63,6 +65,8 @@ function setDeallocate(userId) {
                 </c:forEach>
             </select>
             <input type="submit" name="_eventId_allocate" value="Allocate"/>
+            <input type="checkbox" name="admin" value="true"/>
+            Also add as Admin for this space.            
         </td>        
     </tr>
 
@@ -71,7 +75,8 @@ function setDeallocate(userId) {
 <p/>
 
 <input type="submit" name="_eventId_cancel" value="Cancel"/>
-<input type="hidden" name="deallocate"/>
+<input type="hidden" name="deallocateUserId"/>
+<input type="hidden" name="deallocateRoleKey"/>
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 
 </form>

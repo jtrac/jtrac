@@ -40,6 +40,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 import java.util.List;
 import java.util.Map;
@@ -291,7 +292,6 @@ public class JtracImpl implements Jtrac {
     
     public List<User> findUsersForSpace(long spaceId) {
         return dao.findUsersForSpace(spaceId);
-        // return dao.findUsersForSpaceSet(Collections.singleton(dao.loadSpace(spaceId)));
     }      
     
     public List<UserRole> findUserRolesForSpace(long spaceId) {
@@ -305,7 +305,7 @@ public class JtracImpl implements Jtrac {
         }
         // must be a better way to make this unique?
         List<User> users = dao.findUsersForSpaceSet(spaces);
-        Set<User> userSet = new HashSet<User>(users);
+        Set<User> userSet = new LinkedHashSet<User>(users);
         return new ArrayList<User>(userSet);
     }     
     
@@ -323,8 +323,8 @@ public class JtracImpl implements Jtrac {
         dao.storeUser(user);      
     }
     
-    public void removeUserSpaceAllocation(User user, Space space) {        
-        user.removeSpace(space);
+    public void removeUserSpaceAllocation(User user, Space space, String roleKey) {        
+        user.removeSpaceRole(space, roleKey);
         dao.storeUser(user);      
     }    
     
@@ -346,6 +346,10 @@ public class JtracImpl implements Jtrac {
             return null;
         }
         return spaces.get(0);
+    }
+    
+    public SpaceRole loadSpaceRole(long id) {
+        return dao.loadSpaceRole(id);
     }
     
     public void storeSpace(Space space) {

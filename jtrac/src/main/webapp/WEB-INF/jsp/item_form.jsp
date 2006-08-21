@@ -67,8 +67,7 @@
                             <spring:bind path="item.assignedTo">                
                                 <select name="${status.expression}">
                                     <option/>
-                                    <c:forEach items="${userRoles}" var="userRole">
-                                        <c:set var="user" value="${userRole.user}"/>
+                                    <c:forEach items="${users}" var="user">
                                         <option value="${user.id}" <c:if test='${user.id == status.value}'>selected='true'</c:if>>${user.name}</option>
                                     </c:forEach>   
                                 </select>
@@ -97,7 +96,7 @@
                     <tr>
                         <td>
                             <spring:bind path="item.itemUsers">
-                                <jtrac:multiselect name="${status.expression}" list="${userRoles}" selected="${status.value}"/>
+                                <jtrac:multiselect name="${status.expression}" list="${users}" selected="${status.value}"/>
                             </spring:bind>
                         </td>
                     </tr>

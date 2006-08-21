@@ -23,6 +23,7 @@ import info.jtrac.util.ValidationUtils;
 import java.io.Serializable;
 
 import static info.jtrac.Constants.*;
+import info.jtrac.domain.SpaceRole;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -175,16 +176,20 @@ public class UserFormAction extends AbstractFormAction {
         Space space = (Space) context.getFlowScope().get("space");
         String roleKey = ValidationUtils.getParameter(context, "roleKey");
         jtrac.storeUserSpaceAllocation(user, space, roleKey);
+        String admin = ValidationUtils.getParameter(context, "admin");
+        if (admin != null) {
+            jtrac.storeUserSpaceAllocation(user, space, "ROLE_ADMIN");
+        }        
         refreshSecurityContextIfPrincipal(user);
         return success();
     }    
 
     public Event userDeallocateHandler(RequestContext context) {
-        String spaceId = ValidationUtils.getParameter(context, "deallocate");
-        int id = Integer.parseInt(spaceId);
-        Space space = jtrac.loadSpace(id);
+        String spaceRoleId = ValidationUtils.getParameter(context, "deallocate");
+        int id = Integer.parseInt(spaceRoleId);
+        SpaceRole spaceRole = jtrac.loadSpaceRole(id);
         User user = (User) context.getFlowScope().get("user");        
-        jtrac.removeUserSpaceAllocation(user, space);
+        jtrac.removeUserSpaceAllocation(user, spaceRole.getSpace(), spaceRole.getRoleKey());
         refreshSecurityContextIfPrincipal(user);
         return success();
     }     

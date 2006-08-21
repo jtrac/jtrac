@@ -84,8 +84,8 @@ public class ItemFormAction extends AbstractFormAction {
             }
         }
         context.getFlowScope().put("space", space);
-        List<UserRole> userRoles = jtrac.findUserRolesForSpace(space.getId());
-        context.getFlowScope().put("userRoles", userRoles);
+        List<User> users = jtrac.findUsersForSpace(space.getId());
+        context.getFlowScope().put("users", users);
         return item;
     }
     
