@@ -1,8 +1,8 @@
 package info.jtrac.watij;
 
 import junit.framework.TestCase;
-import watij.IE;
-import static watij.symbols.Symbol.*;
+import static watij.finders.SymbolFactory.*;
+import watij.runtime.ie.IE;
 
 public class AllTest extends TestCase {
             
@@ -47,7 +47,7 @@ public class AllTest extends TestCase {
         
         ie.textField(name, "summary").set("Test Summary");
         ie.textField(name, "detail").set("Test Detail");
-        ie.selectList(name, "assignedTo").select("Admin User");
+        ie.selectList(name, "assignedTo").option(text, "Admin User").select();
         ie.button("Submit").click();
         assertTrue(ie.containsText("TEST-1"));
         
@@ -60,7 +60,7 @@ public class AllTest extends TestCase {
         ie.link(text, "TEST-1").click();
         assertTrue(ie.containsText("History"));
         
-        ie.selectList(name, "status").select("Closed");
+        ie.selectList(name, "status").option(text, "Closed").select();
         ie.textField(name, "comment").set("Test Comment");
         ie.button("Submit").click();
         assertTrue(ie.containsText("Test Comment"));
