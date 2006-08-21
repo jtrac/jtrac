@@ -9,16 +9,19 @@
         <td class="info">View Item by Id</td>        
         <td>
             <input name="refId" value="${refId}"/>
-            <input type="submit" name="_eventId_view" value="View"/>                			
-        </td>
+            <input type="submit" name="_eventId_view" value="View"/>
+            <span class="error"><c:out value="${refIdError}"/></span>              			
+        </td>      		
+    </tr>
+    <tr><td colspan="2"><hr/></td></tr>
+    <tr>
+        <th <c:if test="${!empty itemSearch.summary}">class="selected"</c:if>>Search for text</th>
         <td>
-            <span class="error"><c:out value="${refIdError}"/></span>
-            Use the Search button (below) to search for items.
-        </td>        		
+            <input name="summary" value="${itemSearch.summary}" size="30"/>
+            Search within summary / detail / comments
+        </td>
     </tr>
 </table>
-
-<p/>
 
 <table class="jtrac">
     <tr>
@@ -60,6 +63,9 @@
             Show History&nbsp;<input type="checkbox" name="showHistory" value="true" <c:if test="${itemSearch.showHistory}">checked="true"</c:if>/>
             <input type="hidden" name="_showHistory"/>
         </th>
+        <td>
+            <input type="submit" name="_eventId_search" value="Search"/>
+        </td>
     </tr>
 </table>
 
@@ -312,10 +318,6 @@
 
         <td>
             <table class="jtrac">
-                <tr>
-                    <th <c:if test="${!empty itemSearch.summary}">class="selected"</c:if>>Summary / Detail</th>
-                    <td><input name="summary" value="${itemSearch.summary}"/></td>
-                </tr>
                 <c:if test="${!empty itemSearch.space}">
                     <c:forTokens items="cusStr01,cusStr02,cusStr03,cusStr04,cusStr05" delims="," var="name">
                         <c:set var="field" value="${fieldMap[name]}"/>
@@ -334,10 +336,6 @@
                 </c:if>
             </table>
         </td>
-        <td>
-            <input type="submit" name="_eventId_search" value="Search"/>            
-        </td>
-
     </tr>
 </table>
 
