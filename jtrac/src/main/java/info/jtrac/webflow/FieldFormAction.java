@@ -17,14 +17,17 @@
 package info.jtrac.webflow;
 
 import info.jtrac.domain.Field;
+import info.jtrac.domain.Space;
 import info.jtrac.util.ValidationUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.webflow.Event;
@@ -50,6 +53,7 @@ public class FieldFormAction extends AbstractFormAction {
      */
     public static class FieldForm implements Serializable {
         
+        private Space space;
         private transient Field field;
         private String option;
         
@@ -68,6 +72,10 @@ public class FieldFormAction extends AbstractFormAction {
         public void setOption(String option) {
             this.option = option;
         }
+
+        public void setSpace(Space space) {
+            this.space = space;
+        }
         
     }
     
@@ -83,8 +91,8 @@ public class FieldFormAction extends AbstractFormAction {
         public void validate(Object o, Errors errors) {
             FieldForm fieldForm = (FieldForm) o;
             ValidationUtils.rejectIfEmpty(errors, "field.label");
-            String option = fieldForm.getOption();
-            if (fieldForm.getField().hasOption(option)) {
+            String option = fieldForm.option;
+            if (fieldForm.field.hasOption(option)) {
                 errors.rejectValue("option", "fieldForm.option.exists", "Option already exists");
             }            
         }
@@ -93,9 +101,9 @@ public class FieldFormAction extends AbstractFormAction {
     
     public Event fieldUpdateHandler(RequestContext context) throws Exception {
         FieldForm fieldForm = (FieldForm) getFormObject(context);
-        String option = fieldForm.getOption();
+        String option = fieldForm.option;
         if (option != null && !option.equals("")) {
-            fieldForm.getField().addOption(option);
+            fieldForm.field.addOption(option);
             fieldForm.setOption(null);
         }
         return success();
@@ -104,7 +112,7 @@ public class FieldFormAction extends AbstractFormAction {
     public Event fieldOptionEditSetupHandler(RequestContext context) throws Exception {
         FieldForm fieldForm = (FieldForm) getFormObject(context);
         String optionKey = ValidationUtils.getParameter(context, "optionKey");
-        String option = fieldForm.getField().getCustomValue(optionKey);
+        String option = fieldForm.field.getCustomValue(optionKey);
         context.getRequestScope().put("option", option);
         context.getRequestScope().put("optionKey", optionKey);
         return success();
@@ -121,30 +129,42 @@ public class FieldFormAction extends AbstractFormAction {
             return error();
         }
         FieldForm fieldForm = (FieldForm) getFormObject(context);
-        fieldForm.getField().addOption(optionKey, option); // will overwrite
+        fieldForm.field.addOption(optionKey, option); // will overwrite
         return success();
     }
     
     public Event fieldOptionDeleteSetupHandler(RequestContext context) throws Exception {
         FieldForm fieldForm = (FieldForm) getFormObject(context);
         String optionKey = ValidationUtils.getParameter(context, "optionKey");
-        String option = fieldForm.getField().getCustomValue(optionKey);
+        String option = fieldForm.field.getCustomValue(optionKey);
         context.getRequestScope().put("optionKey", optionKey);
         context.getRequestScope().put("option", option);
+        int affectedCount = 0;
+        if (fieldForm.space.getId() > 0) {
+            affectedCount = jtrac.findItemCount(fieldForm.space, fieldForm.field, optionKey);
+        }        
+        context.getRequestScope().put("affectedCount", affectedCount);
         return success();
     }    
     
     public Event fieldOptionDeleteHandler(RequestContext context) throws Exception {
         FieldForm fieldForm = (FieldForm) getFormObject(context);
         String optionKey = ValidationUtils.getParameter(context, "optionKey");
-        fieldForm.getField().getOptions().remove(optionKey);
+        fieldForm.field.getOptions().remove(optionKey);
+        if (fieldForm.space.getId() > 0) {
+            jtrac.removeFieldValues(fieldForm.space, fieldForm.field, optionKey);
+            // database has been updated, if we don't do this
+            // user may leave without committing metadata change
+            logger.debug("saving space after option delete operation");        
+            jtrac.storeMetadata(fieldForm.space.getMetadata());            
+        }
         return success();
     }
     
     public Event fieldOptionUpHandler(RequestContext context) throws Exception {
         FieldForm fieldForm = (FieldForm) getFormObject(context);
         String optionKey = ValidationUtils.getParameter(context, "optionKey");
-        Map<String, String> options = fieldForm.getField().getOptions();
+        Map<String, String> options = fieldForm.field.getOptions();
         List<String> keys = new ArrayList<String>(options.keySet());
         int index = keys.indexOf(optionKey);
         int swapIndex = index - 1;
@@ -158,14 +178,14 @@ public class FieldFormAction extends AbstractFormAction {
         for (String s : keys) {
             updated.put(s, options.get(s));
         }
-        fieldForm.getField().setOptions(updated);
+        fieldForm.field.setOptions(updated);
         return success();
     }    
     
     public Event fieldOptionDownHandler(RequestContext context) throws Exception {
         FieldForm fieldForm = (FieldForm) getFormObject(context);
         String optionKey = ValidationUtils.getParameter(context, "optionKey");
-        Map<String, String> options = fieldForm.getField().getOptions();
+        Map<String, String> options = fieldForm.field.getOptions();
         List<String> keys = new ArrayList<String>(options.keySet());
         int index = keys.indexOf(optionKey);
         int swapIndex = index + 1;
@@ -179,7 +199,7 @@ public class FieldFormAction extends AbstractFormAction {
         for (String s : keys) {
             updated.put(s, options.get(s));
         }
-        fieldForm.getField().setOptions(updated);        
+        fieldForm.field.setOptions(updated);        
         return success();
     }      
     

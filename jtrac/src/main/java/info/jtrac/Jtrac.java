@@ -16,9 +16,11 @@
 
 package info.jtrac;
 
+import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Config;
 import info.jtrac.domain.Counts;
+import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
@@ -44,7 +46,12 @@ public interface Jtrac extends UserDetailsService {
     Item loadItem(long id);
     Item loadItem(long sequenceNum, String prefixCode);
     History loadHistory(long id);
-    List<Item> findItems(ItemSearch itemSearch);    
+    List<Item> findItems(ItemSearch itemSearch);
+    //========================================================
+    int findItemCount(Space space, Field field);
+    int removeField(Space space, Field field);
+    int findItemCount(Space space, Field field, String optionKey);
+    int removeFieldValues(Space space, Field field, String optionKey);
     //========================================================
     void rebuildIndexes();
     //========================================================

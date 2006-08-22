@@ -27,6 +27,7 @@ import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import info.jtrac.domain.Counts;
+import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.SpaceRole;
 import java.util.Collection;
@@ -46,6 +47,11 @@ public interface JtracDao {
     List<Item> findItems(ItemSearch itemSearch);
     List<AbstractItem> findAllItems();
     //===========================================
+    int findItemCount(Space space, Field field);
+    int removeField(Space space, Field field);
+    int findItemCount(Space space, Field field, int optionKey);
+    int removeFieldValues(Space space, Field field, int optionKey);
+    //========================================================    
     void storeAttachment(Attachment attachment);
     //===========================================
     void storeMetadata(Metadata metadata);

@@ -110,7 +110,9 @@
         <property name="jtrac" ref="jtrac"/>
     </bean>
     
-    <bean id="fieldFormAction" class="info.jtrac.webflow.FieldFormAction"/>
+    <bean id="fieldFormAction" class="info.jtrac.webflow.FieldFormAction">
+        <property name="jtrac" ref="jtrac"/>
+    </bean>    
     
     <bean id="itemSearchFormAction" class="info.jtrac.webflow.ItemSearchFormAction">
         <property name="jtrac" ref="jtrac"/>

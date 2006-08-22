@@ -41,8 +41,7 @@
         </transition>        
     </view-state>
     
-    <view-state id="spaceFieldForm" view="space_field_form">      
-        <transition on="cancel" to="spaceFieldsView"/>
+    <view-state id="spaceFieldForm" view="space_field_form">
         <transition on="edit" to="spaceFieldOptionForm">
             <action bean="fieldFormAction" method="fieldOptionEditSetupHandler"/>
         </transition>

@@ -152,9 +152,10 @@ public class SpaceFormAction extends AbstractFormAction {
     public Event fieldEditHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
         String fieldName = ValidationUtils.getParameter(context, "fieldName");    
-        Field field = space.getMetadata().getField(fieldName).getClone();
+        Field field = space.getMetadata().getField(fieldName);
         FieldForm fieldForm = new FieldForm();
-        fieldForm.setField(field);            
+        fieldForm.setField(field);
+        fieldForm.setSpace(space);
         context.getFlowScope().put("fieldForm", fieldForm);
         return success();
     }
@@ -163,7 +164,7 @@ public class SpaceFormAction extends AbstractFormAction {
         Space space = (Space) context.getFlowScope().get("space");
         FieldForm fieldForm = (FieldForm) context.getFlowScope().get("fieldForm");
         Field field = fieldForm.getField();
-        space.getMetadata().add(field); // will overwrite with clone if applicable
+        space.getMetadata().add(field); // has no effect if edit mode and field exists
         context.getRequestScope().put("selectedFieldName", field.getName());
         return success();
     }
@@ -173,15 +174,26 @@ public class SpaceFormAction extends AbstractFormAction {
         String fieldName = ValidationUtils.getParameter(context, "fieldName");    
         Field field = space.getMetadata().getField(fieldName);
         context.getRequestScope().put("field", field);
-        // TODO database impact report
+        int affectedCount = 0;
+        if (space.getId() > 0) {
+             affectedCount = jtrac.findItemCount(space, field);
+        }
+        context.getRequestScope().put("affectedCount", affectedCount);
         return success();
     }  
     
     public Event fieldDeleteHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
-        String fieldName = ValidationUtils.getParameter(context, "fieldName");    
+        String fieldName = ValidationUtils.getParameter(context, "fieldName");            
+        Field field = space.getMetadata().getField(fieldName);
         space.getMetadata().removeField(fieldName);
-        // TODO database updates
+        if (space.getId() > 0) {
+            jtrac.removeField(space, field);
+            // database has been updated, if we don't do this
+            // user may leave without committing metadata change
+            logger.debug("saving space after field delete operation");
+            jtrac.storeMetadata(space.getMetadata());
+        }     
         return success();
     }      
     
@@ -257,8 +269,6 @@ public class SpaceFormAction extends AbstractFormAction {
     
     public Event spaceSaveHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
-        Metadata metadata = space.getMetadata();
-        jtrac.storeMetadata(metadata);
         jtrac.storeSpace(space);
         return success();
     }

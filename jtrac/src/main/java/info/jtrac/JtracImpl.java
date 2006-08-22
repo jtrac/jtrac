@@ -218,6 +218,24 @@ public class JtracImpl implements Jtrac {
         return dao.findItems(itemSearch);
     }
     
+    public int findItemCount(Space space, Field field) {
+        return dao.findItemCount(space, field);
+    }
+    
+    public int removeField(Space space, Field field) {
+        return dao.removeField(space, field);
+    }
+    
+    public int findItemCount(Space space, Field field, String optionKey) {
+        return dao.findItemCount(space, field, Integer.parseInt(optionKey));
+    }
+    
+    public int removeFieldValues(Space space, Field field, String optionKey) {
+        return dao.removeFieldValues(space, field, Integer.parseInt(optionKey));
+    }
+    
+    //========================================================    
+    
     public void rebuildIndexes() {
         indexer.clearIndexes();
         List<AbstractItem> items = dao.findAllItems();

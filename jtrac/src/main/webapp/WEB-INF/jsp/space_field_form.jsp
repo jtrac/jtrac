@@ -66,9 +66,7 @@ function setOptionKey(optionKey) {
             </tr>
         </c:if>
         <tr>
-            <td>
-                <input type="submit" name="_eventId_cancel" value="Cancel"/>
-            </td>
+            <td/>
             <td>
                 <input type="submit" name="_eventId_done" value="Done"/>
                 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>

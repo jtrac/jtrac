@@ -20,6 +20,7 @@ import info.jtrac.JtracDao;
 import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Config;
+import info.jtrac.domain.Field;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
@@ -272,6 +273,44 @@ public class HibernateJtracDao
             return;
         }
         logger.info("database schema exists, normal startup");
+    }
+
+    public int findItemCount(Space space, Field field) {
+        Criteria criteria = getSession().createCriteria(Item.class);
+        criteria.add(Restrictions.eq("space", space));
+        criteria.add(Restrictions.isNotNull(field.getName().toString()));
+        criteria.setProjection(Projections.rowCount());
+        return (Integer) criteria.list().get(0);         
+    }
+
+    public int removeField(Space space, Field field) {
+        int itemCount = getHibernateTemplate().bulkUpdate("update Item item set item." + field.getName() + " = null" 
+                + " where item.space.id = ?", space.getId());
+        logger.info("no of Item rows where " + field.getName() + " set to null = " + itemCount);
+        int historyCount = getHibernateTemplate().bulkUpdate("update History history set history." + field.getName() + " = null"
+                + " where history.parent in ( from Item item where item.space.id = ? )", space.getId());
+        logger.info("no of History rows where " + field.getName() + " set to null = " + historyCount);
+        return itemCount;
+    }
+
+    public int findItemCount(Space space, Field field, int optionKey) {
+        Criteria criteria = getSession().createCriteria(Item.class);
+        criteria.add(Restrictions.eq("space", space));
+        criteria.add(Restrictions.eq(field.getName().toString(), optionKey));
+        criteria.setProjection(Projections.rowCount());
+        return (Integer) criteria.list().get(0);         
+    }
+
+    public int removeFieldValues(Space space, Field field, int optionKey) {
+        int itemCount = getHibernateTemplate().bulkUpdate("update Item item set item." + field.getName() + " = null" 
+                + " where item.space.id = ?"
+                + " and item." + field.getName() + " = ?", new Object[] { space.getId(), optionKey });
+        logger.info("no of Item rows where " + field.getName() + " value '" + optionKey + "' replaced with null = " + itemCount);
+        int historyCount = getHibernateTemplate().bulkUpdate("update History history set history." + field.getName() + " = null"
+                + " where history." + field.getName() + " = ?"
+                + " and history.parent in ( from Item item where item.space.id = ? )", new Object[] { optionKey, space.getId(), });
+        logger.info("no of History rows where " + field.getName() + " value '" + optionKey + "' replaced with null = " + historyCount);
+        return itemCount;        
     }
     
 }
