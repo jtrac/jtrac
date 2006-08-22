@@ -11,7 +11,7 @@
             <input name="refId" value="${refId}"/>
             <input type="submit" name="_eventId_view" value="View"/>
             <span class="error"><c:out value="${refIdError}"/></span>
-        </td>      		
+        </td>           
     </tr>
     <tr><td colspan="2">&nbsp;</td></tr>
     <tr>
@@ -38,7 +38,7 @@
                 </c:forTokens>
             </select>
         </td>
-        <td/>	
+        <td/>   
         <th <c:if test="${itemSearch.sortFieldName != 'id'}">class="selected"</c:if>>Sort On Column</th>
         <td>
             <select name="sortFieldName">
@@ -58,7 +58,7 @@
         <th <c:if test="${itemSearch.showDetail}">class="selected"</c:if>>
             Show Detail&nbsp;<input type="checkbox" name="showDetail" value="true" <c:if test="${itemSearch.showDetail}">checked="true"</c:if>/>
             <input type="hidden" name="_showDetail"/>
-        </th>	
+        </th>   
         <th <c:if test="${itemSearch.showHistory}">class="selected"</c:if>>
             Show History&nbsp;<input type="checkbox" name="showHistory" value="true" <c:if test="${itemSearch.showHistory}">checked="true"</c:if>/>
             <input type="hidden" name="_showHistory"/>
@@ -77,15 +77,15 @@
             <td>
                 <table class="jtrac">
                     <tr><th <c:if test="${!empty itemSearch.severitySet}">class="selected"</c:if>>Severity</th></tr>
-                    <tr>						
+                    <tr>                        
                         <td>
                             <select name="severitySet" size="8" multiple="true">
                                 <c:set var="severityMap" value="${searchMap['severitySet']}"/>
-                                <c:forEach items="${itemSearch.severityOptions}" var="entry">	
+                                <c:forEach items="${itemSearch.severityOptions}" var="entry">   
                                     <option value="${entry.key}" <c:if test="${severityMap[entry.key]}">selected="true"</c:if>>
                                         ${entry.value}
                                     </option>
-                                </c:forEach>				
+                                </c:forEach>                
                             </select>
                             <input type="hidden" name="_severitySet"/>
                         </td>
@@ -95,15 +95,15 @@
             <td>
                 <table class="jtrac">
                     <tr><th <c:if test="${!empty itemSearch.prioritySet}">class="selected"</c:if>>Priority</th></tr>
-                    <tr>			
+                    <tr>            
                         <td>
                             <select name="prioritySet" size="8" multiple="true">
                                 <c:set var="priorityMap" value="${searchMap['prioritySet']}"/>
-                                <c:forEach items="${itemSearch.priorityOptions}" var="entry">	
+                                <c:forEach items="${itemSearch.priorityOptions}" var="entry">   
                                     <option value="${entry.key}" <c:if test="${priorityMap[entry.key]}">selected="true"</c:if>>
                                         ${entry.value}
                                     </option>
-                                </c:forEach>				
+                                </c:forEach>                
                             </select>
                             <input type="hidden" name="_prioritySet"/>
                         </td>
@@ -114,7 +114,7 @@
         <td>
             <table class="jtrac">
                 <tr><th <c:if test="${!empty itemSearch.statusSet}">class="selected"</c:if>>Status</th></tr>
-                <tr>			
+                <tr>            
                     <td>
                         <select name="statusSet" size="8" multiple="true">
                             <c:set var="statusMap" value="${searchMap['statusSet']}"/>
@@ -123,7 +123,7 @@
                                 <option value="${thisKey}" <c:if test="${statusMap[thisKey]}">selected="true"</c:if>>
                                     ${entry.value}
                                 </option>
-                            </c:forEach>				
+                            </c:forEach>                
                         </select>
                         <input type="hidden" name="_statusSet"/>
                     </td>
@@ -133,7 +133,7 @@
         <td>
             <table class="jtrac">
                 <tr><th <c:if test="${!empty itemSearch.loggedBySet}">class="selected"</c:if>>Logged By</th></tr>
-                <tr>	
+                <tr>    
                     <td>
                         <select name="loggedBySet" size="8" multiple="true">
                             <c:set var="loggedByMap" value="${searchMap['loggedBySet']}"/>
@@ -142,7 +142,7 @@
                                 <option value="${thisKey}" <c:if test="${loggedByMap[thisKey]}">selected="true"</c:if>>
                                     ${user.name}
                                 </option>
-                            </c:forEach>				
+                            </c:forEach>                
                         </select>
                         <input type="hidden" name="_loggedBySet"/>
                     </td>
@@ -152,7 +152,7 @@
         <td>
             <table class="jtrac">
                 <tr><th <c:if test="${!empty itemSearch.assignedToSet}">class="selected"</c:if>>Assigned To</th></tr>
-                <tr>	
+                <tr>    
                     <td>
                         <select name="assignedToSet" size="8" multiple="true">
                             <c:set var="assignedToMap" value="${searchMap['assignedToSet']}"/>
@@ -161,7 +161,7 @@
                                 <option value="${thisKey}" <c:if test="${assignedToMap[thisKey]}">selected="true"</c:if>>
                                     ${user.name}
                                 </option>
-                            </c:forEach>				
+                            </c:forEach>                
                         </select>
                         <input type="hidden" name="_assignedToSet"/>
                     </td>
@@ -182,12 +182,12 @@
                     <c:forTokens items="Start,End" delims="," var="suffix">
                         <c:set var="path">${field}${suffix}</c:set>
                         <c:set var="bindPath">itemSearch.${path}</c:set>
-                        <spring:bind path="${bindPath}">						
+                        <spring:bind path="${bindPath}">                        
                             <tr>
                                 <th <c:if test="${!empty status.value}">class="selected"</c:if>>
                                     <c:choose>
-                                        <c:when test="${suffix=='Start'}">On / After</c:when>
-                                        <c:when test="${suffix=='End'}">On / Before</c:when>
+                                        <c:when test="${suffix == 'Start'}">On / After</c:when>
+                                        <c:when test="${suffix == 'End'}">On / Before</c:when>
                                     </c:choose>
                                 </th>
                                 <td>
@@ -200,7 +200,7 @@
                                         button         :    "${path}Button",
                                         step           :    1
                                         });
-                                    </script>								
+                                    </script>                               
                                 </td>
                                 <td class="error"><c:out value="${status.errorMessage}"/></td>
                             </tr>
@@ -236,7 +236,7 @@
                                         <c:forEach items="${field.options}" var="entry">
                                             <option value="${entry.key}" 
                                             <c:if test="${optionsMap[entry.key]}">selected="true"</c:if>>${entry.value}</option>
-                                        </c:forEach>				
+                                        </c:forEach>                
                                     </select>
                                     <input type="hidden" name="_${nameSet}"/>
                                 </td>
@@ -264,12 +264,12 @@
                             <c:forTokens items="Start,End" delims="," var="suffix">
                                 <c:set var="path">${name}${suffix}</c:set>
                                 <c:set var="bindPath">itemSearch.${path}</c:set>
-                                <spring:bind path="${bindPath}">						
+                                <spring:bind path="${bindPath}">                        
                                     <tr>
                                         <th <c:if test="${!empty status.value}">class="selected"</c:if>>
                                             <c:choose>
-                                                <c:when test="${suffix=='Start'}">On / After</c:when>
-                                                <c:when test="${suffix=='End'}">On / Before</c:when>
+                                                <c:when test="${suffix == 'Start'}">On / After</c:when>
+                                                <c:when test="${suffix == 'End'}">On / Before</c:when>
                                             </c:choose>
                                         </th>
                                         <td>
@@ -282,7 +282,7 @@
                                                 button         :    "${path}Button",
                                                 step           :    1
                                                 });
-                                            </script>								
+                                            </script>                               
                                         </td>
                                         <td class="error">${status.errorMessage}</td>
                                     </tr>
@@ -298,7 +298,7 @@
             <td>
                 <table class="jtrac">
                     <tr><th <c:if test="${!empty itemSearch.spaceSet}">class="selected"</c:if>>Space</th></tr>
-                    <tr>				
+                    <tr>                
                         <td>
                             <select name="spaceSet" size="8" multiple="true">
                                 <c:set var="spaceMap" value="${searchMap['spaceSet']}"/>
@@ -307,7 +307,7 @@
                                     <option value="${thisKey}" <c:if test="${spaceMap[thisKey]}">selected="true"</c:if>>
                                         ${entry.value}
                                     </option>
-                                </c:forEach>					
+                                </c:forEach>                    
                             </select>
                             <input type="hidden" name="_spaceSet"/>
                         </td>
@@ -342,7 +342,5 @@
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 
 </form>
-
-${_conversationId}
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>
