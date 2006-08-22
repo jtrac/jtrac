@@ -43,7 +43,6 @@ public class FieldFormAction extends AbstractFormAction {
     public FieldFormAction() {
         setFormObjectClass(FieldForm.class);
         setFormObjectName("fieldForm");
-        // setBindOnSetupForm(false);
         setFormObjectScope(ScopeType.FLOW);
         setValidator(new FieldFormValidator());
     }
@@ -53,7 +52,6 @@ public class FieldFormAction extends AbstractFormAction {
      */
     public static class FieldForm implements Serializable {
         
-        private Space space;
         private transient Field field;
         private String option;
         
@@ -71,10 +69,6 @@ public class FieldFormAction extends AbstractFormAction {
         
         public void setOption(String option) {
             this.option = option;
-        }
-
-        public void setSpace(Space space) {
-            this.space = space;
         }
         
     }
@@ -134,29 +128,31 @@ public class FieldFormAction extends AbstractFormAction {
     }
     
     public Event fieldOptionDeleteSetupHandler(RequestContext context) throws Exception {
+        Space space = (Space) context.getFlowScope().get("space");
         FieldForm fieldForm = (FieldForm) getFormObject(context);
         String optionKey = ValidationUtils.getParameter(context, "optionKey");
         String option = fieldForm.field.getCustomValue(optionKey);
         context.getRequestScope().put("optionKey", optionKey);
         context.getRequestScope().put("option", option);
         int affectedCount = 0;
-        if (fieldForm.space.getId() > 0) {
-            affectedCount = jtrac.findItemCount(fieldForm.space, fieldForm.field, optionKey);
+        if (space.getId() > 0) {
+            affectedCount = jtrac.findItemCount(space, fieldForm.field, optionKey);
         }        
         context.getRequestScope().put("affectedCount", affectedCount);
         return success();
     }    
     
     public Event fieldOptionDeleteHandler(RequestContext context) throws Exception {
+        Space space = (Space) context.getFlowScope().get("space");
         FieldForm fieldForm = (FieldForm) getFormObject(context);
         String optionKey = ValidationUtils.getParameter(context, "optionKey");
         fieldForm.field.getOptions().remove(optionKey);
-        if (fieldForm.space.getId() > 0) {
-            jtrac.removeFieldValues(fieldForm.space, fieldForm.field, optionKey);
+        if (space.getId() > 0) {
+            jtrac.removeFieldValues(space, fieldForm.field, optionKey);
             // database has been updated, if we don't do this
             // user may leave without committing metadata change
             logger.debug("saving space after option delete operation");        
-            jtrac.storeMetadata(fieldForm.space.getMetadata());            
+            jtrac.storeMetadata(space.getMetadata());            
         }
         return success();
     }

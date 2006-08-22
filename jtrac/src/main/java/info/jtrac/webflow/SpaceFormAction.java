@@ -26,6 +26,8 @@ import info.jtrac.webflow.FieldFormAction.FieldForm;
 import java.util.Collections;
 import java.util.List;
 import org.acegisecurity.context.SecurityContextHolder;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.validation.DataBinder;
 
 import org.springframework.validation.Errors;
 import org.springframework.webflow.Event;
@@ -42,6 +44,11 @@ public class SpaceFormAction extends AbstractFormAction {
         setFormObjectName("space");
         setFormObjectScope(ScopeType.FLOW);
     }
+    
+    @Override
+    protected void initBinder(RequestContext request, DataBinder binder) {
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+    }     
     
     @Override
     public Object loadFormObject(RequestContext context) {
@@ -144,7 +151,9 @@ public class SpaceFormAction extends AbstractFormAction {
         }
         int type = Integer.parseInt(fieldType);
         FieldForm fieldForm = new FieldForm();
-        fieldForm.setField(space.getMetadata().getNextAvailableField(type));
+        Field field = space.getMetadata().getNextAvailableField(type);
+        fieldForm.setField(field);
+        space.getMetadata().add(field);
         context.getFlowScope().put("fieldForm", fieldForm);                    
         return success();
     }   
@@ -155,16 +164,15 @@ public class SpaceFormAction extends AbstractFormAction {
         Field field = space.getMetadata().getField(fieldName);
         FieldForm fieldForm = new FieldForm();
         fieldForm.setField(field);
-        fieldForm.setSpace(space);
         context.getFlowScope().put("fieldForm", fieldForm);
         return success();
     }
     
     public Event fieldUpdateHandler(RequestContext context) {
-        Space space = (Space) context.getFlowScope().get("space");
+        // Space space = (Space) context.getFlowScope().get("space");
         FieldForm fieldForm = (FieldForm) context.getFlowScope().get("fieldForm");
         Field field = fieldForm.getField();
-        space.getMetadata().add(field); // has no effect if edit mode and field exists
+        // space.getMetadata().add(field); // has no effect if edit mode and field exists
         context.getRequestScope().put("selectedFieldName", field.getName());
         return success();
     }
