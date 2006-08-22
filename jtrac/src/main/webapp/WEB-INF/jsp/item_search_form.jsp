@@ -10,10 +10,10 @@
         <td>
             <input name="refId" value="${refId}"/>
             <input type="submit" name="_eventId_view" value="View"/>
-            <span class="error"><c:out value="${refIdError}"/></span>              			
+            <span class="error"><c:out value="${refIdError}"/></span>
         </td>      		
     </tr>
-    <tr><td colspan="2"><hr/></td></tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
     <tr>
         <th <c:if test="${!empty itemSearch.summary}">class="selected"</c:if>>Search for text</th>
         <td>
