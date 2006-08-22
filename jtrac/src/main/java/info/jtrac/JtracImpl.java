@@ -218,7 +218,7 @@ public class JtracImpl implements Jtrac {
         return dao.findItems(itemSearch);
     }
     
-    public void reIndex() {
+    public void rebuildIndexes() {
         indexer.clearIndexes();
         List<AbstractItem> items = dao.findAllItems();
         for (AbstractItem item : items) {
