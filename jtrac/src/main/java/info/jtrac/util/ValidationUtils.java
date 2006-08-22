@@ -47,41 +47,25 @@ public class ValidationUtils {
         if (input == null) {
             return false;
         }
-        for (char c : input.toCharArray()) {
-            if (!(Character.isUpperCase(c) || Character.isDigit(c))) {
-                return false;
-            }
-        }
-        return true;
+        return input.matches("[A-Z0-9]+");
     }
     
     public static boolean isAllLowerCase(String input) {
         if (input == null) {
             return false;
         }        
-        for (char c : input.toCharArray()) {
-            if (!(Character.isLowerCase(c) || Character.isDigit(c))) {
-                return false;
-            }
-        }
-        return true;
+        return input.matches("[a-z0-9]+");
     }
     
     /**
      * Only letters are allowed, not even numbers
+     * and CamelCase with dash as word separator
      */
-    public static boolean isTitleCase(String input) {
-        if (input == null || input.length() == 0 || !Character.isUpperCase(input.charAt(0))) {
+    public static boolean isCamelDashCase(String input) {
+        if (input == null) {
             return false;
-        }
-        if (input.length() > 1) {
-            for (char c : input.substring(1).toCharArray()) {
-                if (!(Character.isLowerCase(c))) {
-                    return false;
-                }
-            }            
-        }
-        return true;        
+        } 
+        return input.matches("[A-Z][a-z]+(-[A-Z][a-z]+)*");
     }
     
     

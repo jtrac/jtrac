@@ -18,12 +18,15 @@ public class ValidationUtilsTest extends TestCase {
         assertFalse(ValidationUtils.isAllLowerCase("ab cd"));
     }
     
-    public void testTitleCase() {
-        assertTrue(ValidationUtils.isTitleCase("Abcd"));
-        assertFalse(ValidationUtils.isTitleCase("Abcd123"));
-        assertFalse(ValidationUtils.isTitleCase("8bcd"));
-        assertFalse(ValidationUtils.isTitleCase("Ab-cd"));
-        assertFalse(ValidationUtils.isTitleCase("Ab cd"));
+    public void testCamelDashCase() {
+        assertTrue(ValidationUtils.isCamelDashCase("Abcd"));
+        assertTrue(ValidationUtils.isCamelDashCase("Abcd-Efgh"));
+        assertTrue(ValidationUtils.isCamelDashCase("Abcd-Efgh-Hijk"));
+        assertFalse(ValidationUtils.isCamelDashCase("AbcdEfgh"));
+        assertFalse(ValidationUtils.isCamelDashCase("Abcd123"));
+        assertFalse(ValidationUtils.isCamelDashCase("8bcd"));
+        assertFalse(ValidationUtils.isCamelDashCase("Ab-cd"));
+        assertFalse(ValidationUtils.isCamelDashCase("Ab cd"));
     }
     
 }

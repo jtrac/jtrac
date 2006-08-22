@@ -171,7 +171,7 @@ public class SpaceFormAction extends AbstractFormAction {
     public Event stateAddHandler(RequestContext context) throws Exception {
         Space space = (Space) context.getFlowScope().get("space");
         String state = ValidationUtils.getParameter(context, "state");
-        if (!ValidationUtils.isTitleCase(state)) {
+        if (!ValidationUtils.isCamelDashCase(state)) {
             Errors errors = getFormErrors(context);
             errors.reject("error.spaceRoles.state.badchars", 
                     "State name has to start with a capital letter followed by lower-case letters.");
@@ -207,10 +207,10 @@ public class SpaceFormAction extends AbstractFormAction {
     public Event editStateSubmitHandler(RequestContext context) throws Exception {
         String state = ValidationUtils.getParameter(context, "state");
         String stateKey = ValidationUtils.getParameter(context, "stateKey");
-        if (!ValidationUtils.isTitleCase(state)) {
+        if (!ValidationUtils.isCamelDashCase(state)) {
             Errors errors = getFormErrors(context);
             errors.reject("error.spaceRoles.state.badchars", 
-                    "State name has to start with a capital letter followed by lower-case letters.");
+                    "State name has to be Camel-Case with dashes ('-') to separate words e.g. 'Fixed', 'On-Hold' or 'Work-In-Progress'");
             context.getRequestScope().put("state", state);
             context.getRequestScope().put("stateKey", stateKey);
             return error();
