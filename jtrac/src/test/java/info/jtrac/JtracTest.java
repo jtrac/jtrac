@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.userdetails.UserDetails;
+import org.apache.taglibs.standard.extra.spath.SPathFilter;
 import org.springframework.test.AbstractTransactionalDataSourceSpringContextTests;
 
 /**

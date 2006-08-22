@@ -56,6 +56,7 @@ public class SpaceFormAction extends AbstractFormAction {
             clone.setPrefixCode(space.getPrefixCode() + "");
             clone.setDescription(space.getDescription() == null ? null : space.getDescription() + "");
             Metadata m = new Metadata();
+            m.setId(space.getMetadata().getId()); // or else Hibernate orphans the old one
             m.setXml(space.getMetadata().getXml());
             clone.setMetadata(m);
             return clone;
@@ -239,6 +240,8 @@ public class SpaceFormAction extends AbstractFormAction {
     
     public Event spaceSaveHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
+        Metadata metadata = space.getMetadata();
+        jtrac.storeMetadata(metadata);
         jtrac.storeSpace(space);
         return success();
     }
