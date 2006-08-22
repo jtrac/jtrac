@@ -80,7 +80,7 @@
     </view-state>    
     
     <view-state id="spaceRolesView" view="space_roles">
-        <transition on="back" to="spaceFieldForm"/>       
+        <transition on="back" to="spaceFieldsView"/>       
         <transition on="addState" to="spaceRolesView">
             <action bean="spaceFormAction" method="stateAddHandler"/>
         </transition>

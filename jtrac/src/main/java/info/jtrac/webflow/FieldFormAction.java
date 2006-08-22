@@ -145,13 +145,12 @@ public class FieldFormAction extends AbstractFormAction {
     public Event fieldOptionDeleteHandler(RequestContext context) throws Exception {
         Space space = (Space) context.getFlowScope().get("space");
         FieldForm fieldForm = (FieldForm) getFormObject(context);
-        String optionKey = ValidationUtils.getParameter(context, "optionKey");
+        String optionKey = ValidationUtils.getParameter(context, "optionKey");        
         fieldForm.field.getOptions().remove(optionKey);
         if (space.getId() > 0) {
             jtrac.removeFieldValues(space, fieldForm.field, optionKey);
             // database has been updated, if we don't do this
-            // user may leave without committing metadata change
-            logger.debug("saving space after option delete operation");        
+            // user may leave without committing metadata change       
             jtrac.storeMetadata(space.getMetadata());            
         }
         return success();
@@ -164,8 +163,12 @@ public class FieldFormAction extends AbstractFormAction {
         List<String> keys = new ArrayList<String>(options.keySet());
         int index = keys.indexOf(optionKey);
         int swapIndex = index - 1;
-        if (swapIndex < 0 && keys.size() > 1) {
-            swapIndex = keys.size() - 1;
+        if (swapIndex < 0) {
+            if (keys.size() > 1) {
+                swapIndex = keys.size() - 1;
+            } else {
+                swapIndex = 0;
+            }
         }
         if (index != swapIndex) {
             Collections.swap(keys, index, swapIndex);

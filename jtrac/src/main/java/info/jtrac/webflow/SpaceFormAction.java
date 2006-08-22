@@ -62,8 +62,9 @@ public class SpaceFormAction extends AbstractFormAction {
             clone.setId(space.getId());
             clone.setPrefixCode(space.getPrefixCode() + "");
             clone.setDescription(space.getDescription() == null ? null : space.getDescription() + "");
+            clone.setSpaceSequence(space.getSpaceSequence()); // or else Hibernate orphans the old one
             Metadata m = new Metadata();
-            m.setId(space.getMetadata().getId()); // or else Hibernate orphans the old one
+            m.setId(space.getMetadata().getId()); // or else Hibernate orphans the old one           
             m.setXml(space.getMetadata().getXml());
             clone.setMetadata(m);
             return clone;
@@ -116,8 +117,12 @@ public class SpaceFormAction extends AbstractFormAction {
         List<Field.Name> fieldOrder = space.getMetadata().getFieldOrder();
         int index = fieldOrder.indexOf(Field.convertToName(fieldName));
         int swapIndex = index - 1;
-        if (swapIndex < 0 && fieldOrder.size() > 1) {
-            swapIndex = fieldOrder.size() - 1;
+        if (swapIndex < 0) {
+            if (fieldOrder.size() > 1) {        
+                swapIndex = fieldOrder.size() - 1;
+            } else {
+                swapIndex = 0;
+            }
         }
         if (index != swapIndex) {
             Collections.swap(fieldOrder, index, swapIndex);
@@ -152,6 +157,8 @@ public class SpaceFormAction extends AbstractFormAction {
         int type = Integer.parseInt(fieldType);
         FieldForm fieldForm = new FieldForm();
         Field field = space.getMetadata().getNextAvailableField(type);
+        // set intelligent defaults to make adding new field to space easier
+        field.initOptions();
         fieldForm.setField(field);
         space.getMetadata().add(field);
         context.getFlowScope().put("fieldForm", fieldForm);                    
@@ -168,11 +175,9 @@ public class SpaceFormAction extends AbstractFormAction {
         return success();
     }
     
-    public Event fieldUpdateHandler(RequestContext context) {
-        // Space space = (Space) context.getFlowScope().get("space");
+    public Event fieldUpdateHandler(RequestContext context) {        
         FieldForm fieldForm = (FieldForm) context.getFlowScope().get("fieldForm");
-        Field field = fieldForm.getField();
-        // space.getMetadata().add(field); // has no effect if edit mode and field exists
+        Field field = fieldForm.getField();        
         context.getRequestScope().put("selectedFieldName", field.getName());
         return success();
     }
