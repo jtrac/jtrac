@@ -168,6 +168,23 @@ public class SpaceFormAction extends AbstractFormAction {
         return success();
     }
     
+    public Event fieldDeleteSetupHandler(RequestContext context) {
+        Space space = (Space) context.getFlowScope().get("space");
+        String fieldName = ValidationUtils.getParameter(context, "fieldName");    
+        Field field = space.getMetadata().getField(fieldName);
+        context.getRequestScope().put("field", field);
+        // TODO database impact report
+        return success();
+    }  
+    
+    public Event fieldDeleteHandler(RequestContext context) {
+        Space space = (Space) context.getFlowScope().get("space");
+        String fieldName = ValidationUtils.getParameter(context, "fieldName");    
+        space.getMetadata().removeField(fieldName);
+        // TODO database updates
+        return success();
+    }      
+    
     public Event stateAddHandler(RequestContext context) throws Exception {
         Space space = (Space) context.getFlowScope().get("space");
         String state = ValidationUtils.getParameter(context, "state");
@@ -196,7 +213,7 @@ public class SpaceFormAction extends AbstractFormAction {
         return success();
     }
     
-    public Event editStateHandler(RequestContext context) {
+    public Event stateEditSetupHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
         String stateKey = ValidationUtils.getParameter(context, "stateKey");
         context.getRequestScope().put("state", space.getMetadata().getStates().get(Integer.parseInt(stateKey)));
@@ -204,7 +221,7 @@ public class SpaceFormAction extends AbstractFormAction {
         return success();
     }    
     
-    public Event editStateSubmitHandler(RequestContext context) throws Exception {
+    public Event stateEditHandler(RequestContext context) throws Exception {
         String state = ValidationUtils.getParameter(context, "state");
         String stateKey = ValidationUtils.getParameter(context, "stateKey");
         if (!ValidationUtils.isCamelDashCase(state)) {
@@ -218,7 +235,7 @@ public class SpaceFormAction extends AbstractFormAction {
         Space space = (Space) context.getFlowScope().get("space");
         space.getMetadata().getStates().put(Integer.parseInt(stateKey), state);
         return success();
-    }     
+    }  
     
     public Event editTransitionHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");

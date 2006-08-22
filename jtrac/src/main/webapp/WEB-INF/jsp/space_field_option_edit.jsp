@@ -1,15 +1,15 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Rename Workflow State Name</span>
+<span class="info">Edit Option for field '${fieldForm.field.label}'</span>
 
 <p/>
 
 <form method="post" action="<c:url value='flow.htm'/>">
 
-    <input name="state" value="${state}"/>
+    <input name="option" value="${option}"/>
     <input type="submit" name="_eventId_submit" value="Submit"/>
     
-    <spring:bind path="space">
+    <spring:bind path="fieldForm">
         <span class="error">
             <c:forEach items="${status.errorMessages}" var="error">
                 <c:out value="${error}"/><br/>
@@ -17,7 +17,7 @@
         </span>
     </spring:bind>    
     
-    <input type="hidden" name="stateKey" value="${stateKey}"/>
+    <input type="hidden" name="optionKey" value="${optionKey}"/>
     <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
     
     <p/>

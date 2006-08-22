@@ -20,6 +20,11 @@ import info.jtrac.domain.Field;
 import info.jtrac.util.ValidationUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.webflow.Event;
@@ -95,5 +100,87 @@ public class FieldFormAction extends AbstractFormAction {
         }
         return success();
     }
+    
+    public Event fieldOptionEditSetupHandler(RequestContext context) throws Exception {
+        FieldForm fieldForm = (FieldForm) getFormObject(context);
+        String optionKey = ValidationUtils.getParameter(context, "optionKey");
+        String option = fieldForm.getField().getCustomValue(optionKey);
+        context.getRequestScope().put("option", option);
+        context.getRequestScope().put("optionKey", optionKey);
+        return success();
+    }
+    
+    public Event fieldOptionEditHandler(RequestContext context) throws Exception {
+        String optionKey = ValidationUtils.getParameter(context, "optionKey");
+        String option = ValidationUtils.getParameter(context, "option");
+        if (option == null) {
+            Errors errors = getFormErrors(context);
+            errors.reject("error.field.option.empty", "Option text cannot be empty");
+            context.getRequestScope().put("option", option);
+            context.getRequestScope().put("optionKey", optionKey);
+            return error();
+        }
+        FieldForm fieldForm = (FieldForm) getFormObject(context);
+        fieldForm.getField().addOption(optionKey, option); // will overwrite
+        return success();
+    }
+    
+    public Event fieldOptionDeleteSetupHandler(RequestContext context) throws Exception {
+        FieldForm fieldForm = (FieldForm) getFormObject(context);
+        String optionKey = ValidationUtils.getParameter(context, "optionKey");
+        String option = fieldForm.getField().getCustomValue(optionKey);
+        context.getRequestScope().put("optionKey", optionKey);
+        context.getRequestScope().put("option", option);
+        return success();
+    }    
+    
+    public Event fieldOptionDeleteHandler(RequestContext context) throws Exception {
+        FieldForm fieldForm = (FieldForm) getFormObject(context);
+        String optionKey = ValidationUtils.getParameter(context, "optionKey");
+        fieldForm.getField().getOptions().remove(optionKey);
+        return success();
+    }
+    
+    public Event fieldOptionUpHandler(RequestContext context) throws Exception {
+        FieldForm fieldForm = (FieldForm) getFormObject(context);
+        String optionKey = ValidationUtils.getParameter(context, "optionKey");
+        Map<String, String> options = fieldForm.getField().getOptions();
+        List<String> keys = new ArrayList<String>(options.keySet());
+        int index = keys.indexOf(optionKey);
+        int swapIndex = index - 1;
+        if (swapIndex < 0 && keys.size() > 1) {
+            swapIndex = keys.size() - 1;
+        }
+        if (index != swapIndex) {
+            Collections.swap(keys, index, swapIndex);
+        }
+        Map<String, String> updated = new LinkedHashMap<String, String>(keys.size());
+        for (String s : keys) {
+            updated.put(s, options.get(s));
+        }
+        fieldForm.getField().setOptions(updated);
+        return success();
+    }    
+    
+    public Event fieldOptionDownHandler(RequestContext context) throws Exception {
+        FieldForm fieldForm = (FieldForm) getFormObject(context);
+        String optionKey = ValidationUtils.getParameter(context, "optionKey");
+        Map<String, String> options = fieldForm.getField().getOptions();
+        List<String> keys = new ArrayList<String>(options.keySet());
+        int index = keys.indexOf(optionKey);
+        int swapIndex = index + 1;
+        if (swapIndex == keys.size() ) {
+            swapIndex = 0;
+        }
+        if (index != swapIndex) {
+            Collections.swap(keys, index, swapIndex);
+        }
+        Map<String, String> updated = new LinkedHashMap<String, String>(keys.size());
+        for (String s : keys) {
+            updated.put(s, options.get(s));
+        }
+        fieldForm.getField().setOptions(updated);        
+        return success();
+    }      
     
 }

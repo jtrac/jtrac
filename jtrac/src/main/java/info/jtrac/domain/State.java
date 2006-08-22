@@ -129,6 +129,10 @@ public class State implements Serializable {
         fields.put(fieldName, mask);
     }
     
+    public void remove(Field.Name fieldName) {
+        fields.remove(fieldName);
+    }
+    
     public void addTransition(int toStatus) {
         transitions.add(toStatus);
     }

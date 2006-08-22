@@ -168,7 +168,18 @@ public class Metadata implements Serializable {
                 state.add(field.getName());
             }
         }
-    }    
+    }
+    
+    public void removeField(String fieldName) {
+        Field.Name name = Field.convertToName(fieldName);
+        fields.remove(name);
+        fieldOrder.remove(name);
+        for (Role role : roles.values()) {
+            for (State state : role.getStates().values()) {
+                state.remove(name);
+            }
+        }        
+    }
     
     public void addState(String name) {
         // first get the max of existing state keys

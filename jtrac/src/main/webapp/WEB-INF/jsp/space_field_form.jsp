@@ -1,8 +1,14 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
+<script>
+function setOptionKey(optionKey) {
+    document.spaceFieldForm.optionKey.value = optionKey;
+}
+</script>
+
 <span class="info">Edit Field</span>
 
-<form method="post" action="<c:url value='flow.htm'/>">
+<form name="spaceFieldForm" method="post" action="<c:url value='flow.htm'/>">
 
     <table class="jtrac">
         <tr>
@@ -30,13 +36,22 @@
                 </spring:bind>
             </td>
         </tr>
-        <c:if test="${fieldForm.field.name.type < 5}">
+        <c:if test="${fieldForm.field.name.type < 4}">
             <tr>
                 <td class="label">Options</td>
                 <td>
-                    <c:forEach items="${fieldForm.field.options}" var="entry">
-                        (${entry.key})&nbsp;${entry.value}<br/>
-                    </c:forEach>                    
+                    <table>
+                        <c:forEach items="${fieldForm.field.options}" var="entry">
+                            <tr>
+                                <td>${entry.key}</td>
+                                <td class="alt">${entry.value}</td>
+                                <td><input type="submit" name="_eventId_up" value="/\" onClick="setOptionKey('${entry.key}')"/></td>
+                                <td><input type="submit" name="_eventId_down" value="\/" onClick="setOptionKey('${entry.key}')"/></td>
+                                <td><input type="submit" name="_eventId_edit" value="Edit" onClick="setOptionKey('${entry.key}')"/></td>
+                                <td><input type="submit" name="_eventId_delete" value="Delete" onClick="setOptionKey('${entry.key}')"/></td>
+                            </tr>
+                        </c:forEach>
+                    </table>
                 </td>
             </tr>
             <tr>
@@ -57,6 +72,7 @@
             <td>
                 <input type="submit" name="_eventId_done" value="Done"/>
                 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
+                <input type="hidden" name="optionKey"/>
             </td>
         </tr>
     </table>

@@ -24,6 +24,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.dom4j.Element;
 
@@ -182,7 +184,12 @@ public class Field implements Serializable {
             addOption("1", value);
             return;
         }
-        addOption(options.size() + 1 + "", value);             
+        Set<Integer> set = new TreeSet<Integer>();
+        for (String s : options.keySet()) {
+            set.add(new Integer(s));
+        }
+        int last = set.toArray(new Integer[set.size()])[set.size() -1];
+        addOption(last + 1 + "", value);             
     }
     
     public void addOption(String key, String value) {
