@@ -35,6 +35,7 @@ public class History extends AbstractItem {
     }
     
     public History(Item item) {
+        setStatus(item.getStatus());
         setSummary(item.getSummary());
         setDetail(item.getDetail());
         setLoggedBy(item.getLoggedBy());
