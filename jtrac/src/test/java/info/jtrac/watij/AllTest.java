@@ -1,24 +1,34 @@
 package info.jtrac.watij;
 
-import junit.framework.TestCase;
+import junit.framework.Test;
 import static watij.finders.SymbolFactory.*;
-import watij.runtime.ie.IE;
 
-public class AllTest extends TestCase {
-            
-    public void testAll() throws Exception {
-        
-        IE ie = new IE();        
+public class AllTest extends WatijTestCase {
+    
+    static {
+        clazz = AllTest.class;
+    }
+    
+    public AllTest(String name) {
+        super(name);
+    }        
+    
+    public void testGetLoginPage() throws Exception {
         ie.start("http://localhost:8080/jtrac");
         assertTrue(ie.containsText("JTrac"));
-                
+    }
+    
+    public void testSuccessfulLogin() throws Exception {        
         ie.textField(name, "j_username").set("admin");
         ie.textField(name, "j_password").set("admin");
         ie.button("Submit").click();
         assertTrue(ie.containsText("DASHBOARD"));
+    }     
+    
+    public void testCreateNewSpaceAndAllocateAdmin() throws Exception {
         
         ie.link(text, "OPTIONS").click();
-        assertTrue(ie.containsText("Options Menu"));
+        assertTrue(ie.containsText("Options Menu"));        
         
         ie.link(text, "Spaces").click();
         assertTrue(ie.containsText("Spaces"));
@@ -37,7 +47,11 @@ public class AllTest extends TestCase {
         assertTrue(ie.containsText("Users allocated to Space"));
         
         ie.button("Allocate").click();
-        assertTrue(ie.containsText("Admin User"));        
+        assertTrue(ie.containsText("Admin User"));  
+           
+    }
+    
+    public void testCreateNewItem() throws Exception {
         
         ie.link(text, "DASHBOARD").click();
         assertTrue(ie.containsText("TEST"));
@@ -50,6 +64,9 @@ public class AllTest extends TestCase {
         ie.selectList(name, "assignedTo").option(text, "Admin User").select();
         ie.button("Submit").click();
         assertTrue(ie.containsText("TEST-1"));
+    }
+
+    public void testSearchAllContainsItem() throws Exception {
         
         ie.link(text, "SEARCH").click();
         assertTrue(ie.containsText("View Item by Id"));
@@ -59,11 +76,18 @@ public class AllTest extends TestCase {
         
         ie.link(text, "TEST-1").click();
         assertTrue(ie.containsText("History"));
+    }
+     
+    public void testUpdateHistoryForItem() throws Exception {
         
         ie.selectList(name, "status").option(text, "Closed").select();
         ie.textField(name, "comment").set("Test Comment");
         ie.button("Submit").click();
         assertTrue(ie.containsText("Test Comment"));
+        
+    }
+
+    public void testCreateNewUser() throws Exception {
         
         ie.link(text, "OPTIONS").click();                
         ie.link(text, "Users").click();
@@ -79,13 +103,15 @@ public class AllTest extends TestCase {
         assertTrue(ie.containsText("Spaces allocated to User"));
         
         ie.button("Cancel").click();        
-        assertTrue(ie.containsText("Test User"));        
+        assertTrue(ie.containsText("Test User"));    
+    }
+        
+    public void testLogout() throws Exception {
         
         ie.link(text, "LOGOUT").click();
         assertTrue(ie.containsText("Logout Successful"));
+        ie.close();
         
-        ie.close();  
-	        
-    }    
+    }        
     
 }
