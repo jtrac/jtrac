@@ -16,7 +16,7 @@
     
     <p><a href="<c:url value='reindex.htm'/>">Rebuild Indexes</a></p>
     
-    <p><a href="<c:url value='excel_import.htm?_flowId=excelImport'/>">Import from Excel</a></p>
+    <p><a href="<c:url value='flow.htm?_flowId=excel'/>">Import from Excel</a></p>
     
 </authz:authorize>
 

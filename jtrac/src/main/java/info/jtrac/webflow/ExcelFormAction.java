@@ -17,9 +17,12 @@
 package info.jtrac.webflow;
 
 import info.jtrac.domain.ExcelFile;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.webflow.Event;
 import org.springframework.webflow.RequestContext;
 import org.springframework.webflow.ScopeType;
+import org.springframework.webflow.context.servlet.ServletExternalContext;
 
 /**
  * Multiaction that participates in the Excel Import flow 
@@ -33,7 +36,14 @@ public class ExcelFormAction extends AbstractFormAction {
     }
     
     public Event uploadHandler(RequestContext context) throws Exception {
-        ExcelFile excelFile = (ExcelFile) getFormObject(context);        
+        ServletExternalContext servletContext = (ServletExternalContext) context.getLastEvent().getSource();
+        MultipartHttpServletRequest request = (MultipartHttpServletRequest) servletContext.getRequest();
+        MultipartFile multipartFile = request.getFile("file");
+        if(multipartFile.isEmpty()) {
+            return error();
+        }
+        ExcelFile excelFile = new ExcelFile(multipartFile.getInputStream());
+        context.getFlowScope().put("excelFile", excelFile);
         return success();
     }        
     

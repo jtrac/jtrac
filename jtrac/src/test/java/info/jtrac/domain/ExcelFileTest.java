@@ -1,15 +1,12 @@
 package info.jtrac.domain;
 
-import info.jtrac.domain.Field;
-import info.jtrac.util.XmlUtils;
+import java.io.FileInputStream;
 import junit.framework.TestCase;
-import org.dom4j.Document;
-import org.dom4j.Element;
 
 public class ExcelFileTest extends TestCase {
     
-    public void testLoadFile() {
-        ExcelFile ef = new ExcelFile("src/test/resources/data.xls");
+    public void testLoadFile() throws Exception {
+        ExcelFile ef = new ExcelFile(new FileInputStream("src/test/resources/data.xls"));
     } 
     
 }

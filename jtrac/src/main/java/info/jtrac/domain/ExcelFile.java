@@ -16,7 +16,7 @@
 
 package info.jtrac.domain;
 
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +35,20 @@ public class ExcelFile implements Serializable {
     
     private List<String> labels;
     private String[][] cells;    
+
+    public String[][] getCells() {
+        return cells;
+    }
+
+    public List<String> getLabels() {
+        return labels;
+    }
     
-    public ExcelFile(String fileName) {
+    public ExcelFile(InputStream is) {
         POIFSFileSystem fs = null;
         HSSFWorkbook wb = null;
         try {
-            fs = new POIFSFileSystem(new FileInputStream(fileName));
+            fs = new POIFSFileSystem(is);
             wb = new HSSFWorkbook(fs);
         } catch (Exception e) {
             throw new RuntimeException(e);
