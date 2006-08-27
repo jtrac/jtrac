@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="jtrac" basedir=".">
     
-    <!-- example build.properties    
-    tomcat.home=C:/peter/opt/apache-tomcat-5.5.16
+    <!-- example build.properties
     mvn.executable=C:/peter/opt/maven-2.0.4/bin/mvn.bat
     watij.home=C:/peter/opt/watij-2.2.2 
     -->
@@ -85,10 +84,7 @@
             <zipfileset dir="target" includes="*.war" prefix="jtrac"/>
             <zipfileset dir="target/jetty" prefix="jtrac">
                 <exclude name="lib/ant*.jar"/>
-                <exclude name="lib/commons-el*.jar"/>
                 <exclude name="lib/core*.jar"/>
-                <exclude name="lib/xercesImpl*.jar"/>
-                <exclude name="lib/xmlParserAPIs*.jar"/>
             </zipfileset>
             <zipfileset dir="etc" includes="*.bat" prefix="jtrac"/>
             <zipfileset dir="target/site/doc" prefix="jtrac/doc"/>
