@@ -68,29 +68,28 @@
     
     <!-- ========================== DIST ============================ -->
     
-    <!-- TODO call "set-production-flag" after clean for version 2.0 final onwards -->
-    <target name="war" depends="clean, jspc">
+    <target name="war" depends="war-exploded">
         <copy todir="target/${war.name}/WEB-INF" file="etc/log4j.properties" overwrite="true"/>
-        <zip destfile="target/${war.name}.war" basedir="target/${war.name}">
-            <exclude name="**/WEB-INF/*.generated"/>
-            <exclude name="**/WEB-INF/jsp/**"/>
-            <exclude name="**/WEB-INF/src/**"/>          
-        </zip>
+        <zip destfile="target/${war.name}.war" basedir="target/${war.name}"/>
     </target>
     
-    <target name="dist" depends="war, jetty-setup">
-        <ant antfile="doc/build.xml"/>
+    <!-- TODO call "set-production-flag" after clean for version 2.0 final onwards -->
+    <target name="dist-war" depends="clean, war, jetty-setup">
+        <mkdir dir="target/site/doc"/>
         <zip destfile="target/jtrac.zip">
             <zipfileset dir="target" includes="*.war" prefix="jtrac"/>
-            <zipfileset dir="target/jetty" prefix="jtrac">
-                <exclude name="lib/ant*.jar"/>
-                <exclude name="lib/core*.jar"/>
-            </zipfileset>
+            <zipfileset dir="target/jetty" prefix="jtrac"/>
             <zipfileset dir="etc" includes="*.bat" prefix="jtrac"/>
             <zipfileset dir="target/site/doc" prefix="jtrac/doc"/>
             <zipfileset dir="." includes="*.txt" prefix="jtrac"/>
         </zip>         
     </target>
+    
+    <target name="dist-doc">
+        <ant antfile="doc/build.xml"/>
+    </target>
+        
+    <target name="dist" depends="dist-doc, dist-war"/>
     
     <!-- ========================== TEST ============================ -->
 	
@@ -230,68 +229,9 @@
             <doctitle><![CDATA[<h1>JTrac API Documentation</h1>]]></doctitle>
             <bottom><![CDATA[<i>JTrac</i> - <a href="http://jtrac.info">http://jtrac.info</a>]]></bottom>
         </javadoc>
-    </target>
-	
-    <!-- ========================== JSPC ============================ -->
+    </target>	
     
-    <target name="jspc" depends="war-exploded">
-        <taskdef classname="org.apache.jasper.JspC" name="jasper2"> 
-            <classpath id="jspc.classpath"> 
-                <pathelement location="${java.home}/../lib/tools.jar"/> 
-                <fileset dir="${tomcat.home}/bin"> 
-                    <include name="*.jar"/> 
-                </fileset> 
-                <fileset dir="${tomcat.home}/server/lib"> 
-                    <include name="*.jar"/> 
-                </fileset> 
-                <fileset dir="${tomcat.home}/common/lib"> 
-                    <include name="*.jar"/> 
-                </fileset>
-            </classpath> 
-        </taskdef> 
-        <jasper2 validateXml="false" uriroot="target/${war.name}" 
-            webXmlFragment="target/${war.name}/WEB-INF/web.xml.generated" 
-            outputDir="target/${war.name}/WEB-INF/src"/>
-        <javac destdir="target/${war.name}/WEB-INF/classes"
-            optimize="off"
-            debug="on" failonerror="false"
-            srcdir="target/${war.name}/WEB-INF/src" 
-            excludes="**/*.smap">
-            <classpath>
-                <pathelement location="target/${war.name}/WEB-INF/classes"/>
-                <fileset dir="target/${war.name}/WEB-INF/lib">
-                    <include name="*.jar"/>
-                </fileset>
-                <pathelement location="${tomcat.home}/common/classes"/>
-                <fileset dir="${tomcat.home}/common/lib">
-                    <include name="*.jar"/>
-                </fileset>
-                <pathelement location="${tomcat.home}/shared/classes"/>
-                <fileset dir="${tomcat.home}/shared/lib">
-                    <include name="*.jar"/>
-                </fileset>
-                <fileset dir="${tomcat.home}/bin"> 
-                    <include name="*.jar"/> 
-                </fileset> 
-            </classpath>
-            <include name="**"/>
-            <exclude name="tags/**"/>
-        </javac>             
-        <loadfile property="web.xml.generated" srcFile="target/${war.name}/WEB-INF/web.xml.generated"/>
-        <replace file="target/${war.name}/WEB-INF/web.xml" value="${web.xml.generated}" token="&lt;!-- JSPC_TOKEN --&gt;"/>        
-    </target>
-    
-    <!-- ========================= JETTY ============================ -->        
-    
-    <target name="jetty-deploy-jspc" depends="jetty-setup, jspc">      
-        <copy todir="target/jetty/webapp">
-            <fileset dir="target/${war.name}">
-                <exclude name="**/WEB-INF/*.generated"/>
-                <exclude name="**/WEB-INF/jsp/**"/>
-                <exclude name="**/WEB-INF/src/**"/>
-            </fileset>
-        </copy>
-    </target>
+    <!-- ========================= JETTY ============================ -->    
     
     <target name="jetty-setup">
         <copy todir="target/jetty/lib" flatten="true">
@@ -313,48 +253,43 @@
     </target>
     
     <target name="jetty-start" depends="jetty-setup, war-exploded">        
-        <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
-            <jvmarg value="-Dfile.encoding=UTF-8"/>
-            <jvmarg value="-Djtrac.home=${basedir}/home"/>
-            <jvmarg value="-Djtrac.webapp=../${war.name}"/>
-        </java>
+        <jetty-start/>
     </target>    
-    
-    <target name="jetty-start-jspc" depends="jetty-deploy-jspc">
-        <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
-            <jvmarg value="-Dfile.encoding=UTF-8"/>
-            <jvmarg value="-Djtrac.home=${basedir}/home"/>
-            <jvmarg value="-Djtrac.webapp=webapp"/>
-        </java>
-    </target>
    
     <target name="jetty-stop">
-        <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">            
+        <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
+            <jvmarg value="-DSTOP.PORT=8079"/>
+            <jvmarg value="-DSTOP.KEY=jtrac"/>
             <arg value="--stop"/>
         </java>        
     </target>    
 	
-    <target name="jetty-start-debug" depends="jetty-deploy-jspc">
-        <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
-            <jvmarg value="-Dfile.encoding=UTF-8"/>
-            <jvmarg value="-Djtrac.home=${basedir}/home"/>
-            <jvmarg value="-Djtrac.webapp=webapp"/>
-            <jvmarg value="-Xdebug"/>
-            <jvmarg value="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"/>            
-        </java>
+    <target name="jetty-start-debug" depends="war-exploded">
+        <jetty-start arg1="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n" arg2="-Xdebug"/>
     </target> 
        
     <!-- target for NetBeans Profiler on Windows -->
-    <target name="jetty-start-profile" depends="jetty-deploy-jspc">
+    <target name="jetty-start-profile" depends="war-exploded">
         <property name="nbprof.home" value="${netbeans.home}/../profiler1/lib"/>
-        <property name="agent.path" value="${nbprof.home}/deployed/jdk15/windows/profilerinterface.dll=${nbprof.home},5140"/>        
-        <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
-            <jvmarg value="-Dfile.encoding=UTF-8"/>
-            <jvmarg value="-Djtrac.home=${basedir}/home"/>
-            <jvmarg value="-Djtrac.webapp=webapp"/>
-            <jvmarg value="-agentpath:${agent.path}"/>
-            <jvmarg value="-Xmx512m"/>            
-        </java>
-    </target>	
+        <property name="agent.path" value="${nbprof.home}/deployed/jdk15/windows/profilerinterface.dll=${nbprof.home},5140"/>
+        <jetty-start arg1="-agentpath:${agent.path}" arg2="-Xmx512m"/>
+    </target>
+	
+    <macrodef name="jetty-start">
+        <attribute name="webapp" default="../${war.name}"/>
+        <attribute name="arg1" default=""/>
+        <attribute name="arg2" default=""/>
+        <sequential>
+            <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
+                <jvmarg value="-Dfile.encoding=UTF-8"/>
+                <jvmarg value="-Djtrac.home=${basedir}/home"/>
+                <jvmarg value="-Djtrac.webapp=@{webapp}"/>
+                <jvmarg value="-DSTOP.PORT=8079"/>
+                <jvmarg value="-DSTOP.KEY=jtrac"/>
+                <jvmarg value="@{arg1}"/>
+                <jvmarg value="@{arg2}"/>
+            </java>            
+        </sequential>        
+    </macrodef>
               
 </project>

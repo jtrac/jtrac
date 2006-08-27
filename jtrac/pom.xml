@@ -288,7 +288,7 @@
             <artifactId>log4j</artifactId>
             <version>1.2.13</version>
             <scope>runtime</scope>
-        </dependency>
+        </dependency>        
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
@@ -387,12 +387,12 @@
                                     <groupId>org.mortbay.jetty</groupId>
                                     <artifactId>jetty</artifactId>
                                     <version>6.0.0rc2</version>                        
-                                </dependency>
+                                </dependency>                                                           
                                 <dependency>
                                     <groupId>org.mortbay.jetty</groupId>
                                     <artifactId>jsp-2.1</artifactId>
                                     <version>6.0.0rc2</version>
-                                </dependency> 
+                                </dependency>                                    
                                 <dependency>
                                     <groupId>org.mortbay.jetty</groupId>
                                     <artifactId>jsp-api-2.1</artifactId>
@@ -410,7 +410,7 @@
                                     <version>6.0.0rc2</version>                        
                                 </dependency>
                             </dependencies>                            
-                        </extraPath>                        
+                        </extraPath>
                     </extraPaths>                    
                 </configuration>
             </plugin>
