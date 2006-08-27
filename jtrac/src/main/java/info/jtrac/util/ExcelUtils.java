@@ -61,11 +61,11 @@ public class ExcelUtils {
     
     private HSSFCell getCell(int row, int col) {
         HSSFRow sheetRow = sheet.getRow(row);
-        if (null == sheetRow) {
+        if (sheetRow == null) {
             sheetRow = sheet.createRow(row);
         }
         HSSFCell cell = sheetRow.getCell((short) col);
-        if (null == cell) {
+        if (cell == null) {
             cell = sheetRow.createCell((short) col);
         }
         return cell;

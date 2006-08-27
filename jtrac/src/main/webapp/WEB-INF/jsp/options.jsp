@@ -16,6 +16,8 @@
     
     <p><a href="<c:url value='reindex.htm'/>">Rebuild Indexes</a></p>
     
+    <p><a href="<c:url value='excel_import.htm?_flowId=excelImport'/>">Import from Excel</a></p>
+    
 </authz:authorize>
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>

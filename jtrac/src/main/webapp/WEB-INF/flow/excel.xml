@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
+	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
+
+<flow start-state="upload">   
+    
+    <view-state id="upload" view="excel_upload">
+        <transition on="cancel" to="optionsView"/>
+        <transition on="submit" to="excelView">
+            <action bean="excelFormAction" method="uploadHandler"/>
+        </transition>
+    </view-state>
+    
+    <view-state id="excelView" view="excel_view">
+        <transition on="cancel" to="optionsView"/>
+    </view-state>    
+    
+    <end-state id="optionsView" view="externalRedirect:options.htm"/>
+
+</flow>
+

@@ -120,6 +120,10 @@
       
     <bean id="configFormAction" class="info.jtrac.webflow.ConfigFormAction">
         <property name="jtrac" ref="jtrac"/>
-    </bean>    
+    </bean>
+    
+    <bean id="excelFormAction" class="info.jtrac.webflow.ExcelFormAction">
+        <property name="jtrac" ref="jtrac"/>
+    </bean> 
         
 </beans>
