@@ -83,7 +83,13 @@
         <ant antfile="doc/build.xml"/>
         <zip destfile="target/jtrac.zip">
             <zipfileset dir="target" includes="*.war" prefix="jtrac"/>
-            <zipfileset dir="target/jetty" prefix="jtrac"/>
+            <zipfileset dir="target/jetty" prefix="jtrac">
+                <exclude name="lib/ant*.jar"/>
+                <exclude name="lib/commons-el*.jar"/>
+                <exclude name="lib/core*.jar"/>
+                <exclude name="lib/xercesImpl*.jar"/>
+                <exclude name="lib/xmlParserAPIs*.jar"/>
+            </zipfileset>
             <zipfileset dir="etc" includes="*.bat" prefix="jtrac"/>
             <zipfileset dir="target/site/doc" prefix="jtrac/doc"/>
             <zipfileset dir="." includes="*.txt" prefix="jtrac"/>
@@ -279,9 +285,9 @@
         <replace file="target/${war.name}/WEB-INF/web.xml" value="${web.xml.generated}" token="&lt;!-- JSPC_TOKEN --&gt;"/>        
     </target>
     
-    <!-- ========================= JETTY ============================ -->    
+    <!-- ========================= JETTY ============================ -->        
     
-    <target name="jetty-deploy" depends="jetty-setup, jspc">      
+    <target name="jetty-deploy-jspc" depends="jetty-setup, jspc">      
         <copy todir="target/jetty/webapp">
             <fileset dir="target/${war.name}">
                 <exclude name="**/WEB-INF/*.generated"/>
@@ -310,7 +316,15 @@
         <mkdir dir="target/jetty/work"/>        
     </target>
     
-    <target name="jetty-start" depends="jetty-deploy">
+    <target name="jetty-start" depends="jetty-setup, war-exploded">        
+        <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
+            <jvmarg value="-Dfile.encoding=UTF-8"/>
+            <jvmarg value="-Djtrac.home=${basedir}/home"/>
+            <jvmarg value="-Djtrac.webapp=../${war.name}"/>
+        </java>
+    </target>    
+    
+    <target name="jetty-start-jspc" depends="jetty-deploy-jspc">
         <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
             <jvmarg value="-Dfile.encoding=UTF-8"/>
             <jvmarg value="-Djtrac.home=${basedir}/home"/>
@@ -324,7 +338,7 @@
         </java>        
     </target>    
 	
-    <target name="jetty-start-debug" depends="jetty-deploy">
+    <target name="jetty-start-debug" depends="jetty-deploy-jspc">
         <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
             <jvmarg value="-Dfile.encoding=UTF-8"/>
             <jvmarg value="-Djtrac.home=${basedir}/home"/>
@@ -335,7 +349,7 @@
     </target> 
        
     <!-- target for NetBeans Profiler on Windows -->
-    <target name="jetty-start-profile" depends="jetty-deploy">
+    <target name="jetty-start-profile" depends="jetty-deploy-jspc">
         <property name="nbprof.home" value="${netbeans.home}/../profiler1/lib"/>
         <property name="agent.path" value="${nbprof.home}/deployed/jdk15/windows/profilerinterface.dll=${nbprof.home},5140"/>        
         <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
