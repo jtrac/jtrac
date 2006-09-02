@@ -17,13 +17,17 @@
 package info.jtrac.util;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 
 /**
@@ -45,18 +49,43 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer {
     private final Log logger = LogFactory.getLog(getClass());
     
     public JtracConfigurer() throws Exception {
-        String jtracHome = System.getProperty("jtrac.home");
-        if (jtracHome == null) {                        
-            jtracHome = System.getProperty("user.home") + "/.jtrac";
-            logger.info("System property 'jtrac.home' does not exist.  Will use '" + jtracHome + "'");
-            System.setProperty("jtrac.home", jtracHome);
+        String jtracHome = null;
+        ClassPathResource cpr = new ClassPathResource("jtrac-init.properties");
+        File initPropsFile = cpr.getFile();
+        if (initPropsFile.exists()) {
+            logger.info("found 'jtrac-init.properties' on classpath, processing...");
+            InputStream is = null;
+            Properties props = new Properties();
+            try {
+                is = new FileInputStream(initPropsFile);                
+                props.load(is);
+            } finally {
+                is.close();
+            }
+            jtracHome = props.getProperty("jtrac.home");
+        }
+        if (jtracHome != null) {
+            logger.info("'jtrac.home' property initialized from 'jtrac-init.properties' as '" + jtracHome + "'");
         } else {
-            logger.info("System property 'jtrac.home' exists: '" + jtracHome + "'");
+            logger.info("valid 'jtrac.home' property not available in 'jtrac-init.properties', trying system properties...");                
+            jtracHome = System.getProperty("jtrac.home");
+            if (jtracHome == null) {                        
+                jtracHome = System.getProperty("user.home") + "/.jtrac";
+                logger.warn("System property 'jtrac.home' does not exist.  Will use 'user.home' directory '" + jtracHome + "'");                
+                System.setProperty("jtrac.home", jtracHome);
+            } else {
+                logger.info("System property 'jtrac.home' exists: '" + jtracHome + "'");
+            }
         }
         File homeFile = new File(jtracHome);
         if (!homeFile.exists()) {
             homeFile.mkdir();
             logger.info("directory does not exist, created '" + homeFile.getPath() + "'");
+            if (!homeFile.exists()) {
+                String message = "invalid path '" + homeFile.getAbsolutePath() + "', try creating this directory first.  Aborting.";
+                logger.fatal(message);
+                throw new RuntimeException(message);
+            }
         } else {
             logger.info("directory already exists: '" + homeFile.getPath() + "'");
         }
