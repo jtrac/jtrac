@@ -28,10 +28,15 @@ function setDeallocate(spaceId) {
             <td>${spaceRole.space.prefixCode}</td>
             <td>${spaceRole.roleKey}</td>
             <td align="center">
-               <input type="submit" name="_eventId_deallocate" value="X" onClick="setDeallocate('${spaceRole.id}')"/>
+                <c:if test="${spaceRole.roleKey == 'ROLE_ADMIN' && empty spaceRole.space}">
+                    <c:set var="isAdmin" value="true"/>
+                    <c:if test="${user.id != 1}">
+                        <input type="submit" name="_eventId_deallocate" value="X" onClick="setDeallocate('${spaceRole.id}')"/>
+                    </c:if>
+                </c:if>
             </td>
         </tr>
-
+        
     </c:forEach>        
 
 </table>
@@ -49,6 +54,15 @@ function setDeallocate(spaceId) {
 </select>
 
 <input type="submit" name="_eventId_next" value="Next"/>
+
+<c:if test="${!isAdmin}">
+
+<p/>
+
+<span class="info">Make this user an Administrator (for all spaces)</span>
+<input type="submit" name="_eventId_makeAdmin" value="Make Admin"/>
+
+</c:if>
 
 <p/>
 

@@ -73,6 +73,7 @@ public class UserFormAction extends AbstractFormAction {
         
         private transient User user = new User();
         private String passwordConfirm;
+        private boolean admin;
         
         public User getUser() {
             return user;
@@ -89,7 +90,7 @@ public class UserFormAction extends AbstractFormAction {
         public void setPasswordConfirm(String passwordConfirm) {
             this.passwordConfirm = passwordConfirm;
         }
-        
+               
     }
     
     /**
@@ -125,7 +126,8 @@ public class UserFormAction extends AbstractFormAction {
             Errors errors = getFormErrors(context);
             errors.rejectValue("user.loginName", "error.user.loginName.exists", "Login ID already exists");
             return error();
-        }       
+        }
+        // note that jtrac service layer takes care of the object relationships before persisting UI edit
         jtrac.storeUser(user);
         SecurityUtils.refreshSecurityContextIfPrincipal(user);
         return success();
@@ -173,6 +175,13 @@ public class UserFormAction extends AbstractFormAction {
         SpaceRole spaceRole = jtrac.loadSpaceRole(id);
         User user = (User) context.getFlowScope().get("user");        
         jtrac.removeUserSpaceAllocation(user, spaceRole.getSpace(), spaceRole.getRoleKey());
+        SecurityUtils.refreshSecurityContextIfPrincipal(user);
+        return success();
+    } 
+    
+    public Event userMakeAdminHandler(RequestContext context) {        
+        User user = (User) context.getFlowScope().get("user");        
+        jtrac.storeUserSpaceAllocation(user, null, "ROLE_ADMIN");
         SecurityUtils.refreshSecurityContextIfPrincipal(user);
         return success();
     }     

@@ -73,7 +73,7 @@
                     <span class="error">${status.errorMessage}</span>
                 </spring:bind>
             </td>
-        </tr>           
+        </tr>
         <tr>
             <td/>
             <td>

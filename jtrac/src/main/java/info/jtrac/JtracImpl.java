@@ -244,7 +244,7 @@ public class JtracImpl implements Jtrac {
         }
     }
     
-    // =========  acegi UserDetailsService implementation ==========
+    // =========  Acegi UserDetailsService implementation ==========
     public UserDetails loadUserByUsername(String loginName) {
         List<User> users = null;
         if (loginName.indexOf("@") != -1) {
