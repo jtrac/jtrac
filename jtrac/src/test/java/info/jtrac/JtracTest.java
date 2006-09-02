@@ -8,6 +8,7 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import info.jtrac.domain.Counts;
+import info.jtrac.domain.SpaceRole;
 import info.jtrac.domain.State;
 import java.util.HashSet;
 import java.util.List;
@@ -197,6 +198,23 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         assertEquals(0, c.getOpen());
         assertEquals(1, c.getClosed());        
         assertEquals(1, c.getTotal());
+    }
+    
+    public void testRemoveSpaceRoleDoesNotOrphanDatabaseRecord() {
+        Space space = new Space();
+        space.setPrefixCode("TEST");
+        jtrac.storeSpace(space);
+        long spaceId = space.getId();
+        User user = new User();
+        user.setLoginName("test");
+        user.addSpaceRole(space, "ROLE_ADMIN");
+        jtrac.storeUser(user);
+        long id = jdbcTemplate.queryForLong("select id from user_space_roles where space_id = " + spaceId);
+        SpaceRole sr = jtrac.loadSpaceRole(id);
+        assertEquals(spaceId, sr.getSpace().getId());                
+        jtrac.removeUserSpaceAllocation(user, sr);
+        endTransaction();
+        assertEquals(0, jdbcTemplate.queryForInt("select count(0) from user_space_roles where space_id = " + spaceId));        
     }
     
 }

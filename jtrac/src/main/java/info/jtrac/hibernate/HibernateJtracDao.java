@@ -183,13 +183,13 @@ public class HibernateJtracDao
     }
     
     public List<UserRole> findUserRolesForSpace(long spaceId) {
-        List<Object[]> rawList = getHibernateTemplate().find("select user, spaceRole.roleKey from User user" +
+        List<Object[]> rawList = getHibernateTemplate().find("select user, spaceRole from User user" +
                 " join user.spaceRoles as spaceRole where spaceRole.space.id = ? order by user.name", spaceId);
         List<UserRole> userRoles = new ArrayList<UserRole>();
         for (Object[] userRole : rawList) {
             User user = (User) userRole[0];
-            String roleKey = (String) userRole[1];
-            userRoles.add(new UserRole(user, roleKey));
+            SpaceRole sr = (SpaceRole) userRole[1];
+            userRoles.add(new UserRole(user, sr));
         }
         return userRoles;
     }
@@ -241,6 +241,10 @@ public class HibernateJtracDao
         criteria.createCriteria("spaceRoles").add(Restrictions.in("space", spaces));
         criteria.addOrder(Order.asc("name"));
         return criteria.list();
+    }
+    
+    public void removeSpaceRole(SpaceRole spaceRole) {        
+        getHibernateTemplate().delete(spaceRole);
     }
     
     public List<Config> findAllConfig() {

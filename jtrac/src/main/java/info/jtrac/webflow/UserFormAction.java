@@ -174,7 +174,7 @@ public class UserFormAction extends AbstractFormAction {
         int id = Integer.parseInt(spaceRoleId);
         SpaceRole spaceRole = jtrac.loadSpaceRole(id);
         User user = (User) context.getFlowScope().get("user");        
-        jtrac.removeUserSpaceAllocation(user, spaceRole.getSpace(), spaceRole.getRoleKey());
+        jtrac.removeUserSpaceAllocation(user, spaceRole);
         SecurityUtils.refreshSecurityContextIfPrincipal(user);
         return success();
     } 

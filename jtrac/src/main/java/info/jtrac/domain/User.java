@@ -54,13 +54,12 @@ public class User implements UserDetails, Serializable {
     
     //=============================================================
    
-    public void addSpaceRole(Space space, String roleKey) {
-        spaceRoles.add(new SpaceRole(space, roleKey));
+    public void addSpaceRole(Space space, String roleKey) {        
+        spaceRoles.add(new SpaceRole(space, roleKey));        
     }
     
     public void removeSpaceRole(Space space, String roleKey) {
-        SpaceRole sr = new SpaceRole(space, roleKey);
-        spaceRoles.remove(sr);
+        spaceRoles.remove(new SpaceRole(space, roleKey));        
     }
     
     private List<String> getRoleKeys(Space space) {

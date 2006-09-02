@@ -19,6 +19,7 @@ package info.jtrac.webflow;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
+import info.jtrac.domain.SpaceRole;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
 import info.jtrac.util.SecurityUtils;
@@ -322,11 +323,10 @@ public class SpaceFormAction extends AbstractFormAction {
 
     public Event spaceDeallocateHandler(RequestContext context) {
         String userId = ValidationUtils.getParameter(context, "deallocateUserId");
-        String roleKey = ValidationUtils.getParameter(context, "deallocateRoleKey");
-        int id = Integer.parseInt(userId);
-        User user = jtrac.loadUser(id);
-        Space space = (Space) context.getFlowScope().get("space");
-        jtrac.removeUserSpaceAllocation(user, space, roleKey);
+        String spaceRoleId = ValidationUtils.getParameter(context, "deallocateSpaceRoleId");        
+        User user = jtrac.loadUser(Long.parseLong(userId));
+        SpaceRole spaceRole = jtrac.loadSpaceRole(Long.parseLong(spaceRoleId));
+        jtrac.removeUserSpaceAllocation(user, spaceRole);
         SecurityUtils.refreshSecurityContextIfPrincipal(user);
         return success();
     }     

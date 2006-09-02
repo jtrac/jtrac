@@ -1,9 +1,9 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
 <script>
-function setDeallocate(userId, roleKey) {
+function setDeallocate(userId, spaceRoleId) {
     document.spaceAllocateForm.deallocateUserId.value = userId;
-    document.spaceAllocateForm.deallocateRoleKey.value = roleKey;
+    document.spaceAllocateForm.deallocateSpaceRoleId.value = spaceRoleId;
 }
 </script>
 
@@ -28,10 +28,10 @@ function setDeallocate(userId, roleKey) {
         <tr ${rowClass}>
             <td>${userRole.user.loginName}</td>
             <td>${userRole.user.name}</td>
-            <td>${userRole.roleKey}</td>
+            <td>${userRole.spaceRole.roleKey}</td>
             <td align="center">
                 <input type="submit" name="_eventId_deallocate" value="X" 
-                    onClick="setDeallocate('${userRole.user.id}', '${userRole.roleKey}')"/>
+                    onClick="setDeallocate('${userRole.user.id}', '${userRole.spaceRole.id}')"/>
             </td>
         </tr>
 
@@ -76,7 +76,7 @@ function setDeallocate(userId, roleKey) {
 
 <input type="submit" name="_eventId_cancel" value="Cancel"/>
 <input type="hidden" name="deallocateUserId"/>
-<input type="hidden" name="deallocateRoleKey"/>
+<input type="hidden" name="deallocateSpaceRoleId"/>
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 
 </form>

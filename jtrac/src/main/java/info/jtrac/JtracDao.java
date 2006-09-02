@@ -75,6 +75,8 @@ public interface JtracDao {
     List<UserRole> findUserRolesForSpace(long spaceId);
     List<User> findUsersForSpaceSet(Collection<Space> spaces);
     //===========================================
+    void removeSpaceRole(SpaceRole sr);
+    //===========================================
     Counts loadCountsForUser(User user);
     //===========================================
     List<Config> findAllConfig();

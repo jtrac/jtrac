@@ -27,31 +27,31 @@ import java.io.Serializable;
 public class UserRole implements Serializable {
     
     private User user;
-    private String roleKey;    
+    private SpaceRole spaceRole;    
     
     public UserRole() {
         // zero arg constructor
     }
     
-    public UserRole(User user, String roleKey) {
+    public UserRole(User user, SpaceRole spaceRole) {
         this.user = user;
-        this.roleKey = roleKey;
+        this.spaceRole = spaceRole;
     }    
-    
-    public String getRoleKey() {
-        return roleKey;
-    }
-
-    public void setRoleKey(String roleKey) {
-        this.roleKey = roleKey;
-    }        
-    
+        
     public User getUser() {
         return user;
     }
     
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public SpaceRole getSpaceRole() {
+        return spaceRole;
+    }
+
+    public void setSpaceRole(SpaceRole spaceRole) {
+        this.spaceRole = spaceRole;
     }
     
 }
