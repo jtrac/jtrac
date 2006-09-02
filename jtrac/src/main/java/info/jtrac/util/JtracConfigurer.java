@@ -32,14 +32,16 @@ import org.springframework.core.io.FileSystemResource;
 
 /**
  * Custom extension of the Spring PropertyPlaceholderConfigurer that
- * creates a jtrac.home System property if required and also creates
+ * sets up the jtrac.home System property (creates if required) and also creates
  * a default jtrac.properties file for HSQLDB - useful for those who want
  * to quickly evaluate JTrac.  Just dropping the war into a servlet container
  * would work without the need to even configure a datasource.
  * 
- * This class would effectively do nothing if 
- * 1) a "jtrac.home" system property has been set
- * 2) a "jtrac.properties" file exists in jtrac.home
+ * This class would effectively do nothing if a "jtrac.properties" file exists in jtrac.home
+ *
+ * 1) a "jtrac.home" property is looked for in /WEB-INF/classes/jtrac-init.properties
+ * 2) if not found, then a "jtrac.home" system property is checked for
+ * 3) last resort, a ".jtrac" folder is created in the "user.home" and used as "jtrac.home"
  *
  * Note that later on during startup, the HibernateJtracDao would check if 
  * database tables exist, and if they dont, would proceed to create them
