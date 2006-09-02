@@ -91,6 +91,14 @@
         
     <target name="dist" depends="dist-doc, dist-war"/>
     
+    <target name="dist-site-clean">
+        <delete includeemptydirs="true">
+            <fileset dir="target/site">
+                <exclude name="doc/**"/>
+            </fileset>
+        </delete>
+    </target>
+    
     <!-- ========================== TEST ============================ -->
 	
     <target name="all" depends="clean, compile-test">

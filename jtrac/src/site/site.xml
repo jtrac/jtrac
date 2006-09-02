@@ -10,7 +10,7 @@
     </bannerRight>
     <body>
         <links>
-            <item name="JTrac @ SourceForge" href="http://sourceforge.net/projects/j-trac" />            
+            <item name="SourceForge" href="http://sourceforge.net/projects/j-trac" />            
             <item name="Download" href="http://sourceforge.net/project/showfiles.php?group_id=162983&amp;package_id=184104"/>
             <item name="Author" href="http://ptrthomas.wordpress.com"/>
         </links>

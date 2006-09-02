@@ -12,33 +12,28 @@ BODY {
 }
 
 A[accesskey^="p"] {
-    font-family: Verdana, Arial, helvetica, sans-serif;
-    font-size: 12px;
+    font-family: Verdana, Arial, helvetica, sans-serif;    
     color: #003399;
 }
 
 A[accesskey^="u"] {
-    font-family: Verdana, Arial, helvetica, sans-serif;
-    font-size: 12px;
+    font-family: Verdana, Arial, helvetica, sans-serif;    
     color: #003399;
 }
 
 A[accesskey^="h"] {
-    font-family: Verdana, Arial, helvetica, sans-serif;
-    font-size: 12px;
+    font-family: Verdana, Arial, helvetica, sans-serif;    
     color: #003399;
 }
 
 A[accesskey^="n"] {
-    font-family: Verdana, Arial, helvetica, sans-serif;
-    font-size: 12px;
+    font-family: Verdana, Arial, helvetica, sans-serif;    
     color: #003399;
 }
 
 A {
     color: #003399;
-    font-family: Verdana, Arial, helvetica, sans-serif;
-    font-size: 12px;
+    font-family: Verdana, Arial, helvetica, sans-serif;    
 }
 
 A:active {
@@ -286,8 +281,7 @@ HR  {
 }
 
 a code {
-    font-family: Verdana, Arial;
-    font-size: 12px;
+    font-family: Verdana, Arial;    
 }
 
 td code {

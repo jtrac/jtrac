@@ -6,7 +6,7 @@
     <artifactId>jtrac</artifactId>
     <packaging>war</packaging>
     <version>2.0-RC2</version>
-    <name>JTrac</name>
+    <name>JTrac</name>    
     <description>
         JTrac is a generic issue-tracking web-application that can be easily customized by adding custom fields 
         and drop-downs. Features include customizable workflow, field level permissions, e-mail integration, 
@@ -413,7 +413,7 @@
                         </extraPath>
                     </extraPaths>                    
                 </configuration>
-            </plugin>
+            </plugin>            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
