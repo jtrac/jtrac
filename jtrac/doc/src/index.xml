@@ -99,7 +99,7 @@
             <title>Easy to Install</title>
             <para>
                 One of the useful features of JTrac is that it is distributed with an embedded web-application server 
-                (<ulink url="http://jetty.mortbay.org/">Jetty</ulink>) that has a very small footprint (~1.3 MB).  
+                (<ulink url="http://jetty.mortbay.org/">Jetty</ulink>) that has a very small footprint.  
                 If you have Java 5 installed you can be up and running after downloading and extracting JTrac - by 
                 simply using the provided start and stop scripts.  JTrac scans its environment on startup and if a 
                 configured database is not detected, <ulink url="http://www.hsqldb.org/">HSQLDB</ulink> is used by 
@@ -419,11 +419,27 @@ java -version
         <sect1 id="installation-custom">
             <title>Custom Installation</title>
             <para>                    
-                To change the location of "jtrac.home" you need to set a Java system property called "jtrac.home"
-                to a valid path on the server.  This has to be in place after the servlet-engine (e.g. Tomcat) starts.
-                Please look at the contents of "start.bat" to see an example of how the appropriate JVM (Java Virtual Machine)
-                parameters can be set when deploying JTrac.
+                To customize the location of "jtrac.home" you have two options.
             </para>
+            <para>
+                If you can easily set a system property called "jtrac.home" within the environment of your 
+                application server then you don't need to edit the WAR file.  Please look at the contents of "start.bat" 
+                to see an example of how the appropriate JVM (Java Virtual Machine) parameters can be set when deploying JTrac.  
+                For example, if you are using <ulink url="http://tomcat.apache.org/">Apache Tomcat</ulink> 5.5.X, you can 
+                set an environment variable called JAVA_OPTS before invoking the startup script (startup.bat / startup.sh).
+                Here is an example for Tomcat 5.5.X on Windows:                
+            </para>
+            <para>
+                <programlisting>
+
+set JAVA_OPTS=-Djtrac.home=C:/jtrac-home -Dfile.encoding=UTF-8
+                </programlisting>
+            </para>
+            <para>
+                If you explode (unzip) the WAR file, you can edit the /WEB-INF/classes/jtrac-init.properties file
+                and customize the location of "jtrac.home".  Note that you can choose to deploy JTrac as an exploded-war 
+                and it is not mandatory that you re-package (zip) the WAR file after editing "jtrac-init.properties".
+            </para>            
             <para>                    
                 You can configure the database that JTrac uses by editing the "jtrac.properties" file that JTrac expects
                 within the "jtrac.home" folder.  Note that if JTrac does not find a "jtrac.properties" file in the
