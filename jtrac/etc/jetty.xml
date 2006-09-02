@@ -104,12 +104,13 @@
       <Arg><SystemProperty name="jetty.home" default="."/>/<SystemProperty name="jtrac.webapp" default="jtrac.war"/></Arg>
       <Arg>/jtrac</Arg>
       <Set name="defaultsDescriptor"><SystemProperty name="jetty.home" default="."/>/etc/webdefault.xml</Set>
+      <!--
       <Set name="virtualHosts">
         <Array type="java.lang.String">
           <Item>localhost</Item>
         </Array>
       </Set>
-      
+      -->      
       <Get name="SessionHandler">
         <Set name="SessionManager">
           <New class="org.mortbay.jetty.servlet.HashSessionManager">
