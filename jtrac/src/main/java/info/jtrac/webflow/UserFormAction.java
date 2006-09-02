@@ -24,8 +24,7 @@ import java.io.Serializable;
 
 import static info.jtrac.Constants.*;
 import info.jtrac.domain.SpaceRole;
-import org.acegisecurity.Authentication;
-import org.acegisecurity.context.SecurityContextHolder;
+import info.jtrac.util.SecurityUtils;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.validation.DataBinder;
 
@@ -116,22 +115,6 @@ public class UserFormAction extends AbstractFormAction {
                 errors.rejectValue("passwordConfirm", "error.userForm.passwordConfirm.notsame", "Does not match password");
             }
         }        
-    }   
-    
-    /**
-     * routine to refresh the security context only if user == principal
-     * required to do the following
-     * - authorization changes to take effect without having to logoff and re-login
-     * - cosmetic changes (such as change to name) to take effect
-     */
-    private void refreshSecurityContextIfPrincipal(User user) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User u = (User) authentication.getPrincipal();
-        if (u.getId() == user.getId()) {
-            // forces the Acegi Security Context to reload
-            logger.debug("user matches principal, refreshing security context");
-            authentication.setAuthenticated(false);             
-        }
     }
     
     public Event userFormHandler(RequestContext context) throws Exception {
@@ -144,7 +127,7 @@ public class UserFormAction extends AbstractFormAction {
             return error();
         }       
         jtrac.storeUser(user);
-        refreshSecurityContextIfPrincipal(user);
+        SecurityUtils.refreshSecurityContextIfPrincipal(user);
         return success();
     }
     
@@ -180,7 +163,7 @@ public class UserFormAction extends AbstractFormAction {
         if (admin != null) {
             jtrac.storeUserSpaceAllocation(user, space, "ROLE_ADMIN");
         }        
-        refreshSecurityContextIfPrincipal(user);
+        SecurityUtils.refreshSecurityContextIfPrincipal(user);
         return success();
     }    
 
@@ -190,7 +173,7 @@ public class UserFormAction extends AbstractFormAction {
         SpaceRole spaceRole = jtrac.loadSpaceRole(id);
         User user = (User) context.getFlowScope().get("user");        
         jtrac.removeUserSpaceAllocation(user, spaceRole.getSpace(), spaceRole.getRoleKey());
-        refreshSecurityContextIfPrincipal(user);
+        SecurityUtils.refreshSecurityContextIfPrincipal(user);
         return success();
     }     
     

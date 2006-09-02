@@ -21,11 +21,11 @@ import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserRole;
+import info.jtrac.util.SecurityUtils;
 import info.jtrac.util.ValidationUtils;
 import info.jtrac.webflow.FieldFormAction.FieldForm;
 import java.util.Collections;
 import java.util.List;
-import org.acegisecurity.context.SecurityContextHolder;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.validation.DataBinder;
 
@@ -316,8 +316,7 @@ public class SpaceFormAction extends AbstractFormAction {
         if (admin != null) {
             jtrac.storeUserSpaceAllocation(user, space, "ROLE_ADMIN");
         }
-        // effectively forces the Acegi Security Context to reload
-        SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
+        SecurityUtils.refreshSecurityContextIfPrincipal(user);
         return success();
     }    
 
@@ -328,8 +327,7 @@ public class SpaceFormAction extends AbstractFormAction {
         User user = jtrac.loadUser(id);
         Space space = (Space) context.getFlowScope().get("space");
         jtrac.removeUserSpaceAllocation(user, space, roleKey);
-        // effectively forces the Acegi Security Context to reload
-        SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
+        SecurityUtils.refreshSecurityContextIfPrincipal(user);
         return success();
     }     
     
