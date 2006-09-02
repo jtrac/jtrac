@@ -3,7 +3,8 @@
     
     <!-- example build.properties
     mvn.executable=C:/peter/opt/maven-2.0.4/bin/mvn.bat
-    watij.home=C:/peter/opt/watij-2.2.2 
+    watij.home=C:/peter/opt/watij-2.2.2
+    deploy.dir=C:/note-that-this-is-secondary/jetty-is-used-as-primary
     -->
     
     <property file="build.properties"/>
@@ -36,16 +37,27 @@
     </target> 			
 	
     <target name="war-exploded" depends="compile">
-        <copy todir="target/${war.name}">
-            <fileset dir="src/main/webapp"/>
-        </copy>
-        <copy todir="target/${war.name}/WEB-INF/classes">
-            <fileset dir="target/classes"/>
-        </copy>
-        <copy todir="target/${war.name}/WEB-INF/lib" flatten="true">
-            <fileset dir="${m2.repo}" includes="${runtime.jars}" casesensitive="false"/>         
-        </copy>
-    </target>  
+        <war-exploded/>
+    </target> 
+    
+    <target name="war-exploded-alt" depends="compile">
+        <war-exploded deployDir="${deploy.dir}"/>
+    </target>     
+    
+    <macrodef name="war-exploded">
+        <attribute name="deployDir" default="target/${war.name}"/>
+        <sequential>
+            <copy todir="@{deployDir}">
+                <fileset dir="src/main/webapp"/>
+            </copy>
+            <copy todir="@{deployDir}/WEB-INF/classes">
+                <fileset dir="target/classes"/>
+            </copy>
+            <copy todir="@{deployDir}/WEB-INF/lib" flatten="true">
+                <fileset dir="${m2.repo}" includes="${runtime.jars}" casesensitive="false"/>         
+            </copy>
+        </sequential>
+    </macrodef>  
     
     <target name="set-production-flag">        
         <property name="production" value="true"/>
