@@ -233,10 +233,10 @@ public class ItemSearch implements Serializable {
             if (spaceSet != null) {
                 return spaceSet;
             }
-            Set<Long> spaceIdSet = new HashSet<Long>(user.getSpaceRoles().size());
-            for (SpaceRole sr : user.getSpaceRoles()) {
-                if (sr.getSpace() != null) {
-                    spaceIdSet.add(sr.getSpace().getId());
+            Set<Long> spaceIdSet = new HashSet<Long>(user.getUserSpaceRoles().size());
+            for (UserSpaceRole usr : user.getUserSpaceRoles()) {
+                if (usr.getSpace() != null) {
+                    spaceIdSet.add(usr.getSpace().getId());
                 }
             }
             return spaceIdSet;
@@ -325,10 +325,10 @@ public class ItemSearch implements Serializable {
         if (user == null) {
             return null;
         }
-        Map<Integer, String> map = new HashMap<Integer, String>(user.getSpaceRoles().size());
-        for(SpaceRole sr : user.getSpaceRoles()) {
-            if (sr.getSpace() != null) {
-                map.put((int) sr.getSpace().getId(), sr.getSpace().getPrefixCode());
+        Map<Integer, String> map = new HashMap<Integer, String>(user.getUserSpaceRoles().size());
+        for(UserSpaceRole usr : user.getUserSpaceRoles()) {
+            if (usr.getSpace() != null) {
+                map.put((int) usr.getSpace().getId(), usr.getSpace().getPrefixCode());
             }
         }
         return map;

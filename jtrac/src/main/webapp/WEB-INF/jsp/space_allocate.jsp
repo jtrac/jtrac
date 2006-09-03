@@ -1,9 +1,8 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
 <script>
-function setDeallocate(userId, spaceRoleId) {
-    document.spaceAllocateForm.deallocateUserId.value = userId;
-    document.spaceAllocateForm.deallocateSpaceRoleId.value = spaceRoleId;
+function setDeallocate(userSpaceRoleId) {    
+    document.spaceAllocateForm.deallocate.value = userSpaceRoleId;
 }
 </script>
 
@@ -17,21 +16,21 @@ function setDeallocate(userId, spaceRoleId) {
 
     <tr><th>Login Name</th><th>Full Name</th><th>Role</th><th>Remove</th></tr>
     
-    <c:forEach items="${userRoles}" var="userRole" varStatus="row">
+    <c:forEach items="${userSpaceRoles}" var="userSpaceRole" varStatus="row">
         <c:set var="rowClass">
             <c:choose>
-                <c:when test="${selectedUserId == userRole.user.id}">class="selected"</c:when>
+                <c:when test="${selectedUserId == userSpaceRole.user.id}">class="selected"</c:when>
                 <c:when test="${row.count % 2 == 0}">class="alt"</c:when>
             </c:choose>            
         </c:set>    
 
         <tr ${rowClass}>
-            <td>${userRole.user.loginName}</td>
-            <td>${userRole.user.name}</td>
-            <td>${userRole.spaceRole.roleKey}</td>
+            <td>${userSpaceRole.user.loginName}</td>
+            <td>${userSpaceRole.user.name}</td>
+            <td>${userSpaceRole.roleKey}</td>
             <td align="center">
                 <input type="submit" name="_eventId_deallocate" value="X" 
-                    onClick="setDeallocate('${userRole.user.id}', '${userRole.spaceRole.id}')"/>
+                    onClick="setDeallocate('${userSpaceRole.id}')"/>
             </td>
         </tr>
 
@@ -75,8 +74,7 @@ function setDeallocate(userId, spaceRoleId) {
 <p/>
 
 <input type="submit" name="_eventId_cancel" value="Cancel"/>
-<input type="hidden" name="deallocateUserId"/>
-<input type="hidden" name="deallocateSpaceRoleId"/>
+<input type="hidden" name="deallocate"/>
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 
 </form>

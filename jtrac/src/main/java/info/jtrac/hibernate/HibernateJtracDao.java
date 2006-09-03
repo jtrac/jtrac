@@ -28,11 +28,9 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
-import info.jtrac.domain.UserRole;
 import info.jtrac.domain.Counts;
 import info.jtrac.domain.History;
-import info.jtrac.domain.SpaceRole;
-import java.util.ArrayList;
+import info.jtrac.domain.UserSpaceRole;
 import java.util.Collection;
 
 import java.util.List;
@@ -125,8 +123,8 @@ public class HibernateJtracDao
         return (Space) getHibernateTemplate().get(Space.class, id);
     }
     
-    public SpaceRole loadSpaceRole(long id) {
-        return (SpaceRole) getHibernateTemplate().get(SpaceRole.class, id);
+    public UserSpaceRole loadUserSpaceRole(long id) {
+        return (UserSpaceRole) getHibernateTemplate().get(UserSpaceRole.class, id);
     }    
     
     public SpaceSequence loadSpaceSequence(long id) {
@@ -165,7 +163,7 @@ public class HibernateJtracDao
         return (List<User>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) {
                 return session.createCriteria(User.class).setFetchMode(
-                        "spaceRoles", FetchMode.JOIN).add(
+                        "userSpaceRoles", FetchMode.JOIN).add(
                         Restrictions.eq("loginName", loginName)).list();
             }
         });
@@ -176,22 +174,16 @@ public class HibernateJtracDao
         return (List<User>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) {
                 return session.createCriteria(User.class).setFetchMode(
-                        "spaceRoles", FetchMode.JOIN).add(
+                        "userSpaceRoles", FetchMode.JOIN).add(
                         Restrictions.eq("email", email)).list();
             }
         });
     }
     
-    public List<UserRole> findUserRolesForSpace(long spaceId) {
-        List<Object[]> rawList = getHibernateTemplate().find("select user, spaceRole from User user" +
-                " join user.spaceRoles as spaceRole where spaceRole.space.id = ? order by user.name", spaceId);
-        List<UserRole> userRoles = new ArrayList<UserRole>();
-        for (Object[] userRole : rawList) {
-            User user = (User) userRole[0];
-            SpaceRole sr = (SpaceRole) userRole[1];
-            userRoles.add(new UserRole(user, sr));
-        }
-        return userRoles;
+    public List<UserSpaceRole> findUserRolesForSpace(long spaceId) {
+        List<UserSpaceRole> userSpaceRoles = getHibernateTemplate().find("select usr from User user" +
+                " join user.userSpaceRoles as usr where usr.space.id = ? order by user.name", spaceId);
+        return userSpaceRoles;
     }
     
     public Counts loadCountsForUser(User user) {
@@ -232,19 +224,19 @@ public class HibernateJtracDao
     }
         
     public List<User> findUsersForSpace(long spaceId) {
-        return getHibernateTemplate().find("select distinct user from User user join user.spaceRoles as spaceRole" 
-                + " where spaceRole.space.id = ? order by user.name", spaceId);
+        return getHibernateTemplate().find("select distinct user from User user join user.userSpaceRoles as usr" 
+                + " where usr.space.id = ? order by user.name", spaceId);
     }
     
     public List<User> findUsersForSpaceSet(Collection<Space> spaces) {
         Criteria criteria = getSession().createCriteria(User.class);
-        criteria.createCriteria("spaceRoles").add(Restrictions.in("space", spaces));
+        criteria.createCriteria("userSpaceRoles").add(Restrictions.in("space", spaces));
         criteria.addOrder(Order.asc("name"));
         return criteria.list();
     }
     
-    public void removeSpaceRole(SpaceRole spaceRole) {        
-        getHibernateTemplate().delete(spaceRole);
+    public void removeUserSpaceRole(UserSpaceRole userSpaceRole) {        
+        getHibernateTemplate().delete(userSpaceRole);
     }
     
     public List<Config> findAllConfig() {
@@ -270,7 +262,7 @@ public class HibernateJtracDao
             user.setName("Admin User");
             user.setEmail("jtrac.admin");
             user.setPassword("21232f297a57a5a743894a0e4a801fc3");
-            user.addSpaceRole(null, "ROLE_ADMIN");
+            user.addSpaceWithRole(null, "ROLE_ADMIN");
             logger.info("inserting default admin user into database");
             storeUser(user);
             logger.info("schema creation complete");

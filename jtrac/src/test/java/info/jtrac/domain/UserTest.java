@@ -19,9 +19,9 @@ public class UserTest extends TestCase {
         User u = new User();
         u.setLoginName("test");        
         
-        u.addSpaceRole(s1, "ROLE_ONE-ONE");
-        u.addSpaceRole(s1, "ROLE_ONE-TWO");
-        u.addSpaceRole(null, "ROLE_ADMIN");
+        u.addSpaceWithRole(s1, "ROLE_ONE-ONE");
+        u.addSpaceWithRole(s1, "ROLE_ONE-TWO");
+        u.addSpaceWithRole(null, "ROLE_ADMIN");
         
         GrantedAuthority[] gas = u.getAuthorities();
         

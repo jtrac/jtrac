@@ -17,13 +17,13 @@
 
     <c:set var="spaceCount" value="0"/>
     
-    <c:forEach items="${principal.spaceRoles}" var="spaceRole">
-        <c:if test="${!empty spaceRole.space && spaceRole.roleKey != 'ROLE_ADMIN'}">
-            <c:set var="spaceId" value="${spaceRole.space.id}"/>
+    <c:forEach items="${principal.userSpaceRoles}" var="userSpaceRole">
+        <c:if test="${!empty userSpaceRole.space && userSpaceRole.roleKey != 'ROLE_ADMIN'}">
+            <c:set var="spaceId" value="${userSpaceRole.space.id}"/>
             <tr><td>&nbsp;</td></tr>
             <tr class="nav-table">
-                <td>${spaceRole.space.prefixCode}</td>
-                <td>${spaceRole.roleKey}</td>
+                <td>${userSpaceRole.space.prefixCode}</td>
+                <td>${userSpaceRole.roleKey}</td>
                 <td>
                     <a href="<c:url value='flow.htm'>
                         <c:param name='_flowId' value='item'/>

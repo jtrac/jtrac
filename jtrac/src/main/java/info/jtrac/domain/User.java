@@ -50,23 +50,23 @@ public class User implements UserDetails, Serializable {
     private String email;
     private Metadata metadata;
     private boolean locked;
-    private Set<SpaceRole> spaceRoles = new HashSet<SpaceRole>();
+    private Set<UserSpaceRole> userSpaceRoles = new HashSet<UserSpaceRole>();
     
     //=============================================================
    
-    public void addSpaceRole(Space space, String roleKey) {        
-        spaceRoles.add(new SpaceRole(space, roleKey));        
+    public void addSpaceWithRole(Space space, String roleKey) {        
+        userSpaceRoles.add(new UserSpaceRole(this, space, roleKey));        
     }
     
-    public void removeSpaceRole(Space space, String roleKey) {
-        spaceRoles.remove(new SpaceRole(space, roleKey));        
+    public void removeSpaceWithRole(Space space, String roleKey) {
+        userSpaceRoles.remove(new UserSpaceRole(this, space, roleKey));        
     }
     
     private List<String> getRoleKeys(Space space) {
         List<String> roleKeys = new ArrayList<String>();
-        for(SpaceRole sr : spaceRoles) {
-            if (sr.getSpace() != null && sr.getSpace().equals(space)) {
-                roleKeys.add(sr.getRoleKey());
+        for(UserSpaceRole usr : userSpaceRoles) {
+            if (usr.getSpace() != null && usr.getSpace().equals(space)) {
+                roleKeys.add(usr.getRoleKey());
             }
         }
         return roleKeys;
@@ -81,10 +81,10 @@ public class User implements UserDetails, Serializable {
     }
     
     public Set<Space> getSpaces() {
-        Set<Space> spaces = new HashSet<Space>(spaceRoles.size());
-        for (SpaceRole sr : spaceRoles) {
-            if (sr.getSpace() != null) {
-                spaces.add(sr.getSpace());
+        Set<Space> spaces = new HashSet<Space>(userSpaceRoles.size());
+        for (UserSpaceRole usr : userSpaceRoles) {
+            if (usr.getSpace() != null) {
+                spaces.add(usr.getSpace());
             }
         }
         return spaces;
@@ -106,9 +106,9 @@ public class User implements UserDetails, Serializable {
     
     public GrantedAuthority[] getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        authorities.add(new SpaceRole(null, "ROLE_USER"));
-        for (SpaceRole sr : spaceRoles) {            
-            authorities.add(sr);
+        authorities.add(new UserSpaceRole(this, null, "ROLE_USER"));
+        for (UserSpaceRole usr : userSpaceRoles) {            
+            authorities.add(usr);
         }
         return authorities.toArray(new GrantedAuthority[authorities.size()]);
     }
@@ -131,12 +131,12 @@ public class User implements UserDetails, Serializable {
     
     //=============================================================
     
-    public Set<SpaceRole> getSpaceRoles() {
-        return spaceRoles;
+    public Set<UserSpaceRole> getUserSpaceRoles() {
+        return userSpaceRoles;
     }
 
-    public void setSpaceRoles(Set<SpaceRole> spaceRoles) {
-        this.spaceRoles = spaceRoles;
+    public void setUserSpaceRoles(Set<UserSpaceRole> userSpaceRoles) {
+        this.userSpaceRoles = userSpaceRoles;
     }    
     
     public User getParent() {

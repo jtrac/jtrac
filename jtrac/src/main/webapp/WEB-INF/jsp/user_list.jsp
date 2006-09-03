@@ -29,12 +29,12 @@
                 <c:if test="${user.locked}">locked</c:if>
             </td>					
             <td>        
-                <c:forEach items="${user.spaceRoles}" var="spaceRole" varStatus="row">
+                <c:forEach items="${user.userSpaceRoles}" var="userSpaceRole" varStatus="row">
                     <a href="<c:url value='flow.htm'>
                         <c:param name='_flowId' value='spaceAllocate'/>
-                        <c:param name='spaceId' value='${spaceRole.space.id}'/>
-                        </c:url>">${spaceRole.space.prefixCode}</a>
-                    (<i>${spaceRole.roleKey}</i>)           
+                        <c:param name='spaceId' value='${userSpaceRole.space.id}'/>
+                        </c:url>">${userSpaceRole.space.prefixCode}</a>
+                    (<i>${userSpaceRole.roleKey}</i>)           
                 </c:forEach>
             </td>
             <td align="center">

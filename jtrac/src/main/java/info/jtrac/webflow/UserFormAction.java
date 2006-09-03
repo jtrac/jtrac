@@ -23,7 +23,7 @@ import info.jtrac.util.ValidationUtils;
 import java.io.Serializable;
 
 import static info.jtrac.Constants.*;
-import info.jtrac.domain.SpaceRole;
+import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.SecurityUtils;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.validation.DataBinder;
@@ -170,11 +170,11 @@ public class UserFormAction extends AbstractFormAction {
     }    
 
     public Event userDeallocateHandler(RequestContext context) {
-        String spaceRoleId = ValidationUtils.getParameter(context, "deallocate");
-        int id = Integer.parseInt(spaceRoleId);
-        SpaceRole spaceRole = jtrac.loadSpaceRole(id);
+        String userSpaceRoleId = ValidationUtils.getParameter(context, "deallocate");
+        int id = Integer.parseInt(userSpaceRoleId);
+        UserSpaceRole userSpaceRole = jtrac.loadUserSpaceRole(id);
         User user = (User) context.getFlowScope().get("user");        
-        jtrac.removeUserSpaceAllocation(user, spaceRole);
+        jtrac.removeUserSpaceAllocation(userSpaceRole);
         SecurityUtils.refreshSecurityContextIfPrincipal(user);
         return success();
     } 

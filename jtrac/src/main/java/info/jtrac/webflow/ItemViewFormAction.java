@@ -23,7 +23,6 @@ import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
-import info.jtrac.domain.UserRole;
 import info.jtrac.util.AttachmentUtils;
 import info.jtrac.util.ItemUserEditor;
 import info.jtrac.util.UserEditor;

@@ -26,11 +26,10 @@ import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
-import info.jtrac.domain.SpaceRole;
 import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
-import info.jtrac.domain.UserRole;
+import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.lucene.IndexSearcher;
 import info.jtrac.lucene.Indexer;
 import info.jtrac.util.EmailUtils;
@@ -257,7 +256,7 @@ public class JtracImpl implements Jtrac {
         }
         logger.debug("acegi: loadUserByUserName success for '" + loginName + "'");
         User user = users.get(0);
-        logger.debug("spaceRoles: " + user.getSpaceRoles());
+        logger.debug("spaceRoles: " + user.getUserSpaceRoles());
         return user;
     }
     
@@ -312,14 +311,14 @@ public class JtracImpl implements Jtrac {
         return dao.findUsersForSpace(spaceId);
     }      
     
-    public List<UserRole> findUserRolesForSpace(long spaceId) {
+    public List<UserSpaceRole> findUserRolesForSpace(long spaceId) {
         return dao.findUserRolesForSpace(spaceId);
     }   
     
     public List<User> findUsersForUser(User user) {
-        Collection<Space> spaces = new HashSet<Space>(user.getSpaceRoles().size());
-        for (SpaceRole sr : user.getSpaceRoles()) {
-            spaces.add(sr.getSpace());
+        Collection<Space> spaces = new HashSet<Space>(user.getUserSpaceRoles().size());
+        for (UserSpaceRole usr : user.getUserSpaceRoles()) {
+            spaces.add(usr.getSpace());
         }
         // must be a better way to make this unique?
         List<User> users = dao.findUsersForSpaceSet(spaces);
@@ -329,22 +328,23 @@ public class JtracImpl implements Jtrac {
     
     public List<User> findUnallocatedUsersForSpace(long spaceId) {
         List<User> users = findAllUsers();
-        List<UserRole> userRoles = findUserRolesForSpace(spaceId);
-        for(UserRole userRole : userRoles) {
-            users.remove(userRole.getUser());
+        List<UserSpaceRole> userSpaceRoles = findUserRolesForSpace(spaceId);
+        for(UserSpaceRole userSpaceRole : userSpaceRoles) {
+            users.remove(userSpaceRole.getUser());
         }
         return users;
     }     
     
     public void storeUserSpaceAllocation(User user, Space space, String roleKey) {        
-        user.addSpaceRole(space, roleKey);
+        user.addSpaceWithRole(space, roleKey);
         dao.storeUser(user);      
     }
     
-    public void removeUserSpaceAllocation(User user, SpaceRole spaceRole) {        
-        user.removeSpaceRole(spaceRole.getSpace(), spaceRole.getRoleKey());
+    public void removeUserSpaceAllocation(UserSpaceRole userSpaceRole) {
+        User user = userSpaceRole.getUser();
+        user.removeSpaceWithRole(userSpaceRole.getSpace(), userSpaceRole.getRoleKey());
         // dao.storeUser(user);
-        dao.removeSpaceRole(spaceRole);       
+        dao.removeUserSpaceRole(userSpaceRole);       
     }    
     
     //==========================================================================
@@ -367,8 +367,8 @@ public class JtracImpl implements Jtrac {
         return spaces.get(0);
     }
     
-    public SpaceRole loadSpaceRole(long id) {
-        return dao.loadSpaceRole(id);
+    public UserSpaceRole loadUserSpaceRole(long id) {
+        return dao.loadUserSpaceRole(id);
     }
     
     public void storeSpace(Space space) {
@@ -382,8 +382,8 @@ public class JtracImpl implements Jtrac {
     public List<Space> findUnallocatedSpacesForUser(long userId) {
         List<Space> spaces = findAllSpaces();
         User user = loadUser(userId);
-        for(SpaceRole spaceRole : user.getSpaceRoles()) {
-            spaces.remove(spaceRole.getSpace());
+        for(UserSpaceRole usr : user.getUserSpaceRoles()) {
+            spaces.remove(usr.getSpace());
         }
         return spaces;
     }

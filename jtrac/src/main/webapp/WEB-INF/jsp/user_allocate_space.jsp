@@ -1,8 +1,8 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
 <script>
-function setDeallocate(spaceId) {
-    document.userAllocateForm.deallocate.value = spaceId;
+function setDeallocate(userSpaceRoleId) {
+    document.userAllocateForm.deallocate.value = userSpaceRoleId;
 }
 </script>
 
@@ -16,22 +16,22 @@ function setDeallocate(spaceId) {
 
     <tr><th>Space</th><th>Role</th><th>Remove</th></tr>
     
-    <c:forEach items="${user.spaceRoles}" var="spaceRole" varStatus="row">
+    <c:forEach items="${user.userSpaceRoles}" var="userSpaceRole" varStatus="row">
         <c:set var="rowClass">
             <c:choose>
-                <c:when test="${selectedSpaceId == spaceRole.space.id}">class="selected"</c:when>
+                <c:when test="${selectedSpaceId == userSpaceRole.space.id}">class="selected"</c:when>
                 <c:when test="${row.count % 2 == 0}">class="alt"</c:when>
             </c:choose>            
         </c:set>    
 
         <tr ${rowClass}>
-            <td>${spaceRole.space.prefixCode}</td>
-            <td>${spaceRole.roleKey}</td>
+            <td>${userSpaceRole.space.prefixCode}</td>
+            <td>${userSpaceRole.roleKey}</td>
             <td align="center">
-                <c:if test="${spaceRole.roleKey == 'ROLE_ADMIN' && empty spaceRole.space}">
+                <c:if test="${userSpaceRole.roleKey == 'ROLE_ADMIN' && empty userSpaceRole.space}">
                     <c:set var="isAdmin" value="true"/>
                     <c:if test="${user.id != 1}">
-                        <input type="submit" name="_eventId_deallocate" value="X" onClick="setDeallocate('${spaceRole.id}')"/>
+                        <input type="submit" name="_eventId_deallocate" value="X" onClick="setDeallocate('${userSpaceRole.id}')"/>
                     </c:if>
                 </c:if>
             </td>

@@ -25,11 +25,10 @@ import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.User;
-import info.jtrac.domain.UserRole;
 import info.jtrac.domain.Counts;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
-import info.jtrac.domain.SpaceRole;
+import info.jtrac.domain.UserSpaceRole;
 import java.util.Collection;
 
 import java.util.List;
@@ -59,7 +58,7 @@ public interface JtracDao {
     //===========================================
     void storeSpace(Space space);
     Space loadSpace(long id);
-    SpaceRole loadSpaceRole(long id);
+    UserSpaceRole loadUserSpaceRole(long id);
     List<Space> findSpacesByPrefixCode(String prefixCode);
     List<Space> findAllSpaces();
     //===========================================
@@ -72,10 +71,10 @@ public interface JtracDao {
     List<User> findUsersByLoginName(String loginName);
     List<User> findUsersByEmail(String email);
     List<User> findUsersForSpace(long spaceId);
-    List<UserRole> findUserRolesForSpace(long spaceId);
+    List<UserSpaceRole> findUserRolesForSpace(long spaceId);
     List<User> findUsersForSpaceSet(Collection<Space> spaces);
     //===========================================
-    void removeSpaceRole(SpaceRole sr);
+    void removeUserSpaceRole(UserSpaceRole userSpaceRole);
     //===========================================
     Counts loadCountsForUser(User user);
     //===========================================

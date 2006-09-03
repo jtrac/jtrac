@@ -122,16 +122,17 @@
         <property name="email" column="email"/>
         <property name="locked" column="locked"/>
         <many-to-one name="metadata" column="metadata_id"/>
-        <set name="spaceRoles" cascade="all">
+        <set name="userSpaceRoles" cascade="all" inverse="true">
             <key column="user_id"/>
-            <one-to-many class="SpaceRole"/>
+            <one-to-many class="UserSpaceRole"/>
         </set>      
     </class>
 	
-    <class name="SpaceRole" table="user_space_roles">
+    <class name="UserSpaceRole" table="user_space_roles">
         <id name="id" column="id">
             <generator class="native"/>
         </id>
+        <many-to-one name="user" column="user_id"/>
         <many-to-one name="space" column="space_id"/>
         <property name="roleKey" column="role_key" not-null="true"/>
     </class>    

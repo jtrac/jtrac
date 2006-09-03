@@ -19,9 +19,8 @@ package info.jtrac.webflow;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
-import info.jtrac.domain.SpaceRole;
 import info.jtrac.domain.User;
-import info.jtrac.domain.UserRole;
+import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.SecurityUtils;
 import info.jtrac.util.ValidationUtils;
 import info.jtrac.webflow.FieldFormAction.FieldForm;
@@ -295,9 +294,8 @@ public class SpaceFormAction extends AbstractFormAction {
             int id = Integer.parseInt(spaceId);
             space = jtrac.loadSpace(id);           
             context.getFlowScope().put("space", space);
-        }
-        List<UserRole> userRoles = jtrac.findUserRolesForSpace(space.getId());
-        context.getRequestScope().put("userRoles", userRoles);
+        }        
+        context.getRequestScope().put("userSpaceRoles", jtrac.findUserRolesForSpace(space.getId()));
         context.getRequestScope().put("unallocatedUsers", jtrac.findUnallocatedUsersForSpace(space.getId()));
         return success();
     }
@@ -321,13 +319,12 @@ public class SpaceFormAction extends AbstractFormAction {
         return success();
     }    
 
-    public Event spaceDeallocateHandler(RequestContext context) {
-        String userId = ValidationUtils.getParameter(context, "deallocateUserId");
-        String spaceRoleId = ValidationUtils.getParameter(context, "deallocateSpaceRoleId");        
-        User user = jtrac.loadUser(Long.parseLong(userId));
-        SpaceRole spaceRole = jtrac.loadSpaceRole(Long.parseLong(spaceRoleId));
-        jtrac.removeUserSpaceAllocation(user, spaceRole);
-        SecurityUtils.refreshSecurityContextIfPrincipal(user);
+    public Event spaceDeallocateHandler(RequestContext context) {        
+        String userSpaceRoleId = ValidationUtils.getParameter(context, "deallocate");        
+        long id = Long.parseLong(userSpaceRoleId);
+        UserSpaceRole userSpaceRole = jtrac.loadUserSpaceRole(id);
+        jtrac.removeUserSpaceAllocation(userSpaceRole);
+        SecurityUtils.refreshSecurityContextIfPrincipal(userSpaceRole.getUser());
         return success();
     }     
     

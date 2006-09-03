@@ -24,24 +24,26 @@ import org.acegisecurity.GrantedAuthority;
 
 /**
  * Class that exists purely to hold a "ternary" mapping of 
- * user <--> space <--> role.
+ * user <--> space <--> role and is also persisted
  * the JTrac authorization (access control) scheme works as follows:
  * if space is null, that means that this is a "global" JTrac role
  * if space is not null, this role applies for the user to that
  * space, and the getAuthority() method used by Acegi returns the 
  * role key appended with "_" + spacePrefixCode
  */
-public class SpaceRole implements GrantedAuthority, Serializable {
+public class UserSpaceRole implements GrantedAuthority, Serializable {
     
     private long id;
+    private User user;
     private Space space;
     private String roleKey;    
     
-    public SpaceRole() {
+    public UserSpaceRole() {
         // zero arg constructor
     }
     
-    public SpaceRole(Space space, String roleKey) {
+    public UserSpaceRole(User user, Space space, String roleKey) {
+        this.user = user;
         this.space = space;
         this.roleKey = roleKey;
     }
@@ -57,6 +59,14 @@ public class SpaceRole implements GrantedAuthority, Serializable {
     }
     
     //=============================================================      
+    
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
     
     public String getRoleKey() {
         return roleKey;
@@ -80,36 +90,27 @@ public class SpaceRole implements GrantedAuthority, Serializable {
 
     public void setId(long id) {
         this.id = id;
-    }
-    
-    @Override
-    public String toString() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("id [").append(id);
-        sb.append("]; space [").append(space);
-        sb.append("]; roleKey [").append(roleKey);
-        sb.append("]; authority [").append(getAuthority());
-        sb.append("]");
-        return sb.toString();
-    }
+    }    
     
     @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof SpaceRole)) {
+        if (!(o instanceof UserSpaceRole)) {
             return false;
         }
-        final SpaceRole sr = (SpaceRole) o;
-        return (space == sr.getSpace() || space.equals(sr.getSpace())
-            && roleKey.equals(sr.getRoleKey()));
+        final UserSpaceRole usr = (UserSpaceRole) o;
+        return (space == usr.getSpace() || space.equals(usr.getSpace())
+            && user.equals(usr.getUser())
+            && roleKey.equals(usr.getRoleKey()));
     }
     
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = hash * 31 + (space == null ? 0 : space.hashCode());
+        hash = hash * 31 + user.hashCode();
+        hash = hash * 31 + (space == null ? 0 : space.hashCode());        
         hash = hash * 31 + roleKey.hashCode();
         return hash;
     } 

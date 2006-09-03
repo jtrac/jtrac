@@ -18,7 +18,6 @@ package info.jtrac.web.tag;
 
 import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.User;
-import info.jtrac.domain.UserRole;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;

@@ -16,7 +16,6 @@
 
 package info.jtrac;
 
-import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Config;
 import info.jtrac.domain.Counts;
@@ -26,9 +25,8 @@ import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
-import info.jtrac.domain.SpaceRole;
 import info.jtrac.domain.User;
-import info.jtrac.domain.UserRole;
+import info.jtrac.domain.UserSpaceRole;
 
 import java.util.List;
 import java.util.Map;
@@ -60,18 +58,18 @@ public interface Jtrac extends UserDetailsService {
     User loadUser(long id);
     User loadUser(String loginName);
     List<User> findUsersForSpace(long spaceId);
-    List<UserRole> findUserRolesForSpace(long spaceId);
+    List<UserSpaceRole> findUserRolesForSpace(long spaceId);
     List<User> findUsersForUser(User user);
     List<User> findUnallocatedUsersForSpace(long spaceId);
     void storeUserSpaceAllocation(User user, Space space, String roleKey);
-    void removeUserSpaceAllocation(User user, SpaceRole spaceRole);
+    void removeUserSpaceAllocation(UserSpaceRole userSpaceRole);
     //========================================================
     Counts loadCountsForUser(User user);
     //========================================================
     void storeSpace(Space space);
     Space loadSpace(long id);
     Space loadSpace(String prefixCode);
-    SpaceRole loadSpaceRole(long id);
+    UserSpaceRole loadUserSpaceRole(long id);
     List<Space> findAllSpaces();
     List<Space> findUnallocatedSpacesForUser(long userId);
     //========================================================

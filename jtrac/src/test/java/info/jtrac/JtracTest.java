@@ -6,10 +6,9 @@ import info.jtrac.domain.Item;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
-import info.jtrac.domain.UserRole;
 import info.jtrac.domain.Counts;
-import info.jtrac.domain.SpaceRole;
 import info.jtrac.domain.State;
+import info.jtrac.domain.UserSpaceRole;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -106,7 +105,7 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         User user = new User();
         user.setLoginName("test");
         
-        user.addSpaceRole(space, "ROLE_TEST");
+        user.addSpaceWithRole(space, "ROLE_TEST");
         jtrac.storeUser(user);
         
         User u1 = jtrac.loadUser("test");
@@ -116,11 +115,11 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         assertEquals("ROLE_USER", gas[0].getAuthority());
         assertEquals("ROLE_TEST_SPACE", gas[1].getAuthority());
         
-        List<UserRole> userRoles = jtrac.findUserRolesForSpace(space.getId());
-        assertEquals(1, userRoles.size());
-        UserRole ur = userRoles.get(0);
-        assertEquals("test", ur.getUser().getLoginName());
-        assertEquals("ROLE_TEST", ur.getSpaceRole().getRoleKey());
+        List<UserSpaceRole> userSpaceRoles = jtrac.findUserRolesForSpace(space.getId());
+        assertEquals(1, userSpaceRoles.size());
+        UserSpaceRole usr = userSpaceRoles.get(0);
+        assertEquals("test", usr.getUser().getLoginName());
+        assertEquals("ROLE_TEST", usr.getRoleKey());
         
         List<User> users = jtrac.findUsersForUser(u1);
         assertEquals(1, users.size());
@@ -140,7 +139,7 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
     public void testStoreAndLoadUserWithAdminRole() {
         User user = new User();
         user.setLoginName("test");
-        user.addSpaceRole(null, "ROLE_ADMIN");
+        user.addSpaceWithRole(null, "ROLE_ADMIN");
         jtrac.storeUser(user);
         
         UserDetails ud = jtrac.loadUserByUsername("test");
@@ -173,7 +172,7 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         jtrac.storeSpace(s);
         User u = new User();
         u.setLoginName("test");
-        u.addSpaceRole(s, "DEFAULT");
+        u.addSpaceWithRole(s, "DEFAULT");
         jtrac.storeUser(u);
         Item i = new Item();
         i.setSpace(s);
@@ -207,12 +206,12 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         long spaceId = space.getId();
         User user = new User();
         user.setLoginName("test");
-        user.addSpaceRole(space, "ROLE_ADMIN");
+        user.addSpaceWithRole(space, "ROLE_ADMIN");
         jtrac.storeUser(user);
         long id = jdbcTemplate.queryForLong("select id from user_space_roles where space_id = " + spaceId);
-        SpaceRole sr = jtrac.loadSpaceRole(id);
-        assertEquals(spaceId, sr.getSpace().getId());                
-        jtrac.removeUserSpaceAllocation(user, sr);
+        UserSpaceRole usr = jtrac.loadUserSpaceRole(id);
+        assertEquals(spaceId, usr.getSpace().getId());                
+        jtrac.removeUserSpaceAllocation(usr);
         endTransaction();
         assertEquals(0, jdbcTemplate.queryForInt("select count(0) from user_space_roles where space_id = " + spaceId));        
     }
