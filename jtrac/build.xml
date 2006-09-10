@@ -9,8 +9,8 @@
     
     <property file="build.properties"/>
     <property file="build-deps.properties"/>	
-    <property name="war.name" value="jtrac"/>   	
-	
+    <property name="war.name" value="jtrac"/>	
+    
     <target name="clean">
         <delete includeemptydirs="true" failonerror="false">
             <fileset dir="target"/>
@@ -284,8 +284,8 @@
         </java>        
     </target>    
 	
-    <target name="jetty-start-debug" depends="war-exploded">
-        <jetty-start arg1="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n" arg2="-Xdebug"/>
+    <target name="jetty-start-debug" depends="jetty-setup, war-exploded">
+        <jetty-start arg1="-Xrunjdwp:transport=dt_shmem,address=jetty_jpda_address,server=y,suspend=n" arg2="-Xdebug"/>
     </target> 
        
     <!-- target for NetBeans Profiler on Windows -->
