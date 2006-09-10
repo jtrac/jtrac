@@ -110,7 +110,7 @@
             <para>
                 Please see the <link linkend="installation">installation</link> section of this documentation for 
                 more details.  JTrac uses <ulink url="http://www.hibernate.org">Hibernate</ulink> and so it can 
-                support any database.    
+                use any database <ulink url="http://www.hibernate.org/260.html">supported by Hibernate.</ulink>
             </para>                
         </sect1>            
         <sect1 id="features-customfields">
