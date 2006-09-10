@@ -50,16 +50,16 @@
                         </arity>
                     </context>
                 </action>
+                <action name="debug">
+                    <script>nbproject/ide-targets.xml</script>
+                    <target>debug-nb</target>
+                </action>
             </ide-actions>
             <view>
                 <items>
                     <source-folder style="tree">
-                        <label>webapp</label>
+                        <label>Web Pages</label>
                         <location>src/main/webapp</location>
-                    </source-folder>
-                    <source-folder style="tree">
-                        <label>resources</label>
-                        <location>src/main/resources</location>
                     </source-folder>
                     <source-folder style="packages">
                         <label>src/main/java</label>
@@ -73,7 +73,9 @@
                         <location>build.xml</location>
                     </source-file>
                 </items>
-                <context-menu/>
+                <context-menu>
+                    <ide-action name="debug"/>
+                </context-menu>
             </view>
             <subprojects/>
         </general-data>
@@ -96,6 +98,7 @@
             <web-module>
                 <doc-root>src/main/webapp</doc-root>
                 <classpath>target/classes;${test.jars}</classpath>
+                <context-path>/jtrac</context-path>
                 <j2ee-spec-level>1.4</j2ee-spec-level>
             </web-module>
         </web-data>

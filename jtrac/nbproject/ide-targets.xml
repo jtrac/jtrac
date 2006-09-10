@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="jtrac-IDE">
+    <property file="build-deps.properties"/>
+    <target if="netbeans.home" name="debug-nb">
+        <nbjpdaconnect address="jetty_jpda_address" host="localhost" name="jtrac-debug" transport="dt_shmem">
+            <classpath>
+                <path path="${test.jars}"/>
+                <path path="${jspc.classpath}"/>
+            </classpath>
+            <sourcepath>
+                <path path="src/main/java"/>
+                <path path="src/main/webapp"/>                
+            </sourcepath>
+        </nbjpdaconnect>
+        <antcall target="debug-display-browser"/>
+    </target>
+    <target name="debug-display-browser">
+        <nbbrowse url="http://localhost:8080/jtrac"/>
+    </target>
+</project>
