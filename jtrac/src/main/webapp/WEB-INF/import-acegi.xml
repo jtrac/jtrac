@@ -9,13 +9,13 @@
         <property name="filterInvocationDefinitionSource">
             <value>
                 PATTERN_TYPE_APACHE_ANT
-                /resources/*=httpSessionFilter
-                /calendar/**=httpSessionFilter
-                /chart/*=httpSessionFilter
-                /svn_*=httpSessionFilter                 
-                /login.htm*=httpSessionFilter
-                /logout.htm=httpSessionFilter       
-                /**=httpSessionFilter,authenticationFilter,rememberMeFilter,anonFilter,exceptionTranslationFilter,authorizationFilter
+                /resources/*=#NONE#
+                /calendar/**=#NONE#
+                /chart/*=#NONE#
+                /svn_*=#NONE#                 
+                /login.htm*=#NONE#
+                /logout.htm=#NONE#       
+                /**=httpSessionFilter,authenticationFilter,rememberMeFilter,jtracGuestFilter,exceptionTranslationFilter,authorizationFilter
             </value>
         </property>
     </bean>    
@@ -26,13 +26,11 @@
                 <bean class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
                     <property name="userDetailsService" ref="jtrac"/>
                     <property name="passwordEncoder" ref="passwordEncoder"/>
-                </bean> 
-                <bean class="org.acegisecurity.providers.anonymous.AnonymousAuthenticationProvider">
-                    <property name="key" value="jtrac-anon"/>
                 </bean>
                 <bean class="org.acegisecurity.providers.rememberme.RememberMeAuthenticationProvider">
                     <property name="key" value="jtrac-reme"/>
-                </bean>        
+                </bean>
+                <bean class="info.jtrac.acegi.GuestAuthenticationProvider"/>
             </list>
         </property>
     </bean>
@@ -61,7 +59,12 @@
     <bean id="rememberMeServices" class="org.acegisecurity.ui.rememberme.TokenBasedRememberMeServices">
         <property name="userDetailsService" ref="jtrac"/>
         <property name="key" value="jtrac-reme"/>
-    </bean>      
+    </bean>
+    
+    <!-- our custom "guest" processing filter used instead of an anonymous processing filter -->
+    <bean id="jtracGuestFilter" class="info.jtrac.acegi.GuestProcessingFilter">        
+        <property name="jtrac" ref="jtrac"/>
+    </bean>    
            
 </beans>
 

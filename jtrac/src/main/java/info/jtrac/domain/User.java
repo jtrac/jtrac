@@ -65,7 +65,8 @@ public class User implements UserDetails, Serializable {
     private List<String> getRoleKeys(Space space) {
         List<String> roleKeys = new ArrayList<String>();
         for(UserSpaceRole usr : userSpaceRoles) {
-            if (usr.getSpace() != null && usr.getSpace().equals(space)) {
+            Space s = usr.getSpace();
+            if (s == space || ( s != null && s.equals(space))) {
                 roleKeys.add(usr.getRoleKey());
             }
         }
@@ -92,6 +93,10 @@ public class User implements UserDetails, Serializable {
     
     public int getSpaceCount() {
         return getSpaces().size();
+    }
+    
+    public boolean isAdminForAllSpaces() {
+        return getRoleKeys(null).contains("ROLE_ADMIN");
     }
     
     //============ ACEGI UserDetails implementation ===============

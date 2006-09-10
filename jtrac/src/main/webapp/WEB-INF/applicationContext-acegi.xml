@@ -12,12 +12,7 @@
     <bean id="loggerListener" class="org.acegisecurity.event.authentication.LoggerListener"/>    
     
     <!-- has to be first in the filter chain, this injects the security / session context for all the rest -->
-    <bean id="httpSessionFilter" class="org.acegisecurity.context.HttpSessionContextIntegrationFilter"/>      
-    
-    <bean id="anonFilter" class="org.acegisecurity.providers.anonymous.AnonymousProcessingFilter">
-        <property name="key" value="jtrac-anon"/>
-        <property name="userAttribute" value="anonymousUser,ROLE_ANONYMOUS"/>
-    </bean> 
+    <bean id="httpSessionFilter" class="org.acegisecurity.context.HttpSessionContextIntegrationFilter"/>    
     
     <bean name="authorizationFilter" class="org.acegisecurity.intercept.web.FilterSecurityInterceptor">
         <property name="authenticationManager" ref="authenticationManager"/>
@@ -33,11 +28,11 @@
         </property>     
         <property name="objectDefinitionSource">
             <value>
-                PATTERN_TYPE_APACHE_ANT
-                /**=ROLE_USER
+                PATTERN_TYPE_APACHE_ANT                
+                /**=ROLE_USER,ROLE_GUEST
             </value>
         </property>
-    </bean>  
+    </bean>     
            
 </beans>
 

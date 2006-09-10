@@ -33,7 +33,6 @@ function setDeallocate(userSpaceRoleId) {
                     onClick="setDeallocate('${userSpaceRole.id}')"/>
             </td>
         </tr>
-
     </c:forEach>
     
 </table>
@@ -64,8 +63,10 @@ function setDeallocate(userSpaceRoleId) {
                 </c:forEach>
             </select>
             <input type="submit" name="_eventId_allocate" value="Allocate"/>
+            <%-- switch on in future version
             <input type="checkbox" name="admin" value="true"/>
-            Also add as Admin for this space.            
+            Also add as Admin for this space.
+            --%>
         </td>        
     </tr>
 

@@ -43,7 +43,8 @@
                     </td>
                 </tr> 
                 <tr>
-                    <td colspan="3" align="right">
+                    <td><a href="<c:url value='/'/>">Guest Access</a></td>
+                    <td colspan="2" align="right">
                         remember me
                         <input type="checkbox" name="_acegi_security_remember_me"/>
                     </td>

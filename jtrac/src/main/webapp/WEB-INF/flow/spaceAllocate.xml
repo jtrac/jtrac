@@ -17,7 +17,7 @@
         </transition>
         <transition on="deallocate" to="spaceAllocate">
             <action bean="spaceFormAction" method="spaceDeallocateHandler"/>
-        </transition>        
+        </transition>     
         <transition on="cancel" to="spaceListView"/>
         <transition on="userCreate" to="userForm"/>
     </view-state>   

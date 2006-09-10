@@ -61,6 +61,7 @@ public class SpaceFormAction extends AbstractFormAction {
             Space clone = new Space();
             clone.setId(space.getId());
             clone.setPrefixCode(space.getPrefixCode() + "");
+            clone.setGuestAllowed(space.isGuestAllowed());
             clone.setDescription(space.getDescription() == null ? null : space.getDescription() + "");
             clone.setSpaceSequence(space.getSpaceSequence()); // or else Hibernate orphans the old one
             Metadata m = new Metadata();
@@ -75,27 +76,21 @@ public class SpaceFormAction extends AbstractFormAction {
         }
     }    
     
-    public Event spaceFormHandler(RequestContext context) throws Exception {
-        // have to manually bind.  First get space from scope
-        Space space = (Space) context.getFlowScope().get("space");
-        Errors errors = getFormErrors(context);
-        // manual binding
-        String prefixCode = ValidationUtils.getParameter(context, "prefixCode");
-        space.setPrefixCode(prefixCode);
-        String description = ValidationUtils.getParameter(context, "description");
-        space.setDescription(description);
-        if (prefixCode == null) {
+    public Event spaceFormHandler(RequestContext context) throws Exception {        
+        Space space = (Space) getFormObject(context);        
+        Errors errors = getFormErrors(context);               
+        if (space.getPrefixCode() == null) {
             errors.rejectValue("prefixCode", ValidationUtils.ERROR_EMPTY_CODE, ValidationUtils.ERROR_EMPTY_MSG);
         } else {
-            if (prefixCode.length() < 3) {
+            if (space.getPrefixCode().length() < 3) {
                 errors.rejectValue("prefixCode", "error.space.prefixCode.tooshort",
                         "Length should be at least 3 characters.");
             }
-            if (prefixCode.length() > 10) {
+            if (space.getPrefixCode().length() > 10) {
                 errors.rejectValue("prefixCode", "error.space.prefixCode.toolong",
                         "Length should be less than 10 characters.");
             }            
-            if (!ValidationUtils.isAllUpperCase(prefixCode)) {
+            if (!ValidationUtils.isAllUpperCase(space.getPrefixCode())) {
                 errors.rejectValue("prefixCode", "error.space.prefixCode.badchars",
                         "Only capital letters and numeric characters allowed.");
             }
@@ -326,6 +321,6 @@ public class SpaceFormAction extends AbstractFormAction {
         jtrac.removeUserSpaceAllocation(userSpaceRole);
         SecurityUtils.refreshSecurityContextIfPrincipal(userSpaceRole.getUser());
         return success();
-    }     
+    }   
     
 }

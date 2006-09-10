@@ -216,4 +216,12 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         assertEquals(0, jdbcTemplate.queryForInt("select count(0) from user_space_roles where space_id = " + spaceId));        
     }
     
+    public void testFindSpacesWhereGuestAllowed() {
+        Space space = new Space();
+        space.setPrefixCode("TEST");
+        space.setGuestAllowed(true);
+        jtrac.storeSpace(space);
+        assertEquals(1, jtrac.findSpacesWhereGuestAllowed().size());
+    }
+    
 }

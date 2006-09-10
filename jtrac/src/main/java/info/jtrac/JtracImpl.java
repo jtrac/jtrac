@@ -379,6 +379,10 @@ public class JtracImpl implements Jtrac {
         return dao.findAllSpaces();
     }
     
+    public List<Space> findSpacesWhereGuestAllowed() {
+        return dao.findSpacesWhereGuestAllowed();
+    }
+    
     public List<Space> findUnallocatedSpacesForUser(long userId) {
         List<Space> spaces = findAllSpaces();
         User user = loadUser(userId);

@@ -30,6 +30,16 @@
                     <span class="error">${status.errorMessage}</span>
                 </td>
             </spring:bind>
+        </tr>
+        <tr>
+            <td class="label"/>
+            <spring:bind path="space.guestAllowed">
+                <td>
+                    <input type="checkbox" name="${status.expression}" value="true" <c:if test="${status.value}">checked="true"</c:if>/>                
+                    Allow Guest (read only) access
+                    <input type="hidden" name="_${status.expression}"/>                    
+                </td>
+            </spring:bind>
         </tr>   
         <tr>
             <td/>

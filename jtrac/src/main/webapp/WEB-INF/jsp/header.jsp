@@ -3,7 +3,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="authz" uri="http://acegisecurity.org/authz" %>
 <%@ taglib prefix="jtrac" uri="/WEB-INF/tld/jtrac.tld" %>
-<c:set var="principal" value="${ACEGI_SECURITY_CONTEXT.authentication.principal}"/>
 
 <html>
 <head>
@@ -37,8 +36,15 @@
 <td align="right">
     <table class="nav-table">
         <tr>								
-            <td><a href="<c:url value='options.htm'/>">OPTIONS</a></td>
-            <td><a href="<c:url value='logout.htm'/>">LOGOUT</a></td>		
+            <c:choose>
+                <c:when test="${empty principal || principal.loginName == 'guest'}">
+                    <td><a href="<c:url value='login.htm'/>">LOGIN</a></td>
+                </c:when>
+                <c:otherwise>
+                    <td><a href="<c:url value='options.htm'/>">OPTIONS</a></td>
+                    <td><a href="<c:url value='logout.htm'/>">LOGOUT</a></td>
+                </c:otherwise>
+            </c:choose>
             <td>${principal.name}</td>
         </tr>
     </table>

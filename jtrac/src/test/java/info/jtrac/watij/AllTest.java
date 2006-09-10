@@ -14,7 +14,7 @@ public class AllTest extends WatijTestCase {
     }        
     
     public void testGetLoginPage() throws Exception {
-        ie.start("http://localhost:8080/jtrac");
+        ie.start("http://localhost:8080/jtrac/login.htm");
         assertTrue(ie.containsText("JTrac"));
     }
     
@@ -47,7 +47,7 @@ public class AllTest extends WatijTestCase {
         assertTrue(ie.containsText("Users allocated to Space"));
         
         ie.button("Allocate").click();
-        assertTrue(ie.containsText("Admin User"));  
+        assertTrue(ie.containsText("Admin"));  
            
     }
     
@@ -61,7 +61,7 @@ public class AllTest extends WatijTestCase {
         
         ie.textField(name, "summary").set("Test Summary");
         ie.textField(name, "detail").set("Test Detail");
-        ie.selectList(name, "assignedTo").option(text, "Admin User").select();
+        ie.selectList(name, "assignedTo").option(text, "Admin").select();
         ie.button("Submit").click();
         assertTrue(ie.containsText("TEST-1"));
     }

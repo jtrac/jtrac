@@ -146,6 +146,10 @@ public class HibernateJtracDao
         return getHibernateTemplate().find("from Space space order by space.prefixCode");
     }
     
+    public List<Space> findSpacesWhereGuestAllowed() {
+        return getHibernateTemplate().find("from Space space where space.guestAllowed = true");
+    }
+    
     public void storeUser(User user) {
         getHibernateTemplate().merge(user);
     }
@@ -250,26 +254,6 @@ public class HibernateJtracDao
     public Config loadConfig(String param) {
         return (Config) getHibernateTemplate().get(Config.class, param);
     }
-    
-    public void createSchema() {
-        try {
-            getHibernateTemplate().find("from Item item where item.id = 1");
-        } catch (BadSqlGrammarException e) {
-            logger.warn("database schema not found, proceeding to create");
-            schemaHelper.createSchema();
-            User user = new User();
-            user.setLoginName("admin");
-            user.setName("Admin User");
-            user.setEmail("jtrac.admin");
-            user.setPassword("21232f297a57a5a743894a0e4a801fc3");
-            user.addSpaceWithRole(null, "ROLE_ADMIN");
-            logger.info("inserting default admin user into database");
-            storeUser(user);
-            logger.info("schema creation complete");
-            return;
-        }
-        logger.info("database schema exists, normal startup");
-    }
 
     public int findItemCount(Space space, Field field) {
         Criteria criteria = getSession().createCriteria(Item.class);
@@ -308,5 +292,27 @@ public class HibernateJtracDao
         logger.info("no of History rows where " + field.getName() + " value '" + optionKey + "' replaced with null = " + historyCount);
         return itemCount;        
     }
+    
+    //==========================================================================
+    
+    public void createSchema() {
+        try {
+            getHibernateTemplate().find("from Item item where item.id = 1");
+        } catch (BadSqlGrammarException e) {
+            logger.warn("database schema not found, proceeding to create");
+            schemaHelper.createSchema();
+            User admin = new User();
+            admin.setLoginName("admin");
+            admin.setName("Admin");
+            admin.setEmail("admin");
+            admin.setPassword("21232f297a57a5a743894a0e4a801fc3");
+            admin.addSpaceWithRole(null, "ROLE_ADMIN");
+            logger.info("inserting default admin user into database");
+            storeUser(admin);
+            logger.info("schema creation complete");
+            return;
+        }
+        logger.info("database schema exists, normal startup");
+    }    
     
 }

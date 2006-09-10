@@ -58,9 +58,9 @@ public interface JtracDao {
     //===========================================
     void storeSpace(Space space);
     Space loadSpace(long id);
-    UserSpaceRole loadUserSpaceRole(long id);
     List<Space> findSpacesByPrefixCode(String prefixCode);
     List<Space> findAllSpaces();
+    List<Space> findSpacesWhereGuestAllowed();
     //===========================================
     void storeSpaceSequence(SpaceSequence spaceSequence);
     SpaceSequence loadSpaceSequence(long id);
@@ -74,6 +74,7 @@ public interface JtracDao {
     List<UserSpaceRole> findUserRolesForSpace(long spaceId);
     List<User> findUsersForSpaceSet(Collection<Space> spaces);
     //===========================================
+    UserSpaceRole loadUserSpaceRole(long id);
     void removeUserSpaceRole(UserSpaceRole userSpaceRole);
     //===========================================
     Counts loadCountsForUser(User user);

@@ -71,6 +71,7 @@ public interface Jtrac extends UserDetailsService {
     Space loadSpace(String prefixCode);
     UserSpaceRole loadUserSpaceRole(long id);
     List<Space> findAllSpaces();
+    List<Space> findSpacesWhereGuestAllowed();
     List<Space> findUnallocatedSpacesForUser(long userId);
     //========================================================
     void storeMetadata(Metadata metadata);

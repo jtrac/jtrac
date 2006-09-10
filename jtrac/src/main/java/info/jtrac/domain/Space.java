@@ -36,6 +36,7 @@ public class Space implements Serializable {
     private Integer type;
     private String prefixCode;
     private String description;
+    private boolean guestAllowed;
     private SpaceSequence spaceSequence = new SpaceSequence();
     private Metadata metadata = new Metadata();    
     
@@ -89,6 +90,14 @@ public class Space implements Serializable {
         this.type = type;
     }        
     
+    public boolean isGuestAllowed() {
+        return guestAllowed;
+    }
+
+    public void setGuestAllowed(boolean guestAllowed) {
+        this.guestAllowed = guestAllowed;
+    }    
+    
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
@@ -113,6 +122,6 @@ public class Space implements Serializable {
     @Override
     public int hashCode() {
         return prefixCode.hashCode();
-    }    
+    }
     
 }

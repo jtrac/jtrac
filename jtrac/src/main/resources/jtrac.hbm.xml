@@ -144,6 +144,7 @@
         <property name="type" column="type"/>
         <property name="prefixCode" column="prefix_code" unique="true"/>         
         <property name="description" column="description" type="text"/>
+        <property name="guestAllowed" column="guest_allowed"/>
         <one-to-one name="spaceSequence" cascade="all"/>
         <many-to-one name="metadata" column="metadata_id" cascade="all"/>       
     </class>

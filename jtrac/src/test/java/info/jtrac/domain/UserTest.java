@@ -39,4 +39,11 @@ public class UserTest extends TestCase {
      
     }
     
+    public void testCheckIfAdminForAllSpaces() {
+        User u = new User();
+        u.setLoginName("test");
+        u.addSpaceWithRole(null, "ROLE_ADMIN");
+        assertTrue(u.isAdminForAllSpaces());
+    }
+    
 }

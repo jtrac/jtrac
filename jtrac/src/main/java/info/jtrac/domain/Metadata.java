@@ -345,7 +345,7 @@ public class Metadata implements Serializable {
     public List<Field> getEditableFields(Collection<String> roleKeys, Collection<Integer> ss) {
         Set<Field> fs = new HashSet<Field>();     
         for(String roleKey : roleKeys) {
-            if (roleKey.equals("ROLE_ADMIN")) {
+            if (roleKey.equals("ROLE_ADMIN") || roleKey.equals("ROLE_GUEST")) {
                 continue;
             }
             for(Integer status : ss) {

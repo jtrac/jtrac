@@ -5,6 +5,15 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
     version="2.4">
 
+    <!--
+      - Key of the system property that should specify the root directory of this
+      - web app. Applied by WebAppRootListener or Log4jConfigListener.
+      -->
+    <context-param>
+        <param-name>webAppRootKey</param-name>
+        <param-value>jtrac.root</param-value>
+    </context-param> 
+
     <!-- Spring context config location(s) -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
@@ -31,15 +40,15 @@
     </filter>
     
     <filter>
-        <filter-name>encodingFilter</filter-name>	
-        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>	
-        <init-param>	
-            <param-name>encoding</param-name>	
-            <param-value>UTF-8</param-value>	
-        </init-param>	
-        <init-param>	
-            <param-name>forceEncoding</param-name>	
-            <param-value>true</param-value>	
+        <filter-name>encodingFilter</filter-name>   
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class> 
+        <init-param>    
+            <param-name>encoding</param-name>   
+            <param-value>UTF-8</param-value>    
+        </init-param>   
+        <init-param>    
+            <param-name>forceEncoding</param-name>  
+            <param-value>true</param-value> 
         </init-param>
     </filter>    
 
@@ -112,6 +121,6 @@
     <error-page>
         <exception-type>java.lang.Exception</exception-type>
         <location>/WEB-INF/jsp/exception.jsp</location>
-    </error-page> 
+    </error-page>   
     
 </web-app>
