@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir=".." name="jtrac-IDE">
     <property file="build-deps.properties"/>
+    
+    <path id="jetty-classpath">
+        <fileset dir="target/jetty/lib">
+            <include name="standard*.jar"/>
+        </fileset>
+    </path>
+    
     <target if="netbeans.home" name="debug-nb">
-        <nbjpdaconnect address="jetty_jpda_address" host="localhost" name="jtrac-debug" transport="dt_shmem">
+        <nbjpdaconnect address="jtrac_jpda_address" host="localhost" name="jtrac-debug" transport="dt_shmem">
             <classpath>
-                <path path="${test.jars}"/>
-                <path path="${jspc.classpath}"/>
-            </classpath>
+                <path path=""/>   	
+            </classpath>           
             <sourcepath>
-                <path path="src/main/java"/>
                 <path path="src/main/webapp"/>                
             </sourcepath>
         </nbjpdaconnect>

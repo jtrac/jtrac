@@ -40,8 +40,8 @@
         <war-exploded/>
     </target> 
     
-    <target name="war-exploded-alt" depends="compile">
-        <war-exploded deployDir="${deploy.dir}"/>
+    <target name="war-exploded-tomcat" depends="compile">
+        <war-exploded deployDir="${tomcat.home}/webapps/${war.name}"/>
     </target>     
     
     <macrodef name="war-exploded">
@@ -285,7 +285,7 @@
     </target>    
 	
     <target name="jetty-start-debug" depends="jetty-setup, war-exploded">
-        <jetty-start arg1="-Xrunjdwp:transport=dt_shmem,address=jetty_jpda_address,server=y,suspend=n" arg2="-Xdebug"/>
+        <jetty-start arg1="-Xrunjdwp:transport=dt_shmem,address=jtrac_jpda_address,server=y,suspend=n" arg2="-Xdebug"/>
     </target> 
        
     <!-- target for NetBeans Profiler on Windows -->
@@ -310,6 +310,51 @@
                 <jvmarg value="@{arg2}"/>
             </java>            
         </sequential>        
-    </macrodef>
+    </macrodef>    
+    
+    <!-- ====================== TOMCAT TASKS ========================= -->
+    
+    <target name="tomcat-clean">   
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="${tomcat.home}/work/Catalina/localhost/${war.name}"/>
+            <fileset dir="${tomcat.home}/webapps/${war.name}"/>                            
+        </delete>     
+    </target>
+    
+    <target name="tomcat-clean-all">
+        <input message="All tomcat webapps [${tomcat.home}/webapps] will be deleted.  Are you sure?"
+            validargs="y,n" addproperty="do.clean"/>
+        <condition property="do.abort">
+            <equals arg1="n" arg2="${do.clean}"/>
+        </condition>
+        <fail if="do.abort">aborted by user.</fail>        
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="${tomcat.home}/work"/>
+            <fileset dir="${tomcat.home}/webapps">
+                <exclude name="ROOT/**"/>
+            </fileset>
+        </delete>   
+    </target>
+    
+    <target name="tomcat-reload" depends="war-exploded-tomcat">
+        <touch file="${tomcat.home}/webapps/${war.name}/WEB-INF/web.xml"/>
+    </target>
+    
+    <target name="tomcat-start-debug" depends="war-exploded-tomcat">
+        <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">            
+            <jvmarg value="-Dcatalina.home=${tomcat.home}"/>
+            <jvmarg value="-Xdebug"/>
+            <jvmarg value="-Xrunjdwp:transport=dt_shmem,address=jtrac_jpda_address,server=y,suspend=n"/>
+            <jvmarg value="-Dfile.encoding=UTF-8"/>
+            <jvmarg value="-Djtrac.home=${basedir}/home"/>           
+        </java>
+    </target>
+    
+    <target name="tomcat-stop">
+        <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
+            <jvmarg value="-Dcatalina.home=${tomcat.home}"/>
+            <arg value="stop"/>
+        </java>
+    </target>    
               
 </project>
