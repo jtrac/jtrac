@@ -274,11 +274,15 @@ public class AntPropsMojo extends AbstractMojo {
 	 * load properties from file
 	 */
 	private Properties loadProperties() throws Exception {
+		File file = new File("build.properties");
+		Properties props = new Properties();
+		if (!file.exists()) {
+			getLog().warn("build.properties does not exist");
+			return props;
+		}
 		InputStream is = null;
-		Properties props = null;
 		try {
-			is = new FileInputStream("build.properties");
-			props = new Properties();
+			is = new FileInputStream("build.properties");			
 			props.load(is);
 		} finally {
 			is.close();
