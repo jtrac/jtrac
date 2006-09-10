@@ -104,6 +104,10 @@ public class Field implements Serializable {
             return type;
         }        
         
+        public String getText() {
+            return text;
+        }
+        
         public String getDescription() {
             switch (type) {
                 case 1: return "Severity (Drop Down)";

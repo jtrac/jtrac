@@ -254,8 +254,12 @@ public class ItemSearch implements Serializable {
     public ItemSearch(User user) {
         this.user = user;
         fields = new ArrayList<Field>();
-        fields.add(new Field(Field.Name.SEVERITY));
-        fields.add(new Field(Field.Name.PRIORITY));
+        Field severity = new Field(Field.Name.SEVERITY);
+        severity.initOptions();
+        fields.add(severity);
+        Field priority = new Field(Field.Name.PRIORITY);
+        priority.initOptions();
+        fields.add(priority);
         this.sortDescending = true;
     }
     
@@ -300,11 +304,13 @@ public class ItemSearch implements Serializable {
     
     public Map<String, String> getSeverityOptions() {
         Field f = new Field(Field.Name.SEVERITY);
+        f.initOptions();
         return f.getOptions();
     }
     
     public Map<String, String> getPriorityOptions() {
         Field f = new Field(Field.Name.PRIORITY);
+        f.initOptions();
         return f.getOptions();
     }
     
