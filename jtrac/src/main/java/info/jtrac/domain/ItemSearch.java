@@ -273,7 +273,7 @@ public class ItemSearch implements Serializable {
         if (s == null) {
             return null;
         }
-        Map map = new HashMap(s.size());
+        Map<String, Boolean> map = new HashMap<String, Boolean>(s.size());
         for (Object o : s) {
             // ugly toString hack to make JSTL / EL get map value by key easier
             map.put(o.toString(), new Boolean(true));
@@ -282,7 +282,7 @@ public class ItemSearch implements Serializable {
     }
     
     public Map getSearchMap() {
-        Map map = new HashMap();
+        Map<String, Map> map = new HashMap<String, Map>();
         map.put("spaceSet", setToMap(spaceSet));
         map.put("statusSet", setToMap(statusSet));
         map.put("severitySet", setToMap(severitySet));
@@ -322,7 +322,7 @@ public class ItemSearch implements Serializable {
             return map;
         }
         // is mutable so caution
-        Map<Integer, String> temp = new HashMap(space.getMetadata().getStates());
+        Map<Integer, String> temp = new HashMap<Integer, String>(space.getMetadata().getStates());
         temp.remove(State.NEW);
         return temp;
     }

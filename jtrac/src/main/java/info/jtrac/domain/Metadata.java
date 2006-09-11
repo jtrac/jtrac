@@ -250,7 +250,7 @@ public class Metadata implements Serializable {
     
     public List<Field> getFieldList() {
         Map<Field.Name, Field> map = getFields();
-        List<Field> list = new ArrayList(fields.size());
+        List<Field> list = new ArrayList<Field>(fields.size());
         for (Field.Name fieldName : getFieldOrder()) {
             list.add(fields.get(fieldName));
         }

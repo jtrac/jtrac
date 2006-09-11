@@ -98,7 +98,7 @@ public class ItemSearchFormAction extends AbstractFormAction {
                 itemSearch.setStatusSet(Collections.singleton(new Integer(State.OPEN)));
             } else {
                 // is mutable so caution
-                Set<Integer> temp = new HashSet(space.getMetadata().getStates().keySet());
+                Set<Integer> temp = new HashSet<Integer>(space.getMetadata().getStates().keySet());
                 temp.remove(State.NEW);
                 temp.remove(State.CLOSED);
                 itemSearch.setStatusSet(temp);                
