@@ -33,6 +33,7 @@ import java.util.Map;
 public class Space implements Serializable {
     
     private long id;
+    private int version;
     private Integer type;
     private String prefixCode;
     private String description;
@@ -41,6 +42,14 @@ public class Space implements Serializable {
     private Metadata metadata = new Metadata();    
     
     //=======================================================
+    
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }     
     
     public SpaceSequence getSpaceSequence() {
         return spaceSequence;

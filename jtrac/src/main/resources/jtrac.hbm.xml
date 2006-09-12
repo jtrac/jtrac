@@ -9,6 +9,7 @@
         <id name="id" column="id">
             <generator class="native"/>
         </id>
+        <version name="version" column="version"/>
         <property name="type" column="type"/>
         <many-to-one name="parent" column="parent_id"/>
         <many-to-one name="space" column="space_id" not-null="true" index="space_id_idx"/>
@@ -73,7 +74,8 @@
     <class name="History" table="history">
         <id name="id" column="id">
             <generator class="native"/>
-        </id>        
+        </id>
+        <version name="version" column="version"/>
         <many-to-one name="parent" column="item_id" not-null="true"/>
         <property name="actualEffort" column="actual_effort"/>
         <many-to-one name="attachment" column="attachment_id"/>
@@ -141,6 +143,7 @@
         <id name="id" column="id">
             <generator class="native"/>
         </id>
+        <version name="version" column="version"/>
         <property name="type" column="type"/>
         <property name="prefixCode" column="prefix_code" unique="true"/>         
         <property name="description" column="description" type="text"/>
@@ -160,6 +163,7 @@
         <id name="id" column="id">
             <generator class="native"/>
         </id>
+        <version name="version" column="version"/>
         <property name="type" column="type"/>         
         <property name="name" column="name"/>
         <property name="description" column="description" type="text"/>

@@ -31,6 +31,7 @@ import org.springmodules.lucene.index.core.DocumentCreator;
 public abstract class AbstractItem implements Serializable, DocumentCreator {    
 
     private long id;
+    private int version;
     private Item parent; // slightly different meaning for Item and History
     private String summary;
     private String detail;
@@ -357,6 +358,14 @@ public abstract class AbstractItem implements Serializable, DocumentCreator {
     public void setId(long id) {
         this.id = id;
     }
+    
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }    
 
     public Item getParent() {
         return parent;

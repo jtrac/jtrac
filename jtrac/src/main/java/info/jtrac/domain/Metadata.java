@@ -68,6 +68,7 @@ import org.dom4j.Element;
 public class Metadata implements Serializable {    
     
     private long id;
+    private int version;
     private Integer type;
     private String name;
     private String description;
@@ -370,6 +371,14 @@ public class Metadata implements Serializable {
     }
     
     //==================================================================
+    
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }    
     
     public String getName() {
         return name;
