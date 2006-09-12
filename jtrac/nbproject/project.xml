@@ -10,11 +10,6 @@
             </properties>
             <folders>
                 <source-folder>
-                    <label>webapp</label>
-                    <type>doc_root</type>
-                    <location>src/main/webapp</location>
-                </source-folder>
-                <source-folder>
                     <label>src/main/java</label>
                     <type>java</type>
                     <location>src/main/java</location>
@@ -23,6 +18,11 @@
                     <label>src/test/java</label>
                     <type>java</type>
                     <location>src/test/java</location>
+                </source-folder>
+                <source-folder>
+                    <label>webapp</label>
+                    <type>doc_root</type>
+                    <location>src/main/webapp</location>
                 </source-folder>
             </folders>
             <ide-actions>
@@ -51,28 +51,50 @@
                     </context>
                 </action>
                 <action name="deploy">
-                    <script>build.xml</script>
-                    <target>war-exploded</target>
+                    <target>jetty-start-debug</target>
                 </action>
-                <action name="start">
-                    <script>build.xml</script>
-                    <target>jetty-start</target>
+                <action name="run">
+                    <target>jetty-start-debug</target>
                 </action>
                 <action name="stop">
-                    <script>build.xml</script>
                     <target>jetty-stop</target>
-                </action>                 
+                </action>
                 <action name="debug">
                     <script>nbproject/ide-targets.xml</script>
                     <target>debug-nb</target>
-                </action>              
+                </action>
+                <action name="build">
+                    <target>war-exploded</target>
+                </action>
+                <action name="rebuild">
+                    <target>clean</target>
+                    <target>war-exploded</target>
+                </action>
+                <action name="clean">
+                    <target>clean</target>
+                </action>
+                <action name="javadoc">
+                    <target>javadoc</target>
+                </action>
+                <action name="test">
+                    <target>test-coverage</target>
+                </action>
+                <action name="redeploy">
+                    <target>jetty-restart</target>
+                </action>
             </ide-actions>
+            <export>
+                <type>folder</type>
+                <location>target/classes</location>
+                <build-target>war-exploded</build-target>
+            </export>
+            <export>
+                <type>folder</type>
+                <location>target/test-classes</location>
+                <build-target>war-exploded</build-target>
+            </export>
             <view>
                 <items>
-                    <source-folder style="tree">
-                        <label>Web Pages</label>
-                        <location>src/main/webapp</location>
-                    </source-folder>
                     <source-folder style="packages">
                         <label>src/main/java</label>
                         <location>src/main/java</location>
@@ -81,15 +103,18 @@
                         <label>src/test/java</label>
                         <location>src/test/java</location>
                     </source-folder>
+                    <source-folder style="tree">
+                        <label>Web Pages</label>
+                        <location>src/main/webapp</location>
+                    </source-folder>
                     <source-file>
                         <location>build.xml</location>
                     </source-file>
-                </items>               
+                </items>
                 <context-menu>
-                    <ide-action name="deploy"/>
-                    <ide-action name="start"/>
+                    <ide-action name="run"/>
                     <ide-action name="stop"/>
-                    <ide-action name="debug"/>                    
+                    <ide-action name="redeploy"/>
                 </context-menu>
             </view>
             <subprojects/>
@@ -114,7 +139,7 @@
                 <doc-root>src/main/webapp</doc-root>
                 <classpath>target/classes;${test.jars}</classpath>
                 <context-path>/jtrac</context-path>
-                <j2ee-spec-level>1.4</j2ee-spec-level>
+                <j2ee-spec-level>1.5</j2ee-spec-level>
             </web-module>
         </web-data>
     </configuration>
