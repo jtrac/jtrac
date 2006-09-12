@@ -273,12 +273,18 @@
         <mkdir dir="target/jetty/logs"/>
         <mkdir dir="target/jetty/work"/>     
     </target>
+   
+    <target name="jetty-status">
+        <condition property="jetty.running">
+            <socket server="localhost" port="8080"/>
+        </condition>        
+    </target>
     
     <target name="jetty-start" depends="jetty-setup, war-exploded">        
         <jetty-start/>
     </target>    
    
-    <target name="jetty-stop" if="jetty.running">
+    <target name="jetty-stop" depends="jetty-status" if="jetty.running">
         <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
             <jvmarg value="-DSTOP.PORT=8079"/>
             <jvmarg value="-DSTOP.KEY=jtrac"/>
@@ -305,9 +311,6 @@
         <attribute name="arg1" default=""/>
         <attribute name="arg2" default=""/>
         <sequential>
-            <condition property="jetty.running">
-                <socket server="localhost" port="8080"/>
-            </condition>
             <antcall target="jetty-stop"/>
             <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
                 <jvmarg value="-Dfile.encoding=UTF-8"/>

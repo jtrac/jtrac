@@ -55,13 +55,10 @@
                         </arity>
                     </context>
                 </action>
-                <action name="deploy">
-                    <target>jetty-start-debug</target>
-                </action>
                 <action name="run">
                     <target>jetty-start-debug</target>
                 </action>
-                <action name="stop">
+                <action name="Stop-Jetty">
                     <target>jetty-stop</target>
                 </action>
                 <action name="debug">
@@ -78,6 +75,9 @@
                 <action name="clean">
                     <target>clean</target>
                 </action>
+                <action name="Clean-Database">
+                    <target>clean-db</target>
+                </action>                
                 <action name="javadoc">
                     <target>javadoc</target>
                 </action>
@@ -85,7 +85,7 @@
                     <target>test-coverage</target>
                 </action>
                 <action name="redeploy">
-                    <target>jetty-restart</target>
+                    <target>jetty-start-debug</target>
                 </action>
             </ide-actions>
             <export>
@@ -121,9 +121,8 @@
                     </source-file>
                 </items>
                 <context-menu>
-                    <ide-action name="run"/>
-                    <ide-action name="stop"/>
-                    <ide-action name="redeploy"/>
+                    <ide-action name="Stop-Jetty"/>
+                    <ide-action name="Clean-Database"/>
                 </context-menu>
             </view>
             <subprojects/>
