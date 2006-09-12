@@ -4,7 +4,7 @@
 <html>
     <head>
         <title>JTrac Login</title>
-        <link href="resources/jtrac.css" rel="stylesheet" type="text/css"/>
+        <link href="<c:url value='/resources/jtrac.css'/>" rel="stylesheet" type="text/css"/>
         <script>
             <!--
             function setFocus() {
@@ -25,7 +25,7 @@
 		
         <br/>
             
-        <form name="login_form" method="post" action="<c:url value='j_acegi_security_check'/>">
+        <form name="login_form" method="post" action="<c:url value='/app/j_acegi_security_check'/>">
             <table class="jtrac">
                 <tr>
                     <td class="label">Login name / email ID</td>

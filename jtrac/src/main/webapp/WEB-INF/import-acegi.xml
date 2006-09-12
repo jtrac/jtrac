@@ -8,14 +8,9 @@
     <bean id="filterChainProxy" class="org.acegisecurity.util.FilterChainProxy">
         <property name="filterInvocationDefinitionSource">
             <value>
-                PATTERN_TYPE_APACHE_ANT
-                /resources/*=#NONE#
-                /calendar/**=#NONE#
-                /chart/*=#NONE#
-                /svn_*=#NONE#                 
-                /login.htm*=#NONE#
-                /logout.htm=#NONE#       
-                /**=httpSessionFilter,authenticationFilter,rememberMeFilter,jtracGuestFilter,exceptionTranslationFilter,authorizationFilter
+                PATTERN_TYPE_APACHE_ANT                
+                /app/auth/*=#NONE#
+                /app/**=httpSessionFilter,authenticationFilter,rememberMeFilter,jtracGuestFilter,exceptionTranslationFilter,authorizationFilter
             </value>
         </property>
     </bean>    
@@ -37,16 +32,16 @@
   
     <bean id="authenticationFilter" class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilter">
         <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="authenticationFailureUrl" value="/login.htm?error=true"/>
-        <property name="defaultTargetUrl" value="/dashboard.htm"/>
-        <property name="filterProcessesUrl" value="/j_acegi_security_check"/>
+        <property name="authenticationFailureUrl" value="/app/auth/login.htm?error=true"/>
+        <property name="defaultTargetUrl" value="/app"/>
+        <property name="filterProcessesUrl" value="/app/j_acegi_security_check"/>
         <property name="rememberMeServices" ref="rememberMeServices"/>
     </bean>   
               
     <bean id="exceptionTranslationFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
         <property name="authenticationEntryPoint">
             <bean class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
-                <property name="loginFormUrl" value="/login.htm"/>
+                <property name="loginFormUrl" value="/app/auth/login.htm"/>
             </bean>      
         </property>
     </bean>

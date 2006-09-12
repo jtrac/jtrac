@@ -101,23 +101,12 @@
     
     <servlet-mapping>
         <servlet-name>jtrac</servlet-name>
-        <url-pattern>*.htm</url-pattern>
-    </servlet-mapping>
+        <url-pattern>/app/*</url-pattern>
+    </servlet-mapping>         
     
-    <servlet-mapping>
-        <servlet-name>jtrac</servlet-name>
-        <url-pattern>/chart/*</url-pattern>
-    </servlet-mapping>
-   
-    <servlet-mapping>
-        <servlet-name>jtrac</servlet-name>
-        <url-pattern>/attachments/*</url-pattern>
-    </servlet-mapping>          
-         
     <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
-    
     <error-page>
         <exception-type>java.lang.Exception</exception-type>
         <location>/WEB-INF/jsp/exception.jsp</location>

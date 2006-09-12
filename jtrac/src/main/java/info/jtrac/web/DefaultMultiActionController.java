@@ -75,6 +75,14 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
         return new ModelAndView("dashboard", "counts", jtrac.loadCountsForUser(user));
     }   
 
+    public ModelAndView optionsHandler(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("options");
+    }      
+    
+    public ModelAndView svnFormHandler(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("svn_form");
+    }    
+    
     public ModelAndView reindexHandler(HttpServletRequest request, HttpServletResponse response) {
         jtrac.rebuildIndexes();
         return new ModelAndView("options", "message", "Indexes Rebuilt Successfully");

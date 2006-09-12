@@ -32,7 +32,7 @@
             </spring:bind>
         </tr>
         <tr>
-            <td class="label"/>
+            <td class="label">Make Public</td>
             <spring:bind path="space.guestAllowed">
                 <td>
                     <input type="checkbox" name="${status.expression}" value="true" <c:if test="${status.value}">checked="true"</c:if>/>                

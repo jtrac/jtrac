@@ -29,21 +29,14 @@
                 </bean>
             </list>
         </property>
+        <property name="alwaysUseFullPath" value="true"/>
         <property name="urlMap">
             <map>
-                <entry key="/flow.htm" value-ref="flowController"/>
-                <!-- =========================================== -->
-                <entry key="/options.htm" value-ref="urlController"/>
-                <entry key="/svn_form.htm" value-ref="urlController"/>
-                <entry key="/exception.htm" value-ref="urlController"/>
-                <!-- =========================================== -->
-                <entry key="/*" value-ref="defaultController"/>               
+                <entry key="/app/flow.htm" value-ref="flowController"/>
+                <entry key="/app/**" value-ref="defaultController"/>               
             </map>
         </property>
     </bean>    
-    
-    <!-- for cases where a JSP view can be directly rendered without invoking any backend methods  -->      
-    <bean id="urlController" class="org.springframework.web.servlet.mvc.UrlFilenameViewController"/>
     
     <!--
     - This is a MultiActionController that manages simple view rendering where backend services 
@@ -55,17 +48,19 @@
                 <property name="alwaysUseFullPath" value="true"/>
                 <property name="mappings">
                     <props>
-                        <prop key="/login.htm">loginHandler</prop>
-                        <prop key="/logout.htm">logoutHandler</prop>
-                        <prop key="/dashboard.htm">dashboardHandler</prop>
-                        <prop key="/reindex.htm">reindexHandler</prop>
-                        <prop key="/user_list.htm">userListHandler</prop>
-                        <prop key="/space_list.htm">spaceListHandler</prop>
-                        <prop key="/config_list.htm">configListHandler</prop>
-                        <prop key="/svn_view.htm">svnViewHandler</prop>
-                        <prop key="/item_list_excel.htm">itemListExcelHandler</prop>
-                        <prop key="/attachments/*">attachmentViewHandler</prop>
-                        <prop key="/chart/svn_commits_per_committer.jpg">svnCommitsPerCommitterChartHandler</prop>
+                        <prop key="/app/auth/login.htm">loginHandler</prop>
+                        <prop key="/app/auth/logout.htm">logoutHandler</prop>
+                        <prop key="/app/options.htm">optionsHandler</prop>
+                        <prop key="/app/svn_form.htm">svnFormHandler</prop>
+                        <prop key="/app">dashboardHandler</prop>                        
+                        <prop key="/app/reindex.htm">reindexHandler</prop>
+                        <prop key="/app/user_list.htm">userListHandler</prop>
+                        <prop key="/app/space_list.htm">spaceListHandler</prop>
+                        <prop key="/app/config_list.htm">configListHandler</prop>
+                        <prop key="/app/svn_view.htm">svnViewHandler</prop>
+                        <prop key="/app/item_list_excel.htm">itemListExcelHandler</prop>
+                        <prop key="/app/attachments/*">attachmentViewHandler</prop>
+                        <prop key="/app/chart/svn_commits_per_committer.jpg">svnCommitsPerCommitterChartHandler</prop>
                     </props>
                 </property>
             </bean>        

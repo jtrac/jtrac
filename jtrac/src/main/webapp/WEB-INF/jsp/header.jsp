@@ -8,11 +8,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>JTrac</title>
-    <link rel="stylesheet" type="text/css" href="resources/jtrac.css"/>
-    <link rel="stylesheet" type="text/css" href="calendar/calendar-win2k-1.css"/>
-    <script type="text/javascript" src="calendar/calendar.js"></script>
-    <script type="text/javascript" src="calendar/lang/calendar-en.js"></script>
-    <script type="text/javascript" src="calendar/calendar-setup.js"></script>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/jtrac.css'/>"/>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/calendar/calendar-win2k-1.css'/>"/>
+    <script type="text/javascript" src="<c:url value='/resources/calendar/calendar.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/calendar/lang/calendar-en.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/calendar/calendar-setup.js'/>"></script>
 </head>
 <body onLoad="if (document.getElementById('focus') != null) document.getElementById('focus').focus();">
 
@@ -21,14 +21,14 @@
 <td>
     <table class="nav-table">
         <tr>		
-            <td><a href="<c:url value='dashboard.htm'/>">DASHBOARD</a></td>
+            <td><a href="<c:url value='/app'/>">DASHBOARD</a></td>
             <c:if test="${!empty space && _flowId != 'space'}">
                 <td>${space.prefixCode}</td>
-                <td><a href="<c:url value='flow.htm?_flowId=item&spaceId=${space.id}'/>">NEW</a></td>
-                <td><a href="<c:url value='flow.htm?_flowId=itemSearch&spaceId=${space.id}'/>">SEARCH</a></td>                
+                <td><a href="<c:url value='/app/flow.htm?_flowId=item&spaceId=${space.id}'/>">NEW</a></td>
+                <td><a href="<c:url value='/app/flow.htm?_flowId=itemSearch&spaceId=${space.id}'/>">SEARCH</a></td>                
             </c:if>
             <c:if test="${empty space && principal.spaceCount > 1}">
-                <td><a href="<c:url value='flow.htm?_flowId=itemSearch'/>">SEARCH ALL</a></td>               
+                <td><a href="<c:url value='/app/flow.htm?_flowId=itemSearch'/>">SEARCH ALL</a></td>               
             </c:if>            
         </tr>
     </table>
@@ -38,11 +38,11 @@
         <tr>								
             <c:choose>
                 <c:when test="${empty principal || principal.loginName == 'guest'}">
-                    <td><a href="<c:url value='login.htm'/>">LOGIN</a></td>
+                    <td><a href="<c:url value='/app/auth/login.htm'/>">LOGIN</a></td>
                 </c:when>
                 <c:otherwise>
-                    <td><a href="<c:url value='options.htm'/>">OPTIONS</a></td>
-                    <td><a href="<c:url value='logout.htm'/>">LOGOUT</a></td>
+                    <td><a href="<c:url value='/app/options.htm'/>">OPTIONS</a></td>
+                    <td><a href="<c:url value='/app/auth/logout.htm'/>">LOGOUT</a></td>
                 </c:otherwise>
             </c:choose>
             <td>${principal.name}</td>
