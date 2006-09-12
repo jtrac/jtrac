@@ -4,7 +4,7 @@
     <!-- example build.properties
     mvn.executable=C:/peter/opt/maven-2.0.4/bin/mvn.bat
     watij.home=C:/peter/opt/watij-2.2.2
-    deploy.dir=C:/note-that-this-is-secondary/jetty-is-used-as-primary
+    tomcat.home=C:/apache-tomcat-5.5.16 [optional, jetty used by default]
     -->
     
     <property file="build.properties"/>
@@ -30,7 +30,9 @@
         <condition property="debug" value="false" else="true">            
             <isset property="production"/>
         </condition>
-        <javac srcdir="src/main/java" destdir="target/classes" debug="${debug}" classpath="${test.jars}"/>
+        <javac srcdir="src/main/java" destdir="target/classes" debug="${debug}" classpath="${test.jars}">
+            <!-- <compilerarg value="-Xlint:unchecked"/> -->
+        </javac>
         <copy todir="target/classes">
             <fileset dir="src/main/resources"/>
         </copy>              
@@ -311,6 +313,14 @@
             </java>            
         </sequential>        
     </macrodef>    
+    
+    <target name="wait">
+        <waitfor maxwait="4" maxwaitunit="second">
+            <equals arg1="true" arg2="false"/>
+        </waitfor>        
+    </target>
+    
+    <target name="jetty-restart" depends="jetty-stop, wait, jetty-start-debug"/>
     
     <!-- ====================== TOMCAT TASKS ========================= -->
     
