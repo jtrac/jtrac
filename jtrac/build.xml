@@ -271,19 +271,22 @@
             </fileset>
         </copy>        
         <mkdir dir="target/jetty/logs"/>
-        <mkdir dir="target/jetty/work"/>        
+        <mkdir dir="target/jetty/work"/>     
     </target>
     
     <target name="jetty-start" depends="jetty-setup, war-exploded">        
         <jetty-start/>
     </target>    
    
-    <target name="jetty-stop">
+    <target name="jetty-stop" if="jetty.running">
         <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
             <jvmarg value="-DSTOP.PORT=8079"/>
             <jvmarg value="-DSTOP.KEY=jtrac"/>
             <arg value="--stop"/>
-        </java>        
+        </java>
+        <waitfor maxwait="2" maxwaitunit="second">
+            <equals arg1="true" arg2="false"/>
+        </waitfor>        
     </target>    
 	
     <target name="jetty-start-debug" depends="jetty-setup, war-exploded">
@@ -302,6 +305,10 @@
         <attribute name="arg1" default=""/>
         <attribute name="arg2" default=""/>
         <sequential>
+            <condition property="jetty.running">
+                <socket server="localhost" port="8080"/>
+            </condition>
+            <antcall target="jetty-stop"/>
             <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
                 <jvmarg value="-Dfile.encoding=UTF-8"/>
                 <jvmarg value="-Djtrac.home=${basedir}/home"/>
@@ -312,15 +319,7 @@
                 <jvmarg value="@{arg2}"/>
             </java>            
         </sequential>        
-    </macrodef>    
-    
-    <target name="wait">
-        <waitfor maxwait="4" maxwaitunit="second">
-            <equals arg1="true" arg2="false"/>
-        </waitfor>        
-    </target>
-    
-    <target name="jetty-restart" depends="jetty-stop, wait, jetty-start-debug"/>
+    </macrodef>
     
     <!-- ====================== TOMCAT TASKS ========================= -->
     

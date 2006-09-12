@@ -52,9 +52,9 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  * DAO Implementation using Spring Hibernate template
+ * note usage of the Spring "init-method" and "destroy-method" options
  */
-public class HibernateJtracDao
-        extends HibernateDaoSupport implements JtracDao {
+public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     
     private final Log logger = LogFactory.getLog(getClass());
     
@@ -295,6 +295,10 @@ public class HibernateJtracDao
     
     //==========================================================================
     
+    /**
+     * note that this is automatically configured to run on startup 
+     * as a spring bean "init-method"
+     */
     public void createSchema() {
         try {
             getHibernateTemplate().find("from Item item where item.id = 1");
@@ -313,6 +317,14 @@ public class HibernateJtracDao
             return;
         }
         logger.info("database schema exists, normal startup");
-    }    
+    }   
+    
+    /**
+     * note that this is automatically configured to run on context shutdown 
+     * as a spring bean "destroy-method"
+     */
+    public void stopEmbeddedDb() throws Exception {
+        schemaHelper.stopEmbeddedDb();
+    }
     
 }

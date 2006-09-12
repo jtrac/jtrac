@@ -65,10 +65,11 @@
     </bean>
     
     <!-- Hibernate DAO implementation.  Transactions (AOP) have been applied at the service layer not here -->
-    <bean id="dao" class="info.jtrac.hibernate.HibernateJtracDao" init-method="createSchema">
+    <bean id="dao" class="info.jtrac.hibernate.HibernateJtracDao" init-method="createSchema" destroy-method="stopEmbeddedDb">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="schemaHelper">
             <bean class="info.jtrac.hibernate.SchemaHelper">
+                <property name="dataSource" ref="dataSource"/>
                 <property name="mappingResources" value="jtrac.hbm.xml"/>
                 <property name="driverClassName" value="${database.driver}"/>
                 <property name="url" value="${database.url}"/>
