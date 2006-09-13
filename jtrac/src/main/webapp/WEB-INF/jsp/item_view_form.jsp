@@ -1,14 +1,14 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<p>
-    <c:if test="${!empty calledBySearch}">
-        <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=back&itemId=${item.id}#goto'/>">(back)</a>
-    </c:if>
-</p>
+<c:if test="${!empty calledBySearch}">
+    <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=back&itemId=${item.id}#goto'/>">(back)</a>
+    <br/>
+    <br/>
+</c:if>
 
 <jtrac:itemview item="${item}"/>
 
-<p/>
+<br/>
 
 <form method="post" action="<c:url value='/flow'/>" enctype="multipart/form-data">
 

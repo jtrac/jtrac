@@ -1,7 +1,5 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<p/>
-
 <form method="post" action="<c:url value='/flow'/>" enctype="multipart/form-data">
 
 <table class="bdr-collapse">
