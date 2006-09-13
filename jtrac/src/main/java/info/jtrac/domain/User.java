@@ -49,7 +49,7 @@ public class User implements UserDetails, Serializable {
     private String password;
     private String email;
     private Metadata metadata;
-    private boolean locked;
+    private boolean locked;    
     private Set<UserSpaceRole> userSpaceRoles = new HashSet<UserSpaceRole>();
     
     //=============================================================
@@ -111,7 +111,10 @@ public class User implements UserDetails, Serializable {
     
     public GrantedAuthority[] getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        authorities.add(new UserSpaceRole(this, null, "ROLE_USER"));
+        // grant full access only if not a Guest
+        if (id > 0) {
+            authorities.add(new UserSpaceRole(this, null, "ROLE_USER"));
+        }
         for (UserSpaceRole usr : userSpaceRoles) {            
             authorities.add(usr);
         }

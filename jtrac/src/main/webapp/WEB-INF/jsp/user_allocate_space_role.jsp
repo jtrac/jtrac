@@ -13,9 +13,10 @@
     </select>   
     
     <input type="submit" name="_eventId_allocate" value="Allocate"/>
+    <%-- switch on in future version
     <input type="checkbox" name="admin" value="true"/>
     Also add as Admin for this space.
-    
+    --%>
     <p/>
     
     <input type="submit" name="_eventId_cancel" value="Cancel"/>

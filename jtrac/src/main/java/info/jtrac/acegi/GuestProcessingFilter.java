@@ -61,7 +61,8 @@ public class GuestProcessingFilter implements Filter {
             if (spaces.size() > 0) {
                 User guestUser = new User();
                 guestUser.setLoginName("guest");
-                guestUser.setName("Guest");                             
+                guestUser.setName("Guest");
+                guestUser.addSpaceWithRole(null, "ROLE_GUEST");
                 for (Space space : spaces) {            
                     guestUser.addSpaceWithRole(space, "ROLE_GUEST");
                 }        

@@ -1,4 +1,3 @@
 <%-- redirected because we can't set the welcome page to a virtual URL --%>
-<%@ page session="true" contentType="text/html; charset=UTF-8" %>
-<%@ taglib prefix="c" uri="/WEB-INF/tld/c.tld" %>
+<%@ include file="/WEB-INF/jsp/include.jsp" %>
 <c:redirect url="/app"/>

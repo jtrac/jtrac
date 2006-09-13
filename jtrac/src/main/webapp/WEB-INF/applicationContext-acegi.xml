@@ -26,9 +26,12 @@
                 </property>
             </bean>           
         </property>     
-        <property name="objectDefinitionSource">
+        <property name="objectDefinitionSource">            
             <value>
-                PATTERN_TYPE_APACHE_ANT                
+                PATTERN_TYPE_APACHE_ANT
+                /flow/item_search*=ROLE_USER,ROLE_GUEST
+                /flow/user_profile*=ROLE_USER
+                /flow/*=ROLE_ADMIN
                 /**=ROLE_USER,ROLE_GUEST
             </value>
         </property>

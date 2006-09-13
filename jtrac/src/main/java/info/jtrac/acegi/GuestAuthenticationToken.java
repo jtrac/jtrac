@@ -33,6 +33,7 @@ public class GuestAuthenticationToken extends AbstractAuthenticationToken implem
     public GuestAuthenticationToken(Object principal, GrantedAuthority[] authorities) {
         super(authorities);
         this.principal = principal;
+        setAuthenticated(true);
     }
     
     public Object getPrincipal() {

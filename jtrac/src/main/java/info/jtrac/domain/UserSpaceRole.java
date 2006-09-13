@@ -115,4 +115,9 @@ public class UserSpaceRole implements GrantedAuthority, Serializable {
         return hash;
     } 
     
+    @Override
+    public String toString() {
+        return getAuthority();
+    }
+    
 }
