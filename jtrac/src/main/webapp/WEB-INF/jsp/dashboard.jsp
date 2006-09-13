@@ -4,8 +4,8 @@
     
     <tr>
         <th>Space</th>
-        <th>Role</th>
         <c:if test="${principal.id != 0}">
+            <th>Role</th>
             <th>Create<br/>New Item</th>
             <th>Logged<br/>By Me</th>
             <th>Assigned<br/>To Me</th>
@@ -25,8 +25,8 @@
             <tr><td>&nbsp;</td></tr>
             <tr class="nav-table">
                 <td>${userSpaceRole.space.prefixCode}</td>
-                <td>${userSpaceRole.roleKey}</td>
                 <c:if test="${principal.id != 0}">
+                    <td>${userSpaceRole.roleKey}</td>
                     <td><a href="<c:url value='/flow/item?spaceId=${spaceId}'/>">(new)</a></td>
                     <td align="right"><a href="<c:url value='/flow/item_search?type=loggedBy&spaceId=${spaceId}'/>">${count.loggedBy}</a></td>
                     <td align="right"><a href="<c:url value='/flow/item_search?type=assignedTo&spaceId=${spaceId}'/>">${count.assignedTo}</a></td>

@@ -2,7 +2,7 @@
 
 <span class="info">Users and Allocated Trackers</span>
 
-<a href="<c:url value='/flow/user'/>">Create New User</a>
+<a href="<c:url value='/flow/user'/>">[ Create New User ]</a>
 
 <p/>
 

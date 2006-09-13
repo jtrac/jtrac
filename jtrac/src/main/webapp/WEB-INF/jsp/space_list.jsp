@@ -2,7 +2,7 @@
 
 <span class="info">Spaces</span>
 
-<a href="<c:url value='/flow/space'/>">Create New Space</a>
+<a href="<c:url value='/flow/space'/>">[ Create New Space ]</a>
 
 <p/>
 
