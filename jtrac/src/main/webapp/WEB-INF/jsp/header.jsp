@@ -23,7 +23,9 @@
             <td><a href="<c:url value='/app'/>">DASHBOARD</a></td>
             <c:if test="${!empty space && _flowId != 'space'}">
                 <td>${space.prefixCode}</td>
-                <td><a href="<c:url value='/flow/item?spaceId=${space.id}'/>">NEW</a></td>
+                <c:if test="${principal.id != 0}">
+                    <td><a href="<c:url value='/flow/item?spaceId=${space.id}'/>">NEW</a></td>
+                </c:if>
                 <td><a href="<c:url value='/flow/item_search?spaceId=${space.id}'/>">SEARCH</a></td>                
             </c:if>
             <c:if test="${empty space && principal.spaceCount > 1}">
@@ -36,7 +38,7 @@
     <table class="nav-table">
         <tr>                                
             <c:choose>
-                <c:when test="${empty principal || principal.loginName == 'guest'}">
+                <c:when test="${principal.id == 0}">
                     <td><a href="<c:url value='/auth/login.htm'/>">LOGIN</a></td>
                 </c:when>
                 <c:otherwise>
