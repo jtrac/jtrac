@@ -8,9 +8,10 @@
     <bean id="filterChainProxy" class="org.acegisecurity.util.FilterChainProxy">
         <property name="filterInvocationDefinitionSource">
             <value>
-                PATTERN_TYPE_APACHE_ANT                
-                /app/auth/*=#NONE#
-                /app/**=httpSessionFilter,authenticationFilter,rememberMeFilter,jtracGuestFilter,exceptionTranslationFilter,authorizationFilter
+                PATTERN_TYPE_APACHE_ANT
+                /resources/*=#NONE#
+                /auth/*=#NONE#
+                /**=httpSessionFilter,authenticationFilter,rememberMeFilter,jtracGuestFilter,exceptionTranslationFilter,authorizationFilter
             </value>
         </property>
     </bean>    
@@ -32,7 +33,7 @@
   
     <bean id="authenticationFilter" class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilter">
         <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="authenticationFailureUrl" value="/app/auth/login.htm?error=true"/>
+        <property name="authenticationFailureUrl" value="/auth/login.htm?error=true"/>
         <property name="defaultTargetUrl" value="/app"/>
         <property name="filterProcessesUrl" value="/app/j_acegi_security_check"/>
         <property name="rememberMeServices" ref="rememberMeServices"/>
@@ -41,7 +42,7 @@
     <bean id="exceptionTranslationFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
         <property name="authenticationEntryPoint">
             <bean class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
-                <property name="loginFormUrl" value="/app/auth/login.htm"/>
+                <property name="loginFormUrl" value="/auth/login.htm"/>
             </bean>      
         </property>
     </bean>

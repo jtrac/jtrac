@@ -20,29 +20,29 @@
 <tr>
 <td>
     <table class="nav-table">
-        <tr>		
+        <tr>        
             <td><a href="<c:url value='/app'/>">DASHBOARD</a></td>
             <c:if test="${!empty space && _flowId != 'space'}">
                 <td>${space.prefixCode}</td>
-                <td><a href="<c:url value='/app/flow.htm?_flowId=item&spaceId=${space.id}'/>">NEW</a></td>
-                <td><a href="<c:url value='/app/flow.htm?_flowId=itemSearch&spaceId=${space.id}'/>">SEARCH</a></td>                
+                <td><a href="<c:url value='/flow/item?spaceId=${space.id}'/>">NEW</a></td>
+                <td><a href="<c:url value='/flow/item_search?spaceId=${space.id}'/>">SEARCH</a></td>                
             </c:if>
             <c:if test="${empty space && principal.spaceCount > 1}">
-                <td><a href="<c:url value='/app/flow.htm?_flowId=itemSearch'/>">SEARCH ALL</a></td>               
+                <td><a href="<c:url value='/flow/item_search'/>">SEARCH ALL</a></td>               
             </c:if>            
         </tr>
     </table>
 </td>
 <td align="right">
     <table class="nav-table">
-        <tr>								
+        <tr>                                
             <c:choose>
                 <c:when test="${empty principal || principal.loginName == 'guest'}">
-                    <td><a href="<c:url value='/app/auth/login.htm'/>">LOGIN</a></td>
+                    <td><a href="<c:url value='/auth/login.htm'/>">LOGIN</a></td>
                 </c:when>
                 <c:otherwise>
                     <td><a href="<c:url value='/app/options.htm'/>">OPTIONS</a></td>
-                    <td><a href="<c:url value='/app/auth/logout.htm'/>">LOGOUT</a></td>
+                    <td><a href="<c:url value='/auth/logout.htm'/>">LOGOUT</a></td>
                 </c:otherwise>
             </c:choose>
             <td>${principal.name}</td>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
-	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
+    "http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
 
 <flow start-state="userAllocateSpace"> 
 
@@ -31,7 +31,7 @@
         </transition>
     </view-state>    
     
-    <end-state id="userListView" view="externalRedirect:user_list.htm"/>
+    <end-state id="userListView" view="externalRedirect:/app/user_list.htm"/>
 
 </flow>
 

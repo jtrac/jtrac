@@ -2,7 +2,7 @@
 
 <p/>
 
-<form method="post" action="<c:url value='flow.htm'/>" enctype="multipart/form-data">
+<form method="post" action="<c:url value='/flow'/>" enctype="multipart/form-data">
 
 <table class="bdr-collapse">
 

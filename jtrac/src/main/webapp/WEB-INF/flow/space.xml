@@ -118,7 +118,7 @@
         <transition on="spaceListView" to="spaceListView"/>
     </subflow-state>        
     
-    <end-state id="spaceListView" view="externalRedirect:space_list.htm"/>   
+    <end-state id="spaceListView" view="externalRedirect:/app/space_list.htm"/>   
     
 </flow>
 

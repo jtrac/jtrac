@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
-	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
+    "http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
 
 <flow start-state="configForm">  
     
@@ -15,7 +15,7 @@
         <transition on="cancel" to="configListView"/>
     </view-state>
  
-    <end-state id="configListView" view="externalRedirect:config_list.htm"/> 
+    <end-state id="configListView" view="externalRedirect:/app/config_list.htm"/> 
     
 </flow>
 

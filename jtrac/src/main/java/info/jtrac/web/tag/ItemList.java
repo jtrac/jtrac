@@ -32,6 +32,8 @@ import org.springframework.web.util.HtmlUtils;
 
 public class ItemList extends SimpleTagSupport {
     
+    private HttpServletRequest request;
+    private HttpServletResponse response;
     private List<AbstractItem> items;
     private ItemSearch itemSearch;
     
@@ -46,18 +48,18 @@ public class ItemList extends SimpleTagSupport {
     @Override
     public void doTag() {
         PageContext pageContext = (PageContext) getJspContext();
-        HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+        request = (HttpServletRequest) pageContext.getRequest();        
+        response = (HttpServletResponse) pageContext.getResponse();
         JspWriter out = pageContext.getOut();
         try {
             
             //=============================== PAGINATION =====================================
             String flowUrlParam = "_flowExecutionKey=" + request.getAttribute("flowExecutionKey");
-            String flowUrl = "flow.htm?" + flowUrlParam;
+            String flowUrl = "/flow?" + flowUrlParam;
             StringBuffer sb = new StringBuffer();
             long resultCount = itemSearch.getResultCount();
             String plural = resultCount == 1 ? "" : "s";
-            sb.append("<a href='" + flowUrl + "&_eventId=back' title='Modify Search'>" + resultCount + " record" + plural + " found.</a>&nbsp;&nbsp;");
+            sb.append("<a href='" + encodeURL(flowUrl + "&_eventId=back'") + " title='Modify Search'>" + resultCount + " record" + plural + " found.</a>&nbsp;&nbsp;");
             int pageSize = itemSearch.getPageSize();
             int pageCount = 0;
             if (pageSize != -1) {
@@ -70,25 +72,25 @@ public class ItemList extends SimpleTagSupport {
                 if (currentPage == 0) {
                     sb.append("&lt;&lt;&nbsp;&nbsp;");
                 } else {
-                    sb.append("<a href='" + response.encodeURL(pageUrl + (currentPage - 1)) + "'>&lt;&lt;</a>&nbsp;&nbsp;");
+                    sb.append("<a href='" + encodeURL(pageUrl + (currentPage - 1)) + "'>&lt;&lt;</a>&nbsp;&nbsp;");
                 }
                 for(int i = 0; i < pageCount; i++) {
                     if (currentPage == i) {
                         sb.append((i + 1) +"&nbsp;&nbsp;");
                     } else {
-                        sb.append("<a href='" + response.encodeURL(pageUrl + i) + "'>" + (i + 1) +"</a>&nbsp;&nbsp;");
+                        sb.append("<a href='" + encodeURL(pageUrl + i) + "'>" + (i + 1) +"</a>&nbsp;&nbsp;");
                     }
                 }
                 if (currentPage == pageCount - 1) {
                     sb.append("&gt;&gt;");
                 } else {
-                    sb.append("<a href='" + response.encodeURL(pageUrl + (currentPage + 1)) + "'>&gt;&gt;</a>");
+                    sb.append("<a href='" + encodeURL(pageUrl + (currentPage + 1)) + "'>&gt;&gt;</a>");
                 }
                 sb.append("</span>");
             }
             // write out record count + pagination
             out.println("<table class='jtrac bdr-collapse' width='100%'><tr><td>" + sb + "</td>");            
-            out.println("<td align='right'><a href='item_list_excel.htm?" + flowUrlParam + "'>(export to excel)</a></td></tr></table><p/>");
+            out.println("<td align='right'><a href='" + encodeURL("/app/item_list_excel.htm?" + flowUrlParam) + "'>(export to excel)</a></td></tr></table><p/>");
             
             //=============================== TABLE HEADER =====================================
             boolean showDetail = itemSearch.isShowDetail();
@@ -132,9 +134,9 @@ public class ItemList extends SimpleTagSupport {
                 out.println("<tr" + rowClass + ">");
                 String href = null;
                 if (showHistory) {
-                    href = response.encodeURL(itemUrl + item.getParent().getId());
+                    href = encodeURL(itemUrl + item.getParent().getId());
                 } else {
-                    href = response.encodeURL(itemUrl + item.getId());
+                    href = encodeURL(itemUrl + item.getId());
                 }
                 out.println("  <td>" + bookmark + "<a href='" + href + "'>" + item.getRefId() + "</a></td>");
                 out.println("  <td>" + ( item.getSummary() == null ? "" : HtmlUtils.htmlEscape(item.getSummary()) ) + "</td>");
@@ -145,7 +147,7 @@ public class ItemList extends SimpleTagSupport {
                         out.println("  <td>");
                         Attachment attachment = h.getAttachment();
                         if (attachment != null) {
-                            String attHref = response.encodeURL("attachments/" + attachment.getFileName() +"?filePrefix=" + attachment.getFilePrefix());
+                            String attHref = encodeURL("attachments/" + attachment.getFileName() +"?filePrefix=" + attachment.getFilePrefix());
                             out.println("<a target='_blank' href='" + attHref + "'>" + attachment.getFileName() + "</a>&nbsp;");
                         }
                         out.println(( h.getComment() == null ? "" : HtmlUtils.htmlEscape(h.getComment()) ) + "</td>");
@@ -170,6 +172,10 @@ public class ItemList extends SimpleTagSupport {
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }
+    }
+    
+    private String encodeURL(String url) {
+        return response.encodeURL(request.getContextPath() + url);
     }
     
 }

@@ -6,7 +6,7 @@
 
 <c:set var="fields" value="${space.metadata.fields}"/>
 
-<form name="spacePreviewForm" method="post" action="<c:url value='flow.htm'/>">
+<form name="spacePreviewForm" method="post" action="<c:url value='/flow'/>">
 
 <table class="jtrac">
 

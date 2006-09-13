@@ -2,7 +2,7 @@
 
 <p>
     <c:if test="${!empty calledBySearch}">
-        <a href="<c:url value='flow.htm?_flowExecutionKey=${flowExecutionKey}&_eventId=back&itemId=${item.id}#goto'/>">(back)</a>
+        <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=back&itemId=${item.id}#goto'/>">(back)</a>
     </c:if>
 </p>
 
@@ -10,7 +10,7 @@
 
 <p/>
 
-<form method="post" action="<c:url value='flow.htm'/>" enctype="multipart/form-data">
+<form method="post" action="<c:url value='/flow'/>" enctype="multipart/form-data">
 
 <table class="bdr-collapse" width="100%">
 

@@ -4,7 +4,7 @@
 
 <p/>
 
-<form method="post" action="<c:url value='flow.htm'/>">
+<form method="post" action="<c:url value='/flow'/>">
     <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>    
     <input type="submit" name="_eventId_cancel" value="Cancel"/>
 </form>

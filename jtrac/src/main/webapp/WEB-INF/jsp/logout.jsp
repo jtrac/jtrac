@@ -22,7 +22,7 @@
                 <td><br/></td>
             </tr>
             <tr>
-                <td class="info" align="center"><a href="<c:url value='/app/auth/login.htm'/>">Login</a></td>
+                <td class="info" align="center"><a href="<c:url value='/auth/login.htm'/>">Login</a></td>
             </tr>
         </table>        
         

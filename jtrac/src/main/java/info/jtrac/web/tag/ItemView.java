@@ -19,6 +19,7 @@ package info.jtrac.web.tag;
 import info.jtrac.domain.Item;
 import info.jtrac.util.ItemUtils;
 import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
@@ -35,10 +36,11 @@ public class ItemView extends SimpleTagSupport {
     @Override
     public void doTag() {
         PageContext pageContext = (PageContext) getJspContext();
+        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
         JspWriter out = pageContext.getOut();
         try {
-            out.print(ItemUtils.getAsHtml(item, response));
+            out.print(ItemUtils.getAsHtml(item, request, response));
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }        

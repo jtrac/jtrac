@@ -4,7 +4,7 @@
 
 <p/>
 
-<form method="post" action="<c:url value='flow.htm'/>">
+<form method="post" action="<c:url value='/flow'/>">
 
     <spring:bind path="userForm.user.id">        
         <input type="hidden" name="${status.expression}" value="${status.value}"/>

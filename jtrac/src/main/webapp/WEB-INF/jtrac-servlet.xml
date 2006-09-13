@@ -32,8 +32,8 @@
         <property name="alwaysUseFullPath" value="true"/>
         <property name="urlMap">
             <map>
-                <entry key="/app/flow.htm" value-ref="flowController"/>
-                <entry key="/app/**" value-ref="defaultController"/>               
+                <entry key="/flow/**" value-ref="flowController"/>                
+                <entry key="/**" value-ref="defaultController"/>               
             </map>
         </property>
     </bean>    
@@ -48,8 +48,8 @@
                 <property name="alwaysUseFullPath" value="true"/>
                 <property name="mappings">
                     <props>
-                        <prop key="/app/auth/login.htm">loginHandler</prop>
-                        <prop key="/app/auth/logout.htm">logoutHandler</prop>
+                        <prop key="/auth/login.htm">loginHandler</prop>
+                        <prop key="/auth/logout.htm">logoutHandler</prop>
                         <prop key="/app/options.htm">optionsHandler</prop>
                         <prop key="/app/svn_form.htm">svnFormHandler</prop>
                         <prop key="/app">dashboardHandler</prop>                        

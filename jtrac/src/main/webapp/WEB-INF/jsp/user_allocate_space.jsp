@@ -10,7 +10,7 @@ function setDeallocate(userSpaceRoleId) {
 
 <p/>
 
-<form name="userAllocateForm" method="post" action="<c:url value='flow.htm'/>">
+<form name="userAllocateForm" method="post" action="<c:url value='/flow'/>">
 
 <table class="jtrac">
 

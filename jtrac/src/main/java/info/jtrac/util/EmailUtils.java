@@ -103,7 +103,7 @@ public class EmailUtils {
     }
     
     private String getItemViewAnchor(Item item) {
-        return "<p><a href='" + url + "flow.htm?_flowId=itemView&itemId=" + item.getId() + "'>Click here to access " + item.getRefId() + "</a></p>";
+        return "<p><a href='" + url + "flow/item_view?itemId=" + item.getId() + "'>Click here to access " + item.getRefId() + "</a></p>";
     }
     
     private String getSubject(Item item) {       
@@ -124,7 +124,7 @@ public class EmailUtils {
         StringBuffer sb = new StringBuffer();
         String anchor = getItemViewAnchor(item);
         sb.append(anchor);
-        sb.append(ItemUtils.getAsHtml(item, null));
+        sb.append(ItemUtils.getAsHtml(item, null, null));
         sb.append(anchor);
         // prepare message
         MimeMessage message = sender.createMimeMessage();

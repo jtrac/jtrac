@@ -22,9 +22,9 @@ import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.util.HtmlUtils;
-import org.springframework.web.util.WebUtils;
 
 /**
  * Utilities to convert an Item into HTML etc.
@@ -41,7 +41,7 @@ public final class ItemUtils {
         return temp.replaceAll("\n", "<br/>").replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
     }
     
-    public static String getAsHtml(Item item, HttpServletResponse response) {
+    public static String getAsHtml(Item item, HttpServletRequest request, HttpServletResponse response) {
         StringBuffer sb = new StringBuffer();
         sb.append("<table width='100%' class='jtrac'>");
         sb.append("<tr class='alt'>");
@@ -97,8 +97,8 @@ public final class ItemUtils {
                 sb.append("  <td>");
                 Attachment attachment = history.getAttachment();
                 if (attachment != null) {
-                    if (response != null) {
-                        String href = response.encodeURL("attachments/" + attachment.getFileName() +"?filePrefix=" + attachment.getFilePrefix());
+                    if (request != null && response != null) {
+                        String href = response.encodeURL(request.getContextPath() + "attachments/" + attachment.getFileName() +"?filePrefix=" + attachment.getFilePrefix());
                         sb.append("<a target='_blank' href='" + href + "'>" + attachment.getFileName() + "</a>&nbsp;");
                     } else {
                         sb.append("(attachment:&nbsp" + attachment.getFileName() + ")&nbsp;");

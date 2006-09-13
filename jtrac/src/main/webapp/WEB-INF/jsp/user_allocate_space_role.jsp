@@ -4,7 +4,7 @@
 
 <p/>
 
-<form method="post" action="<c:url value='flow.htm'/>">
+<form method="post" action="<c:url value='/flow'/>">
 
     <select name="roleKey">
         <c:forEach items="${space.metadata.roles}" var="roleMapEntry">

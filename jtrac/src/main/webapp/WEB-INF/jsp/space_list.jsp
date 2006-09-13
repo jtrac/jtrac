@@ -2,7 +2,7 @@
 
 <span class="info">Spaces</span>
 
-<a href="<c:url value='flow.htm'><c:param name='_flowId' value='space'/></c:url>">Create New Space</a>
+<a href="<c:url value='/flow/space'/>">Create New Space</a>
 
 <p/>
 
@@ -19,16 +19,10 @@
         </c:set>
         <tr ${rowClass}>
             <td>
-                <a href="<c:url value='flow.htm'>
-                    <c:param name='_flowId' value='space'/>
-                    <c:param name='spaceId' value='${space.id}'/>
-                    </c:url>">${space.prefixCode}</a>
+                <a href="<c:url value='/flow/space?spaceId=${space.id}'/>">${space.prefixCode}</a>
             </td>
             <td align="center">
-                <a href="<c:url value='flow.htm'>
-                    <c:param name='_flowId' value='spaceAllocate'/>
-                    <c:param name='spaceId' value='${space.id}'/>
-                    </c:url>">(+)</a>
+                <a href="<c:url value='/flow/space_allocate?spaceId=${space.id}'/>">(+)</a>
             </td>
         </tr>
     </c:forEach>

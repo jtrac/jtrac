@@ -6,7 +6,7 @@ function setDeallocate(userSpaceRoleId) {
 }
 </script>
 
-<form name="spaceAllocateForm" method="post" action="<c:url value='flow.htm'/>">
+<form name="spaceAllocateForm" method="post" action="<c:url value='/flow'/>">
 
 <span class="info">Users allocated to Space: ${space.prefixCode}</span>
 

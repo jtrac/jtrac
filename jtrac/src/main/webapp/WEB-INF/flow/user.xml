@@ -32,7 +32,7 @@
         <transition on="userListView" to="userListView"/>
     </subflow-state>
     
-    <end-state id="userListView" view="externalRedirect:user_list.htm">
+    <end-state id="userListView" view="externalRedirect:/app/user_list.htm">
         <output-mapper>
             <mapping source="flowScope.space" target="space"/>
         </output-mapper>

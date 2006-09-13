@@ -25,23 +25,17 @@
                 <td>${userSpaceRole.space.prefixCode}</td>
                 <td>${userSpaceRole.roleKey}</td>
                 <td>
-                    <a href="<c:url value='flow.htm'>
-                        <c:param name='_flowId' value='item'/>
-                        <c:param name='spaceId' value='${spaceId}'/>
-                        </c:url>">NEW</a>                
+                    <a href="<c:url value='/flow/item?spaceId=${spaceId}'/>">NEW</a>                
                 </td>
                 <td>
-                    <a href="<c:url value='flow.htm'>
-                        <c:param name='_flowId' value='itemSearch'/>
-                        <c:param name='spaceId' value='${spaceId}'/>
-                        </c:url>">SEARCH</a>               
+                    <a href="<c:url value='/flow/item_search?spaceId=${spaceId}'/>">SEARCH</a>               
                 </td>
                 <c:set var="count" value="${counts.counts[spaceId]}"/>
-                <td align="right"><a href="<c:url value='flow.htm?_flowId=itemSearch&type=loggedBy&spaceId=${spaceId}'/>">${count.loggedBy}</a></td>
-                <td align="right"><a href="<c:url value='flow.htm?_flowId=itemSearch&type=assignedTo&spaceId=${spaceId}'/>">${count.assignedTo}</a></td>
-                <td align="right"><a href="<c:url value='flow.htm?_flowId=itemSearch&type=open&spaceId=${spaceId}'/>">${count.open}</a></td>
-                <td align="right"><a href="<c:url value='flow.htm?_flowId=itemSearch&type=closed&spaceId=${spaceId}'/>">${count.closed}</a></td>
-                <td align="right"><a href="<c:url value='flow.htm?_flowId=itemSearch&type=total&spaceId=${spaceId}'/>">${count.total}</a></td>                
+                <td align="right"><a href="<c:url value='/flow/item_search?type=loggedBy&spaceId=${spaceId}'/>">${count.loggedBy}</a></td>
+                <td align="right"><a href="<c:url value='/flow/item_search?type=assignedTo&spaceId=${spaceId}'/>">${count.assignedTo}</a></td>
+                <td align="right"><a href="<c:url value='/flow/item_search?type=open&spaceId=${spaceId}'/>">${count.open}</a></td>
+                <td align="right"><a href="<c:url value='/flow/item_search?type=closed&spaceId=${spaceId}'/>">${count.closed}</a></td>
+                <td align="right"><a href="<c:url value='/flow/item_search?type=total&spaceId=${spaceId}'/>">${count.total}</a></td>                
             </tr>
             <c:set var="spaceCount" value="${spaceCount + 1}"/>
         </c:if>
@@ -52,12 +46,12 @@
     <c:if test="${spaceCount > 1}">
         <tr>
             <td colspan="2"/>
-            <td colspan="2" align="center" class="nav-table"><a href="<c:url value='flow.htm?_flowId=itemSearch'/>">SEARCH ALL</a></td>           
-            <td align="right" class="nav-table"><a href="<c:url value='flow.htm?_flowId=itemSearch&type=loggedBy'/>">${counts.loggedBy}</a></td>
-            <td align="right" class="nav-table"><a href="<c:url value='flow.htm?_flowId=itemSearch&type=assignedTo'/>">${counts.assignedTo}</a></td>
-            <td align="right" class="nav-table"><a href="<c:url value='flow.htm?_flowId=itemSearch&type=open'/>">${counts.open}</a></td>
-            <td align="right" class="nav-table"><a href="<c:url value='flow.htm?_flowId=itemSearch&type=closed'/>">${counts.closed}</a></td>
-            <td align="right" class="nav-table"><a href="<c:url value='flow.htm?_flowId=itemSearch&type=total'/>">${counts.total}</a></td>    
+            <td colspan="2" align="center" class="nav-table"><a href="<c:url value='/flow/item_search'/>">SEARCH ALL</a></td>           
+            <td align="right" class="nav-table"><a href="<c:url value='/flow/item_search?type=loggedBy'/>">${counts.loggedBy}</a></td>
+            <td align="right" class="nav-table"><a href="<c:url value='/flow/item_search?type=assignedTo'/>">${counts.assignedTo}</a></td>
+            <td align="right" class="nav-table"><a href="<c:url value='/flow/item_search?type=open'/>">${counts.open}</a></td>
+            <td align="right" class="nav-table"><a href="<c:url value='/flow/item_search?type=closed'/>">${counts.closed}</a></td>
+            <td align="right" class="nav-table"><a href="<c:url value='/flow/item_search?type=total'/>">${counts.total}</a></td>    
         </tr>
     </c:if>    
     

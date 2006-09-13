@@ -12,7 +12,7 @@ function setFieldName(fieldName) {
 
 <c:set var="fields" value="${space.metadata.fields}"/>
 
-<form name="spaceFieldsForm" method="post" action="<c:url value='flow.htm'/>">
+<form name="spaceFieldsForm" method="post" action="<c:url value='/flow'/>">
 
 <table class="jtrac">
     <tr>

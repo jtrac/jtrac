@@ -4,7 +4,7 @@
 
 <p/>
 
-<form method="post" action="<c:url value='flow.htm'/>">
+<form method="post" action="<c:url value='/flow'/>">
 
     <input name="state" value="${state}"/>
     <input type="submit" name="_eventId_submit" value="Submit"/>

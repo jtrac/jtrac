@@ -29,7 +29,7 @@ function editMask(stateKey, roleKey, fieldKey) {
 <c:set var="fieldCount" value="${space.metadata.fieldCount}"/>
 <c:set var="stateCount" value="${space.metadata.stateCount}"/>
 
-<form name="spaceRolesForm" method="post" action="<c:url value='flow.htm'/>">
+<form name="spaceRolesForm" method="post" action="<c:url value='/flow'/>">
 
 <table class="jtrac">
     <tr>

@@ -4,7 +4,7 @@
 
 <p/>
 
-<form method="post" action="<c:url value='flow.htm'/>">
+<form method="post" action="<c:url value='/flow'/>">
 
     <p>Are you sure that you want to delete this option?</p>
     <p>No of affected database records = ${affectedCount}</p>

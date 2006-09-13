@@ -14,7 +14,7 @@ public class AllTest extends WatijTestCase {
     }        
     
     public void testGetLoginPage() throws Exception {
-        ie.start("http://localhost:8080/jtrac/login.htm");
+        ie.start("http://localhost:8080/jtrac");
         assertTrue(ie.containsText("JTrac"));
     }
     

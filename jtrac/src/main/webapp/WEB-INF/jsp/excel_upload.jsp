@@ -4,7 +4,7 @@
 
 <p/>
 
-<form method="post" action="<c:url value='flow.htm'/>" enctype="multipart/form-data">
+<form method="post" action="<c:url value='/flow'/>" enctype="multipart/form-data">
     <input type="file" name="file"/>
     <input type="submit" name="_eventId_submit" value="Submit"/>
     <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>    

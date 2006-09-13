@@ -97,16 +97,27 @@
     <servlet-mapping>
         <servlet-name>casproxy</servlet-name>
         <url-pattern>/casProxy/*</url-pattern>
-    </servlet-mapping>    
-    
+    </servlet-mapping>
+       
     <servlet-mapping>
         <servlet-name>jtrac</servlet-name>
         <url-pattern>/app/*</url-pattern>
-    </servlet-mapping>         
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>jtrac</servlet-name>
+        <url-pattern>/auth/*</url-pattern>
+    </servlet-mapping>  
+  
+    <servlet-mapping>
+        <servlet-name>jtrac</servlet-name>
+        <url-pattern>/flow/*</url-pattern>
+    </servlet-mapping>    
     
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
+    
     <error-page>
         <exception-type>java.lang.Exception</exception-type>
         <location>/WEB-INF/jsp/exception.jsp</location>
