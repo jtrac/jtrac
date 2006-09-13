@@ -85,7 +85,7 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
     
     public ModelAndView reindexHandler(HttpServletRequest request, HttpServletResponse response) {
         jtrac.rebuildIndexes();
-        return new ModelAndView("options", "message", "Indexes Rebuilt Successfully");
+        return new ModelAndView("index_rebuild_success");
     }     
     
     public ModelAndView svnViewHandler(HttpServletRequest request, HttpServletResponse response) {

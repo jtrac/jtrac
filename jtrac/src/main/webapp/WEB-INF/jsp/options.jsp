@@ -2,22 +2,45 @@
 
 <span class="info">Options Menu</span>
 
-<p><span class="info">${message}</span></p>
-
-<p><a href="<c:url value='/flow/user_profile?userId=${principal.id}'/>">Profile</a></p>
-
+<table class="jtrac">
+    <tr><td>&nbsp;</td></tr>
+    <tr class="nav-table">  
+        <td>
+            <a href="<c:url value='/flow/user_profile?userId=${principal.id}'/>">Edit Your Profile</a>
+        </td>
+    </tr>
 <authz:authorize ifAllGranted="ROLE_ADMIN">
-    
-    <p><a href="<c:url value='user_list.htm'/>">Users</a></p>
-
-    <p><a href="<c:url value='space_list.htm'/>">Spaces</a></p>
-
-    <p><a href="<c:url value='config_list.htm'/>">Config</a></p>
-    
-    <p><a href="<c:url value='reindex.htm'/>">Rebuild Indexes</a></p>
-    
-    <p><a href="<c:url value='/flow/excel'/>">Import from Excel</a></p>
-    
+    <tr><td>&nbsp;</td></tr>
+    <tr class="nav-table">
+        <td>
+            <a href="<c:url value='/app/user_list.htm'/>">Manage Users</a>
+        </td>
+    </tr>
+    <tr><td>&nbsp;</td></tr>
+    <tr class="nav-table">
+        <td>
+            <a href="<c:url value='/app/space_list.htm'/>">Manage Spaces</a>
+        </td>
+    </tr>
+    <tr><td>&nbsp;</td></tr>
+    <tr class="nav-table">
+        <td>
+            <a href="<c:url value='/app/config_list.htm'/>">Manage Configuration</a>
+        </td>
+    </tr>
+    <tr><td>&nbsp;</td></tr>
+    <tr class="nav-table">    
+        <td>
+            <a href="<c:url value='/app/reindex.htm'/>">Rebuild Indexes</a>
+        </td>
+    </tr>
+    <tr><td>&nbsp;</td></tr>
+    <tr class="nav-table">
+        <td>
+            <a href="<c:url value='/flow/excel'/>">Import from Excel</a>
+        </td>
+    </tr>    
 </authz:authorize>
+</table>
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>
