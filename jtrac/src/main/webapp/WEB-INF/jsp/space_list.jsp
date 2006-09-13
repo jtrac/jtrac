@@ -8,7 +8,12 @@
 
 <table class="jtrac">
 
-    <tr><th>Space Key</th><th>Users</th></tr>
+    <tr>
+        <th>Space</th>
+        <th>Edit</th>
+        <th>Description</th>
+        <th>Users</th>
+    </tr>
 
     <c:forEach items="${spaces}" var="space" varStatus="row">
         <c:set var="rowClass">
@@ -18,9 +23,11 @@
             </c:choose>            
         </c:set>
         <tr ${rowClass}>
+            <td>${space.prefixCode}</td>
             <td>
-                <a href="<c:url value='/flow/space?spaceId=${space.id}'/>">${space.prefixCode}</a>
+                <a href="<c:url value='/flow/space?spaceId=${space.id}'/>">(edit)</a>
             </td>
+            <td>${space.description}</td>
             <td align="center">
                 <a href="<c:url value='/flow/space_allocate?spaceId=${space.id}'/>">(+)</a>
             </td>
