@@ -211,7 +211,7 @@ public class SpaceFormAction extends AbstractFormAction {
         if (!ValidationUtils.isCamelDashCase(state)) {
             Errors errors = getFormErrors(context);
             errors.reject("error.spaceRoles.state.badchars", 
-                    "State name has to start with a capital letter followed by lower-case letters.");
+                    "State name has to be Camel-Case with dashes ('-') to separate words e.g. 'Fixed', 'On-Hold' or 'Work-In-Progress'");
             context.getRequestScope().put("state", state);
             return error();
         }

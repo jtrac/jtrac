@@ -16,11 +16,9 @@ function editMask(stateKey, roleKey, fieldKey) {
 }
 </script>
 
-<p/>
-
 <span class="info">Space Roles and State-Transitions (Workflow) for Space: ${space.prefixCode}</span>
 
-<p/>
+<br/><br/>
 
 <c:set var="states" value="${space.metadata.states}"/>
 <c:set var="roles" value="${space.metadata.roleList}"/>
@@ -146,8 +144,10 @@ function editMask(stateKey, roleKey, fieldKey) {
 <input type="hidden" name="roleKey"/>
 <input type="hidden" name="transitionKey"/>
 <input type="hidden" name="fieldKey"/>
-
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
+
+<p/>
+<input type="submit" name="_eventId_cancel" value="Cancel"/>
 
 </form>
 

@@ -32,7 +32,8 @@
         <transition on="down" to="spaceFieldsView">
             <action bean="spaceFormAction" method="fieldDownHandler"/>
         </transition>         
-        <transition on="next" to="spaceRolesView"/>     
+        <transition on="next" to="spaceRolesView"/>
+        <transition on="cancel" to="spaceListView"/>
     </view-state>
    
     <view-state id="spaceFieldDeleteView" view="space_field_delete">
@@ -100,6 +101,7 @@
         <transition on="save" to="spaceAllocateFlow">
             <action bean="spaceFormAction" method="spaceSaveHandler"/>
         </transition>
+        <transition on="cancel" to="spaceListView"/>
     </view-state>  
     
     <view-state id="spaceStateEditForm" view="space_state_edit">      

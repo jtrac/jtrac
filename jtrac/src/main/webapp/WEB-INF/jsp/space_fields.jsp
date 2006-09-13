@@ -68,6 +68,8 @@ function setFieldName(fieldName) {
 <input type="submit" name="_eventId_back" value="Back"/>
 <input type="submit" name="_eventId_next" value="Next"/>
 <input type="hidden" name="fieldName"/>
+<p/>
+<input type="submit" name="_eventId_cancel" value="Cancel"/>
 
 </form>
 
