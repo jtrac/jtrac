@@ -52,7 +52,7 @@ function setDeallocate(userSpaceRoleId) {
 
 <input type="submit" name="_eventId_next" value="Next"/>
 
-<c:if test="${!user.adminForAllSpaces && user.id != 2}">
+<c:if test="${!user.adminForAllSpaces}">
 
 <p/>
 

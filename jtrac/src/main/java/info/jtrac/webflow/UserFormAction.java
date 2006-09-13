@@ -172,10 +172,11 @@ public class UserFormAction extends AbstractFormAction {
     public Event userDeallocateHandler(RequestContext context) {
         String userSpaceRoleId = ValidationUtils.getParameter(context, "deallocate");
         int id = Integer.parseInt(userSpaceRoleId);
-        UserSpaceRole userSpaceRole = jtrac.loadUserSpaceRole(id);
-        User user = (User) context.getFlowScope().get("user");        
+        UserSpaceRole userSpaceRole = jtrac.loadUserSpaceRole(id);        
         jtrac.removeUserSpaceAllocation(userSpaceRole);
+        User user = jtrac.loadUser(userSpaceRole.getUser().getId());
         SecurityUtils.refreshSecurityContextIfPrincipal(user);
+        context.getFlowScope().put("user", user);
         return success();
     } 
     

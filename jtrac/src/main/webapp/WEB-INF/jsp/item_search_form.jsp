@@ -1,7 +1,5 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<p/>
-
 <form method="post" action="<c:url value='/flow'/>">
 
 <table class="jtrac">
@@ -22,6 +20,8 @@
         </td>
     </tr>
 </table>
+
+<br/>
 
 <table class="jtrac">
     <tr>

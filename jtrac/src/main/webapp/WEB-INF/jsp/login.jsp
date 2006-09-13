@@ -15,7 +15,12 @@
     </head>
     <body onLoad="setFocus()">
         
-        <table width="100%" class="jtrac"><tr class="alt"><td>JTrac</td></tr></table>
+        <table width="100%" class="jtrac alt">
+            <tr>
+                <td><a href="<c:url value='/'/>">Home</a>
+                <td align="right">JTrac</td>
+            </tr>
+        </table>
         
         <hr/>
         <br/>  
@@ -42,7 +47,7 @@
                     </td>
                 </tr> 
                 <tr>
-                    <td><a href="<c:url value='/'/>">Guest Access</a></td>
+                    <td/>
                     <td colspan="2" align="right">
                         remember me
                         <input type="checkbox" name="_acegi_security_remember_me"/>

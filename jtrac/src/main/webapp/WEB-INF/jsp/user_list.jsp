@@ -8,7 +8,7 @@
 
 <table class="jtrac">
 
-    <tr><th>User Name</th><th>Edit Profile</th><th>Locked</th><th>Tracker (Role)</th><th>Assign</br>Tracker</th></tr>
+    <tr><th>User Name</th><th>Edit Profile</th><th>Locked</th><th>Tracker (Role)</th><th>Assign</br>Tracker / Role</th></tr>
 
     <c:forEach items="${users}" var="user" varStatus="row">
         <c:set var="rowClass">
