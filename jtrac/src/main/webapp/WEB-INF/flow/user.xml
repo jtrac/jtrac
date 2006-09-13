@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
-	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
+    "http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
 
 <flow start-state="userForm">
 
@@ -23,7 +23,7 @@
         <if test="${flowScope.space == null}" then="userAllocateFlow" else="userListView"/>
     </decision-state>
     
-    <subflow-state id="userAllocateFlow" flow="userAllocate">
+    <subflow-state id="userAllocateFlow" flow="user_allocate">
         <attribute-mapper>
             <input-mapper>
                 <mapping source="requestScope.userForm.user" target="user"/>

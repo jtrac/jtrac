@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
-	"http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
+    "http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
 
 <flow start-state="itemForm">        
     
@@ -14,7 +14,7 @@
         </transition>
     </view-state>    
     
-    <subflow-state id="itemViewForm" flow="itemView">
+    <subflow-state id="itemViewForm" flow="item_view">
         <attribute-mapper>
             <input-mapper>
                 <mapping source="flowScope.item" target="item"/>
