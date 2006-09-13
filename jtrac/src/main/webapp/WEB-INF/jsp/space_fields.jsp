@@ -28,14 +28,14 @@ function setFieldName(fieldName) {
     <c:forEach items="${space.metadata.fieldOrder}" var="fieldName" varStatus="row">
         <c:set var="rowClass">
             <c:choose>
-                <c:when test="${selectedFieldName == fieldName}">class="selected"</c:when>
+                <c:when test="${selectedFieldName == fieldName.text}">class="selected"</c:when>
                 <c:when test="${row.count % 2 == 0}">class="alt"</c:when>
             </c:choose>            
         </c:set>           
         <tr ${rowClass}>
             <td>
-                <input type="submit" name="_eventId_up" value="/\" onClick="setFieldName('${fieldName}')"/>
-                <input type="submit" name="_eventId_down" value="\/" onClick="setFieldName('${fieldName}')"/>
+                <input type="submit" name="_eventId_up" value="/\" onClick="setFieldName('${fieldName.text}')"/>
+                <input type="submit" name="_eventId_down" value="\/" onClick="setFieldName('${fieldName.text}')"/>
             </td>
             <c:set var="field" value="${fields[fieldName]}"/>
             <td>${field.name}</td>
@@ -47,8 +47,8 @@ function setFieldName(fieldName) {
                     ${entry.value}<br/>
                 </c:forEach>
             </td>
-            <td><input type="submit" name="_eventId_edit" value="Edit" onClick="setFieldName('${fieldName}')"/></td>
-            <td><input type="submit" name="_eventId_delete" value="Delete" onClick="setFieldName('${fieldName}')"/></td>
+            <td><input type="submit" name="_eventId_edit" value="Edit" onClick="setFieldName('${fieldName.text}')"/></td>
+            <td><input type="submit" name="_eventId_delete" value="Delete" onClick="setFieldName('${fieldName.text}')"/></td>
         </tr>
     </c:forEach>
 </table>

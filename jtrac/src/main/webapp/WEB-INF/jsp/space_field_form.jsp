@@ -8,12 +8,14 @@ function setOptionKey(optionKey) {
 
 <span class="info">Edit Field</span>
 
+<br/><br/>
+
 <form name="spaceFieldForm" method="post" action="<c:url value='/flow'/>">
 
     <table class="jtrac">
         <tr>
             <td class="label">Internal Name</td>
-            <td>${fieldForm.field.name}</td>
+            <td>${fieldForm.field.nameText}</td>
         </tr>
         <tr>
             <td class="label">

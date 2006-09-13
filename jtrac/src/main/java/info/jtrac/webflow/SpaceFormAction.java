@@ -173,7 +173,7 @@ public class SpaceFormAction extends AbstractFormAction {
     public Event fieldUpdateHandler(RequestContext context) {        
         FieldForm fieldForm = (FieldForm) context.getFlowScope().get("fieldForm");
         Field field = fieldForm.getField();        
-        context.getRequestScope().put("selectedFieldName", field.getName());
+        context.getRequestScope().put("selectedFieldName", field.getNameText());
         return success();
     }
     
