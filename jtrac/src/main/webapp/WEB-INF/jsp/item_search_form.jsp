@@ -44,7 +44,7 @@
             <select name="sortFieldName">
                 <option value="id">ID</option>
                 <c:forEach items="${itemSearch.fields}" var="field">
-                    <option value="${field.name.text}" <c:if test="${itemSearch.sortFieldName == field.name}">selected="true"</c:if>>
+                    <option value="${field.nameText}" <c:if test="${itemSearch.sortFieldName == field.nameText}">selected="true"</c:if>>
                         ${field.label}
                     </option>
                 </c:forEach>

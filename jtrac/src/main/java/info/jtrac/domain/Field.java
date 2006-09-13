@@ -39,7 +39,7 @@ public class Field implements Serializable {
     private Name name;
     private String label;
     private boolean optional;
-    private Map<String, String> options;
+    private Map<String, String> options;    
     
     private static final Map<String, Name> nameMap;
     
@@ -253,6 +253,12 @@ public class Field implements Serializable {
             addOption("4", "Low");
             addOption("5", "Lowest");            
         }          
+    }
+    
+    // getter for JSTL only, avoid nasty Enum / EL incompatibilities 
+    // e.g. Glassfish vs Apache
+    public String getNameText() {
+        return name.text;
     }
     
     //===================================================================  
