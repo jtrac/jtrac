@@ -25,7 +25,7 @@
     <tr><td>&nbsp;</td></tr>
     <tr class="nav-table">
         <td>
-            <a href="<c:url value='/app/config_list.htm'/>">Manage Configuration</a>
+            <a href="<c:url value='/app/config_list.htm'/>">Manage Settings</a>
         </td>
     </tr>
     <tr><td>&nbsp;</td></tr>
