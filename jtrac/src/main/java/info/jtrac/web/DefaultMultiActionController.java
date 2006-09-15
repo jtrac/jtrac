@@ -35,6 +35,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.acegisecurity.AuthenticationException;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.ui.AbstractProcessingFilter;
+import org.acegisecurity.ui.AuthenticationEntryPoint;
+import org.acegisecurity.ui.cas.CasProcessingFilterEntryPoint;
 import org.acegisecurity.ui.rememberme.TokenBasedRememberMeServices;
 import org.acegisecurity.ui.webapp.AuthenticationProcessingFilter;
 import org.jfree.chart.ChartFactory;
@@ -48,17 +50,28 @@ import org.springframework.webflow.execution.FlowExecution;
 
 public class DefaultMultiActionController extends AbstractMultiActionController {
     
-    public ModelAndView loginHandler(HttpServletRequest request, HttpServletResponse response) {
-        String message = null;
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    public void setAuthenticationEntryPoint(AuthenticationEntryPoint authenticationEntryPoint) {
+        this.authenticationEntryPoint = authenticationEntryPoint;
+    }
+    
+    public ModelAndView loginHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request.getSession().invalidate();
+        if (authenticationEntryPoint instanceof CasProcessingFilterEntryPoint) {
+            logger.info("CAS mode detected, attempting CasProcessingFilterEntryPoint");
+            authenticationEntryPoint.commence(request, response, null);
+            return null;
+        }
+        ModelAndView mav = new ModelAndView("login");
         if (request.getParameter("error") != null) {
             AuthenticationException ae = (AuthenticationException) WebUtils.getSessionAttribute(request, AbstractProcessingFilter.ACEGI_SECURITY_LAST_EXCEPTION_KEY);
-            message = ae.getMessage();
+            mav.addObject("message", ae.getMessage());            
         }
         String loginName = (String) WebUtils.getSessionAttribute(request, AuthenticationProcessingFilter.ACEGI_SECURITY_LAST_USERNAME_KEY);
-        Map<String, String> model = new HashMap<String, String>();
-        model.put("message", message);
-        model.put("loginName", loginName);
-        return new ModelAndView("login", model);
+        Map<String, String> model = new HashMap<String, String>();        
+        mav.addObject("loginName", loginName);
+        return mav;
     }
 
     public ModelAndView logoutHandler(HttpServletRequest request, HttpServletResponse response) {

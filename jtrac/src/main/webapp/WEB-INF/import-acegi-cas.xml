@@ -3,66 +3,38 @@
 
 <!-- Acegi security configuration as Spring context -->
 
-<beans>                   
-    
-    <bean id="filterChainProxy" class="org.acegisecurity.util.FilterChainProxy">
-        <property name="filterInvocationDefinitionSource">
-            <value>
-                PATTERN_TYPE_APACHE_ANT
-                /resources/*=httpSessionFilter
-                /calendar/**=httpSessionFilter
-                /error_cas.htm=httpSessionFilter
-                /chart/*=httpSessionFilter
-                /svn_*=httpSessionFilter                 
-                /login.htm*=httpSessionFilter
-                /logout.htm=httpSessionFilter                
-                /**=httpSessionFilter,authenticationFilter,anonFilter,exceptionTranslationFilter,authorizationFilter
-            </value>
-        </property>
-    </bean>      
-    
-    <bean id="serviceProperties" class="org.acegisecurity.ui.cas.ServiceProperties">
-        <property name="service" value="https://localhost/jtrac/j_acegi_cas_security_check"/>
-        <property name="sendRenew" value="false"/>
-    </bean>
+<beans>  
     
     <bean id="authenticationFilter" class="org.acegisecurity.ui.cas.CasProcessingFilter">
         <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="authenticationFailureUrl" value="/exception.htm"/>
-        <property name="defaultTargetUrl" value="/"/>
-        <property name="filterProcessesUrl" value="/j_acegi_cas_security_check"/>
-    </bean>
-    
-    <bean id="exceptionTranslationFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
-        <property name="authenticationEntryPoint" ref="casProcessingFilterEntryPoint"/>
-    </bean>  
-    
-    <bean id="casProcessingFilterEntryPoint" class="org.acegisecurity.ui.cas.CasProcessingFilterEntryPoint">
-        <property name="loginUrl" value="https://localhost/cas/login"/>
-        <property name="serviceProperties" ref="serviceProperties"/>
-    </bean>   
- 
-    <bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
-        <property name="providers">
-            <list>
-                <ref local="casAuthenticationProvider"/>
-            </list>
-        </property>
+        <property name="authenticationFailureUrl" value="/auth/cas_failed.htm"/>
+        <property name="defaultTargetUrl" value="/app"/>
+        <property name="filterProcessesUrl" value="/app/j_acegi_cas_security_check"/>
     </bean>    
     
-    <bean id="casAuthenticationProvider" class="org.acegisecurity.providers.cas.CasAuthenticationProvider">
+    <bean id="authenticationProvider" class="org.acegisecurity.providers.cas.CasAuthenticationProvider">
         <property name="casAuthoritiesPopulator" ref="casAuthoritiesPopulator"/>
         <property name="casProxyDecider" ref="casProxyDecider"/>
         <property name="ticketValidator" ref="casProxyTicketValidator"/>
         <property name="statelessTicketCache" ref="statelessTicketCache"/>
-        <property name="key" value="my_password_for_this_auth_provider_only"/>
+        <property name="key" value="jtrac-cas"/>
     </bean>    
-        
-    <bean id="casProxyTicketValidator" class="org.acegisecurity.providers.cas.ticketvalidator.CasProxyTicketValidator">
-        <property name="casValidate" value="https://localhost/cas/proxyValidate"/>
-        <property name="proxyCallbackUrl" value="https://localhost/jtrac/casProxy/receptor"/>
+    
+    <bean id="authenticationEntryPoint" class="org.acegisecurity.ui.cas.CasProcessingFilterEntryPoint">
+        <property name="loginUrl" value="http://localhost:8080/cas/login"/>
         <property name="serviceProperties" ref="serviceProperties"/>
-        <!-- <property name="trustStore" value="/some/path/to/your/lib/security/cacerts"/> -->
+    </bean>    
+    
+    <bean id="serviceProperties" class="org.acegisecurity.ui.cas.ServiceProperties">
+        <property name="service" value="/jtrac/app/j_acegi_cas_security_check"/>
+        <property name="sendRenew" value="false"/>
+    </bean>    
+           
+    <bean id="casProxyTicketValidator" class="org.acegisecurity.providers.cas.ticketvalidator.CasProxyTicketValidator">
+        <property name="casValidate" value="https://localhost:8443/cas/proxyValidate"/>
+        <property name="proxyCallbackUrl" value="/casProxy/receptor"/>
+        <property name="serviceProperties" ref="serviceProperties"/>
+        <property name="trustStore" value="C:/adms_aep/apache-tomcat-5.5.16/conf/cacerts"/>
     </bean>
 
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
@@ -82,16 +54,7 @@
         <property name="userDetailsService" ref="jtrac"/>
     </bean>
 
-    <bean id="casProxyDecider" class="org.acegisecurity.providers.cas.proxy.RejectProxyTickets"/>    	         
- 
-   <bean id="basicProcessingFilter" class="org.acegisecurity.ui.basicauth.BasicProcessingFilter">
-      <property name="authenticationManager" ref="authenticationManager"/>
-      <property name="authenticationEntryPoint" ref="basicProcessingFilterEntryPoint"/>
-   </bean>
-
-   <bean id="basicProcessingFilterEntryPoint" class="org.acegisecurity.ui.basicauth.BasicProcessingFilterEntryPoint">
-      <property name="realmName" value="jtrac-realm"/>
-   </bean>    
+    <bean id="casProxyDecider" class="org.acegisecurity.providers.cas.proxy.RejectProxyTickets"/>   
     
 </beans>
 

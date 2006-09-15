@@ -67,6 +67,7 @@
         </property>
         <property name="jtrac" ref="jtrac"/>
         <property name="flowExecutionRepositoryFactory" ref="repositoryFactory"/>
+        <property name="authenticationEntryPoint" ref="authenticationEntryPoint"/>
     </bean>    
     
     <!-- ======================== SPRING WEB FLOW ============================ -->
