@@ -82,16 +82,9 @@
     </view-state>    
     
     <view-state id="spaceRolesView" view="space_roles">
-        <transition on="back" to="spaceFieldsView"/>       
-        <transition on="addState" to="spaceRolesView">
-            <action bean="spaceFormAction" method="stateAddHandler"/>
-        </transition>
-        <transition on="addRole" to="spaceRolesView">
-            <action bean="spaceFormAction" method="roleAddHandler"/>
-        </transition>
-        <transition on="editState" to="spaceStateEditForm">
-            <action bean="spaceFormAction" method="stateEditSetupHandler"/>
-        </transition>
+        <transition on="back" to="spaceFieldsView"/>
+        <transition on="editState" to="spaceStateForm"/>                
+        <transition on="editRole" to="spaceRoleForm"/>     
         <transition on="editTransition" to="spaceRolesView">
             <action bean="spaceFormAction" method="editTransitionHandler"/>
         </transition>
@@ -104,10 +97,23 @@
         <transition on="cancel" to="spaceListView"/>
     </view-state>  
     
-    <view-state id="spaceStateEditForm" view="space_state_edit">      
+    <view-state id="spaceStateForm" view="space_state_form">
+        <entry-actions>
+            <action bean="spaceFormAction" method="stateFormSetupHandler"/>
+        </entry-actions>      
         <transition on="cancel" to="spaceRolesView"/>
         <transition on="submit" to="spaceRolesView">
-            <action bean="spaceFormAction" method="stateEditHandler"/>
+            <action bean="spaceFormAction" method="stateFormHandler"/>
+        </transition>        
+    </view-state>    
+    
+    <view-state id="spaceRoleForm" view="space_role_form">
+        <entry-actions>
+            <action bean="spaceFormAction" method="roleFormSetupHandler"/>
+        </entry-actions>      
+        <transition on="cancel" to="spaceRolesView"/>
+        <transition on="submit" to="spaceRolesView">
+            <action bean="spaceFormAction" method="roleFormHandler"/>
         </transition>        
     </view-state>    
     

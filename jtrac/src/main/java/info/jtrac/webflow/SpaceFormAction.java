@@ -203,45 +203,21 @@ public class SpaceFormAction extends AbstractFormAction {
             jtrac.storeMetadata(space.getMetadata());
         }     
         return success();
-    }      
-    
-    public Event stateAddHandler(RequestContext context) throws Exception {
-        Space space = (Space) context.getFlowScope().get("space");
-        String state = ValidationUtils.getParameter(context, "state");
-        if (!ValidationUtils.isCamelDashCase(state)) {
-            Errors errors = getFormErrors(context);
-            errors.reject("error.spaceRoles.state.badchars", 
-                    "State name has to be Camel-Case with dashes ('-') to separate words e.g. 'Fixed', 'On-Hold' or 'Work-In-Progress'");
-            context.getRequestScope().put("state", state);
-            return error();
-        }
-        space.getMetadata().addState(state);        
-        return success();
     }
     
-    public Event roleAddHandler(RequestContext context) throws Exception {
-        Space space = (Space) context.getFlowScope().get("space");
-        String role = ValidationUtils.getParameter(context, "role");             
-        if (!ValidationUtils.isAllUpperCase(role)) {
-            Errors errors = getFormErrors(context);
-            errors.reject("error.spaceRoles.role.badchars", 
-                    "Role name has to be all capital letters or digits.");
-            context.getRequestScope().put("role", role);
-            return error();
-        }        
-        space.getMetadata().addRole(role);
-        return success();
-    }
+    //========================== STATES / ROLES ================================
     
-    public Event stateEditSetupHandler(RequestContext context) {
+    public Event stateFormSetupHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
         String stateKey = ValidationUtils.getParameter(context, "stateKey");
-        context.getRequestScope().put("state", space.getMetadata().getStates().get(Integer.parseInt(stateKey)));
-        context.getRequestScope().put("stateKey", stateKey);
+        if (stateKey != null) {
+            context.getRequestScope().put("stateKey", stateKey);
+            context.getRequestScope().put("state", space.getMetadata().getStates().get(Integer.parseInt(stateKey)));
+        }
         return success();
-    }    
+    }
     
-    public Event stateEditHandler(RequestContext context) throws Exception {
+    public Event stateFormHandler(RequestContext context) throws Exception {
         String state = ValidationUtils.getParameter(context, "state");
         String stateKey = ValidationUtils.getParameter(context, "stateKey");
         if (!ValidationUtils.isCamelDashCase(state)) {
@@ -253,9 +229,43 @@ public class SpaceFormAction extends AbstractFormAction {
             return error();
         }                
         Space space = (Space) context.getFlowScope().get("space");
-        space.getMetadata().getStates().put(Integer.parseInt(stateKey), state);
+        if (stateKey == null) {
+            space.getMetadata().addState(state);
+        } else {
+            space.getMetadata().getStates().put(Integer.parseInt(stateKey), state);
+        }
         return success();
-    }  
+    }    
+    
+    public Event roleFormSetupHandler(RequestContext context) {        
+        String roleKey = ValidationUtils.getParameter(context, "roleKey");
+        if (roleKey != null) {
+            context.getRequestScope().put("oldRoleKey", roleKey);
+            context.getRequestScope().put("roleKey", roleKey);
+        }
+        return success();
+    }    
+ 
+    public Event roleFormHandler(RequestContext context) throws Exception {
+        Space space = (Space) context.getFlowScope().get("space");
+        String roleKey = ValidationUtils.getParameter(context, "roleKey");
+        String oldRoleKey = ValidationUtils.getParameter(context, "oldRoleKey");
+        if (!ValidationUtils.isAllUpperCase(roleKey)) {
+            Errors errors = getFormErrors(context);
+            errors.reject("error.spaceRoles.role.name.badchars", "Role name has to be all capital letters or digits.");
+            context.getRequestScope().put("oldRoleKey", oldRoleKey);
+            context.getRequestScope().put("roleKey", roleKey);
+            return error();
+        }
+        if (oldRoleKey == null) {
+            space.getMetadata().addRole(roleKey);
+        } else if (!oldRoleKey.equals(roleKey)) {
+            // TODO
+        }
+        return success();
+    }     
+    
+    //======================== TRANSITION / MASK ===============================
     
     public Event editTransitionHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
@@ -275,11 +285,15 @@ public class SpaceFormAction extends AbstractFormAction {
         return success();
     }    
     
+    //============================ SAVE ========================================
+    
     public Event spaceSaveHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
         jtrac.storeSpace(space);
         return success();
     }
+    
+    //========================== ALLOCATE ======================================
     
     public Event spaceAllocateSetup(RequestContext context) {
         context.getFlowScope().put("_flowId", "space");

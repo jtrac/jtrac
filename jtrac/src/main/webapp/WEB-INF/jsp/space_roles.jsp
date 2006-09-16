@@ -4,6 +4,9 @@
 function editState(stateKey) {
     document.spaceRolesForm.stateKey.value = stateKey;
 }
+function editRole(roleKey) {
+    document.spaceRolesForm.roleKey.value = roleKey;
+}
 function editTransition(stateKey, roleKey, transitionKey) {
     document.spaceRolesForm.stateKey.value = stateKey;
     document.spaceRolesForm.roleKey.value = roleKey;
@@ -30,15 +33,15 @@ function editMask(stateKey, roleKey, fieldKey) {
 <form name="spaceRolesForm" method="post" action="<c:url value='/flow'/>">
 
 <table class="jtrac">
-    <tr>
-        <td/>
-        <td/>
+    <tr class="center">
+        <td colspan="2"><input type="submit" name="_eventId_editState" value="Add State"/></td>
+        <td colspan="2"><input type="submit" name="_eventId_editRole" value="Add Role"/></td>
         <th colspan="${stateCount - 1}">Next Allowed State</th>
         <th colspan="${fieldCount}">Field Level Permissions<br/>E=Edit, V=view</th> <%-- H=hide support in future --%>        
     </tr>
     <tr class="center alt">
-        <th>State</th>
-        <th>Role</th>
+        <th colspan="2">State</th>
+        <th colspan="2">Role</th>
         <c:forEach items="${states}" var="mapEntry">
             <c:if test="${mapEntry.key != 0}">
                 <td>${mapEntry.value}</td>
@@ -61,19 +64,35 @@ function editMask(stateKey, roleKey, fieldKey) {
                 <c:if test="${innerRow.count == roleCount}">bdr-bottom</c:if>
             </c:set>
            <c:set var="roleState" value="${role.states[stateRowEntry.key]}"/>
-            <tr class="center ${innerRowClass} ${lastRole}">
+            <tr class="center ${innerRowClass} ${lastRole}">                
                 <c:if test="${innerRow.count == 1}">
                     <td rowspan="${roleCount}" class="bdr-bottom ${rowClass}">
+                        ${states[stateRowEntry.key]}
+                    </td>
+                    <td rowspan="${roleCount}" class="bdr-bottom ${rowClass}">
                         <c:choose>
-                            <c:when test="${stateRowEntry.key == 0 || stateRowEntry.key == 99}">${states[stateRowEntry.key]}</c:when>
+                            <c:when test="${stateRowEntry.key != 0 && stateRowEntry.key != 99}">
+                                <input type="submit" name="_eventId_editState" value="Edit" onClick="editState('${stateRowEntry.key}')"/>
+                            </c:when>
                             <c:otherwise>
-                                <input type="submit" name="_eventId_editState" 
-                                    value="${states[roleState.status]}" onClick="editState('${stateRowEntry.key}')" title="rename"/>
+                                &nbsp;
                             </c:otherwise>
                         </c:choose>
                     </td>
-                </c:if>
-                <td>${role.name}</td>
+                </c:if>                
+                <td>                    
+                    ${role.name}
+                </td>
+                <td>    
+                    <c:choose>
+                        <c:when test="${stateRowEntry.key == 0}">
+                            <input type="submit" name="_eventId_editRole" value="Edit" onClick="editRole('${role.name}')"/>
+                        </c:when>
+                        <c:otherwise>
+                            &nbsp;
+                        </c:otherwise>
+                    </c:choose>                    
+                </td>
                 <c:forEach items="${states}" var="stateColEntry">
                     <c:if test="${stateColEntry.key != 0}">
                         <c:set var="showTransition">
@@ -107,38 +126,18 @@ function editMask(stateKey, roleKey, fieldKey) {
                             <c:when test="${stateRowEntry.key == 0 || stateRowEntry.key == 99}">${showMask}</c:when>
                             <c:otherwise>
                                 <input type="submit" name="_eventId_editMask" value="${showMask}"
-                                    onClick="editMask('${stateRowEntry.key}', '${role.name}', '${field.name}')" title="toggle"/>
+                                    onClick="editMask('${stateRowEntry.key}', '${role.name}', '${field.name.text}')" title="toggle"/>
                             </c:otherwise>
                         </c:choose>                             
                     </td>
                 </c:forEach>                
             </tr>
         </c:forEach>
-    </c:forEach>
-    <tr class="center">
-        <td><input name="state" size="12" value="${state}"/></td>
-        <td><input name="role" size="12" value="${role}"/></td>
-    <tr>
-    <tr class="center">
-        <td><input type="submit" name="_eventId_addState" value="Add New State"/></td>
-        <td><input type="submit" name="_eventId_addRole" value="Add New Role"/></td>
-    <tr>        
-</table>
+    </c:forEach>       
+</table> 
 
-<spring:bind path="space">
-    <span class="error">
-        <c:forEach items="${status.errorMessages}" var="error">
-            <c:out value="${error}"/><br/>
-        </c:forEach>
-    </span>
-</spring:bind>  
-
-<table class="jtrac">
-    <tr>
-        <td><input type="submit" name="_eventId_back" value="Back"/></td>
-        <td><input type="submit" name="_eventId_save" value="Save"/></td> 
-    </tr>
-</table>
+<input type="submit" name="_eventId_back" value="Back"/>
+<input type="submit" name="_eventId_save" value="Save"/>
 
 <input type="hidden" name="stateKey"/>
 <input type="hidden" name="roleKey"/>
@@ -147,6 +146,7 @@ function editMask(stateKey, roleKey, fieldKey) {
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 
 <p/>
+
 <input type="submit" name="_eventId_cancel" value="Cancel"/>
 
 </form>

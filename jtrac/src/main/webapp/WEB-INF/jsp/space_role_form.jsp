@@ -1,12 +1,12 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Rename Workflow State Name</span>
+<span class="info">Workflow Role</span>
 
 <p/>
 
 <form method="post" action="<c:url value='/flow'/>">
 
-    <input name="state" value="${state}"/>
+    <input name="roleKey" value="${roleKey}"/>
     <input type="submit" name="_eventId_submit" value="Submit"/>
     
     <spring:bind path="space">
@@ -17,7 +17,7 @@
         </span>
     </spring:bind>    
     
-    <input type="hidden" name="stateKey" value="${stateKey}"/>
+    <input type="hidden" name="oldRoleKey" value="${oldRoleKey}"/>
     <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
     
     <p/>
