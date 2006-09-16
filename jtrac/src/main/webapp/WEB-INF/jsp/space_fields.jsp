@@ -38,7 +38,7 @@ function setFieldName(fieldName) {
                 <input type="submit" name="_eventId_down" value="\/" onClick="setFieldName('${fieldName.text}')"/>
             </td>
             <c:set var="field" value="${fields[fieldName]}"/>
-            <td>${field.name}</td>
+            <td>${field.name.text}</td>
             <td>${field.name.description}</td>
             <td><c:if test="${field.optional}">true</c:if></td>
             <td>${field.label}</td>
