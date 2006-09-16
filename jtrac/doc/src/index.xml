@@ -66,7 +66,7 @@
                 minor changes to the database schema before the 2.0 milestone.
             </para>
             <para>
-                JTrac 2.0 final should be available by the end of August 2006. Development has been slower than 
+                JTrac 2.0 final should be available by the end of October 2006. Development has been slower than 
                 expected and the earlier target of June 2006 has admittedly not been met.
             </para>
             <para>
@@ -435,11 +435,13 @@ java -version
 set JAVA_OPTS=-Djtrac.home=C:/jtrac-home -Dfile.encoding=UTF-8
                 </programlisting>
             </para>
+            <!--
             <para>
                 If you explode (unzip) the WAR file, you can edit the /WEB-INF/classes/jtrac-init.properties file
                 and customize the location of "jtrac.home".  Note that you can choose to deploy JTrac as an exploded-war 
                 and it is not mandatory that you re-package (zip) the WAR file after editing "jtrac-init.properties".
-            </para>            
+            </para>
+            -->
             <para>                    
                 You can configure the database that JTrac uses by editing the "jtrac.properties" file that JTrac expects
                 within the "jtrac.home" folder.  Note that if JTrac does not find a "jtrac.properties" file in the
