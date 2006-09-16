@@ -56,10 +56,9 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
         this.authenticationEntryPoint = authenticationEntryPoint;
     }
     
-    public ModelAndView loginHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        request.getSession().invalidate();
+    public ModelAndView loginHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {        
         if (authenticationEntryPoint instanceof CasProcessingFilterEntryPoint) {
-            logger.info("CAS mode detected, attempting CasProcessingFilterEntryPoint");
+            logger.info("CAS mode detected, attempting CasProcessingFilterEntryPoint");            
             authenticationEntryPoint.commence(request, response, null);
             return null;
         }
@@ -68,8 +67,7 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
             AuthenticationException ae = (AuthenticationException) WebUtils.getSessionAttribute(request, AbstractProcessingFilter.ACEGI_SECURITY_LAST_EXCEPTION_KEY);
             mav.addObject("message", ae.getMessage());            
         }
-        String loginName = (String) WebUtils.getSessionAttribute(request, AuthenticationProcessingFilter.ACEGI_SECURITY_LAST_USERNAME_KEY);
-        Map<String, String> model = new HashMap<String, String>();        
+        String loginName = (String) WebUtils.getSessionAttribute(request, AuthenticationProcessingFilter.ACEGI_SECURITY_LAST_USERNAME_KEY);              
         mav.addObject("loginName", loginName);
         return mav;
     }
