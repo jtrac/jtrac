@@ -23,7 +23,7 @@
                 ${configMap[configParam]}
             </td>
             <td align="center">
-                <a href="<c:url value='/flow/config/?param=${configParam}'/>">(+)</a>
+                <a href="<c:url value='/flow/config?param=${configParam}'/>">(+)</a>
             </td>            
         </tr>
     </c:forEach>
