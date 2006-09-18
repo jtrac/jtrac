@@ -22,6 +22,7 @@ public class UserTest extends TestCase {
         u.addSpaceWithRole(s1, "ROLE_ONE-ONE");
         u.addSpaceWithRole(s1, "ROLE_ONE-TWO");
         u.addSpaceWithRole(null, "ROLE_ADMIN");
+        u.setId(1);
         
         GrantedAuthority[] gas = u.getAuthorities();
         
@@ -29,7 +30,7 @@ public class UserTest extends TestCase {
         for(GrantedAuthority ga : gas) {
             set.add(ga.getAuthority());
         }        
-        
+                
         assertEquals(4, gas.length);
         
         assertTrue(set.contains("ROLE_USER"));
