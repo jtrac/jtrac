@@ -17,7 +17,7 @@ function setOptionKey(optionKey) {
             <td class="label">Internal Name</td>
             <td>
                 ${fieldForm.field.name.text}
-                <input type="submit" name="_eventId_delete" value="Delete This Field"/>
+                <input type="submit" name="_eventId_delete" value="Delete"/>
             </td>
         </tr>
         <tr>

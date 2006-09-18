@@ -34,7 +34,7 @@
     </view-state>
    
     <view-state id="spaceFieldDeleteView" view="space_field_delete">
-        <transition on="cancel" to="spaceFieldsView"/>
+        <transition on="cancel" to="spaceFieldForm"/>
         <transition on="submit" to="spaceFieldsView">
             <action bean="spaceFormAction" method="fieldDeleteHandler"/>
         </transition>        
