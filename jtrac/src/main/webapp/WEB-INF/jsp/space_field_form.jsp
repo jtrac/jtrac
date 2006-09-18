@@ -15,7 +15,10 @@ function setOptionKey(optionKey) {
     <table class="jtrac">
         <tr>
             <td class="label">Internal Name</td>
-            <td>${fieldForm.field.nameText}</td>
+            <td>
+                ${fieldForm.field.name.text}
+                <input type="submit" name="_eventId_delete" value="Delete This Field"/>
+            </td>
         </tr>
         <tr>
             <td class="label">
@@ -50,7 +53,6 @@ function setOptionKey(optionKey) {
                                 <td><input type="submit" name="_eventId_up" value="/\" onClick="setOptionKey('${entry.key}')"/></td>
                                 <td><input type="submit" name="_eventId_down" value="\/" onClick="setOptionKey('${entry.key}')"/></td>
                                 <td><input type="submit" name="_eventId_edit" value="Edit" onClick="setOptionKey('${entry.key}')"/></td>
-                                <td><input type="submit" name="_eventId_delete" value="Delete" onClick="setOptionKey('${entry.key}')"/></td>
                             </tr>
                         </c:forEach>
                     </table>
@@ -71,6 +73,7 @@ function setOptionKey(optionKey) {
             <td/>
             <td>
                 <input type="submit" name="_eventId_done" value="Done"/>
+                <input type="hidden" name="fieldName" value="${fieldForm.field.name.text}"/>
                 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
                 <input type="hidden" name="optionKey"/>
             </td>

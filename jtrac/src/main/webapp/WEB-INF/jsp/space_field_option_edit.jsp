@@ -8,6 +8,7 @@
 
     <input name="option" value="${option}"/>
     <input type="submit" name="_eventId_submit" value="Submit"/>
+    <input type="submit" name="_eventId_delete" value="Delete This Option"/>
     
     <spring:bind path="fieldForm">
         <span class="error">

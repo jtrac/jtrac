@@ -23,7 +23,6 @@ function setFieldName(fieldName) {
         <th>Label</th>
         <th>Option List</th>
         <th/>
-        <th/>
     </tr>
     <c:forEach items="${space.metadata.fieldOrder}" var="fieldName" varStatus="row">
         <c:set var="rowClass">
@@ -48,7 +47,6 @@ function setFieldName(fieldName) {
                 </c:forEach>
             </td>
             <td><input type="submit" name="_eventId_edit" value="Edit" onClick="setFieldName('${fieldName.text}')"/></td>
-            <td><input type="submit" name="_eventId_delete" value="Delete" onClick="setFieldName('${fieldName.text}')"/></td>
         </tr>
     </c:forEach>
 </table>

@@ -22,10 +22,7 @@
         </transition>
         <transition on="edit" to="spaceFieldForm">
             <action bean="spaceFormAction" method="fieldEditHandler"/>
-        </transition>
-        <transition on="delete" to="spaceFieldDeleteView">
-            <action bean="spaceFormAction" method="fieldDeleteSetupHandler"/>
-        </transition>        
+        </transition>       
         <transition on="up" to="spaceFieldsView">
             <action bean="spaceFormAction" method="fieldUpHandler"/>
         </transition>
@@ -47,9 +44,9 @@
         <transition on="edit" to="spaceFieldOptionForm">
             <action bean="fieldFormAction" method="fieldOptionEditSetupHandler"/>
         </transition>
-        <transition on="delete" to="spaceFieldOptionDeleteView">
-            <action bean="fieldFormAction" method="fieldOptionDeleteSetupHandler"/>
-        </transition>        
+        <transition on="delete" to="spaceFieldDeleteView">
+            <action bean="spaceFormAction" method="fieldDeleteSetupHandler"/>
+        </transition>       
         <transition on="up" to="spaceFieldForm">
             <action bean="fieldFormAction" method="fieldOptionUpHandler"/>
         </transition>
@@ -67,7 +64,10 @@
         </transition>        
     </view-state>
  
-    <view-state id="spaceFieldOptionForm" view="space_field_option_edit">      
+    <view-state id="spaceFieldOptionForm" view="space_field_option_edit">
+        <transition on="delete" to="spaceFieldOptionDeleteView">
+            <action bean="fieldFormAction" method="fieldOptionDeleteSetupHandler"/>
+        </transition>      
         <transition on="cancel" to="spaceFieldForm"/>
         <transition on="submit" to="spaceFieldForm">
             <action bean="fieldFormAction" method="fieldOptionEditHandler"/>
