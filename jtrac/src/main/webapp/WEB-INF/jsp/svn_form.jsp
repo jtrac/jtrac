@@ -2,7 +2,7 @@
 
 <span class="info">Connect to Subversion repository</span>
 
-<form method="post" action="<c:url value='svn_view.htm'/>">
+<form method="post" action="<c:url value='/app/svn_view.htm'/>">
 
     <table class="jtrac">
         <tr>	

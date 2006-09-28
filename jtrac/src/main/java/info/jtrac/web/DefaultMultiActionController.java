@@ -116,6 +116,7 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
     public ModelAndView svnCommitsPerCommitterChartHandler(HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         Map<String, Integer> commitsPerCommitter = (Map<String, Integer>) request.getSession().getAttribute("commitsPerCommitter");
+        request.getSession().setAttribute("commitsPerCommitter", null);
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (Map.Entry<String, Integer> entry : commitsPerCommitter.entrySet()) {
             dataset.addValue(entry.getValue(), "Commits", entry.getKey());
