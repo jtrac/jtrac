@@ -1,10 +1,8 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<p/>
+<span class="error">JTrac Internal error</span>
 
-<div class="error">JTrac Internal error</div>
-
-<p/>
+<br/><br/>
 
 <% 
 try {
