@@ -296,7 +296,7 @@
     </target>    
 	
     <target name="jetty-start-debug" depends="jetty-setup, war-exploded">
-        <jetty-start arg1="-Xrunjdwp:transport=dt_shmem,address=jtrac_jpda_address,server=y,suspend=n" arg2="-Xdebug"/>
+        <jetty-start arg1="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n" arg2="-Xdebug"/>
     </target> 
        
     <!-- target for NetBeans Profiler on Windows -->
@@ -356,7 +356,7 @@
         <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">            
             <jvmarg value="-Dcatalina.home=${tomcat.home}"/>
             <jvmarg value="-Xdebug"/>
-            <jvmarg value="-Xrunjdwp:transport=dt_shmem,address=jtrac_jpda_address,server=y,suspend=n"/>
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"/>
             <jvmarg value="-Dfile.encoding=UTF-8"/>
             <jvmarg value="-Djtrac.home=${basedir}/home"/>           
         </java>

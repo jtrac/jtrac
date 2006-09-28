@@ -4,7 +4,7 @@
     <property file="build-deps.properties"/>    
     
     <target if="netbeans.home" name="debug-nb">
-        <nbjpdaconnect address="jtrac_jpda_address" host="localhost" name="jtrac-debug" transport="dt_shmem">          
+        <nbjpdaconnect address="8000" host="localhost" name="jtrac-debug" transport="dt_socket">          
             <sourcepath>
                 <path path="src/main/webapp"/>                
             </sourcepath>
