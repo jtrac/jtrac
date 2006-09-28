@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="jtrac" basedir=".">
     
-    <!-- example build.properties
-    mvn.executable=C:/peter/opt/maven-2.0.4/bin/mvn.bat
+    <!-- example build.properties    
     watij.home=C:/peter/opt/watij-2.2.2
     tomcat.home=C:/apache-tomcat-5.5.16 [optional, jetty used by default]
     -->
     
     <property file="build.properties"/>
-    <property file="build-deps.properties"/>	
-    <property name="war.name" value="jtrac"/>	
+    <property file="build-deps.properties"/>    
+    <property name="war.name" value="jtrac"/>   
     
     <target name="clean">
         <delete includeemptydirs="true" failonerror="false">
@@ -24,7 +23,7 @@
             </fileset>
         </delete>        
     </target>    
-	
+    
     <target name="compile">
         <mkdir dir="target/classes"/>
         <condition property="debug" value="false" else="true">            
@@ -36,8 +35,8 @@
         <copy todir="target/classes">
             <fileset dir="src/main/resources"/>
         </copy>              
-    </target> 			
-	
+    </target>           
+    
     <target name="war-exploded" depends="compile">
         <war-exploded/>
     </target> 
@@ -71,14 +70,14 @@
         <java classname="org.hibernate.tool.hbm2ddl.SchemaExport" fork="true">
             <classpath>
                 <path path="${test.jars}"/>
-                <path path="target/classes"/>        	
-            </classpath>			
+                <path path="target/classes"/>           
+            </classpath>            
             <jvmarg value="-Dhibernate.dialect=org.hibernate.dialect.SybaseDialect"/>
             <arg value="--text"/>
             <arg value="--output=target/schema.sql"/>
             <arg value="src/main/resources/*.hbm.xml"/>
         </java>
-    </target>	    
+    </target>       
     
     <!-- ========================== DIST ============================ -->
     
@@ -113,15 +112,27 @@
         </delete>
     </target>
     
+    <target name="dist-src">
+        <mkdir dir="target"/>
+        <zip destfile="target/jtrac-src.zip">
+            <zipfileset dir="nbproject" prefix="jtrac/nbproject"/>
+            <zipfileset dir="etc" prefix="jtrac/etc"/>
+            <zipfileset dir="src" prefix="jtrac/src"/>
+            <zipfileset dir="." includes="*.*" prefix="jtrac"/>
+            <zipfileset dir="../antprops/src" prefix="antprops/src"/>
+            <zipfileset dir="../antprops" includes="*.*" prefix="antprops"/>
+        </zip>         
+    </target>    
+    
     <!-- ========================== TEST ============================ -->
-	
+    
     <target name="all" depends="clean, compile-test">
         <checkstyle-macro/>
         <style in="target/reports/checkstyle.xml" out="target/reports/checkstyle.html" 
         style="etc/checkstyle-noframes-sorted.xsl"/>        
         <antcall target="test-coverage"/>
     </target>
-	
+    
     <target name="compile-test" depends="compile">
         <mkdir dir="target/test-classes"/>
         <javac srcdir="src/test/java" destdir="target/test-classes" debug="true">
@@ -130,7 +141,7 @@
                 <path path="${test.jars}"/>
             </classpath>
         </javac>
-    </target> 			
+    </target>           
     
     <target name="test-coverage" depends="compile-test">    
         <test-macro emmaEnabled="true"/>
@@ -147,7 +158,7 @@
     </target>
     
     <target name="test-single" depends="compile-test">
-    	<!-- files property expected from netbeans -->
+        <!-- files property expected from netbeans -->
         <fail unless="files">no files selected!</fail>      
         <test-macro includes="${files}" emmaEnabled="true" excludes=""/>      
     </target>    
@@ -191,24 +202,12 @@
                 </report>
             </emma>          
         </sequential>
-    </macrodef>
-	
-    <!-- ======================== MAVEN ============================ -->
-
-    <target name="mvn-antprops">
-        <input message="Connect to external repositories?" validargs="y,n" addproperty="do.online"/>
-        <condition property="offline.flag" value="-o" else="">
-            <equals arg1="n" arg2="${do.online}"/>
-        </condition>		
-        <exec executable="${mvn.executable}">
-            <arg line="antprops:generate ${offline.flag}"/>
-        </exec>
-    </target>    
+    </macrodef>    
     
-    <!-- ======================= CHECKSTYLE ========================= -->	
-	
-    <taskdef resource="checkstyletask.properties" classpath="${checkstyle.jars}"/>	                	
-	
+    <!-- ======================= CHECKSTYLE ========================= -->   
+    
+    <taskdef resource="checkstyletask.properties" classpath="${checkstyle.jars}"/>                      
+    
     <target name="checkstyle">
         <checkstyle-macro/>
         <concat>
@@ -226,7 +225,7 @@
             <fileset dir="target/reports" includes="checkstyle.txt"/>
         </concat>
     </target>    
-	
+    
     <macrodef name="checkstyle-macro">
         <attribute name="files" default="**/*.java"/>
         <sequential>
@@ -240,10 +239,10 @@
                 <formatter type="plain" toFile="target/reports/checkstyle.txt"/>
             </checkstyle>            
         </sequential>
-    </macrodef>	
-	
+    </macrodef> 
+    
     <!-- =========================== DOC ============================ -->
-	
+    
     <target name="javadoc">
         <mkdir dir="target/api"/>
         <javadoc destdir="target/api" windowtitle="JTrac" use="true" defaultexcludes="true" breakiterator="true">
@@ -251,7 +250,7 @@
             <doctitle><![CDATA[<h1>JTrac API Documentation</h1>]]></doctitle>
             <bottom><![CDATA[<i>JTrac</i> - <a href="http://jtrac.info">http://jtrac.info</a>]]></bottom>
         </javadoc>
-    </target>	
+    </target>   
     
     <!-- ========================= JETTY ============================ -->    
     
@@ -294,7 +293,7 @@
             <equals arg1="true" arg2="false"/>
         </waitfor>        
     </target>    
-	
+    
     <target name="jetty-start-debug" depends="jetty-setup, war-exploded">
         <jetty-start arg1="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n" arg2="-Xdebug"/>
     </target> 
@@ -305,7 +304,7 @@
         <property name="agent.path" value="${nbprof.home}/deployed/jdk15/windows/profilerinterface.dll=${nbprof.home},5140"/>
         <jetty-start arg1="-agentpath:${agent.path}" arg2="-Xmx512m"/>
     </target>
-	
+    
     <macrodef name="jetty-start">
         <attribute name="webapp" default="../${war.name}"/>
         <attribute name="arg1" default=""/>
