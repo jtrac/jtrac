@@ -136,6 +136,8 @@ function editMask(stateKey, roleKey, fieldKey) {
     </c:forEach>       
 </table> 
 
+<br/>
+
 <input type="submit" name="_eventId_back" value="Back"/>
 <input type="submit" name="_eventId_save" value="Save"/>
 

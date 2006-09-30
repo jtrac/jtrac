@@ -57,7 +57,7 @@
 </table>    
 
 <c:if test="${spaceCount == 0}">
-    <p><span class="info">You are not mapped to any Spaces yet.</span></p>
+    <span class="info">You are not mapped to any Spaces yet.</span>
 </c:if>
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>
