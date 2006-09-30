@@ -19,9 +19,10 @@ package info.jtrac.domain;
 import java.io.Serializable;
 
 /**
- * Class that exists purely to hold the users associated with an item
+ * Class that exists purely to hold a single user associated with an item
  * along with a integer "type" indicating the nature of the relationship
- * between Item and User
+ * between Item --> User (one directional relationship)
+ *
  * This is used in the following cases
  * - users "watching" an Item and need to be notified on Status changes
  *
