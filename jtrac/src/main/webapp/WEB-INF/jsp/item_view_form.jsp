@@ -65,7 +65,7 @@
         <td>
             <spring:bind path="history.comment">
                 <textarea name="${status.expression}" rows="6" cols="70">${status.value}</textarea>
-                <br/><span class="error">${status.errorMessage}</span>
+                <div class="error">${status.errorMessage}</div>
             </spring:bind>
         </td>        
     </tr>
