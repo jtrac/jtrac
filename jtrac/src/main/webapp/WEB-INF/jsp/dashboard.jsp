@@ -24,7 +24,7 @@
             <c:set var="count" value="${counts.counts[spaceId]}"/>
             <tr><td>&nbsp;</td></tr>
             <tr class="nav-table">
-                <td>${userSpaceRole.space.prefixCode}</td>
+                <td>${userSpaceRole.space.name}</td>
                 <c:if test="${principal.id != 0}">
                     <td>${userSpaceRole.roleKey}</td>
                     <td><a href="<c:url value='/flow/item?spaceId=${spaceId}'/>">(new)</a></td>

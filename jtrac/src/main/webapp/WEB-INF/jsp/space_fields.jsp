@@ -6,7 +6,7 @@ function setFieldName(fieldName) {
 }
 </script>
 
-<span class="info">Custom Fields for Space: ${space.prefixCode}</span>
+<span class="info">Custom Fields for Space: ${space.name} (${space.prefixCode})</span>
 
 <p/>
 

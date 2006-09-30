@@ -61,6 +61,7 @@ public class SpaceFormAction extends AbstractFormAction {
             Space clone = new Space();
             clone.setId(space.getId());
             clone.setPrefixCode(space.getPrefixCode() + "");
+            clone.setName(space.getName() + "");
             clone.setGuestAllowed(space.isGuestAllowed());
             clone.setDescription(space.getDescription() == null ? null : space.getDescription() + "");
             clone.setSpaceSequence(space.getSpaceSequence()); // or else Hibernate orphans the old one
@@ -88,12 +89,15 @@ public class SpaceFormAction extends AbstractFormAction {
             }
             if (space.getPrefixCode().length() > 10) {
                 errors.rejectValue("prefixCode", "error.space.prefixCode.toolong",
-                        "Length should be less than 10 characters.");
+                        "Length should not be greater than 10 characters.");
             }            
             if (!ValidationUtils.isAllUpperCase(space.getPrefixCode())) {
                 errors.rejectValue("prefixCode", "error.space.prefixCode.badchars",
                         "Only capital letters and numeric characters allowed.");
             }
+        }
+        if (space.getName() == null) {
+            errors.rejectValue("name", ValidationUtils.ERROR_EMPTY_CODE, ValidationUtils.ERROR_EMPTY_MSG);
         }
         if (errors.hasErrors()) {
             return error();

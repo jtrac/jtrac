@@ -19,7 +19,7 @@ function editMask(stateKey, roleKey, fieldKey) {
 }
 </script>
 
-<span class="info">Space Roles and State-Transitions (Workflow) for Space: ${space.prefixCode}</span>
+<span class="info">Space Roles and State-Transitions (Workflow) for Space: ${space.name} (${space.prefixCode})</span>
 
 <br/><br/>
 

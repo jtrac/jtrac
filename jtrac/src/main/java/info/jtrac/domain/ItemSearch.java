@@ -334,7 +334,7 @@ public class ItemSearch implements Serializable {
         Map<Integer, String> map = new HashMap<Integer, String>(user.getUserSpaceRoles().size());
         for(UserSpaceRole usr : user.getUserSpaceRoles()) {
             if (usr.getSpace() != null) {
-                map.put((int) usr.getSpace().getId(), usr.getSpace().getPrefixCode());
+                map.put((int) usr.getSpace().getId(), usr.getSpace().getName());
             }
         }
         return map;

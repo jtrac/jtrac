@@ -9,7 +9,8 @@
 <table class="jtrac">
 
     <tr>
-        <th>Space</th>
+        <th>Key</th>
+        <th>Name</th>
         <th>Edit</th>
         <th>Description</th>
         <th>Users</th>
@@ -24,6 +25,7 @@
         </c:set>
         <tr ${rowClass}>
             <td>${space.prefixCode}</td>
+            <td>${space.name}</td>
             <td>
                 <a href="<c:url value='/flow/space?spaceId=${space.id}'/>">(edit)</a>
             </td>
