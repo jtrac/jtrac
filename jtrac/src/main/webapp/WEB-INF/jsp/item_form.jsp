@@ -15,7 +15,7 @@
             <td>
                 <spring:bind path="item.summary">
                     <input name="${status.expression}" value="${status.value}" size="107" id="focus"/>
-                    <br/><span class="error">${status.errorMessage}</span>
+                    <div class="error">${status.errorMessage}</div>                   
                 </spring:bind>
             </td>
         </tr>
@@ -27,8 +27,8 @@
             </td>    
             <td>
                 <spring:bind path="item.detail">
-                    <textarea name="${status.expression}" rows="10" cols="80">${status.value}</textarea>                
-                    <br/><span class="error">${status.errorMessage}</span>
+                    <textarea name="${status.expression}" rows="10" cols="80">${status.value}</textarea>                    
+                    <div class="error">${status.errorMessage}</div>
                 </spring:bind>
             </td>
         </tr>
