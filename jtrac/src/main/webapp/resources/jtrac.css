@@ -5,7 +5,7 @@ tr.center td { text-align: center; }
 .label { font-weight: bold; text-align: right; }
 a { color: blue; }
 a:hover { color: red; }
-.multiselect { height: 12em; overflow: auto; background: white; text-align: left; border: solid thin; }
+.multiselect { height: 12em; overflow: auto; background: white; text-align: left; border: thin groove; }
 .error { color: red; font-weight: bold; }
 .info { color: blue; font-weight: bold; }
 .alt { background: #DEDEFF; } 
