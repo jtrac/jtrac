@@ -35,7 +35,7 @@ import java.util.Map;
 import org.acegisecurity.userdetails.UserDetailsService;
 
 /**
- * Jtrac main business interface (facade)
+ * Jtrac main business interface (Service Layer)
  */
 public interface Jtrac extends UserDetailsService {
       

@@ -54,7 +54,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Jtrac Facade implementation
+ * Jtrac Service Layer implementation
  * This is where all the business logic is
  * For data persistence this delegates to JtracDao
  */
