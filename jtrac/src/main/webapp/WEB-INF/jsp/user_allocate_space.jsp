@@ -25,7 +25,7 @@ function setDeallocate(userSpaceRoleId) {
         </c:set>    
 
         <tr ${rowClass}>
-            <td>${userSpaceRole.space.prefixCode}</td>
+            <td>${userSpaceRole.space.name}</td>
             <td>${userSpaceRole.roleKey}</td>
             <td align="center">
                 <c:if test="${!(userSpaceRole.roleKey == 'ROLE_ADMIN' && empty userSpaceRole.space && user.id == 1)}">
@@ -46,7 +46,7 @@ function setDeallocate(userSpaceRoleId) {
 
 <select name="spaceId">
     <c:forEach items="${unallocatedSpaces}" var="space">
-        <option value="${space.id}">${space.prefixCode}</option>
+        <option value="${space.id}">${space.name}</option>
     </c:forEach>
 </select>
 

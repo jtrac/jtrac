@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Allocate Role for User: ${user.loginName} within Space: ${space.prefixCode}</span>
+<span class="info">Allocate Role for User: ${user.loginName} within Space: ${space.name} (${space.prefixCode})</span>
 
 <p/>
 
