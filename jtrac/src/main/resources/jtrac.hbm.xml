@@ -12,8 +12,8 @@
         <version name="version" column="version"/>
         <property name="type" column="type"/>
         <many-to-one name="parent" column="parent_id"/>
-        <many-to-one name="space" column="space_id" not-null="true" index="space_id_idx"/>
-        <property name="sequenceNum" column="sequence_num" index="sequence_num_idx"/>
+        <many-to-one name="space" column="space_id" not-null="true" index="idx_items_space_id"/>
+        <property name="sequenceNum" column="sequence_num" index="idx_items_sequence_num"/>
         <property name="timeStamp" column="time_stamp"/>
         <property name="plannedEffort" column="planned_effort"/>
         <set name="children" order-by="id" cascade="all" inverse="true">
@@ -24,21 +24,29 @@
             <key column="item_id"/>
             <one-to-many class="History"/>
         </set>        
-        <set name="itemUsers" cascade="all">
+        <set name="itemUsers" cascade="all" inverse="true">
             <key column="item_id"/>
             <one-to-many class="ItemUser"/>
+        </set>
+        <set name="itemItems" cascade="all" inverse="true">
+            <key column="item_id"/>
+            <one-to-many class="ItemItem"/>
+        </set>
+        <set name="itemTags" cascade="all" inverse="true">
+            <key column="item_id"/>
+            <one-to-many class="ItemTag"/>
         </set>         
-        <set name="attachments" cascade="all">
+        <set name="attachments" cascade="all" inverse="true">
             <key column="item_id"/>
             <one-to-many class="Attachment"/>
         </set>                 
-        <!-- identical to History -->
-        <many-to-one name="loggedBy" column="logged_by" not-null="true" index="logged_by_idx"/>
-        <many-to-one name="assignedTo" column="assigned_to" index="assigned_to_idx"/>        
+        <!-- identical to History (except indexes) -->
+        <many-to-one name="loggedBy" column="logged_by" not-null="true" index="idx_items_logged_by"/>
+        <many-to-one name="assignedTo" column="assigned_to" index="idx_items_assigned_to"/>        
         <property name="summary" column="summary"/>        
         <property name="detail" column="detail" type="text"/>
-        <property name="status" column="status" index="status_idx"/>
-        <property name="severity" column="severity" index="severity_idx"/>
+        <property name="status" column="status" index="idx_items_status"/>
+        <property name="severity" column="severity" index="idx_items_severity"/>
         <property name="priority" column="priority"/>        
         <property name="cusDbl01" column="cus_dbl_01"/>
         <property name="cusDbl02" column="cus_dbl_02"/>
@@ -70,6 +78,31 @@
         <many-to-one name="user" column="user_id" not-null="true"/>
         <property name="type" column="type"/>
     </class>     
+
+    <class name="ItemItem" table="item_items">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <many-to-one name="item" column="item_id" not-null="true"/>
+        <property name="type" column="type"/>
+    </class>    
+    
+    <class name="ItemTag" table="item_tags">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <many-to-one name="tag" column="tag_id" not-null="true"/>
+        <property name="type" column="type"/>
+    </class> 
+    
+    <class name="Tag" table="tags">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="type" column="type"/>
+        <property name="name" column="name" not-null="true" unique="true"/>
+        <property name="description" column="description" type="text"/>        
+    </class>
     
     <class name="History" table="history">
         <id name="id" column="id">
@@ -118,10 +151,10 @@
         </id>        
         <property name="type" column="type"/>         
         <many-to-one name="parent" column="parent"/>
-        <property name="loginName" column="login_name" unique="true" index="login_name_idx"/>
-        <property name="name" column="name"/>
+        <property name="loginName" column="login_name" unique="true" index="idx_users_login_name" length="50"/>
+        <property name="name" column="name" length="50"/>
         <property name="password" column="password"/>
-        <property name="email" column="email"/>
+        <property name="email" column="email" length="50"/>
         <property name="locked" column="locked"/>
         <many-to-one name="metadata" column="metadata_id"/>
         <set name="userSpaceRoles" cascade="all" inverse="true">
@@ -145,7 +178,8 @@
         </id>
         <version name="version" column="version"/>
         <property name="type" column="type"/>
-        <property name="prefixCode" column="prefix_code" unique="true"/>         
+        <property name="prefixCode" column="prefix_code" unique="true" length="10"/>
+        <property name="name" column="name" length="50"/>
         <property name="description" column="description" type="text"/>
         <property name="guestAllowed" column="guest_allowed"/>
         <one-to-one name="spaceSequence" cascade="all"/>
@@ -165,7 +199,7 @@
         </id>
         <version name="version" column="version"/>
         <property name="type" column="type"/>         
-        <property name="name" column="name"/>
+        <property name="name" column="name" length="50"/>
         <property name="description" column="description" type="text"/>
         <many-to-one name="parent" column="parent_id"/>
         <property name="xml" column="xml" type="text"/>

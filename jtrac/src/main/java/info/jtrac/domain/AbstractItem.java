@@ -65,7 +65,12 @@ public abstract class AbstractItem implements Serializable, DocumentCreator {
     private Date cusTim02;
     private Date cusTim03;    
     
+    // probably belong to Item not AbstractItem, but convenient for item_view_form binding
     private Set<ItemUser> itemUsers;
+    private Set<ItemItem> itemItems;
+    private Set<ItemTag> itemTags;
+    
+    // mvc form binding convenience not really domain, TODO refactor
     private boolean sendNotifications = true;
     
     // we could have used reflection or a Map but doing this way for performance
@@ -423,20 +428,36 @@ public abstract class AbstractItem implements Serializable, DocumentCreator {
         this.plannedEffort = plannedEffort;
     }    
     
-    public Set<ItemUser> getItemUsers() {
-        return itemUsers;
-    }
-
-    public void setItemUsers(Set<ItemUser> itemUsers) {
-        this.itemUsers = itemUsers;
-    }      
-    
     public boolean isSendNotifications() {
         return sendNotifications;
     }
 
     public void setSendNotifications(boolean sendNotifications) {
         this.sendNotifications = sendNotifications;
+    }    
+    
+    public Set<ItemUser> getItemUsers() {
+        return itemUsers;
+    }
+
+    public void setItemUsers(Set<ItemUser> itemUsers) {
+        this.itemUsers = itemUsers;
+    }  
+    
+    public Set<ItemItem> getItemItems() {
+        return itemItems;
+    }
+
+    public void setItemItems(Set<ItemItem> itemItems) {
+        this.itemItems = itemItems;
+    } 
+    
+    public Set<ItemTag> getItemTags() {
+        return itemTags;
+    }
+
+    public void setItemTags(Set<ItemTag> itemTags) {
+        this.itemTags = itemTags;
     }    
     
     @Override
