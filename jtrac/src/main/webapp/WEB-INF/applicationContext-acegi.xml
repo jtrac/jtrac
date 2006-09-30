@@ -15,8 +15,6 @@
         <property name="filterInvocationDefinitionSource">
             <value>
                 PATTERN_TYPE_APACHE_ANT
-                /resources/*=#NONE#
-                /auth/*=#NONE#
                 /**=httpSessionFilter,authenticationFilter,rememberMeFilter,jtracGuestFilter,exceptionTranslationFilter,authorizationFilter
             </value>
         </property>

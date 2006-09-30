@@ -53,14 +53,24 @@
     </filter>    
 
     <filter-mapping>
-      <filter-name>encodingFilter</filter-name>
-      <url-pattern>/*</url-pattern>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/app/*</url-pattern>
+    </filter-mapping>    
+    
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/flow/*</url-pattern>
     </filter-mapping>    
     
     <filter-mapping>
         <filter-name>acegiSecurityFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping> 
+        <url-pattern>/app/*</url-pattern>
+    </filter-mapping>
+ 
+    <filter-mapping>
+        <filter-name>acegiSecurityFilter</filter-name>
+        <url-pattern>/flow/*</url-pattern>
+    </filter-mapping>    
     
     <!-- Leave the listener commented-out if using JBoss -->
     <listener>
