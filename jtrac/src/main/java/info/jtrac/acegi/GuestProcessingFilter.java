@@ -28,6 +28,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import org.acegisecurity.context.HttpSessionContextIntegrationFilter;
+import org.acegisecurity.context.SecurityContext;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.ui.AuthenticationDetailsSource;
 import org.acegisecurity.ui.AuthenticationDetailsSourceImpl;
@@ -72,18 +74,11 @@ public class GuestProcessingFilter implements Filter {
                 if (logger.isDebugEnabled()) {
                     logger.debug("populated SecurityContextHolder with guest user: " + guestUser);
                 }
-                // since we have this filter of our own up and running do something to make JSPs cleaner
+                // this only happens once, see the hack in header.jsp for more
                 request.setAttribute("principal", authentication.getPrincipal());
             }
-        } else {
-            // since we have this filter of our own up and running do something to make JSPs cleaner
-            request.setAttribute("principal", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-            if (logger.isDebugEnabled()) {
-                logger.debug("SecurityContextHolder not populated with guest user, as it already contained: '" 
-                    + SecurityContextHolder.getContext().getAuthentication() + "'");
-            }
         }       
-        chain.doFilter(request, response);           
+        chain.doFilter(request, response);
     }
 
     public void destroy() {
