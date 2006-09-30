@@ -157,10 +157,44 @@
         <test-macro/>     
     </target>
     
-    <target name="test-single" depends="compile-test">
+    <target name="test-single" depends="compile-test" if="netbeans.home">
         <!-- files property expected from netbeans -->
         <fail unless="files">no files selected!</fail>      
         <test-macro includes="${files}" emmaEnabled="true" excludes=""/>      
+    </target>  
+  
+    <target name="debug-single" if="netbeans.home">
+        <!-- files property expected from netbeans -->
+        <fail unless="files">no files selected!</fail>        
+        <nbjpdastart name="junit.textui.TestRunner" addressproperty="jpda.address" transport="dt_socket">
+            <classpath>
+                <path path="${test.jars}"/>
+            </classpath>
+        </nbjpdastart> 
+        <java classname="junit.textui.TestRunner" fork="true">
+            <classpath>
+                <path path="target/test-classes"/>
+                <path path="${test.jars}"/>
+            </classpath>
+            <jvmarg value="-Xdebug"/>
+            <jvmarg value="-Xnoagent"/>
+            <jvmarg value="-Djava.compiler=none"/>
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,address=${jpda.address}"/>            
+            <arg value="${files}"/>
+        </java>       
+    </target>
+    
+    <target name="debug-fix">
+        <!-- files property expected from netbeans -->
+        <fail unless="files">no files selected!</fail>        
+        <javac srcdir="src/test/java" destdir="target/test-classes" debug="true" classpath="${test.jars}">
+            <include name="${files}.java"/>
+        </javac>
+        <nbjpdareload>
+            <fileset dir="target/test-classes">
+            <include name="${files}.class"/>
+            </fileset>
+        </nbjpdareload>
     </target>    
     
     <taskdef resource="emma_ant.properties" classpath="${emma.jars}"/>
@@ -299,7 +333,7 @@
     </target> 
        
     <!-- target for NetBeans Profiler on Windows -->
-    <target name="jetty-start-profile" depends="war-exploded">
+    <target name="jetty-start-profile" depends="war-exploded" if="netbeans.home">
         <property name="nbprof.home" value="${netbeans.home}/../profiler1/lib"/>
         <property name="agent.path" value="${nbprof.home}/deployed/jdk15/windows/profilerinterface.dll=${nbprof.home},5140"/>
         <jetty-start arg1="-agentpath:${agent.path}" arg2="-Xmx512m"/>

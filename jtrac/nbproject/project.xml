@@ -55,6 +55,30 @@
                         </arity>
                     </context>
                 </action>
+                <action name="debug.single">
+                    <target>debug-single</target>
+                        <context>
+                        <property>files</property>
+                        <folder>src/test/java</folder>
+                        <pattern>\.java$</pattern>
+                        <format>java-name</format>
+                        <arity>
+                            <one-file-only/>
+                        </arity>
+                    </context>
+                </action>
+                <action name="debug.fix">
+                    <target>debug-fix</target>
+                    <context>
+                        <property>files</property>
+                        <folder>src/test/java</folder>
+                        <pattern>\.java$</pattern>
+                        <format>relative-path-noext</format>
+                        <arity>
+                            <one-file-only/>
+                        </arity>
+                    </context>
+                </action>                
                 <action name="run">
                     <target>jetty-start-debug</target>
                 </action>

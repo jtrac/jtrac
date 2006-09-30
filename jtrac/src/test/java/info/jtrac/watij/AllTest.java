@@ -30,15 +30,16 @@ public class AllTest extends WatijTestCase {
         ie.link(text, "OPTIONS").click();
         assertTrue(ie.containsText("Options Menu"));        
         
-        ie.link(text, "Spaces").click();
+        ie.link(text, "Manage Spaces").click();
         assertTrue(ie.containsText("Spaces"));
         
-        ie.link(text, "Create New Space").click();
+        ie.link(text, "[ Create New Space ]").click();
         assertTrue(ie.containsText("Create New Space"));
         
         ie.textField(name, "prefixCode").set("TEST");
+        ie.textField(name, "name").set("Test Space");
         ie.button("Next").click();
-        assertTrue(ie.containsText("Custom Fields for Space: TEST"));
+        assertTrue(ie.containsText("Custom Fields for Space:"));
         
         ie.button("Next").click();
         assertTrue(ie.containsText("Space Roles"));
@@ -93,7 +94,7 @@ public class AllTest extends WatijTestCase {
         ie.link(text, "Users").click();
         assertTrue(ie.containsText("Users and Allocated Trackers"));
         
-        ie.link(text, "Create New User").click();
+        ie.link(text, "[ Create New User ]").click();
         assertTrue(ie.containsText("Edit User"));
         
         ie.textField(name, "user.loginName").set("testuser");
