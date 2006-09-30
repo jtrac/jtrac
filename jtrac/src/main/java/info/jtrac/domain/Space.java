@@ -36,6 +36,7 @@ public class Space implements Serializable {
     private int version;
     private Integer type;
     private String prefixCode;
+    private String name;
     private String description;
     private boolean guestAllowed;
     private SpaceSequence spaceSequence = new SpaceSequence();
@@ -67,6 +68,14 @@ public class Space implements Serializable {
         this.prefixCode = prefixCode;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }    
+    
     public String getDescription() {
         return description;
     }
