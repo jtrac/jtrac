@@ -69,7 +69,7 @@ public class JtracImpl implements Jtrac {
     public void setDao(JtracDao dao) {
         this.dao = dao;
         // performs one time init on Spring assisted startup        
-        setEmailUtils();
+        initEmailUtils();
     }
     
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
@@ -108,7 +108,7 @@ public class JtracImpl implements Jtrac {
     /**
      * initialize the email adapter
      */
-    private void setEmailUtils() {
+    private void initEmailUtils() {
         String host = loadConfig("mail.server.host");
         if (host == null) {
             logger.warn("'mail.server.host' config is null, mail adapter not initialized");
@@ -134,18 +134,18 @@ public class JtracImpl implements Jtrac {
             history.setAttachment(attachment);
         }
         Date now = new Date();
-        if (item.getTimeStamp() == null) {
-            item.setTimeStamp(now);
-        }
+        item.setTimeStamp(now);
         history.setTimeStamp(now);
         item.add(history);
         // SpaceSequence spaceSequence = item.getSpace().getSpaceSequence();
         // very important - have to do this to guarantee unique sequenceNum !
-        // see HibernateJtracDao.loadSpaceSequence() and storeSpaceSequence() for complete picture
+        // see HibernateJtracDao.storeSpaceSequence() for complete picture
         long ssId = item.getSpace().getSpaceSequence().getId();
-        SpaceSequence spaceSequence = dao.loadSpaceSequence(ssId);  //uses hibernate.get() not load()
+        SpaceSequence spaceSequence = dao.loadSpaceSequence(ssId);
         item.setSequenceNum(spaceSequence.next());
         dao.storeSpaceSequence(spaceSequence);
+        // this will at the moment execute unnecessary updates (bug in Hibernate handling of "version" property)
+        // se http://opensource.atlassian.com/projects/hibernate/browse/HHH-1401
         dao.storeItem(item);
         indexer.index(item);
         indexer.index(history);
@@ -413,7 +413,7 @@ public class JtracImpl implements Jtrac {
         dao.storeConfig(config);
         // ugly hack, TODO make smarter in future
         // email adapter to be re-initialized
-        setEmailUtils();
+        initEmailUtils();
     }
     
     public String loadConfig(String param) {
