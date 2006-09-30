@@ -16,24 +16,14 @@
 
 package info.jtrac.web;
 
-import java.util.HashMap;
-import java.util.Map;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.webflow.ExternalContext;
-import org.springframework.webflow.context.servlet.ServletExternalContext;
+import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
 import org.springframework.webflow.execution.repository.PermissionDeniedFlowExecutionAccessException;
-import org.springframework.webflow.executor.FlowExecutor;
-import org.springframework.webflow.executor.ResponseInstruction;
-import org.springframework.webflow.executor.mvc.FlowController;
-import org.springframework.webflow.executor.support.FlowExecutorArgumentExtractor;
-import org.springframework.webflow.support.ApplicationView;
 
 /**
  * Spring MVC exception handler resolver designed to gracefully handle
@@ -43,13 +33,17 @@ public class FlowExceptionResolver implements HandlerExceptionResolver{
     
     protected final Log logger = LogFactory.getLog(getClass());
     
-    public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object o, Exception e) {        
-        if (!e.getClass().isAssignableFrom(PermissionDeniedFlowExecutionAccessException.class)) {
-            logger.debug("returning null cannot resolve type " + e.getClass());
+    public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object o, Exception e) {
+        logger.debug("exception type: " + e.getClass() + ", message: " + e.getMessage());
+        if (e instanceof NoSuchFlowExecutionException) {
+            logger.debug("user must have logged in after session expired, redirecting to dashboard");            
+            return new ModelAndView("redirect:/app");
+        } else if (e instanceof PermissionDeniedFlowExecutionAccessException) {
+            logger.debug("user must have hit browser back button, trying to handle gracefully");        
+            return new ModelAndView("exception_flow");
+        } else {
             return null;
-        } 
-        logger.debug("user must have hit browser back button, trying to handle gracefully");
-        return new ModelAndView("exception_flow");        
+        }       
     }
     
 }
