@@ -99,7 +99,7 @@
                         </td>
                     </tr>
                     <tr><th>Attachment</th></tr>
-                    <tr><td><input type="file" name="file"/></td></tr>
+                    <tr><td><input type="file" name="file" size="15"/></td></tr>
                 </table>
             </td>
         </tr>

@@ -1,18 +1,37 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<c:if test="${!empty calledBySearch}">
-    <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=back&itemId=${item.id}#goto'/>">(back)</a>
-    <br/>
-    <br/>
-</c:if>
+<form method="post" action="<c:url value='/flow'/>" enctype="multipart/form-data">
 
-<jtrac:itemview item="${item}"/>
-
-<c:if test="${principal.id > 0}">
+<table class="jtrac">
+<tr>
+    <td>
+        <c:if test="${!empty calledBySearch || !empty calledByRelate}">            
+            <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=back&itemId=${item.id}#goto'/>">(back)</a>        
+        </c:if>
+    </td>
+    <c:if test="${!empty calledByRelate}">
+        <td class="selected">
+           Relate this item to ${relatingItem.refId} [${relatingItem.summary}]
+        </td>
+        <td>            
+            <select name="relationType">                
+                <option value="1">${relatingItem.refId} is a duplicate of this item</option>
+                <option value="2">${relatingItem.refId} depends on the resolution of this item</option>
+                <option value="0">Both items are related</option>
+            </select>
+            <input type="submit" name="_eventId_relate" value="Submit"/>
+        </td>
+    </c:if>    
+</tr>
+</table>
 
 <br/>
 
-<form method="post" action="<c:url value='/flow'/>" enctype="multipart/form-data">
+<jtrac:itemview item="${item}"/>
+
+<c:if test="${principal.id > 0 && empty calledByRelate}">
+
+<br/>
 
 <table class="bdr-collapse" width="100%">
 
@@ -76,8 +95,11 @@
         <td>
             <input type="submit" name="_eventId_submit" value="Submit"/>
             <input type="checkbox" name="sendNotifications" value="true" <c:if test="${history.sendNotifications}">checked="true"</c:if>/>
+            <input type="hidden" name="_sendNotifications"/>               
             send e-mail notifications
-            <input type="hidden" name="_sendNotifications"/>            
+            <c:if test="${empty calledByRelate}">            
+                | <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=relate&itemId=${item.id}'/>">(add related item)</a>
+            </c:if>
         </td>        
     </tr>  
 </table>
@@ -95,7 +117,7 @@
             </td>
         </tr>
         <tr><th>Attachment</th></tr>
-        <tr><td><input type="file" name="file"/></td></tr>
+        <tr><td><input type="file" name="file" size="15"/></td></tr>
     </table>
 </td>
 
@@ -104,10 +126,11 @@
 </table>
 
 <input type="hidden" name="itemId" value="${item.id}"/>
+
+</c:if>
+
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 
 </form>
-
-</c:if>
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>

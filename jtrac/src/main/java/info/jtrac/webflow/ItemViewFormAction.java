@@ -78,12 +78,12 @@ public class ItemViewFormAction extends AbstractFormAction {
         List<User> users = jtrac.findUsersForSpace(item.getSpace().getId());
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Space space = item.getSpace();
-        context.getFlowScope().put("transitions", item.getPermittedTransitions(user));
-        context.getFlowScope().put("editableFields", item.getEditableFieldList(user));
+        context.getRequestScope().put("transitions", item.getPermittedTransitions(user));
+        context.getRequestScope().put("editableFields", item.getEditableFieldList(user));
         // not flow scope because of weird Hibernate Lazy loading issues
         // hidden field "itemId" added to item_view_form.jsp
         context.getRequestScope().put("item", item);
-        context.getFlowScope().put("users", users);        
+        context.getRequestScope().put("users", users);        
         History history = new History();
         history.setItemUsers(item.getItemUsers());
         return history;
@@ -131,5 +131,16 @@ public class ItemViewFormAction extends AbstractFormAction {
         resetForm(context);
         return success();
     }
+    
+    public Event relateHandler(RequestContext context) {
+        // there may be a better way to do this within the flow definition file
+        // but this is a "marker" for switching on the "back" hyperlink
+        // see the "input-mapper" sections in WEB-INF/flow/item_view.xml and item_search.xml
+        context.getRequestScope().put("calledByRelate", true);
+        String itemId = ValidationUtils.getParameter(context, "itemId");      
+        Item item = jtrac.loadItem(Long.parseLong(itemId));
+        context.getRequestScope().put("item", item);
+        return success();
+    }     
     
 }

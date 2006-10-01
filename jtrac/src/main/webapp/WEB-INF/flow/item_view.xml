@@ -8,6 +8,8 @@
         <mapping source="space" target="flowScope.space"/>
         <mapping source="itemSearch" target="flowScope.itemSearch"/>
         <mapping source="calledBySearch" target="flowScope.calledBySearch"/>
+        <mapping source="calledByRelate" target="requestScope.calledByRelate"/>
+        <mapping source="relatingItem" target="requestScope.relatingItem"/>
     </input-mapper>    
     
     <view-state id="itemViewForm" view="item_view_form">
@@ -18,8 +20,27 @@
             <action bean="itemViewFormAction" method="bind"/>
             <action bean="itemViewFormAction" method="itemViewHandler"/>
         </transition>
-        <transition on="back" to="itemListView"/>        
-    </view-state>    
+        <transition on="back" to="itemListView"/>
+        <transition on="relate" to="itemSearchRelatedForm">
+            <action bean="itemViewFormAction" method="relateHandler"/>
+        </transition>
+    </view-state>
+    
+    <subflow-state id="itemSearchRelatedForm" flow="item_search">
+        <attribute-mapper>
+            <input-mapper>
+                <!-- just for enabling "back" navigation in item_search_form.jsp -->
+                <mapping source="requestScope.calledByRelate" target="calledByRelate"/>
+                <mapping source="requestScope.item" target="relatingItem"/>
+            </input-mapper>
+            <!--
+            <output-mapper>
+                <mapping source="item" target="requestScope.item"/>
+            </output-mapper>
+            -->
+        </attribute-mapper>
+        <transition on="backFromSearch" to="itemViewForm"/>      
+    </subflow-state>     
     
     <end-state id="itemListView" view="item_list"/>
     

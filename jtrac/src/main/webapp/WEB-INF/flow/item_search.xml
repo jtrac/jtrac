@@ -4,6 +4,11 @@
 
 <flow start-state="checkIfDashboardSearch">  
     
+    <input-mapper>
+        <mapping source="calledByRelate" target="flowScope.calledByRelate"/>
+        <mapping source="relatingItem" target="flowScope.relatingItem"/>
+    </input-mapper>   
+    
     <decision-state id="checkIfDashboardSearch">
         <if test="${requestParameters.type == null}" then="itemSearchForm" else="itemListViewSetup"/>
     </decision-state>
@@ -26,7 +31,8 @@
         </transition>
         <transition on="view" to="itemViewForm">            
             <action bean="itemSearchFormAction" method="itemSearchViewByRefIdHandler"/>
-        </transition>      
+        </transition>
+        <transition on="back" to="backFromSearch"/>      
     </view-state>    
     
     <view-state id="itemListView" view="item_list">
@@ -49,12 +55,23 @@
                 <mapping source="flowScope.itemSearch" target="itemSearch"/>
                 <!-- just for enabling "back" navigation in item_view_form.jsp -->
                 <mapping source="requestScope.calledBySearch" target="calledBySearch"/>
+                <!-- just for disabling "relate" navigation in item_view_form.jsp -->
+                <mapping source="flowScope.calledByRelate" target="calledByRelate"/>
+                <mapping source="flowScope.relatingItem" target="relatingItem"/>
             </input-mapper>
         </attribute-mapper>
         <transition on="itemListView" to="itemListView">
             <action bean="itemSearchFormAction" method="itemSearchFormHandler"/>
-        </transition>
+        </transition>        
     </subflow-state>      
     
+    <end-state id="backFromSearch">
+        <!--
+        <output-mapper>        
+            <mapping source="flowScope.item" target="item"/>
+        </output-mapper>
+        -->
+    </end-state>
+        
 </flow>
 

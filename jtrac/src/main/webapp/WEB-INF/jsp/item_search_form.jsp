@@ -1,5 +1,17 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
+<c:if test="${!empty calledByRelate}">
+    <table class="jtrac">
+        <tr>
+            <td><a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=back&itemId=${relatingItem.id}'/>">(back)</a></td>
+            <td class="selected">
+                Searching for items related to ${relatingItem.refId} [${relatingItem.summary}]
+            </td>
+        </tr>
+    </table>
+    <br/>
+</c:if>
+
 <form method="post" action="<c:url value='/flow'/>">
     View Item by Id
     <input name="refId" value="${refId}"/>
