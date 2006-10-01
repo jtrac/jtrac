@@ -705,42 +705,41 @@ wrapper.exe -r etc/wrapper.conf
                 </itemizedlist> 
             </para>
             <para>
-                The JTrac development environment uses Maven only for dependency management and deploying the website
-                hosted at SourceForge.  Almost all other development actions (clean, compile etc) are fired through
-                an Ant script that is able to use the dependencies information managed by Maven.  Using Maven means that
-                no binaries (JAR files) are checked into version control at all.
+                The JTrac development environment uses Maven 2 only for dependency management and generating and deploying the JTrac 
+                website hosted at SourceForge.  Almost all other development actions (clean, compile etc) are fired through
+                a detailed Ant script that is able to use the dependency information managed by Maven.  Using Maven ensures that
+                no binaries (JAR files) need to be checked into version control at all.
             </para>
             <para>
-                You can get some idea about the details and rationale of the custom Ant + Maven integration approach
-                <ulink url="http://ptrthomas.wordpress.com/2006/04/18/another-way-to-integrate-maven-2-with-ant-and-netbeans/">here (blog post)</ulink>
+                You can get some idea about the details and rationale of the custom Ant + Maven integration approach from
+                <ulink url="http://ptrthomas.wordpress.com/2006/04/18/another-way-to-integrate-maven-2-with-ant-and-netbeans/">this blog post.</ulink>
             </para>
             <para>
-                NetBeans is what we use, but because of the "IDE Neutral" Ant, you would be easily able to use
-                Eclipse (or any other IDE of your choice) without any problems.
+                Although NetBeans is preferred by the JTrac developers, the reliance on an "IDE Neutral" Ant script
+                ensures that you would easily be able to use Eclipse (or any other IDE of your choice) without any problems.
             </para>
             <para>
                 If you get stuck or have any questions about setting up and getting started, feel free to use the 
-                <ulink url="http://sourceforge.net/forum/forum.php?forum_id=552477">JTrac forums</ulink>.
+                <ulink url="http://sourceforge.net/forum/forum.php?forum_id=552477">JTrac forums</ulink> for help.
             </para>
         </sect1>
         <sect1 id="dev-check-prerequisites">
             <title>Check Prerequisites</title>
             <para>
-                Open a command prompt and confirm that Maven 2 works fine.  Do this by typing the command "mvn"
-                Maven 2 should try and do something (and probably fail).  Maven 2 should be in your "PATH" and if it is,
-                you are ready to move to the next step.
+                Maven 2 should be in your "PATH".  You can test this out by opening a command prompt and trying to run the
+                command "mvn".  If this is set, you are ready to move to the next step.
             </para>
         </sect1>
         <sect1 id="dev-download">
             <title>Download / Extract Source</title>
             <para>
-                Download the source code from 
+                (Source code downloads will be provided for releases greater than 2.0-RC2 onward.)  Download the source code from 
                 <ulink url="http://sourceforge.net/project/showfiles.php?group_id=162983&amp;package_id=184104">SourceForge</ulink>
                 and extract it to a convenient location.  You will end up with two directories ("antprops" and "jtrac").
             </para>
             <para>
-                Or you could choose to check out the source code directly from the JTrac SourceForge Subversion repository.
-                You have to do two separate check-outs, for the "antprops" Maven plugin in addition to "jtrac".
+                You could choose to check out the source code directly from the JTrac SourceForge Subversion repository.
+                You have to perform two separate check-outs, one for the "antprops" Maven plugin and of course "jtrac" itself.
             </para> 
            <para>
                Subversion URL for the Maven 2 "Antprops" plugin:
@@ -750,7 +749,7 @@ https://svn.sourceforge.net/svnroot/j-trac/trunk/maven-antprops-plugin
                 </programlisting>               
            </para>
            <para>
-               Subversion URL for the JTrac source code
+               Subversion URL for the JTrac source code:
                 <programlisting>
 
 https://svn.sourceforge.net/svnroot/j-trac/trunk/jtrac
@@ -784,13 +783,14 @@ mvn install
         <sect1 id="dev-build-properties">
             <title>Customize Ant Build Properties File</title>
             <para>
-                The downloaded source code should contain a sample "build.properties" file.  Please customize it
-                to suit your environment.  Actually all the entries, are optional and you will require them only if you
-                want to use Tomcat (instead of Jetty) and also Watij for the automated functional test script.
+                The downloaded source code should contain a sample "build.properties" file or you can look at the XML comment
+                provided at the top of "build.xml" for the structure.  Actually both entries are optional and you will require 
+                them only if you want to use Tomcat (instead of Jetty) and also try the <ulink url="http://watij.com/">Watij</ulink>
+                automated functional test script.
             </para>
             <para>
-                If you are in a hurry and can't wait to start working on JTrac you can skip this step.  
-                But then, ensure that you remove the build.properties file before the next step.
+                If you are in a hurry and can't wait to start working on JTrac you can skip setting up Tomcat or Watij.  
+                But then, ensure that you remove the build.properties file if one already exists - before the next step.
             </para>            
         </sect1>        
         <sect1 id="dev-antprops-generate">
@@ -805,20 +805,20 @@ mvn antprops:generate
                 </programlisting>
             </para>
             <para>
-                This step will not only download all the required JAR files (which may take time only the first time),
+                This step will not only download all the required JAR files (which may take time only for the first time),
                 but also generate a standard properties file that will contain all the information required for
-                our Ant build file to operate.  The file generated is called "build-deps.properties"
+                the Ant build script to operate.  The file generated is called "build-deps.properties"
             </para>            
         </sect1>
         <sect1 id="dev-eclipse">
             <title>Import project into your IDE</title>
             <para>
-                If you are a NetBeans user you are ready to start developing on JTrac!  Just use the "Open Project"
+                If you are a NetBeans user you are ready to build and run JTrac!  Just use the "Open Project"
                 option from the menu.
             </para>
             <para>
                 If you want to use Eclipse, that's easy as well.  You need to first run the following command and
-                Maven will then generate your Eclipse project config files for you.
+                Maven will then generate your Eclipse project descriptor files for you.
             </para>
             <para>
                 <programlisting>
@@ -827,29 +827,35 @@ mvn eclipse:eclipse
                 </programlisting>
             </para>
             <para>
-                That should create the ".project" and the ".classpath" files for you.  Now it's just a matter of
-                importing "Existing Project into Workspace".
+                That should create the ".project" and the ".classpath" files.  Now its just a matter of
+                importing "Existing Project into Workspace" within Eclipse.
             </para>          
         </sect1>
-        <sect1 id="dev-starting">
-            <title>Starting JTrac</title>
+        <sect1 id="dev-building">
+            <title>Building And Running JTrac</title>
             <para>
-                Use the "jetty-start" Ant target to get going.  For NetBeans users, this is neatly mapped
-                to your "Run Main Project (F6)" shortcut, once you make JTrac your "main project".  Note that
-                this Ant target is smart enough to detect if Jetty is already running and will perform a 
-                Jetty shutdown if required.
+                You can explore all the Ant targets that are available. You can also try the "jetty-start" 
+                Ant target straight away that will compile, create and deploy the WAR as well as boot a Jetty server.
+                For NetBeans users, the "jetty-start" target is neatly mapped to the "Run Main Project (F6)" shortcut, 
+                once you make JTrac the "main project".  Note that this Ant target is smart enough to detect if Jetty 
+                is already running and will perform a shutdown if required before re-starting.
             </para>
             <para>
+                Maven has been configured to download the Jetty web server which makes the amount of
+                setup that you need to do in order to set up your development environment - minimal.
                 Since JTrac creates the HSQLDB database if required on startup, you do not need to worry about 
-                installing, configuring and creating any database.
+                installing, configuring and creating any database either.
             </para>            
             <para>
-                Note that if you use NetBeans, you can debug and set breakpoints even in JSPs.  If you want to use
-                Apache Tomcat instead of Jetty, just have "build.properties" point to a valid Tomcat instance.
+                Note that if you use NetBeans, you can debug and set breakpoints even in JSPs.  If you are interested
+                in more information as to why you should consider using NetBeans for development, please refer this
+                <ulink url="http://ptrthomas.wordpress.com/2006/04/11/reasons-for-switching-to-netbeans/">blog post.</ulink>
             </para>
             <para>
-                By now, you may have noticed that because of the Ant script, you don't even need a Tomcat or Jetty
-                plugin in NetBeans or Eclipse.
+            	If you want to use Apache Tomcat instead of Jetty, just have "build.properties" point to a valid Tomcat instance.            
+                By now, you may have noticed that because of the 
+                <ulink url="http://ptrthomas.wordpress.com/2006/03/25/how-to-start-and-stop-tomcat-from-ant/">Ant script</ulink>, 
+                you don't even need a Tomcat or Jetty plugin in either NetBeans or Eclipse.
             </para>            
         </sect1>
     </chapter>
