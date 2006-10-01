@@ -13,11 +13,13 @@
     </tr>
     <tr><td colspan="2">&nbsp;</td></tr>
     <tr>
-        <th <c:if test="${!empty itemSearch.summary}">class="selected"</c:if>>Search for text</th>
+        <th <c:if test="${!empty itemSearch.summary}">class="selected"</c:if>>Text Search</th>
         <td>
             <input name="summary" value="${itemSearch.summary}" size="30"/>
-            Search within summary / detail / comments
         </td>
+        <td>
+            <input type="submit" name="_eventId_search" value="Search"/>
+        </td>        
     </tr>
 </table>
 
@@ -63,9 +65,6 @@
             Show History&nbsp;<input type="checkbox" name="showHistory" value="true" <c:if test="${itemSearch.showHistory}">checked="true"</c:if>/>
             <input type="hidden" name="_showHistory"/>
         </th>
-        <td>
-            <input type="submit" name="_eventId_search" value="Search"/>
-        </td>
     </tr>
 </table>
 
@@ -209,6 +208,27 @@
                 </c:forTokens>
             </table>
         </td>
+        <c:if test="${empty itemSearch.space}">
+            <td>
+                <table class="jtrac">
+                    <tr><th <c:if test="${!empty itemSearch.spaceSet}">class="selected"</c:if>>Space</th></tr>
+                    <tr>                
+                        <td>
+                            <select name="spaceSet" size="8" multiple="true">
+                                <c:set var="spaceMap" value="${searchMap['spaceSet']}"/>
+                                <c:forEach items="${itemSearch.spaceOptions}" var="entry">
+                                    <c:set var="thisKey">${entry.key}</c:set>
+                                    <option value="${thisKey}" <c:if test="${spaceMap[thisKey]}">selected="true"</c:if>>
+                                        ${entry.value}
+                                    </option>
+                                </c:forEach>                    
+                            </select>
+                            <input type="hidden" name="_spaceSet"/>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </c:if>        
     </tr>
 </table>
 
@@ -290,28 +310,6 @@
                             </c:forTokens>
                         </c:if>
                     </c:forTokens>
-                </table>
-            </td>
-        </c:if>
-
-        <c:if test="${empty itemSearch.space}">
-            <td>
-                <table class="jtrac">
-                    <tr><th <c:if test="${!empty itemSearch.spaceSet}">class="selected"</c:if>>Space</th></tr>
-                    <tr>                
-                        <td>
-                            <select name="spaceSet" size="8" multiple="true">
-                                <c:set var="spaceMap" value="${searchMap['spaceSet']}"/>
-                                <c:forEach items="${itemSearch.spaceOptions}" var="entry">
-                                    <c:set var="thisKey">${entry.key}</c:set>
-                                    <option value="${thisKey}" <c:if test="${spaceMap[thisKey]}">selected="true"</c:if>>
-                                        ${entry.value}
-                                    </option>
-                                </c:forEach>                    
-                            </select>
-                            <input type="hidden" name="_spaceSet"/>
-                        </td>
-                    </tr>
                 </table>
             </td>
         </c:if>
