@@ -8,6 +8,8 @@
 
 <jtrac:itemview item="${item}"/>
 
+<c:if test="${principal.id > 0}">
+
 <br/>
 
 <form method="post" action="<c:url value='/flow'/>" enctype="multipart/form-data">
@@ -105,5 +107,7 @@
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 
 </form>
+
+</c:if>
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>
