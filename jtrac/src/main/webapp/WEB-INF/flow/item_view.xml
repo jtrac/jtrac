@@ -21,9 +21,10 @@
             <action bean="itemViewFormAction" method="itemViewHandler"/>
         </transition>
         <transition on="back" to="itemListView"/>
-        <transition on="relate" to="itemSearchRelatedForm">
+        <transition on="relateSearch" to="itemSearchRelatedForm">
             <action bean="itemViewFormAction" method="relateHandler"/>
         </transition>
+        <transition on="relateSubmit" to="relateSubmit"/>       
     </view-state>
     
     <subflow-state id="itemSearchRelatedForm" flow="item_search">
@@ -42,7 +43,9 @@
         <transition on="backFromSearch" to="itemViewForm"/>      
     </subflow-state>     
     
-    <end-state id="itemListView" view="item_list"/>
+    <end-state id="itemListView"/>
+    
+    <end-state id="relateSubmit"/>
     
 </flow>
 

@@ -19,7 +19,8 @@
                 <option value="2">${relatingItem.refId} depends on the resolution of this item</option>
                 <option value="0">Both items are related</option>
             </select>
-            <input type="submit" name="_eventId_relate" value="Submit"/>
+            <input type="hidden" name="itemId" value="${relatingItem.id}"/>
+            <input type="submit" name="_eventId_relateSubmit" value="Submit"/>
         </td>
     </c:if>    
 </tr>
@@ -98,7 +99,7 @@
             <input type="hidden" name="_sendNotifications"/>               
             send e-mail notifications
             <c:if test="${empty calledByRelate}">            
-                | <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=relate&itemId=${item.id}'/>">(add related item)</a>
+                | <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=relateSearch&itemId=${item.id}'/>">(add related item)</a>
             </c:if>
         </td>        
     </tr>  

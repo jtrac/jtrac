@@ -62,16 +62,11 @@
         </attribute-mapper>
         <transition on="itemListView" to="itemListView">
             <action bean="itemSearchFormAction" method="itemSearchFormHandler"/>
-        </transition>        
+        </transition>
+        <transition on="relateSubmit" to="backFromSearch"/>       
     </subflow-state>      
     
-    <end-state id="backFromSearch">
-        <!--
-        <output-mapper>        
-            <mapping source="flowScope.item" target="item"/>
-        </output-mapper>
-        -->
-    </end-state>
+    <end-state id="backFromSearch"/>
         
 </flow>
 
