@@ -34,6 +34,22 @@ public class ItemItem implements Serializable {
     private long id;
     private Item item;
     private int type;
+
+    public static int RELATED = 0;
+    public static int DUPLICATE_OF = 1;
+    public static int DEPENDS_ON = 2;
+    
+    public static String getRelationText(int type) {
+        if (type == RELATED) {
+            return "is related to";
+        } else if (type == DUPLICATE_OF) {
+            return "is duplicate of";
+        } else if (type == DEPENDS_ON) {
+            return "depends on resolution of";
+        } else {
+            throw new RuntimeException("unknown type: " + type);
+        }
+    }
     
     public ItemItem() {
         // zero arg constructor
@@ -46,8 +62,12 @@ public class ItemItem implements Serializable {
     public ItemItem(Item item, int type) {
         this.item = item;
         this.type = type;
+    }    
+    
+    public String getRelationText() {
+        return getRelationText(type);
     }
-
+    
     //=================================================
     
     public long getId() {

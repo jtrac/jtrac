@@ -21,6 +21,7 @@ import java.util.Date;
 
 import static info.jtrac.domain.Field.Name.*;
 import info.jtrac.util.DateUtils;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import org.springmodules.lucene.index.core.DocumentCreator;
 
@@ -156,6 +157,13 @@ public abstract class AbstractItem implements Serializable, DocumentCreator {
     public String getStatusValue() {
         // using accessor for space, getSpace() is overridden in subclass History
         return getSpace().getMetadata().getStatusValue(status);
+    }
+    
+    public void add(ItemItem itemItem) {
+        if (itemItems == null) {
+            itemItems = new LinkedHashSet<ItemItem>();
+        }
+        itemItems.add(itemItem);
     }
     
     //===================================================

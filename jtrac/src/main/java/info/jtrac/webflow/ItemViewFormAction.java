@@ -19,6 +19,7 @@ package info.jtrac.webflow;
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemItem;
 import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
@@ -70,6 +71,7 @@ public class ItemViewFormAction extends AbstractFormAction {
     public Object loadFormObject(RequestContext context) {
         Item item = null;
         String itemId = ValidationUtils.getParameter(context, "itemId");
+        String relatedItemRefId = ValidationUtils.getParameter(context, "relatedItemRefId");
         if (itemId != null) {            
             item = jtrac.loadItem(Long.parseLong(itemId));            
         } else {
@@ -83,8 +85,16 @@ public class ItemViewFormAction extends AbstractFormAction {
         // not flow scope because of weird Hibernate Lazy loading issues
         // hidden field "itemId" added to item_view_form.jsp
         context.getRequestScope().put("item", item);
-        context.getRequestScope().put("users", users);        
+        context.getRequestScope().put("users", users);
         History history = new History();
+        if (relatedItemRefId != null) {
+            String relationType = ValidationUtils.getParameter(context, "relationType");
+            context.getRequestScope().put("relatedItemRefId", relatedItemRefId);
+            context.getRequestScope().put("relationType", relationType);
+            String relationString = null;
+            int type = Integer.parseInt(relationType);
+            context.getRequestScope().put("relationText", ItemItem.getRelationText(type));
+        }        
         history.setItemUsers(item.getItemUsers());
         return history;
     }     
@@ -107,10 +117,11 @@ public class ItemViewFormAction extends AbstractFormAction {
         if (errors.hasErrors()) {
             return error();
         }
-        Item item = (Item) context.getRequestScope().get("item");
+        Item item = (Item) context.getRequestScope().get("item"); // loaded by loadFormObject() on submit
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();        
         history.setLoggedBy(user);
         
+        // attachment handling
         ServletExternalContext servletContext = (ServletExternalContext) context.getLastEvent().getSource();
         MultipartHttpServletRequest request = (MultipartHttpServletRequest) servletContext.getRequest();
         MultipartFile multipartFile = request.getFile("file");
@@ -121,13 +132,24 @@ public class ItemViewFormAction extends AbstractFormAction {
             attachment.setFileName(fileName);
         }        
         
+        // related item handling
+        String refId = ValidationUtils.getParameter(context, "relatedItemRefId");
+        if (refId != null) {
+            String relationType = ValidationUtils.getParameter(context, "relationType");
+            int pos = refId.indexOf('-');
+            long sequenceNum = Long.parseLong(refId.substring(pos + 1));
+            String prefixCode = refId.substring(0, pos).toUpperCase();
+            Item relatedItem = jtrac.loadItem(sequenceNum, prefixCode);
+            ItemItem itemItem = new ItemItem(relatedItem, Integer.parseInt(relationType));
+            item.add(itemItem);
+        }         
+        
         jtrac.storeHistoryForItem(item, history, attachment);
         
         if (attachment != null) {
             File file = new File(System.getProperty("jtrac.home") + "/attachments/" + attachment.getFilePrefix() + "_" + attachment.getFileName());
             multipartFile.transferTo(file);
-        }        
-        
+        }
         resetForm(context);
         return success();
     }

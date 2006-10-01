@@ -15,11 +15,12 @@
         </td>
         <td>            
             <select name="relationType">                
-                <option value="1">${relatingItem.refId} is a duplicate of this item</option>
-                <option value="2">${relatingItem.refId} depends on the resolution of this item</option>
+                <option value="1">${relatingItem.refId} is duplicate of this</option>
+                <option value="2">${relatingItem.refId} depends on this</option>
                 <option value="0">Both items are related</option>
             </select>
             <input type="hidden" name="itemId" value="${relatingItem.id}"/>
+            <input type="hidden" name="relatedItemRefId" value="${item.refId}"/>
             <input type="submit" name="_eventId_relateSubmit" value="Submit"/>
         </td>
     </c:if>    
@@ -98,8 +99,12 @@
             <input type="checkbox" name="sendNotifications" value="true" <c:if test="${history.sendNotifications}">checked="true"</c:if>/>
             <input type="hidden" name="_sendNotifications"/>               
             send e-mail notifications
-            <c:if test="${empty calledByRelate}">            
+            <c:if test="${empty relatedItemRefId}">            
                 | <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=relateSearch&itemId=${item.id}'/>">(add related item)</a>
+            </c:if>
+            <c:if test="${!empty relatedItemRefId}">
+                | <span class="info">${relationText} ${relatedItemRefId}</span>
+                <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=relateSearch&itemId=${item.id}'/>">(change)</a>
             </c:if>
         </td>        
     </tr>  
@@ -126,6 +131,8 @@
 
 </table>
 
+<input type="hidden" name="relationType" value="${relationType}"/>
+<input type="hidden" name="relatedItemRefId" value="${relatedItemRefId}"/>
 <input type="hidden" name="itemId" value="${item.id}"/>
 
 </c:if>

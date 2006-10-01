@@ -20,6 +20,7 @@ import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemItem;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -46,7 +47,13 @@ public final class ItemUtils {
         sb.append("<table width='100%' class='jtrac'>");
         sb.append("<tr class='alt'>");
         sb.append("  <td class='label'>ID</td>");
-        sb.append("  <td colspan='5'>" + item.getRefId() + "</td>");
+        sb.append("  <td>" + item.getRefId() + "</td>");
+        sb.append("  <td class='label'>Related Items</td>");
+        sb.append("  <td colspan='3'>");
+        for(ItemItem itemItem : item.getItemItems()) {
+            sb.append(itemItem.getRelationText() + " " + itemItem.getItem().getRefId() + "; ");
+        }        
+        sb.append("  </td>");
         sb.append("</tr>");
         sb.append("<tr>");
         sb.append("  <td class='label' width='20%'>Status</td>");
@@ -75,8 +82,9 @@ public final class ItemUtils {
             sb.append("</tr>");
             row ++;
         }
-        
         sb.append("</table>");
+        
+        //=========================== HISTORY ==================================
         sb.append("&nbsp;<b>History</b>");
         sb.append("<table width='100%' class='jtrac'>");
         sb.append("<tr>");
