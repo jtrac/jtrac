@@ -1,21 +1,20 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
 <form method="post" action="<c:url value='/flow'/>">
+    View Item by Id
+    <input name="refId" value="${refId}"/>
+    <input type="submit" name="_eventId_view" value="View"/>
+    <span class="error"><c:out value="${refIdError}"/></span>
+    <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
+</form>
+
+<form method="post" action="<c:url value='/flow'/>">
 
 <table class="jtrac">
     <tr>
-        <td class="info">View Item by Id</td>        
-        <td>
-            <input name="refId" value="${refId}"/>
-            <input type="submit" name="_eventId_view" value="View"/>
-            <span class="error"><c:out value="${refIdError}"/></span>
-        </td>           
-    </tr>
-    <tr><td colspan="2">&nbsp;</td></tr>
-    <tr>
         <th <c:if test="${!empty itemSearch.summary}">class="selected"</c:if>>Text Search</th>
         <td>
-            <input name="summary" value="${itemSearch.summary}" size="30"/>
+            <input name="summary" value="${itemSearch.summary}" size="30" id="focus"/>
         </td>
         <td>
             <input type="submit" name="_eventId_search" value="Search"/>
