@@ -47,7 +47,7 @@
             <td class="label">
                 ${field.label}            
             </td>
-            <spring:bind path="history.${field.name}">
+            <spring:bind path="itemViewForm.history.${field.name.text}">
                 <%@ include file="/WEB-INF/jsp/item_form_include.jsp" %>               
             </spring:bind>
         </tr>        
@@ -56,7 +56,7 @@
     <tr>
         <td class="label">New Status</td>
         <td>
-            <spring:bind path="history.status">
+            <spring:bind path="itemViewForm.history.status">
                 <select name="${status.expression}">
                     <option/>
                     <c:forEach items="${transitions}" var="transitionEntry">
@@ -70,7 +70,7 @@
     <tr>
         <td class="label">Assign To</td>       
         <td>
-            <spring:bind path="history.assignedTo">
+            <spring:bind path="itemViewForm.history.assignedTo">
                 <select name="${status.expression}">
                     <option/>
                     <c:forEach items="${users}" var="user">
@@ -86,7 +86,7 @@
             Comment
             <font color="red">*</font></td>
         <td>
-            <spring:bind path="history.comment">
+            <spring:bind path="itemViewForm.history.comment">
                 <textarea name="${status.expression}" rows="6" cols="70">${status.value}</textarea>
                 <div class="error">${status.errorMessage}</div>
             </spring:bind>
@@ -96,14 +96,16 @@
         <td/>
         <td>
             <input type="submit" name="_eventId_submit" value="Submit"/>
-            <input type="checkbox" name="sendNotifications" value="true" <c:if test="${history.sendNotifications}">checked="true"</c:if>/>
-            <input type="hidden" name="_sendNotifications"/>               
+            <spring:bind path="itemViewForm.history.sendNotifications">
+                <input type="checkbox" name="${status.expression}" value="true" <c:if test="${status.value}">checked="true"</c:if>/>
+                <input type="hidden" name="_${status.expression}"/> 
+            </spring:bind>              
             send e-mail notifications
-            <c:if test="${empty relatedItemRefId}">            
+            <c:if test="${empty itemViewForm.relatedItemRefId}">            
                 | <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=relateSearch&itemId=${item.id}'/>">(add related item)</a>
             </c:if>
-            <c:if test="${!empty relatedItemRefId}">
-                | <span class="info">${relationText} ${relatedItemRefId}</span>
+            <c:if test="${!empty itemViewForm.relatedItemRefId}">
+                | <span class="info">${relationText} ${itemViewForm.relatedItemRefId}</span>
                 <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=relateSearch&itemId=${item.id}'/>">(change)</a>
             </c:if>
         </td>        
@@ -117,7 +119,7 @@
         <tr><th>Notify By E-mail</th></tr>
         <tr>
             <td>
-                <spring:bind path="history.itemUsers">
+                <spring:bind path="itemViewForm.history.itemUsers">
                     <jtrac:multiselect name="${status.expression}" list="${users}" selected="${status.value}"/>
                 </spring:bind>
             </td>
@@ -131,8 +133,14 @@
 
 </table>
 
-<input type="hidden" name="relationType" value="${relationType}"/>
-<input type="hidden" name="relatedItemRefId" value="${relatedItemRefId}"/>
+<spring:bind path="itemViewForm.relationType">
+    <input type="hidden" name="${status.expression}" value="${status.value}"/>
+</spring:bind>
+
+<spring:bind path="itemViewForm.relatedItemRefId">
+    <input type="hidden" name="${status.expression}" value="${status.value}"/>
+</spring:bind>
+
 <input type="hidden" name="itemId" value="${item.id}"/>
 
 </c:if>

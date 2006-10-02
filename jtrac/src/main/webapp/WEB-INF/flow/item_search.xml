@@ -63,10 +63,10 @@
         <transition on="itemListView" to="itemListView">
             <action bean="itemSearchFormAction" method="itemSearchFormHandler"/>
         </transition>
-        <transition on="relateSubmit" to="backFromSearch"/>       
+        <transition on="relateSubmit" to="relateSubmit"/>       
     </subflow-state>      
     
-    <end-state id="backFromSearch"/>
+    <end-state id="relateSubmit"/>
         
 </flow>
 

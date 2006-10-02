@@ -29,6 +29,7 @@ import info.jtrac.util.ItemUserEditor;
 import info.jtrac.util.UserEditor;
 import info.jtrac.util.ValidationUtils;
 import java.io.File;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -52,10 +53,48 @@ import org.springframework.webflow.context.servlet.ServletExternalContext;
 public class ItemViewFormAction extends AbstractFormAction {
     
     public ItemViewFormAction() {
-        setFormObjectClass(History.class);
-        setFormObjectName("history");        
+        setFormObjectClass(ItemViewForm.class);
+        setFormObjectName("itemViewForm");        
         setFormObjectScope(ScopeType.REQUEST);        
     }
+    
+    /**
+     * form backing object
+     */
+    public static class ItemViewForm implements Serializable {
+        
+        private transient History history;
+        private int relationType;
+        private String relatedItemRefId;
+
+        public History getHistory() {
+            if (history == null) {
+                history = new History();
+            }
+            return history;
+        }
+
+        public void setHistory(History history) {
+            this.history = history;
+        }
+
+        public int getRelationType() {
+            return relationType;
+        }
+
+        public void setRelationType(int relationType) {
+            this.relationType = relationType;
+        }
+
+        public String getRelatedItemRefId() {
+            return relatedItemRefId;
+        }
+
+        public void setRelatedItemRefId(String relatedItemRefId) {
+            this.relatedItemRefId = relatedItemRefId;
+        }                
+    
+    }    
     
     @Override
     protected void initBinder(RequestContext request, DataBinder binder) {
@@ -71,7 +110,6 @@ public class ItemViewFormAction extends AbstractFormAction {
     public Object loadFormObject(RequestContext context) {
         Item item = null;
         String itemId = ValidationUtils.getParameter(context, "itemId");
-        String relatedItemRefId = ValidationUtils.getParameter(context, "relatedItemRefId");
         if (itemId != null) {            
             item = jtrac.loadItem(Long.parseLong(itemId));            
         } else {
@@ -86,33 +124,27 @@ public class ItemViewFormAction extends AbstractFormAction {
         // hidden field "itemId" added to item_view_form.jsp
         context.getRequestScope().put("item", item);
         context.getRequestScope().put("users", users);
-        History history = new History();
-        if (relatedItemRefId != null) {
-            String relationType = ValidationUtils.getParameter(context, "relationType");
-            context.getRequestScope().put("relatedItemRefId", relatedItemRefId);
-            context.getRequestScope().put("relationType", relationType);
-            String relationString = null;
-            int type = Integer.parseInt(relationType);
-            context.getRequestScope().put("relationText", ItemItem.getRelationText(type));
-        }        
+        ItemViewForm itemViewForm = new ItemViewForm();      
+        History history = itemViewForm.getHistory();        
         history.setItemUsers(item.getItemUsers());
-        return history;
+        return itemViewForm;
     }     
     
     public Event itemViewHandler(RequestContext context) throws Exception {
-        History history = (History) getFormObject(context);
+        ItemViewForm itemViewForm = (ItemViewForm) getFormObject(context);
+        History history = itemViewForm.getHistory();
         Errors errors = getFormErrors(context);
         if (history.getStatus() != null) {
             if (history.getStatus() != State.CLOSED && history.getAssignedTo() == null) {
-                errors.rejectValue("assignedTo", "error.history.assignedTo.required", "Required if Status other than Closed.");
+                errors.rejectValue("history.assignedTo", "error.history.assignedTo.required", "Required if Status other than Closed.");
             }
         } else {
             if (history.getAssignedTo() != null) {
-                errors.rejectValue("status", "error.history.status.required", "Required if assigning.");
+                errors.rejectValue("history.status", "error.history.status.required", "Required if assigning.");
             }
         }
         if (history.getComment() == null) {
-            errors.rejectValue("comment", ValidationUtils.ERROR_EMPTY_CODE, ValidationUtils.ERROR_EMPTY_MSG);
+            errors.rejectValue("history.comment", ValidationUtils.ERROR_EMPTY_CODE, ValidationUtils.ERROR_EMPTY_MSG);
         }
         if (errors.hasErrors()) {
             return error();
@@ -133,14 +165,13 @@ public class ItemViewFormAction extends AbstractFormAction {
         }        
         
         // related item handling
-        String refId = ValidationUtils.getParameter(context, "relatedItemRefId");
-        if (refId != null) {
-            String relationType = ValidationUtils.getParameter(context, "relationType");
+        if (itemViewForm.getRelatedItemRefId() != null) {
+            String refId = itemViewForm.getRelatedItemRefId();
             int pos = refId.indexOf('-');
             long sequenceNum = Long.parseLong(refId.substring(pos + 1));
             String prefixCode = refId.substring(0, pos).toUpperCase();
             Item relatedItem = jtrac.loadItem(sequenceNum, prefixCode);
-            ItemItem itemItem = new ItemItem(relatedItem, Integer.parseInt(relationType));
+            ItemItem itemItem = new ItemItem(relatedItem, itemViewForm.getRelationType());
             item.add(itemItem);
         }         
         
@@ -163,6 +194,17 @@ public class ItemViewFormAction extends AbstractFormAction {
         Item item = jtrac.loadItem(Long.parseLong(itemId));
         context.getRequestScope().put("item", item);
         return success();
-    }     
+    }
+    
+    public Event relateSubmitHandler(RequestContext context) throws Exception {
+        ItemViewForm itemViewForm = (ItemViewForm) getFormObject(context);
+        String relatedItemRefId = ValidationUtils.getParameter(context, "relatedItemRefId");
+        String relationType = ValidationUtils.getParameter(context, "relationType");
+        itemViewForm.setRelatedItemRefId(relatedItemRefId);
+        itemViewForm.setRelationType(Integer.parseInt(relationType));
+        int type = Integer.parseInt(relationType);
+        context.getRequestScope().put("relationText", ItemItem.getRelationText(type));                
+        return success();
+    }
     
 }

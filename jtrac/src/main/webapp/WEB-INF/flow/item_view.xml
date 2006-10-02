@@ -40,7 +40,9 @@
             </output-mapper>
             -->
         </attribute-mapper>
-        <transition on="backFromSearch" to="itemViewForm"/>      
+        <transition on="relateSubmit" to="itemViewForm">
+            <action bean="itemViewFormAction" method="relateSubmitHandler"/>
+        </transition>
     </subflow-state>     
     
     <end-state id="itemListView"/>
