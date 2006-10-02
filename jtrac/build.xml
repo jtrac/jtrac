@@ -112,6 +112,12 @@
         </delete>
     </target>
     
+    <target name="dist-lib">
+        <copy todir="lib">
+            <fileset dir="${m2.repo}" includes="${all.jars}" casesensitive="false"/>         
+        </copy>
+    </target>    
+    
     <target name="dist-src">
         <mkdir dir="target"/>
         <zip destfile="target/jtrac-src.zip">
@@ -400,6 +406,6 @@
             <jvmarg value="-Dcatalina.home=${tomcat.home}"/>
             <arg value="stop"/>
         </java>
-    </target>    
+    </target>
               
 </project>
