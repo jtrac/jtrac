@@ -344,7 +344,9 @@ public class AntPropsMojo extends AbstractMojo {
 				String path = (String) j.next();
 				String fullPath = "${" + key + "}/" + path;
 				out.write("\\\n    " + fullPath + ":");
-				allPaths.add(fullPath);
+				if(key.equals("m2.repo")) {
+					allPaths.add(path);
+				}
 			}
 		}
 		out.write("\n\n");
@@ -363,19 +365,17 @@ public class AntPropsMojo extends AbstractMojo {
 				} else {
 					out.write("\\\n    " + fullPath + ":");
 				}
-				allPaths.add(fullPath);
+				allPaths.add(path);
 			}
 			out.write("\n\n");
 		}
-		//===============================================================
-		/*
+		//===============================================================		
 		out.write("all.jars=");
 		for (Iterator i = allPaths.iterator(); i.hasNext(); ) {
 			String path = (String) i.next();
 			out.write("\\\n    " + path + ",");
 		}
 		out.write("\n\n");
-		*/
 		//===============================================================
 		out.close();
 		os.close();
