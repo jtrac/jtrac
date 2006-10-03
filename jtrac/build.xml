@@ -166,17 +166,17 @@
     <target name="test-single" depends="compile-test" if="netbeans.home">
         <!-- files property expected from netbeans -->
         <fail unless="files">no files selected!</fail>      
-        <test-macro includes="${files}" emmaEnabled="true" excludes=""/>      
+        <test-macro includes="${files}" emmaEnabled="true" excludes="" haltonfailure="true"/>      
     </target>  
   
-    <target name="debug-single" if="netbeans.home">
+    <target name="debug-single" depends="compile-test" if="netbeans.home">
         <!-- files property expected from netbeans -->
         <fail unless="files">no files selected!</fail>        
         <nbjpdastart name="junit.textui.TestRunner" addressproperty="jpda.address" transport="dt_socket">
             <classpath>
                 <path path="${test.jars}"/>
             </classpath>
-        </nbjpdastart> 
+        </nbjpdastart>  
         <java classname="junit.textui.TestRunner" fork="true">
             <classpath>
                 <path path="target/test-classes"/>
@@ -187,21 +187,8 @@
             <jvmarg value="-Djava.compiler=none"/>
             <jvmarg value="-Xrunjdwp:transport=dt_socket,address=${jpda.address}"/>            
             <arg value="${files}"/>
-        </java>       
-    </target>
-    
-    <target name="debug-fix">
-        <!-- files property expected from netbeans -->
-        <fail unless="files">no files selected!</fail>        
-        <javac srcdir="src/test/java" destdir="target/test-classes" debug="true" classpath="${test.jars}">
-            <include name="${files}.java"/>
-        </javac>
-        <nbjpdareload>
-            <fileset dir="target/test-classes">
-            <include name="${files}.class"/>
-            </fileset>
-        </nbjpdareload>
-    </target>    
+        </java>
+    </target>   
     
     <taskdef resource="emma_ant.properties" classpath="${emma.jars}"/>
     
@@ -209,6 +196,7 @@
         <attribute name="includes" default="**/*Test.java"/>
         <attribute name="emmaEnabled" default="false"/>
         <attribute name="excludes" default="**/watij/**/*"/>
+        <attribute name="haltonfailure" default="false"/>
         <sequential>
             <mkdir dir="target/reports"/>
             <emma enabled="@{emmaEnabled}">                    
@@ -217,7 +205,7 @@
                 metadatafile="target/metadata.emma" merge="true"/>
             </emma>
             <copy file="etc/build.log4j.properties" tofile="target/test-classes/log4j.properties"/>
-            <junit fork="true" dir="." tempdir="target">
+            <junit fork="true" dir="." tempdir="target" haltonfailure="@{haltonfailure}">
                 <classpath>
                     <path path="target/instr-classes"/>
                     <path path="target/classes"/>

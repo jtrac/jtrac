@@ -14,7 +14,7 @@ public class AllTest extends WatijTestCase {
     }        
     
     public void testGetLoginPage() throws Exception {
-        ie.start("http://localhost:8080/jtrac");
+        ie.start("http://localhost:8080/jtrac/auth/login.htm");
         assertTrue(ie.containsText("JTrac"));
     }
     
@@ -55,9 +55,9 @@ public class AllTest extends WatijTestCase {
     public void testCreateNewItem() throws Exception {
         
         ie.link(text, "DASHBOARD").click();
-        assertTrue(ie.containsText("TEST"));
+        assertTrue(ie.containsText("Test Space"));
         
-        ie.link(text, "NEW").click();
+        ie.link(text, "(new)").click();
         assertTrue(ie.containsText("Summary"));
         
         ie.textField(name, "summary").set("Test Summary");
@@ -81,8 +81,8 @@ public class AllTest extends WatijTestCase {
      
     public void testUpdateHistoryForItem() throws Exception {
         
-        ie.selectList(name, "status").option(text, "Closed").select();
-        ie.textField(name, "comment").set("Test Comment");
+        ie.selectList(name, "history.status").option(text, "Closed").select();
+        ie.textField(name, "history.comment").set("Test Comment");
         ie.button("Submit").click();
         assertTrue(ie.containsText("Test Comment"));
         
@@ -91,7 +91,7 @@ public class AllTest extends WatijTestCase {
     public void testCreateNewUser() throws Exception {
         
         ie.link(text, "OPTIONS").click();                
-        ie.link(text, "Users").click();
+        ie.link(text, "Manage Users").click();
         assertTrue(ie.containsText("Users and Allocated Trackers"));
         
         ie.link(text, "[ Create New User ]").click();
