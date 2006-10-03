@@ -32,7 +32,16 @@
    * start
    
      [ http://www.mortbay.org/jetty/LICENSE.TXT ]
+
+   ======================================================================
    
+   This product includes software developed by the Eclipse Project
+   (http://www.eclipse.org/jdt/).
+   
+   * core
+   
+     [ http://www.eclipse.org/legal/epl-v10.html ]
+
    ======================================================================
 
    This product includes software developed by the Spring Framework
@@ -68,6 +77,7 @@
    * commons-lang
    * poi
    * log4j
+   * ant
    
      [ http://www.apache.org/licenses/LICENSE-2.0 ]
    
