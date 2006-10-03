@@ -4,7 +4,7 @@
 
 <flow start-state="itemViewForm">      
     
-    <input-mapper>
+    <input-mapper>        
         <mapping source="space" target="flowScope.space"/>
         <mapping source="itemSearch" target="flowScope.itemSearch"/>
         <mapping source="calledBySearch" target="flowScope.calledBySearch"/>
@@ -34,11 +34,6 @@
                 <mapping source="requestScope.calledByRelate" target="calledByRelate"/>
                 <mapping source="requestScope.item" target="relatingItem"/>
             </input-mapper>
-            <!--
-            <output-mapper>
-                <mapping source="item" target="requestScope.item"/>
-            </output-mapper>
-            -->
         </attribute-mapper>
         <transition on="relateSubmit" to="itemViewForm">
             <action bean="itemViewFormAction" method="relateSubmitHandler"/>

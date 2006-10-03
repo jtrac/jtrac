@@ -17,7 +17,6 @@
     <subflow-state id="itemViewForm" flow="item_view">
         <attribute-mapper>
             <input-mapper>
-                <mapping source="flowScope.item" target="item"/>
                 <!-- just for displaying navigation in header.jsp -->
                 <mapping source="flowScope.space" target="space"/>
             </input-mapper>

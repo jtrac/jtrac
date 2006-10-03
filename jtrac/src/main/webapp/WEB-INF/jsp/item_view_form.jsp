@@ -27,8 +27,6 @@
 </tr>
 </table>
 
-<br/>
-
 <jtrac:itemview item="${item}"/>
 
 <c:if test="${principal.id > 0 && empty calledByRelate}">
