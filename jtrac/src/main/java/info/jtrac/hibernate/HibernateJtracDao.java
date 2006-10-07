@@ -45,8 +45,8 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.orm.hibernate3.HibernateJdbcException;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -302,7 +302,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     public void createSchema() {
         try {
             getHibernateTemplate().find("from Item item where item.id = 1");
-        } catch (BadSqlGrammarException e) {
+        } catch (HibernateJdbcException e) {
             logger.warn("database schema not found, proceeding to create");
             schemaHelper.createSchema();
             User admin = new User();
