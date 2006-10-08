@@ -117,6 +117,7 @@
     
     <action-state id="roleFormHandler">
         <action bean="spaceFormAction" method="roleFormHandler"/>
+        <transition on="error" to="spaceRoleForm"/>
         <transition on="success" to="spaceRolesView"/>
         <transition on="confirm" to="spaceRoleFormConfirm"/>
     </action-state>
