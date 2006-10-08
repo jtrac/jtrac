@@ -280,6 +280,7 @@ public class SpaceFormAction extends AbstractFormAction {
         Space space = (Space) context.getFlowScope().get("space");
         String roleKey = ValidationUtils.getParameter(context, "roleKey");
         String oldRoleKey = ValidationUtils.getParameter(context, "oldRoleKey");
+        // TODO next 3 lines should ideally be in a transaction
         jtrac.renameSpaceRole(oldRoleKey, roleKey, space);
         jtrac.storeSpace(space);        
         space.getMetadata().renameRole(oldRoleKey, roleKey);
