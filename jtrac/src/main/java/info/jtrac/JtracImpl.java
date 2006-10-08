@@ -45,7 +45,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import org.acegisecurity.context.SecurityContextHolder;
 
 
 import org.acegisecurity.providers.encoding.PasswordEncoder;
@@ -361,15 +360,7 @@ public class JtracImpl implements Jtrac {
     }
     
     public int renameSpaceRole(String oldRoleKey, String newRoleKey, Space space) {        
-        int count = 0;
-        if (space.getId() > 0) {
-            count = dao.renameSpaceRole(oldRoleKey, newRoleKey, space);
-        }
-        space.getMetadata().renameRole(oldRoleKey, newRoleKey);
-        dao.storeSpace(space);
-        // refresh role information for logged on user
-        SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
-        return count;
+        return dao.renameSpaceRole(oldRoleKey, newRoleKey, space);        
     }
     
     //==========================================================================

@@ -26,6 +26,7 @@ import info.jtrac.util.ValidationUtils;
 import info.jtrac.webflow.FieldFormAction.FieldForm;
 import java.util.Collections;
 import java.util.List;
+import org.acegisecurity.context.SecurityContextHolder;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.validation.DataBinder;
 
@@ -268,6 +269,7 @@ public class SpaceFormAction extends AbstractFormAction {
             if (space.getId() > 0) {
                 return new Event(this, "confirm");
             } else {
+                space.getMetadata().renameRole(oldRoleKey, roleKey);
                 jtrac.renameSpaceRole(oldRoleKey, roleKey, space);
             }
         }
@@ -279,6 +281,10 @@ public class SpaceFormAction extends AbstractFormAction {
         String roleKey = ValidationUtils.getParameter(context, "roleKey");
         String oldRoleKey = ValidationUtils.getParameter(context, "oldRoleKey");
         jtrac.renameSpaceRole(oldRoleKey, roleKey, space);
+        jtrac.storeSpace(space);        
+        space.getMetadata().renameRole(oldRoleKey, roleKey);
+        // refresh role information for logged on user
+        SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
         return success();
     }
     
