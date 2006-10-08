@@ -112,10 +112,21 @@
             <action bean="spaceFormAction" method="roleFormSetupHandler"/>
         </entry-actions>      
         <transition on="cancel" to="spaceRolesView"/>
+        <transition on="submit" to="roleFormHandler"/>     
+    </view-state>
+    
+    <action-state id="roleFormHandler">
+        <action bean="spaceFormAction" method="roleFormHandler"/>
+        <transition on="success" to="spaceRolesView"/>
+        <transition on="confirm" to="spaceRoleFormConfirm"/>
+    </action-state>
+    
+    <view-state id="spaceRoleFormConfirm" view="space_role_form_confirm">    
+        <transition on="cancel" to="spaceRolesView"/>
         <transition on="submit" to="spaceRolesView">
-            <action bean="spaceFormAction" method="roleFormHandler"/>
-        </transition>        
-    </view-state>    
+            <action bean="spaceFormAction" method="roleFormConfirmHandler"/>
+        </transition>       
+    </view-state>
     
     <subflow-state id="spaceAllocateFlow" flow="space_allocate">        
         <attribute-mapper>

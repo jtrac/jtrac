@@ -198,7 +198,7 @@ public class Metadata implements Serializable {
             state.add(fields.keySet());
             role.add(state);
         }
-    }
+    }        
     
     public void addRole(String name) {
         Role role = new Role(name);
@@ -208,6 +208,17 @@ public class Metadata implements Serializable {
             role.add(state);
         }
         roles.put(role.getName(), role);
+    }
+    
+    public void renameRole(String oldRole, String newRole) {
+        // important! this has to be combined with a database update
+        Role role = roles.get(oldRole);
+        if (role == null) {
+            return; // TODO improve JtracTest and assert not null here
+        }
+        role.setName(newRole);
+        roles.remove(oldRole);
+        roles.put(newRole, role);
     }
     
     public Set<Field.Name> getUnusedFieldNames() {

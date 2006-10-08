@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import org.acegisecurity.context.SecurityContextHolder;
 
 
 import org.acegisecurity.providers.encoding.PasswordEncoder;
@@ -333,24 +334,42 @@ public class JtracImpl implements Jtrac {
             users.remove(userSpaceRole.getUser());
         }
         return users;
-    }     
-    
-    public void storeUserSpaceAllocation(User user, Space space, String roleKey) {        
-        user.addSpaceWithRole(space, roleKey);
-        dao.storeUser(user);      
-    }
-    
-    public void removeUserSpaceAllocation(UserSpaceRole userSpaceRole) {
-        User user = userSpaceRole.getUser();
-        user.removeSpaceWithRole(userSpaceRole.getSpace(), userSpaceRole.getRoleKey());
-        // dao.storeUser(user);
-        dao.removeUserSpaceRole(userSpaceRole);       
-    }    
+    }       
     
     //==========================================================================
     
     public Counts loadCountsForUser(User user) {
         return dao.loadCountsForUser(user);
+    }            
+    
+    //==========================================================================
+    
+    public void storeUserSpaceRole(User user, Space space, String roleKey) {        
+        user.addSpaceWithRole(space, roleKey);
+        dao.storeUser(user);      
+    }
+    
+    public void removeUserSpaceRole(UserSpaceRole userSpaceRole) {
+        User user = userSpaceRole.getUser();
+        user.removeSpaceWithRole(userSpaceRole.getSpace(), userSpaceRole.getRoleKey());
+        // dao.storeUser(user);
+        dao.removeUserSpaceRole(userSpaceRole);       
+    }     
+    
+    public UserSpaceRole loadUserSpaceRole(long id) {
+        return dao.loadUserSpaceRole(id);
+    }
+    
+    public int renameSpaceRole(String oldRoleKey, String newRoleKey, Space space) {        
+        int count = 0;
+        if (space.getId() > 0) {
+            count = dao.renameSpaceRole(oldRoleKey, newRoleKey, space);
+        }
+        space.getMetadata().renameRole(oldRoleKey, newRoleKey);
+        dao.storeSpace(space);
+        // refresh role information for logged on user
+        SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
+        return count;
     }
     
     //==========================================================================
@@ -365,11 +384,7 @@ public class JtracImpl implements Jtrac {
             return null;
         }
         return spaces.get(0);
-    }
-    
-    public UserSpaceRole loadUserSpaceRole(long id) {
-        return dao.loadUserSpaceRole(id);
-    }
+    }    
     
     public void storeSpace(Space space) {
         dao.storeSpace(space);

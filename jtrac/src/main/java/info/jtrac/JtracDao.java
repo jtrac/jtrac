@@ -76,6 +76,7 @@ public interface JtracDao {
     //===========================================
     UserSpaceRole loadUserSpaceRole(long id);
     void removeUserSpaceRole(UserSpaceRole userSpaceRole);
+    int renameSpaceRole(String oldRoleKey, String newRoleKey, Space space);
     //===========================================
     Counts loadCountsForUser(User user);
     //===========================================

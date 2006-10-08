@@ -48,16 +48,13 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         };
     }
     
-    //==============================================================================
+    //==========================================================================
     
-    public void testGeneratedPasswordIsAlwaysDifferent() {
-        String p1 = jtrac.generatePassword();
-        String p2 = jtrac.generatePassword();
-        assertTrue(!p1.equals(p2));
-    }
-    
-    public void testEncodeClearTextPassword() {
-        assertEquals("21232f297a57a5a743894a0e4a801fc3", jtrac.encodeClearText("admin"));
+    private Space getSpace() {
+        Space space = new Space();
+        space.setPrefixCode("TEST");
+        space.setName("Test Space");
+        return space;
     }
     
     private Metadata getMetadata() {
@@ -68,10 +65,20 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
                 + "</fields></metadata>";
         metadata.setXml(xmlString);
         return metadata;
+    }    
+    
+    //==========================================================================
+    
+    public void testGeneratedPasswordIsAlwaysDifferent() {
+        String p1 = jtrac.generatePassword();
+        String p2 = jtrac.generatePassword();
+        assertTrue(!p1.equals(p2));
     }
     
-    //========================== DAO TESTS ==============================
-    
+    public void testEncodeClearTextPassword() {
+        assertEquals("21232f297a57a5a743894a0e4a801fc3", jtrac.encodeClearText("admin"));
+    }
+        
     public void testMetadataInsertAndLoad() {
         Metadata m1 = getMetadata();
         jtrac.storeMetadata(m1);
@@ -94,9 +101,7 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
     }
     
     public void testUserSpaceRolesInsert() {
-        Space space = new Space();
-        space.setPrefixCode("SPACE");
-        space.setDescription("test description");
+        Space space = getSpace();
         Metadata metadata = getMetadata();
         
         space.setMetadata(metadata);
@@ -113,7 +118,7 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         GrantedAuthority[] gas = u1.getAuthorities();
         assertEquals(2, gas.length);
         assertEquals("ROLE_USER", gas[0].getAuthority());
-        assertEquals("ROLE_TEST_SPACE", gas[1].getAuthority());
+        assertEquals("ROLE_TEST_TEST", gas[1].getAuthority());
         
         List<UserSpaceRole> userSpaceRoles = jtrac.findUserRolesForSpace(space.getId());
         assertEquals(1, userSpaceRoles.size());
@@ -167,8 +172,7 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
     }
     
     public void testItemInsertAndCounts() {
-        Space s = new Space();
-        s.setPrefixCode("TEST");
+        Space s = getSpace();
         jtrac.storeSpace(s);
         User u = new User();
         u.setLoginName("test");
@@ -200,8 +204,7 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
     }
     
     public void testRemoveSpaceRoleDoesNotOrphanDatabaseRecord() {
-        Space space = new Space();
-        space.setPrefixCode("TEST");
+        Space space = getSpace();
         jtrac.storeSpace(space);
         long spaceId = space.getId();
         User user = new User();
@@ -211,17 +214,30 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         long id = jdbcTemplate.queryForLong("select id from user_space_roles where space_id = " + spaceId);
         UserSpaceRole usr = jtrac.loadUserSpaceRole(id);
         assertEquals(spaceId, usr.getSpace().getId());                
-        jtrac.removeUserSpaceAllocation(usr);
+        jtrac.removeUserSpaceRole(usr);
         endTransaction();
         assertEquals(0, jdbcTemplate.queryForInt("select count(0) from user_space_roles where space_id = " + spaceId));        
     }
     
     public void testFindSpacesWhereGuestAllowed() {
-        Space space = new Space();
-        space.setPrefixCode("TEST");
+        Space space = getSpace();
         space.setGuestAllowed(true);
         jtrac.storeSpace(space);
         assertEquals(1, jtrac.findSpacesWhereGuestAllowed().size());
+    }
+    
+    public void testRenameSpaceRole() {
+        Space space = getSpace();
+        jtrac.storeSpace(space);
+        User u = new User();
+        u.setLoginName("test");
+        u.addSpaceWithRole(space, "DEFAULT");
+        jtrac.storeUser(u);
+        assertEquals(1, jdbcTemplate.queryForInt("select count(0) from user_space_roles where role_key = 'DEFAULT'"));
+        jtrac.renameSpaceRole("DEFAULT", "NEWDEFAULT", space);
+        assertEquals(0, jdbcTemplate.queryForInt("select count(0) from user_space_roles where role_key = 'DEFAULT'"));
+        assertEquals(1, jdbcTemplate.queryForInt("select count(0) from user_space_roles where role_key = 'NEWDEFAULT'"));
+        
     }
     
 }

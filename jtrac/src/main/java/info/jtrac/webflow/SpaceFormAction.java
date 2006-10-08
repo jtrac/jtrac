@@ -253,21 +253,34 @@ public class SpaceFormAction extends AbstractFormAction {
     public Event roleFormHandler(RequestContext context) throws Exception {
         Space space = (Space) context.getFlowScope().get("space");
         String roleKey = ValidationUtils.getParameter(context, "roleKey");
-        String oldRoleKey = ValidationUtils.getParameter(context, "oldRoleKey");
+        String oldRoleKey = ValidationUtils.getParameter(context, "oldRoleKey");        
+        // needed for errors or if confirm rename screen to be shown
+        context.getRequestScope().put("oldRoleKey", oldRoleKey);
+        context.getRequestScope().put("roleKey", roleKey);        
         if (!ValidationUtils.isAllUpperCase(roleKey)) {
             Errors errors = getFormErrors(context);
             errors.reject("error.spaceRoles.role.name.badchars", "Role name has to be all capital letters or digits.");
-            context.getRequestScope().put("oldRoleKey", oldRoleKey);
-            context.getRequestScope().put("roleKey", roleKey);
             return error();
         }
         if (oldRoleKey == null) {
             space.getMetadata().addRole(roleKey);
         } else if (!oldRoleKey.equals(roleKey)) {
-            // TODO
+            if (space.getId() > 0) {
+                return new Event(this, "confirm");
+            } else {
+                jtrac.renameSpaceRole(oldRoleKey, roleKey, space);
+            }
         }
         return success();
     }     
+    
+    public Event roleFormConfirmHandler(RequestContext context) {
+        Space space = (Space) context.getFlowScope().get("space");
+        String roleKey = ValidationUtils.getParameter(context, "roleKey");
+        String oldRoleKey = ValidationUtils.getParameter(context, "oldRoleKey");
+        jtrac.renameSpaceRole(oldRoleKey, roleKey, space);
+        return success();
+    }
     
     //======================== TRANSITION / MASK ===============================
     
@@ -324,9 +337,9 @@ public class SpaceFormAction extends AbstractFormAction {
         Space space = (Space) context.getFlowScope().get("space");
         String roleKey = ValidationUtils.getParameter(context, "roleKey");
         String admin = ValidationUtils.getParameter(context, "admin");
-        jtrac.storeUserSpaceAllocation(user, space, roleKey);
+        jtrac.storeUserSpaceRole(user, space, roleKey);
         if (admin != null) {
-            jtrac.storeUserSpaceAllocation(user, space, "ROLE_ADMIN");
+            jtrac.storeUserSpaceRole(user, space, "ROLE_ADMIN");
         }
         SecurityUtils.refreshSecurityContextIfPrincipal(user);
         return success();
@@ -336,7 +349,7 @@ public class SpaceFormAction extends AbstractFormAction {
         String userSpaceRoleId = ValidationUtils.getParameter(context, "deallocate");        
         long id = Long.parseLong(userSpaceRoleId);
         UserSpaceRole userSpaceRole = jtrac.loadUserSpaceRole(id);
-        jtrac.removeUserSpaceAllocation(userSpaceRole);
+        jtrac.removeUserSpaceRole(userSpaceRole);
         SecurityUtils.refreshSecurityContextIfPrincipal(userSpaceRole.getUser());
         return success();
     }   
