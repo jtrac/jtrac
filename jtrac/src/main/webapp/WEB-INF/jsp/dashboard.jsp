@@ -1,5 +1,12 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
+<c:choose>
+    <c:when test="${principal.spaceCount == 0}">
+        <span class="info">You are not mapped to any Spaces yet.</span>
+        <br/>
+    </c:when>
+    <c:otherwise>
+    
 <table class="jtrac">
     
     <tr>
@@ -54,10 +61,9 @@
         </tr>
     </c:if>    
     
-</table>    
+</table>
 
-<c:if test="${spaceCount == 0}">
-    <span class="info">You are not mapped to any Spaces yet.</span>
-</c:if>
+    </c:otherwise>
+</c:choose>
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>
