@@ -160,10 +160,10 @@ public class UserFormAction extends AbstractFormAction {
         User user = (User) context.getFlowScope().get("user");
         Space space = (Space) context.getFlowScope().get("space");
         String roleKey = ValidationUtils.getParameter(context, "roleKey");
-        jtrac.storeUserSpaceAllocation(user, space, roleKey);
+        jtrac.storeUserSpaceRole(user, space, roleKey);
         String admin = ValidationUtils.getParameter(context, "admin");
         if (admin != null) {
-            jtrac.storeUserSpaceAllocation(user, space, "ROLE_ADMIN");
+            jtrac.storeUserSpaceRole(user, space, "ROLE_ADMIN");
         }        
         SecurityUtils.refreshSecurityContextIfPrincipal(user);
         return success();
@@ -173,7 +173,7 @@ public class UserFormAction extends AbstractFormAction {
         String userSpaceRoleId = ValidationUtils.getParameter(context, "deallocate");
         int id = Integer.parseInt(userSpaceRoleId);
         UserSpaceRole userSpaceRole = jtrac.loadUserSpaceRole(id);        
-        jtrac.removeUserSpaceAllocation(userSpaceRole);
+        jtrac.removeUserSpaceRole(userSpaceRole);
         User user = jtrac.loadUser(userSpaceRole.getUser().getId());
         SecurityUtils.refreshSecurityContextIfPrincipal(user);
         context.getFlowScope().put("user", user);
@@ -182,7 +182,7 @@ public class UserFormAction extends AbstractFormAction {
     
     public Event userMakeAdminHandler(RequestContext context) {        
         User user = (User) context.getFlowScope().get("user");        
-        jtrac.storeUserSpaceAllocation(user, null, "ROLE_ADMIN");
+        jtrac.storeUserSpaceRole(user, null, "ROLE_ADMIN");
         SecurityUtils.refreshSecurityContextIfPrincipal(user);
         return success();
     }     
