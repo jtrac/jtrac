@@ -25,7 +25,9 @@ import info.jtrac.util.SecurityUtils;
 import info.jtrac.util.ValidationUtils;
 import info.jtrac.webflow.FieldFormAction.FieldForm;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.validation.DataBinder;
@@ -52,25 +54,13 @@ public class SpaceFormAction extends AbstractFormAction {
     }     
     
     @Override
-    public Object loadFormObject(RequestContext context) {
-        context.getFlowScope().put("_flowId", "space");
+    public Object loadFormObject(RequestContext context) {        
         String spaceId = ValidationUtils.getParameter(context, "spaceId");
         Space space = null;
         if (spaceId != null) {
-            space = jtrac.loadSpace(Integer.parseInt(spaceId));
-            // cloning
-            Space clone = new Space();
-            clone.setId(space.getId());
-            clone.setPrefixCode(space.getPrefixCode() + "");
-            clone.setName(space.getName() + "");
-            clone.setGuestAllowed(space.isGuestAllowed());
-            clone.setDescription(space.getDescription() == null ? null : space.getDescription() + "");
-            clone.setSpaceSequence(space.getSpaceSequence()); // or else Hibernate orphans the old one
-            Metadata m = new Metadata();
-            m.setId(space.getMetadata().getId()); // or else Hibernate orphans the old one           
-            m.setXml(space.getMetadata().getXml());
-            clone.setMetadata(m);
-            return clone;
+            space =  jtrac.loadSpace(Integer.parseInt(spaceId));
+            space.getMetadata().getXml();  // hack: ensure nothing left to be lazy loaded!
+            return space;
         } else {
             space = new Space();
             space.getMetadata().initRoles();
@@ -157,6 +147,13 @@ public class SpaceFormAction extends AbstractFormAction {
         int type = Integer.parseInt(fieldType);
         FieldForm fieldForm = new FieldForm();
         Field field = space.getMetadata().getNextAvailableField(type);
+        // push newly created field name to flow scope to support delete without prompt
+        Set<String> newFields = (Set<String>) context.getFlowScope().get("newFields");
+        if (newFields == null) {
+            newFields = new HashSet<String>();
+        }
+        newFields.add(field.getName().getText());
+        context.getFlowScope().put("newFields", newFields);
         // set intelligent defaults to make adding new field to space easier
         field.initOptions();
         fieldForm.setField(field);
@@ -180,33 +177,37 @@ public class SpaceFormAction extends AbstractFormAction {
         Field field = fieldForm.getField();        
         context.getRequestScope().put("selectedFieldName", field.getNameText());
         return success();
-    }
-    
-    public Event fieldDeleteSetupHandler(RequestContext context) {
-        Space space = (Space) context.getFlowScope().get("space");
-        String fieldName = ValidationUtils.getParameter(context, "fieldName");    
-        Field field = space.getMetadata().getField(fieldName);
-        context.getRequestScope().put("field", field);
-        int affectedCount = 0;
-        if (space.getId() > 0) {
-             affectedCount = jtrac.findItemCount(space, field);
-        }
-        context.getRequestScope().put("affectedCount", affectedCount);
-        return success();
     }  
     
     public Event fieldDeleteHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
         String fieldName = ValidationUtils.getParameter(context, "fieldName");            
-        Field field = space.getMetadata().getField(fieldName);
-        space.getMetadata().removeField(fieldName);
+        Field field = space.getMetadata().getField(fieldName);        
         if (space.getId() > 0) {
-            jtrac.removeField(space, field);
-            // database has been updated, if we don't do this
-            // user may leave without committing metadata change
-            logger.debug("saving space after field delete operation");
-            jtrac.storeMetadata(space.getMetadata());
-        }     
+            Set<String> newFields = (Set<String>) context.getFlowScope().get("newFields");
+            if (newFields != null && newFields.contains(fieldName)) {
+                space.getMetadata().removeField(fieldName);
+                return success();
+            }
+            context.getRequestScope().put("affectedCount", jtrac.findItemCount(space, field));
+            return new Event(this, "confirm");
+        }
+        space.getMetadata().removeField(fieldName);        
+        return success();
+    }
+    
+    public Event fieldDeleteConfirmHandler(RequestContext context) {
+        Space space = (Space) context.getFlowScope().get("space");
+        String fieldName = ValidationUtils.getParameter(context, "fieldName");            
+        Field field = space.getMetadata().getField(fieldName);
+        // database will be updated, if we don't do this
+        // user may leave without committing metadata change
+        logger.debug("saving space after field delete operation");
+        jtrac.removeField(space, field);
+        space.getMetadata().removeField(fieldName);       
+        jtrac.storeSpace(space);
+        // horrible hack, but otherwise if we save again we get the dreaded Stale Object Exception
+        space.setMetadata(jtrac.loadMetadata(space.getMetadata().getId()));
         return success();
     }
     
@@ -282,8 +283,10 @@ public class SpaceFormAction extends AbstractFormAction {
         String oldRoleKey = ValidationUtils.getParameter(context, "oldRoleKey");
         // TODO next 3 lines should ideally be in a transaction
         jtrac.renameSpaceRole(oldRoleKey, roleKey, space);
-        jtrac.storeSpace(space);        
         space.getMetadata().renameRole(oldRoleKey, roleKey);
+        jtrac.storeSpace(space);
+        // horrible hack, but otherwise if we save again we get the dreaded Stale Object Exception
+        space.setMetadata(jtrac.loadMetadata(space.getMetadata().getId()));        
         // refresh role information for logged on user
         SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
         return success();

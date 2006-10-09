@@ -16,7 +16,7 @@
     </view-state>
     
     <view-state id="spaceFieldsView" view="space_fields">
-    <transition on="back" to="spaceForm"/>
+        <transition on="back" to="spaceForm"/>
         <transition on="add" to="spaceFieldForm">
             <action bean="spaceFormAction" method="fieldAddHandler"/>
         </transition>
@@ -32,21 +32,12 @@
         <transition on="next" to="spaceRolesView"/>
         <transition on="cancel" to="spaceListView"/>
     </view-state>
-   
-    <view-state id="spaceFieldDeleteView" view="space_field_delete">
-        <transition on="cancel" to="spaceFieldForm"/>
-        <transition on="submit" to="spaceFieldsView">
-            <action bean="spaceFormAction" method="fieldDeleteHandler"/>
-        </transition>        
-    </view-state>
     
     <view-state id="spaceFieldForm" view="space_field_form">
         <transition on="edit" to="spaceFieldOptionForm">
             <action bean="fieldFormAction" method="fieldOptionEditSetupHandler"/>
         </transition>
-        <transition on="delete" to="spaceFieldDeleteView">
-            <action bean="spaceFormAction" method="fieldDeleteSetupHandler"/>
-        </transition>       
+        <transition on="delete" to="fieldDeleteHandler"/>     
         <transition on="up" to="spaceFieldForm">
             <action bean="fieldFormAction" method="fieldOptionUpHandler"/>
         </transition>
@@ -64,6 +55,19 @@
         </transition>        
     </view-state>
  
+    <action-state id="fieldDeleteHandler">
+        <action bean="spaceFormAction" method="fieldDeleteHandler"/>
+        <transition on="success" to="spaceFieldsView"/>
+        <transition on="confirm" to="spaceFieldDeleteView"/>
+    </action-state>    
+    
+    <view-state id="spaceFieldDeleteView" view="space_field_delete">
+        <transition on="cancel" to="spaceFieldForm"/>
+        <transition on="submit" to="spaceFieldsView">
+            <action bean="spaceFormAction" method="fieldDeleteConfirmHandler"/>
+        </transition>        
+    </view-state>    
+    
     <view-state id="spaceFieldOptionForm" view="space_field_option_edit">
         <transition on="delete" to="spaceFieldOptionDeleteView">
             <action bean="fieldFormAction" method="fieldOptionDeleteSetupHandler"/>
