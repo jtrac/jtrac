@@ -12,19 +12,7 @@
     <table class="jtrac">
         <tr>
             <td class="label">
-                Key (prefix code)
-                <font color="red">*</font>
-            </td>
-            <spring:bind path="space.prefixCode">
-                <td>
-                    <input name="${status.expression}" value="${status.value}" id="focus" size="10"/>
-                    <span class="error">${status.errorMessage}</span>
-                </td>
-            </spring:bind>
-        </tr>
-        <tr>
-            <td class="label">
-                Name
+                Display Name
                 <font color="red">*</font>
             </td>
             <spring:bind path="space.name">
@@ -33,7 +21,21 @@
                     <span class="error">${status.errorMessage}</span>
                 </td>
             </spring:bind>
-        </tr>        
+        </tr>         
+        <tr>
+            <td class="label">
+                Prefix Key
+                <font color="red">*</font>
+                <br/>
+                (short, all caps)
+            </td>
+            <spring:bind path="space.prefixCode">
+                <td>
+                    <input name="${status.expression}" value="${status.value}" id="focus" size="10"/>
+                    <span class="error">${status.errorMessage}</span>
+                </td>
+            </spring:bind>
+        </tr>       
         <tr>
             <td class="label">Description</td>
             <spring:bind path="space.description">

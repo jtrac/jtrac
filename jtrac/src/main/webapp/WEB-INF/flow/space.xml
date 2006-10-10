@@ -69,19 +69,23 @@
     </view-state>    
     
     <view-state id="spaceFieldOptionForm" view="space_field_option_edit">
-        <transition on="delete" to="spaceFieldOptionDeleteView">
-            <action bean="fieldFormAction" method="fieldOptionDeleteSetupHandler"/>
-        </transition>      
+        <transition on="delete" to="fieldOptionDeleteHandler"/>   
         <transition on="cancel" to="spaceFieldForm"/>
         <transition on="submit" to="spaceFieldForm">
             <action bean="fieldFormAction" method="fieldOptionEditHandler"/>
         </transition>        
-    </view-state>       
+    </view-state>
+       
+    <action-state id="fieldOptionDeleteHandler">
+        <action bean="fieldFormAction" method="fieldDeleteHandler"/>
+        <transition on="success" to="spaceFieldsView"/>
+        <transition on="confirm" to="spaceFieldDeleteView"/>
+    </action-state>     
     
     <view-state id="spaceFieldOptionDeleteView" view="space_field_option_delete">
         <transition on="cancel" to="spaceFieldForm"/>
         <transition on="submit" to="spaceFieldForm">
-            <action bean="fieldFormAction" method="fieldOptionDeleteHandler"/>
+            <action bean="fieldFormAction" method="fieldOptionDeleteConfirmHandler"/>
         </transition>        
     </view-state>    
     

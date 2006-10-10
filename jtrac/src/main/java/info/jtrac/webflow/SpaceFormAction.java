@@ -147,13 +147,6 @@ public class SpaceFormAction extends AbstractFormAction {
         int type = Integer.parseInt(fieldType);
         FieldForm fieldForm = new FieldForm();
         Field field = space.getMetadata().getNextAvailableField(type);
-        // push newly created field name to flow scope to support delete without prompt
-        Set<String> newFields = (Set<String>) context.getFlowScope().get("newFields");
-        if (newFields == null) {
-            newFields = new HashSet<String>();
-        }
-        newFields.add(field.getName().getText());
-        context.getFlowScope().put("newFields", newFields);
         // set intelligent defaults to make adding new field to space easier
         field.initOptions();
         fieldForm.setField(field);
@@ -184,13 +177,11 @@ public class SpaceFormAction extends AbstractFormAction {
         String fieldName = ValidationUtils.getParameter(context, "fieldName");            
         Field field = space.getMetadata().getField(fieldName);        
         if (space.getId() > 0) {
-            Set<String> newFields = (Set<String>) context.getFlowScope().get("newFields");
-            if (newFields != null && newFields.contains(fieldName)) {
-                space.getMetadata().removeField(fieldName);
-                return success();
+            int affectedCount = jtrac.findItemCount(space, field);
+            if (affectedCount > 0) {
+                context.getRequestScope().put("affectedCount", affectedCount);
+                return new Event(this, "confirm");
             }
-            context.getRequestScope().put("affectedCount", jtrac.findItemCount(space, field));
-            return new Event(this, "confirm");
         }
         space.getMetadata().removeField(fieldName);        
         return success();

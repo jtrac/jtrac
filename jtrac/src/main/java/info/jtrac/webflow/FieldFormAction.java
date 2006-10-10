@@ -127,32 +127,35 @@ public class FieldFormAction extends AbstractFormAction {
         return success();
     }
     
-    public Event fieldOptionDeleteSetupHandler(RequestContext context) throws Exception {
+    public Event fieldOptionDeleteHandler(RequestContext context) throws Exception {
         Space space = (Space) context.getFlowScope().get("space");
         FieldForm fieldForm = (FieldForm) getFormObject(context);
         String optionKey = ValidationUtils.getParameter(context, "optionKey");
         String option = fieldForm.field.getCustomValue(optionKey);
         context.getRequestScope().put("optionKey", optionKey);
         context.getRequestScope().put("option", option);
-        int affectedCount = 0;
         if (space.getId() > 0) {
-            affectedCount = jtrac.findItemCount(space, fieldForm.field, optionKey);
-        }        
-        context.getRequestScope().put("affectedCount", affectedCount);
+            int affectedCount = jtrac.findItemCount(space, fieldForm.field, optionKey);
+            if (affectedCount > 0) {
+                context.getRequestScope().put("affectedCount", affectedCount);
+                return new Event(this, "confirm");
+            }
+        }
+        fieldForm.field.getOptions().remove(optionKey);
         return success();
     }    
     
-    public Event fieldOptionDeleteHandler(RequestContext context) throws Exception {
+    public Event fieldOptionDeleteConfirmHandler(RequestContext context) throws Exception {
         Space space = (Space) context.getFlowScope().get("space");
         FieldForm fieldForm = (FieldForm) getFormObject(context);
         String optionKey = ValidationUtils.getParameter(context, "optionKey");        
-        fieldForm.field.getOptions().remove(optionKey);
-        if (space.getId() > 0) {
-            jtrac.removeFieldValues(space, fieldForm.field, optionKey);
-            // database has been updated, if we don't do this
-            // user may leave without committing metadata change       
-            jtrac.storeMetadata(space.getMetadata());            
-        }
+        fieldForm.field.getOptions().remove(optionKey);        
+        jtrac.removeFieldValues(space, fieldForm.field, optionKey);
+        // database has been updated, if we don't do this
+        // user may leave without committing metadata change       
+        jtrac.storeSpace(space);
+        // horrible hack, but otherwise if we save again we get the dreaded Stale Object Exception
+        space.setMetadata(jtrac.loadMetadata(space.getMetadata().getId()));
         return success();
     }
     
