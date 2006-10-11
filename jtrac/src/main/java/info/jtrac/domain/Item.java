@@ -86,6 +86,17 @@ public class Item extends AbstractItem {
         return d;
     }    
     
+    public History getLatestHistory() {
+        if (history == null) {
+            return null;
+        }
+        History out = null;
+        for(History h : history) {
+            out = h;
+        }
+        return out;
+    }
+    
     //===========================================================
     
     @Override

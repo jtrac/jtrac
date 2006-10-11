@@ -133,7 +133,7 @@ public class EmailUtils {
             helper.setText(addHeaderAndFooter(sb), true);
             helper.setSubject(getSubject(item));
             helper.setSentDate(new Date());
-            helper.setFrom(from);
+            helper.setFrom(item.getLatestHistory().getLoggedBy().getEmail());
             // set TO            
             if (item.getAssignedTo() != null) {
                 helper.setTo(item.getAssignedTo().getEmail());
