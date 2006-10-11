@@ -419,29 +419,49 @@ java -version
         <sect1 id="installation-custom">
             <title>Custom Installation</title>
             <para>                    
-                To customize the location of "jtrac.home" you have two options.
+                To customize the location of "jtrac.home" you have the following four options.  JTrac applies these
+                rules in the order in which they are listed below:
             </para>
-            <para>
-                If you can easily set a system property called "jtrac.home" within the environment of your 
-                application server then you don't need to edit the WAR file.  Please look at the contents of "start.bat" 
-                to see an example of how the appropriate JVM (Java Virtual Machine) parameters can be set when deploying JTrac.  
-                For example, if you are using <ulink url="http://tomcat.apache.org/">Apache Tomcat</ulink> 5.5.X, you can 
-                set an environment variable called JAVA_OPTS before invoking the startup script (startup.bat / startup.sh).
-                Here is an example for Tomcat 5.5.X on Windows:                
-            </para>
-            <para>
-                <programlisting>
+            <sect2 id="installation-custom-initprops">
+                <title>Edit the "jtrac-init.properties" file</title>
+                <para>
+                    If you explode (unzip) the WAR file, you can edit the /WEB-INF/classes/jtrac-init.properties file
+                    and customize the location of "jtrac.home".  Note that you can choose to deploy JTrac as an exploded-war 
+                    and it is not mandatory that you re-package (zip) the WAR file after editing "jtrac-init.properties".
+                </para>
+            </sect2>
+            <sect2 id="installation-custom-servletparams">
+                <title>Set a Servlet context parameter</title>
+                <para>
+                    For example you can specify the jtrac.home using the Tomcat administration console or as 
+                    follows using the &lt;Context&gt; tag.                     
+                </para>
+                <para>
+                    <programlisting>
+                        <![CDATA[                        
+<Context docBase="${catalina.home}/jtrac/jtrac.war">
+    <Parameter name="jtrac.home" value="C:/data/jtrac_home"/>
+</Context>              ]]>
+                    </programlisting>
+                </para>                
+            </sect2>            
+            <sect2 id="installation-custom-systemparams">
+                <title>Set a System / JVM parameter</title>            
+                <para>
+                    If you can easily set a system property called "jtrac.home" within the environment of your 
+                    application server then you don't need to edit the WAR file.  Please look at the contents of "start.bat" 
+                    to see an example of how the appropriate JVM (Java Virtual Machine) parameters can be set when deploying JTrac.  
+                    For example, if you are using <ulink url="http://tomcat.apache.org/">Apache Tomcat</ulink> 5.5.X, you can 
+                    set an environment variable called JAVA_OPTS before invoking the startup script (startup.bat / startup.sh).
+                    Here is an example for Tomcat 5.5.X on Windows:                
+                </para>
+                <para>
+                    <programlisting>
 
-set JAVA_OPTS=-Djtrac.home=C:/jtrac-home -Dfile.encoding=UTF-8
-                </programlisting>
-            </para>
-            <!--
-            <para>
-                If you explode (unzip) the WAR file, you can edit the /WEB-INF/classes/jtrac-init.properties file
-                and customize the location of "jtrac.home".  Note that you can choose to deploy JTrac as an exploded-war 
-                and it is not mandatory that you re-package (zip) the WAR file after editing "jtrac-init.properties".
-            </para>
-            -->
+set JAVA_OPTS=-Djtrac.home=C:/data/jtrac_home -Dfile.encoding=UTF-8
+                    </programlisting>
+                </para>
+            </sect2>
             <para>                    
                 You can configure the database that JTrac uses by editing the "jtrac.properties" file that JTrac expects
                 within the "jtrac.home" folder.  Note that if JTrac does not find a "jtrac.properties" file in the

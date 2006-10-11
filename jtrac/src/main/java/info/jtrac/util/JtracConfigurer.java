@@ -24,11 +24,13 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Properties;
+import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.web.context.ServletContextAware;
 
 /**
  * Custom extension of the Spring PropertyPlaceholderConfigurer that
@@ -41,21 +43,34 @@ import org.springframework.core.io.FileSystemResource;
  *
  * 1) a "jtrac.home" property is looked for in /WEB-INF/classes/jtrac-init.properties
  * 2) if not found, then a "jtrac.home" system property is checked for
- * 3) last resort, a ".jtrac" folder is created in the "user.home" and used as "jtrac.home"
+ * 3) then a servlet context init-parameter called "jtrac.home" is looked for 
+ * 4) last resort, a ".jtrac" folder is created in the "user.home" and used as "jtrac.home"
  *
  * Note that later on during startup, the HibernateJtracDao would check if 
  * database tables exist, and if they dont, would proceed to create them
  */
-public class JtracConfigurer extends PropertyPlaceholderConfigurer {
+
+public class JtracConfigurer extends PropertyPlaceholderConfigurer implements ServletContextAware {
     
     private final Log logger = LogFactory.getLog(getClass());
-    
-    public JtracConfigurer() throws Exception {
+ 
+    private ServletContext servletContext;
+
+    public JtracConfigurer() {
+        // zero arg constructor
+    }
+
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
+    }
+
+    public void init() throws Exception {
         String jtracHome = null;
         ClassPathResource cpr = new ClassPathResource("jtrac-init.properties");
         File initPropsFile = cpr.getFile();
         if (initPropsFile.exists()) {
             logger.info("found 'jtrac-init.properties' on classpath, processing...");
+            System.out.println(initPropsFile);
             InputStream is = null;
             Properties props = new Properties();
             try {
@@ -65,20 +80,29 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer {
                 is.close();
             }
             jtracHome = props.getProperty("jtrac.home");
-        }
-        if (jtracHome != null) {
-            logger.info("'jtrac.home' property initialized from 'jtrac-init.properties' as '" + jtracHome + "'");
-        } else {
-            logger.info("valid 'jtrac.home' property not available in 'jtrac-init.properties', trying system properties...");                
-            jtracHome = System.getProperty("jtrac.home");
-            if (jtracHome == null) {                        
-                jtracHome = System.getProperty("user.home") + "/.jtrac";
-                logger.warn("System property 'jtrac.home' does not exist.  Will use 'user.home' directory '" + jtracHome + "'");                
-                System.setProperty("jtrac.home", jtracHome);
-            } else {
-                logger.info("System property 'jtrac.home' exists: '" + jtracHome + "'");
+            if (jtracHome != null) {
+                logger.info("'jtrac.home' property initialized from 'jtrac-init.properties' as '" + jtracHome + "'");
             }
         }
+        if (jtracHome == null) {
+            logger.info("valid 'jtrac.home' property not available in 'jtrac-init.properties', trying system properties.");                
+            jtracHome = System.getProperty("jtrac.home");
+            if (jtracHome != null) {
+                logger.info("'jtrac.home' property initialized from system properties as '" + jtracHome + "'");
+            }
+        }
+        if (jtracHome == null) {
+            logger.info("valid 'jtrac.home' property not available in system properties, trying servlet init paramters.");                
+            jtracHome = servletContext.getInitParameter("jtrac.home");
+            if (jtracHome != null) {                        
+                logger.info("Servlet init parameter 'jtrac.home' exists: '" + jtracHome + "'");
+            }
+        }
+        if (jtracHome == null) {                        
+            jtracHome = System.getProperty("user.home") + "/.jtrac";
+            logger.warn("Servlet init paramter  'jtrac.home' does not exist.  Will use 'user.home' directory '" + jtracHome + "'");                
+        }
+        System.setProperty("jtrac.home", jtracHome);
         File homeFile = new File(jtracHome);
         if (!homeFile.exists()) {
             homeFile.mkdir();

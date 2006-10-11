@@ -7,7 +7,7 @@
 
     <!-- Configurer that replaces ${...} placeholders with values from a properties file
          we use a custom Configurer that extends the Spring PropertyPlaceholderConfigurer -->
-    <bean class="info.jtrac.util.JtracConfigurer"/>        
+    <bean class="info.jtrac.util.JtracConfigurer" init-method="init"/>        
 
     <!-- this Acegi helper finds its way into our root Spring context 
          because JtracImpl depends on it -->
