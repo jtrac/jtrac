@@ -317,9 +317,7 @@
             <jvmarg value="-DSTOP.KEY=jtrac"/>
             <arg value="--stop"/>
         </java>
-        <waitfor maxwait="2" maxwaitunit="second">
-            <equals arg1="true" arg2="false"/>
-        </waitfor>        
+        <sleep seconds="2"/>
     </target>    
     
     <target name="jetty-start-debug" depends="jetty-setup, war-exploded">
