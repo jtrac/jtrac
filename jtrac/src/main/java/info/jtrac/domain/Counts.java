@@ -56,7 +56,7 @@ public class Counts implements Serializable {
     
     public void addOpen(long spaceId, int count) {
         Counts c = getCounts(spaceId);
-        c.setOpen(count);
+        c.setOpen(c.getOpen() + count);
         c.setTotal(c.getTotal() + count);
         open += count;
         total += count;        
