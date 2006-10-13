@@ -149,9 +149,27 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
             }
             logger.info("HSQLDB will be used.  Finished creating '" + propFile.getPath() + "'");
         } else {
-            logger.info("'jtrac.properties' file exists: '" + propFile.getPath() + "'");
-        }            
-        setLocation(new FileSystemResource(propFile));
+            logger.info("'jtrac.properties' file exists: '" + propFile.getPath() + "'");            
+        } 
+        FileSystemResource fsr = new FileSystemResource(propFile);
+        logger.info("opening for processing: " + fsr);
+        InputStream is = null;
+        Properties props = new Properties();
+        try {
+            is = new FileInputStream(fsr.getFile());                
+            props.load(is);
+        } finally {
+            is.close();
+        }
+        String databaseUrl = props.getProperty("database.url");
+        if (databaseUrl.trim().startsWith("jdbc:hsqldb:file")) {
+            logger.info("embedded HSQLDB mode detected, switching on spring single connection data source");
+            System.setProperty("jtrac.datasource", "dataSourceEmbedded");
+        } else {
+            logger.info("Not using embedded HSQLDB, switching on Apache DBCP data source connection pooling");
+            System.setProperty("jtrac.datasource", "dataSource");
+        }
+        setLocation(fsr);
     }
     
 }
