@@ -27,6 +27,7 @@ statements = new String[] {
 "alter table spaces add column guest_allowed boolean default 0",
 "alter table metadata add column version integer default 0 not null before type",
 "alter table metadata alter name varchar(50)",
+"update spaces set name = prefix_code",
 "shutdown"
 
 };
