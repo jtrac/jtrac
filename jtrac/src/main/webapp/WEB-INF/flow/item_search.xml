@@ -67,6 +67,8 @@
     </subflow-state>      
     
     <end-state id="relateSubmit"/>
-        
+    
+    <end-state id="backFromSearch"/> 
+    
 </flow>
 

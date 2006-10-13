@@ -38,6 +38,7 @@
         <transition on="relateSubmit" to="itemViewForm">
             <action bean="itemViewFormAction" method="relateSubmitHandler"/>
         </transition>
+        <transition on="backFromSearch" to="itemViewForm"/>       
     </subflow-state>     
     
     <end-state id="itemListView"/>
