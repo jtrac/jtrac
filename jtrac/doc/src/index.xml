@@ -419,8 +419,9 @@ java -version
         <sect1 id="installation-custom">
             <title>Custom Installation</title>
             <para>                    
-                To customize the location of "jtrac.home" you have the following four options.  JTrac applies these
-                rules in the order in which they are listed below:
+                To customize the location of "jtrac.home" you have the following three options.  JTrac tries to
+                look up the value of "jtrac.home" from the options below, and tries each method in the order listed
+                below.
             </para>
             <sect2 id="installation-custom-initprops">
                 <title>Edit the "jtrac-init.properties" file</title>
@@ -434,7 +435,7 @@ java -version
                 <title>Set a Servlet context parameter</title>
                 <para>
                     For example you can specify the jtrac.home using the Tomcat administration console or as 
-                    follows using the &lt;Context&gt; tag.                     
+                    follows using a &lt;Context&gt; parameter.                     
                 </para>
                 <para>
                     <programlisting>
@@ -485,8 +486,8 @@ hibernate.show_sql=false
                 create the schema if one does not already exist.
             </para>
             <para>
-                If you edit the "jtrac.properties" file, ensure that there are no trailing spaces in the entries shown above.  
-                This can save you a lot of frustration!
+                If you edit the "jtrac.properties" file, ensure that there are no trailing spaces in the entries shown above
+                (especially when cutting and pasting from somewhere).  This can save you a lot of frustration!
             </para>              
         </sect1>
         <sect1 id="installation-windowsservice">
