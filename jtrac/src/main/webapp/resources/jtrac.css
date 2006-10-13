@@ -14,6 +14,7 @@ a:hover { color: red; }
 .nav-table-outer, .nav-table-outer tr { font-size: 80%; background-color: #CCCCCC; }
 .nav-table td { font-weight: bold; background-color: #DEDEFF; padding-left: 1em; padding-right: 1em; }
 .nav-table td a { width: 100%; height: 100%; display: block; }
+.nav-width th { width: 4em; }
 .bdr-collapse { border-collapse: collapse; }
 .bdr-collapse td { padding: 0px 0px 0px 0px; }
 .page-links { font-weight: bold }

@@ -9,7 +9,7 @@
     
 <table class="jtrac">
     
-    <tr>
+    <tr class="nav-width">
         <th>Space</th>
         <c:if test="${principal.id != 0}">
             <th>Role</th>
