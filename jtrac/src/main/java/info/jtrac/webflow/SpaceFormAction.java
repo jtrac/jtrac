@@ -54,7 +54,8 @@ public class SpaceFormAction extends AbstractFormAction {
     }     
     
     @Override
-    public Object loadFormObject(RequestContext context) {        
+    public Object loadFormObject(RequestContext context) {
+        context.getFlowScope().put("_flowId", "space");
         String spaceId = ValidationUtils.getParameter(context, "spaceId");
         Space space = null;
         if (spaceId != null) {
