@@ -12,7 +12,8 @@ a:hover { color: red; }
 .selected, table.jtrac .selected { background: #ADD8E6; }
 .bdr-bottom, tr.bdr-bottom td { border-bottom: thin solid grey; }
 .nav-table-outer, .nav-table-outer tr { font-size: 80%; background-color: #CCCCCC; }
-.nav-table td, td.nav-table { font-weight: bold; background-color: #DEDEFF; padding-left: 1em; padding-right: 1em; }
+.nav-table td { font-weight: bold; background-color: #DEDEFF; padding-left: 1em; padding-right: 1em; }
+.nav-table td a { width: 100%; height: 100%; display: block; }
 .bdr-collapse { border-collapse: collapse; }
 .bdr-collapse td { padding: 0px 0px 0px 0px; }
 .page-links { font-weight: bold }
