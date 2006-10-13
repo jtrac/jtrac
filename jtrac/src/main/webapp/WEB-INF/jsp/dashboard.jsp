@@ -13,7 +13,7 @@
         <th>Space</th>
         <c:if test="${principal.id != 0}">
             <th>Role</th>
-            <th>Create<br/>New Item</th>
+            <th>Create<br/>New</th>
             <th>Logged<br/>By Me</th>
             <th>Assigned<br/>To Me</th>
         </c:if>
