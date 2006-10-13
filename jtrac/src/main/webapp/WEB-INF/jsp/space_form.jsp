@@ -17,21 +17,19 @@
             </td>
             <spring:bind path="space.name">
                 <td>
-                    <input name="${status.expression}" value="${status.value}"/>
+                    <input name="${status.expression}" value="${status.value}" id="focus"/>
                     <span class="error">${status.errorMessage}</span>
                 </td>
             </spring:bind>
         </tr>         
         <tr>
             <td class="label">
-                Prefix Key
+                Space Key (short name)
                 <font color="red">*</font>
-                <br/>
-                (short, all caps)
             </td>
             <spring:bind path="space.prefixCode">
                 <td>
-                    <input name="${status.expression}" value="${status.value}" id="focus" size="10"/>
+                    <input name="${status.expression}" value="${status.value}" size="10"/>
                     <span class="error">${status.errorMessage}</span>
                 </td>
             </spring:bind>
