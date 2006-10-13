@@ -478,12 +478,16 @@ database.password=
 hibernate.dialect=org.hibernate.dialect.HSQLDialect
 hibernate.show_sql=false
                 </programlisting>
-            </para>
+            </para>          
             <para>
                 You can change the database values and the hibernate dialect to match the settings of a 
                 database that you have already.  When JTrac starts, it will connect to the database and
                 create the schema if one does not already exist.
             </para>
+            <para>
+                If you edit the "jtrac.properties" file, ensure that there are no trailing spaces in the entries shown above.  
+                This can save you a lot of frustration!
+            </para>              
         </sect1>
         <sect1 id="installation-windowsservice">
             <title>Installing as a Windows Service</title>
