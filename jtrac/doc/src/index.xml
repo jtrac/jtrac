@@ -419,9 +419,8 @@ java -version
         <sect1 id="installation-custom">
             <title>Custom Installation</title>
             <para>                    
-                To customize the location of "jtrac.home" you have the following three options.  JTrac tries to
-                look up the value of "jtrac.home" from the options below, and tries each method in the order listed
-                below.
+                To customize the location of "jtrac.home" you have the following three options.  On startup, JTrac tries to
+                detect the value of "jtrac.home", and checks the following configuration options in the order listed below.
             </para>
             <sect2 id="installation-custom-initprops">
                 <title>Edit the "jtrac-init.properties" file</title>
@@ -462,6 +461,10 @@ java -version
 set JAVA_OPTS=-Djtrac.home=C:/data/jtrac_home -Dfile.encoding=UTF-8
                     </programlisting>
                 </para>
+                <para>
+                    If "jtrac.home" has not been configured in any of the above ways, JTrac will create a folder called
+                    ".jtrac" in the user home directory and proceed to use that as "jtrac.home".
+                </para>
             </sect2>
             <para>                    
                 You can configure the database that JTrac uses by editing the "jtrac.properties" file that JTrac expects
@@ -488,6 +491,26 @@ hibernate.show_sql=false
             <para>
                 If you edit the "jtrac.properties" file, ensure that there are no trailing spaces in the entries shown above
                 (especially when cutting and pasting from somewhere).  This can save you a lot of frustration!
+            </para>
+            <para>
+                Don't forget to make the database driver available for the web-application.  If you are using the bundled
+                Jetty web-app server, this is as simple as copying the jar file into the "lib" folder along with the
+                jetty jar files.  If you are using Tomcat, you can either place the jar file under "shared/lib" or within
+                the "/WEB-INF/lib" folder of the "jtrac" (exploded) WAR itself.
+            </para>            
+            <para>
+                Given below is a sample jtrac.properties file for MySQL.  Using the default "root" user is obviously
+                not advisable from a security point of view and you should try and have a separate user for the database
+                used by JTrac.
+                <programlisting>
+
+database.driver=com.mysql.jdbc.Driver
+database.url=jdbc:mysql://localhost/jtrac
+database.username=root
+database.password=
+hibernate.dialect=org.hibernate.dialect.MySQLDialect
+hibernate.show_sql=false
+                </programlisting>
             </para>              
         </sect1>
         <sect1 id="installation-windowsservice">
