@@ -33,6 +33,7 @@ public class ItemItem implements Serializable {
     
     private long id;
     private Item item;
+    private Item relatedItem;
     private int type;
 
     public static int RELATED = 0;
@@ -55,12 +56,9 @@ public class ItemItem implements Serializable {
         // zero arg constructor
     }
     
-    public ItemItem(Item item) {
+    public ItemItem(Item item, Item relatedItem, int type) {        
         this.item = item;
-    }
-    
-    public ItemItem(Item item, int type) {
-        this.item = item;
+        this.relatedItem = relatedItem;
         this.type = type;
     }    
     
@@ -85,6 +83,14 @@ public class ItemItem implements Serializable {
     public void setItem(Item item) {
         this.item = item;
     }
+    
+    public Item getRelatedItem() {
+        return relatedItem;
+    }
+
+    public void setRelatedItem(Item relatedItem) {
+        this.relatedItem = relatedItem;
+    }    
 
     public int getType() {
         return type;

@@ -68,7 +68,8 @@ public abstract class AbstractItem implements Serializable, DocumentCreator {
     
     // probably belong to Item not AbstractItem, but convenient for item_view_form binding
     private Set<ItemUser> itemUsers;
-    private Set<ItemItem> itemItems;
+    private Set<ItemItem> relatedItems;
+    private Set<ItemItem> relatingItems;
     private Set<ItemTag> itemTags;
     
     // mvc form binding convenience not really domain, TODO refactor
@@ -160,10 +161,10 @@ public abstract class AbstractItem implements Serializable, DocumentCreator {
     }
     
     public void add(ItemItem itemItem) {
-        if (itemItems == null) {
-            itemItems = new LinkedHashSet<ItemItem>();
+        if (relatedItems == null) {
+            relatedItems = new LinkedHashSet<ItemItem>();
         }
-        itemItems.add(itemItem);
+        relatedItems.add(itemItem);
     }
     
     //===================================================
@@ -452,13 +453,21 @@ public abstract class AbstractItem implements Serializable, DocumentCreator {
         this.itemUsers = itemUsers;
     }  
     
-    public Set<ItemItem> getItemItems() {
-        return itemItems;
+    public Set<ItemItem> getRelatedItems() {
+        return relatedItems;
     }
 
-    public void setItemItems(Set<ItemItem> itemItems) {
-        this.itemItems = itemItems;
+    public void setRelatedItems(Set<ItemItem> relatedItems) {
+        this.relatedItems = relatedItems;
     } 
+    
+    public Set<ItemItem> getRelatingItems() {
+        return relatingItems;
+    }
+
+    public void setRelatingItems(Set<ItemItem> relatingItems) {
+        this.relatingItems = relatingItems;
+    }    
     
     public Set<ItemTag> getItemTags() {
         return itemTags;

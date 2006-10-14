@@ -171,7 +171,7 @@ public class ItemViewFormAction extends AbstractFormAction {
             long sequenceNum = Long.parseLong(refId.substring(pos + 1));
             String prefixCode = refId.substring(0, pos).toUpperCase();
             Item relatedItem = jtrac.loadItem(sequenceNum, prefixCode);
-            ItemItem itemItem = new ItemItem(relatedItem, itemViewForm.getRelationType());
+            ItemItem itemItem = new ItemItem(item, relatedItem, itemViewForm.getRelationType());
             item.add(itemItem);
         }         
         

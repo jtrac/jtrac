@@ -28,10 +28,14 @@
             <key column="item_id"/>
             <one-to-many class="ItemUser"/>
         </set>
-        <set name="itemItems" cascade="all" inverse="true">
+        <set name="relatedItems" cascade="all" inverse="true">
             <key column="item_id"/>
             <one-to-many class="ItemItem"/>
         </set>
+        <set name="relatingItems">
+            <key column="related_item_id"/>
+            <one-to-many class="ItemItem"/>
+        </set>        
         <set name="itemTags" cascade="all" inverse="true">
             <key column="item_id"/>
             <one-to-many class="ItemTag"/>
@@ -84,6 +88,7 @@
             <generator class="native"/>
         </id>
         <many-to-one name="item" column="item_id" not-null="true"/>
+        <many-to-one name="relatedItem" column="related_item_id" not-null="true"/>
         <property name="type" column="type"/>
     </class>    
     

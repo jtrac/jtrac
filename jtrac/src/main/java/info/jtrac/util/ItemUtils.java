@@ -50,11 +50,16 @@ public final class ItemUtils {
         sb.append("  <td>" + item.getRefId() + "</td>");
         sb.append("  <td class='label'>Related Items</td>");
         sb.append("  <td colspan='3'>");
-        if (item.getItemItems() != null) {
-            for(ItemItem itemItem : item.getItemItems()) {
-                sb.append(itemItem.getRelationText() + " " + itemItem.getItem().getRefId() + "; ");
+        if (item.getRelatedItems() != null) {
+            for(ItemItem itemItem : item.getRelatedItems()) {
+                sb.append(itemItem.getRelationText() + " " + itemItem.getRelatedItem().getRefId() + " ");
             }
         }
+        if (item.getRelatingItems() != null) {
+            for(ItemItem itemItem : item.getRelatingItems()) {
+                sb.append(itemItem.getItem().getRefId() + " " + itemItem.getRelationText() + " this. ");
+            }
+        }        
         sb.append("  </td>");
         sb.append("</tr>");
         sb.append("<tr>");
