@@ -17,8 +17,9 @@ while (rs.next()) {
 
 stmt1 = conn1.createStatement();
 
-stmt1.executeUpdate("delete from user_space_roles where id = 1");
-stmt1.executeUpdate("delete from users where id = 1");
+stmt2 = conn2.createStatement();
+stmt2.executeUpdate("delete from user_space_roles");
+stmt2.executeUpdate("delete from users");
 
 for (tableName : tableNames) {
     rs = stmt1.executeQuery("select * from " + tableName);
