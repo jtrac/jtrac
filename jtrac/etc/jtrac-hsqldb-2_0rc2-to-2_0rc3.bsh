@@ -43,6 +43,4 @@ for (sql : statements) {
     stmt.executeUpdate(sql);
 }
 
-
-stmt.close();
 conn.close();
