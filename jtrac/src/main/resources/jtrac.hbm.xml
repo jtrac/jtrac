@@ -109,6 +109,7 @@
             <generator class="native"/>
         </id>
         <version name="version" column="version"/>
+        <property name="type" column="type"/>
         <many-to-one name="parent" column="item_id" not-null="true"/>
         <property name="actualEffort" column="actual_effort"/>
         <many-to-one name="attachment" column="attachment_id"/>

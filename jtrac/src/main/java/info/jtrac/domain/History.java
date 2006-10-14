@@ -26,6 +26,7 @@ import org.apache.lucene.document.Document;
  */
 public class History extends AbstractItem {
     
+    private Integer type;
     private String comment;
     private Double actualEffort;
     private Attachment attachment;
@@ -85,6 +86,14 @@ public class History extends AbstractItem {
     public Space getSpace() {
         return getParent().getSpace();
     }            
+    
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }    
     
     public String getComment() {
         return comment;
