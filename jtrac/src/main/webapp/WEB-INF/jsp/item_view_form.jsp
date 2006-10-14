@@ -20,8 +20,8 @@
                 <option value="0">Both items are related</option>
             </select>
             <input type="hidden" name="itemId" value="${relatingItem.id}"/>
-            <input type="hidden" name="relatedItemRefId" value="${item.refId}"/>
-            <input type="submit" name="_eventId_relateSubmit" value="Submit"/>
+            <input type="hidden" name="relatedItemRefId" value="${item.refId}"/>            
+            <input type="submit" name="_eventId_relateSubmit" value="Submit" <c:if test="${item.id == relatingItem.id}">disabled='true'</c:if>/>
         </td>
     </c:if>    
 </tr>
