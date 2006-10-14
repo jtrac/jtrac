@@ -6,7 +6,7 @@
     <bookinfo>
         <title>JTrac</title>
         <subtitle>User / Developer Guide</subtitle>
-        <releaseinfo>2.0-RC2</releaseinfo>
+        <releaseinfo>2.0-RC3</releaseinfo>
         <authorgroup>
             <author>
                 <firstname>Peter</firstname>
@@ -59,15 +59,17 @@
         </sect1>        
         
         <sect1 id="introduction-releasenotes">
-            <title>Release Notes: Version 2.0-RC2</title>
+            <title>Release Notes: Version 2.0-RC3</title>
             <para>
-                As the version number implies, 2.0-RC2 is not yet final and thus not recommended for production.
-                The intention is to get as much feedback as possible from interested users and there may be
-                minor changes to the database schema before the 2.0 milestone.
+                Note that the database schema has changed!  If you are using an earlier version of JTrac in production
+                you have to upgrade your database schema.  Instructions on how to upgrade are available 
+                <ulink url="http://sourceforge.net/forum/forum.php?thread_id=1592046&forum_id=552477">here</ulink>
+                on the JTrac forums.
             </para>
             <para>
                 JTrac 2.0 final should be available by the end of October 2006. Development has been slower than 
-                expected and the earlier target of June 2006 has admittedly not been met.
+                expected and the earlier target of June 2006 has admittedly not been met.  RC3 has almost all the
+                "most wanted" features in place, and we are expecting 2.0 final to be out in October 2006 itself.
             </para>
             <para>
                 You are encouraged to try out JTrac and communicate your feedback and interest in future versions
