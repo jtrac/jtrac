@@ -50,16 +50,30 @@ public final class ItemUtils {
         sb.append("  <td>" + item.getRefId() + "</td>");
         sb.append("  <td class='label'>Related Items</td>");
         sb.append("  <td colspan='3'>");
-        if (item.getRelatedItems() != null) {
-            for(ItemItem itemItem : item.getRelatedItems()) {
-                sb.append(itemItem.getRelationText() + " " + itemItem.getRelatedItem().getRefId() + " ");
+        if (item.getRelatedItems() != null || item.getRelatingItems() != null) {
+            String flowUrlParam = "_flowExecutionKey=" + request.getAttribute("flowExecutionKey");
+            String flowUrl = "/flow?" + flowUrlParam; 
+            if (item.getRelatedItems() != null) {
+                for(ItemItem itemItem : item.getRelatedItems()) {                    
+                    String refId = itemItem.getRelatedItem().getRefId();
+                    if (request != null && response != null) {
+                        String url = flowUrl + "&_eventId=viewRelated&itemId=" + itemItem.getRelatedItem().getId();
+                        refId = "<a href='" + response.encodeURL(request.getContextPath() + url) + "'>" + refId + "</a>";
+                    }
+                    sb.append(itemItem.getRelationText() + " " + refId + ". ");
+                }
+            }
+            if (item.getRelatingItems() != null) {
+                for(ItemItem itemItem : item.getRelatingItems()) {
+                    String refId = itemItem.getItem().getRefId();
+                    if (request != null && response != null) {
+                        String url = flowUrl + "&_eventId=viewRelated&itemId=" + itemItem.getItem().getId();
+                        refId = "<a href='" + response.encodeURL(request.getContextPath() + url) + "'>" + refId + "</a>";
+                    }
+                    sb.append(refId + " " + itemItem.getRelationText() + " this. ");
+                }
             }
         }
-        if (item.getRelatingItems() != null) {
-            for(ItemItem itemItem : item.getRelatingItems()) {
-                sb.append(itemItem.getItem().getRefId() + " " + itemItem.getRelationText() + " this. ");
-            }
-        }        
         sb.append("  </td>");
         sb.append("</tr>");
         sb.append("<tr>");
