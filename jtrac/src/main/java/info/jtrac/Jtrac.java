@@ -22,6 +22,7 @@ import info.jtrac.domain.Counts;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemItem;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
@@ -45,6 +46,7 @@ public interface Jtrac extends UserDetailsService {
     Item loadItem(long sequenceNum, String prefixCode);
     History loadHistory(long id);
     List<Item> findItems(ItemSearch itemSearch);
+    void removeItemItem(ItemItem itemItem);
     //========================================================
     int findItemCount(Space space, Field field);
     int removeField(Space space, Field field);

@@ -23,6 +23,7 @@ import info.jtrac.domain.Counts;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemItem;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
@@ -215,6 +216,10 @@ public class JtracImpl implements Jtrac {
             itemSearch.setItemIds(hits);            
         }
         return dao.findItems(itemSearch);
+    }
+    
+    public void removeItemItem(ItemItem itemItem) {
+        dao.removeItemItem(itemItem);
     }
     
     public int findItemCount(Space space, Field field) {

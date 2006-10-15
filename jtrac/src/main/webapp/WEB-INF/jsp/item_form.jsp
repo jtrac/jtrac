@@ -77,7 +77,7 @@
                     <c:if test="${item.id != 0}">
                         <tr>    
                             <td class="label">
-                                Edit Comment
+                                Edit Reason
                                 <font color="red">*</font>
                             </td>
                             <td>

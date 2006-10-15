@@ -30,6 +30,7 @@ import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.Counts;
 import info.jtrac.domain.History;
+import info.jtrac.domain.ItemItem;
 import info.jtrac.domain.UserSpaceRole;
 import java.util.Collection;
 
@@ -102,6 +103,10 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     public List<AbstractItem> findAllItems() {
         return getHibernateTemplate().loadAll(AbstractItem.class);
     }
+    
+    public void removeItemItem(ItemItem itemItem) {
+        getHibernateTemplate().delete(itemItem);
+    }    
     
     public void storeAttachment(Attachment attachment) {
         getHibernateTemplate().merge(attachment);

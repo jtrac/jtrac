@@ -32,7 +32,9 @@ import java.io.File;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
@@ -66,6 +68,7 @@ public class ItemViewFormAction extends AbstractFormAction {
         private transient History history;
         private int relationType;
         private String relatedItemRefId;
+        private Set<Long> removeRelated;
 
         public History getHistory() {
             if (history == null) {
@@ -92,7 +95,15 @@ public class ItemViewFormAction extends AbstractFormAction {
 
         public void setRelatedItemRefId(String relatedItemRefId) {
             this.relatedItemRefId = relatedItemRefId;
-        }                
+        }    
+
+        public Set<Long> getRemoveRelated() {
+            return removeRelated;
+        }
+
+        public void setRemoveRelated(Set<Long> removeRelated) {
+            this.removeRelated = removeRelated;
+        }
     
     }    
     
@@ -110,7 +121,7 @@ public class ItemViewFormAction extends AbstractFormAction {
     public Object loadFormObject(RequestContext context) {
         Item item = null;
         String itemId = ValidationUtils.getParameter(context, "itemId");
-        if (itemId != null) {            
+        if (itemId != null && !itemId.equals("0")) {            
             item = jtrac.loadItem(Long.parseLong(itemId));            
         } else {
             item = (Item) context.getRequestScope().get("item");
@@ -174,6 +185,22 @@ public class ItemViewFormAction extends AbstractFormAction {
             ItemItem itemItem = new ItemItem(item, relatedItem, itemViewForm.getRelationType());
             item.add(itemItem);
         }         
+        
+        // remove related items if user wanted to
+        if (itemViewForm.removeRelated != null) { 
+            Set<ItemItem> toRemove = new HashSet<ItemItem>();
+            for (long i : itemViewForm.removeRelated) {
+                for (ItemItem ii : item.getRelatedItems()) {
+                    if (ii.getId() == i) {
+                        toRemove.add(ii);
+                    }
+                }
+            }
+            item.getRelatedItems().removeAll(toRemove);
+            for (ItemItem ii : toRemove) {
+                jtrac.removeItemItem(ii);
+            }
+        }
         
         jtrac.storeHistoryForItem(item, history, attachment);
         

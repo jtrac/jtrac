@@ -71,7 +71,7 @@ public class ItemFormAction extends AbstractFormAction {
         String itemId = ValidationUtils.getParameter(context, "itemId");
         Item item = null;
         Space space = null;
-        if (itemId != null) {
+        if (itemId != null && !itemId.equals("0")) {
             item = jtrac.loadItem(Long.parseLong(itemId));
             space = item.getSpace();
         } else {
