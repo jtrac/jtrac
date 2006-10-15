@@ -62,7 +62,8 @@
             <title>Release Notes: Version 2.0-RC3</title>
             <para>
                 Note that the database schema has changed!  If you are using an earlier version of JTrac in production
-                you have to upgrade your database schema.  Instructions on how to upgrade are available 
+                you have to upgrade your database schema as well as the bundled Jetty web server.  
+                Instructions on how to upgrade are available 
                 <ulink url="http://sourceforge.net/forum/forum.php?thread_id=1592046&amp;forum_id=552477">here</ulink>
                 on the JTrac forums.
             </para>
@@ -273,22 +274,21 @@
                     </caption>
                 </mediaobject>
             </para>                 
-        </sect1>
-        <sect1 id="features-dashboard">
-            <title>Dashboard</title>
+        </sect1>       
+        <sect1 id="features-textsearch">
+            <title>Full Text Search</title>
             <para>
-                The default view when you log into JTrac is a very handy dashboard view that provides the most 
-                frequently used statistics at a glance. You can click on any of the numbers to immediately bring up 
-                the search results view listing the items matched. For example, clicking on the count of items 
-                "Logged By Me" would immediately display the list of items initiated by the currently logged in user.
+                The summary and even the detailed descriptions of items are indexed and can be searched.
+                Note that if you are upgrading or migrating databases, you may need to "re-index" which
+                is an option available to admin users.
             </para>
             <para>
                 <mediaobject>
                     <imageobject role="html">
-                        <imagedata align="center" fileref="../images/dashboard.png"/>
+                        <imagedata align="center" fileref="../images/full-text-search.png"/>
                     </imageobject>
                     <caption>
-                        <para>Statistics at a glance and search results available with just one click</para>
+                        <para>Lucene powered full text search with wildcard support</para>
                     </caption>
                 </mediaobject>
             </para>                 
@@ -340,7 +340,24 @@
                 Most users will use only five screens in JTrac: Dashboard, Create, View, Search and Results.
                 Navigation has been designed with usability and simplicity in mind.
             </para>                 
-        </sect1>            
+        </sect1>
+        <sect1 id="features-guest">
+            <title>Read-Only Access</title>
+            <para>
+                When setting up a Space you can define whether this space can be viewed by users without 
+                having to log-in.
+            </para>
+            <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="../images/guest-allowed.png"/>
+                    </imageobject>
+                    <caption>
+                        <para>Specify if read-only anonymous access is allowed per-space</para>
+                    </caption>
+                </mediaobject>
+            </para>                 
+        </sect1>             
         <sect1 id="features-email">
             <title>E-mail Integration</title>
             <para>
@@ -848,7 +865,7 @@ wrapper.exe -r etc/wrapper.conf
         <sect1 id="dev-download">
             <title>Download / Extract Source</title>
             <para>
-                (Source code downloads will be provided for releases greater than 2.0-RC2 onward.)  Download the source code from 
+                Download the source code from 
                 <ulink url="http://sourceforge.net/project/showfiles.php?group_id=162983&amp;package_id=184104">SourceForge</ulink>
                 and extract it to a convenient location.  You will end up with two directories ("antprops" and "jtrac").
             </para>
