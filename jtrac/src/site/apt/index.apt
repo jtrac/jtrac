@@ -17,7 +17,7 @@ About
 
     * Add custom fields and drop downs
     
-    * Customizable workflow
+    * Per-project customizable workflow
     
     * Field-level permissions
     
@@ -35,7 +35,7 @@ About
     
     * Export data and search results to Excel
     
-    * Allow read-only access without having to log-in
+    * Support for anonymous browsing of projects
     
     * Relate items to each other, e.g. "duplicate of", "depends on" etc.
     
