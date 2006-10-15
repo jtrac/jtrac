@@ -2,10 +2,7 @@
 
 <span class="info">Create New Space</span>
 
-<p>
-    The space name / unique id you choose should be CAPITAL LETTERS and at least three characters long.<br/>
-    Numeric characters are allowed.
-</p>
+<br/><br/>
 
 <form method="post" action="<c:url value='/flow'/>">
 

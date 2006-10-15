@@ -2,7 +2,7 @@
 
 <form method="post" action="<c:url value='/flow'/>" enctype="multipart/form-data">
 
-<table class="jtrac">
+<table class="jtrac" width="100%">
 <tr>
     <td>
         <c:if test="${!empty calledBySearch || !empty calledByRelate}">            
@@ -23,7 +23,12 @@
             <input type="hidden" name="relatedItemRefId" value="${item.refId}"/>            
             <input type="submit" name="_eventId_relateSubmit" value="Submit" <c:if test="${item.id == relatingItem.id}">disabled='true'</c:if>/>
         </td>
-    </c:if>    
+    </c:if>
+    <authz:authorize ifAllGranted="ROLE_ADMIN">
+        <td align="right">
+            <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=edit&itemId=${item.id}'/>">(edit)</a>
+        </td>
+    </authz:authorize>
 </tr>
 </table>
 

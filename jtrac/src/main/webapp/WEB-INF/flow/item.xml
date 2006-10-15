@@ -8,21 +8,31 @@
         <entry-actions>
             <action bean="itemFormAction" method="setupForm"/>
         </entry-actions>
-        <transition on="submit" to="itemViewForm">
+        <transition on="submit" to="processSubmit">
             <action bean="itemFormAction" method="bind"/>
-            <action bean="itemFormAction" method="itemFormHandler"/>
         </transition>
+        <transition on="cancel" to="backFromEdit"/>
     </view-state>    
+    
+    <action-state id="processSubmit">        
+        <action bean="itemFormAction" method="itemFormHandler"/>
+        <transition on="error" to="itemForm"/>
+        <transition on="edit" to="backFromEdit"/>
+        <transition on="success" to="itemViewForm"/>
+    </action-state>    
     
     <subflow-state id="itemViewForm" flow="item_view">
         <attribute-mapper>
             <input-mapper>
                 <!-- just for displaying navigation in header.jsp -->
                 <mapping source="flowScope.space" target="space"/>
+                <mapping source="requestScope.item" target="item"/>
             </input-mapper>
         </attribute-mapper>
         <transition on="itemListView" to="itemForm"/>
-    </subflow-state>    
+    </subflow-state>
+    
+    <end-state id="backFromEdit"/>
     
 </flow>
 

@@ -6,6 +6,7 @@
     
     <input-mapper>        
         <mapping source="space" target="flowScope.space"/>
+        <mapping source="item" target="requestScope.item"/>
         <mapping source="itemSearch" target="flowScope.itemSearch"/>
         <mapping source="calledBySearch" target="flowScope.calledBySearch"/>
         <mapping source="calledByRelate" target="requestScope.calledByRelate"/>
@@ -26,7 +27,12 @@
         </transition>
         <transition on="relateSubmit" to="relateSubmit"/>
         <transition on="viewRelated" to="itemViewForm"/>
+        <transition on="edit" to="itemEditForm"/>
     </view-state>
+    
+    <subflow-state id="itemEditForm" flow="item">
+        <transition on="backFromEdit" to="itemViewForm"/>
+    </subflow-state>
     
     <subflow-state id="itemSearchRelatedForm" flow="item_search">
         <attribute-mapper>

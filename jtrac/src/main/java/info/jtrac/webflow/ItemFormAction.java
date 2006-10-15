@@ -18,6 +18,7 @@ package info.jtrac.webflow;
 
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Field;
+import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Space;
@@ -90,23 +91,37 @@ public class ItemFormAction extends AbstractFormAction {
     
     public Event itemFormHandler(RequestContext context) throws Exception {
         Item item = (Item) getFormObject(context);
-        Space space = (Space) context.getFlowScope().get("space");        
-        item.setSpace(space);
+        Errors errors = getFormErrors(context);
+        Space space = null;
+        boolean isEdit = false;
         if (item.getId() == 0) {
             item.setStatus(State.OPEN);
-        }        
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();        
-        item.setLoggedBy(user);
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();        
+            item.setLoggedBy(user);
+            space = (Space) context.getFlowScope().get("space");
+            item.setSpace(space);
+            ValidationUtils.rejectIfEmpty(errors, "assignedTo");
+        } else { // edit scenario
+            space = item.getSpace();
+            isEdit = true;
+        }       
+
         // validation
-        Errors errors = getFormErrors(context);
-        ValidationUtils.rejectIfEmpty(errors, "summary", "detail", "assignedTo");
+        ValidationUtils.rejectIfEmpty(errors, "summary", "detail");
         for (Field field : space.getMetadata().getFields().values()) {
             Object o = item.getValue(field.getName());
             if (o == null && !field.isOptional()) {
                 errors.rejectValue(field.getName() + "", ValidationUtils.ERROR_EMPTY_CODE, ValidationUtils.ERROR_EMPTY_MSG);
             }
         }
-        if (errors.hasErrors()) {
+        
+        // TODO clean this mess up with proper form backing object
+        String comment = ValidationUtils.getParameter(context, "comment");
+        if (errors.hasErrors() || (isEdit && comment == null)) {
+            context.getRequestScope().put("comment", comment);
+            if ((isEdit && comment == null)) {
+                context.getRequestScope().put("commentError", ValidationUtils.ERROR_EMPTY_MSG);
+            }
             return error();
         }
         
@@ -114,19 +129,30 @@ public class ItemFormAction extends AbstractFormAction {
         MultipartHttpServletRequest request = (MultipartHttpServletRequest) servletContext.getRequest();
         MultipartFile multipartFile = request.getFile("file");
         Attachment attachment = null;
-        if (!multipartFile.isEmpty()) {
+        if (!isEdit && !multipartFile.isEmpty()) {
             String fileName = AttachmentUtils.cleanFileName(multipartFile.getOriginalFilename());
             attachment = new Attachment();
             attachment.setFileName(fileName);
         }
         
-        jtrac.storeItem(item, attachment);
+        if (isEdit) {            
+            History history = new History(item);
+            history.setComment(comment);
+            jtrac.storeHistoryForItem(item, history, attachment);
+        } else {
+            jtrac.storeItem(item, attachment);
+        }
         
         if (attachment != null) {
             File file = new File(System.getProperty("jtrac.home") + "/attachments/" + attachment.getFilePrefix() + "_" + attachment.getFileName());
             multipartFile.transferTo(file);
         }
+        
+        if (isEdit) {
+            return new Event(this, "edit");
+        }
+
         return success();
-    }        
+    }     
     
 }

@@ -55,53 +55,70 @@
                             </spring:bind>
                         </tr>        
                     </c:forEach>
-
-                    <tr>    
-                        <td class="label">
-                            Assign To
-                            <font color="red">*</font>
-                        </td>    
-                        <td>
-                            <spring:bind path="item.assignedTo">                
-                                <select name="${status.expression}">
-                                    <option/>
-                                    <c:forEach items="${users}" var="user">
-                                        <option value="${user.id}" <c:if test='${user.id == status.value}'>selected='true'</c:if>>${user.name}</option>
-                                    </c:forEach>   
-                                </select>
-                                <span class="error">${status.errorMessage}</span>
-                            </spring:bind>
-                        </td>
-                    </tr>  
-
+                    <c:if test="${item.id == 0}">
+                        <tr>    
+                            <td class="label">
+                                Assign To
+                                <font color="red">*</font>
+                            </td>
+                            <td>
+                                <spring:bind path="item.assignedTo">                
+                                    <select name="${status.expression}">
+                                        <option/>
+                                        <c:forEach items="${users}" var="user">
+                                            <option value="${user.id}" <c:if test='${user.id == status.value}'>selected='true'</c:if>>${user.name}</option>
+                                        </c:forEach>   
+                                    </select>
+                                    <span class="error">${status.errorMessage}</span>
+                                </spring:bind>
+                            </td>
+                        </tr>  
+                    </c:if>
+                    <c:if test="${item.id != 0}">
+                        <tr>    
+                            <td class="label">
+                                Edit Comment
+                                <font color="red">*</font>
+                            </td>
+                            <td>
+                                <textarea name="comment" rows="5" cols="40">${comment}</textarea>                    
+                                <div class="error">${commentError}</div>
+                            </td>
+                        </tr>                        
+                    </c:if>
                     <tr>
                         <td/>
                         <td>
                             <input type="submit" name="_eventId_submit" value="Submit"/>
+                            <c:if test="${item.id != 0}">
+                                <input type="submit" name="_eventId_cancel" value="Cancel"/>
+                            </c:if>
                             <input type="checkbox" name="sendNotifications" value="true" <c:if test="${item.sendNotifications}">checked="true"</c:if>/>
                             send e-mail notifications
                             <input type="hidden" name="_sendNotifications"/>
                             <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
+                            <input type="hidden" name="itemId" value="${item.id}"/>
                         </td>
                     </tr>
                 </table>
 
             </td>
-
-            <td align="right">
-                <table class="jtrac">
-                    <tr><th>Notify By E-mail</th></tr>
-                    <tr>
-                        <td>
-                            <spring:bind path="item.itemUsers">
-                                <jtrac:multiselect name="${status.expression}" list="${users}" selected="${status.value}"/>
-                            </spring:bind>
-                        </td>
-                    </tr>
-                    <tr><th>Attachment</th></tr>
-                    <tr><td><input type="file" name="file" size="15"/></td></tr>
-                </table>
-            </td>
+            <c:if test="${item.id == 0}">
+                <td align="right">
+                    <table class="jtrac">
+                        <tr><th>Notify By E-mail</th></tr>
+                        <tr>
+                            <td>
+                                <spring:bind path="item.itemUsers">
+                                    <jtrac:multiselect name="${status.expression}" list="${users}" selected="${status.value}"/>
+                                </spring:bind>
+                            </td>
+                        </tr>
+                        <tr><th>Attachment</th></tr>
+                        <tr><td><input type="file" name="file" size="15"/></td></tr>
+                    </table>
+                </td>
+            </c:if>
         </tr>
     </table>
     </td>
