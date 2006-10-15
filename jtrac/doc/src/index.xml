@@ -63,7 +63,7 @@
             <para>
                 Note that the database schema has changed!  If you are using an earlier version of JTrac in production
                 you have to upgrade your database schema.  Instructions on how to upgrade are available 
-                <ulink url="http://sourceforge.net/forum/forum.php?thread_id=1592046&forum_id=552477">here</ulink>
+                <ulink url="http://sourceforge.net/forum/forum.php?thread_id=1592046&amp;forum_id=552477">here</ulink>
                 on the JTrac forums.
             </para>
             <para>
@@ -173,7 +173,50 @@
                         <para>An example of a customized workflow</para>
                     </caption>
                 </mediaobject>
-            </para>                  
+            </para>
+            <para>
+                This flexibility allows for some interesting possibilities.  For example if you want to maintain
+                a "percentage complete" field that can be updated at any time during the life-cycle of an item.
+                The snapshot below shows how you can set up a drop down field called "% Complete":
+            </para>
+            <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="../images/percent-complete-field.png"/>
+                    </imageobject>
+                    <caption>
+                        <para>Setting up of a drop down custom field called "% Complete"</para>
+                    </caption>
+                </mediaobject>
+            </para>
+            <para>
+                Then when customizing the roles and field-level permissions, all you need to do is specify that
+                the "% Complete" field is editable even when the status is "Open".
+            </para>
+            <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="../images/percent-complete-roles.png"/>
+                    </imageobject>
+                    <caption>
+                        <para>Making a custom field editable even after an item is newly created</para>
+                    </caption>
+                </mediaobject>
+            </para>
+            <para>
+                This results in the "% Complete" field being available for updating when anyone views an item
+                with a status of "Open".
+            </para>
+            <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="../images/percent-complete-history.png"/>
+                    </imageobject>
+                    <caption>
+                        <para>Example of a custom field that can be updated even when status is "Open"</para>
+                    </caption>
+                </mediaobject>
+            </para>            
         </sect1>
         <sect1 id="features-customroles">
             <title>Custom Roles</title>
@@ -189,7 +232,7 @@
                 example, you can set a project up so that only a "MANAGER" can change the "Severity" level after a
                 bug is submitted.
             </para>                
-        </sect1>
+        </sect1>        
         <sect1 id="features-search">
             <title>Search Custom Fields</title>
             <para>
@@ -515,6 +558,15 @@ hibernate.show_sql=false
                 </programlisting>
             </para>              
         </sect1>
+        <sect1 id="installation-upgrading">
+            <title>Upgrading from previous versions</title>
+            <para>
+                If you are using an earlier version of JTrac in production you may have to upgrade your database schema.  
+                Instructions on how to upgrade are available 
+                <ulink url="http://sourceforge.net/forum/forum.php?thread_id=1592046&amp;forum_id=552477">here</ulink>
+                on the JTrac forums.
+            </para>
+        </sect1>
         <sect1 id="installation-windowsservice">
             <title>Installing as a Windows Service</title>
             <para>                    
@@ -618,6 +670,12 @@ wrapper.exe -r etc/wrapper.conf
     
     <chapter id="roadmap">
         <title>Roadmap</title>
+        <para>
+            Have a look at our detailed <link linkend="dev-guide">developer guide</link> and you will find that 
+            JTrac has one of the most "developer-friendly" setups among open-source projects.  It will take you
+            only a few minutes to be up and running no matter which java IDE you use.  We actively encourage 
+            contributions and with your support JTrac can become better than it is today.
+        </para>       
         <sect1 id="roadmap-hide">
             <title>Field-Level "Hide" Permissions</title>
             <para>
@@ -731,7 +789,14 @@ wrapper.exe -r etc/wrapper.conf
                 JTrac should be able to expose a remote XML API (SOAP or REST) so that core functionality can be 
                 invoked / integrated with other systems.
             </para>
-        </sect1>      
+        </sect1>
+        <sect1 id="roadmap-timetracking">            
+            <title>Time Tracking</title>            
+            <para>
+                The database schema already has support for capturing planned vs actual effort against items.
+                This needs to be implemented and obviously will open up a lot of possibilities.
+            </para>
+        </sect1>       
     </chapter>
     
     <chapter id="dev-guide">
