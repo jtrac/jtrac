@@ -54,8 +54,12 @@ public final class ItemUtils {
         sb.append("  <td class='label'>Related Items</td>");
         sb.append("  <td colspan='3'>");
         if (item.getRelatedItems() != null || item.getRelatingItems() != null) {
-            String flowUrlParam = "_flowExecutionKey=" + request.getAttribute("flowExecutionKey");
-            String flowUrl = "/flow?" + flowUrlParam; 
+            String flowUrlParam = null;
+            String flowUrl = null;
+            if (isWeb) {
+                flowUrlParam = "_flowExecutionKey=" + request.getAttribute("flowExecutionKey");
+                flowUrl = "/flow?" + flowUrlParam;
+            }
             if (item.getRelatedItems() != null) {
                 sb.append("<input type='hidden' name='_removeRelated'/>");
                 ItemViewForm itemViewForm = null;
