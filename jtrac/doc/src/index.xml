@@ -591,7 +591,7 @@ hibernate.show_sql=false
                 <programlisting>
 
 database.driver=com.mysql.jdbc.Driver
-database.url=jdbc:mysql://localhost/jtrac
+database.url=jdbc:mysql://localhost/jtrac?autoReconnect=true
 database.username=root
 database.password=
 hibernate.dialect=org.hibernate.dialect.MySQLDialect
@@ -1008,7 +1008,7 @@ mvn eclipse:eclipse
                 <ulink url="http://ptrthomas.wordpress.com/2006/04/11/reasons-for-switching-to-netbeans/">blog post.</ulink>
             </para>
             <para>
-            	If you want to use Apache Tomcat instead of Jetty, just have "build.properties" point to a valid Tomcat instance.            
+                If you want to use Apache Tomcat instead of Jetty, just have "build.properties" point to a valid Tomcat instance.            
                 By now, you may have noticed that because of the 
                 <ulink url="http://ptrthomas.wordpress.com/2006/03/25/how-to-start-and-stop-tomcat-from-ant/">Ant script</ulink>, 
                 you don't even need a Tomcat or Jetty plugin in either NetBeans or Eclipse.
