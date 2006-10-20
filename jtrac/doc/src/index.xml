@@ -587,11 +587,13 @@ hibernate.show_sql=false
             <para>
                 Given below is a sample jtrac.properties file for MySQL.  Using the default "root" user is obviously
                 not advisable from a security point of view and you should try and have a separate user for the database
-                used by JTrac.
+                used by JTrac.  Note: do not use the "autoReconnect=true" parameter in the MySQL URL, this is not
+                recommended by the MySQL team.  The Apache DBCP connection pool used internally by JTrac is configured 
+                to refresh stale database connections.
                 <programlisting>
 
 database.driver=com.mysql.jdbc.Driver
-database.url=jdbc:mysql://localhost/jtrac?autoReconnect=true
+database.url=jdbc:mysql://localhost/jtrac
 database.username=root
 database.password=
 hibernate.dialect=org.hibernate.dialect.MySQLDialect
