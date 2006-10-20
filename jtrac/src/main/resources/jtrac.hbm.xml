@@ -162,7 +162,7 @@
         <property name="password" column="password"/>
         <property name="email" column="email" length="50"/>
         <property name="locked"> 
-            <column name="locked" sql-type="BOOLEAN"/> 
+            <column name="locked" sql-type="integer"/> 
         </property>        
         <many-to-one name="metadata" column="metadata_id"/>
         <set name="userSpaceRoles" cascade="all" inverse="true">
@@ -190,7 +190,7 @@
         <property name="name" column="name" length="50"/>
         <property name="description" column="description" type="text"/>
         <property name="guestAllowed"> 
-            <column name="guest_allowed" sql-type="BOOLEAN"/> 
+            <column name="guest_allowed" sql-type="integer"/> 
         </property>         
         <one-to-one name="spaceSequence" cascade="all"/>
         <many-to-one name="metadata" column="metadata_id" cascade="all"/>       
