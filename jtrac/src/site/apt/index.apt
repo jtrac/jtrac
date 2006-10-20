@@ -8,8 +8,8 @@ About
 
 *--                                             --+
 |                                                   
-|    JTrac is currently at version 2.0-RC3.  Please see the {{{doc/html/introduction.html#introduction-releasenotes} release notes.}}
-|    Note that the database schema has changed since 2.0-RC2 and existing users have to upgrade.
+|    JTrac is currently at version 2.0-RC3-update1.  A severe e-mail notification issue in 2.0-RC3 has been fixed.
+|    Note that the database schema has changed since 2.0-RC2 and existing users have to {{{http://sourceforge.net/forum/forum.php?thread_id=1592046&forum_id=552477} upgrade.}}
 |                                                 
 *--                                             --+    
 
