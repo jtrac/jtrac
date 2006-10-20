@@ -102,7 +102,7 @@
         <ant antfile="doc/build.xml"/>
     </target>
         
-    <target name="dist" depends="clean, dist-doc, dist-war"/>
+    <target name="dist" depends="clean, dist-doc, dist-war, dist-src"/>
     
     <target name="dist-site-clean">
         <delete includeemptydirs="true">
