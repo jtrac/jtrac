@@ -54,7 +54,9 @@
         <property name="username" value="${database.username}"/>
         <property name="password" value="${database.password}"/>
         <property name="validationQuery" value="SELECT 1"/>
-        <property name="testOnBorrow" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="timeBetweenEvictionRunsMillis" value="600000"/>
     </bean>	    
 
     <!-- Hibernate SessionFactory -->
