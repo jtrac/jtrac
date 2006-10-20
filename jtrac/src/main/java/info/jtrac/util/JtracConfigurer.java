@@ -163,10 +163,10 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
         String databaseUrl = props.getProperty("database.url");
         if (databaseUrl.trim().startsWith("jdbc:hsqldb:file")) {
             logger.info("embedded HSQLDB mode detected, switching on spring single connection data source");
-            System.setProperty("jtrac.datasource", "dataSourceEmbedded");
+            System.setProperty("jtrac.datasource", "dataSource");
         } else {
             logger.info("Not using embedded HSQLDB, switching on Apache DBCP data source connection pooling");
-            System.setProperty("jtrac.datasource", "dataSource");
+            System.setProperty("jtrac.datasource", "dataSourceDbcp");
         }
         setLocation(fsr);
     }

@@ -39,7 +39,7 @@
     </bean>        
     
     <!-- this is used only when the embedded database is used -->
-    <bean id="dataSourceEmbedded" class="org.springframework.jdbc.datasource.SingleConnectionDataSource" lazy-init="true">
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.SingleConnectionDataSource" lazy-init="true">
         <property name="driverClassName" value="${database.driver}"/>
         <property name="url" value="${database.url}"/>
         <property name="username" value="${database.username}"/>
@@ -48,7 +48,7 @@
     </bean>
      
     <!-- Apache commons DBCP data source, does connection pooling -->
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" lazy-init="true">
+    <bean id="dataSourceDbcp" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" lazy-init="true">
         <property name="driverClassName" value="${database.driver}"/>
         <property name="url" value="${database.url}"/>
         <property name="username" value="${database.username}"/>

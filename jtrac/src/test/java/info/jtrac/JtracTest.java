@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.sql.DataSource;
 
 import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.userdetails.UserDetails;
@@ -29,6 +30,13 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
     
     private Jtrac jtrac;
     private JtracDao dao;
+    private DataSource ds;
+    
+    public JtracTest() {
+        // have to do this because we have two beans of type DataSource (lazy-init)
+        setAutowireMode(AUTOWIRE_BY_NAME);
+        System.setProperty("jtrac.home", "target/home");
+    }
     
     // magically autowired by Spring JUnit helper / extension
     public void setDao(JtracDao dao) {
@@ -41,7 +49,6 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
     }
     
     protected String[] getConfigLocations() {
-        System.setProperty("jtrac.home", "target/home");
         return new String[] {
             "file:src/main/webapp/WEB-INF/applicationContext.xml",
             "file:src/main/webapp/WEB-INF/applicationContext-lucene.xml"
