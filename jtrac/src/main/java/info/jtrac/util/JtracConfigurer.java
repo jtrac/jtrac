@@ -69,8 +69,7 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
         ClassPathResource cpr = new ClassPathResource("jtrac-init.properties");
         File initPropsFile = cpr.getFile();
         if (initPropsFile.exists()) {
-            logger.info("found 'jtrac-init.properties' on classpath, processing...");
-            System.out.println(initPropsFile);
+            logger.info("found 'jtrac-init.properties' on classpath, processing...");            
             InputStream is = null;
             Properties props = new Properties();
             try {
