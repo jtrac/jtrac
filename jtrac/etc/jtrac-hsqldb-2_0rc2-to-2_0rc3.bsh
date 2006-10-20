@@ -25,7 +25,7 @@ statements = new String[] {
 "alter table spaces alter prefix_code varchar(10)",
 "alter table spaces add constraint sys_ct_53 unique (prefix_code)",
 "alter table spaces add column name varchar(50) before description",
-"alter table spaces add column guest_allowed boolean default 0",
+"alter table spaces add column guest_allowed integer default 0",
 "alter table metadata add column version integer default 0 not null before type",
 "alter table metadata alter name varchar(50)",
 "alter table item_items add constraint fk8b19eb94b57e4540 foreign key (item_id) references items (id)",
