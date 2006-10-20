@@ -241,7 +241,7 @@
          <dependency>
             <groupId>org.springmodules</groupId>
             <artifactId>spring-modules-lucene</artifactId>
-            <version>0.5</version>
+            <version>0.6</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>
