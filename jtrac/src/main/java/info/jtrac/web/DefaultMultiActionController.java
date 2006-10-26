@@ -109,7 +109,7 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
     }    
 
     public ModelAndView attachmentViewHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        AttachmentUtils.download(request, response);
+        AttachmentUtils.download(getServletContext(), request, response);
         return null;
     }
 
