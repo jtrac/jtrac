@@ -74,9 +74,7 @@
             </bean>        
         </property>
         <property name="jtrac" ref="jtrac"/>
-        <!--
-        <property name="flowExecutionRepositoryFactory" ref="repositoryFactory"/>
-        -->
+        <property name="flowExecutor" ref="flowExecutor"/>
         <property name="authenticationEntryPoint" ref="authenticationEntryPoint"/>
     </bean>    
     
@@ -99,16 +97,7 @@
             </map>
         </property>        
         <property name="repositoryType" value="SIMPLE"/>
-    </bean>    
-
-    <!--
-    <bean id="repositoryFactory" class="org.springframework.webflow.execution.repository.support.DefaultFlowExecutionRepositoryFactory">
-        <constructor-arg ref="flowRegistry"/>
-        <property name="listenerLoader">
-            <bean class="info.jtrac.webflow.FlowExecutionListenerLoader"/>
-        </property>
     </bean>
-    -->
 
     <bean name="flowRegistry" class="org.springframework.webflow.engine.builder.xml.XmlFlowRegistryFactoryBean">
         <property name="flowLocations" value="/WEB-INF/flow/*.xml"/>
