@@ -17,7 +17,7 @@
 package info.jtrac.util;
 
 import org.springframework.validation.Errors;
-import org.springframework.webflow.RequestContext;
+import org.springframework.webflow.execution.RequestContext;
 
 /**
  * Helper class that improves on the Spring ValidationUtils

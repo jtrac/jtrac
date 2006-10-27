@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
-    "http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
 
-<flow start-state="upload">   
+    <start-state idref="upload"/>  
     
     <view-state id="upload" view="excel_upload">
         <transition on="cancel" to="optionsView"/>

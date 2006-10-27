@@ -23,12 +23,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
-import org.springframework.webflow.ExternalContext;
+import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.context.servlet.ServletExternalContext;
 import org.springframework.webflow.execution.FlowExecution;
-import org.springframework.webflow.execution.repository.FlowExecutionKey;
 import org.springframework.webflow.execution.repository.FlowExecutionRepository;
-import org.springframework.webflow.execution.repository.FlowExecutionRepositoryFactory;
+import org.springframework.webflow.executor.support.FlowExecutorArgumentExtractionException;
 import org.springframework.webflow.executor.support.FlowExecutorArgumentExtractor;
 
 /**
@@ -41,17 +40,14 @@ public abstract class AbstractMultiActionController extends MultiActionControlle
     protected final Log logger = LogFactory.getLog(getClass());
     
     protected Jtrac jtrac;
-    private FlowExecutionRepositoryFactory flowExecutionRepositoryFactory;
-    
-    // just for getFlowExecution (see below)
-    private FlowExecutorArgumentExtractor flowExecutorArgumentExtractor = new FlowExecutorArgumentExtractor();
+    private FlowExecutionRepository repository;   
     
     public void setJtrac(Jtrac jtrac) {
         this.jtrac = jtrac;
     }
 
-    public void setFlowExecutionRepositoryFactory(FlowExecutionRepositoryFactory flowExecutionRepositoryFactory) {
-        this.flowExecutionRepositoryFactory = flowExecutionRepositoryFactory;
+    public void setFlowExecutionRepository(FlowExecutionRepository flowExecutionRepository) {
+        this.repository = flowExecutionRepository;
     }
     
     /**
@@ -59,9 +55,10 @@ public abstract class AbstractMultiActionController extends MultiActionControlle
      * needed for getting access to "stateful" objects within a flow
      */  
     protected FlowExecution getFlowExecution(HttpServletRequest request, HttpServletResponse response) {        
-        ExternalContext externalContext = new ServletExternalContext(getServletContext(), request, response);
-        FlowExecutionRepository repository = flowExecutionRepositoryFactory.getRepository(externalContext);        
-        String flowExecutionKey = flowExecutorArgumentExtractor.extractFlowExecutionKey(externalContext);
+        // ExternalContext externalContext = new ServletExternalContext(getServletContext(), request, response);    
+        // FlowExecutorArgumentExtractor extractor = new FlowExecutorArgumentExtractor(externalContext);
+        // String flowExecutionKey = extractor.extractFlowExecutionKey(externalContext);
+        String flowExecutionKey = request.getParameter("_flowExecutionKey");
         return repository.getFlowExecution(repository.parseFlowExecutionKey(flowExecutionKey));        
     }
     

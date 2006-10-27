@@ -16,10 +16,10 @@
 
 package info.jtrac.webflow;
 
-import org.springframework.webflow.RequestContext;
-import org.springframework.webflow.State;
-import org.springframework.webflow.execution.ConditionalFlowExecutionListenerLoader;
+import org.springframework.webflow.definition.StateDefinition;
 import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
+import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.factory.ConditionalFlowExecutionListenerLoader;
 
 /**
  * Spring WebFlow listener loader
@@ -33,7 +33,7 @@ public class FlowExecutionListenerLoader extends ConditionalFlowExecutionListene
     class JtracFlowExecutionListener extends FlowExecutionListenerAdapter {
 
         @Override
-        public void stateEntered(RequestContext context, State prevState, State newState) {
+        public void stateEntered(RequestContext context, StateDefinition prevState, StateDefinition newState) {
             logger.debug("prevState: " + prevState);
             logger.debug("newState: " + newState);
         }

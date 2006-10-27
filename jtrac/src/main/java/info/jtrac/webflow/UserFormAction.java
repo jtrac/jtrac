@@ -30,9 +30,9 @@ import org.springframework.validation.DataBinder;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import org.springframework.webflow.Event;
-import org.springframework.webflow.RequestContext;
-import org.springframework.webflow.ScopeType;
+import org.springframework.webflow.execution.Event;
+import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.ScopeType;
 
 /**
  * Multiaction that backs the "User Create / Edit" flow
@@ -52,7 +52,7 @@ public class UserFormAction extends AbstractFormAction {
     }     
     
     @Override
-    public Object loadFormObject(RequestContext context) {
+    public Object createFormObject(RequestContext context) {
         UserForm userForm = new UserForm();
         String userId = ValidationUtils.getParameter(context, "userId");
         // if called as subflow, userId may be vestigial from space allocate form

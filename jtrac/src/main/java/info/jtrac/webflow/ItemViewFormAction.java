@@ -43,9 +43,9 @@ import org.springframework.validation.DataBinder;
 import org.springframework.validation.Errors;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.webflow.Event;
-import org.springframework.webflow.RequestContext;
-import org.springframework.webflow.ScopeType;
+import org.springframework.webflow.execution.Event;
+import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.ScopeType;
 import org.springframework.webflow.context.servlet.ServletExternalContext;
 
 /**
@@ -118,7 +118,7 @@ public class ItemViewFormAction extends AbstractFormAction {
     }    
     
     @Override
-    public Object loadFormObject(RequestContext context) {
+    public Object createFormObject(RequestContext context) {
         Item item = null;
         String itemId = ValidationUtils.getParameter(context, "itemId");
         if (itemId != null && !itemId.equals("0")) {            

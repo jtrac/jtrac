@@ -34,9 +34,9 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.validation.DataBinder;
-import org.springframework.webflow.Event;
-import org.springframework.webflow.RequestContext;
-import org.springframework.webflow.ScopeType;
+import org.springframework.webflow.execution.Event;
+import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.ScopeType;
 
 /**
  * Multiaction that backs the "Item Search" flow
@@ -58,7 +58,7 @@ public class ItemSearchFormAction extends AbstractFormAction {
     }     
     
     @Override
-    public Object loadFormObject(RequestContext context) {
+    public Object createFormObject(RequestContext context) {
         String spaceId = ValidationUtils.getParameter(context, "spaceId");
         ItemSearch itemSearch = null;
         if (spaceId == null) {

@@ -30,9 +30,9 @@ import java.util.Map;
 import java.util.Set;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import org.springframework.webflow.Event;
-import org.springframework.webflow.RequestContext;
-import org.springframework.webflow.ScopeType;
+import org.springframework.webflow.execution.Event;
+import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.ScopeType;
 
 /**
  * Multiaction that participates in the "Space Create / Edit" flow

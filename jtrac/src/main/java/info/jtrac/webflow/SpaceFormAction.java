@@ -33,9 +33,9 @@ import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.validation.DataBinder;
 
 import org.springframework.validation.Errors;
-import org.springframework.webflow.Event;
-import org.springframework.webflow.RequestContext;
-import org.springframework.webflow.ScopeType;
+import org.springframework.webflow.execution.Event;
+import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.ScopeType;
 
 /**
  * Multiaction that backs the "Space Create" flow
@@ -54,7 +54,7 @@ public class SpaceFormAction extends AbstractFormAction {
     }     
     
     @Override
-    public Object loadFormObject(RequestContext context) {
+    public Object createFormObject(RequestContext context) {
         context.getFlowScope().put("_flowId", "space");
         String spaceId = ValidationUtils.getParameter(context, "spaceId");
         Space space = null;

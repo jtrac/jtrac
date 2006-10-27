@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE flow PUBLIC "-//SPRING//DTD WEBFLOW 1.0//EN"
-    "http://www.springframework.org/dtd/spring-webflow-1.0.dtd">
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
 
-<flow start-state="checkIfDashboardSearch">  
-    
     <input-mapper>
         <mapping source="calledByRelate" target="flowScope.calledByRelate"/>
         <mapping source="relatingItem" target="flowScope.relatingItem"/>
-    </input-mapper>   
+    </input-mapper>    
+    
+    <start-state idref="checkIfDashboardSearch"/>  
     
     <decision-state id="checkIfDashboardSearch">
         <if test="${requestParameters.type == null}" then="itemSearchForm" else="itemListViewSetup"/>

@@ -20,9 +20,9 @@ import info.jtrac.domain.Config;
 import info.jtrac.util.ValidationUtils;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.validation.DataBinder;
-import org.springframework.webflow.Event;
-import org.springframework.webflow.RequestContext;
-import org.springframework.webflow.ScopeType;
+import org.springframework.webflow.execution.Event;
+import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.ScopeType;
 
 /**
  * Multiaction that participates in the config editing flow 
@@ -41,7 +41,7 @@ public class ConfigFormAction extends AbstractFormAction {
     }
     
     @Override
-    public Object loadFormObject(RequestContext context) {
+    public Object createFormObject(RequestContext context) {
         String param = ValidationUtils.getParameter(context, "param");
         String value = jtrac.loadConfig(param);
         if (value == null) {
