@@ -935,8 +935,20 @@ mvn install
                 </programlisting>
             </para>
             <para>
-                If this does not work, maybe you are not connected to the internet.
+                If this does not work, maybe you are not connected to the internet.  Here's a tip that may help if you 
+                are behind an HTTP proxy.  This has been reported to work even when the proxy requires NTLM authentication.  
+                You can append a parameter when running Maven commands as follows:
             </para>
+            <para>
+                <programlisting>
+
+mvn install -Dhttp.proxyHost=172.19.56.56
+                </programlisting>
+            </para>
+            <para>
+                Note that if your proxy port is different from the default 80, you will have to add an "http.proxyPort" 
+                parameter as well.
+            </para>             
         </sect1> 
         <sect1 id="dev-build-properties">
             <title>Customize Ant Build Properties File</title>
@@ -970,22 +982,9 @@ mvn antprops:generate
             <para>
                 Note that you need to perform this step every time the "pom.xml" file changes.  This happens rarely 
                 and typically when newer versions of JTrac dependencies (e.g. Spring and Hibernate) are available.  Keep
-                watching for changes in the versions of JTrac dependencies or "pom.xml" to avoid any problems.
-            </para>
-            <para>
-                Here's a tip that may help if you are behind an HTTP proxy.  This has been reported to work even when the
-                proxy requires NTLM authentication.  You can append a parameter when running Maven commands as follows:
-            </para>
-            <para>
-                <programlisting>
-
-mvn antprops:generate -Dhttp.proxyHost=172.19.56.56
-                </programlisting>
-            </para>
-            <para>
-                Note that if your proxy port is different from the default 80, you will have to add an "http.proxyPort" 
-                parameter as well.
-            </para>           
+                watching for changes in the versions of JTrac dependencies or specifically changes to "pom.xml" to avoid 
+                any problems.
+            </para>          
         </sect1>
         <sect1 id="dev-eclipse">
             <title>Import project into your IDE</title>
