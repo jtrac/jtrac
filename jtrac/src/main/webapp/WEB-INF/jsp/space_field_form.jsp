@@ -80,6 +80,8 @@ function setOptionKey(optionKey) {
         </tr>
     </table>
 
+    <input type="submit" name="_eventId_cancel" value="Cancel"/>
+    
 </form>
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>

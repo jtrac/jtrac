@@ -37,6 +37,8 @@
     
     <view-state id="spaceFieldForm" view="space_field_form">
         <transition on="edit" to="spaceFieldOptionForm">
+            <action bean="fieldFormAction" method="bindAndValidate"/>
+            <action bean="fieldFormAction" method="fieldUpdateHandler"/>            
             <action bean="fieldFormAction" method="fieldOptionEditSetupHandler"/>
         </transition>
         <transition on="delete" to="fieldDeleteHandler"/>     
@@ -54,7 +56,8 @@
             <action bean="fieldFormAction" method="bindAndValidate"/>
             <action bean="fieldFormAction" method="fieldUpdateHandler"/>
             <action bean="spaceFormAction" method="fieldUpdateHandler"/>
-        </transition>        
+        </transition>
+        <transition on="cancel" to="spaceFieldsView"/>
     </view-state>
  
     <action-state id="fieldDeleteHandler">
