@@ -20,6 +20,7 @@
             <item name="Installation" href="doc/html/installation.html"/>
             <item name="FAQ" href="doc/html/faq.html"/>
             <item name="Download" href="http://sourceforge.net/project/showfiles.php?group_id=162983&amp;package_id=184104"/>
+            <item name="Contribute" href="doc/html/dev-guide.html"/>
         </menu>
         <menu name="Documentation">
             <item name="HTML" href="doc/html/index.html"/>
