@@ -615,13 +615,15 @@ hibernate.show_sql=false
             <para>                    
                 If you choose to use the bundled <ulink url="http://jetty.mortbay.org/">Jetty</ulink> web-application 
                 server, you can easily install JTrac as a Windows service so that it can start automatically when 
-                the host machine is switched on.
+                the host machine is switched on.  One of the big advantages of this is that the "DOS Window" / console
+                will not be visible and it will run in the background.  You can therfore avoid the possibility of someone 
+                closing the console window and terminating the application by mistake.
             </para>
             <para>
-                You can do this by using the <ulink url="http://wrapper.tanukisoftware.org/">Java Service Wrapper</ulink>
-                project.  For convenience, the JTrac distribution contains a "wrapper.conf" file in the "etc"
-                folder that is pre-configured for the Java Service Wrapper.  But first you have to download the 
-                Java Service Wrapper distribution separately.
+                JTrac can be configured as a Windows service by using the 
+                <ulink url="http://wrapper.tanukisoftware.org/">Java Service Wrapper</ulink> project.  For convenience, 
+                the JTrac distribution contains a "wrapper.conf" file in the "etc" folder that is pre-configured for 
+                the Java Service Wrapper.  But first you have to download the Java Service Wrapper distribution separately.
             </para>
             <para>
                 Place some of the files from the Java Service Wrapper distribution into the JTrac folder structure
@@ -990,11 +992,11 @@ mvn antprops:generate
             <title>Import project into your IDE</title>
             <para>
                 If you are a NetBeans user you are ready to build and run JTrac!  Just use the "Open Project"
-                option from the menu.
+                option from the menu and select the "jtrac" folder.  You should be able to open it as a valid NetBeans project.
             </para>
             <para>
-                If you want to use Eclipse, that's easy as well.  You need to first run the following command and
-                Maven will then generate your Eclipse project descriptor files for you.
+                If you want to use Eclipse, that's easy as well.  First you have to run the following command and
+                Maven will then generate the Eclipse project descriptor files for you.
             </para>
             <para>
                 <programlisting>
@@ -1004,8 +1006,15 @@ mvn eclipse:eclipse
             </para>
             <para>
                 That should create the ".project" and the ".classpath" files.  Now its just a matter of
-                importing "Existing Project into Workspace" within Eclipse.
-            </para>          
+                importing "Existing Project into Workspace" within Eclipse.  Note that the Eclipse project descriptor
+                files also need to be re-generated when JTrac dependencies change, i.e. when "pom.xml" changes.
+                Make sure you do this also if you ever run "mvn antprops:generate".
+            </para>
+            <para>
+                For Eclipse to work with Maven 2, you have to have a classpath variable called "M2_REPO" set correctly.
+                Refer the <ulink url="http://maven.apache.org/guides/mini/guide-ide-eclipse.html">Maven 2 documentation</ulink>
+                for details on how to do this.
+            </para>
         </sect1>
         <sect1 id="dev-building">
             <title>Building And Running JTrac</title>
