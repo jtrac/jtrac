@@ -85,7 +85,7 @@ public class EmailUtils {
                     sender.send(message);
                     logger.debug("send mail thread successfull");
                 } catch (Exception e) {
-                    logger.error("send mail thread failed: " + e);                   
+                    logger.error("send mail thread failed", e);
                 }
             }
         }.start();
@@ -152,7 +152,7 @@ public class EmailUtils {
             // send message
             sendInNewThread(message);
         } catch (Exception e) {
-            logger.error("failed to prepare e-mail: " + e);
+            logger.error("failed to prepare e-mail", e);
         }              
     }
     
@@ -178,7 +178,7 @@ public class EmailUtils {
             helper.setFrom(from);
             sendInNewThread(message);
         } catch (Exception e) {
-            logger.error("failed to prepare e-mail: " + e);
+            logger.error("failed to prepare e-mail", e);
         }
     }
     
