@@ -40,8 +40,7 @@ public final class ItemUtils {
         if (text == null) {
             return "";
         }
-        String temp = HtmlUtils.htmlEscape(text);  
-        return temp.replaceAll("\n", "<br/>").replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+        return "<pre>" + HtmlUtils.htmlEscape(text) + "</pre>";
     }
     
     public static String getAsHtml(Item item, HttpServletRequest request, HttpServletResponse response) {

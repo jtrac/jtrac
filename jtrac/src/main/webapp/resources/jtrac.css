@@ -18,3 +18,4 @@ a:hover { color: red; }
 .bdr-collapse { border-collapse: collapse; }
 .bdr-collapse td { padding: 0px 0px 0px 0px; }
 .page-links { font-weight: bold }
+pre { font-family: Arial; }
