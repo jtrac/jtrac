@@ -1,4 +1,6 @@
 package info.jtrac.domain;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import java.util.Set;
@@ -63,6 +65,16 @@ public class MetadataTest extends TestCase {
         assertEquals("Closed", m.getStatusValue(99));
         assertEquals("", m.getStatusValue(50));        
     }    
-    
+        
+    public void testGetEditableFields() {
+        Metadata m = new Metadata();
+        m.initRoles();
+        Field f = new Field(Field.Name.CUS_STR_01);
+        m.add(f);
+        m.switchMask(State.OPEN, "DEFAULT", "cusStr01"); // should now be editable when status is open
+        // query for editable fields for DEFAULT role and when status is OPEN
+        List<Field> fields = m.getEditableFields(Collections.singletonList("DEFAULT"), Collections.singletonList(State.OPEN));
+        assertEquals(1, fields.size());
+    }
     
 }

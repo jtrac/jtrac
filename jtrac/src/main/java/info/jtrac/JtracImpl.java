@@ -156,6 +156,14 @@ public class JtracImpl implements Jtrac {
     }
     
     public void storeHistoryForItem(Item item, History history, Attachment attachment) {
+        // first apply edits onto item record before we change the item status
+        // the item.getEditableFieldList routine depends on the current State of the item
+        for(Field field : item.getEditableFieldList(history.getLoggedBy())) {
+            Object value = history.getValue(field.getName());
+            if (value != null) {
+                item.setValue(field.getName(), value);
+            }
+        }        
         if (history.getStatus() != null) {
             item.setStatus(history.getStatus());
             if (history.getStatus() == State.CLOSED) {
@@ -166,12 +174,6 @@ public class JtracImpl implements Jtrac {
                     item.setAssignedTo(history.getAssignedTo());
                 }
             }           
-        }
-        for(Field field : item.getEditableFieldList(history.getLoggedBy())) {
-            Object value = history.getValue(field.getName());
-            if (value != null) {
-                item.setValue(field.getName(), value);
-            }
         }
         item.setItemUsers(history.getItemUsers());
         history.setTimeStamp(new Date());
