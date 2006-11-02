@@ -168,6 +168,13 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
             logger.info("Not using embedded HSQLDB, switching on Apache DBCP data source connection pooling");
             System.setProperty("jtrac.datasource", "dataSourceDbcp");
         }
+        String validationQuery = props.getProperty("database.validationQuery");
+        if (validationQuery == null) {
+            logger.info("database.validationQuery property not found in 'jtrac.properties', using default 'SELECT 1'");
+            System.setProperty("database.validationQuery", "SELECT 1");
+        } else {
+            logger.info("database.validationQuery property found in 'jtrac.properties': '" + validationQuery + "'");
+        }       
         setLocation(fsr);
     }
     
