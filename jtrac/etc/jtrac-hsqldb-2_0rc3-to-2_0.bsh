@@ -1,0 +1,21 @@
+import java.sql.*;
+
+statements = new String[] {
+
+"alter table metadata alter column xml rename to xml_string",
+"shutdown"
+
+};
+
+Class.forName("org.hsqldb.jdbcDriver");
+
+conn = DriverManager.getConnection("jdbc:hsqldb:file:jtrac", "sa", "");
+
+stmt = conn.createStatement();
+
+for (sql : statements) {
+    print(sql);
+    stmt.executeUpdate(sql);
+}
+
+conn.close();

@@ -14,7 +14,7 @@ public class MetadataTest extends TestCase {
                 + "<field name='cusInt01' label='Test Label'/>"
                 + "<field name='cusInt02' label='Test Label 2'/>"
                 + "</fields></metadata>";
-        metadata.setXml(xmlString);
+        metadata.setXmlString(xmlString);
         return metadata;
     }    
     
@@ -42,7 +42,7 @@ public class MetadataTest extends TestCase {
                 + "<field name='cusInt03' label='Test Label 3'/>"
                 + "<field name='cusInt04' label='Test Label 4'/>"
                 + "</fields></metadata>";
-        m2.setXml(xmlString);
+        m2.setXmlString(xmlString);
         m2.setParent(m1);
         Map<Field.Name, Field> fields = m2.getFields();
         assertEquals(fields.size(), 4);

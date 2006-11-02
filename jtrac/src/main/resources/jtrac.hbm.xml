@@ -212,7 +212,7 @@
         <property name="name" column="name" length="50"/>
         <property name="description" column="description" type="text"/>
         <many-to-one name="parent" column="parent_id"/>
-        <property name="xml" column="xml" type="text"/>
+        <property name="xmlString" column="xml_string" type="text"/>
     </class>    
     
     <class name="Attachment" table="attachments">

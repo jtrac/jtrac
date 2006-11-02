@@ -70,7 +70,7 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
                 + "<field name='cusInt01' label='Test Label'/>"
                 + "<field name='cusInt02' label='Test Label 2'/>"
                 + "</fields></metadata>";
-        metadata.setXml(xmlString);
+        metadata.setXmlString(xmlString);
         return metadata;
     }    
     

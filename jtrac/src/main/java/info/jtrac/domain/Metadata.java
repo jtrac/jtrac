@@ -91,7 +91,7 @@ public class Metadata implements Serializable {
     }
     
     /* accessor, will be used by Hibernate */
-    public void setXml(String xmlString) {
+    public void setXmlString(String xmlString) {
         init();
         if (xmlString == null) {
             return;
@@ -117,7 +117,7 @@ public class Metadata implements Serializable {
     }        
     
     /* accessor, will be used by Hibernate */
-    public String getXml() {
+    public String getXmlString() {
         Document d = XmlUtils.getNewDocument(METADATA);
         Element root = d.getRootElement();
         Element fs = root.addElement(FIELDS);
@@ -143,7 +143,7 @@ public class Metadata implements Serializable {
     }
     
     public String getPrettyXml() {
-        return XmlUtils.getAsPrettyXml(getXml());
+        return XmlUtils.getAsPrettyXml(getXmlString());
     }
     
     //====================================================================
