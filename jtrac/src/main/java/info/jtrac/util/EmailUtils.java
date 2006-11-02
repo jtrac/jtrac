@@ -93,10 +93,7 @@ public class EmailUtils {
 
     private String addHeaderAndFooter(StringBuffer html) {
         StringBuffer sb = new StringBuffer();
-        sb.append("<html><body><style type='text/css'> table.jtrac { border-collapse: collapse; font-family: Arial; font-size: 80% }");
-        sb.append(" table.jtrac th, table.jtrac td { padding-left: 0.2em; padding-right: 0.2em; border: 1px solid black }");
-        sb.append(" table.jtrac th, table.jtrac td.label { background: #CCCCCC } .alt { background: #DEDEFF }");
-        sb.append(" .selected { background: #ADD8E6 } </style>");
+        sb.append("<html><body>");
         sb.append(html);
         sb.append("</html>");
         return sb.toString();
@@ -126,6 +123,9 @@ public class EmailUtils {
         sb.append(anchor);
         sb.append(ItemUtils.getAsHtml(item, null, null));
         sb.append(anchor);
+        if (logger.isDebugEnabled()) {
+            logger.debug("html content: " + sb);
+        }
         // prepare message
         MimeMessage message = sender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");        

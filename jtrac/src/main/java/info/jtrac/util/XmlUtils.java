@@ -18,11 +18,15 @@ package info.jtrac.util;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.dom4j.io.DocumentResult;
+import org.dom4j.io.DocumentSource;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 
@@ -68,7 +72,7 @@ public final class XmlUtils {
         try {
             return DocumentHelper.parseText(xmlString);
         } catch (DocumentException de) {
-            throw new RuntimeException("XML Parse failed on '" + xmlString + "'");
+            throw new RuntimeException(de);
         }
     }
     
@@ -80,6 +84,18 @@ public final class XmlUtils {
         Document d = DocumentHelper.createDocument();
         d.addElement(rootElementName);
         return d;
+    }
+    
+    public static Document transform(Document source, Document stylesheet) {
+        TransformerFactory factory = TransformerFactory.newInstance();
+        try {
+            Transformer transformer = factory.newTransformer(new DocumentSource(stylesheet));
+            DocumentResult result = new DocumentResult();
+            transformer.transform(new DocumentSource(source), result );
+            return result.getDocument();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
     
 }
