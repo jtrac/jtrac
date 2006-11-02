@@ -89,15 +89,12 @@
     
     <chapter id="features">
         <title>Features</title>
-        <sect1 id="features-overview">                
-            <title>Overview</title>
-            <para>                    
-                JTrac has all the features you would expect from a standard issue-tracking application such as 
-                support for file-attachments and e-mail integration.  JTrac offers powerful customization options,
-                especially in the areas of workflow and field-level permissions and compares well to even
-                commercial tools.
-            </para>
-        </sect1>
+        <para>                    
+            JTrac has all the features you would expect from a standard issue-tracking application such as 
+            support for file-attachments and e-mail integration.  JTrac offers powerful customization options,
+            especially in the areas of workflow and field-level permissions and compares well to even
+            commercial tools.
+        </para>        
         <sect1 id="features-easytoinstall">
             <title>Easy to Install</title>
             <para>
