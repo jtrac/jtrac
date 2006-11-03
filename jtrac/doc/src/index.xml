@@ -757,6 +757,14 @@ wrapper.exe -r etc/wrapper.conf
                 creation / updation of items.  It would be handy to have attachments submitted through
                 email also.
             </para>
+        </sect1>
+        <sect1 id="roadmap-screenshot">
+            <title>Screenshot Capture</title>
+            <para>
+                Using a Java applet, it should be possible for the user to upload a screenshot directly from the 
+                system clipboard.  The user should be able to annotate (e.g. highlight a particular area of) the 
+                image before uploading.
+            </para>
         </sect1>        
         <sect1 id="roadmap-savedsearches">
             <title>Saved Searches</title>            
