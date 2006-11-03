@@ -200,6 +200,14 @@ public class Metadata implements Serializable {
         }
     }        
     
+    public void removeState(int stateId) {
+        states.remove(stateId);
+        for (Role role : roles.values()) {
+            role.removeState(stateId);
+        }        
+        
+    }
+    
     public void addRole(String name) {
         Role role = new Role(name);
         for (Map.Entry<Integer, String> entry : states.entrySet()) {

@@ -115,10 +115,24 @@
             <action bean="spaceFormAction" method="stateFormSetupHandler"/>
         </entry-actions>      
         <transition on="cancel" to="spaceRolesView"/>
+        <transition on="delete" to="stateDeleteHandler"/>
         <transition on="submit" to="spaceRolesView">
             <action bean="spaceFormAction" method="stateFormHandler"/>
         </transition>        
-    </view-state>    
+    </view-state>
+    
+    <action-state id="stateDeleteHandler">
+        <action bean="spaceFormAction" method="stateDeleteHandler"/>
+        <transition on="success" to="spaceRolesView"/>
+        <transition on="confirm" to="spaceStateDeleteView"/>
+    </action-state>
+    
+    <view-state id="spaceStateDeleteView" view="space_state_delete">
+        <transition on="cancel" to="spaceStateForm"/>
+        <transition on="submit" to="spaceRolesView">
+            <action bean="spaceFormAction" method="stateDeleteConfirmHandler"/>
+        </transition>        
+    </view-state>     
     
     <view-state id="spaceRoleForm" view="space_role_form">
         <entry-actions>

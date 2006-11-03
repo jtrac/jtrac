@@ -60,7 +60,7 @@ public class SpaceFormAction extends AbstractFormAction {
         Space space = null;
         if (spaceId != null) {
             space =  jtrac.loadSpace(Integer.parseInt(spaceId));
-            space.getMetadata().getXml();  // hack: ensure nothing left to be lazy loaded!
+            space.getMetadata().getXmlString();  // hack: ensure nothing left to be lazy loaded!
             return space;
         } else {
             space = new Space();
@@ -184,7 +184,8 @@ public class SpaceFormAction extends AbstractFormAction {
                 return new Event(this, "confirm");
             }
         }
-        space.getMetadata().removeField(fieldName);        
+        // this is an unsaved space or there are no impacted items
+        space.getMetadata().removeField(fieldName);
         return success();
     }
     
@@ -203,7 +204,7 @@ public class SpaceFormAction extends AbstractFormAction {
         return success();
     }
     
-    //========================== STATES / ROLES ================================
+    //=============================== STATES ===================================
     
     public Event stateFormSetupHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
@@ -233,7 +234,42 @@ public class SpaceFormAction extends AbstractFormAction {
             space.getMetadata().getStates().put(Integer.parseInt(stateKey), state);
         }
         return success();
+    } 
+    
+    public Event stateDeleteHandler(RequestContext context) {
+        Space space = (Space) context.getFlowScope().get("space");
+        String stateKey = ValidationUtils.getParameter(context, "stateKey");
+        int status = Integer.parseInt(stateKey);
+        if (space.getId() > 0) {
+            int affectedCount = jtrac.loadCountOfItemsHavingStatus(space, status);
+            if (affectedCount > 0) {
+                context.getRequestScope().put("affectedCount", affectedCount);
+                context.getRequestScope().put("stateKey", stateKey);
+                context.getRequestScope().put("state", ValidationUtils.getParameter(context, "state"));
+                return new Event(this, "confirm");
+            }
+        }
+        // this is an unsaved space or there are no impacted items
+        space.getMetadata().removeState(status);
+        return success();
+    }
+    
+    public Event stateDeleteConfirmHandler(RequestContext context) {
+        Space space = (Space) context.getFlowScope().get("space");
+        String stateKey = ValidationUtils.getParameter(context, "stateKey");
+        int status = Integer.parseInt(stateKey);
+        // database will be updated, if we don't do this
+        // user may leave without committing metadata change
+        logger.debug("saving space after field delete operation");
+        jtrac.bulkUpdateStatusToOpen(space, status);
+        space.getMetadata().removeState(status);       
+        jtrac.storeSpace(space);
+        // horrible hack, but otherwise if we save again we get the dreaded Stale Object Exception
+        space.setMetadata(jtrac.loadMetadata(space.getMetadata().getId()));
+        return success();
     }    
+    
+    //================================= ROLES ==================================
     
     public Event roleFormSetupHandler(RequestContext context) {        
         String roleKey = ValidationUtils.getParameter(context, "roleKey");

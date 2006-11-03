@@ -1,10 +1,12 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
+<form method="post" action="<c:url value='/flow'/>">
+
 <span class="info">Workflow State</span>
 
-<br/><br/>
+<c:if test="${!empty stateKey}"><input type="submit" name="_eventId_delete" value="Delete" <c:if test="${stateKey == 1}">disabled='true'</c:if>/></c:if>
 
-<form method="post" action="<c:url value='/flow'/>">
+<br/><br/>
 
     <input name="state" value="${state}"/>
     <input type="submit" name="_eventId_submit" value="Submit"/>

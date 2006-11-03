@@ -240,6 +240,14 @@ public class JtracImpl implements Jtrac {
         return dao.removeFieldValues(space, field, Integer.parseInt(optionKey));
     }
     
+    public int loadCountOfItemsHavingStatus(Space space, int status) {
+        return dao.loadCountOfItemsHavingStatus(space, status);
+    }
+    
+    public int bulkUpdateStatusToOpen(Space space, int status) {
+        return dao.bulkUpdateStatusToOpen(space, status);
+    }
+    
     //========================================================    
     
     public void rebuildIndexes() {

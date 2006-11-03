@@ -52,6 +52,8 @@ public interface Jtrac extends UserDetailsService {
     int removeField(Space space, Field field);
     int findItemCount(Space space, Field field, String optionKey);
     int removeFieldValues(Space space, Field field, String optionKey);
+    int loadCountOfItemsHavingStatus(Space space, int status);
+    int bulkUpdateStatusToOpen(Space space, int status);    
     //========================================================
     void rebuildIndexes();
     //========================================================

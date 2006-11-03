@@ -78,6 +78,10 @@ public class Role implements Serializable {
         states.put(state.getStatus(), state);
     }
     
+    public void removeState(int stateId) {
+        states.remove(stateId);
+    }
+    
     //=======================================================================
     
     public Map<Integer, State> getStates() {

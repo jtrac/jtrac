@@ -298,6 +298,32 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return itemCount;        
     }
     
+    public int loadCountOfItemsHavingStatus(Space space, int status) {
+        Criteria criteria = getSession().createCriteria(Item.class);
+        criteria.add(Restrictions.eq("space", space));
+        criteria.add(Restrictions.eq("status", status));
+        criteria.setProjection(Projections.rowCount());
+        int itemCount = (Integer) criteria.list().get(0);
+        // even when no item has this status currently, items may have history with this status
+        // because of the "parent" difference, cannot use AbstractItem and have to do a separate Criteria query
+        criteria = getSession().createCriteria(History.class);
+        criteria.createCriteria("parent").add(Restrictions.eq("space", space));
+        criteria.add(Restrictions.eq("status", status));
+        criteria.setProjection(Projections.rowCount());
+        return itemCount + (Integer) criteria.list().get(0);
+    }    
+    
+    public int bulkUpdateStatusToOpen(Space space, int status) {
+        int itemCount = getHibernateTemplate().bulkUpdate("update Item item set item.status = " + State.OPEN 
+                + " where item.status = ? and item.space.id = ?", new Object[] { status, space.getId() });
+        logger.info("no of Item rows where status changed from " + status + " to " + State.OPEN + " = " + itemCount);
+        int historyCount = getHibernateTemplate().bulkUpdate("update History history set history.status = " + State.OPEN 
+                + " where history.status = ?"
+                + " and history.parent in ( from Item item where item.space.id = ? )", new Object[] { status, space.getId() });
+        logger.info("no of History rows where status changed from " + status + " to " + State.OPEN + " = " + historyCount);
+        return itemCount;
+    }    
+    
     public int renameSpaceRole(String oldRoleKey, String newRoleKey, Space space) {
         return getHibernateTemplate().bulkUpdate("update UserSpaceRole usr set usr.roleKey = ?"
                 + " where usr.roleKey = ? and usr.space.id = ?", new Object[] { newRoleKey, oldRoleKey, space.getId() });
