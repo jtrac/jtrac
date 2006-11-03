@@ -88,6 +88,8 @@
     
     <!-- TODO call "set-production-flag" after clean for version 2.0 final onwards -->
     <target name="dist-war" depends="war, jetty-setup">
+        <copy todir="target/jetty/logs" file="etc/dummy.txt"/>
+        <copy todir="target/jetty/work" file="etc/dummy.txt"/>
         <mkdir dir="target/site/doc"/>
         <zip destfile="target/jtrac.zip">
             <zipfileset dir="target" includes="*.war" prefix="jtrac"/>
