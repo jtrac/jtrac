@@ -224,24 +224,24 @@ public class JtracImpl implements Jtrac {
         dao.removeItemItem(itemItem);
     }
     
-    public int findItemCount(Space space, Field field) {
-        return dao.findItemCount(space, field);
+    public int loadCountOfRecordsHavingFieldNotNull(Space space, Field field) {
+        return dao.loadCountOfRecordsHavingFieldNotNull(space, field);
     }
     
-    public int removeField(Space space, Field field) {
-        return dao.removeField(space, field);
+    public int bulkUpdateFieldToNull(Space space, Field field) {
+        return dao.bulkUpdateFieldToNull(space, field);
     }
     
-    public int findItemCount(Space space, Field field, String optionKey) {
-        return dao.findItemCount(space, field, Integer.parseInt(optionKey));
+    public int loadCountOfRecordsHavingFieldWithValue(Space space, Field field, int optionKey) {
+        return dao.loadCountOfRecordsHavingFieldWithValue(space, field, optionKey);
     }
     
-    public int removeFieldValues(Space space, Field field, String optionKey) {
-        return dao.removeFieldValues(space, field, Integer.parseInt(optionKey));
+    public int bulkUpdateFieldToNullForValue(Space space, Field field, int optionKey) {
+        return dao.bulkUpdateFieldToNullForValue(space, field, optionKey);
     }
     
-    public int loadCountOfItemsHavingStatus(Space space, int status) {
-        return dao.loadCountOfItemsHavingStatus(space, status);
+    public int loadCountOfRecordsHavingStatus(Space space, int status) {
+        return dao.loadCountOfRecordsHavingStatus(space, status);
     }
     
     public int bulkUpdateStatusToOpen(Space space, int status) {
@@ -374,8 +374,8 @@ public class JtracImpl implements Jtrac {
         return dao.loadUserSpaceRole(id);
     }
     
-    public int renameSpaceRole(String oldRoleKey, String newRoleKey, Space space) {        
-        return dao.renameSpaceRole(oldRoleKey, newRoleKey, space);        
+    public int updateSpaceRole(String oldRoleKey, String newRoleKey, Space space) {        
+        return dao.updateSpaceRole(oldRoleKey, newRoleKey, space);        
     }
     
     //==========================================================================

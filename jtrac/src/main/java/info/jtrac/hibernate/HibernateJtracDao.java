@@ -260,15 +260,22 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return (Config) getHibernateTemplate().get(Config.class, param);
     }
 
-    public int findItemCount(Space space, Field field) {
+    public int loadCountOfRecordsHavingFieldNotNull(Space space, Field field) {
         Criteria criteria = getSession().createCriteria(Item.class);
         criteria.add(Restrictions.eq("space", space));
         criteria.add(Restrictions.isNotNull(field.getName().toString()));
         criteria.setProjection(Projections.rowCount());
-        return (Integer) criteria.list().get(0);         
+        int itemCount = (Integer) criteria.list().get(0);
+        // even when no item has this field not null currently, items may have history with this field not null
+        // because of the "parent" difference, cannot use AbstractItem and have to do a separate Criteria query
+        criteria = getSession().createCriteria(History.class);
+        criteria.createCriteria("parent").add(Restrictions.eq("space", space));
+        criteria.add(Restrictions.isNotNull(field.getName().toString()));
+        criteria.setProjection(Projections.rowCount());
+        return itemCount + (Integer) criteria.list().get(0);        
     }
 
-    public int removeField(Space space, Field field) {
+    public int bulkUpdateFieldToNull(Space space, Field field) {
         int itemCount = getHibernateTemplate().bulkUpdate("update Item item set item." + field.getName() + " = null" 
                 + " where item.space.id = ?", space.getId());
         logger.info("no of Item rows where " + field.getName() + " set to null = " + itemCount);
@@ -278,15 +285,22 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return itemCount;
     }
 
-    public int findItemCount(Space space, Field field, int optionKey) {
+    public int loadCountOfRecordsHavingFieldWithValue(Space space, Field field, int optionKey) {
         Criteria criteria = getSession().createCriteria(Item.class);
         criteria.add(Restrictions.eq("space", space));
         criteria.add(Restrictions.eq(field.getName().toString(), optionKey));
         criteria.setProjection(Projections.rowCount());
-        return (Integer) criteria.list().get(0);         
+        int itemCount = (Integer) criteria.list().get(0);
+        // even when no item has this field value currently, items may have history with this field value
+        // because of the "parent" difference, cannot use AbstractItem and have to do a separate Criteria query
+        criteria = getSession().createCriteria(History.class);
+        criteria.createCriteria("parent").add(Restrictions.eq("space", space));
+        criteria.add(Restrictions.eq(field.getName().toString(), optionKey));
+        criteria.setProjection(Projections.rowCount());
+        return itemCount + (Integer) criteria.list().get(0);        
     }
 
-    public int removeFieldValues(Space space, Field field, int optionKey) {
+    public int bulkUpdateFieldToNullForValue(Space space, Field field, int optionKey) {
         int itemCount = getHibernateTemplate().bulkUpdate("update Item item set item." + field.getName() + " = null" 
                 + " where item.space.id = ?"
                 + " and item." + field.getName() + " = ?", new Object[] { space.getId(), optionKey });
@@ -298,7 +312,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return itemCount;        
     }
     
-    public int loadCountOfItemsHavingStatus(Space space, int status) {
+    public int loadCountOfRecordsHavingStatus(Space space, int status) {
         Criteria criteria = getSession().createCriteria(Item.class);
         criteria.add(Restrictions.eq("space", space));
         criteria.add(Restrictions.eq("status", status));
@@ -324,7 +338,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return itemCount;
     }    
     
-    public int renameSpaceRole(String oldRoleKey, String newRoleKey, Space space) {
+    public int updateSpaceRole(String oldRoleKey, String newRoleKey, Space space) {
         return getHibernateTemplate().bulkUpdate("update UserSpaceRole usr set usr.roleKey = ?"
                 + " where usr.roleKey = ? and usr.space.id = ?", new Object[] { newRoleKey, oldRoleKey, space.getId() });
     }

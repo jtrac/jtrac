@@ -48,11 +48,11 @@ public interface Jtrac extends UserDetailsService {
     List<Item> findItems(ItemSearch itemSearch);
     void removeItemItem(ItemItem itemItem);
     //========================================================
-    int findItemCount(Space space, Field field);
-    int removeField(Space space, Field field);
-    int findItemCount(Space space, Field field, String optionKey);
-    int removeFieldValues(Space space, Field field, String optionKey);
-    int loadCountOfItemsHavingStatus(Space space, int status);
+    int loadCountOfRecordsHavingFieldNotNull(Space space, Field field);
+    int bulkUpdateFieldToNull(Space space, Field field);
+    int loadCountOfRecordsHavingFieldWithValue(Space space, Field field, int optionKey);
+    int bulkUpdateFieldToNullForValue(Space space, Field field, int optionKey);
+    int loadCountOfRecordsHavingStatus(Space space, int status);
     int bulkUpdateStatusToOpen(Space space, int status);    
     //========================================================
     void rebuildIndexes();
@@ -78,7 +78,7 @@ public interface Jtrac extends UserDetailsService {
     void storeUserSpaceRole(User user, Space space, String roleKey);        
     UserSpaceRole loadUserSpaceRole(long id);
     void removeUserSpaceRole(UserSpaceRole userSpaceRole);
-    int renameSpaceRole(String oldRoleKey, String newRoleKey, Space space);
+    int updateSpaceRole(String oldRoleKey, String newRoleKey, Space space);
     //========================================================
     void storeMetadata(Metadata metadata);
     Metadata loadMetadata(long id);

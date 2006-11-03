@@ -135,7 +135,7 @@ public class FieldFormAction extends AbstractFormAction {
         context.getRequestScope().put("optionKey", optionKey);
         context.getRequestScope().put("option", option);
         if (space.getId() > 0) {
-            int affectedCount = jtrac.findItemCount(space, fieldForm.field, optionKey);
+            int affectedCount = jtrac.loadCountOfRecordsHavingFieldWithValue(space, fieldForm.field, Integer.parseInt(optionKey));
             if (affectedCount > 0) {
                 context.getRequestScope().put("affectedCount", affectedCount);
                 return new Event(this, "confirm");
@@ -150,7 +150,7 @@ public class FieldFormAction extends AbstractFormAction {
         FieldForm fieldForm = (FieldForm) getFormObject(context);
         String optionKey = ValidationUtils.getParameter(context, "optionKey");        
         fieldForm.field.getOptions().remove(optionKey);        
-        jtrac.removeFieldValues(space, fieldForm.field, optionKey);
+        jtrac.bulkUpdateFieldToNullForValue(space, fieldForm.field, Integer.parseInt(optionKey));
         // database has been updated, if we don't do this
         // user may leave without committing metadata change       
         jtrac.storeSpace(space);

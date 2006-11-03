@@ -178,7 +178,7 @@ public class SpaceFormAction extends AbstractFormAction {
         String fieldName = ValidationUtils.getParameter(context, "fieldName");            
         Field field = space.getMetadata().getField(fieldName);        
         if (space.getId() > 0) {
-            int affectedCount = jtrac.findItemCount(space, field);
+            int affectedCount = jtrac.loadCountOfRecordsHavingFieldNotNull(space, field);
             if (affectedCount > 0) {
                 context.getRequestScope().put("affectedCount", affectedCount);
                 return new Event(this, "confirm");
@@ -196,7 +196,7 @@ public class SpaceFormAction extends AbstractFormAction {
         // database will be updated, if we don't do this
         // user may leave without committing metadata change
         logger.debug("saving space after field delete operation");
-        jtrac.removeField(space, field);
+        jtrac.bulkUpdateFieldToNull(space, field);
         space.getMetadata().removeField(fieldName);       
         jtrac.storeSpace(space);
         // horrible hack, but otherwise if we save again we get the dreaded Stale Object Exception
@@ -241,7 +241,7 @@ public class SpaceFormAction extends AbstractFormAction {
         String stateKey = ValidationUtils.getParameter(context, "stateKey");
         int status = Integer.parseInt(stateKey);
         if (space.getId() > 0) {
-            int affectedCount = jtrac.loadCountOfItemsHavingStatus(space, status);
+            int affectedCount = jtrac.loadCountOfRecordsHavingStatus(space, status);
             if (affectedCount > 0) {
                 context.getRequestScope().put("affectedCount", affectedCount);
                 context.getRequestScope().put("stateKey", stateKey);
@@ -299,7 +299,7 @@ public class SpaceFormAction extends AbstractFormAction {
                 return new Event(this, "confirm");
             } else {
                 space.getMetadata().renameRole(oldRoleKey, roleKey);
-                jtrac.renameSpaceRole(oldRoleKey, roleKey, space);
+                jtrac.updateSpaceRole(oldRoleKey, roleKey, space);
             }
         }
         return success();
@@ -310,7 +310,7 @@ public class SpaceFormAction extends AbstractFormAction {
         String roleKey = ValidationUtils.getParameter(context, "roleKey");
         String oldRoleKey = ValidationUtils.getParameter(context, "oldRoleKey");
         // TODO next 3 lines should ideally be in a transaction
-        jtrac.renameSpaceRole(oldRoleKey, roleKey, space);
+        jtrac.updateSpaceRole(oldRoleKey, roleKey, space);
         space.getMetadata().renameRole(oldRoleKey, roleKey);
         jtrac.storeSpace(space);
         // horrible hack, but otherwise if we save again we get the dreaded Stale Object Exception
