@@ -584,9 +584,7 @@ hibernate.show_sql=false
             <para>
                 Given below is a sample jtrac.properties file for MySQL.  Using the default "root" user is obviously
                 not advisable from a security point of view and you should try and have a separate user for the database
-                used by JTrac.  Note: do not use the "autoReconnect=true" parameter in the MySQL URL, this is not
-                recommended by the MySQL team.  The Apache DBCP connection pool used internally by JTrac is configured 
-                to refresh stale database connections.
+                used by JTrac.
                 <programlisting>
 
 database.driver=com.mysql.jdbc.Driver
@@ -596,7 +594,20 @@ database.password=
 hibernate.dialect=org.hibernate.dialect.MySQLDialect
 hibernate.show_sql=false
                 </programlisting>
-            </para>              
+            </para>
+            <para>
+                For MySQL, do not use the "autoReconnect=true" parameter in the MySQL URL, this is 
+                <ulink url="http://dev.mysql.com/doc/connector/j/en/connector-j-usagenotes-j2ee.html#connector-j-usagenotes-tomcat">not recommended</ulink>
+                by the MySQL team.  The <ulink url="http://jakarta.apache.org/commons/dbcp/">Apache DBCP</ulink> 
+                connection pool used internally by JTrac is configured to refresh stale database connections.                
+            </para>
+            <para>
+                The default query to test idle database connections is "SELECT 1".  This has been reported
+                to not work for databases such as Derby and Progress because they consider this invalid SQL.  You can
+                customize the validation query by adding a "database.validationQuery" property in "jtrac.properties.
+                If you set the validation query to an empty string, this effectively disables the periodic testing of
+                idle database connections by Apache DBCP.
+            </para>            
         </sect1>
         <sect1 id="installation-upgrading">
             <title>Upgrading from previous versions</title>
