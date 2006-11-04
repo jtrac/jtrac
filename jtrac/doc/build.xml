@@ -32,6 +32,7 @@
                     <include name="**/*.jar"/>
                 </fileset>
             </classpath>
+            <jvmarg value="-Xmx256M"/>
             <arg value="-o"/>
             <arg value="${dist.doc.dir}/pdf/docbook_fop.tmp"/>
             <arg value="${doc.src.dir}/src/index.xml"/>
@@ -61,6 +62,7 @@
                     <include name="**/*.jar"/>
                 </fileset>
             </classpath>
+            <jvmarg value="-Xmx256M"/>
             <arg value="${basedir}/${doc.src.dir}/src/index.xml"/>
             <arg value="${basedir}/${doc.src.dir}/styles/html_chunk.xsl"/>
         </java>
@@ -74,6 +76,7 @@
                     <include name="**/*.jar"/>
                 </fileset>
             </classpath>
+            <jvmarg value="-Xmx256M"/>
             <arg value="-o"/>
             <arg value="${dist.doc.dir}/html-single/index.html"/>
             <arg value="${doc.src.dir}/src/index.xml"/>

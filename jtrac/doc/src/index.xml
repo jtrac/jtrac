@@ -103,9 +103,12 @@
                 If you have Java 5 installed you can be up and running after downloading and extracting JTrac - by 
                 simply using the provided start and stop scripts.  JTrac scans its environment on startup and if a 
                 configured database is not detected, <ulink url="http://www.hsqldb.org/">HSQLDB</ulink> is used by 
-                default.  Also, if you already have a web-application server that you wish to use (such as 
-                <ulink url="http://tomcat.apache.org/">Tomcat</ulink>) you can drop in just the single WAR file 
-                provided and immediately sign on into the application.
+                default.
+            </para>
+            <para>
+                If you already have a web-application server that you wish to use (such as 
+                <ulink url="http://tomcat.apache.org/">Tomcat</ulink>), you can just drop in the WAR file 
+                provided and sign on into the application straight away.
             </para>
             <para>
                 Please see the <link linkend="installation">installation</link> section of this documentation for 
@@ -835,13 +838,14 @@ wrapper.exe -r etc/wrapper.conf
                 Import from other issue tracking systems (such as BugZilla) to be considered.
             </para>
         </sect1>
-        <sect1 id="roadmap-cas">            
-            <title>CAS (Single Sign On)</title>            
+        <sect1 id="roadmap-sso">            
+            <title>Single Sign On</title>            
             <para>
                 Since JTrac uses the <ulink url="http://www.acegisecurity.org/">Acegi Security</ulink> 
                 framework, it would be easy to configure it to use an existing 
-                <ulink url="http://www.ja-sig.org/products/cas/">Central Authentication Service</ulink> (CAS) installation 
-                for implementing Single Sign On. In fact most of the configuration is in place and only needs to be documented.
+                <ulink url="http://www.ja-sig.org/products/cas/">Central Authentication Service</ulink> (CAS) installation
+                or LDAP server (even Windows Active Directory) for implementing Single Sign On. 
+                In fact most of the configuration is in place and only needs to be documented.
             </para>
         </sect1>
         <sect1 id="roadmap-xmlapi">            
@@ -1008,7 +1012,8 @@ mvn antprops:generate
             <title>Import project into your IDE</title>
             <para>
                 If you are a NetBeans user you are ready to build and run JTrac!  Just use the "Open Project"
-                option from the menu and select the "jtrac" folder.  You should be able to open it as a valid NetBeans project.
+                option from the "File" menu, browse to and select the "jtrac" folder.  You should be able to open it 
+                as a valid NetBeans project.
             </para>
             <para>
                 If you want to use Eclipse, that's easy as well.  First you have to run the following command and
