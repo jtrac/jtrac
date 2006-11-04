@@ -87,7 +87,7 @@
     </target>
     
     <!-- TODO call "set-production-flag" after clean for version 2.0 final onwards -->
-    <target name="dist-war" depends="war, jetty-setup">
+    <target name="dist-jtrac" depends="war, jetty-setup">
         <copy todir="target/jetty/logs" file="etc/dummy.txt"/>
         <copy todir="target/jetty/work" file="etc/dummy.txt"/>
         <mkdir dir="target/site/doc"/>
@@ -100,11 +100,18 @@
         </zip>         
     </target>
     
+    <target name="dist-war-scp" depends="clean, war">
+        <input message="Please enter password:" addproperty="password"/>
+        <scp file="target/jtrac.war" 
+            todir="ptrthomas@shell.sourceforge.net:/home/groups/j/j-/j-trac/htdocs/files"
+            password="${password}" trust="true"/>
+    </target>
+    
     <target name="dist-doc">
         <ant antfile="doc/build.xml"/>
     </target>
         
-    <target name="dist" depends="clean, dist-doc, dist-war, dist-src"/>
+    <target name="dist" depends="clean, dist-doc, dist-jtrac, dist-jtrac-src"/>
     
     <target name="dist-site-clean">
         <delete includeemptydirs="true">
@@ -120,7 +127,7 @@
         </copy>
     </target>    
     
-    <target name="dist-src">
+    <target name="dist-jtrac-src">
         <mkdir dir="target"/>
         <zip destfile="target/jtrac-src.zip">
             <zipfileset dir="nbproject" prefix="jtrac/nbproject"/>
@@ -351,7 +358,7 @@
         </sequential>        
     </macrodef>
     
-    <!-- ====================== TOMCAT TASKS ========================= -->
+    <!-- ========================= TOMCAT ============================ -->
     
     <target name="tomcat-clean">   
         <delete includeemptydirs="true" failonerror="false">
