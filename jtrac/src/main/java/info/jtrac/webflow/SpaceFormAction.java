@@ -202,7 +202,7 @@ public class SpaceFormAction extends AbstractFormAction {
         // horrible hack, but otherwise if we save again we get the dreaded Stale Object Exception
         space.setMetadata(jtrac.loadMetadata(space.getMetadata().getId()));
         return success();
-    }
+    }        
     
     //=============================== STATES ===================================
     
@@ -319,6 +319,38 @@ public class SpaceFormAction extends AbstractFormAction {
         SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
         return success();
     }
+    
+    public Event roleDeleteHandler(RequestContext context) {
+        Space space = (Space) context.getFlowScope().get("space");
+        String roleKey = ValidationUtils.getParameter(context, "roleKey");
+        if (space.getId() > 0) {
+            List<User> users = jtrac.findUsersWithRoleForSpace(space.getId(), roleKey);
+            if (users.size() > 0) {
+                String oldRoleKey = ValidationUtils.getParameter(context, "oldRoleKey");
+                context.getRequestScope().put("oldRoleKey", oldRoleKey);
+                context.getRequestScope().put("roleKey", roleKey);                 
+                return new Event(this, "confirm");
+            }
+        }
+        // this is an unsaved space or there are no impacted users
+        space.getMetadata().removeRole(roleKey);                   
+        return success();
+    }
+    
+    public Event roleDeleteConfirmHandler(RequestContext context) {
+        Space space = (Space) context.getFlowScope().get("space");
+        String roleKey = ValidationUtils.getParameter(context, "roleKey");
+        // database will be updated, if we don't do this
+        // user may leave without committing metadata change
+        logger.debug("saving space after role delete operation");
+        jtrac.bulkUpdateDeleteSpaceRole(space, roleKey);
+        space.getMetadata().removeRole(roleKey);        
+        jtrac.storeSpace(space);
+        // horrible hack, but otherwise if we save again we get the dreaded Stale Object Exception
+        space.setMetadata(jtrac.loadMetadata(space.getMetadata().getId()));
+        SecurityUtils.refreshSecurityContext();
+        return success();
+    }    
     
     //======================== TRANSITION / MASK ===============================
     

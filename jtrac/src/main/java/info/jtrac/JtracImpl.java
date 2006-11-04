@@ -328,7 +328,11 @@ public class JtracImpl implements Jtrac {
     
     public List<UserSpaceRole> findUserRolesForSpace(long spaceId) {
         return dao.findUserRolesForSpace(spaceId);
-    }   
+    } 
+    
+    public List<User> findUsersWithRoleForSpace(long spaceId, String roleKey) {
+        return dao.findUsersWithRoleForSpace(spaceId, roleKey);
+    }    
     
     public List<User> findUsersForUser(User user) {
         Collection<Space> spaces = new HashSet<Space>(user.getUserSpaceRoles().size());
@@ -376,6 +380,10 @@ public class JtracImpl implements Jtrac {
     
     public int updateSpaceRole(String oldRoleKey, String newRoleKey, Space space) {        
         return dao.updateSpaceRole(oldRoleKey, newRoleKey, space);        
+    }
+    
+    public int bulkUpdateDeleteSpaceRole(Space space, String roleKey) {
+        return dao.bulkUpdateDeleteSpaceRole(space, roleKey);
     }
     
     //==========================================================================

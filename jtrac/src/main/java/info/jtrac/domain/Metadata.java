@@ -229,6 +229,11 @@ public class Metadata implements Serializable {
         roles.put(newRole, role);
     }
     
+    public void removeRole(String name) {
+        // important! this has to be combined with a database update
+        roles.remove(name);
+    }
+    
     public Set<Field.Name> getUnusedFieldNames() {
         EnumSet<Field.Name> allFieldNames = EnumSet.allOf(Field.Name.class);
         for (Field f : getFields().values()) {

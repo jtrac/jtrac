@@ -76,11 +76,13 @@ public interface JtracDao {
     List<User> findUsersByEmail(String email);
     List<User> findUsersForSpace(long spaceId);
     List<UserSpaceRole> findUserRolesForSpace(long spaceId);
+    List<User> findUsersWithRoleForSpace(long spaceId, String roleKey);
     List<User> findUsersForSpaceSet(Collection<Space> spaces);
     //===========================================
     UserSpaceRole loadUserSpaceRole(long id);
     void removeUserSpaceRole(UserSpaceRole userSpaceRole);
     int updateSpaceRole(String oldRoleKey, String newRoleKey, Space space);
+    int bulkUpdateDeleteSpaceRole(Space space, String roleKey);
     //===========================================
     Counts loadCountsForUser(User user);
     //===========================================

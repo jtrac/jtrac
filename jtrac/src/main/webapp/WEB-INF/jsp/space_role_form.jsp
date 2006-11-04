@@ -1,10 +1,12 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
+<form method="post" action="<c:url value='/flow'/>">
+
 <span class="info">Workflow Role</span>
 
-<p/>
+<input type="submit" name="_eventId_delete" value="Delete" <c:if test="${space.metadata.roleCount <= 1}">disabled='true'</c:if>/>
 
-<form method="post" action="<c:url value='/flow'/>">
+<p/>
 
     <input name="roleKey" value="${roleKey}"/>
     <input type="submit" name="_eventId_submit" value="Submit"/>

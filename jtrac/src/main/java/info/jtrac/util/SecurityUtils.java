@@ -40,4 +40,8 @@ public class SecurityUtils {
         }
     }
     
+    public static void refreshSecurityContext() {
+        SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
+    }
+    
 }

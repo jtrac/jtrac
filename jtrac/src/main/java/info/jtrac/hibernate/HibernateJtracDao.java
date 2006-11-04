@@ -190,10 +190,15 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     }
     
     public List<UserSpaceRole> findUserRolesForSpace(long spaceId) {
-        List<UserSpaceRole> userSpaceRoles = getHibernateTemplate().find("select usr from User user" +
-                " join user.userSpaceRoles as usr where usr.space.id = ? order by user.name", spaceId);
-        return userSpaceRoles;
+        return getHibernateTemplate().find("select usr from User user" +
+                " join user.userSpaceRoles as usr where usr.space.id = ? order by user.name", spaceId);        
     }
+    
+    public List<User> findUsersWithRoleForSpace(long spaceId, String roleKey) {
+        return getHibernateTemplate().find("from User user"
+                + " join user.userSpaceRoles as usr where usr.space.id = ?"
+                + " and usr.roleKey = ? order by user.name", new Object[] { spaceId, roleKey });        
+    }    
     
     public Counts loadCountsForUser(User user) {
         Set<Space> spaces = user.getSpaces();
@@ -342,6 +347,11 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return getHibernateTemplate().bulkUpdate("update UserSpaceRole usr set usr.roleKey = ?"
                 + " where usr.roleKey = ? and usr.space.id = ?", new Object[] { newRoleKey, oldRoleKey, space.getId() });
     }
+    
+    public int bulkUpdateDeleteSpaceRole(Space space, String roleKey) {
+        return getHibernateTemplate().bulkUpdate("delete UserSpaceRole usr"
+                + " where usr.space.id = ? and usr.roleKey = ?", new Object[] { space.getId(), roleKey });
+    }    
     
     //==========================================================================
     

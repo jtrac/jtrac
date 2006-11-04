@@ -63,6 +63,7 @@ public interface Jtrac extends UserDetailsService {
     User loadUser(String loginName);
     List<User> findUsersForSpace(long spaceId);
     List<UserSpaceRole> findUserRolesForSpace(long spaceId);
+    List<User> findUsersWithRoleForSpace(long spaceId, String roleKey);
     List<User> findUsersForUser(User user);
     List<User> findUnallocatedUsersForSpace(long spaceId);
     //========================================================
@@ -79,6 +80,7 @@ public interface Jtrac extends UserDetailsService {
     UserSpaceRole loadUserSpaceRole(long id);
     void removeUserSpaceRole(UserSpaceRole userSpaceRole);
     int updateSpaceRole(String oldRoleKey, String newRoleKey, Space space);
+    int bulkUpdateDeleteSpaceRole(Space space, String roleKey);
     //========================================================
     void storeMetadata(Metadata metadata);
     Metadata loadMetadata(long id);
