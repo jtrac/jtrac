@@ -248,6 +248,14 @@ public class JtracImpl implements Jtrac {
         return dao.bulkUpdateStatusToOpen(space, status);
     }
     
+    public int bulkUpdateRenameSpaceRole(Space space, String oldRoleKey, String newRoleKey) {        
+        return dao.bulkUpdateRenameSpaceRole(space, oldRoleKey, newRoleKey);        
+    }
+    
+    public int bulkUpdateDeleteSpaceRole(Space space, String roleKey) {
+        return dao.bulkUpdateDeleteSpaceRole(space, roleKey);
+    }    
+    
     //========================================================    
     
     public void rebuildIndexes() {
@@ -376,14 +384,6 @@ public class JtracImpl implements Jtrac {
     
     public UserSpaceRole loadUserSpaceRole(long id) {
         return dao.loadUserSpaceRole(id);
-    }
-    
-    public int updateSpaceRole(String oldRoleKey, String newRoleKey, Space space) {        
-        return dao.updateSpaceRole(oldRoleKey, newRoleKey, space);        
-    }
-    
-    public int bulkUpdateDeleteSpaceRole(Space space, String roleKey) {
-        return dao.bulkUpdateDeleteSpaceRole(space, roleKey);
     }
     
     //==========================================================================

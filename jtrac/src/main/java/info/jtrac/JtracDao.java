@@ -54,6 +54,8 @@ public interface JtracDao {
     int bulkUpdateFieldToNullForValue(Space space, Field field, int optionKey);
     int loadCountOfRecordsHavingStatus(Space space, int status);
     int bulkUpdateStatusToOpen(Space space, int status);
+    int bulkUpdateRenameSpaceRole(Space space, String oldRoleKey, String newRoleKey);
+    int bulkUpdateDeleteSpaceRole(Space space, String roleKey);    
     //========================================================    
     void storeAttachment(Attachment attachment);
     //===========================================
@@ -81,8 +83,6 @@ public interface JtracDao {
     //===========================================
     UserSpaceRole loadUserSpaceRole(long id);
     void removeUserSpaceRole(UserSpaceRole userSpaceRole);
-    int updateSpaceRole(String oldRoleKey, String newRoleKey, Space space);
-    int bulkUpdateDeleteSpaceRole(Space space, String roleKey);
     //===========================================
     Counts loadCountsForUser(User user);
     //===========================================

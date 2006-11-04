@@ -343,7 +343,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return itemCount;
     }    
     
-    public int updateSpaceRole(String oldRoleKey, String newRoleKey, Space space) {
+    public int bulkUpdateRenameSpaceRole(Space space, String oldRoleKey, String newRoleKey) {
         return getHibernateTemplate().bulkUpdate("update UserSpaceRole usr set usr.roleKey = ?"
                 + " where usr.roleKey = ? and usr.space.id = ?", new Object[] { newRoleKey, oldRoleKey, space.getId() });
     }

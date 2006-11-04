@@ -53,7 +53,9 @@ public interface Jtrac extends UserDetailsService {
     int loadCountOfRecordsHavingFieldWithValue(Space space, Field field, int optionKey);
     int bulkUpdateFieldToNullForValue(Space space, Field field, int optionKey);
     int loadCountOfRecordsHavingStatus(Space space, int status);
-    int bulkUpdateStatusToOpen(Space space, int status);    
+    int bulkUpdateStatusToOpen(Space space, int status);
+    int bulkUpdateRenameSpaceRole(Space space, String oldRoleKey, String newRoleKey);
+    int bulkUpdateDeleteSpaceRole(Space space, String roleKey);    
     //========================================================
     void rebuildIndexes();
     //========================================================
@@ -79,8 +81,6 @@ public interface Jtrac extends UserDetailsService {
     void storeUserSpaceRole(User user, Space space, String roleKey);        
     UserSpaceRole loadUserSpaceRole(long id);
     void removeUserSpaceRole(UserSpaceRole userSpaceRole);
-    int updateSpaceRole(String oldRoleKey, String newRoleKey, Space space);
-    int bulkUpdateDeleteSpaceRole(Space space, String roleKey);
     //========================================================
     void storeMetadata(Metadata metadata);
     Metadata loadMetadata(long id);

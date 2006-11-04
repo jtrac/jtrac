@@ -241,7 +241,7 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         u.addSpaceWithRole(space, "DEFAULT");
         jtrac.storeUser(u);
         assertEquals(1, jdbcTemplate.queryForInt("select count(0) from user_space_roles where role_key = 'DEFAULT'"));
-        jtrac.updateSpaceRole("DEFAULT", "NEWDEFAULT", space);
+        jtrac.bulkUpdateRenameSpaceRole(space, "DEFAULT", "NEWDEFAULT");
         assertEquals(0, jdbcTemplate.queryForInt("select count(0) from user_space_roles where role_key = 'DEFAULT'"));
         assertEquals(1, jdbcTemplate.queryForInt("select count(0) from user_space_roles where role_key = 'NEWDEFAULT'"));
         

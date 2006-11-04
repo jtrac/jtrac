@@ -299,7 +299,7 @@ public class SpaceFormAction extends AbstractFormAction {
                 return new Event(this, "confirm");
             } else {
                 space.getMetadata().renameRole(oldRoleKey, roleKey);
-                jtrac.updateSpaceRole(oldRoleKey, roleKey, space);
+                jtrac.bulkUpdateRenameSpaceRole(space, oldRoleKey, roleKey);
             }
         }
         return success();
@@ -310,7 +310,7 @@ public class SpaceFormAction extends AbstractFormAction {
         String roleKey = ValidationUtils.getParameter(context, "roleKey");
         String oldRoleKey = ValidationUtils.getParameter(context, "oldRoleKey");
         // TODO next 3 lines should ideally be in a transaction
-        jtrac.updateSpaceRole(oldRoleKey, roleKey, space);
+        jtrac.bulkUpdateRenameSpaceRole(space, oldRoleKey, roleKey);
         space.getMetadata().renameRole(oldRoleKey, roleKey);
         jtrac.storeSpace(space);
         // horrible hack, but otherwise if we save again we get the dreaded Stale Object Exception
