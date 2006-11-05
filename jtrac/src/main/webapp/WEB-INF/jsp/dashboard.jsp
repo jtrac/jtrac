@@ -2,7 +2,7 @@
 
 <c:choose>
     <c:when test="${principal.spaceCount == 0}">
-        <span class="info">You are not mapped to any Spaces yet.</span>
+        <span class="info">You are not mapped to any Spaces.</span>
         <br/>
     </c:when>
     <c:otherwise>
