@@ -34,7 +34,7 @@
     
     <subflow-state id="itemEditForm" flow="item">
         <transition on="backFromEdit" to="itemViewForm"/>
-        <transition on="backFromDelete" to="backFromDelete"/>
+        <transition on="backFromDelete" to="backFromView"/>
     </subflow-state>
     
     <subflow-state id="itemSearchRelatedForm" flow="item_search">
@@ -53,9 +53,7 @@
     
     <end-state id="backFromView"/>
     
-    <end-state id="relateSubmit"/>
-    
-    <end-state id="backFromDelete"/>
+    <end-state id="relateSubmit"/>    
     
 </flow>
 
