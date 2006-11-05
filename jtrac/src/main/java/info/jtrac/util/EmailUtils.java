@@ -20,7 +20,9 @@ import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.User;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Properties;
+import javax.mail.Header;
 import javax.mail.internet.MimeMessage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -66,7 +68,7 @@ public class EmailUtils {
             sender.setUsername(userName);
             sender.setPassword(password);
         }
-        logger.debug("email sender initialized: host = '" + host + "', port = '" + p + "'");
+        logger.info("email sender initialized: host = '" + host + "', port = '" + p + "'");
     }
 
     /**
@@ -86,6 +88,17 @@ public class EmailUtils {
                     logger.debug("send mail thread successfull");
                 } catch (Exception e) {
                     logger.error("send mail thread failed", e);
+                    logger.error("mail headers dump start");
+                    try {
+                        Enumeration headers = message.getAllHeaders();
+                        while(headers.hasMoreElements()) {
+                            Header h = (Header) headers.nextElement();
+                            logger.info(h.getName() + ": " + h.getValue());
+                        }
+                    } catch (Exception f) {
+                        // :(
+                    }
+                    logger.error("mail headers dump end");
                 }
             }
         }.start();
@@ -93,7 +106,10 @@ public class EmailUtils {
 
     private String addHeaderAndFooter(StringBuffer html) {
         StringBuffer sb = new StringBuffer();
-        sb.append("<html><body>");
+        // additional cosmetic tweaking of e-mail layout
+        //  style just after the body tag does not work for a minority of clients like gmail, thunderbird etc.
+        // ItemUtils adds the main inline CSS when generating the email content, so we gracefully degrade
+        sb.append("<html><body><style type='text/css'>table.jtrac th, table.jtrac td { padding-left: 0.2em; padding-right: 0.2em; }</style>");
         sb.append(html);
         sb.append("</html>");
         return sb.toString();
