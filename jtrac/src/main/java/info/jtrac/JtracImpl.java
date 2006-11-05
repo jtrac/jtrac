@@ -186,7 +186,7 @@ public class JtracImpl implements Jtrac {
         item.add(history);
         dao.storeItem(item);
         indexer.index(history);
-        if (item.isSendNotifications() && emailUtils != null) {
+        if (history.isSendNotifications() && emailUtils != null) {
             emailUtils.send(item);
         }
     }
