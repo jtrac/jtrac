@@ -59,25 +59,35 @@
    System for Spring Project (http://acegisecurity.org).
 
    * acegi-security [ http://www.apache.org/licenses/LICENSE-2.0 ]  
-   
+
    ======================================================================
+
+   This product includes software developed by the Spring Modules
+   Project (https://springmodules.dev.java.net/).
+   
+   * spring-modules-lucene [ http://www.apache.org/licenses/LICENSE-2.0 ]
+   
+   ======================================================================   
    
    This product includes software developed by
    The Apache Software Foundation (http://www.apache.org/).
    
-   * commons-logging
    * geronimo-spec-jta
    * jstl
    * standard
-   * commons-collections
    * oro
-   * commons-io
    * commons-codec
+   * commons-collections   
+   * commons-dbcp
    * commons-fileupload
+   * commons-io   
    * commons-lang
+   * commons-logging
+   * commons-pool
    * poi
    * log4j
    * ant
+   * lucene
    
      [ http://www.apache.org/licenses/LICENSE-2.0 ]
    
@@ -166,7 +176,14 @@
       
    * dom4j [ http://www.dom4j.org/license.html ]   
    
-   ======================================================================    
+   ======================================================================
+   
+   This product includes software developed by the jscalendar project / 
+   Mihai Bazon, <mihai_bazon@yahoo.com> (http://www.dynarch.com/projects/calendar).
+      
+   * /resources/calendar [ http://www.opensource.org/licenses/lgpl-license.php ]   
+   
+   ======================================================================   
    
    The following binaries bundled and included in the distribution are 
    covered under the Sun Microsystems, Inc Binary Code License Agreement.
