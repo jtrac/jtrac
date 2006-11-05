@@ -55,7 +55,8 @@ public interface JtracDao {
     int loadCountOfRecordsHavingStatus(Space space, int status);
     int bulkUpdateStatusToOpen(Space space, int status);
     int bulkUpdateRenameSpaceRole(Space space, String oldRoleKey, String newRoleKey);
-    int bulkUpdateDeleteSpaceRole(Space space, String roleKey);    
+    int bulkUpdateDeleteSpaceRole(Space space, String roleKey);
+    int bulkUpdateDeleteItemsForSpace(Space space);    
     //========================================================    
     void storeAttachment(Attachment attachment);
     //===========================================
@@ -67,6 +68,7 @@ public interface JtracDao {
     List<Space> findSpacesByPrefixCode(String prefixCode);
     List<Space> findAllSpaces();
     List<Space> findSpacesWhereGuestAllowed();
+    void removeSpace(Space space);
     //===========================================
     void storeSpaceSequence(SpaceSequence spaceSequence);
     SpaceSequence loadSpaceSequence(long id);

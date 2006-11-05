@@ -45,9 +45,7 @@
             <para>
                 JTrac was created after the author felt that he could write a much better alternative to a 
                 commercial defect tracking tool that he was having to use. Development started in 2004. 
-                There have been quite a few releases already and a small but growing base of satisfied users exist 
-                who are friends and colleagues of the author. JTrac is ideal for issue tracking but is so generic 
-                that you can use it to track well - almost anything.
+                JTrac is ideal for issue tracking but is so generic that you can use it to track well - almost anything.
             </para>
             <para>
                 JTrac development used to be hosted at <ulink url="https://jtrac.dev.java.net"/> but moved to SourceForge 

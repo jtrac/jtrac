@@ -11,11 +11,19 @@
             <action bean="spaceFormAction" method="setupForm"/>
         </entry-actions>        
         <transition on="cancel" to="spaceListView"/>
+        <transition on="delete" to="spaceDeleteView"/>
         <transition on="submit" to="spaceFieldsView">
             <action bean="spaceFormAction" method="bind"/>
             <action bean="spaceFormAction" method="spaceFormHandler"/>
         </transition>
     </view-state>
+    
+    <view-state id="spaceDeleteView" view="space_delete">
+        <transition on="cancel" to="spaceForm"/>
+        <transition on="submit" to="spaceListView">
+            <action bean="spaceFormAction" method="spaceDeleteHandler"/>
+        </transition>        
+    </view-state>    
     
     <view-state id="spaceFieldsView" view="space_fields">
         <transition on="back" to="spaceForm"/>

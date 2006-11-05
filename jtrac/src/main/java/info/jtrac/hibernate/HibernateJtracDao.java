@@ -155,6 +155,10 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return getHibernateTemplate().find("from Space space where space.guestAllowed = true");
     }
     
+    public void removeSpace(Space space) {        
+        getHibernateTemplate().delete(space);
+    }    
+    
     public void storeUser(User user) {
         getHibernateTemplate().merge(user);
     }
@@ -349,9 +353,25 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     }
     
     public int bulkUpdateDeleteSpaceRole(Space space, String roleKey) {
-        return getHibernateTemplate().bulkUpdate("delete UserSpaceRole usr"
-                + " where usr.space.id = ? and usr.roleKey = ?", new Object[] { space.getId(), roleKey });
-    }    
+        if (roleKey == null) {
+            return getHibernateTemplate().bulkUpdate("delete UserSpaceRole usr where usr.space.id = ?", space.getId());            
+        } else {
+            return getHibernateTemplate().bulkUpdate("delete UserSpaceRole usr"
+                    + " where usr.space.id = ? and usr.roleKey = ?", new Object[] { space.getId(), roleKey });
+        }
+    }
+    
+    public int bulkUpdateDeleteItemsForSpace(Space space) {
+        int historyCount = getHibernateTemplate().bulkUpdate("delete History history where history.parent in"
+                + " ( from Item item where item.space.id = ? )", space.getId());
+        logger.debug("deleted " + historyCount + " records from history");
+        int itemItemCount = getHibernateTemplate().bulkUpdate("delete ItemItem itemItem where itemItem.item in"
+                + " ( from Item item where item.space.id = ? )", space.getId());
+        logger.debug("deleted " + itemItemCount + " records from item_items");
+        int itemCount = getHibernateTemplate().bulkUpdate("delete Item item where item.space.id = ?", space.getId());
+        logger.debug("deleted " + itemCount + " records from items");
+        return historyCount + itemItemCount + itemCount;
+    }
     
     //==========================================================================
     

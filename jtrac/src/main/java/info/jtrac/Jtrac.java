@@ -55,7 +55,7 @@ public interface Jtrac extends UserDetailsService {
     int loadCountOfRecordsHavingStatus(Space space, int status);
     int bulkUpdateStatusToOpen(Space space, int status);
     int bulkUpdateRenameSpaceRole(Space space, String oldRoleKey, String newRoleKey);
-    int bulkUpdateDeleteSpaceRole(Space space, String roleKey);    
+    int bulkUpdateDeleteSpaceRole(Space space, String roleKey);
     //========================================================
     void rebuildIndexes();
     //========================================================
@@ -77,6 +77,7 @@ public interface Jtrac extends UserDetailsService {
     List<Space> findAllSpaces();
     List<Space> findSpacesWhereGuestAllowed();
     List<Space> findUnallocatedSpacesForUser(long userId);
+    void removeSpace(Space space);
     //========================================================
     void storeUserSpaceRole(User user, Space space, String roleKey);        
     UserSpaceRole loadUserSpaceRole(long id);

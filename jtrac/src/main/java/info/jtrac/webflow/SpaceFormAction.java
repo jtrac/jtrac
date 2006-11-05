@@ -314,9 +314,9 @@ public class SpaceFormAction extends AbstractFormAction {
         space.getMetadata().renameRole(oldRoleKey, roleKey);
         jtrac.storeSpace(space);
         // horrible hack, but otherwise if we save again we get the dreaded Stale Object Exception
-        space.setMetadata(jtrac.loadMetadata(space.getMetadata().getId()));        
-        // refresh role information for logged on user
-        SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
+        space.setMetadata(jtrac.loadMetadata(space.getMetadata().getId()));                
+        // current user may be allocated to this space with this role - refresh
+        SecurityUtils.refreshSecurityContext();
         return success();
     }
     
@@ -348,6 +348,7 @@ public class SpaceFormAction extends AbstractFormAction {
         jtrac.storeSpace(space);
         // horrible hack, but otherwise if we save again we get the dreaded Stale Object Exception
         space.setMetadata(jtrac.loadMetadata(space.getMetadata().getId()));
+        // current user may be allocated to this space with this role - refresh
         SecurityUtils.refreshSecurityContext();
         return success();
     }    
@@ -379,6 +380,14 @@ public class SpaceFormAction extends AbstractFormAction {
         jtrac.storeSpace(space);
         return success();
     }
+    
+    public Event spaceDeleteHandler(RequestContext context) {
+        Space space = (Space) context.getFlowScope().get("space");
+        jtrac.removeSpace(space);
+        // current user may be allocated to this space - refresh
+        SecurityUtils.refreshSecurityContext();
+        return success();
+    }    
     
     //========================== ALLOCATE ======================================
     

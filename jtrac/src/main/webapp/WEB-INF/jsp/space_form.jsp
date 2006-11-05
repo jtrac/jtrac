@@ -1,10 +1,12 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Create New Space</span>
+<form method="post" action="<c:url value='/flow'/>">
+
+<span class="info">Space Details</span>
+
+<c:if test="${space.id > 0}"><input type="submit" name="_eventId_delete" value="Delete"/></c:if>
 
 <br/><br/>
-
-<form method="post" action="<c:url value='/flow'/>">
 
     <table class="jtrac">
         <tr>

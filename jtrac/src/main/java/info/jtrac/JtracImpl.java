@@ -421,6 +421,16 @@ public class JtracImpl implements Jtrac {
         return spaces;
     }
     
+    public void removeSpace(Space space) {
+        logger.info("proceeding to delete space: " + space);
+        dao.bulkUpdateDeleteSpaceRole(space, null);
+        dao.bulkUpdateDeleteItemsForSpace(space);
+        dao.removeSpace(space);
+        logger.info("successfully deleted space");
+    }
+    
+    //==========================================================================
+    
     public void storeMetadata(Metadata metadata) {
         dao.storeMetadata(metadata);
     }
