@@ -220,6 +220,10 @@ public class JtracImpl implements Jtrac {
         return dao.findItems(itemSearch);
     }
     
+    public void removeItem(Item item) {
+        dao.removeItem(item);
+    }
+    
     public void removeItemItem(ItemItem itemItem) {
         dao.removeItemItem(itemItem);
     }

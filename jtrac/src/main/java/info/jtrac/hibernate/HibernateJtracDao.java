@@ -104,6 +104,10 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return getHibernateTemplate().loadAll(AbstractItem.class);
     }
     
+    public void removeItem(Item item) {
+        getHibernateTemplate().delete(item);
+    }    
+    
     public void removeItemItem(ItemItem itemItem) {
         getHibernateTemplate().delete(itemItem);
     }    

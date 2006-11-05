@@ -155,4 +155,10 @@ public class ItemFormAction extends AbstractFormAction {
         return success();
     }     
     
+    public Event itemDeleteHandler(RequestContext context) throws Exception {
+        Item item = (Item) getFormObject(context);
+        jtrac.removeItem(item);
+        return success();
+    }
+    
 }

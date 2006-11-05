@@ -46,6 +46,7 @@ public interface Jtrac extends UserDetailsService {
     Item loadItem(long sequenceNum, String prefixCode);
     History loadHistory(long id);
     List<Item> findItems(ItemSearch itemSearch);
+    void removeItem(Item item);
     void removeItemItem(ItemItem itemItem);
     //========================================================
     int loadCountOfRecordsHavingFieldNotNull(Space space, Field field);

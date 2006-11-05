@@ -46,6 +46,7 @@ public interface JtracDao {
     List<Item> findItems(long sequenceNum, String prefixCode);
     List<Item> findItems(ItemSearch itemSearch);
     List<AbstractItem> findAllItems();
+    void removeItem(Item item);
     void removeItemItem(ItemItem itemItem);
     //===========================================
     int loadCountOfRecordsHavingFieldNotNull(Space space, Field field);

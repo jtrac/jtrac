@@ -2,6 +2,10 @@
 
 <form method="post" action="<c:url value='/flow'/>" enctype="multipart/form-data">
 
+<c:if test="${item.id != 0}">    
+    <input type="submit" name="_eventId_delete" value="Delete"/><br/><br/>
+</c:if>
+
 <table class="bdr-collapse">
 
 <tr>
@@ -90,9 +94,6 @@
                         <td/>
                         <td>
                             <input type="submit" name="_eventId_submit" value="Submit"/>
-                            <c:if test="${item.id != 0}">
-                                <input type="submit" name="_eventId_cancel" value="Cancel"/>
-                            </c:if>
                             <input type="checkbox" name="sendNotifications" value="true" <c:if test="${item.sendNotifications}">checked="true"</c:if>/>
                             send e-mail notifications
                             <input type="hidden" name="_sendNotifications"/>
@@ -125,7 +126,13 @@
 </tr>
 
 </table>
+
+<br/>
     
+<c:if test="${item.id != 0}">
+    <input type="submit" name="_eventId_cancel" value="Cancel"/>
+</c:if>
+
 </form>
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>
