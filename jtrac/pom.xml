@@ -341,7 +341,13 @@
             <groupId>org.ajaxtags</groupId>
             <artifactId>ajaxtags</artifactId>
             <version>1.2-beta3</version>
-            <scope>runtime</scope>          
+            <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.htmlparser</groupId>
+                    <artifactId>jericho-html</artifactId>
+                </exclusion>
+            </exclusions>          
         </dependency>        
     </dependencies>
     
