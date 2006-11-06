@@ -333,14 +333,25 @@
     </div>
     <div id="footer">
       <div class="xleft">
-        <!-- Site Meter -->
-        <script type="text/javascript" src="http://s27.sitemeter.com/js/counter.js?site=s27jtrac"></script>
-        <noscript>
-            <a href="http://s27.sitemeter.com/stats.asp?site=s27jtrac" target="_top">
-                <img src="http://s27.sitemeter.com/meter.asp?site=s27jtrac" alt="Site Meter" border="0"/>
-            </a>
-        </noscript>
-        <!-- Copyright (c)2006 Site Meter -->
+        <!-- start eXTReMe tracking -->
+        <div id="eXTReMe"><a href="http://extremetracking.com/open?login=jtrac">
+        <img src="http://t1.extreme-dm.com/i.gif" style="border: 0;"
+        height="38" width="41" id="EXim" alt="eXTReMe Tracker" /></a>
+        <script type="text/javascript"><!--
+        var EXlogin='jtrac' // Login
+        var EXvsrv='s10' // VServer
+        EXs=screen;EXw=EXs.width;navigator.appName!="Netscape"?
+        EXb=EXs.colorDepth:EXb=EXs.pixelDepth;
+        navigator.javaEnabled()==1?EXjv="y":EXjv="n";
+        EXd=document;EXw?"":EXw="na";EXb?"":EXb="na";
+        EXd.write("<img src=http://e1.extreme-dm.com",
+        "/"+EXvsrv+".g?login="+EXlogin+"&amp;",
+        "jv="+EXjv+"&amp;j=y&amp;srw="+EXw+"&amp;srb="+EXb+"&amp;",
+        "l="+escape(EXd.referrer)+" height=1 width=1>");//-->
+        </script><noscript><div id="neXTReMe"><img height="1" width="1" alt=""
+        src="http://e1.extreme-dm.com/s10.g?login=jtrac&amp;j=n&amp;jv=n" />
+        </div></noscript></div>
+        <!-- end eXTReMe tracking -->
       </div>
       <div class="xright">&#169;#copyright()#publishDate( "bottom" $decoration.publishDate $decoration.version ) The JTrac Project</div>
       <div class="clear">
