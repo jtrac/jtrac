@@ -66,7 +66,21 @@
     </c:otherwise>
 </c:choose>
 
+<script type="text/javascript">
+    
+function initProgress() {
+    Element.show('progressMsg');
+}
+
+function resetProgress() {
+    Effect.Fade('progressMsg');
+}        
+
+</script>
+
 <button id="clicky">Click Me!</button>
+
+<span id="progressMsg" style="display:none"><img src="${pageContext.request.contextPath}/resources/indicator.gif" /> Loading...</span>
 
 <div id="testDiv">X</div>
 
@@ -74,6 +88,8 @@
   baseUrl="${pageContext.request.contextPath}/app/ajax/test.htm" 
   source="clicky"
   target="testDiv"
-  parameters="" />
+  parameters="" 
+  preFunction="initProgress"
+  postFunction="resetProgress" />
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>
