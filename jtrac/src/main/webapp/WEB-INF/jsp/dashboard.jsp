@@ -13,11 +13,11 @@
         <th>Space</th>
         <c:if test="${principal.id != 0}">
             <th>Role</th>
-            <th>Create<br/>New</th>
+            <th>New</th>
             <th>Logged<br/>By Me</th>
             <th>Assigned<br/>To Me</th>
         </c:if>
-        <th>Open</th>
+        <th>Active</th>
         <th>Closed</th>
         <th>Total</th>
         <th>Search</th>
@@ -65,5 +65,15 @@
 
     </c:otherwise>
 </c:choose>
+
+<button id="clicky">Click Me!</button>
+
+<div id="testDiv">X</div>
+
+<ajax:htmlContent
+  baseUrl="${pageContext.request.contextPath}/app/ajax/test.htm" 
+  source="clicky"
+  target="testDiv"
+  parameters="" />
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>

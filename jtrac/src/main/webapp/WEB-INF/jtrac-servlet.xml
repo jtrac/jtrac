@@ -40,7 +40,8 @@
         <property name="alwaysUseFullPath" value="true"/>
         <property name="urlMap">
             <map>
-                <entry key="/flow/**" value-ref="flowController"/>                
+                <entry key="/flow/**" value-ref="flowController"/>
+                <entry key="/app/ajax/**" value-ref="ajaxController"/>
                 <entry key="/**" value-ref="defaultController"/>               
             </map>
         </property>
@@ -76,6 +77,23 @@
         <property name="jtrac" ref="jtrac"/>
         <property name="flowExecutor" ref="flowExecutor"/>
         <property name="authenticationEntryPoint" ref="authenticationEntryPoint"/>
+    </bean>    
+    
+    <!--
+    - This is an additional MultiActionController that manages specifically Ajax requests (AjaxTags)
+    -->
+    <bean id="ajaxController" class="info.jtrac.web.AjaxMultiActionController">
+        <property name="methodNameResolver">
+            <bean class="org.springframework.web.servlet.mvc.multiaction.PropertiesMethodNameResolver">
+                <property name="alwaysUseFullPath" value="true"/>
+                <property name="mappings">
+                    <props>
+                        <prop key="/app/ajax/test.htm">ajaxTestHandler</prop>
+                    </props>
+                </property>
+            </bean>        
+        </property>
+        <property name="jtrac" ref="jtrac"/>
     </bean>    
     
     <!-- ======================== SPRING WEB FLOW ============================ -->

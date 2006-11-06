@@ -178,6 +178,48 @@
    
    ======================================================================
    
+   This product includes software developed by the AjaxTags project 
+   (http://ajaxtags.sourceforge.net/).
+      
+   * ajaxtags
+   * ajaxtags.js
+   
+   [ http://www.apache.org/licenses/LICENSE-2.0 ]   
+   
+   ======================================================================
+   
+   This product includes software developed by the prototype project 
+   (http://prototype.conio.net/).
+      
+   * prototype.js 
+   
+   [ http://dev.rubyonrails.org/browser/spinoffs/prototype/LICENSE ]  
+   
+   ====================================================================== 
+   
+   This product includes software developed by the script.aculo.us project 
+   (http://script.aculo.us/).
+      
+   * scriptaculous.js 
+   * builder.js
+   * controls.js
+   * dragdrop.js
+   * effects.js
+   * slider.js
+   
+   [ http://wiki.script.aculo.us/scriptaculous/show/License ]  
+   
+   ======================================================================
+   
+   This product includes software developed by the overlibmws project 
+   (http://www.macridesweb.com/oltest/).
+      
+   * overlibmws.js 
+   
+   [ http://www.macridesweb.com/oltest/license.html ]  
+   
+   ======================================================================    
+   
    This product includes software developed by the jscalendar project / 
    Mihai Bazon, <mihai_bazon@yahoo.com> (http://www.dynarch.com/projects/calendar).
       

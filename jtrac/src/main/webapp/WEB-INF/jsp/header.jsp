@@ -1,6 +1,7 @@
 <%@ include file="/WEB-INF/jsp/include.jsp" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="authz" uri="http://acegisecurity.org/authz" %>
+<%@ taglib prefix="ajax" uri="http://ajaxtags.org/tags/ajax" %>
 <%@ taglib prefix="jtrac" uri="/WEB-INF/tld/jtrac.tld" %>
 <c:if test="${empty principal}"><c:set var="principal" value="${ACEGI_SECURITY_CONTEXT.authentication.principal}"/></c:if>
 
@@ -8,11 +9,15 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>JTrac</title>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/jtrac.css'/>"/>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/calendar/calendar-win2k-1.css'/>"/>
-    <script type="text/javascript" src="<c:url value='/resources/calendar/calendar.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/calendar/lang/calendar-en.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/calendar/calendar-setup.js'/>"></script>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/jtrac.css"/>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/calendar/calendar-win2k-1.css"/>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/prototype.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/scriptaculous.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/overlibmws.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/ajaxtags.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/calendar/calendar.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/calendar/lang/calendar-en.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/calendar/calendar-setup.js"></script>    
 </head>
 <body onLoad="if (document.getElementById('focus') != null) document.getElementById('focus').focus();">
 

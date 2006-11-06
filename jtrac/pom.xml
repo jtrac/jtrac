@@ -336,7 +336,13 @@
             <artifactId>commons-fileupload</artifactId>
             <version>1.1.1</version>
             <scope>runtime</scope>
-        </dependency>         
+        </dependency>
+        <dependency>
+            <groupId>org.ajaxtags</groupId>
+            <artifactId>ajaxtags</artifactId>
+            <version>1.2-beta3</version>
+            <scope>runtime</scope>          
+        </dependency>        
     </dependencies>
     
     <build>
