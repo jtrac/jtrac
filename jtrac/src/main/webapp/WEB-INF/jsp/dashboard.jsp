@@ -26,22 +26,23 @@
         <c:if test="${!empty userSpaceRole.space && userSpaceRole.roleKey != 'ROLE_ADMIN'}">
             <c:set var="spaceId" value="${userSpaceRole.space.id}"/>
             <c:set var="count" value="${counts.counts[spaceId]}"/>
-            <tr id="tr_1"></tr>
-            <tr class="nav-table">
-                <td>${userSpaceRole.space.name}</td>
-                <c:if test="${principal.id != 0}">                    
-                    <td><a href="<c:url value='/flow/item?spaceId=${spaceId}'/>">(new)</a></td>
-                    <td align="right"><a href="<c:url value='/flow/item_search?type=loggedBy&spaceId=${spaceId}'/>">${count.loggedBy}</a></td>
-                    <td align="right"><a href="<c:url value='/flow/item_search?type=assignedTo&spaceId=${spaceId}'/>">${count.assignedTo}</a></td>
-                </c:if>
-                <td align="right"><a href="<c:url value='/flow/item_search?type=total&spaceId=${spaceId}'/>">${count.total}</a></td>
-                <td><a href="<c:url value='/flow/item_search?spaceId=${spaceId}'/>">(search)</a></td>
-            </tr>
+            <tbody id="tr_1">
+                <tr class="nav-table" >
+                    <td>${userSpaceRole.space.name}</td>
+                    <c:if test="${principal.id != 0}">                    
+                        <td><a href="<c:url value='/flow/item?spaceId=${spaceId}'/>">(new)</a></td>
+                        <td align="right"><a href="<c:url value='/flow/item_search?type=loggedBy&spaceId=${spaceId}'/>">${count.loggedBy}</a></td>
+                        <td align="right"><a href="<c:url value='/flow/item_search?type=assignedTo&spaceId=${spaceId}'/>">${count.assignedTo}</a></td>
+                    </c:if>
+                    <td align="right"><a href="<c:url value='/flow/item_search?type=total&spaceId=${spaceId}'/>">${count.total}</a></td>
+                    <td><a href="<c:url value='/flow/item_search?spaceId=${spaceId}'/>">(search)</a></td>
+                </tr>
+            </tbody>
             <c:set var="spaceCount" value="${spaceCount + 1}"/>
         </c:if>
     </c:forEach>    
 
-    <tr><td style="height:1em"/></tr>
+   <tbody id="tr_1_alt"/>
 
     <c:if test="${spaceCount > 1}">
         <tr class="nav-table">
@@ -64,14 +65,28 @@ function initProgress() {
     Element.show('progressMsg');
 }
 
+var newRow = '<table><tbody><tr><td>FOO BAR</td></tr></tbody></table>';
+
 function resetProgress() {
-    if ($('removeMe')) Element.remove('removeMe');
-    td = Builder.node('td', {id:'removeMe'}, $('testDiv').innerHTML);
-    // td.innerHTML = $('testDiv').innerHTML);
-    // new Insertion.Top('tr_1', td);
-    $('tr_1').appendChild(td);
+    // Element.hide('tr_1');
+    // tr = Builder.node('tr', $('testDiv').innerHTML);
+    // $('tr_1_alt').appendChild(td);
+    
+    $('testDiv').innerHTML = newRow;
+    $('tr_1').parentNode.replaceChild($('testDiv').firstChild.firstChild, $('tr_1'));
+    
     Element.hide('progressMsg');
     // Effect.Fade('progressMsg');
+    
+var stateCounts = eval({ 
+    states: [ 'Assigned', 'Fixed', 'Closed' ], 
+    atmCounts: [ 3, 4, 5 ],
+    lbmCounts: [ 5, 6, 7 ],
+    totCounts: [ 9, 10, 11]
+});
+
+
+    
 }        
 
 </script>
