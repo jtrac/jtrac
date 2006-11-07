@@ -1,1 +1,1 @@
-<td>Hello World!</td>
+<%= new java.util.Date() %>
