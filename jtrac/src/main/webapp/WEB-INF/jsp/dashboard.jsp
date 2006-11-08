@@ -35,7 +35,7 @@ function showResponse(ajaxRequest) {
             <th>Logged<br/>By Me</th>
             <th>Assigned<br/>To Me</th>
         </c:if>
-        <th>Total</th>
+        <th>All</th>
         <th/>
     </tr>
         
