@@ -71,5 +71,17 @@ public class Counts implements Serializable {
     public int getTotal() {
         return getTotalForType(TOTAL);
     }
-        
+ 
+    public Map<Integer, Integer> getLoggedByMeMap() {
+        return typeCounts.get(LOGGED_BY_ME);
+    }
+    
+    public Map<Integer, Integer> getAssignedToMeMap() {
+        return typeCounts.get(ASSIGNED_TO_ME);
+    } 
+    
+    public Map<Integer, Integer> getTotalMap() {
+        return typeCounts.get(TOTAL);
+    }    
+    
 }

@@ -245,7 +245,24 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     }
     
     public Counts loadCountsForUserSpace(User user, Space space) {
-        return null;
+        HibernateTemplate ht = getHibernateTemplate();        
+        List<Object[]> loggedByList = ht.find("select status, count(item) from Item item" 
+                + " where item.loggedBy.id = ? and item.space.id = ? group by item.status", new Object[] { user.getId(), space.getId() });
+        List<Object[]> assignedToList = ht.find("select status, count(item) from Item item" 
+                + " where item.assignedTo.id = ? and item.space.id = ? group by item.status", new Object[] { user.getId(), space.getId() });
+        List<Object[]> statusList = ht.find("select status, count(item) from Item item" 
+                + " where item.space.id = ? group by item.status", space.getId());
+        Counts c = new Counts();
+        for(Object[] oa : loggedByList) {
+            c.add(Counts.LOGGED_BY_ME, (Integer) oa[0], (Integer) oa[1]);
+        }
+        for(Object[] oa : assignedToList) {
+            c.add(Counts.ASSIGNED_TO_ME, (Integer) oa[0], (Integer) oa[1]);
+        }
+        for(Object[] oa : statusList) {
+            c.add(Counts.TOTAL, (Integer) oa[0], (Integer) oa[1]);
+        }
+        return c;
     }
     
     //==========================================================================

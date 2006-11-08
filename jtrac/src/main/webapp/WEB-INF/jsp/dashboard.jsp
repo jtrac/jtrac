@@ -26,18 +26,18 @@
     <c:forEach items="${principal.userSpaceRoles}" var="userSpaceRole">
         <c:if test="${!empty userSpaceRole.space && userSpaceRole.roleKey != 'ROLE_ADMIN'}">
             <c:set var="spaceId" value="${userSpaceRole.space.id}"/>
-            <c:set var="count" value="${countsHolder.counts[spaceId]}"/>
+            <c:set var="counts" value="${countsHolder.counts[spaceId]}"/>
             <tr style="height:1em"></tr>
-            <tbody id="tr_1">
+            <tbody id="tbody_${spaceId}">
                 <tr class="nav-table" >
                     <td>${userSpaceRole.space.name}</td>
                     <c:if test="${principal.id != 0}">                    
                         <td><a href="<c:url value='/flow/item?spaceId=${spaceId}'/>">(new)</a></td>
-                        <td><a href="#" onclick="doCall()">(+)</a></td>
-                        <td><a href="<c:url value='/flow/item_search?type=loggedBy&spaceId=${spaceId}'/>">${count.loggedByMe}</a></td>
-                        <td><a href="<c:url value='/flow/item_search?type=assignedTo&spaceId=${spaceId}'/>">${count.assignedToMe}</a></td>
+                        <td><a href="#" onclick="doCall(${spaceId})">(+)</a></td>
+                        <td><a href="<c:url value='/flow/item_search?type=loggedBy&spaceId=${spaceId}'/>">${counts.loggedByMe}</a></td>
+                        <td><a href="<c:url value='/flow/item_search?type=assignedTo&spaceId=${spaceId}'/>">${counts.assignedToMe}</a></td>
                     </c:if>
-                    <td><a href="<c:url value='/flow/item_search?type=total&spaceId=${spaceId}'/>">${count.total}</a></td>
+                    <td><a href="<c:url value='/flow/item_search?type=total&spaceId=${spaceId}'/>">${counts.total}</a></td>
                     <td><a href="<c:url value='/flow/item_search?spaceId=${spaceId}'/>">(search)</a></td>
                 </tr>
             </tbody>
@@ -64,25 +64,18 @@
 
 <script type="text/javascript">       
 
-function doCall() {
-    new Ajax.Request('${pageContext.request.contextPath}/app/ajax/test.htm', { method: 'get', onComplete: showResponse }); 
+var currentSpaceId;    
+    
+function doCall(spaceId) {
+    currentSpaceId = spaceId;
+    new Ajax.Request('${pageContext.request.contextPath}/app/ajax/test.htm', 
+        { method: 'get', parameters: 'spaceId=' + spaceId, onComplete: showResponse }
+    ); 
 }
 
 function showResponse(ajaxRequest) {
-    new Insertion.Top('tr_1', ajaxRequest.responseText);
-}
-
-function initProgress() {
-    Element.show('progressMsg');
-}
-
-function resetProgress() {
-    alert($('testDiv').innerHTML);
-    // new Insertion.Top('tr_1', html);
-    Element.hide('progressMsg');
-    // Effect.Fade('progressMsg');
-       
-}        
+    new Insertion.Top('tbody_' + currentSpaceId, ajaxRequest.responseText);
+}       
 
 </script>
 

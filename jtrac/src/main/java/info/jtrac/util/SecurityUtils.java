@@ -44,4 +44,8 @@ public class SecurityUtils {
         SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
     }
     
+    public static User getPrincipal() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+    
 }

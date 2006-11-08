@@ -21,6 +21,7 @@ import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.User;
 import info.jtrac.util.AttachmentUtils;
 import info.jtrac.util.ExcelUtils;
+import info.jtrac.util.SecurityUtils;
 import info.jtrac.util.SvnUtils;
 
 import java.io.OutputStream;
@@ -33,7 +34,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.acegisecurity.AuthenticationException;
-import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.ui.AbstractProcessingFilter;
 import org.acegisecurity.ui.AuthenticationEntryPoint;
 import org.acegisecurity.ui.cas.CasProcessingFilterEntryPoint;
@@ -81,7 +81,7 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
     }
 
     public ModelAndView dashboardHandler(HttpServletRequest request, HttpServletResponse response) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = SecurityUtils.getPrincipal();
         applyCacheSeconds(response, 0, true);
         return new ModelAndView("dashboard", "countsHolder", jtrac.loadCountsForUser(user));
     }   
