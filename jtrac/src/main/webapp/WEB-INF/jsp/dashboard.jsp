@@ -27,8 +27,9 @@ function showResponse(ajaxRequest) {
     
 <table class="jtrac">
     
-    <tr class="nav-width">        
-        <th colspan="3"/>
+    <tr class="nav-width">
+        <th>Space</th>
+        <th colspan="2">Action</th>
         <th>Status</th>
         <c:if test="${principal.id != 0}">            
             <th>Logged<br/>By Me</th>
@@ -65,7 +66,8 @@ function showResponse(ajaxRequest) {
 
     <c:if test="${spaceCount > 1}">
         <tr class="nav-table">
-            <td colspan="3"><a href="<c:url value='/flow/item_search'/>">(search)</a></td>
+            <th colspan="2"/>
+            <td><a href="<c:url value='/flow/item_search'/>">(search)</a></td>
             <th/>                        
             <td><a href="<c:url value='/flow/item_search?type=loggedBy'/>">${countsHolder.totalLoggedByMe}</a></td>
             <td><a href="<c:url value='/flow/item_search?type=assignedTo'/>">${countsHolder.totalAssignedToMe}</a></td>
