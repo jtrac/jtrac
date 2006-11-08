@@ -13,7 +13,7 @@ a:hover { color: red; }
 .bdr-bottom, tr.bdr-bottom td { border-bottom: thin solid grey; }
 .nav-table-outer, .nav-table-outer tr { font-size: 80%; background-color: #CCCCCC; }
 .nav-table td { font-weight: bold; background-color: #DEDEFF; padding-left: 1em; padding-right: 1em; text-align: right;}
-.nav-table td a { width: 100%; height: 100%; display: block; }
+.nav-table td a { width: 100%; display: block; }
 .nav-width th { width: 4em; }
 .bdr-collapse { border-collapse: collapse; }
 .bdr-collapse td { padding: 0px 0px 0px 0px; }

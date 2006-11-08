@@ -174,17 +174,7 @@
    This product includes software developed by the dom4j project 
    (http://www.dom4j.org/).
       
-   * dom4j [ http://www.dom4j.org/license.html ]   
-   
-   ======================================================================
-   
-   This product includes software developed by the AjaxTags project 
-   (http://ajaxtags.sourceforge.net/).
-      
-   * ajaxtags
-   * ajaxtags.js
-   
-   [ http://www.apache.org/licenses/LICENSE-2.0 ]   
+   * dom4j [ http://www.dom4j.org/license.html ]  
    
    ======================================================================
    

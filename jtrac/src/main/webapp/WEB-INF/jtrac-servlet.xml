@@ -80,7 +80,7 @@
     </bean>    
     
     <!--
-    - This is an additional MultiActionController that manages specifically Ajax requests (AjaxTags)
+    - This is an additional MultiActionController that specifically handles Ajax requests (AjaxTags)
     -->
     <bean id="ajaxController" class="info.jtrac.web.AjaxMultiActionController">
         <property name="methodNameResolver">
@@ -88,7 +88,7 @@
                 <property name="alwaysUseFullPath" value="true"/>
                 <property name="mappings">
                     <props>
-                        <prop key="/app/ajax/test.htm">ajaxTestHandler</prop>
+                        <prop key="/app/ajax/dashboard.htm">ajaxDashboardHandler</prop>
                     </props>
                 </property>
             </bean>        

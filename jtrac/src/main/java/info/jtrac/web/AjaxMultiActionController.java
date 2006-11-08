@@ -31,11 +31,11 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class AjaxMultiActionController extends AbstractMultiActionController {
     
-    public ModelAndView ajaxTestHandler(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView ajaxDashboardHandler(HttpServletRequest request, HttpServletResponse response) {
         String spaceId = request.getParameter("spaceId");
         Space space = jtrac.loadSpace(Long.parseLong(spaceId));
         User user = SecurityUtils.getPrincipal();        
-        ModelAndView mav = new ModelAndView("ajax_test");
+        ModelAndView mav = new ModelAndView("ajax_dashboard");
         Map states =  new TreeMap(space.getMetadata().getStates());
         states.remove(State.NEW);
         mav.addObject("states", states);

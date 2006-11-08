@@ -1,5 +1,23 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
+<script type="text/javascript">       
+
+var currentSpaceId;    
+    
+function doCall(spaceId) {
+    currentSpaceId = spaceId;
+    Element.hide('tr_' + spaceId);
+    new Ajax.Request('${pageContext.request.contextPath}/app/ajax/dashboard.htm', 
+        { method: 'get', parameters: 'spaceId=' + spaceId, onComplete: showResponse }
+    ); 
+}
+
+function showResponse(ajaxRequest) {
+    new Insertion.Top('tbody_' + currentSpaceId, ajaxRequest.responseText);
+}       
+
+</script>
+
 <c:choose>
     <c:when test="${principal.spaceCount == 0}">
         <span class="info">You are not mapped to any Spaces.</span>
@@ -30,7 +48,7 @@
             <tr style="height:1em"></tr>
             <tbody id="tbody_${spaceId}">
                 <tr class="nav-table" id="tr_${spaceId}">
-                    <td>${userSpaceRole.space.name}</td>                    
+                    <td id="hide_${spaceId}">${userSpaceRole.space.name}</td>                    
                     <td><a href="<c:url value='/flow/item?spaceId=${spaceId}'/>">(new)</a></td>
                     <td><a href="#" onclick="doCall(${spaceId})">(+)</a></td>
                     <c:if test="${principal.id != 0}">
@@ -61,25 +79,5 @@
 
     </c:otherwise>
 </c:choose>
-
-<script type="text/javascript">       
-
-var currentSpaceId;    
-    
-function doCall(spaceId) {
-    currentSpaceId = spaceId;
-    Element.hide('tr_' + spaceId);
-    new Ajax.Request('${pageContext.request.contextPath}/app/ajax/test.htm', 
-        { method: 'get', parameters: 'spaceId=' + spaceId, onComplete: showResponse }
-    ); 
-}
-
-function showResponse(ajaxRequest) {
-    new Insertion.Top('tbody_' + currentSpaceId, ajaxRequest.responseText);
-}       
-
-</script>
-
-<span id="progressMsg" style="display:none"><img src="${pageContext.request.contextPath}/resources/indicator.gif" /> Loading...</span>
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>

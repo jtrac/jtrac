@@ -80,11 +80,12 @@ public class ItemSearchFormAction extends AbstractFormAction {
     /**
      * used only when "quick search" is invoked from the dashboard
      * note that the itemSearch form object and the space in the context 
-     * are elegantly initialized in the setupForm / loadFormObject sequence
+     * are elegantly initialized in the setupForm / createFormObject sequence
      * refer to WEB-INF/flow/itemSearch.xml
      */
     public Event itemListViewSetup(RequestContext context) throws Exception {        
         String type = ValidationUtils.getParameter(context, "type");
+        String status = ValidationUtils.getParameter(context, "status");
         ItemSearch itemSearch = (ItemSearch) getFormObject(context);
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Set<Long> set = Collections.singleton(user.getId());
@@ -93,18 +94,9 @@ public class ItemSearchFormAction extends AbstractFormAction {
             itemSearch.setLoggedBySet(set);
         } else if (type.equals("assignedTo")) {
             itemSearch.setAssignedToSet(set);
-        } else if (type.equals("open")) {
-            if (space == null) {
-                itemSearch.setStatusSet(Collections.singleton(new Integer(State.OPEN)));
-            } else {
-                // is mutable so caution
-                Set<Integer> temp = new HashSet<Integer>(space.getMetadata().getStates().keySet());
-                temp.remove(State.NEW);
-                temp.remove(State.CLOSED);
-                itemSearch.setStatusSet(temp);                
-            }            
-        } else if (type.equals("closed")) {
-            itemSearch.setStatusSet(Collections.singleton(new Integer(State.CLOSED)));
+        }
+        if (status != null) {
+            itemSearch.setStatusSet(Collections.singleton(new Integer(status)));
         }
         return success();
     }    
