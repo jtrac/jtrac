@@ -20,6 +20,7 @@ import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Config;
 import info.jtrac.domain.Counts;
+import info.jtrac.domain.CountsHolder;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
@@ -368,9 +369,13 @@ public class JtracImpl implements Jtrac {
     
     //==========================================================================
     
-    public Counts loadCountsForUser(User user) {
+    public CountsHolder loadCountsForUser(User user) {
         return dao.loadCountsForUser(user);
-    }            
+    }
+    
+    public Counts loadCountsForUserSpace(User user, Space space) {
+        return dao.loadCountsForUserSpace(user, space);
+    }    
     
     //==========================================================================
     

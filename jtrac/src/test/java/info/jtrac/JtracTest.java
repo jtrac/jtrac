@@ -1,12 +1,13 @@
 package info.jtrac;
 
 import info.jtrac.domain.Config;
+import info.jtrac.domain.Counts;
+import info.jtrac.domain.CountsHolder;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
-import info.jtrac.domain.Counts;
 import info.jtrac.domain.State;
 import info.jtrac.domain.UserSpaceRole;
 import java.util.HashSet;
@@ -193,20 +194,14 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         jtrac.storeItem(i, null);
         assertEquals(1, i.getSequenceNum());
         
-        Counts total = jtrac.loadCountsForUser(u);
-        assertEquals(1, total.getAssignedTo());
-        assertEquals(1, total.getLoggedBy());
-        assertEquals(0, total.getOpen());
-        assertEquals(1, total.getClosed());
-        assertEquals(1, total.getTotal());
+        CountsHolder ch = jtrac.loadCountsForUser(u);
+        assertEquals(1, ch.getTotalAssignedToMe());
+        assertEquals(1, ch.getTotalLoggedByMe());
+        assertEquals(1, ch.getTotalTotal());
         
-        Map<Long, Counts> counts = total.getCounts();
-        assertEquals(1, counts.size());
-        Counts c = counts.get(s.getId());
-        assertEquals(1, c.getLoggedBy());
-        assertEquals(1, c.getAssignedTo());        
-        assertEquals(0, c.getOpen());
-        assertEquals(1, c.getClosed());        
+        Counts c = ch.getCounts().get(s.getId());        
+        assertEquals(1, c.getLoggedByMe());
+        assertEquals(1, c.getAssignedToMe());              
         assertEquals(1, c.getTotal());
     }
     

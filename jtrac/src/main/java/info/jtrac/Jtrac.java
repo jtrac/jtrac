@@ -19,6 +19,7 @@ package info.jtrac;
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Config;
 import info.jtrac.domain.Counts;
+import info.jtrac.domain.CountsHolder;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
@@ -70,7 +71,8 @@ public interface Jtrac extends UserDetailsService {
     List<User> findUsersForUser(User user);
     List<User> findUnallocatedUsersForSpace(long spaceId);
     //========================================================
-    Counts loadCountsForUser(User user);
+    CountsHolder loadCountsForUser(User user);
+    Counts loadCountsForUserSpace(User user, Space space);
     //========================================================
     void storeSpace(Space space);
     Space loadSpace(long id);

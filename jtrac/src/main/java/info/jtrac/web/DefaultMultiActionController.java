@@ -83,7 +83,7 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
     public ModelAndView dashboardHandler(HttpServletRequest request, HttpServletResponse response) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         applyCacheSeconds(response, 0, true);
-        return new ModelAndView("dashboard", "counts", jtrac.loadCountsForUser(user));
+        return new ModelAndView("dashboard", "countsHolder", jtrac.loadCountsForUser(user));
     }   
 
     public ModelAndView optionsHandler(HttpServletRequest request, HttpServletResponse response) {

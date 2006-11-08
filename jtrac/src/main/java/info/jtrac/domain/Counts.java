@@ -17,107 +17,59 @@
 package info.jtrac.domain;
 
 import java.io.Serializable;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Object that holds statistics for items per space, per user
+ * Object that holds statistics for items within a single space
+ * a map of these would serve as the model for the dashboard view
+ * contains logic for totalling etc.
  */
 public class Counts implements Serializable {
+
+    public static final int ASSIGNED_TO_ME = 1;
+    public static final int LOGGED_BY_ME = 2;
+    public static final int TOTAL = 3;
     
-    private Map<Long, Counts> counts = new HashMap<Long, Counts>();
+    private Map<Integer, Map<Integer, Integer>> typeCounts = new HashMap<Integer, Map<Integer, Integer>>();     
     
-    private int loggedBy;
-    private int assignedTo;
-    private int open;
-    private int closed;
-    private int total;
-    
-    private Counts getCounts(long spaceId) {
-        Counts c = counts.get(spaceId);
-        if (c == null) {
-            c = new Counts();
-            counts.put(spaceId, c);
+    public void add(int type, int state, int count) {
+        Map<Integer, Integer> stateCounts = typeCounts.get(type);
+        if (stateCounts == null) {
+            stateCounts = new HashMap<Integer, Integer>();
+            typeCounts.put(type, stateCounts);
         }
-        return c;
-    }
+        Integer i = stateCounts.get(state);
+        if (i == null) {            
+            stateCounts.put(state, count);
+        } else {
+            stateCounts.put(state, i + count);
+        }
+    }  
     
-    public void addLoggedBy(long spaceId, int count) {
-        Counts c = getCounts(spaceId);
-        c.setLoggedBy(count);
-        loggedBy += count;
-    }
-    
-    public void addAssignedTo(long spaceId, int count) {
-        Counts c = getCounts(spaceId);
-        c.setAssignedTo(count);
-        assignedTo += count;       
-    }
-    
-    public void addOpen(long spaceId, int count) {
-        Counts c = getCounts(spaceId);
-        c.setOpen(c.getOpen() + count);
-        c.setTotal(c.getTotal() + count);
-        open += count;
-        total += count;        
-    }
-    
-    public void addClosed(long spaceId, int count) {
-        Counts c = getCounts(spaceId);
-        c.setClosed(count);
-        c.setTotal(c.getTotal() + count);
-        closed += count;
-        total += count;        
-    }
-    
-    //==========================================================================
-    
-    public int getLoggedBy() {
-        return loggedBy;
-    }
-    
-    public void setLoggedBy(int loggedBy) {
-        this.loggedBy = loggedBy;
-    }
-    
-    public int getAssignedTo() {
-        return assignedTo;
-    }
-    
-    public void setAssignedTo(int assignedTo) {
-        this.assignedTo = assignedTo;
-    }
-    
-    public int getOpen() {
-        return open;
-    }
-    
-    public void setOpen(int open) {
-        this.open = open;
-    }
-    
-    public int getClosed() {
-        return closed;
-    }
-    
-    public void setClosed(int closed) {
-        this.closed = closed;
-    }
-    
-    public int getTotal() {
+    protected int getTotalForType(int type) {
+        Map<Integer, Integer> stateCounts = typeCounts.get(type);
+        if (stateCounts == null) {
+            return 0;
+        }
+        int total = 0;
+        for(Map.Entry<Integer, Integer> entry : stateCounts.entrySet()) {
+            total += entry.getValue();
+        }
         return total;
     }
     
-    public void setTotal(int total) {
-        this.total = total;
-    }
+    public int getLoggedByMe() {
+        return getTotalForType(LOGGED_BY_ME);
+    }     
     
-    public Map<Long, Counts> getCounts() {
-        return counts;
-    }
+    public int getAssignedToMe() {
+        return getTotalForType(ASSIGNED_TO_ME);
+    }    
     
-    public void setCounts(Map<Long, Counts> counts) {
-        this.counts = counts;
+    public int getTotal() {
+        return getTotalForType(TOTAL);
     }
-    
+        
 }

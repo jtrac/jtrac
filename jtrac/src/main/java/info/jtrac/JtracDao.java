@@ -19,13 +19,14 @@ package info.jtrac;
 import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Config;
+import info.jtrac.domain.Counts;
+import info.jtrac.domain.CountsHolder;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.User;
-import info.jtrac.domain.Counts;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.ItemItem;
@@ -87,7 +88,8 @@ public interface JtracDao {
     UserSpaceRole loadUserSpaceRole(long id);
     void removeUserSpaceRole(UserSpaceRole userSpaceRole);
     //===========================================
-    Counts loadCountsForUser(User user);
+    CountsHolder loadCountsForUser(User user);
+    Counts loadCountsForUserSpace(User user, Space space);
     //===========================================
     List<Config> findAllConfig();
     void storeConfig(Config config);

@@ -13,6 +13,7 @@
         <th>Space</th>
         <c:if test="${principal.id != 0}">
             <th>New</th>
+            <th/>
             <th>Logged<br/>By Me</th>
             <th>Assigned<br/>To Me</th>
         </c:if>
@@ -25,16 +26,18 @@
     <c:forEach items="${principal.userSpaceRoles}" var="userSpaceRole">
         <c:if test="${!empty userSpaceRole.space && userSpaceRole.roleKey != 'ROLE_ADMIN'}">
             <c:set var="spaceId" value="${userSpaceRole.space.id}"/>
-            <c:set var="count" value="${counts.counts[spaceId]}"/>
+            <c:set var="count" value="${countsHolder.counts[spaceId]}"/>
+            <tr style="height:1em"></tr>
             <tbody id="tr_1">
                 <tr class="nav-table" >
                     <td>${userSpaceRole.space.name}</td>
                     <c:if test="${principal.id != 0}">                    
                         <td><a href="<c:url value='/flow/item?spaceId=${spaceId}'/>">(new)</a></td>
-                        <td align="right"><a href="<c:url value='/flow/item_search?type=loggedBy&spaceId=${spaceId}'/>">${count.loggedBy}</a></td>
-                        <td align="right"><a href="<c:url value='/flow/item_search?type=assignedTo&spaceId=${spaceId}'/>">${count.assignedTo}</a></td>
+                        <td><a href="#" onclick="doCall()">(+)</a></td>
+                        <td><a href="<c:url value='/flow/item_search?type=loggedBy&spaceId=${spaceId}'/>">${count.loggedByMe}</a></td>
+                        <td><a href="<c:url value='/flow/item_search?type=assignedTo&spaceId=${spaceId}'/>">${count.assignedToMe}</a></td>
                     </c:if>
-                    <td align="right"><a href="<c:url value='/flow/item_search?type=total&spaceId=${spaceId}'/>">${count.total}</a></td>
+                    <td><a href="<c:url value='/flow/item_search?type=total&spaceId=${spaceId}'/>">${count.total}</a></td>
                     <td><a href="<c:url value='/flow/item_search?spaceId=${spaceId}'/>">(search)</a></td>
                 </tr>
             </tbody>
@@ -42,14 +45,14 @@
         </c:if>
     </c:forEach>    
 
-   <tbody id="tr_1_alt"/>
+   <tr style="height:1em"></tr>
 
     <c:if test="${spaceCount > 1}">
         <tr class="nav-table">
-            <th colspan="2"/>         
-            <td align="right"><a href="<c:url value='/flow/item_search?type=loggedBy'/>">${counts.loggedBy}</a></td>
-            <td align="right"><a href="<c:url value='/flow/item_search?type=assignedTo'/>">${counts.assignedTo}</a></td>
-            <td align="right"><a href="<c:url value='/flow/item_search?type=total'/>">${counts.total}</a></td>
+            <th colspan="3"/>         
+            <td><a href="<c:url value='/flow/item_search?type=loggedBy'/>">${countsHolder.totalLoggedByMe}</a></td>
+            <td><a href="<c:url value='/flow/item_search?type=assignedTo'/>">${countsHolder.totalAssignedToMe}</a></td>
+            <td><a href="<c:url value='/flow/item_search?type=total'/>">${countsHolder.totalTotal}</a></td>
             <td><a href="<c:url value='/flow/item_search'/>">(search)</a></td>
         </tr>
     </c:if>        
@@ -82,8 +85,6 @@ function resetProgress() {
 }        
 
 </script>
-
-<button id="clicky" onClick="doCall()">Click Me!</button>
 
 <span id="progressMsg" style="display:none"><img src="${pageContext.request.contextPath}/resources/indicator.gif" /> Loading...</span>
 

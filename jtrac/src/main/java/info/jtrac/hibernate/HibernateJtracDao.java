@@ -29,13 +29,13 @@ import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.Counts;
+import info.jtrac.domain.CountsHolder;
 import info.jtrac.domain.History;
 import info.jtrac.domain.ItemItem;
 import info.jtrac.domain.UserSpaceRole;
 import java.util.Collection;
 
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -208,43 +208,48 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
                 + " and usr.roleKey = ? order by user.name", new Object[] { spaceId, roleKey });        
     }    
     
-    public Counts loadCountsForUser(User user) {
-        Set<Space> spaces = user.getSpaces();
+    //==========================================================================    
+    
+    public CountsHolder loadCountsForUser(User user) {
+        Collection<Space> spaces = user.getSpaces();
         if (spaces.size() == 0) {
             return null;
         }
         StringBuffer sb = new StringBuffer();
         sb.append('(');
+        Space space = null; // holds the only space if only one 
         for (Space s : spaces) {
             sb.append(s.getId());
             sb.append(',');
+            space = s;
         }
         sb.setCharAt(sb.length() - 1, ')');
-        Counts c = new Counts();
-        HibernateTemplate ht = getHibernateTemplate();
-        List<Object[]> loggedByList = ht.find("select item.space.id, count(item) from Item item" +
-                " where item.loggedBy.id = ? group by item.space.id", user.getId());
-        List<Object[]> assignedToList = ht.find("select item.space.id, count(item) from Item item" +
-                " where item.assignedTo.id = ? group by item.space.id", user.getId());
-        List<Object[]> statusList = ht.find("select item.space.id, item.status, count(item) from Item item" +
-                " where item.space.id in " + sb.toString() + " group by item.space.id, item.status");
+        CountsHolder ch = new CountsHolder();
+        HibernateTemplate ht = getHibernateTemplate();        
+        List<Object[]> loggedByList = ht.find("select item.space.id, count(item) from Item item" 
+                + " where item.loggedBy.id = ? group by item.space.id", user.getId());
+        List<Object[]> assignedToList = ht.find("select item.space.id, count(item) from Item item" 
+                + " where item.assignedTo.id = ? group by item.space.id", user.getId());
+        List<Object[]> statusList = ht.find("select item.space.id, count(item) from Item item" 
+                + " where item.space.id in " + sb.toString() + " group by item.space.id");
         for(Object[] oa : loggedByList) {
-            c.addLoggedBy((Long) oa[0], (Integer) oa[1]);
+            ch.add((Long) oa[0], Counts.LOGGED_BY_ME, 0, (Integer) oa[1]);
         }
         for(Object[] oa : assignedToList) {
-            c.addAssignedTo((Long) oa[0], (Integer) oa[1]);
+            ch.add((Long) oa[0], Counts.ASSIGNED_TO_ME, 0, (Integer) oa[1]);
         }
         for(Object[] oa : statusList) {
-            int i = (Integer) oa[1];
-            if (i == State.CLOSED) {
-                c.addClosed((Long) oa[0], (Integer) oa[2]);
-            } else {
-                c.addOpen((Long) oa[0], (Integer) oa[2]);
-            }
+            ch.add((Long) oa[0], Counts.TOTAL, 0, (Integer) oa[1]);
         }
-        return c;
+        return ch;
     }
-        
+    
+    public Counts loadCountsForUserSpace(User user, Space space) {
+        return null;
+    }
+    
+    //==========================================================================
+    
     public List<User> findUsersForSpace(long spaceId) {
         return getHibernateTemplate().find("select distinct user from User user join user.userSpaceRoles as usr" 
                 + " where usr.space.id = ? order by user.name", spaceId);
