@@ -17,8 +17,11 @@
 package info.jtrac.web;
 
 import info.jtrac.domain.Space;
+import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.util.SecurityUtils;
+import java.util.Map;
+import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
@@ -33,6 +36,10 @@ public class AjaxMultiActionController extends AbstractMultiActionController {
         Space space = jtrac.loadSpace(Long.parseLong(spaceId));
         User user = SecurityUtils.getPrincipal();        
         ModelAndView mav = new ModelAndView("ajax_test");
+        Map states =  new TreeMap(space.getMetadata().getStates());
+        states.remove(State.NEW);
+        mav.addObject("states", states);
+        mav.addObject("stateCount", states.size());
         mav.addObject("space", space);
         mav.addObject("counts", jtrac.loadCountsForUserSpace(user, space));
         applyCacheSeconds(response, 0, true);

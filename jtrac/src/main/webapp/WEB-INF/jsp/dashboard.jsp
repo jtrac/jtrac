@@ -11,14 +11,14 @@
     
     <tr class="nav-width">        
         <th>Space</th>
-        <c:if test="${principal.id != 0}">
-            <th>New</th>
             <th/>
+            <th>Status</th>
+        <c:if test="${principal.id != 0}">            
             <th>Logged<br/>By Me</th>
             <th>Assigned<br/>To Me</th>
         </c:if>
         <th>Total</th>
-        <th>Search</th>
+        <th/>
     </tr>
         
     <c:set var="spaceCount" value="0"/>
@@ -29,11 +29,11 @@
             <c:set var="counts" value="${countsHolder.counts[spaceId]}"/>
             <tr style="height:1em"></tr>
             <tbody id="tbody_${spaceId}">
-                <tr class="nav-table" >
-                    <td>${userSpaceRole.space.name}</td>
-                    <c:if test="${principal.id != 0}">                    
-                        <td><a href="<c:url value='/flow/item?spaceId=${spaceId}'/>">(new)</a></td>
-                        <td><a href="#" onclick="doCall(${spaceId})">(+)</a></td>
+                <tr class="nav-table" id="tr_${spaceId}">
+                    <td>${userSpaceRole.space.name}</td>                    
+                    <td><a href="<c:url value='/flow/item?spaceId=${spaceId}'/>">(new)</a></td>
+                    <td><a href="#" onclick="doCall(${spaceId})">(+)</a></td>
+                    <c:if test="${principal.id != 0}">
                         <td><a href="<c:url value='/flow/item_search?type=loggedBy&spaceId=${spaceId}'/>">${counts.loggedByMe}</a></td>
                         <td><a href="<c:url value='/flow/item_search?type=assignedTo&spaceId=${spaceId}'/>">${counts.assignedToMe}</a></td>
                     </c:if>
@@ -68,6 +68,7 @@ var currentSpaceId;
     
 function doCall(spaceId) {
     currentSpaceId = spaceId;
+    Element.hide('tr_' + spaceId);
     new Ajax.Request('${pageContext.request.contextPath}/app/ajax/test.htm', 
         { method: 'get', parameters: 'spaceId=' + spaceId, onComplete: showResponse }
     ); 
