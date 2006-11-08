@@ -45,7 +45,7 @@ function showResponse(ajaxRequest) {
         <c:if test="${!empty userSpaceRole.space && userSpaceRole.roleKey != 'ROLE_ADMIN'}">
             <c:set var="spaceId" value="${userSpaceRole.space.id}"/>
             <c:set var="counts" value="${countsHolder.counts[spaceId]}"/>
-            <tr style="height:1em"></tr>
+            <tr><td>&nbsp;</td></tr>
             <tbody id="tbody_${spaceId}">
                 <tr class="nav-table" id="tr_${spaceId}">
                     <td id="hide_${spaceId}">${userSpaceRole.space.name}</td>                    
@@ -63,7 +63,7 @@ function showResponse(ajaxRequest) {
         </c:if>
     </c:forEach>    
 
-   <tr style="height:1em"></tr>
+   <tr><td>&nbsp;</td></tr>
 
     <c:if test="${spaceCount > 1}">
         <tr class="nav-table">
