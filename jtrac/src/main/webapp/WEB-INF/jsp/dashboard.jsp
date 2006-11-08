@@ -59,50 +59,32 @@
     </c:otherwise>
 </c:choose>
 
-<script type="text/javascript">
-    
+<script type="text/javascript">       
+
+function doCall() {
+    new Ajax.Request('${pageContext.request.contextPath}/app/ajax/test.htm', { method: 'get', onComplete: showResponse }); 
+}
+
+function showResponse(ajaxRequest) {
+    new Insertion.Top('tr_1', ajaxRequest.responseText);
+}
+
 function initProgress() {
     Element.show('progressMsg');
 }
 
-var newRow = '<table><tbody><tr><td>FOO BAR</td></tr></tbody></table>';
-
 function resetProgress() {
-    // Element.hide('tr_1');
-    // tr = Builder.node('tr', $('testDiv').innerHTML);
-    // $('tr_1_alt').appendChild(td);
-    
-    $('testDiv').innerHTML = newRow;
-    $('tr_1').parentNode.replaceChild($('testDiv').firstChild.firstChild, $('tr_1'));
-    
+    alert($('testDiv').innerHTML);
+    // new Insertion.Top('tr_1', html);
     Element.hide('progressMsg');
     // Effect.Fade('progressMsg');
-    
-var stateCounts = eval({ 
-    states: [ 'Assigned', 'Fixed', 'Closed' ], 
-    atmCounts: [ 3, 4, 5 ],
-    lbmCounts: [ 5, 6, 7 ],
-    totCounts: [ 9, 10, 11]
-});
-
-
-    
+       
 }        
 
 </script>
 
-<div id="testDiv"></div>
-
-<button id="clicky">Click Me!</button>
+<button id="clicky" onClick="doCall()">Click Me!</button>
 
 <span id="progressMsg" style="display:none"><img src="${pageContext.request.contextPath}/resources/indicator.gif" /> Loading...</span>
-
-<ajax:htmlContent
-  baseUrl="${pageContext.request.contextPath}/app/ajax/test.htm" 
-  source="clicky"
-  target="testDiv"
-  parameters="" 
-  preFunction="initProgress"
-  postFunction="resetProgress" />
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>
