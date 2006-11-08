@@ -28,15 +28,13 @@ function showResponse(ajaxRequest) {
 <table class="jtrac">
     
     <tr class="nav-width">        
-        <th>Space</th>
-            <th/>
-            <th>Status</th>
+        <th colspan="3"/>
+        <th>Status</th>
         <c:if test="${principal.id != 0}">            
             <th>Logged<br/>By Me</th>
             <th>Assigned<br/>To Me</th>
         </c:if>
         <th>All</th>
-        <th/>
     </tr>
         
     <c:set var="spaceCount" value="0"/>
@@ -50,13 +48,13 @@ function showResponse(ajaxRequest) {
                 <tr class="nav-table" id="tr_${spaceId}">
                     <td id="hide_${spaceId}">${userSpaceRole.space.name}</td>                    
                     <td><a href="<c:url value='/flow/item?spaceId=${spaceId}'/>">(new)</a></td>
+                    <td><a href="<c:url value='/flow/item_search?spaceId=${spaceId}'/>">(search)</a></td>
                     <td><a href="#" onclick="doCall(${spaceId})">(+)</a></td>
                     <c:if test="${principal.id != 0}">
                         <td><a href="<c:url value='/flow/item_search?type=loggedBy&spaceId=${spaceId}'/>">${counts.loggedByMe}</a></td>
                         <td><a href="<c:url value='/flow/item_search?type=assignedTo&spaceId=${spaceId}'/>">${counts.assignedToMe}</a></td>
                     </c:if>
                     <td><a href="<c:url value='/flow/item_search?type=total&spaceId=${spaceId}'/>">${counts.total}</a></td>
-                    <td><a href="<c:url value='/flow/item_search?spaceId=${spaceId}'/>">(search)</a></td>
                 </tr>
             </tbody>
             <c:set var="spaceCount" value="${spaceCount + 1}"/>
@@ -67,11 +65,11 @@ function showResponse(ajaxRequest) {
 
     <c:if test="${spaceCount > 1}">
         <tr class="nav-table">
-            <th colspan="3"/>         
+            <td colspan="3"><a href="<c:url value='/flow/item_search'/>">(search)</a></td>
+            <th/>                        
             <td><a href="<c:url value='/flow/item_search?type=loggedBy'/>">${countsHolder.totalLoggedByMe}</a></td>
             <td><a href="<c:url value='/flow/item_search?type=assignedTo'/>">${countsHolder.totalAssignedToMe}</a></td>
             <td><a href="<c:url value='/flow/item_search?type=total'/>">${countsHolder.totalTotal}</a></td>
-            <td><a href="<c:url value='/flow/item_search'/>">(search)</a></td>
         </tr>
     </c:if>        
     

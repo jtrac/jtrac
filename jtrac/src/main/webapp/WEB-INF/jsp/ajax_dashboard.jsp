@@ -7,23 +7,21 @@
         <c:if test="${row.count == 1}">
             <td rowSpan="${stateCount + 1}">${space.name}</td>                   
             <td rowSpan="${stateCount + 1}"><a href="<c:url value='/flow/item?spaceId=${space.id}'/>">(new)</a></td>
+            <td rowSpan="${stateCount + 1}"><a href="<c:url value='/flow/item_search?spaceId=${space.id}'/>">(search)</a></td>
         </c:if>              
         <td>${states[stateId]}</td>          
         <c:if test="${principal.id != 0}">            
             <td><a href="<c:url value='/flow/item_search?type=loggedBy&spaceId=${space.id}&status=${stateId}'/>">${counts.loggedByMeMap[stateId]}</a></td>
             <td><a href="<c:url value='/flow/item_search?type=assignedTo&spaceId=${space.id}&status=${stateId}'/>">${counts.assignedToMeMap[stateId]}</a></td>
         </c:if>
-        <td class="selected"><a href="<c:url value='/flow/item_search?spaceId=${space.id}&status=${stateId}'/>">${counts.totalMap[stateId]}</a></td>
-        <c:if test="${row.count == 1}">
-            <td rowSpan="${stateCount + 1}"><a href="<c:url value='/flow/item_search?spaceId=${space.id}'/>">(search)</a></td>
-        </c:if>
+        <td><a href="<c:url value='/flow/item_search?type=total&spaceId=${space.id}&status=${stateId}'/>">${counts.totalMap[stateId]}</a></td>
     </tr>       
 </c:forEach>
 <tr class="nav-table">
     <th/>
     <c:if test="${principal.id != 0}">
-        <td class="selected"><a href="<c:url value='/flow/item_search?type=loggedBy&spaceId=${space.id}'/>">${counts.loggedByMe}</a></td>
-        <td class="selected"><a href="<c:url value='/flow/item_search?type=assignedTo&spaceId=${space.id}'/>">${counts.assignedToMe}</a></td>        
+        <td><a href="<c:url value='/flow/item_search?type=loggedBy&spaceId=${space.id}'/>">${counts.loggedByMe}</a></td>
+        <td><a href="<c:url value='/flow/item_search?type=assignedTo&spaceId=${space.id}'/>">${counts.assignedToMe}</a></td>        
     </c:if>
     <td class="selected"><a href="<c:url value='/flow/item_search?type=total&spaceId=${space.id}'/>">${counts.total}</a></td>
 </tr>
