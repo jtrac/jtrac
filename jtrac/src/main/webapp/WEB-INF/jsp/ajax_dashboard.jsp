@@ -5,10 +5,10 @@
     <c:set var="stateId" value="${stateEntry.key}"/>
     <tr class="nav-table" valign="middle">
         <c:if test="${row.count == 1}">
-            <th rowSpan="${stateCount + 1}">${space.name}</th>                   
-            <td rowSpan="${stateCount + 1}"><a href="<c:url value='/flow/item?spaceId=${space.id}'/>">(new)</a></td>
-            <td rowSpan="${stateCount + 1}"><a href="<c:url value='/flow/item_search?spaceId=${space.id}'/>">(search)</a></td>
-            <td rowSpan="${stateCount + 1}" class="nostyle" valign="top"><a href="#" onclick="collapse(${space.id})">(--)</a></td>
+            <th rowSpan="${stateCount + 1}" class="shrink">${space.name}</th>                   
+            <td rowSpan="${stateCount + 1}" class="shrink"><a href="<c:url value='/flow/item?spaceId=${space.id}'/>">(new)</a></td>
+            <td rowSpan="${stateCount + 1}" class="shrink"><a href="<c:url value='/flow/item_search?spaceId=${space.id}'/>">(search)</a></td>
+            <td rowSpan="${stateCount + 1}" class="shrink" valign="top"><a href="#" onclick="collapse(${space.id})">(--)</a></td>
         </c:if>
         <td>${states[stateId]}</td>          
         <c:if test="${principal.id != 0}">            

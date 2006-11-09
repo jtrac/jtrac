@@ -378,6 +378,8 @@ public class SpaceFormAction extends AbstractFormAction {
     public Event spaceSaveHandler(RequestContext context) {
         Space space = (Space) context.getFlowScope().get("space");
         jtrac.storeSpace(space);
+        // current user may be allocated to this space, and e.g. name could have changed
+        SecurityUtils.refreshSecurityContext();        
         return success();
     }
     

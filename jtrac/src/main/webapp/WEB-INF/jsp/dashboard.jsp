@@ -38,19 +38,17 @@ function collapse(spaceId) {
     <c:otherwise>
     
 <table class="jtrac">
-    <thead>
-        <tr class="nav-width">
-            <th>Space</th>
-            <th colspan="2">Action</th>
-            <th colspan="2">Status</th>
-            <c:if test="${principal.id != 0}">            
-                <th>Logged<br/>By Me</th>
-                <th>Assigned<br/>To Me</th>
-            </c:if>
-            <th>All</th>
-        </tr>
-        <tr><td>&nbsp;</td></tr>
-    </thead>
+    <tr>
+        <th>Space</th>
+        <th colspan="2">Action</th>
+        <th colspan="2">Status</th>
+        <c:if test="${principal.id != 0}">            
+            <th>Logged<br/>By Me</th>
+            <th>Assigned<br/>To Me</th>
+        </c:if>
+        <th style="width:4.5em">All</th>
+    </tr>
+    <tr><td>&nbsp;</td></tr>
         
     <c:set var="spaceCount" value="0"/>
 
@@ -60,10 +58,10 @@ function collapse(spaceId) {
             <c:set var="counts" value="${countsHolder.counts[spaceId]}"/>
             <tbody id="tbody_${spaceId}">
                 <tr class="nav-table">
-                    <th>${userSpaceRole.space.name}</th>                    
-                    <td><a href="<c:url value='/flow/item?spaceId=${spaceId}'/>">(new)</a></td>
-                    <td><a href="<c:url value='/flow/item_search?spaceId=${spaceId}'/>">(search)</a></td>
-                    <td class="nostyle"><a href="#" onclick="doCall(${spaceId})">(+)</a></td>
+                    <td class="shrink">${userSpaceRole.space.name}</td>                    
+                    <td class="shrink"><a href="<c:url value='/flow/item?spaceId=${spaceId}'/>">(new)</a></td>
+                    <td class="shrink"><a href="<c:url value='/flow/item_search?spaceId=${spaceId}'/>">(search)</a></td>
+                    <td class="shrink"><a href="#" onclick="doCall(${spaceId})">(+)</a></td>
                     <td><span id="spinner_${spaceId}" style="display:none"><img src="${pageContext.request.contextPath}/resources/spinner.gif"/></span></td>
                     <c:if test="${principal.id != 0}">
                         <td><a href="<c:url value='/flow/item_search?type=loggedBy&spaceId=${spaceId}'/>">${counts.loggedByMe}</a></td>
@@ -81,8 +79,8 @@ function collapse(spaceId) {
     <c:if test="${spaceCount > 1}">
         
         <tr class="nav-table">
-            <th colspan="2">All Spaces</th>
-            <td><a href="<c:url value='/flow/item_search'/>">(search)</a></td>
+            <th colspan="2"/>
+            <td class="shrink"><a href="<c:url value='/flow/item_search'/>">(search)</a></td>
             <th colspan="2"/>                        
             <td><a href="<c:url value='/flow/item_search?type=loggedBy'/>">${countsHolder.totalLoggedByMe}</a></td>
             <td><a href="<c:url value='/flow/item_search?type=assignedTo'/>">${countsHolder.totalAssignedToMe}</a></td>
