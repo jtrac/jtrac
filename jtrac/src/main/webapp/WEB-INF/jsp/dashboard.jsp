@@ -59,10 +59,26 @@ function collapse(spaceId) {
             <tbody id="tbody_${spaceId}">
                 <tr class="nav-table">
                     <th>${userSpaceRole.space.name}</th>                    
-                    <td class="shrink"><a href="<c:url value='/flow/item?spaceId=${spaceId}'/>">(new)</a></td>
-                    <td class="shrink"><a href="<c:url value='/flow/item_search?spaceId=${spaceId}'/>">(search)</a></td>
-                    <td class="shrink"><a href="#" onclick="doCall(${spaceId})">(+)</a></td>
-                    <td><span id="spinner_${spaceId}" style="display:none"><img src="${pageContext.request.contextPath}/resources/spinner.gif"/></span></td>
+                    <td class="icon">
+                        <a href="<c:url value='/flow/item?spaceId=${spaceId}'/>">
+                            <img title="New" class="noborder" src="${pageContext.request.contextPath}/resources/document-new.png"/>
+                        </a>
+                    </td>
+                    <td class="icon">
+                        <a href="<c:url value='/flow/item_search?spaceId=${spaceId}'/>">
+                            <img title="Search" class="noborder" src="${pageContext.request.contextPath}/resources/system-search.png"/>
+                        </a>
+                    </td>
+                    <td style="padding:0">
+                        <a href="#" onclick="doCall(${spaceId})">
+                            <img title="Show Details" class="noborder" src="${pageContext.request.contextPath}/resources/collapsed.png"/>
+                        </a>
+                    </td>
+                    <td>
+                        <span id="spinner_${spaceId}" style="display:none">
+                            <img src="${pageContext.request.contextPath}/resources/spinner.gif"/>
+                        </span>
+                    </td>
                     <c:if test="${principal.id != 0}">
                         <td><a href="<c:url value='/flow/item_search?type=loggedBy&spaceId=${spaceId}'/>">${counts.loggedByMe}</a></td>
                         <td><a href="<c:url value='/flow/item_search?type=assignedTo&spaceId=${spaceId}'/>">${counts.assignedToMe}</a></td>
@@ -80,7 +96,11 @@ function collapse(spaceId) {
         
         <tr class="nav-table">
             <th colspan="2"/>
-            <td class="shrink"><a href="<c:url value='/flow/item_search'/>">(search)</a></td>
+            <td class="icon">
+                <a href="<c:url value='/flow/item_search'/>">
+                    <img title="Search" class="noborder" src="${pageContext.request.contextPath}/resources/system-search.png"/>
+                </a>
+            </td>
             <th colspan="2"/>                        
             <td><a href="<c:url value='/flow/item_search?type=loggedBy'/>">${countsHolder.totalLoggedByMe}</a></td>
             <td><a href="<c:url value='/flow/item_search?type=assignedTo'/>">${countsHolder.totalAssignedToMe}</a></td>

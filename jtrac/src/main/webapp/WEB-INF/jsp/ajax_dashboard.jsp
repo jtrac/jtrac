@@ -5,10 +5,22 @@
     <c:set var="stateId" value="${stateEntry.key}"/>
     <tr class="nav-table" valign="middle">
         <c:if test="${row.count == 1}">
-            <th rowSpan="${stateCount + 1}" class="shrink">${space.name}</th>                   
-            <td rowSpan="${stateCount + 1}" class="shrink"><a href="<c:url value='/flow/item?spaceId=${space.id}'/>">(new)</a></td>
-            <td rowSpan="${stateCount + 1}" class="shrink"><a href="<c:url value='/flow/item_search?spaceId=${space.id}'/>">(search)</a></td>
-            <td rowSpan="${stateCount + 1}" class="shrink" valign="top"><a href="#" onclick="collapse(${space.id})">(--)</a></td>
+            <th rowSpan="${stateCount + 1}">${space.name}</th>                   
+            <td rowSpan="${stateCount + 1}" class="icon">
+                <a href="<c:url value='/flow/item?spaceId=${space.id}'/>">
+                    <img title="New" class="noborder" src="${pageContext.request.contextPath}/resources/document-new.png"/>
+                </a>                
+            </td>
+            <td rowSpan="${stateCount + 1}" class="icon">
+                <a href="<c:url value='/flow/item_search?spaceId=${space.id}'/>">
+                    <img title="Search" class="noborder" src="${pageContext.request.contextPath}/resources/system-search.png"/>
+                </a>
+            </td>
+            <td rowSpan="${stateCount + 1}" valign="top" align="center" style="padding:0">
+                <a href="#" onclick="collapse(${space.id})">
+                    <img title="Hide Details" class="noborder" src="${pageContext.request.contextPath}/resources/expanded.png"/>
+                </a>
+            </td>
         </c:if>
         <td>${states[stateId]}</td>          
         <c:if test="${principal.id != 0}">            
