@@ -5,10 +5,11 @@
 var currentSpaceId;    
     
 function doCall(spaceId) {
-    Element.hide('tbody_' + spaceId);
     if ($('tbody_detail_' + spaceId).innerHTML) {
+        Element.hide('tbody_' + spaceId);
         Element.show('tbody_detail_' + spaceId);
     } else {
+        Element.show('spinner_' + spaceId);
         currentSpaceId = spaceId;
         new Ajax.Request('${pageContext.request.contextPath}/app/ajax/dashboard.htm', 
             { method: 'get', parameters: 'spaceId=' + spaceId, onComplete: showResponse }
@@ -17,6 +18,8 @@ function doCall(spaceId) {
 }
 
 function showResponse(ajaxRequest) {
+    Element.hide('tbody_' + currentSpaceId);
+    Element.hide('spinner_' + currentSpaceId);
     new Insertion.Top('tbody_detail_' + currentSpaceId, ajaxRequest.responseText);
 }       
 
@@ -61,7 +64,7 @@ function collapse(spaceId) {
                     <td><a href="<c:url value='/flow/item?spaceId=${spaceId}'/>">(new)</a></td>
                     <td><a href="<c:url value='/flow/item_search?spaceId=${spaceId}'/>">(search)</a></td>
                     <td class="nostyle"><a href="#" onclick="doCall(${spaceId})">(+)</a></td>
-                    <td/>
+                    <td><span id="spinner_${spaceId}" style="display:none"><img src="${pageContext.request.contextPath}/resources/spinner.gif"/></span></td>
                     <c:if test="${principal.id != 0}">
                         <td><a href="<c:url value='/flow/item_search?type=loggedBy&spaceId=${spaceId}'/>">${counts.loggedByMe}</a></td>
                         <td><a href="<c:url value='/flow/item_search?type=assignedTo&spaceId=${spaceId}'/>">${counts.assignedToMe}</a></td>

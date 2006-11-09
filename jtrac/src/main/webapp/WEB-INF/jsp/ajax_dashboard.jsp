@@ -1,4 +1,4 @@
-<%@ page session="true" contentType="text/html; charset=UTF-8" %>
+ <%@ page session="true" contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="/WEB-INF/tld/c.tld" %>
 <c:set var="principal" value="${ACEGI_SECURITY_CONTEXT.authentication.principal}"/>
 <c:forEach items="${states}" var="stateEntry" varStatus="row">
