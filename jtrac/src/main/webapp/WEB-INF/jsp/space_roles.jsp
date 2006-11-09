@@ -72,7 +72,7 @@ function editMask(stateKey, roleKey, fieldKey) {
                     <td rowspan="${roleCount}" class="bdr-bottom ${rowClass}">
                         <c:choose>
                             <c:when test="${stateRowEntry.key != 0 && stateRowEntry.key != 99}">
-                                <input type="submit" name="_eventId_editState" value="Edit" onClick="editState('${stateRowEntry.key}')"/>
+                                <input type="submit" name="_eventId_editState" value="..." onClick="editState('${stateRowEntry.key}')"/>
                             </c:when>
                             <c:otherwise>
                                 &nbsp;
@@ -86,7 +86,7 @@ function editMask(stateKey, roleKey, fieldKey) {
                 <td>    
                     <c:choose>
                         <c:when test="${stateRowEntry.key == 0}">
-                            <input type="submit" name="_eventId_editRole" value="Edit" onClick="editRole('${role.name}')"/>
+                            <input type="submit" name="_eventId_editRole" value="..." onClick="editRole('${role.name}')"/>
                         </c:when>
                         <c:otherwise>
                             &nbsp;
