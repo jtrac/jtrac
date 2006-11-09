@@ -213,9 +213,20 @@
    This product includes software developed by the jscalendar project / 
    Mihai Bazon, <mihai_bazon@yahoo.com> (http://www.dynarch.com/projects/calendar).
       
-   * /resources/calendar [ http://www.opensource.org/licenses/lgpl-license.php ]   
+   * /resources/calendar 
    
-   ======================================================================   
+   [ http://www.opensource.org/licenses/lgpl-license.php ]   
+   
+   ======================================================================  
+   
+   This product includes images created by the Tango Desktop Project
+   (http://tango.freedesktop.org/)      
+      
+   * /resources/<some *.png files> 
+   
+   [ http://creativecommons.org/licenses/by-sa/2.5/ ]   
+   
+   ======================================================================    
    
    The following binaries bundled and included in the distribution are 
    covered under the Sun Microsystems, Inc Binary Code License Agreement.
