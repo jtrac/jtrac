@@ -272,7 +272,23 @@
                         <para>Statistics at a glance and search results available with just one click</para>
                     </caption>
                 </mediaobject>
-            </para>                 
+            </para>
+            <para>
+                For a Space, you can also drill-down to a finer level of detail  by clicking on the (+) sign.
+                This expands the dashboard rows so that you can see a break-up of item counts, not only by
+                whether 'logged by me' / 'assigned to me' - but against the custom workflow states defined for 
+                the Space as well.  Again, it is possible to directly go the items by clicking on the dashboard numbers.
+            </para>
+            <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="../images/dashboard-expanded.png"/>
+                    </imageobject>
+                    <caption>
+                        <para>Expanded statistics for a Space showing counts by workflow status</para>
+                    </caption>
+                </mediaobject>
+            </para>            
         </sect1>            
         <sect1 id="features-searchall">
             <title>Search Across All Projects</title>

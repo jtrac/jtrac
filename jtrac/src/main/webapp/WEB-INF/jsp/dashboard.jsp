@@ -58,7 +58,7 @@ function collapse(spaceId) {
             <c:set var="counts" value="${countsHolder.counts[spaceId]}"/>
             <tbody id="tbody_${spaceId}">
                 <tr class="nav-table">
-                    <td class="shrink">${userSpaceRole.space.name}</td>                    
+                    <th>${userSpaceRole.space.name}</th>                    
                     <td class="shrink"><a href="<c:url value='/flow/item?spaceId=${spaceId}'/>">(new)</a></td>
                     <td class="shrink"><a href="<c:url value='/flow/item_search?spaceId=${spaceId}'/>">(search)</a></td>
                     <td class="shrink"><a href="#" onclick="doCall(${spaceId})">(+)</a></td>
@@ -67,7 +67,7 @@ function collapse(spaceId) {
                         <td><a href="<c:url value='/flow/item_search?type=loggedBy&spaceId=${spaceId}'/>">${counts.loggedByMe}</a></td>
                         <td><a href="<c:url value='/flow/item_search?type=assignedTo&spaceId=${spaceId}'/>">${counts.assignedToMe}</a></td>
                     </c:if>
-                    <td><a href="<c:url value='/flow/item_search?type=total&spaceId=${spaceId}'/>">${counts.total}</a></td>
+                    <td class="selected"><a href="<c:url value='/flow/item_search?type=total&spaceId=${spaceId}'/>">${counts.total}</a></td>
                 </tr>
                 <tr><td>&nbsp;</td></tr>
             </tbody>
