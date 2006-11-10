@@ -103,6 +103,9 @@
     </view-state>    
     
     <view-state id="spaceRolesView" view="space_roles">
+        <entry-actions>
+            <action bean="spaceFormAction" method="spaceRolesSetupHandler"/>
+        </entry-actions>        
         <transition on="back" to="spaceFieldsView"/>
         <transition on="editState" to="spaceStateForm"/>                
         <transition on="editRole" to="spaceRoleForm"/>     

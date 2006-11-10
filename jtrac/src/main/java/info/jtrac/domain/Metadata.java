@@ -324,7 +324,8 @@ public class Metadata implements Serializable {
      * logic for resolving the next possible transitions for a given role and state     
      * - lookup Role by roleKey
      * - for this Role, lookup state by key (integer)
-     * - for the State, iterate over transitions, get the label for each and add to map     
+     * - for the State, iterate over transitions, get the label for each and add to map
+     * The map returned is used to render the drop down list on screen, [ key = value ]
      */        
     public Map<Integer, String> getPermittedTransitions(List<String> roleKeys, int status) {
         Map<Integer, String> map = new LinkedHashMap<Integer, String>();
@@ -392,7 +393,7 @@ public class Metadata implements Serializable {
     
     public List<Field> getEditableFields() {
         return getEditableFields(roles.keySet(), states.keySet());
-    }
+    }        
     
     //==================================================================
     

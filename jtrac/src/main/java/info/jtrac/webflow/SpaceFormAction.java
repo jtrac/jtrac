@@ -17,18 +17,16 @@
 package info.jtrac.webflow;
 
 import info.jtrac.domain.Field;
-import info.jtrac.domain.Metadata;
+import info.jtrac.domain.Role;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
+import info.jtrac.domain.WorkflowRenderer;
 import info.jtrac.util.SecurityUtils;
 import info.jtrac.util.ValidationUtils;
 import info.jtrac.webflow.FieldFormAction.FieldForm;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import org.acegisecurity.context.SecurityContextHolder;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.validation.DataBinder;
 
@@ -270,6 +268,17 @@ public class SpaceFormAction extends AbstractFormAction {
     }    
     
     //================================= ROLES ==================================
+    
+    public Event spaceRolesSetupHandler(RequestContext context) throws Exception {
+        Space space = (Space) context.getFlowScope().get("space");
+        Role role = space.getMetadata().getRoles().get("DEFAULT");
+        if (role != null) {
+            WorkflowRenderer workflow = new WorkflowRenderer(role, space.getMetadata().getStates());
+            context.getRequestScope().put("workflow", workflow);
+        }
+        return success();
+    }
+    
     
     public Event roleFormSetupHandler(RequestContext context) {        
         String roleKey = ValidationUtils.getParameter(context, "roleKey");

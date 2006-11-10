@@ -153,4 +153,6 @@ function editMask(stateKey, roleKey, fieldKey) {
 
 </form>
 
+${workflow.asHtml}
+
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>

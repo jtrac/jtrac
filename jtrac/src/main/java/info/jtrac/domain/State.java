@@ -36,8 +36,9 @@ import org.dom4j.Element;
  * to represent permissions (view or edit) that the role owning this state
  * has for each field for an item which is in this particular state
  *
- * For example, consider a state FOO and a role BAR that has this possible state
- * When item.status == FOO.status, the fields that a user with role BAR can view
+ * For example, consider a state FOO and a role BAR.  
+ * When a user with role BAR views an item that is having the status FOO:
+ * ie. when item.status == FOO.status, the fields that can be viewed on screen
  * will be the entries in FOO.fields where the value == MASK_VIEW (or 1)
  */
 public class State implements Serializable {
