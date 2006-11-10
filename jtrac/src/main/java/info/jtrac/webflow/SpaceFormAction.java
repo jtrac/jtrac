@@ -217,15 +217,19 @@ public class SpaceFormAction extends AbstractFormAction {
     public Event stateFormHandler(RequestContext context) throws Exception {
         String state = ValidationUtils.getParameter(context, "state");
         String stateKey = ValidationUtils.getParameter(context, "stateKey");
-        if (!ValidationUtils.isCamelDashCase(state)) {
-            Errors errors = getFormErrors(context);
+        Errors errors = getFormErrors(context);
+        context.getRequestScope().put("state", state);
+        context.getRequestScope().put("stateKey", stateKey);        
+        if (!ValidationUtils.isCamelDashCase(state)) {            
             errors.reject("error.spaceRoles.state.badchars", 
                     "State name has to be Camel-Case with dashes ('-') to separate words e.g. 'Fixed', 'On-Hold' or 'Work-In-Progress'");
-            context.getRequestScope().put("state", state);
-            context.getRequestScope().put("stateKey", stateKey);
             return error();
-        }                
+        }
         Space space = (Space) context.getFlowScope().get("space");
+        if(space.getMetadata().getStates().containsValue(state)) {
+            errors.reject("error.spaceRoles.state.exists", "A State by that name already exists.");
+            return error();
+        }
         if (stateKey == null) {
             space.getMetadata().addState(state);
         } else {
@@ -295,11 +299,15 @@ public class SpaceFormAction extends AbstractFormAction {
         String oldRoleKey = ValidationUtils.getParameter(context, "oldRoleKey");        
         // needed for errors or if confirm rename screen to be shown
         context.getRequestScope().put("oldRoleKey", oldRoleKey);
-        context.getRequestScope().put("roleKey", roleKey);        
-        if (!ValidationUtils.isAllUpperCase(roleKey)) {
-            Errors errors = getFormErrors(context);
-            errors.reject("error.spaceRoles.role.name.badchars", "Role name has to be all capital letters or digits.");
+        context.getRequestScope().put("roleKey", roleKey);
+        Errors errors = getFormErrors(context);
+        if (!ValidationUtils.isAllUpperCase(roleKey)) {            
+            errors.reject("error.spaceRoles.role.badchars", "Role name has to be all capital letters or digits.");
             return error();
+        }
+        if (space.getMetadata().getRoles().containsKey(roleKey)) {
+            errors.reject("error.spaceRoles.role.exists", "A Role by that name already exists.");
+            return error();            
         }
         if (oldRoleKey == null) {
             space.getMetadata().addRole(roleKey);
