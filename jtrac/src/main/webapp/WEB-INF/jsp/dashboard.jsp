@@ -52,14 +52,14 @@ function collapse(spaceId) {
         
     <c:set var="spaceCount" value="0"/>
 
-    <c:forEach items="${userSpaceRoles}" var="userSpaceRole">        
+    <c:forEach items="${principal.spaceRoles}" var="userSpaceRole">        
         <c:set var="spaceId" value="${userSpaceRole.space.id}"/>
         <c:set var="counts" value="${countsHolder.counts[spaceId]}"/>
         <tbody id="tbody_${spaceId}">
             <tr class="nav-table">
                 <th>${userSpaceRole.space.name}</th>                    
                 <td class="icon">
-                    <c:if test="${userSpaceRole.ableToCreateNewItem}">
+                    <c:if test="${principal.spacesWhereAbleToCreateNewItem[spaceId]}">
                         <a href="<c:url value='/flow/item?spaceId=${spaceId}'/>">
                             <img title="New" class="noborder" src="${pageContext.request.contextPath}/resources/document-new.png"/>
                         </a>

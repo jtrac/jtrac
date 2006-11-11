@@ -7,9 +7,11 @@
         <c:if test="${row.count == 1}">
             <th rowSpan="${stateCount + 1}">${space.name}</th>                   
             <td rowSpan="${stateCount + 1}" class="icon">
-                <a href="<c:url value='/flow/item?spaceId=${space.id}'/>">
-                    <img title="New" class="noborder" src="${pageContext.request.contextPath}/resources/document-new.png"/>
-                </a>                
+                <c:if test="${principal.spacesWhereAbleToCreateNewItem[space.id]}">
+                    <a href="<c:url value='/flow/item?spaceId=${space.id}'/>">
+                        <img title="New" class="noborder" src="${pageContext.request.contextPath}/resources/document-new.png"/>
+                    </a>
+                </c:if>
             </td>
             <td rowSpan="${stateCount + 1}" class="icon">
                 <a href="<c:url value='/flow/item_search?spaceId=${space.id}'/>">

@@ -19,6 +19,7 @@ package info.jtrac.web;
 import info.jtrac.domain.Config;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.User;
+import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.AttachmentUtils;
 import info.jtrac.util.ExcelUtils;
 import info.jtrac.util.SecurityUtils;
@@ -26,6 +27,7 @@ import info.jtrac.util.SvnUtils;
 
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletOutputStream;
 
@@ -84,8 +86,19 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
         User user = SecurityUtils.getPrincipal();
         ModelAndView mav = new ModelAndView("dashboard");
         mav.addObject("countsHolder", jtrac.loadCountsForUser(user));
-        // have to do this, security context principal is not compatible with open session in view
-        mav.addObject("userSpaceRoles", jtrac.loadUser(user.getId()).getSpaceRoles()); 
+        // performance hack, because of the principal (loaded by Acegi) not in sync with our
+        // open session in view.  Basically cache the "SpacesWhereAbleToCreateNewItem" else
+        // rendering dashboard would require a lot of extra queries to load Space + Metadata
+        // which the userSpaceRole.isAbleToCreateNewItem() method requires
+        if (user.getSpacesWhereAbleToCreateNewItem() == null) {
+            Map<Long, Boolean> map = new HashMap<Long, Boolean>();
+            for(UserSpaceRole usr : jtrac.loadUser(user.getId()).getSpaceRoles()) {
+                if (usr.isAbleToCreateNewItem()) {
+                    map.put(usr.getSpace().getId(), true);
+                }
+            }
+            user.setSpacesWhereAbleToCreateNewItem(map);
+        }
         applyCacheSeconds(response, 0, true);
         return mav;
     }   

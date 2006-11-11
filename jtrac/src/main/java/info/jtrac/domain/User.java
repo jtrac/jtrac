@@ -51,6 +51,7 @@ public class User implements UserDetails, Serializable {
     private Metadata metadata;
     private boolean locked;    
     private Set<UserSpaceRole> userSpaceRoles = new HashSet<UserSpaceRole>();
+    private Map<Long, Boolean> spacesWhereAbleToCreateNewItem;
     
     //=============================================================
    
@@ -111,7 +112,7 @@ public class User implements UserDetails, Serializable {
             }
         }
         return list;
-    }
+    }        
     
     //============ ACEGI UserDetails implementation ===============
     
@@ -149,9 +150,17 @@ public class User implements UserDetails, Serializable {
     
     public String getPassword() {
         return password;
-    }
+    } 
     
     //=============================================================
+    
+    public Map<Long, Boolean> getSpacesWhereAbleToCreateNewItem() {
+        return spacesWhereAbleToCreateNewItem;
+    }
+
+    public void setSpacesWhereAbleToCreateNewItem(Map<Long, Boolean> spacesWhereAbleToCreateNewItem) {
+        this.spacesWhereAbleToCreateNewItem = spacesWhereAbleToCreateNewItem;
+    }
     
     public Set<UserSpaceRole> getUserSpaceRoles() {
         return userSpaceRoles;
