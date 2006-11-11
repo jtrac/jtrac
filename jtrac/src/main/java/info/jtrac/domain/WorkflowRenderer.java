@@ -19,10 +19,11 @@ package info.jtrac.domain;
 import info.jtrac.util.XmlUtils;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
@@ -30,66 +31,72 @@ import org.dom4j.Element;
  * Class that is used to render a workflow to the GUI
  * currently designed to work with an HTML table in a JSP
  */
-public class WorkflowRenderer implements Serializable {           
-        
-    public class StateElement {
-        
-        private Element e;
-        
-        public StateElement(Element e) {
-            this.e = e;
-        }
-        
-        public Collection<StateElement> getChildElements() {
-            List<StateElement> childElements = new LinkedList<StateElement>();
-            for(Element child : (List<Element>) e.elements()) {
-                childElements.add(new StateElement(e));
-            }
-            return childElements;
-        }
-        
-        public int getChildElementCount() {
-            return e.elements().size();
-        }
-        
-        public String getStateName() {
-            return e.attributeValue("name");
-        }
-        
-    }
+public class WorkflowRenderer implements Serializable {
     
-    private Role role;
+    Map<String, Role> rolesMap;
+    Map<String, Set<String>> transitionRoles;
+    Map<Integer, Set<Integer>> stateTransitions;
     private Map<Integer, String> stateNames;
     Document document;
     
-    public WorkflowRenderer(Role role, Map<Integer, String> stateNames) {
-        this.role = role;
+    public WorkflowRenderer(Map<String, Role> rolesMap, Map<Integer, String> stateNames) {
+        this.rolesMap = rolesMap;
         this.stateNames = stateNames;
         init();
     }
     
     private void init() {
-        State s = role.getStates().get(State.NEW);
+        // transitions <--> roleNames map
+        // the key is a string concatenation <fromstate>_<tostate> for convenience
+        transitionRoles = new HashMap<String, Set<String>>();
+        // for each state <--> a union of transitions across all roles
+        stateTransitions = new HashMap<Integer, Set<Integer>>();
+        for(Role r : rolesMap.values()) {
+            for(State s: r.getStates().values()) {
+                Set<Integer> transitions = stateTransitions.get(s.getStatus());
+                if (transitions == null) {
+                    transitions = new HashSet<Integer>();
+                    stateTransitions.put(s.getStatus(), transitions);                    
+                }
+                transitions.addAll(s.getTransitions());
+                for (int i : s.getTransitions()) {
+                    String transitionKey = s.getStatus() + "_" + i;
+                    Set<String> roleNames = transitionRoles.get(transitionKey);
+                    if (roleNames == null) {
+                        roleNames = new HashSet<String>();
+                        transitionRoles.put(transitionKey, roleNames);
+                    }
+                    roleNames.add(r.getName());
+                }
+            }
+        }
         document = XmlUtils.getNewDocument("state");
         Element e = document.getRootElement();
         e.addAttribute("name", stateNames.get(State.NEW));
         e.addAttribute("key", State.NEW + "");
-        addTransitions(e, s);
+        addTransitions(e, State.NEW);
     }
     
     /* has the state already been added to the tree? */
     private boolean stateExists(int key) {
         return document.selectNodes("//state[@key='" + key + "']").size() > 0;
     }
-   
-    private void addTransitions(Element parent, State s) {
-        for(int i : s.getTransitions()) {
+    
+    /* main recursive function */
+    private void addTransitions(Element parent, int state) {
+        Set<Integer> transitions = stateTransitions.get(state);
+        if (transitions == null) {
+            return;
+        }
+        for(int i : transitions) {
             boolean exists = stateExists(i);
             Element child = parent.addElement("state");
             child.addAttribute("name", stateNames.get(i));
-            child.addAttribute("key", i + "");            
-            if(!exists) { // check to avoid infinite loop
-                addTransitions(child, role.getStates().get(i));
+            child.addAttribute("key", i + "");
+            if (exists) {
+                child.addAttribute("mirror", "true");
+            } else {
+                addTransitions(child, i);
             }            
         }        
     }
@@ -102,21 +109,26 @@ public class WorkflowRenderer implements Serializable {
         return XmlUtils.getAsPrettyXml(document);
     }
     
-    public StateElement getRootStateElement() {
-        return new StateElement(document.getRootElement());
-    }
-    
     public String getAsHtml(Element e) {
         StringBuffer sb = new StringBuffer();
-        sb.append("<table border='1'><tr><td colspan='" + e.elements().size() + "'>");
+        int childCount = e.elements().size();
+        boolean notLeaf = childCount > 0;
+        if (notLeaf) sb.append("<table border='1' class='jtrac'><tr><td rowspan='" + childCount + "'>");
         sb.append(e.attributeValue("name"));
-        sb.append("</td></tr><tr valign='top'>");
+        if (notLeaf) sb.append("</td>");
+        boolean first = true;
         for(Element child : (List<Element>) e.elements()) {
+            if (!first) {
+                sb.append("<tr>");
+            }
             sb.append("<td>");
             sb.append(getAsHtml(child));
-            sb.append("</td>");
+            sb.append("</td></tr>");
+            if (first) {
+              first = false;  
+            } 
         }
-        sb.append("</tr></table>");
+        if (notLeaf) sb.append("</table>");
         return sb.toString();
     }
     
