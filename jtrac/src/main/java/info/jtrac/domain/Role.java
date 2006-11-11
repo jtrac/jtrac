@@ -80,6 +80,9 @@ public class Role implements Serializable {
     
     public void removeState(int stateId) {
         states.remove(stateId);
+        for(State s : states.values()) {
+            s.removeTransition(stateId);
+        }
     }
     
     //=======================================================================

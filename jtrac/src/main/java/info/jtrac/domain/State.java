@@ -138,6 +138,10 @@ public class State implements Serializable {
         transitions.add(toStatus);
     }
     
+    public void removeTransition(int toStatus) {
+        transitions.remove(toStatus);
+    }
+    
     /**
      * to make JSTL EL easier
      * create Map on the fly but with boolean true values for keys that are present
