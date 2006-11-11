@@ -343,6 +343,18 @@ public class Metadata implements Serializable {
         return map;
     }
     
+    // returning map ideal for JSTL
+    public Map<String, Boolean> getRolesAbleToTransition(int fromStatus, int toStatus) {
+        Map<String, Boolean> map = new HashMap<String, Boolean>(roles.size());
+        for(Role role : roles.values()) {
+            State s = role.getStates().get(fromStatus);
+            if(s.getTransitions().contains(toStatus)) {
+                map.put(role.getName(), true);
+            }
+        }
+        return map;
+    }
+    
     private State getRoleState(String roleKey, int stateKey) {
         Role role = roles.get(roleKey);
         return role.getStates().get(stateKey);

@@ -24,6 +24,7 @@ import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
+import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.AttachmentUtils;
 import info.jtrac.util.ItemUserEditor;
 import info.jtrac.util.UserEditor;
@@ -84,8 +85,9 @@ public class ItemFormAction extends AbstractFormAction {
             }
         }
         context.getFlowScope().put("space", space);
-        List<User> users = jtrac.findUsersForSpace(space.getId());
-        context.getFlowScope().put("users", users);
+        List<UserSpaceRole> userSpaceRoles = jtrac.findUserRolesForSpace(space.getId());
+        context.getFlowScope().put("userSpaceRoles", userSpaceRoles);
+        context.getFlowScope().put("permittedRoles", space.getMetadata().getRolesAbleToTransition(State.NEW, State.OPEN));
         return item;
     }
     

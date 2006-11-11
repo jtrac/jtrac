@@ -78,8 +78,8 @@
             <spring:bind path="itemViewForm.history.assignedTo">
                 <select name="${status.expression}">
                     <option/>
-                    <c:forEach items="${users}" var="user">
-                        <option value="${user.id}" <c:if test='${user.id == status.value}'>selected="true"</c:if>>${user.name}</option>
+                    <c:forEach items="${userSpaceRoles}" var="usr">
+                        <option value="${usr.user.id}" <c:if test='${usr.user.id == status.value}'>selected="true"</c:if>>${usr.user.name}</option>
                     </c:forEach>  
                 </select>
                 <span class="error">${status.errorMessage}</span>
@@ -125,7 +125,7 @@
         <tr>
             <td>
                 <spring:bind path="itemViewForm.history.itemUsers">
-                    <jtrac:multiselect name="${status.expression}" list="${users}" selected="${status.value}"/>
+                    <jtrac:multiselect name="${status.expression}" list="${userSpaceRoles}" selected="${status.value}"/>
                 </spring:bind>
             </td>
         </tr>

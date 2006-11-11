@@ -24,6 +24,7 @@ import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
+import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.AttachmentUtils;
 import info.jtrac.util.ItemUserEditor;
 import info.jtrac.util.UserEditor;
@@ -126,7 +127,7 @@ public class ItemViewFormAction extends AbstractFormAction {
         } else {
             item = (Item) context.getRequestScope().get("item");
         }
-        List<User> users = jtrac.findUsersForSpace(item.getSpace().getId());
+        List<UserSpaceRole> userSpaceRoles = jtrac.findUserRolesForSpace(item.getSpace().getId());
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Space space = item.getSpace();
         context.getRequestScope().put("transitions", item.getPermittedTransitions(user));
@@ -134,7 +135,7 @@ public class ItemViewFormAction extends AbstractFormAction {
         // not flow scope because of weird Hibernate Lazy loading issues
         // hidden field "itemId" added to item_view_form.jsp
         context.getRequestScope().put("item", item);
-        context.getRequestScope().put("users", users);
+        context.getRequestScope().put("userSpaceRoles", userSpaceRoles);
         ItemViewForm itemViewForm = new ItemViewForm();      
         History history = itemViewForm.getHistory();        
         history.setItemUsers(item.getItemUsers());

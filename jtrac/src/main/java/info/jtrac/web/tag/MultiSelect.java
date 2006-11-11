@@ -18,6 +18,7 @@ package info.jtrac.web.tag;
 
 import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.User;
+import info.jtrac.domain.UserSpaceRole;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -29,13 +30,13 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 public class MultiSelect extends SimpleTagSupport {
     
     private Set<ItemUser> selected;
-    private List<User> list;
+    private List<UserSpaceRole> list;
     private String name;
     
     public void setName(String name) {
         this.name = name;
     }
-    public void setList(List<User> list) {
+    public void setList(List<UserSpaceRole> list) {
         this.list = list;
     }
     public void setSelected(Set<ItemUser> selected) {
@@ -52,7 +53,8 @@ public class MultiSelect extends SimpleTagSupport {
                 StringBuffer sb = new StringBuffer();
                 boolean hasSelected = false;
 
-                for(User user : list) {
+                for(UserSpaceRole usr : list) {
+                    User user = usr.getUser();
                     if (selected != null && selected.contains(new ItemUser(user))) {
                         hasSelected = true;
                         out.print("<input type='checkbox' name='" + name + "' value='" + user.getId() + "'");
