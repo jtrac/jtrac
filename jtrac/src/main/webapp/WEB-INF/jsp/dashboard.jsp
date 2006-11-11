@@ -52,44 +52,44 @@ function collapse(spaceId) {
         
     <c:set var="spaceCount" value="0"/>
 
-    <c:forEach items="${principal.userSpaceRoles}" var="userSpaceRole">
-        <c:if test="${!empty userSpaceRole.space && userSpaceRole.roleKey != 'ROLE_ADMIN'}">
-            <c:set var="spaceId" value="${userSpaceRole.space.id}"/>
-            <c:set var="counts" value="${countsHolder.counts[spaceId]}"/>
-            <tbody id="tbody_${spaceId}">
-                <tr class="nav-table">
-                    <th>${userSpaceRole.space.name}</th>                    
-                    <td class="icon">
+    <c:forEach items="${userSpaceRoles}" var="userSpaceRole">        
+        <c:set var="spaceId" value="${userSpaceRole.space.id}"/>
+        <c:set var="counts" value="${countsHolder.counts[spaceId]}"/>
+        <tbody id="tbody_${spaceId}">
+            <tr class="nav-table">
+                <th>${userSpaceRole.space.name}</th>                    
+                <td class="icon">
+                    <c:if test="${userSpaceRole.ableToCreateNewItem}">
                         <a href="<c:url value='/flow/item?spaceId=${spaceId}'/>">
                             <img title="New" class="noborder" src="${pageContext.request.contextPath}/resources/document-new.png"/>
                         </a>
-                    </td>
-                    <td class="icon">
-                        <a href="<c:url value='/flow/item_search?spaceId=${spaceId}'/>">
-                            <img title="Search" class="noborder" src="${pageContext.request.contextPath}/resources/system-search.png"/>
-                        </a>
-                    </td>
-                    <td style="padding:0">
-                        <a href="#" onclick="doCall(${spaceId})">
-                            <img title="Show Details" class="noborder" src="${pageContext.request.contextPath}/resources/collapsed.png"/>
-                        </a>
-                    </td>
-                    <td>
-                        <span id="spinner_${spaceId}" style="display:none">
-                            <img src="${pageContext.request.contextPath}/resources/spinner.gif"/>
-                        </span>
-                    </td>
-                    <c:if test="${principal.id != 0}">
-                        <td><a href="<c:url value='/flow/item_search?type=loggedBy&spaceId=${spaceId}'/>">${counts.loggedByMe}</a></td>
-                        <td><a href="<c:url value='/flow/item_search?type=assignedTo&spaceId=${spaceId}'/>">${counts.assignedToMe}</a></td>
                     </c:if>
-                    <td class="selected"><a href="<c:url value='/flow/item_search?type=total&spaceId=${spaceId}'/>">${counts.total}</a></td>
-                </tr>
-                <tr><td>&nbsp;</td></tr>
-            </tbody>
-            <tbody id="tbody_detail_${spaceId}"></tbody>
-            <c:set var="spaceCount" value="${spaceCount + 1}"/>
-        </c:if>
+                </td>
+                <td class="icon">
+                    <a href="<c:url value='/flow/item_search?spaceId=${spaceId}'/>">
+                        <img title="Search" class="noborder" src="${pageContext.request.contextPath}/resources/system-search.png"/>
+                    </a>
+                </td>
+                <td style="padding:0">
+                    <a href="#" onclick="doCall(${spaceId})">
+                        <img title="Show Details" class="noborder" src="${pageContext.request.contextPath}/resources/collapsed.png"/>
+                    </a>
+                </td>
+                <td>
+                    <span id="spinner_${spaceId}" style="display:none">
+                        <img src="${pageContext.request.contextPath}/resources/spinner.gif"/>
+                    </span>
+                </td>
+                <c:if test="${principal.id != 0}">
+                    <td><a href="<c:url value='/flow/item_search?type=loggedBy&spaceId=${spaceId}'/>">${counts.loggedByMe}</a></td>
+                    <td><a href="<c:url value='/flow/item_search?type=assignedTo&spaceId=${spaceId}'/>">${counts.assignedToMe}</a></td>
+                </c:if>
+                <td class="selected"><a href="<c:url value='/flow/item_search?type=total&spaceId=${spaceId}'/>">${counts.total}</a></td>
+            </tr>
+            <tr><td>&nbsp;</td></tr>
+        </tbody>
+        <tbody id="tbody_detail_${spaceId}"></tbody>
+        <c:set var="spaceCount" value="${spaceCount + 1}"/>        
     </c:forEach>    
 
     <c:if test="${spaceCount > 1}">

@@ -82,8 +82,12 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
 
     public ModelAndView dashboardHandler(HttpServletRequest request, HttpServletResponse response) {
         User user = SecurityUtils.getPrincipal();
+        ModelAndView mav = new ModelAndView("dashboard");
+        mav.addObject("countsHolder", jtrac.loadCountsForUser(user));
+        // have to do this, security context principal is not compatible with open session in view
+        mav.addObject("userSpaceRoles", jtrac.loadUser(user.getId()).getSpaceRoles()); 
         applyCacheSeconds(response, 0, true);
-        return new ModelAndView("dashboard", "countsHolder", jtrac.loadCountsForUser(user));
+        return mav;
     }   
 
     public ModelAndView optionsHandler(HttpServletRequest request, HttpServletResponse response) {

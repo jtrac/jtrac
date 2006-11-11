@@ -99,6 +99,20 @@ public class User implements UserDetails, Serializable {
         return getRoleKeys(null).contains("ROLE_ADMIN");
     }
     
+    /** 
+     * this returns 'valid' spaceRoles, where space not null and role not ROLE_ADMIN
+     * TODO multiple roles per space ? 
+     */
+    public List<UserSpaceRole> getSpaceRoles() {
+        List<UserSpaceRole> list = new ArrayList<UserSpaceRole>(userSpaceRoles.size());
+        for(UserSpaceRole usr : userSpaceRoles) {
+            if(usr.getSpace() != null && usr.getRoleKey() != "ROLE_ADMIN") {
+                list.add(usr);
+            }
+        }
+        return list;
+    }
+    
     //============ ACEGI UserDetails implementation ===============
     
     public boolean isAccountNonExpired() {
