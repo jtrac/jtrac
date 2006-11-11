@@ -16,6 +16,6 @@ a:hover { color: red; }
 .nav-table td.icon { padding: 0; text-align: center; width: 4em; }
 .nav-table td a { width: 100%; display: block; }
 .bdr-collapse { border-collapse: collapse; }
-.bdr-collapse td { padding: 0px 0px 0px 0px; }
+.bdr-collapse td { padding: 0; }
 .page-links { font-weight: bold; }
 img.noborder { border: none; }

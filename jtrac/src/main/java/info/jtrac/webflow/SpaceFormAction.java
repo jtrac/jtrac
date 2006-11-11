@@ -274,12 +274,9 @@ public class SpaceFormAction extends AbstractFormAction {
     //================================= ROLES ==================================
     
     public Event spaceRolesSetupHandler(RequestContext context) throws Exception {
-        Space space = (Space) context.getFlowScope().get("space");
-        Role role = space.getMetadata().getRoles().get("DEFAULT");
-        if (role != null) {
-            WorkflowRenderer workflow = new WorkflowRenderer(space.getMetadata().getRoles(), space.getMetadata().getStates());
-            context.getRequestScope().put("workflow", workflow);
-        }
+        Space space = (Space) context.getFlowScope().get("space");                
+        WorkflowRenderer workflow = new WorkflowRenderer(space.getMetadata().getRoles(), space.getMetadata().getStates());
+        context.getRequestScope().put("workflow", workflow);        
         return success();
     }
     

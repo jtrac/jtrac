@@ -153,6 +153,17 @@ function editMask(stateKey, roleKey, fieldKey) {
 
 </form>
 
+<br/><br/>
+
+<style>
+    .workflow { border-collapse: collapse; }
+    .workflow table { width: 100%; height: 100%; }
+    .workflow td { border: 1px solid black; font-size: 80%; padding-left: 0.2em; padding-right: 0.2em; }
+    .state { background: #DEDEFF; }
+    .mirror { background: #CCCCCC; }
+    .transitions { font-style: italic;  }  
+</style>
+
 ${workflow.asHtml}
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>

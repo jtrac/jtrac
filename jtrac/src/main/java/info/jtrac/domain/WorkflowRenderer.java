@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
@@ -48,7 +49,7 @@ public class WorkflowRenderer implements Serializable {
     private void init() {
         // transitions <--> roleNames map
         // the key is a string concatenation <fromstate>_<tostate> for convenience
-        transitionRoles = new HashMap<String, Set<String>>();
+        transitionRoles = new TreeMap<String, Set<String>>();
         // for each state <--> a union of transitions across all roles
         stateTransitions = new HashMap<Integer, Set<Integer>>();
         for(Role r : rolesMap.values()) {
@@ -109,26 +110,32 @@ public class WorkflowRenderer implements Serializable {
         return XmlUtils.getAsPrettyXml(document);
     }
     
-    public String getAsHtml(Element e) {
-        StringBuffer sb = new StringBuffer();
-        int childCount = e.elements().size();
-        boolean notLeaf = childCount > 0;
-        if (notLeaf) sb.append("<table border='1' class='jtrac'><tr><td rowspan='" + childCount + "'>");
-        sb.append(e.attributeValue("name"));
-        if (notLeaf) sb.append("</td>");
+    private String getAsHtml(Element e) {
+        StringBuffer sb = new StringBuffer();        
+        List<Element> childElements = (List<Element>) e.elements();
+        String stateClass = e.attributeValue("mirror") != null ? "mirror" : "state";
+        sb.append("<table class='workflow'><tr><td rowspan='" + childElements.size() + "' class='" + stateClass + "'>");        
+        sb.append(e.attributeValue("name"));        
+        sb.append("</td>");
         boolean first = true;
-        for(Element child : (List<Element>) e.elements()) {
+        String fromState = e.attributeValue("key");
+        for(Element child : childElements) {
             if (!first) {
                 sb.append("<tr>");
             }
-            sb.append("<td>");
+            String toState = child.attributeValue("key");
+            sb.append("<td class='transitions'>");
+            for(String roleKey : transitionRoles.get(fromState + "_" + toState)) {
+                sb.append(roleKey).append("<br/>");
+            }
+            sb.append("</td><td>");
             sb.append(getAsHtml(child));
             sb.append("</td></tr>");
             if (first) {
               first = false;  
             } 
-        }
-        if (notLeaf) sb.append("</table>");
+        }        
+        sb.append("</table>");        
         return sb.toString();
     }
     
