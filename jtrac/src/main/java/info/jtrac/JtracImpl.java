@@ -167,14 +167,7 @@ public class JtracImpl implements Jtrac {
         }        
         if (history.getStatus() != null) {
             item.setStatus(history.getStatus());
-            if (history.getStatus() == State.CLOSED) {
-                item.setAssignedTo(null);
-                history.setAssignedTo(null);
-            } else {
-                if(history.getAssignedTo() != null) {
-                    item.setAssignedTo(history.getAssignedTo());
-                }
-            }           
+            item.setAssignedTo(history.getAssignedTo()); // this may be null, when closing                            
         }
         item.setItemUsers(history.getItemUsers());
         history.setTimeStamp(new Date());
