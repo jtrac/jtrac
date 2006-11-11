@@ -179,9 +179,10 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         // using criteria query to override lazy loading during authentication
         return (List<User>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) {
-                return session.createCriteria(User.class).setFetchMode(
-                        "userSpaceRoles", FetchMode.JOIN).add(
-                        Restrictions.eq("loginName", loginName)).list();
+                Criteria criteria = session.createCriteria(User.class);
+                criteria.setFetchMode("userSpaceRoles", FetchMode.JOIN);
+                criteria.add(Restrictions.eq("loginName", loginName));
+                return criteria.list();
             }
         });
     }
@@ -190,9 +191,10 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         // using criteria query to override lazy loading during authentication
         return (List<User>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) {
-                return session.createCriteria(User.class).setFetchMode(
-                        "userSpaceRoles", FetchMode.JOIN).add(
-                        Restrictions.eq("email", email)).list();
+                Criteria criteria = session.createCriteria(User.class);
+                criteria.setFetchMode("userSpaceRoles", FetchMode.JOIN);
+                criteria.add(Restrictions.eq("email", email));
+                return criteria.list();
             }
         });
     }
