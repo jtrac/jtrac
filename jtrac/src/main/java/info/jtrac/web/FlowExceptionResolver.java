@@ -24,25 +24,27 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
 import org.springframework.webflow.execution.repository.PermissionDeniedFlowExecutionAccessException;
+import org.springframework.webflow.executor.support.FlowExecutorArgumentExtractionException;
 
 /**
  * Spring MVC exception handler resolver designed to gracefully handle
  * the case where the user hit the browser back button during a WebFlow
  */
-public class FlowExceptionResolver implements HandlerExceptionResolver{
+public class FlowExceptionResolver implements HandlerExceptionResolver {
     
     protected final Log logger = LogFactory.getLog(getClass());
     
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object o, Exception e) {
         logger.debug("exception type: " + e.getClass() + ", message: " + e.getMessage());
-        if (e instanceof NoSuchFlowExecutionException) {
-            logger.debug("user must have logged in after session expired, redirecting to dashboard");            
+        if (e instanceof NoSuchFlowExecutionException 
+                || e instanceof FlowExecutorArgumentExtractionException) {
+            logger.debug("session must have expired in the middle of a flow, redirecting to dashboard");            
             return new ModelAndView("redirect:/app");
         } else if (e instanceof PermissionDeniedFlowExecutionAccessException) {
             logger.debug("user must have hit browser back button, trying to handle gracefully");        
             return new ModelAndView("exception_flow");
         } else {
-            return null;
+            return null;  // not an exception we are interested in, pass control back to Spring
         }       
     }
     
