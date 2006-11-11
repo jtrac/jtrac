@@ -19,6 +19,15 @@ function editMask(stateKey, roleKey, fieldKey) {
 }
 </script>
 
+<style>
+    .workflow { border-collapse: collapse; }
+    .workflow table { width: 100%; height: 100%; }
+    .workflow td { border: 1px solid black; font-size: 80%; padding-left: 0.2em; padding-right: 0.2em; }
+    .state { background: #DEDEFF; }
+    .mirror { background: #CCCCCC; }
+    .transition { font-style: italic; }  
+</style>
+
 <span class="info">Space Roles and State-Transitions (Workflow) for Space: ${space.name} (${space.prefixCode})</span>
 
 <br/><br/>
@@ -80,7 +89,7 @@ function editMask(stateKey, roleKey, fieldKey) {
                         </c:choose>
                     </td>
                 </c:if>                
-                <td>                    
+                <td class="transition">                    
                     ${role.name}
                 </td>
                 <td>    
@@ -103,10 +112,13 @@ function editMask(stateKey, roleKey, fieldKey) {
                         </c:set>
                         <td>
                             <c:choose>
-                                <c:when test="${stateRowEntry.key == 0 || stateRowEntry.key == 99}">${showTransition}</c:when>
+                                <c:when test="${stateRowEntry.key == 0 && stateColEntry.key != 1}">
+                                    ${showTransition}
+                                </c:when>
                                 <c:otherwise>
                                     <input type="submit" name="_eventId_editTransition" value="${showTransition}"
-                                        onClick="editTransition('${stateRowEntry.key}', '${role.name}', '${stateColEntry.key}')" title="toggle"/>
+                                        <c:if test="${showTransition == 'Y'}">class='selected'</c:if> title="toggle"
+                                        onClick="editTransition('${stateRowEntry.key}', '${role.name}', '${stateColEntry.key}')"/>
                                 </c:otherwise>
                             </c:choose>                            
                         </td>
@@ -154,15 +166,6 @@ function editMask(stateKey, roleKey, fieldKey) {
 </form>
 
 <br/><br/>
-
-<style>
-    .workflow { border-collapse: collapse; }
-    .workflow table { width: 100%; height: 100%; }
-    .workflow td { border: 1px solid black; font-size: 80%; padding-left: 0.2em; padding-right: 0.2em; }
-    .state { background: #DEDEFF; }
-    .mirror { background: #CCCCCC; }
-    .transitions { font-style: italic;  }  
-</style>
 
 ${workflow.asHtml}
 
