@@ -19,7 +19,6 @@ package info.jtrac.domain;
 import info.jtrac.util.XmlUtils;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +50,7 @@ public class WorkflowRenderer implements Serializable {
         // the key is a string concatenation <fromstate>_<tostate> for convenience
         transitionRoles = new TreeMap<String, Set<String>>();
         // for each state <--> a union of transitions across all roles
-        stateTransitions = new HashMap<Integer, Set<Integer>>();
+        stateTransitions = new TreeMap<Integer, Set<Integer>>();
         for(Role r : rolesMap.values()) {
             for(State s: r.getStates().values()) {
                 Set<Integer> transitions = stateTransitions.get(s.getStatus());
@@ -124,7 +123,7 @@ public class WorkflowRenderer implements Serializable {
                 sb.append("<tr>");
             }
             String toState = child.attributeValue("key");
-            sb.append("<td class='transitions'>");
+            sb.append("<td class='transition'>");
             for(String roleKey : transitionRoles.get(fromState + "_" + toState)) {
                 sb.append(roleKey).append("<br/>");
             }
