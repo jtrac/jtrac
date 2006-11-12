@@ -199,9 +199,20 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         });
     }
     
-    public List<UserSpaceRole> findUserRolesForSpace(long spaceId) {
-        return getHibernateTemplate().find("select usr from User user" +
-                " join user.userSpaceRoles as usr where usr.space.id = ? order by user.name", spaceId);        
+    public List<UserSpaceRole> findUserRolesForSpace(final long spaceId) {        
+        // return getHibernateTemplate().find("select usr from User user" +
+        //      " join user.userSpaceRoles as usr where usr.space.id = ? order by user.name", spaceId);
+        // same as above commented, but forcing eager load of user object
+        // done this way to avoid n + 1 selects on item / item_view
+        // screens when rendering users to notify, drop down etc.
+        return (List<UserSpaceRole>) getHibernateTemplate().execute(new HibernateCallback() {
+            public Object doInHibernate(Session session) {
+                Criteria criteria = session.createCriteria(UserSpaceRole.class);
+                criteria.setFetchMode("user", FetchMode.JOIN);
+                criteria.add(Restrictions.eq("space.id", spaceId));
+                return criteria.list();
+            }
+        });        
     }
     
     public List<User> findUsersWithRoleForSpace(long spaceId, String roleKey) {
