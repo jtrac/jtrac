@@ -93,7 +93,13 @@ function handleAjaxResponse(ajaxRequest) {
         <td class="label">Assign To</td>       
         <td>
             <spring:bind path="itemViewForm.history.assignedTo">
-                <select name="${status.expression}" id="assignedTo"> 
+                <select name="${status.expression}" id="assignedTo">
+                    <c:if test="${!empty usersAbleToTransition}">
+                        <option/>
+                        <c:forEach items="${usersAbleToTransition}" var="usr">
+                            <option value="${usr.user.id}" <c:if test='${status.value == usr.user.id}'>selected="true"</c:if>>${usr.user.name}</option>
+                        </c:forEach>                         
+                    </c:if>
                 </select>
                 <span class="error">${status.errorMessage}</span>
             </spring:bind>

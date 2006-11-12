@@ -144,7 +144,14 @@ public class ItemViewFormAction extends AbstractFormAction {
         // not flow scope because of weird Hibernate Lazy loading issues
         // hidden field "itemId" added to item_view_form.jsp
         context.getRequestScope().put("userSpaceRoles", userSpaceRoles);
-        
+        if (getFormErrors(context).hasErrors()) {
+            ItemViewForm itemViewForm = (ItemViewForm) getFormObject(context);
+            if (itemViewForm.getHistory().getStatus() != null) {
+                logger.debug("form being re-shown with errors, and status was not null");
+                context.getRequestScope().put("usersAbleToTransition", 
+                        jtrac.findUsersAbleToTransition(item.getSpace(), item.getStatus(), itemViewForm.getHistory().getStatus()));
+            }
+        }
         return success();
     }
     
