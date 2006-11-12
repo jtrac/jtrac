@@ -3,7 +3,7 @@
 <script type="text/javascript"> 
 
 function doAjaxRequest() {
-    var params = 'spaceId=${space.id}&fromState=${item.status}&toState=' + $F('status'); 
+    var params = 'spaceId=${item.space.id}&fromState=${item.status}&toState=' + $F('status'); 
     new Ajax.Request('${pageContext.request.contextPath}/app/ajax/item_view_users.htm', 
         { method: 'get', parameters: params, onComplete: handleAjaxResponse }
     );    
