@@ -4,7 +4,7 @@
 
 var currentSpaceId;    
     
-function doCall(spaceId) {
+function doAjaxRequest(spaceId) {
     if ($('tbody_detail_' + spaceId).innerHTML) {
         Element.hide('tbody_' + spaceId);
         Element.show('tbody_detail_' + spaceId);
@@ -12,12 +12,12 @@ function doCall(spaceId) {
         Element.show('spinner_' + spaceId);
         currentSpaceId = spaceId;
         new Ajax.Request('${pageContext.request.contextPath}/app/ajax/dashboard.htm', 
-            { method: 'get', parameters: 'spaceId=' + spaceId, onComplete: showResponse }
+            { method: 'get', parameters: 'spaceId=' + spaceId, onComplete: handleAjaxResponse }
         );
     }
 }
 
-function showResponse(ajaxRequest) {
+function handleAjaxResponse(ajaxRequest) {
     Element.hide('tbody_' + currentSpaceId);
     Element.hide('spinner_' + currentSpaceId);
     new Insertion.Top('tbody_detail_' + currentSpaceId, ajaxRequest.responseText);
@@ -71,7 +71,7 @@ function collapse(spaceId) {
                     </a>
                 </td>
                 <td style="padding:0">
-                    <a href="#" onclick="doCall(${spaceId})">
+                    <a href="#" onclick="doAjaxRequest(${spaceId})">
                         <img title="Show Details" class="noborder" src="${pageContext.request.contextPath}/resources/collapsed.png"/>
                     </a>
                 </td>
