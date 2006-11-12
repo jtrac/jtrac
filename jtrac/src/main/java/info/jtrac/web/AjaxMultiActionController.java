@@ -62,6 +62,7 @@ public class AjaxMultiActionController extends AbstractMultiActionController {
         if(assignedTo != null && assignedTo.trim().length() > 0) {
             mav.addObject("selected", new Long(assignedTo));
         }
+        applyCacheSeconds(response, 0, true);
         return mav;
     }
     

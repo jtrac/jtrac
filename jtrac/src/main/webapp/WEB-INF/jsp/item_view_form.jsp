@@ -2,17 +2,22 @@
 
 <script type="text/javascript"> 
 
-function doAjaxRequest() {
+function doAjaxRequest() {    
     var status = $F('status');
-    if (!status) return;
-    var params = 'spaceId=${item.space.id}&fromState=${item.status}&toState=' + status + '&assignedTo=' + $F('assignedTo'); 
+    if (status == null || !status) return;
+    var params = 'spaceId=${item.space.id}&fromState=${item.status}&toState=' + status; 
+    var assignedTo = $F('assignedTo');
+    if (assignedTo != null && assignedTo) {
+        params += '&assignedTo=' + assignedTo;
+    }
     new Ajax.Request('${pageContext.request.contextPath}/app/ajax/item_view_users.htm', 
         { method: 'get', parameters: params, onComplete: handleAjaxResponse }
     );    
 }
 
 function handleAjaxResponse(ajaxRequest) {
-    Element.update($('assignedTo'), ajaxRequest.responseText);    
+    // just because of stupid IE, have to use parent    
+    Element.update($('assignedToParent'), ajaxRequest.responseText);    
 }
 
 </script>
@@ -88,27 +93,30 @@ function handleAjaxResponse(ajaxRequest) {
                 <span class="error">${status.errorMessage}</span>
             </spring:bind>
         </td>        
-    </tr>
+    </tr>    
     <tr>
         <td class="label">Assign To</td>       
         <td>
-            <spring:bind path="itemViewForm.history.assignedTo">
-                <select name="${status.expression}" id="assignedTo">
-                    <c:if test="${!empty usersAbleToTransition}">
-                        <option/>
-                        <c:forEach items="${usersAbleToTransition}" var="usr">
-                            <option value="${usr.user.id}" <c:if test='${status.value == usr.user.id}'>selected="true"</c:if>>${usr.user.name}</option>
-                        </c:forEach>                         
-                    </c:if>
-                </select>
-                <span class="error">${status.errorMessage}</span>
-            </spring:bind>
+            <div id="assignedToParent">
+                <spring:bind path="itemViewForm.history.assignedTo">
+                    <select name="${status.expression}" id="assignedTo">
+                        <c:if test="${!empty usersAbleToTransition}">
+                            <option/>
+                            <c:forEach items="${usersAbleToTransition}" var="usr">
+                                <option value="${usr.user.id}" <c:if test='${status.value == usr.user.id}'>selected="true"</c:if>>${usr.user.name}</option>
+                            </c:forEach>                         
+                        </c:if>
+                    </select>
+                    <span class="error">${status.errorMessage}</span>
+                </spring:bind>
+            </div>
         </td>        
     </tr>
      <tr>
         <td class="label">
             Comment
-            <font color="red">*</font></td>
+            <font color="red">*</font>
+        </td>
         <td>
             <spring:bind path="itemViewForm.history.comment">
                 <textarea name="${status.expression}" rows="6" cols="70">${status.value}</textarea>
