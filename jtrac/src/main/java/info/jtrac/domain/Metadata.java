@@ -41,14 +41,19 @@ import org.dom4j.Element;
 /**
  * XML metadata is one of the interesting design decisions of JTrac.
  * Metadata is defined for each space and so Items that belong to a
- * space are customized by the space metadata.
+ * space are customized by the space metadata.  This class can marshall
+ * and unmarshall itself to XML and this XML is stored in the database
+ * in a single column.  Because of this approach, Metadata can be made more
+ * and more complicated in the future without impact to the database schema.
+ *
+ * Things that the Metadata configures for a Space:
  * 
  * 1) custom Fields for an Item (within a Space)
  * - Label
  * - whether mandatory or not
  * - the option values (drop down list options)
  * - the option "key" values are stored in the database (WITHOUT any relationships)
- * - the values corresponding to "key"s are resolved from the Metadata
+ * - the values corresponding to "key"s are resolved in memory from the Metadata
  *   and not through a database join.
  *
  * 2) the Roles available within a space

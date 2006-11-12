@@ -1,5 +1,20 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
+<script type="text/javascript"> 
+
+function doAjaxRequest() {
+    var params = 'spaceId=${space.id}&fromState=${item.status}&toState=' + $F('status'); 
+    new Ajax.Request('${pageContext.request.contextPath}/app/ajax/item_view_users.htm', 
+        { method: 'get', parameters: params, onComplete: handleAjaxResponse }
+    );    
+}
+
+function handleAjaxResponse(ajaxRequest) {
+    Element.update($('selectAssignedTo'), ajaxRequest.responseText);    
+}
+
+</script>
+
 <form method="post" action="<c:url value='/flow'/>" enctype="multipart/form-data">
 
 <table class="jtrac" width="100%">
@@ -62,7 +77,7 @@
         <td class="label">New Status</td>
         <td>
             <spring:bind path="itemViewForm.history.status">
-                <select name="${status.expression}">
+                <select name="${status.expression}" id="status" onChange="doAjaxRequest()">
                     <option/>
                     <c:forEach items="${transitions}" var="transitionEntry">
                         <option value="${transitionEntry.key}" <c:if test='${transitionEntry.key == status.value}'>selected="true"</c:if>>${transitionEntry.value}</option>
@@ -76,14 +91,10 @@
         <td class="label">Assign To</td>       
         <td>
             <spring:bind path="itemViewForm.history.assignedTo">
-                <select name="${status.expression}">
-                    <option/>
-                    <c:forEach items="${userSpaceRoles}" var="usr">
-                        <option value="${usr.user.id}" <c:if test='${usr.user.id == status.value}'>selected="true"</c:if>>${usr.user.name}</option>
-                    </c:forEach>  
+                <select name="${status.expression}" id="selectAssignedTo"> 
                 </select>
                 <span class="error">${status.errorMessage}</span>
-            </spring:bind> 
+            </spring:bind>
         </td>        
     </tr>
      <tr>

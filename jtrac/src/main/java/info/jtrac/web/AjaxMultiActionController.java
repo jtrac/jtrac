@@ -19,7 +19,10 @@ package info.jtrac.web;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
+import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.SecurityUtils;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +30,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * Spring MultiActionController that handles Ajax calls
+ * Spring MultiActionController that handles Ajax requests
+ * we return HTML through a JSP as far as possible, to keep things simple
  */
 public class AjaxMultiActionController extends AbstractMultiActionController {
     
@@ -45,5 +49,22 @@ public class AjaxMultiActionController extends AbstractMultiActionController {
         applyCacheSeconds(response, 0, true);
         return mav;
     } 
+    
+    public ModelAndView ajaxItemViewUsersHandler(HttpServletRequest request, HttpServletResponse response) {
+        String spaceId = request.getParameter("spaceId");
+        String fromState = request.getParameter("fromState");
+        String toState = request.getParameter("toState");
+        logger.debug("ajaxItemViewUsersHandler: spaceId = " + spaceId + ", fromState = " + fromState + ", toState = " + toState);
+        Space space = jtrac.loadSpace(Long.parseLong(spaceId));
+        Map<String, Boolean> map = space.getMetadata().getRolesAbleToTransition(Integer.parseInt(fromState), Integer.parseInt(toState));
+        List<UserSpaceRole> userSpaceRoles = jtrac.findUserRolesForSpace(Long.parseLong(spaceId));
+        List<UserSpaceRole> list = new ArrayList<UserSpaceRole>(userSpaceRoles.size());
+        for(UserSpaceRole usr : userSpaceRoles) {
+            if(map.containsKey(usr.getRoleKey())) {
+                list.add(usr);
+            }
+        }
+        return new ModelAndView("ajax_item_view_users", "userSpaceRoles", list);        
+    }
     
 }

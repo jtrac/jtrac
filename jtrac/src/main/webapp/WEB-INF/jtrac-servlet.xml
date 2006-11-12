@@ -89,6 +89,7 @@
                 <property name="mappings">
                     <props>
                         <prop key="/app/ajax/dashboard.htm">ajaxDashboardHandler</prop>
+                        <prop key="/app/ajax/item_view_users.htm">ajaxItemViewUsersHandler</prop>
                     </props>
                 </property>
             </bean>        
