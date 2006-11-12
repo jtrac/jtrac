@@ -127,6 +127,15 @@ public class ItemViewFormAction extends AbstractFormAction {
         } else {
             item = (Item) context.getRequestScope().get("item");
         }
+        context.getRequestScope().put("item", item);
+        ItemViewForm itemViewForm = new ItemViewForm();      
+        History history = itemViewForm.getHistory();        
+        history.setItemUsers(item.getItemUsers());
+        return itemViewForm;
+    }     
+    
+    public Event itemViewSetupHandler(RequestContext context) throws Exception {
+        Item item = (Item) context.getRequestScope().get("item");
         List<UserSpaceRole> userSpaceRoles = jtrac.findUserRolesForSpace(item.getSpace().getId());
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Space space = item.getSpace();
@@ -134,13 +143,10 @@ public class ItemViewFormAction extends AbstractFormAction {
         context.getRequestScope().put("editableFields", item.getEditableFieldList(user));
         // not flow scope because of weird Hibernate Lazy loading issues
         // hidden field "itemId" added to item_view_form.jsp
-        context.getRequestScope().put("item", item);
         context.getRequestScope().put("userSpaceRoles", userSpaceRoles);
-        ItemViewForm itemViewForm = new ItemViewForm();      
-        History history = itemViewForm.getHistory();        
-        history.setItemUsers(item.getItemUsers());
-        return itemViewForm;
-    }     
+        
+        return success();
+    }
     
     public Event itemViewHandler(RequestContext context) throws Exception {
         ItemViewForm itemViewForm = (ItemViewForm) getFormObject(context);

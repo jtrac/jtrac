@@ -18,6 +18,7 @@
     <view-state id="itemViewForm" view="item_view_form">
         <entry-actions>
             <action bean="itemViewFormAction" method="setupForm"/>
+            <action bean="itemViewFormAction" method="itemViewSetupHandler"/>
         </entry-actions>
         <transition on="submit" to="itemViewForm">
             <action bean="itemViewFormAction" method="bind"/>

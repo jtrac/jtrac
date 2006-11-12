@@ -54,17 +54,15 @@ public class AjaxMultiActionController extends AbstractMultiActionController {
         String spaceId = request.getParameter("spaceId");
         String fromState = request.getParameter("fromState");
         String toState = request.getParameter("toState");
-        logger.debug("ajaxItemViewUsersHandler: spaceId = " + spaceId + ", fromState = " + fromState + ", toState = " + toState);
+        String assignedTo = request.getParameter("assignedTo");        
+        logger.debug("ajaxItemViewUsersHandler: spaceId = " + spaceId + ", fromState = " + fromState + ", toState = " + toState + ", assignedTo = " + assignedTo);
         Space space = jtrac.loadSpace(Long.parseLong(spaceId));
-        Map<String, Boolean> map = space.getMetadata().getRolesAbleToTransition(Integer.parseInt(fromState), Integer.parseInt(toState));
-        List<UserSpaceRole> userSpaceRoles = jtrac.findUserRolesForSpace(Long.parseLong(spaceId));
-        List<UserSpaceRole> list = new ArrayList<UserSpaceRole>(userSpaceRoles.size());
-        for(UserSpaceRole usr : userSpaceRoles) {
-            if(map.containsKey(usr.getRoleKey())) {
-                list.add(usr);
-            }
+        ModelAndView mav = new ModelAndView("ajax_item_view_users");
+        mav.addObject("userSpaceRoles", jtrac.findUsersAbleToTransition(space, Integer.parseInt(fromState), Integer.parseInt(toState)));        
+        if(assignedTo != null && assignedTo.trim().length() > 0) {
+            mav.addObject("selected", new Long(assignedTo));
         }
-        return new ModelAndView("ajax_item_view_users", "userSpaceRoles", list);        
+        return mav;
     }
     
 }

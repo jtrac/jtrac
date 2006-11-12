@@ -360,6 +360,18 @@ public class JtracImpl implements Jtrac {
         return users;
     }       
     
+    public List<UserSpaceRole> findUsersAbleToTransition(Space space, int fromState, int toState) {
+        Map<String, Boolean> map = space.getMetadata().getRolesAbleToTransition(fromState, toState);
+        List<UserSpaceRole> userSpaceRoles = dao.findUserRolesForSpace(space.getId());
+        List<UserSpaceRole> list = new ArrayList<UserSpaceRole>(userSpaceRoles.size());
+        for(UserSpaceRole usr : userSpaceRoles) {
+            if(map.containsKey(usr.getRoleKey())) {
+                list.add(usr);
+            }
+        } 
+        return list;
+    }
+    
     //==========================================================================
     
     public CountsHolder loadCountsForUser(User user) {

@@ -3,14 +3,16 @@
 <script type="text/javascript"> 
 
 function doAjaxRequest() {
-    var params = 'spaceId=${item.space.id}&fromState=${item.status}&toState=' + $F('status'); 
+    var status = $F('status');
+    if (!status) return;
+    var params = 'spaceId=${item.space.id}&fromState=${item.status}&toState=' + status + '&assignedTo=' + $F('assignedTo'); 
     new Ajax.Request('${pageContext.request.contextPath}/app/ajax/item_view_users.htm', 
         { method: 'get', parameters: params, onComplete: handleAjaxResponse }
     );    
 }
 
 function handleAjaxResponse(ajaxRequest) {
-    Element.update($('selectAssignedTo'), ajaxRequest.responseText);    
+    Element.update($('assignedTo'), ajaxRequest.responseText);    
 }
 
 </script>
@@ -91,7 +93,7 @@ function handleAjaxResponse(ajaxRequest) {
         <td class="label">Assign To</td>       
         <td>
             <spring:bind path="itemViewForm.history.assignedTo">
-                <select name="${status.expression}" id="selectAssignedTo"> 
+                <select name="${status.expression}" id="assignedTo"> 
                 </select>
                 <span class="error">${status.errorMessage}</span>
             </spring:bind>
