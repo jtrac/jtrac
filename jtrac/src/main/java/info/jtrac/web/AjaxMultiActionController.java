@@ -21,7 +21,7 @@ import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.SecurityUtils;
-import java.util.ArrayList;
+import info.jtrac.util.UserUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -57,7 +57,8 @@ public class AjaxMultiActionController extends AbstractMultiActionController {
         logger.debug("ajaxItemViewUsersHandler: spaceId = " + spaceId + ", toState = " + toState + ", assignedTo = " + assignedTo);
         Space space = jtrac.loadSpace(Long.parseLong(spaceId));
         ModelAndView mav = new ModelAndView("ajax_item_view_users");
-        mav.addObject("userSpaceRoles", jtrac.findUsersAbleToTransitionFrom(space, Integer.parseInt(toState)));        
+        List<UserSpaceRole> userSpaceRoles = jtrac.findUserRolesForSpace(space.getId());
+        mav.addObject("userSpaceRoles", UserUtils.filterUsersAbleToTransitionFrom(userSpaceRoles, space, Integer.parseInt(toState)));        
         if(assignedTo != null && assignedTo.trim().length() > 0) {
             mav.addObject("selected", new Long(assignedTo));
         }

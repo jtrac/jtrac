@@ -358,27 +358,7 @@ public class JtracImpl implements Jtrac {
             users.remove(userSpaceRole.getUser());
         }
         return users;
-    }       
-    
-    /**
-     * This is a rather 'deep' concept, first of course you need to restrict the next possible
-     * states that an item can be switched to based on the current state and the workflow defined.
-     * But what about who all it can be assigned to?  This will be the set of users who fall into roles
-     * that have permissions to transition FROM the state being switched to. Ouch.
-     * This is why the item_view / history update screen has to be Ajaxed so that the drop
-     * down list of users has to dynamically change based on the TO state
-     */
-    public List<UserSpaceRole> findUsersAbleToTransitionFrom(Space space, int state) {
-        Set<String> set = space.getMetadata().getRolesAbleToTransitionFrom(state);
-        List<UserSpaceRole> userSpaceRoles = dao.findUserRolesForSpace(space.getId());
-        List<UserSpaceRole> list = new ArrayList<UserSpaceRole>(userSpaceRoles.size());
-        for(UserSpaceRole usr : userSpaceRoles) {
-            if(set.contains(usr.getRoleKey())) {
-                list.add(usr);
-            }
-        } 
-        return list;
-    }
+    }    
     
     //==========================================================================
     

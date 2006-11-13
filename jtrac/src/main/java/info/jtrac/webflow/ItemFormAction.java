@@ -28,6 +28,7 @@ import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.AttachmentUtils;
 import info.jtrac.util.ItemUserEditor;
 import info.jtrac.util.UserEditor;
+import info.jtrac.util.UserUtils;
 import info.jtrac.util.ValidationUtils;
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -88,7 +89,7 @@ public class ItemFormAction extends AbstractFormAction {
         List<UserSpaceRole> userSpaceRoles = jtrac.findUserRolesForSpace(space.getId());
         // TODO, next two can be combined, optimized
         context.getFlowScope().put("userSpaceRoles", userSpaceRoles);
-        context.getFlowScope().put("usersAbleToTransitionFrom", jtrac.findUsersAbleToTransitionFrom(space, State.OPEN));
+        context.getFlowScope().put("usersAbleToTransitionFrom", UserUtils.filterUsersAbleToTransitionFrom(userSpaceRoles, space, State.OPEN));
         return item;
     }
     

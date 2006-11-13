@@ -28,6 +28,7 @@ import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.AttachmentUtils;
 import info.jtrac.util.ItemUserEditor;
 import info.jtrac.util.UserEditor;
+import info.jtrac.util.UserUtils;
 import info.jtrac.util.ValidationUtils;
 import java.io.File;
 import java.io.Serializable;
@@ -128,6 +129,8 @@ public class ItemViewFormAction extends AbstractFormAction {
         } else {
             item = (Item) context.getRequestScope().get("item");
         }
+        // not flow scope because of weird Hibernate Lazy loading issues
+        // hidden field "itemId" added to item_view_form.jsp        
         context.getRequestScope().put("item", item);
         ItemViewForm itemViewForm = new ItemViewForm();      
         History history = itemViewForm.getHistory();        
@@ -137,22 +140,20 @@ public class ItemViewFormAction extends AbstractFormAction {
     
     public Event itemViewSetupHandler(RequestContext context) throws Exception {
         Item item = (Item) context.getRequestScope().get("item");
-        List<UserSpaceRole> userSpaceRoles = jtrac.findUserRolesForSpace(item.getSpace().getId());
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Space space = item.getSpace();
+        List<UserSpaceRole> userSpaceRoles = jtrac.findUserRolesForSpace(space.getId());        
         Map<Integer, String> map = item.getPermittedTransitions(user);
         context.getRequestScope().put("transitions", map);
         context.getRequestScope().put("transitionCount", map.size());
         context.getRequestScope().put("editableFields", item.getEditableFieldList(user));
-        // not flow scope because of weird Hibernate Lazy loading issues
-        // hidden field "itemId" added to item_view_form.jsp
         context.getRequestScope().put("userSpaceRoles", userSpaceRoles);
         if (getFormErrors(context).hasErrors()) {
             ItemViewForm itemViewForm = (ItemViewForm) getFormObject(context);
             if (itemViewForm.getHistory().getStatus() != null) {
                 logger.debug("form being re-shown with errors, and status was not null");
                 context.getRequestScope().put("usersAbleToTransitionFrom", 
-                        jtrac.findUsersAbleToTransitionFrom(item.getSpace(), itemViewForm.getHistory().getStatus()));
+                        UserUtils.filterUsersAbleToTransitionFrom(userSpaceRoles, item.getSpace(), itemViewForm.getHistory().getStatus()));
             }
         }
         return success();
