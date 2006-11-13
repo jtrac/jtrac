@@ -227,6 +227,16 @@
                 you can easily tweak it to fit your existing process rather than the other way around.
             </para>
             <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="../images/custom-roles.png"/>
+                    </imageobject>
+                    <caption>
+                        <para>Example of workflow where each role has clearly defined responsibilities.</para>
+                    </caption>
+                </mediaobject>
+            </para>            
+            <para>
                 Also, field-level permissions can be mapped to roles.  This allows for even more flexibility - for
                 example, you can set a project up so that only a "MANAGER" can change the "Severity" level after a
                 bug is submitted.
@@ -274,10 +284,10 @@
                 </mediaobject>
             </para>
             <para>
-                For a Space, you can also drill-down to a finer level of detail  by clicking on the (+) sign.
-                This expands the dashboard rows so that you can see a break-up of item counts, not only by
+                For a Space, you can also drill-down to a finer level of detail  by clicking on the right-arrow 
+                'expand' icon.  This expands the dashboard rows so that you can see a break-up of item counts, not only by
                 whether 'logged by me' / 'assigned to me' - but against the custom workflow states defined for 
-                the Space as well.  Again, it is possible to directly go the items by clicking on the dashboard numbers.
+                the Space as well.  Again, it is possible to directly navigate to the items by clicking on the dashboard numbers.
             </para>
             <para>
                 <mediaobject>
