@@ -5,18 +5,19 @@
 function doAjaxRequest() {    
     var status = $F('status');
     if (status == null || !status) return;
-    var params = 'spaceId=${item.space.id}&fromState=${item.status}&toState=' + status; 
+    var params = 'spaceId=${item.space.id}&toState=' + status; 
     var assignedTo = $F('assignedTo');
     if (assignedTo != null && assignedTo) {
         params += '&assignedTo=' + assignedTo;
     }
+    Element.show('spinner');
     new Ajax.Request('${pageContext.request.contextPath}/app/ajax/item_view_users.htm', 
         { method: 'get', parameters: params, onComplete: handleAjaxResponse }
     );    
 }
 
 function handleAjaxResponse(ajaxRequest) {
-    // just because of stupid IE, have to use parent    
+    Element.hide('spinner');       
     Element.update($('assignedToParent'), ajaxRequest.responseText);    
 }
 
@@ -80,38 +81,44 @@ function handleAjaxResponse(ajaxRequest) {
         </tr>        
     </c:forEach>    
     
-    <tr>
-        <td class="label">New Status</td>
-        <td>
-            <spring:bind path="itemViewForm.history.status">
-                <select name="${status.expression}" id="status" onChange="doAjaxRequest()">
-                    <option/>
-                    <c:forEach items="${transitions}" var="transitionEntry">
-                        <option value="${transitionEntry.key}" <c:if test='${transitionEntry.key == status.value}'>selected="true"</c:if>>${transitionEntry.value}</option>
-                    </c:forEach>
-                </select>
-                <span class="error">${status.errorMessage}</span>
-            </spring:bind>
-        </td>        
-    </tr>    
-    <tr>
-        <td class="label">Assign To</td>       
-        <td>
-            <div id="assignedToParent">
-                <spring:bind path="itemViewForm.history.assignedTo">
-                    <select name="${status.expression}" id="assignedTo">
-                        <c:if test="${!empty usersAbleToTransition}">
-                            <option/>
-                            <c:forEach items="${usersAbleToTransition}" var="usr">
-                                <option value="${usr.user.id}" <c:if test='${status.value == usr.user.id}'>selected="true"</c:if>>${usr.user.name}</option>
-                            </c:forEach>                         
-                        </c:if>
+    <c:if test="${transitionCount > 0}">
+        <tr>
+            <td class="label">New Status</td>
+            <td>
+                <spring:bind path="itemViewForm.history.status">
+                    <select name="${status.expression}" id="status" onChange="doAjaxRequest()">
+                        <option/>
+                        <c:forEach items="${transitions}" var="transitionEntry">
+                            <option value="${transitionEntry.key}" <c:if test='${transitionEntry.key == status.value}'>selected="true"</c:if>>${transitionEntry.value}</option>
+                        </c:forEach>
                     </select>
                     <span class="error">${status.errorMessage}</span>
                 </spring:bind>
-            </div>
-        </td>        
-    </tr>
+            </td>        
+        </tr>    
+        <tr>
+            <td class="label">Assign To</td>       
+            <td>
+                <span id="assignedToParent">
+                    <spring:bind path="itemViewForm.history.assignedTo">
+                        <select name="${status.expression}" id="assignedTo">
+                            <c:if test="${!empty usersAbleToTransitionFrom}">
+                                <option/>
+                                <c:forEach items="${usersAbleToTransitionFrom}" var="usr">
+                                    <option value="${usr.user.id}" <c:if test='${status.value == usr.user.id}'>selected="true"</c:if>>${usr.user.name}</option>
+                                </c:forEach>                         
+                            </c:if>
+                        </select>                       
+                        <span class="error">${status.errorMessage}</span>
+                    </spring:bind>
+                </span>
+                <span id="spinner" style="display:none">
+                    <img src="${pageContext.request.contextPath}/resources/spinner.gif"/>
+                </span>              
+            </td>        
+        </tr>
+    </c:if>
+    
      <tr>
         <td class="label">
             Comment

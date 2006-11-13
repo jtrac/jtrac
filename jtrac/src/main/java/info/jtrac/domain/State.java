@@ -60,16 +60,7 @@ public class State implements Serializable {
     }
     
     public State(int s) {
-        this.status = s;
-        // default rules for state transitions
-        if (s == NEW) {
-            addTransition(OPEN);
-        } else if (s == OPEN) {
-            addTransition(OPEN);
-            addTransition(CLOSED);
-        } else if (s == CLOSED) {
-            addTransition(OPEN);
-        }
+        this.status = s;        
     }
     
     public State(Element e) {

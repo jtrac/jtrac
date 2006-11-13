@@ -35,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -139,7 +140,9 @@ public class ItemViewFormAction extends AbstractFormAction {
         List<UserSpaceRole> userSpaceRoles = jtrac.findUserRolesForSpace(item.getSpace().getId());
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Space space = item.getSpace();
-        context.getRequestScope().put("transitions", item.getPermittedTransitions(user));
+        Map<Integer, String> map = item.getPermittedTransitions(user);
+        context.getRequestScope().put("transitions", map);
+        context.getRequestScope().put("transitionCount", map.size());
         context.getRequestScope().put("editableFields", item.getEditableFieldList(user));
         // not flow scope because of weird Hibernate Lazy loading issues
         // hidden field "itemId" added to item_view_form.jsp
@@ -148,8 +151,8 @@ public class ItemViewFormAction extends AbstractFormAction {
             ItemViewForm itemViewForm = (ItemViewForm) getFormObject(context);
             if (itemViewForm.getHistory().getStatus() != null) {
                 logger.debug("form being re-shown with errors, and status was not null");
-                context.getRequestScope().put("usersAbleToTransition", 
-                        jtrac.findUsersAbleToTransition(item.getSpace(), item.getStatus(), itemViewForm.getHistory().getStatus()));
+                context.getRequestScope().put("usersAbleToTransitionFrom", 
+                        jtrac.findUsersAbleToTransitionFrom(item.getSpace(), itemViewForm.getHistory().getStatus()));
             }
         }
         return success();

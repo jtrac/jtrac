@@ -374,7 +374,7 @@ public class SpaceFormAction extends AbstractFormAction {
         String stateKey = ValidationUtils.getParameter(context, "stateKey");
         String roleKey = ValidationUtils.getParameter(context, "roleKey");
         String transitionKey = ValidationUtils.getParameter(context, "transitionKey");
-        space.getMetadata().toggleTransition(Integer.parseInt(stateKey), roleKey, Integer.parseInt(transitionKey));
+        space.getMetadata().toggleTransition(roleKey, Integer.parseInt(stateKey), Integer.parseInt(transitionKey));
         return success();
     }
     

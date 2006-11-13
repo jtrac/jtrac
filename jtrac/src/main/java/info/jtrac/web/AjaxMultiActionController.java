@@ -51,14 +51,13 @@ public class AjaxMultiActionController extends AbstractMultiActionController {
     } 
     
     public ModelAndView ajaxItemViewUsersHandler(HttpServletRequest request, HttpServletResponse response) {
-        String spaceId = request.getParameter("spaceId");
-        String fromState = request.getParameter("fromState");
+        String spaceId = request.getParameter("spaceId");        
         String toState = request.getParameter("toState");
         String assignedTo = request.getParameter("assignedTo");        
-        logger.debug("ajaxItemViewUsersHandler: spaceId = " + spaceId + ", fromState = " + fromState + ", toState = " + toState + ", assignedTo = " + assignedTo);
+        logger.debug("ajaxItemViewUsersHandler: spaceId = " + spaceId + ", toState = " + toState + ", assignedTo = " + assignedTo);
         Space space = jtrac.loadSpace(Long.parseLong(spaceId));
         ModelAndView mav = new ModelAndView("ajax_item_view_users");
-        mav.addObject("userSpaceRoles", jtrac.findUsersAbleToTransition(space, Integer.parseInt(fromState), Integer.parseInt(toState)));        
+        mav.addObject("userSpaceRoles", jtrac.findUsersAbleToTransitionFrom(space, Integer.parseInt(toState)));        
         if(assignedTo != null && assignedTo.trim().length() > 0) {
             mav.addObject("selected", new Long(assignedTo));
         }

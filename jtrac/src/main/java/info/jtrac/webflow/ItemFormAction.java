@@ -86,8 +86,9 @@ public class ItemFormAction extends AbstractFormAction {
         }
         context.getFlowScope().put("space", space);
         List<UserSpaceRole> userSpaceRoles = jtrac.findUserRolesForSpace(space.getId());
+        // TODO, next two can be combined, optimized
         context.getFlowScope().put("userSpaceRoles", userSpaceRoles);
-        context.getFlowScope().put("permittedRoles", space.getMetadata().getRolesAbleToTransition(State.NEW, State.OPEN));
+        context.getFlowScope().put("usersAbleToTransitionFrom", jtrac.findUsersAbleToTransitionFrom(space, State.OPEN));
         return item;
     }
     

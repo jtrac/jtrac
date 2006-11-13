@@ -70,7 +70,7 @@ public interface Jtrac extends UserDetailsService {
     List<User> findUsersWithRoleForSpace(long spaceId, String roleKey);
     List<User> findUsersForUser(User user);
     List<User> findUnallocatedUsersForSpace(long spaceId);
-    List<UserSpaceRole> findUsersAbleToTransition(Space space, int fromState, int toState);
+    List<UserSpaceRole> findUsersAbleToTransitionFrom(Space space, int state);
     //========================================================
     CountsHolder loadCountsForUser(User user);
     Counts loadCountsForUserSpace(User user, Space space);

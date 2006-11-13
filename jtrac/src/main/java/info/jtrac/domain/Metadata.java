@@ -154,10 +154,15 @@ public class Metadata implements Serializable {
     //====================================================================
     
     public void initRoles() {
+        // set up default simple workflow
         states.put(State.NEW, "New");
         states.put(State.OPEN, "Open");
         states.put(State.CLOSED, "Closed");
         addRole("DEFAULT");
+        toggleTransition("DEFAULT", State.NEW, State.OPEN);
+        toggleTransition("DEFAULT",State.OPEN, State.OPEN);
+        toggleTransition("DEFAULT", State.OPEN, State.CLOSED);
+        toggleTransition("DEFAULT", State.CLOSED, State.OPEN);
     }
     
     public Field getField(String name) {
@@ -360,17 +365,28 @@ public class Metadata implements Serializable {
         return map;
     }
     
+    public Set<String> getRolesAbleToTransitionFrom(int state) {
+        Set<String> set = new HashSet<String>(roles.size());
+        for(Role role : roles.values()) {
+            State s = role.getStates().get(state);
+            if(s.getTransitions().size() > 0) {
+                set.add(role.getName());
+            }
+        }
+        return set;        
+    }
+    
     private State getRoleState(String roleKey, int stateKey) {
         Role role = roles.get(roleKey);
         return role.getStates().get(stateKey);
     }
     
-    public void toggleTransition(int stateKey, String roleKey, int transitionKey) {
-        State state = getRoleState(roleKey, stateKey);
-        if (state.getTransitions().contains(transitionKey)) {
-            state.getTransitions().remove(transitionKey);
+    public void toggleTransition(String roleKey, int fromState,  int toState) {
+        State state = getRoleState(roleKey, fromState);
+        if (state.getTransitions().contains(toState)) {
+            state.getTransitions().remove(toState);
         } else {
-            state.getTransitions().add(transitionKey);
+            state.getTransitions().add(toState);
         }
     }
     
