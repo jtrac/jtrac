@@ -33,6 +33,7 @@
                 </fileset>
             </classpath>
             <jvmarg value="-Xmx256M"/>
+            <jvmarg value="-Dhttp.proxyHost=${http.proxyHost}"/>
             <arg value="-o"/>
             <arg value="${dist.doc.dir}/pdf/docbook_fop.tmp"/>
             <arg value="${doc.src.dir}/src/index.xml"/>
@@ -63,6 +64,7 @@
                 </fileset>
             </classpath>
             <jvmarg value="-Xmx256M"/>
+            <jvmarg value="-Dhttp.proxyHost=${http.proxyHost}"/>
             <arg value="${basedir}/${doc.src.dir}/src/index.xml"/>
             <arg value="${basedir}/${doc.src.dir}/styles/html_chunk.xsl"/>
         </java>
@@ -77,6 +79,7 @@
                 </fileset>
             </classpath>
             <jvmarg value="-Xmx256M"/>
+            <jvmarg value="-Dhttp.proxyHost=${http.proxyHost}"/>
             <arg value="-o"/>
             <arg value="${dist.doc.dir}/html-single/index.html"/>
             <arg value="${doc.src.dir}/src/index.xml"/>
