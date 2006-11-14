@@ -27,7 +27,6 @@ import info.jtrac.util.SvnUtils;
 
 import java.io.OutputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletOutputStream;
 
@@ -75,10 +74,11 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
     }
 
     public ModelAndView logoutHandler(HttpServletRequest request, HttpServletResponse response) {
-        request.getSession().invalidate();
+        // next line moved to logout.jsp otherwise locale resolving issues
+        // request.getSession().invalidate(); 
         Cookie terminate = new Cookie(TokenBasedRememberMeServices.ACEGI_SECURITY_HASHED_REMEMBER_ME_COOKIE_KEY, null);
         terminate.setMaxAge(0);
-        response.addCookie(terminate);
+        response.addCookie(terminate);     
         return new ModelAndView("logout");
     }
 

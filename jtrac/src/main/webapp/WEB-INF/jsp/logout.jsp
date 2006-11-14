@@ -1,3 +1,4 @@
+<% session.invalidate(); %>
 <%@ include file="/WEB-INF/jsp/include.jsp" %>
 
 <html>
