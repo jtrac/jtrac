@@ -5,7 +5,7 @@
 
 <beans> 
     
-    <bean id="authenticationFilter" class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilter">
+    <bean id="authenticationFilter" class="info.jtrac.acegi.JtracAuthenticationProcessingFilter">
         <property name="authenticationManager" ref="authenticationManager"/>
         <property name="authenticationFailureUrl" value="/auth/login.htm?error=true"/>
         <property name="defaultTargetUrl" value="/app"/>

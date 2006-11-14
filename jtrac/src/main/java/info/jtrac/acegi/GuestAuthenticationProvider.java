@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class GuestAuthenticationProvider implements AuthenticationProvider {        
     
-    private static final Log logger = LogFactory.getLog(GuestAuthenticationProvider.class);
+    private final Log logger = LogFactory.getLog(getClass());
     
     public boolean supports(Class clazz) {
         return (GuestAuthenticationToken.class.isAssignableFrom(clazz));

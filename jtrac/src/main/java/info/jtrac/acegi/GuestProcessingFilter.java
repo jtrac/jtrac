@@ -51,7 +51,7 @@ public class GuestProcessingFilter implements Filter {
         this.jtrac = jtrac;
     }       
     
-    private static final Log logger = LogFactory.getLog(GuestProcessingFilter.class);
+    private final Log logger = LogFactory.getLog(getClass());
     
     public void init(FilterConfig filterConfig) {
         // ignored
