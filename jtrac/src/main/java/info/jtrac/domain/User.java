@@ -49,6 +49,7 @@ public class User implements UserDetails, Serializable {
     private String password;
     private String email;
     private Metadata metadata;
+    private String locale;
     private boolean locked;    
     private Set<UserSpaceRole> userSpaceRoles = new HashSet<UserSpaceRole>();
     private Map<Long, Boolean> spacesWhereAbleToCreateNewItem;
@@ -198,6 +199,13 @@ public class User implements UserDetails, Serializable {
         this.email = email;
     }
     
+    public String getLocale() {
+        return locale;
+    }
+    
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }    
     
     public boolean isLocked() {
         return locked;

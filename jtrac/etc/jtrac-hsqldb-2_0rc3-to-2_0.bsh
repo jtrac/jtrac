@@ -3,6 +3,7 @@ import java.sql.*;
 statements = new String[] {
 
 "alter table metadata alter column xml rename to xml_string",
+"alter table users add column locale varchar(20) before locked",
 "shutdown"
 
 };

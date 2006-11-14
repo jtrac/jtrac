@@ -47,6 +47,20 @@
                 </td>
             </spring:bind>
         </tr>
+        <tr>
+            <td class="label">
+                Language
+            </td>
+            <spring:bind path="userForm.user.locale">
+                <td>
+                    <select name="${status.expression}">
+                        <c:forEach items="${locales}" var="localeEntry">
+                            <option value="${localeEntry.key}" <c:if test="${status.value == localeEntry.key}">selected='true'</c:if>>${localeEntry.value}</option>
+                        </c:forEach>
+                    </select>
+                </td>
+            </spring:bind>
+        </tr>        
         <c:if test="${userForm.user.id == 0}">
             <tr>
                 <td/>

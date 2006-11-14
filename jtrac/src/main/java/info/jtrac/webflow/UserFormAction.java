@@ -25,6 +25,8 @@ import java.io.Serializable;
 import static info.jtrac.Constants.*;
 import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.SecurityUtils;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.validation.DataBinder;
 
@@ -53,6 +55,10 @@ public class UserFormAction extends AbstractFormAction {
     
     @Override
     public Object createFormObject(RequestContext context) {
+        // TODO get this from some config
+        Map<String, String> locales = new LinkedHashMap<String, String>();
+        locales.put("en", "en (English)");
+        context.getRequestScope().put("locales", locales);
         UserForm userForm = new UserForm();
         String userId = ValidationUtils.getParameter(context, "userId");
         // if called as subflow, userId may be vestigial from space allocate form

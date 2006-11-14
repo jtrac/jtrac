@@ -161,6 +161,7 @@
         <property name="name" column="name" length="50"/>
         <property name="password" column="password"/>
         <property name="email" column="email" length="50"/>
+        <property name="locale" column="locale" length="20"/>
         <property name="locked"> 
             <column name="locked" sql-type="integer"/> 
         </property>        
