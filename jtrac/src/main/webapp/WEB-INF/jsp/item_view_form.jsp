@@ -101,7 +101,7 @@ function handleAjaxResponse(ajaxRequest) {
             <td>
                 <span id="assignedToParent">
                     <spring:bind path="itemViewForm.history.assignedTo">
-                        <select name="${status.expression}" id="assignedTo">
+                        <select name="${status.expression}" id="assignedTo" <c:if test="${empty usersAbleToTransitionFrom}">disabled='true'</c:if>>
                             <c:if test="${!empty usersAbleToTransitionFrom}">
                                 <option/>
                                 <c:forEach items="${usersAbleToTransitionFrom}" var="usr">
