@@ -57,7 +57,8 @@ public class UserFormAction extends AbstractFormAction {
     public Object createFormObject(RequestContext context) {
         // TODO get this from some config
         Map<String, String> locales = new LinkedHashMap<String, String>();
-        locales.put("en", "en (English)");
+        locales.put("en", "en - English");
+        locales.put("de", "de - German");
         context.getRequestScope().put("locales", locales);
         UserForm userForm = new UserForm();
         String userId = ValidationUtils.getParameter(context, "userId");

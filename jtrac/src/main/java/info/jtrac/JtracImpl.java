@@ -308,9 +308,11 @@ public class JtracImpl implements Jtrac {
         } else {
             // the User object passed in may be incomplete, just bound from an HTML form
             // load actual user from database, which retains for e.g. the spaceRoles
+            // TODO this may be wrong approach, should change to using Spring Binding
             User temp = loadUser(user.getId());
             // apply edits from the GUI
-            temp.setEmail(user.getEmail());        
+            temp.setEmail(user.getEmail());
+            temp.setLocale(user.getLocale());
             temp.setLoginName(user.getLoginName());
             temp.setName(user.getName());
             if (user.getPassword() != null) {

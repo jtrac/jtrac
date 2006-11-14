@@ -24,16 +24,16 @@
 <td>
     <table class="nav-table">
         <tr>        
-            <td><a href="<c:url value='/app'/>">DASHBOARD</a></td>
+            <td><a href="<c:url value='/app'/>"><fmt:message key="header.dashboard"/></a></td>
             <c:if test="${!empty space && _flowId != 'space'}">
                 <td>${space.name}</td>
                 <c:if test="${principal.id != 0 && principal.spacesWhereAbleToCreateNewItem[space.id]}">
-                    <td><a href="<c:url value='/flow/item?spaceId=${space.id}'/>">NEW</a></td>
+                    <td><a href="<c:url value='/flow/item?spaceId=${space.id}'/>"><fmt:message key="header.new"/></a></td>
                 </c:if>
-                <td><a href="<c:url value='/flow/item_search?spaceId=${space.id}'/>">SEARCH</a></td>                
+                <td><a href="<c:url value='/flow/item_search?spaceId=${space.id}'/>"><fmt:message key="header.search"/></a></td>                
             </c:if>
             <c:if test="${empty space && principal.spaceCount > 1}">
-                <td><a href="<c:url value='/flow/item_search'/>">SEARCH</a></td>               
+                <td><a href="<c:url value='/flow/item_search'/>"><fmt:message key="header.search"/></a></td>               
             </c:if>            
         </tr>
     </table>
@@ -43,11 +43,11 @@
         <tr>                                
             <c:choose>
                 <c:when test="${principal.id == 0}">
-                    <td><a href="<c:url value='/auth/login.htm'/>">LOGIN</a></td>
+                    <td><a href="<c:url value='/auth/login.htm'/>"><fmt:message key="header.login"/></a></td>
                 </c:when>
                 <c:otherwise>
-                    <td><a href="<c:url value='/app/options.htm'/>">OPTIONS</a></td>
-                    <td><a href="<c:url value='/auth/logout.htm'/>">LOGOUT</a></td>
+                    <td><a href="<c:url value='/app/options.htm'/>"><fmt:message key="header.options"/></a></td>
+                    <td><a href="<c:url value='/auth/logout.htm'/>"><fmt:message key="header.logout"/></a></td>
                 </c:otherwise>
             </c:choose>
             <td>${principal.name}</td>
