@@ -15,6 +15,11 @@
         <property name="maxUploadSize" value="5120000"/>
     </bean>	    
     
+    <!-- i18n  -->
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+       <property name="basename" value="messages"/>
+    </bean>    
+    
     <!--
     - This sets up a uniform short-cut way to map the view logical name (with JSTL support)
     - to the actual web resource (jsp).  A more complex mapping can be done with a resource bundle
