@@ -29,27 +29,27 @@ function handleAjaxResponse(ajaxRequest) {
 <tr>
     <td>
         <c:if test="${!empty calledBySearch || !empty calledByRelate}">            
-            <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=back&itemId=${item.id}#goto'/>">(back)</a>        
+            <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=back&itemId=${item.id}#goto'/>">(<fmt:message key='back'/>)</a>        
         </c:if>
     </td>
     <c:if test="${!empty calledByRelate}">
         <td class="selected">
-           Relate this item to ${relatingItem.refId} [${relatingItem.summary}]
+           <fmt:message key='item_view_form.relateTo'/> ${relatingItem.refId} [${relatingItem.summary}]
         </td>
         <td>            
             <select name="relationType">                
-                <option value="1">${relatingItem.refId} is duplicate of this</option>
-                <option value="2">${relatingItem.refId} depends on this</option>
-                <option value="0">Both items are related</option>
+                <option value="1">${relatingItem.refId} <fmt:message key='item_view_form.isDuplicateOfThis'/></option>
+                <option value="2">${relatingItem.refId} <fmt:message key='item_view_form.dependsOnThis'/></option>
+                <option value="0">${relatingItem.refId} <fmt:message key='item_view_form.isRelatedToThis'/></option>
             </select>
             <input type="hidden" name="itemId" value="${relatingItem.id}"/>
             <input type="hidden" name="relatedItemRefId" value="${item.refId}"/>            
-            <input type="submit" name="_eventId_relateSubmit" value="Submit" <c:if test="${item.id == relatingItem.id}">disabled='true'</c:if>/>
+            <input type="submit" name="_eventId_relateSubmit" value="<fmt:message key='submit'/>" <c:if test="${item.id == relatingItem.id}">disabled='true'</c:if>/>
         </td>
     </c:if>
     <authz:authorize ifAllGranted="ROLE_ADMIN">
         <td align="right">
-            <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=edit&itemId=${item.id}'/>">(edit)</a>
+            <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=edit&itemId=${item.id}'/>">(<fmt:message key='edit'/>)</a>
         </td>
     </authz:authorize>
 </tr>
@@ -83,7 +83,7 @@ function handleAjaxResponse(ajaxRequest) {
     
     <c:if test="${transitionCount > 0}">
         <tr>
-            <td class="label">New Status</td>
+            <td class="label"><fmt:message key='item_view_form.newStatus'/></td>
             <td>
                 <spring:bind path="itemViewForm.history.status">
                     <select name="${status.expression}" id="status" onChange="doAjaxRequest()">
@@ -97,7 +97,7 @@ function handleAjaxResponse(ajaxRequest) {
             </td>        
         </tr>    
         <tr>
-            <td class="label">Assign To</td>       
+            <td class="label"><fmt:message key='item_view_form.assignTo'/></td>       
             <td>
                 <span id="assignedToParent">
                     <spring:bind path="itemViewForm.history.assignedTo">
@@ -121,7 +121,7 @@ function handleAjaxResponse(ajaxRequest) {
     
      <tr>
         <td class="label">
-            Comment
+            <fmt:message key='item_view_form.comment'/>
             <font color="red">*</font>
         </td>
         <td>
@@ -134,18 +134,18 @@ function handleAjaxResponse(ajaxRequest) {
      <tr>
         <td/>
         <td>
-            <input type="submit" name="_eventId_submit" value="Submit"/>
+            <input type="submit" name="_eventId_submit" value="<fmt:message key='submit'/>"/>
             <spring:bind path="itemViewForm.history.sendNotifications">
                 <input type="checkbox" name="${status.expression}" value="true" <c:if test="${status.value}">checked="true"</c:if>/>
                 <input type="hidden" name="_${status.expression}"/> 
             </spring:bind>              
-            send e-mail notifications
+            <fmt:message key='item_view_form.sendNotifications'/>
             <c:if test="${empty itemViewForm.relatedItemRefId}">            
-                | <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=relateSearch&itemId=${item.id}'/>">(add related item)</a>
+                | <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=relateSearch&itemId=${item.id}'/>">(<fmt:message key='item_view_form.addRelatedItem'/>)</a>
             </c:if>
             <c:if test="${!empty itemViewForm.relatedItemRefId}">
                 | <span class="info">${relationText} ${itemViewForm.relatedItemRefId}</span>
-                <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=relateSearch&itemId=${item.id}'/>">(change)</a>
+                <a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=relateSearch&itemId=${item.id}'/>">(<fmt:message key='item_view_form.change'/>)</a>
             </c:if>
         </td>        
     </tr>  
@@ -155,7 +155,7 @@ function handleAjaxResponse(ajaxRequest) {
 
 <td valign="top">
     <table class="jtrac">
-        <tr><th>Notify By E-mail</th></tr>
+        <tr><th><fmt:message key='item_view_form.notifyByEmail'/></th></tr>
         <tr>
             <td>
                 <spring:bind path="itemViewForm.history.itemUsers">
@@ -163,7 +163,7 @@ function handleAjaxResponse(ajaxRequest) {
                 </spring:bind>
             </td>
         </tr>
-        <tr><th>Attachment</th></tr>
+        <tr><th><fmt:message key='item_view_form.attachment'/></th></tr>
         <tr><td><input type="file" name="file" size="15"/></td></tr>
     </table>
 </td>

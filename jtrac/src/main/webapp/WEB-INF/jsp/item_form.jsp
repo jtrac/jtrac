@@ -3,7 +3,7 @@
 <form method="post" action="<c:url value='/flow'/>" enctype="multipart/form-data">
 
 <c:if test="${item.id != 0}">    
-    <input type="submit" name="_eventId_delete" value="Delete"/><br/><br/>
+    <input type="submit" name="_eventId_delete" value="<fmt:message key='delete'/>"/><br/><br/>
 </c:if>
 
 <table class="bdr-collapse">
@@ -13,7 +13,7 @@
     <table class="jtrac">
         <tr>    
             <td class="label">
-                Summary
+                <fmt:message key="item_form.summary"/>
                 <font color="red">*</font>
             </td>    
             <td>
@@ -26,7 +26,7 @@
 
         <tr>    
             <td class="label">
-                Detail
+                <fmt:message key="item_form.detail"/>
                 <font color="red">*</font>
             </td>    
             <td>
@@ -62,7 +62,7 @@
                     <c:if test="${item.id == 0}">
                         <tr>    
                             <td class="label">
-                                Assign To
+                                <fmt:message key="item_form.assignTo"/>
                                 <font color="red">*</font>
                             </td>
                             <td>
@@ -81,7 +81,7 @@
                     <c:if test="${item.id != 0}">
                         <tr>    
                             <td class="label">
-                                Edit Reason
+                                <fmt:message key="item_form.editReason"/>
                                 <font color="red">*</font>
                             </td>
                             <td>
@@ -93,9 +93,9 @@
                     <tr>
                         <td/>
                         <td>
-                            <input type="submit" name="_eventId_submit" value="Submit"/>
+                            <input type="submit" name="_eventId_submit" value="<fmt:message key='submit'/>"/>
                             <input type="checkbox" name="sendNotifications" value="true" <c:if test="${item.sendNotifications}">checked="true"</c:if>/>
-                            send e-mail notifications
+                            <fmt:message key="item_form.sendNotifications"/>
                             <input type="hidden" name="_sendNotifications"/>
                             <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
                             <input type="hidden" name="itemId" value="${item.id}"/>
@@ -107,7 +107,7 @@
             <c:if test="${item.id == 0}">
                 <td align="right">
                     <table class="jtrac">
-                        <tr><th>Notify By E-mail</th></tr>
+                        <tr><th><fmt:message key="item_form.notifyByEmail"/></th></tr>
                         <tr>
                             <td>
                                 <spring:bind path="item.itemUsers">
@@ -115,7 +115,7 @@
                                 </spring:bind>
                             </td>
                         </tr>
-                        <tr><th>Attachment</th></tr>
+                        <tr><th><fmt:message key="item_form.attachment"/></th></tr>
                         <tr><td><input type="file" name="file" size="15"/></td></tr>
                     </table>
                 </td>
@@ -130,7 +130,7 @@
 <br/>
     
 <c:if test="${item.id != 0}">
-    <input type="submit" name="_eventId_cancel" value="Cancel"/>
+    <input type="submit" name="_eventId_cancel" value="<fmt:message key='cancel'/>"/>
 </c:if>
 
 </form>

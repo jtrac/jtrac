@@ -32,21 +32,21 @@ function collapse(spaceId) {
 
 <c:choose>
     <c:when test="${principal.spaceCount == 0}">
-        <span class="info">You are not mapped to any Spaces.</span>
+        <span class="info"><fmt:message key="dashboard.noSpaces"/></span>
         <br/>
     </c:when>
     <c:otherwise>
     
 <table class="jtrac">
     <tr>
-        <th>Space</th>
-        <th colspan="2">Action</th>
-        <th colspan="2">Status</th>
+        <th><fmt:message key="dashboard.space"/></th>
+        <th colspan="2"><fmt:message key="dashboard.action"/></th>
+        <th colspan="2"><fmt:message key="dashboard.status"/></th>
         <c:if test="${principal.id != 0}">            
-            <th>Logged<br/>By Me</th>
-            <th>Assigned<br/>To Me</th>
+            <th><fmt:message key="dashboard.loggedByMe"/></th>
+            <th><fmt:message key="dashboard.assignedToMe"/></th>
         </c:if>
-        <th style="width:4.5em">All</th>
+        <th style="width:4.5em"><fmt:message key="dashboard.all"/></th>
     </tr>
     <tr><td>&nbsp;</td></tr>
         
@@ -61,18 +61,18 @@ function collapse(spaceId) {
                 <td class="icon">
                     <c:if test="${principal.spacesWhereAbleToCreateNewItem[spaceId]}">
                         <a href="<c:url value='/flow/item?spaceId=${spaceId}'/>">
-                            <img title="New" class="noborder" src="${pageContext.request.contextPath}/resources/document-new.png"/>
+                            <img title="<fmt:message key='dashboard.new'/>" class="noborder" src="${pageContext.request.contextPath}/resources/document-new.png"/>
                         </a>
                     </c:if>
                 </td>
                 <td class="icon">
                     <a href="<c:url value='/flow/item_search?spaceId=${spaceId}'/>">
-                        <img title="Search" class="noborder" src="${pageContext.request.contextPath}/resources/system-search.png"/>
+                        <img title="<fmt:message key='dashboard.search'/>" class="noborder" src="${pageContext.request.contextPath}/resources/system-search.png"/>
                     </a>
                 </td>
                 <td style="padding:0">
                     <a href="#" onclick="doAjaxRequest(${spaceId})">
-                        <img title="Show Details" class="noborder" src="${pageContext.request.contextPath}/resources/collapsed.png"/>
+                        <img title="<fmt:message key='dashboard.showDetails'/>" class="noborder" src="${pageContext.request.contextPath}/resources/collapsed.png"/>
                     </a>
                 </td>
                 <td>
