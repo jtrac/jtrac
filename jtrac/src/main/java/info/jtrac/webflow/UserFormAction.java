@@ -25,6 +25,7 @@ import java.io.Serializable;
 import static info.jtrac.Constants.*;
 import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.SecurityUtils;
+import info.jtrac.util.UserUtils;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -151,7 +152,11 @@ public class UserFormAction extends AbstractFormAction {
         } else {
             jtrac.storeUser(user);
         }
-        SecurityUtils.refreshSecurityContextIfPrincipal(user);
+        temp = SecurityUtils.getPrincipal();
+        if (temp.getId() == user.getId()) {
+            SecurityUtils.refreshSecurityContext();
+            UserUtils.refreshLocale(context, user.getLocale());
+        }
         return success();
     }
     

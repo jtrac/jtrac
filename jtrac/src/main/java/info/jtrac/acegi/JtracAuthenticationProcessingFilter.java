@@ -17,16 +17,14 @@
 package info.jtrac.acegi;
 
 import info.jtrac.domain.User;
+import info.jtrac.util.UserUtils;
 import java.io.IOException;
-import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.ui.webapp.AuthenticationProcessingFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.util.StringUtils;
-import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 /**
  * Extension of Acegi class to set the users locale from database profile
@@ -39,16 +37,8 @@ public class JtracAuthenticationProcessingFilter extends AuthenticationProcessin
     public void onSuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         super.onSuccessfulAuthentication(request, response, authentication);
         User user = (User) authentication.getPrincipal();
-        logger.debug("successful authentication post processing for user '" + user.getLoginName() + "'");
-        String localeString = user.getLocale();
-        if (localeString == null) {
-            localeString = "en";
-            logger.debug("user locale is null, defaulting to 'en'");
-        }
-        Locale locale = StringUtils.parseLocaleString(localeString);
-        SessionLocaleResolver slr = new SessionLocaleResolver();
-        slr.setLocale(request, response, locale);
-        logger.debug("locale set to " + locale);
+        logger.debug("successful authentication post processing for user " + user);
+        UserUtils.refreshLocale(request, response, user.getLocale());
     }
     
 }

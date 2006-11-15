@@ -20,12 +20,33 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.UserSpaceRole;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import org.springframework.webflow.context.servlet.ServletExternalContext;
+import org.springframework.webflow.execution.RequestContext;
 
 /**
  * routines to filter User, UserSpaceRoles collections etc
  */
 public class UserUtils {
+    
+    public static void refreshLocale(HttpServletRequest request, HttpServletResponse response, String localeString) {
+        if (localeString == null) {
+            localeString = "en";
+        }
+        Locale locale = StringUtils.parseLocaleString(localeString);
+        SessionLocaleResolver slr = new SessionLocaleResolver();
+        slr.setLocale(request, response, locale);      
+    }
+    
+    public static void refreshLocale(RequestContext context, String localeString) {
+        ServletExternalContext servletContext = (ServletExternalContext) context.getLastEvent().getSource();
+        refreshLocale(servletContext.getRequest(), servletContext.getResponse(), localeString);
+    }
     
     /**
      * This is a rather 'deep' concept, first of course you need to restrict the next possible
