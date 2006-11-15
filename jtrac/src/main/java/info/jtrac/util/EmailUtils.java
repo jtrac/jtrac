@@ -21,13 +21,16 @@ import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.User;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.Properties;
 import javax.mail.Header;
 import javax.mail.internet.MimeMessage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.util.StringUtils;
 
 /**
  * Class to handle sending of E-mail and pre-formatted messages
@@ -107,7 +110,7 @@ public class EmailUtils {
     private String addHeaderAndFooter(StringBuffer html) {
         StringBuffer sb = new StringBuffer();
         // additional cosmetic tweaking of e-mail layout
-        //  style just after the body tag does not work for a minority of clients like gmail, thunderbird etc.
+        // style just after the body tag does not work for a minority of clients like gmail, thunderbird etc.
         // ItemUtils adds the main inline CSS when generating the email content, so we gracefully degrade
         sb.append("<html><body><style type='text/css'>table.jtrac th, table.jtrac td { padding-left: 0.2em; padding-right: 0.2em; }</style>");
         sb.append(html);
@@ -131,13 +134,15 @@ public class EmailUtils {
         return prefix + " #" + item.getRefId() + " " + summary;
     }
     
-    public void send(Item item) {
+    public void send(Item item, MessageSource messageSource) {
+        // TODO make this locale sensitive per recipient
+        Locale locale = StringUtils.parseLocaleString("en");
         logger.debug("attempting to send mail for item update");
         // prepare message content
         StringBuffer sb = new StringBuffer();
         String anchor = getItemViewAnchor(item);
         sb.append(anchor);
-        sb.append(ItemUtils.getAsHtml(item, null, null));
+        sb.append(ItemUtils.getAsHtml(item, messageSource, locale));
         sb.append(anchor);
         if (logger.isDebugEnabled()) {
             logger.debug("html content: " + sb);

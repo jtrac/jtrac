@@ -15,13 +15,8 @@
         <property name="maxUploadSize" value="5120000"/>
     </bean>	    
     
-    <!-- i18n locale resolver -->
-    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver"/>
-    
-    <!-- i18n message source -->
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-       <property name="basename" value="messages"/>
-    </bean>    
+    <!-- i18n locale resolver, note that messageSource is in root context -->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver"/>       
     
     <!--
     - This sets up a uniform short-cut way to map the view logical name (with JSTL support)

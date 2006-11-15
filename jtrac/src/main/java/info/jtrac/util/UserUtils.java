@@ -34,12 +34,13 @@ import org.springframework.webflow.execution.RequestContext;
  */
 public class UserUtils {
     
+    public static SessionLocaleResolver slr = new SessionLocaleResolver();
+    
     public static void refreshLocale(HttpServletRequest request, HttpServletResponse response, String localeString) {
         if (localeString == null) {
             localeString = "en";
         }
         Locale locale = StringUtils.parseLocaleString(localeString);
-        SessionLocaleResolver slr = new SessionLocaleResolver();
         slr.setLocale(request, response, locale);      
     }
     

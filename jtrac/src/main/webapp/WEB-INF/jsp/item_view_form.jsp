@@ -38,9 +38,9 @@ function handleAjaxResponse(ajaxRequest) {
         </td>
         <td>            
             <select name="relationType">                
-                <option value="1">${relatingItem.refId} <fmt:message key='item_view_form.isDuplicateOfThis'/></option>
-                <option value="2">${relatingItem.refId} <fmt:message key='item_view_form.dependsOnThis'/></option>
-                <option value="0">${relatingItem.refId} <fmt:message key='item_view_form.isRelatedToThis'/></option>
+                <option value="1">${relatingItem.refId} <fmt:message key='item_view_form.duplicateOf'/></option>
+                <option value="2">${relatingItem.refId} <fmt:message key='item_view_form.dependsOn'/></option>
+                <option value="0">${relatingItem.refId} <fmt:message key='item_view_form.relatedTo'/></option>
             </select>
             <input type="hidden" name="itemId" value="${relatingItem.id}"/>
             <input type="hidden" name="relatedItemRefId" value="${item.refId}"/>            

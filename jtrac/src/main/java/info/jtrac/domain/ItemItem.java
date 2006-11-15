@@ -40,13 +40,14 @@ public class ItemItem implements Serializable {
     public static int DUPLICATE_OF = 1;
     public static int DEPENDS_ON = 2;
     
+    // this returns i18n keys
     public static String getRelationText(int type) {
         if (type == RELATED) {
-            return "is related to";
+            return "relatedTo";
         } else if (type == DUPLICATE_OF) {
-            return "is duplicate of";
+            return "duplicateOf";
         } else if (type == DEPENDS_ON) {
-            return "depends on resolution of";
+            return "dependsOn";
         } else {
             throw new RuntimeException("unknown type: " + type);
         }

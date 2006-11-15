@@ -13,6 +13,11 @@
          because JtracImpl depends on it -->
     <bean id="passwordEncoder" class="org.acegisecurity.providers.encoding.Md5PasswordEncoder"/>
 
+    <!-- i18n message source -->
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+       <property name="basename" value="messages"/>
+    </bean>    
+    
     <!-- the business service tier / facade is behind an AOP interceptor (see "target" property)
          only the store* operations require transactions across multiple dao update operations -->
     <bean id="jtrac" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
@@ -23,6 +28,7 @@
                 <property name="passwordEncoder" ref="passwordEncoder"/>
                 <property name="indexer" ref="indexer"/>
                 <property name="indexSearcher" ref="indexSearcher"/>
+                <property name="messageSource" ref="messageSource"/>
             </bean>
         </property>        
         <property name="transactionAttributes">

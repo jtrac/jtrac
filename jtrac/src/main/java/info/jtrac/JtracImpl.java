@@ -29,7 +29,6 @@ import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.SpaceSequence;
-import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.lucene.IndexSearcher;
@@ -54,6 +53,7 @@ import org.acegisecurity.userdetails.UserDetails;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.context.MessageSource;
 
 /**
  * Jtrac Service Layer implementation
@@ -67,6 +67,7 @@ public class JtracImpl implements Jtrac {
     private EmailUtils emailUtils;
     private Indexer indexer;
     private IndexSearcher indexSearcher;
+    private MessageSource messageSource;
     
     public void setDao(JtracDao dao) {
         this.dao = dao;
@@ -85,6 +86,11 @@ public class JtracImpl implements Jtrac {
     public void setIndexer(Indexer indexer) {
         this.indexer = indexer;
     }    
+
+    public void setMessageSource(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
+    
     
     private final Log logger = LogFactory.getLog(getClass());
     
@@ -152,7 +158,7 @@ public class JtracImpl implements Jtrac {
         indexer.index(item);
         indexer.index(history);
         if (item.isSendNotifications() && emailUtils != null) {
-            emailUtils.send(item);
+            emailUtils.send(item, messageSource);
         }
     }
     
@@ -181,7 +187,7 @@ public class JtracImpl implements Jtrac {
         dao.storeItem(item);
         indexer.index(history);
         if (history.isSendNotifications() && emailUtils != null) {
-            emailUtils.send(item);
+            emailUtils.send(item, messageSource);
         }
     }
     

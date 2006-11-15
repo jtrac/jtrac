@@ -23,10 +23,14 @@ import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemItem;
 import info.jtrac.webflow.ItemViewFormAction.ItemViewForm;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.context.MessageSource;
+import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.util.HtmlUtils;
 
 /**
@@ -44,8 +48,28 @@ public final class ItemUtils {
         return temp.replaceAll("\n", "<br/>").replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
     }
     
+    private static String fmt(String key, MessageSource messageSource, Locale locale) {
+        try {
+            return messageSource.getMessage("item_view." + key, null, locale);
+        } catch (Exception e) {
+            return "???item_view." + key + "???";
+        }
+    }
+    
+    public static String getAsHtml(Item item, MessageSource messageSource, Locale locale) {
+        return getAsHtml(item, null, null, messageSource, locale);
+    }
+    
     public static String getAsHtml(Item item, HttpServletRequest request, HttpServletResponse response) {
-        boolean isWeb = request != null && response != null;
+        Locale locale = RequestContextUtils.getLocale(request);
+        MessageSource messageSource = RequestContextUtils.getWebApplicationContext(request);        
+        return getAsHtml(item, request, response, messageSource, locale);
+    }    
+    
+    private static String getAsHtml(Item item, HttpServletRequest request, HttpServletResponse response, 
+            MessageSource ms, Locale loc) {        
+        
+        boolean isWeb = request != null && response != null;             
         
         String tableStyle = " class='jtrac'";
         String tdStyle = "";
@@ -66,9 +90,9 @@ public final class ItemUtils {
         StringBuffer sb = new StringBuffer();
         sb.append("<table width='100%'" + tableStyle + ">");
         sb.append("<tr" + altStyle + ">");
-        sb.append("  <td" + labelStyle + ">ID</td>");
+        sb.append("  <td" + labelStyle + ">" + fmt("id", ms, loc) + "</td>");
         sb.append("  <td" + tdStyle + ">" + item.getRefId() + "</td>");
-        sb.append("  <td" + labelStyle + ">Related Items</td>");
+        sb.append("  <td" + labelStyle + ">" + fmt("relatedItems", ms, loc) + "</td>");
         sb.append("  <td colspan='3'" + tdStyle + ">");
         if (item.getRelatedItems() != null || item.getRelatingItems() != null) {
             String flowUrlParam = null;
@@ -94,9 +118,9 @@ public final class ItemUtils {
                         String url = flowUrl + "&_eventId=viewRelated&itemId=" + itemItem.getRelatedItem().getId();
                         refId = "<a href='" + response.encodeURL(request.getContextPath() + url) + "'>" + refId + "</a>"
                                 + "<input type='checkbox' name='removeRelated' value='" 
-                                + itemItem.getId() + "' title='remove'" + checked + "/>";
+                                + itemItem.getId() + "' title='" + fmt("remove", ms, loc) + "'" + checked + "/>";
                     }
-                    sb.append(itemItem.getRelationText() + " " + refId + " ");
+                    sb.append(fmt(itemItem.getRelationText(), ms, loc) + " " + refId + " ");
                 }
             }
             if (item.getRelatingItems() != null) {
@@ -106,26 +130,26 @@ public final class ItemUtils {
                         String url = flowUrl + "&_eventId=viewRelated&itemId=" + itemItem.getItem().getId();
                         refId = "<a href='" + response.encodeURL(request.getContextPath() + url) + "'>" + refId + "</a>";
                     }
-                    sb.append(refId + " " + itemItem.getRelationText() + " this. ");
+                    sb.append(refId + " " + fmt(itemItem.getRelationText(), ms, loc) + " this. ");
                 }
             }
         }
         sb.append("  </td>");
         sb.append("</tr>");
         sb.append("<tr>");
-        sb.append("  <td width='20%'" + labelStyle + ">Status</td>");
+        sb.append("  <td width='20%'" + labelStyle + ">" + fmt("status", ms, loc) + "</td>");
         sb.append("  <td" + tdStyle + ">" + item.getStatusValue() + "</td>");
-        sb.append("  <td" + labelStyle + ">Logged By</td>");
+        sb.append("  <td" + labelStyle + ">" + fmt("loggedBy", ms, loc) + "</td>");
         sb.append("  <td" + tdStyle + ">" + item.getLoggedBy().getName() + "</td>");
-        sb.append("  <td" + labelStyle + ">Assigned To</td>");
+        sb.append("  <td" + labelStyle + ">" + fmt("assignedTo", ms, loc) + "</td>");
         sb.append("  <td width='15%'" + tdStyle + ">" + ( item.getAssignedTo() == null ? "" : item.getAssignedTo().getName() ) + "</td>");
         sb.append("</tr>");
         sb.append("<tr" + altStyle + ">");
-        sb.append("  <td" + labelStyle + ">Summary</td>");
+        sb.append("  <td" + labelStyle + ">" + fmt("summary", ms, loc) + "</td>");
         sb.append("  <td colspan='5'" + tdStyle + ">" + HtmlUtils.htmlEscape(item.getSummary()) + "</td>");
         sb.append("</tr>");
         sb.append("<tr>");
-        sb.append("  <td valign='top'" + labelStyle + ">Detail</td>");
+        sb.append("  <td valign='top'" + labelStyle + ">" + fmt("detail", ms, loc) + "</td>");
         sb.append("  <td colspan='5'" + tdStyle + ">" + fixWhiteSpace(item.getDetail()) + "</td>");
         sb.append("</tr>");
         
@@ -142,11 +166,11 @@ public final class ItemUtils {
         sb.append("</table>");
         
         //=========================== HISTORY ==================================
-        sb.append("<br/>&nbsp;<b" + tableStyle + ">History</b>");
+        sb.append("<br/>&nbsp;<b" + tableStyle + ">" + fmt("history", ms, loc) + "</b>");
         sb.append("<table width='100%'" + tableStyle + ">");
         sb.append("<tr>");
-        sb.append("  <th" + thStyle + ">Logged By</th><th" + thStyle + ">Status</th>"
-                + "<th" + thStyle + ">Assigned To</th><th" + thStyle + ">Comment</th><th" + thStyle + ">Time Stamp</th>");
+        sb.append("  <th" + thStyle + ">" + fmt("loggedBy", ms, loc) + "</th><th" + thStyle + ">" + fmt("status", ms, loc) + "</th>"
+                + "<th" + thStyle + ">" + fmt("assignedTo", ms, loc) + "</th><th" + thStyle + ">" + fmt("comment", ms, loc) + "</th><th" + thStyle + ">" + fmt("timeStamp", ms, loc) + "</th>");
         List<Field> editable = item.getSpace().getMetadata().getEditableFields();
         for(Field field : editable) {
             sb.append("<th" + thStyle + ">" + field.getLabel() + "</th>");

@@ -242,4 +242,24 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         
     }
     
+    public void testGetItemAsHtmlDoesNotThrowException() {        
+        Config config = new Config("mail.server.host", "dummyhost");
+        jtrac.storeConfig(config);
+        // now email sending is switched on
+        Space s = getSpace();
+        jtrac.storeSpace(s);
+        User u = new User();
+        u.setLoginName("test");
+        u.setEmail("test");
+        u.addSpaceWithRole(s, "DEFAULT");
+        jtrac.storeUser(u);
+        Item i = new Item();
+        i.setSpace(s);
+        i.setAssignedTo(u);
+        i.setLoggedBy(u);
+        i.setStatus(State.CLOSED);
+        // next step will internally try to render item as Html for sending e-mail
+        jtrac.storeItem(i, null);        
+    }
+    
 }
