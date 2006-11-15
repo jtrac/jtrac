@@ -293,36 +293,18 @@ public class JtracImpl implements Jtrac {
         return users.get(0);
     }
   
-    public void storeUser(User user) {        
-        String clearText = null;
-        if (user.getId() == 0) {
-            if (user.getPassword() == null) {
-                clearText = generatePassword();
-                user.setPassword(encodeClearText(clearText));
-            } else {
-                // password was provided by Admin.  Maybe e-mail is not available
-                // we don't set clearText, so no email will be sent
-                user.setPassword(encodeClearText(user.getPassword()));
-            }            
-            dao.storeUser(user);
-        } else {
-            // the User object passed in may be incomplete, just bound from an HTML form
-            // load actual user from database, which retains for e.g. the spaceRoles
-            // TODO this may be wrong approach, should change to using Spring Binding
-            User temp = loadUser(user.getId());
-            // apply edits from the GUI
-            temp.setEmail(user.getEmail());
-            temp.setLocale(user.getLocale());
-            temp.setLoginName(user.getLoginName());
-            temp.setName(user.getName());
-            if (user.getPassword() != null) {
-                clearText = user.getPassword();
-                temp.setPassword(encodeClearText(clearText));                
-            }
-            dao.storeUser(temp);
-        }
-        if (emailUtils != null && clearText != null) {                
-            emailUtils.sendUserPassword(user, clearText);
+    public void storeUser(User user) {
+        dao.storeUser(user);
+    }
+    
+    public void storeUser(User user, String password) {        
+        if (password == null) {
+            password = generatePassword();
+        }                        
+        user.setPassword(encodeClearText(password));
+        storeUser(user);
+        if (emailUtils != null) {                
+            emailUtils.sendUserPassword(user, password);
         }
     }
     

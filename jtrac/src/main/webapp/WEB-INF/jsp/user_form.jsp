@@ -7,7 +7,7 @@
 <form method="post" action="<c:url value='/flow'/>">
 
     <spring:bind path="userForm.user.id">        
-        <input type="hidden" name="${status.expression}" value="${status.value}"/>
+        <input type="hidden" name="userId" value="${status.value}"/>
     </spring:bind>
 
     <table class="jtrac">
@@ -72,7 +72,7 @@
         </c:if>
         <tr>
             <td class="label">Password</td>
-            <spring:bind path="userForm.user.password">
+            <spring:bind path="userForm.password">
                 <td>
                     <input type="password" name="${status.expression}" value="${status.value}" size="15"/>
                     <span class="error">${status.errorMessage}</span>

@@ -61,12 +61,12 @@ public class UserFormAction extends AbstractFormAction {
         locales.put("de", "de - German");
         context.getRequestScope().put("locales", locales);
         UserForm userForm = new UserForm();
+        // note that form has a hidden field 'userId' to handle re-show form on errors
         String userId = ValidationUtils.getParameter(context, "userId");
-        // if called as subflow, userId may be vestigial from space allocate form
+        // if called as subflow, userId may be unintended request parameter from space allocate form
         // hence extra check for space in Flow scope
         if (userId != null && context.getFlowScope().get("space") == null) {
             User user = jtrac.loadUser(Integer.parseInt(userId));
-            user.setPassword(null);
             userForm.setUser(user);
             return userForm;
         }
@@ -78,17 +78,29 @@ public class UserFormAction extends AbstractFormAction {
      */
     public static class UserForm implements Serializable {
         
-        private transient User user = new User();
+        private transient User user;
+        private String password;
         private String passwordConfirm;
         private boolean admin;
         
         public User getUser() {
+            if (user == null) {
+                return new User();
+            }
             return user;
         }
         
         public void setUser(User user) {
             this.user = user;
         }
+        
+        public String getPassword() {
+            return password;
+        }
+        
+        public void setPassword(String password) {
+            this.password = password;
+        }        
         
         public String getPasswordConfirm() {
             return passwordConfirm;
@@ -116,7 +128,7 @@ public class UserFormAction extends AbstractFormAction {
                 errors.rejectValue("user.loginName", "error.userForm.user.loginName.badchars", 
                         "Only lower case letters and numeric characters allowed.");
             }
-            String password = userForm.getUser().getPassword();
+            String password = userForm.getPassword();
             String passwordConfirm = userForm.getPasswordConfirm();
             if ((password != null && !password.equals(passwordConfirm)) ||
                     (passwordConfirm != null && !passwordConfirm.equals(password))) {
@@ -134,8 +146,11 @@ public class UserFormAction extends AbstractFormAction {
             errors.rejectValue("user.loginName", "error.user.loginName.exists", "Login ID already exists");
             return error();
         }
-        // note that jtrac service layer takes care of the object relationships before persisting UI edit
-        jtrac.storeUser(user);
+        if (userForm.getPassword() != null) {
+            jtrac.storeUser(user, userForm.getPassword());
+        } else {
+            jtrac.storeUser(user);
+        }
         SecurityUtils.refreshSecurityContextIfPrincipal(user);
         return success();
     }
