@@ -196,8 +196,8 @@
                             <tr>
                                 <th <c:if test="${!empty status.value}">class="selected"</c:if>>
                                     <c:choose>
-                                        <c:when test="${suffix == 'Start'}">On / After</c:when>
-                                        <c:when test="${suffix == 'End'}">On / Before</c:when>
+                                        <c:when test="${suffix == 'Start'}"><fmt:message key='item_search_form.onOrAfter'/></c:when>
+                                        <c:when test="${suffix == 'End'}"><fmt:message key='item_search_form.onOrBefore'/></c:when>
                                     </c:choose>
                                 </th>
                                 <td>
@@ -255,8 +255,7 @@
                 <c:if test="${!empty field}">
                     <td>
                         <table class="jtrac">
-                            <tr>
-                                
+                            <tr>                                
                                 <th <c:if test="${!empty optionsMap}">class="selected"</c:if>>
                                     <c:out value="${field.label}"/>
                                 </th>
@@ -299,8 +298,8 @@
                                     <tr>
                                         <th <c:if test="${!empty status.value}">class="selected"</c:if>>
                                             <c:choose>
-                                                <c:when test="${suffix == 'Start'}">On / After</c:when>
-                                                <c:when test="${suffix == 'End'}">On / Before</c:when>
+                                                <c:when test="${suffix == 'Start'}"><fmt:message key='item_search_form.onOrAfter'/></c:when>
+                                                <c:when test="${suffix == 'End'}"><fmt:message key='item_search_form.onOrBefore'/></c:when>
                                             </c:choose>
                                         </th>
                                         <td>
