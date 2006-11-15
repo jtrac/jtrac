@@ -23,11 +23,14 @@ import info.jtrac.domain.History;
 import info.jtrac.domain.ItemSearch;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
+import org.springframework.context.MessageSource;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.util.HtmlUtils;
 
 public class ItemList extends SimpleTagSupport {
@@ -45,11 +48,21 @@ public class ItemList extends SimpleTagSupport {
         this.itemSearch = itemSearch;
     }
     
+    private static String fmt(String key, MessageSource messageSource, Locale locale) {
+        try {
+            return messageSource.getMessage("item_list." + key, null, locale);
+        } catch (Exception e) {
+            return "???item_list." + key + "???";
+        }
+    }    
+    
     @Override
     public void doTag() {
         PageContext pageContext = (PageContext) getJspContext();
         request = (HttpServletRequest) pageContext.getRequest();        
         response = (HttpServletResponse) pageContext.getResponse();
+        Locale loc = RequestContextUtils.getLocale(request);
+        MessageSource ms = RequestContextUtils.getWebApplicationContext(request);         
         JspWriter out = pageContext.getOut();
         try {
             
@@ -58,8 +71,9 @@ public class ItemList extends SimpleTagSupport {
             String flowUrl = "/flow?" + flowUrlParam;
             StringBuffer sb = new StringBuffer();
             long resultCount = itemSearch.getResultCount();
-            String plural = resultCount == 1 ? "" : "s";
-            sb.append("<a href='" + encodeURL(flowUrl + "&_eventId=back'") + " title='Modify Search'>" + resultCount + " record" + plural + " found.</a>&nbsp;&nbsp;");
+            String recordsFound = resultCount == 1 ? "recordFound" : "recordsFound";
+            sb.append("<a href='" + encodeURL(flowUrl + "&_eventId=back'") + " title='" + fmt("modifySearch", ms, loc) + "'>" 
+                    + resultCount + " " + fmt(recordsFound, ms, loc) + "</a>&nbsp;&nbsp;");
             int pageSize = itemSearch.getPageSize();
             int pageCount = 0;
             if (pageSize != -1) {
@@ -90,7 +104,8 @@ public class ItemList extends SimpleTagSupport {
             }
             // write out record count + pagination
             out.println("<table class='jtrac bdr-collapse' width='100%'><tr><td>" + sb + "</td>");            
-            out.println("<td align='right'><a href='" + encodeURL("/app/item_list_excel.htm?" + flowUrlParam) + "'>(export to excel)</a></td></tr></table><p/>");
+            out.println("<td align='right'><a href='" + encodeURL("/app/item_list_excel.htm?" + flowUrlParam) + "'>(" 
+                    + fmt("exportToExcel", ms, loc) + ")</a></td></tr></table><p/>");
             
             //=============================== TABLE HEADER =====================================
             boolean showDetail = itemSearch.isShowDetail();
@@ -99,20 +114,20 @@ public class ItemList extends SimpleTagSupport {
             
             out.println("<table class='jtrac'>");
             out.println("<tr>");
-            out.println("  <th>ID</th>");
-            out.println("  <th>Summary</th>");
+            out.println("  <th>" + fmt("id", ms, loc) + "</th>");
+            out.println("  <th>" + fmt("summary", ms, loc) + "</th>");
             
             if (showDetail) {
-                out.println("  <th>Detail</th>");
+                out.println("  <th>" + fmt("detail", ms, loc) + "</th>");
             }
             
-            out.println("  <th>Logged By</th>");
-            out.println("  <th>Status</th>");
-            out.println("  <th>Assigned To</th>");
+            out.println("  <th>" + fmt("loggedBy", ms, loc) + "</th>");
+            out.println("  <th>" + fmt("status", ms, loc) + "</th>");
+            out.println("  <th>" + fmt("assignedTo", ms, loc) + "</th>");
             for(Field field : fields) {
                 out.println("  <th>" + field.getLabel() + "</th>");
             }
-            out.println("  <th>Time Stamp</th>");
+            out.println("  <th>" + fmt("timeStamp", ms, loc) + "</th>");
             out.println("</tr>");
             int count = 1;
             String itemUrl = flowUrl + "&_eventId=view&itemId=";

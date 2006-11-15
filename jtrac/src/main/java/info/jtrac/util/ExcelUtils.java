@@ -22,6 +22,7 @@ import info.jtrac.domain.History;
 import info.jtrac.domain.ItemSearch;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
@@ -29,6 +30,7 @@ import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.context.MessageSource;
 
 /**
  * Excel Sheet generation helper
@@ -58,6 +60,14 @@ public class ExcelUtils {
         this.items = items;
         this.itemSearch = itemSearch;
     }
+    
+    private static String fmt(String key, MessageSource messageSource, Locale locale) {
+        try {
+            return messageSource.getMessage("item_list." + key, null, locale);
+        } catch (Exception e) {
+            return "???item_list." + key + "???";
+        }
+    }    
     
     private HSSFCell getCell(int row, int col) {
         HSSFRow sheetRow = sheet.getRow(row);
@@ -101,7 +111,7 @@ public class ExcelUtils {
         cell.setCellValue(value);          
     }    
     
-    public HSSFWorkbook exportToExcel() {
+    public HSSFWorkbook exportToExcel(MessageSource ms, Locale loc) {
                 
         boolean showDetail = itemSearch.isShowDetail();
         boolean showHistory = itemSearch.isShowHistory();
@@ -111,22 +121,22 @@ public class ExcelUtils {
         int col = 0;
         
         // begin header row
-        setHeader(row, col++, "ID");
-        setHeader(row, col++, "Summary");
+        setHeader(row, col++, fmt("id", ms, loc));
+        setHeader(row, col++, fmt("summary", ms, loc));
                 
         if (showDetail) {
-            setHeader(row, col++, "Detail");
+            setHeader(row, col++, fmt("detail", ms, loc));
         }
         
-        setHeader(row, col++, "Logged By");
-        setHeader(row, col++, "Status");
-        setHeader(row, col++, "Assigned To");
+        setHeader(row, col++, fmt("loggedBy", ms, loc));
+        setHeader(row, col++, fmt("status", ms, loc));
+        setHeader(row, col++, fmt("assignedTo", ms, loc));
         
         for(Field field : fields) {
             setHeader(row, col++, field.getLabel());            
         }
         
-        setHeader(row, col++, "Time Stamp");        
+        setHeader(row, col++, fmt("timeStamp", ms, loc));        
         
         // iterate over list
         for(AbstractItem item : items) {

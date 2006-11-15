@@ -165,15 +165,15 @@ public class ItemViewFormAction extends AbstractFormAction {
         Errors errors = getFormErrors(context);
         if (history.getStatus() != null) {
             if (history.getStatus() != State.CLOSED && history.getAssignedTo() == null) {
-                errors.rejectValue("history.assignedTo", "error.history.assignedTo.required", "Required if Status other than Closed.");
+                errors.rejectValue("history.assignedTo", "item_view_form.assignedTo.error");
             }
         } else {
             if (history.getAssignedTo() != null) {
-                errors.rejectValue("history.status", "error.history.status.required", "Required if assigning.");
+                errors.rejectValue("history.status", "item_view_form.status.error");
             }
         }
         if (history.getComment() == null) {
-            errors.rejectValue("history.comment", ValidationUtils.ERROR_EMPTY_CODE, ValidationUtils.ERROR_EMPTY_MSG);
+            errors.rejectValue("history.comment", ValidationUtils.ERROR_EMPTY_CODE);
         }
         if (errors.hasErrors()) {
             return error();

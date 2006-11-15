@@ -3,9 +3,9 @@
 <c:if test="${!empty calledByRelate}">
     <table class="jtrac">
         <tr>
-            <td><a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=back&itemId=${relatingItem.id}'/>">(back)</a></td>
+            <td><a href="<c:url value='/flow?_flowExecutionKey=${flowExecutionKey}&_eventId=back&itemId=${relatingItem.id}'/>">(<fmt:message key='back'/>)</a></td>
             <td class="selected">
-                Searching for items related to ${relatingItem.refId} [${relatingItem.summary}]
+                <fmt:message key='item_search_form.searchingForRelated'/> ${relatingItem.refId} [${relatingItem.summary}]
             </td>
         </tr>
     </table>
@@ -13,10 +13,10 @@
 </c:if>
 
 <form method="post" action="<c:url value='/flow'/>">
-    View Item by Id
+    <fmt:message key='item_search_form.viewItemById'/>
     <input name="refId" value="${refId}"/>
-    <input type="submit" name="_eventId_view" value="View"/>
-    <span class="error"><c:out value="${refIdError}"/></span>
+    <input type="submit" name="_eventId_view" value="<fmt:message key='view'/>"/>
+    <span class="error">${refIdError}</span>
     <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 </form>
 
@@ -24,12 +24,12 @@
 
 <table class="jtrac">
     <tr>
-        <th <c:if test="${!empty itemSearch.summary}">class="selected"</c:if>>Text Search</th>
+        <th <c:if test="${!empty itemSearch.summary}">class="selected"</c:if>><fmt:message key='item_search_form.textSearch'/></th>
         <td>
             <input name="summary" value="${itemSearch.summary}" size="30" id="focus"/>
         </td>
         <td>
-            <input type="submit" name="_eventId_search" value="Search"/>
+            <input type="submit" name="_eventId_search" value="<fmt:message key='search'/>"/>
         </td>        
     </tr>
 </table>
@@ -38,13 +38,13 @@
 
 <table class="jtrac">
     <tr>
-        <th <c:if test="${itemSearch.pageSize != 25}">class="selected"</c:if>>Results / page</th>
+        <th <c:if test="${itemSearch.pageSize != 25}">class="selected"</c:if>><fmt:message key='item_search_form.resultsPerPage'/></th>
         <td>
             <select name="pageSize">
                 <c:forTokens items="5,10,15,25,50,100,-1" delims="," var="size">
                     <option value="${size}" <c:if test="${itemSearch.pageSize == size}">selected="true"</c:if>>
                         <c:choose>
-                            <c:when test="${size == -1}">No Limit</c:when>
+                            <c:when test="${size == -1}"><fmt:message key='item_search_form.noLimit'/></c:when>
                             <c:otherwise>${size}</c:otherwise>
                         </c:choose>
                     </option>
@@ -52,10 +52,10 @@
             </select>
         </td>
         <td/>   
-        <th <c:if test="${itemSearch.sortFieldName != 'id'}">class="selected"</c:if>>Sort On Column</th>
+        <th <c:if test="${itemSearch.sortFieldName != 'id'}">class="selected"</c:if>><fmt:message key='item_search_form.sortOnColumn'/></th>
         <td>
             <select name="sortFieldName">
-                <option value="id">ID</option>
+                <option value="id"><fmt:message key='item_search_form.id'/></option>
                 <c:forEach items="${itemSearch.fields}" var="field">
                     <option value="${field.nameText}" <c:if test="${itemSearch.sortFieldName == field.nameText}">selected="true"</c:if>>
                         ${field.label}
@@ -64,16 +64,16 @@
             </select>
         </td>
         <th <c:if test="${!itemSearch.sortDescending}">class="selected"</c:if>>
-            <input type="checkbox" name="sortDescending" value="true" <c:if test="${itemSearch.sortDescending}">checked="true"</c:if>/>&nbsp;Descending
+            <input type="checkbox" name="sortDescending" value="true" <c:if test="${itemSearch.sortDescending}">checked="true"</c:if>/>&nbsp;<fmt:message key='item_search_form.descending'/>
             <input type="hidden" name="_sortDescending"/>
         </th>
         <td/>
         <th <c:if test="${itemSearch.showDetail}">class="selected"</c:if>>
-            Show Detail&nbsp;<input type="checkbox" name="showDetail" value="true" <c:if test="${itemSearch.showDetail}">checked="true"</c:if>/>
+            <fmt:message key='item_search_form.showDetail'/>&nbsp;<input type="checkbox" name="showDetail" value="true" <c:if test="${itemSearch.showDetail}">checked="true"</c:if>/>
             <input type="hidden" name="_showDetail"/>
         </th>   
         <th <c:if test="${itemSearch.showHistory}">class="selected"</c:if>>
-            Show History&nbsp;<input type="checkbox" name="showHistory" value="true" <c:if test="${itemSearch.showHistory}">checked="true"</c:if>/>
+            <fmt:message key='item_search_form.showHistory'/>&nbsp;<input type="checkbox" name="showHistory" value="true" <c:if test="${itemSearch.showHistory}">checked="true"</c:if>/>
             <input type="hidden" name="_showHistory"/>
         </th>
     </tr>
@@ -86,7 +86,7 @@
         <c:if test="${empty itemSearch.space}">
             <td>
                 <table class="jtrac">
-                    <tr><th <c:if test="${!empty itemSearch.severitySet}">class="selected"</c:if>>Severity</th></tr>
+                    <tr><th <c:if test="${!empty itemSearch.severitySet}">class="selected"</c:if>><fmt:message key='item_search_form.severity'/></th></tr>
                     <tr>                        
                         <td>
                             <select name="severitySet" size="8" multiple="true">
@@ -104,7 +104,7 @@
             </td>
             <td>
                 <table class="jtrac">
-                    <tr><th <c:if test="${!empty itemSearch.prioritySet}">class="selected"</c:if>>Priority</th></tr>
+                    <tr><th <c:if test="${!empty itemSearch.prioritySet}">class="selected"</c:if>><fmt:message key='item_search_form.priority'/></th></tr>
                     <tr>            
                         <td>
                             <select name="prioritySet" size="8" multiple="true">
@@ -123,7 +123,7 @@
         </c:if>
         <td>
             <table class="jtrac">
-                <tr><th <c:if test="${!empty itemSearch.statusSet}">class="selected"</c:if>>Status</th></tr>
+                <tr><th <c:if test="${!empty itemSearch.statusSet}">class="selected"</c:if>><fmt:message key='item_search_form.status'/></th></tr>
                 <tr>            
                     <td>
                         <select name="statusSet" size="8" multiple="true">
@@ -142,7 +142,7 @@
         </td>
         <td>
             <table class="jtrac">
-                <tr><th <c:if test="${!empty itemSearch.loggedBySet}">class="selected"</c:if>>Logged By</th></tr>
+                <tr><th <c:if test="${!empty itemSearch.loggedBySet}">class="selected"</c:if>><fmt:message key='item_search_form.loggedBy'/></th></tr>
                 <tr>    
                     <td>
                         <select name="loggedBySet" size="8" multiple="true">
@@ -161,7 +161,7 @@
         </td>
         <td>
             <table class="jtrac">
-                <tr><th <c:if test="${!empty itemSearch.assignedToSet}">class="selected"</c:if>>Assigned To</th></tr>
+                <tr><th <c:if test="${!empty itemSearch.assignedToSet}">class="selected"</c:if>><fmt:message key='item_search_form.assignedTo'/></th></tr>
                 <tr>    
                     <td>
                         <select name="assignedToSet" size="8" multiple="true">
@@ -184,8 +184,8 @@
                     <tr>
                         <th colspan="2">
                             <c:choose>
-                                <c:when test="${field=='createdDate'}">Created Date</c:when>
-                                <c:when test="${field=='modifiedDate'}">History Updated Date</c:when>
+                                <c:when test="${field=='createdDate'}"><fmt:message key='item_search_form.createdDate'/></c:when>
+                                <c:when test="${field=='modifiedDate'}"><fmt:message key='item_search_form.historyUpdatedDate'/></c:when>
                             </c:choose>
                         </th>
                     </tr>
@@ -222,7 +222,7 @@
         <c:if test="${empty itemSearch.space}">
             <td>
                 <table class="jtrac">
-                    <tr><th <c:if test="${!empty itemSearch.spaceSet}">class="selected"</c:if>>Space</th></tr>
+                    <tr><th <c:if test="${!empty itemSearch.spaceSet}">class="selected"</c:if>><fmt:message key='item_search_form.space'/></th></tr>
                     <tr>                
                         <td>
                             <select name="spaceSet" size="8" multiple="true">

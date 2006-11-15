@@ -27,6 +27,7 @@ import info.jtrac.util.SvnUtils;
 
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import javax.servlet.ServletOutputStream;
 
@@ -45,7 +46,9 @@ import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.springframework.context.MessageSource;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.util.WebUtils;
 import org.springframework.webflow.execution.FlowExecution;
 
@@ -171,7 +174,9 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
         response.setContentType("application/unknow");
         response.setHeader("Content-Disposition", "inline;filename=jtrac-export.xls");
         ServletOutputStream out = response.getOutputStream();
-        eu.exportToExcel().write(out);
+        Locale locale = RequestContextUtils.getLocale(request);
+        MessageSource messageSource = RequestContextUtils.getWebApplicationContext(request);        
+        eu.exportToExcel(messageSource, locale).write(out);
         out.flush();        
         return null;        
     }       

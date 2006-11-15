@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Edit User</span>
+<span class="info"><fmt:message key='user_form.userDetails'/></span>
 
 <p/>
 
@@ -13,7 +13,7 @@
     <table class="jtrac">
         <tr>
             <td class="label">
-                Login ID
+                <fmt:message key='user_form.loginId'/>
                 <font color="red">*</font>
             </td>
             <spring:bind path="userForm.user.loginName">        
@@ -25,7 +25,7 @@
         </tr>
         <tr>
             <td class="label">
-                Full Name
+                <fmt:message key='user_form.fullName'/>
                 <font color="red">*</font>
             </td>
             <spring:bind path="userForm.user.name">
@@ -37,7 +37,7 @@
         </tr>
         <tr>
             <td class="label">
-                E Mail ID
+                <fmt:message key='user_form.emailId'/>
                 <font color="red">*</font>
             </td>
             <spring:bind path="userForm.user.email">
@@ -49,7 +49,7 @@
         </tr>
         <tr>
             <td class="label">
-                Language
+                <fmt:message key='user_form.language'/>
             </td>
             <spring:bind path="userForm.user.locale">
                 <td>
@@ -65,13 +65,12 @@
             <tr>
                 <td/>
                 <td>
-                    A password will be generated and e-mailed by default.<br/>
-                    The fields below are optional.
+                    <fmt:message key='user_form.passwordMessage'/>                    
                 </td>
             </tr>
         </c:if>
         <tr>
-            <td class="label">Password</td>
+            <td class="label"><fmt:message key='user_form.password'/></td>
             <spring:bind path="userForm.password">
                 <td>
                     <input type="password" name="${status.expression}" value="${status.value}" size="15"/>
@@ -80,7 +79,7 @@
             </spring:bind>
         </tr>
         <tr>
-            <td class="label">Confirm Password</td>
+            <td class="label"><fmt:message key='user_form.confirmPassword'/></td>
             <td>
                 <spring:bind path="userForm.passwordConfirm">
                     <input type="password" name="${status.expression}" value="${status.value}" size="15"/>
@@ -91,13 +90,13 @@
         <tr>
             <td/>
             <td>
-                <input type="submit" name="_eventId_submit" value="Submit"/>
+                <input type="submit" name="_eventId_submit" value="<fmt:message key='submit'/>"/>
                 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
             </td>
         </tr>                                                 
     </table>
 
-    <input type="submit" name="_eventId_cancel" value="Cancel"/>
+    <input type="submit" name="_eventId_cancel" value="<fmt:message key='cancel'/>"/>
     
 </form>
 

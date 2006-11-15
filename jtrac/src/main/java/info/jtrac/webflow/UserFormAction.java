@@ -126,14 +126,13 @@ public class UserFormAction extends AbstractFormAction {
             UserForm userForm = (UserForm) o;
             ValidationUtils.rejectIfEmpty(errors, "user.loginName", "user.name", "user.email");
             if (!ValidationUtils.isAllLowerCase(userForm.getUser().getLoginName())) {
-                errors.rejectValue("user.loginName", "error.userForm.user.loginName.badchars", 
-                        "Only lower case letters and numeric characters allowed.");
+                errors.rejectValue("user.loginName", "user_form.loginId.error.invalid");
             }
             String password = userForm.getPassword();
             String passwordConfirm = userForm.getPasswordConfirm();
             if ((password != null && !password.equals(passwordConfirm)) ||
                     (passwordConfirm != null && !passwordConfirm.equals(password))) {
-                errors.rejectValue("passwordConfirm", "error.userForm.passwordConfirm.notsame", "Does not match password");
+                errors.rejectValue("passwordConfirm", "user_form.passwordConfirm.error");
             }
         }        
     }
@@ -144,7 +143,7 @@ public class UserFormAction extends AbstractFormAction {
         User temp = jtrac.loadUser(user.getLoginName());
         if (temp != null && temp.getId() != user.getId()) {
             Errors errors = getFormErrors(context);
-            errors.rejectValue("user.loginName", "error.user.loginName.exists", "Login ID already exists");
+            errors.rejectValue("user.loginName", "user_form.loginId.error.exists");
             return error();
         }
         if (userForm.getPassword() != null) {
