@@ -7,6 +7,9 @@
     <start-state idref="upload"/>  
     
     <view-state id="upload" view="excel_upload">
+        <entry-actions>
+            <action bean="excelFormAction" method="setupForm"/>
+        </entry-actions>        
         <transition on="cancel" to="optionsView"/>
         <transition on="submit" to="excelView">
             <action bean="excelFormAction" method="uploadHandler"/>

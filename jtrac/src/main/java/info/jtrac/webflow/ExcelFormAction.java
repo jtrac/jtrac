@@ -17,6 +17,7 @@
 package info.jtrac.webflow;
 
 import info.jtrac.domain.ExcelFile;
+import org.springframework.validation.Errors;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.webflow.execution.Event;
@@ -42,7 +43,14 @@ public class ExcelFormAction extends AbstractFormAction {
         if(multipartFile.isEmpty()) {
             return error();
         }
-        ExcelFile excelFile = new ExcelFile(multipartFile.getInputStream());
+        ExcelFile excelFile = null;
+        try {
+            excelFile = new ExcelFile(multipartFile.getInputStream());
+        } catch (Exception e) {
+            Errors errors = getFormErrors(context);
+            errors.reject("excel_upload.error.invalidFile");
+            return error();
+        }
         context.getFlowScope().put("excelFile", excelFile);
         return success();
     }        

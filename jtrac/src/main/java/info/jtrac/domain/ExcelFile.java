@@ -33,6 +33,10 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
  */
 public class ExcelFile implements Serializable {
     
+    public ExcelFile() {
+        // zero arg constructor
+    }
+    
     private List<String> labels;
     private String[][] cells;    
 

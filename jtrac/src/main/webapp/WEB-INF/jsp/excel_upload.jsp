@@ -2,7 +2,16 @@
 
 <span class="info">Upload Excel File</span>
 
-<p/>
+<br/><br/>
+
+<spring:bind path="excelFile">
+    <span class="error">
+        <c:forEach items="${status.errorMessages}" var="error">
+            <c:out value="${error}"/><br/>
+        </c:forEach>
+    </span>
+    <br/>
+</spring:bind>
 
 <form method="post" action="<c:url value='/flow'/>" enctype="multipart/form-data">
     <input type="file" name="file"/>
