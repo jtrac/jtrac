@@ -29,19 +29,19 @@ About
     
     * Full text search
     
-    * Search and filter even on custom fields    
+    * Filter searches even by custom fields    
     
-    * Dashboard view of statistics
+    * Detailed dashboard view of statistics
     
     * Export data and search results to Excel
     
     * Support for anonymous browsing of projects
     
-    * Relate items to each other, e.g. "duplicate of", "depends on" etc.
+    * Cross-reference items to each other, e.g. "duplicate of", "depends on" etc.
     
     * Support for all popular databases
     
-    * Database upgrade and migration scripts available
+    * Support for multiple languages
     
     * Embedded database and web-app server - download and start using right away!
     

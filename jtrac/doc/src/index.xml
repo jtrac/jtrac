@@ -227,6 +227,11 @@
                 you can easily tweak it to fit your existing process rather than the other way around.
             </para>
             <para>
+                A user-friendly "map" of the workflow is visible while it is being edited.  JTrac makes it possible 
+                for you to define very complex workflows complete with field level permission settings - all within
+                a single screen.
+            </para            
+            <para>
                 <mediaobject>
                     <imageobject role="html">
                         <imagedata align="center" fileref="../images/custom-roles.png"/>
@@ -762,7 +767,7 @@ wrapper.exe -r etc/wrapper.conf
                 In a future version of JTrac, the ability to even hide fields depending on the role and status
                 will be implemented.  The design for this is already in place.
             </para>
-        </sect1>
+        </sect1>       
         <sect1 id="roadmap-nested">
             <title>Nested Items</title>
             <para>
@@ -785,7 +790,8 @@ wrapper.exe -r etc/wrapper.conf
             <para>
                 Again using Beanshell, users should be able to define routines to execute periodically, say at a pre-determined
                 time every day.  This would allow triggers for events such as slippage of a "due-date" field.
-                This can be combined with e-mail notifications.
+                This can be combined with e-mail notifications.  Also a daily dashboard summary could be mailed out once
+                the scheduler is in place.
             </para>
         </sect1>
         <sect1 id="roadmap-email">
@@ -839,27 +845,25 @@ wrapper.exe -r etc/wrapper.conf
         <sect1 id="roadmap-tags">            
             <title>Tags</title>            
             <para>
-                A one-to-many data model for being able to tag items will be introduced before JTrac goes into 
-                version 2.0 final.
+                A one-to-many data model for being able to tag items "Web 2.0 style" will be introduced before 
+                JTrac reaches version 2.0 final.  This would be ideal to track things such as mapping bugs to 
+                software release version numbers, keywords and all kinds of other cool stuff.
             </para>
         </sect1>
         <sect1 id="roadmap-feeds">            
             <title>RSS Feeds</title>            
             <para>
-                RSS feeds will be introduced at the dashboard level for items and even for Subversion 
-                repository information.
-            </para>
-        </sect1>
-        <sect1 id="roadmap-i18n">            
-            <title>Internationalization</title>            
-            <para>
-                Multi language support to be added.
+                RSS feeds will be introduced so that you can monitor new items and updates to items.
             </para>
         </sect1>
         <sect1 id="roadmap-import">            
             <title>Import from other tools</title>            
             <para>
-                Import from other issue tracking systems (such as BugZilla) to be considered.
+                Import from other issue tracking systems (such as BugZilla) to be considered.  The current version has
+                an experimental Excel sheet import feature which you can access from the options screen if you are an
+                admin user.  Once complete, this feature will allow you to import raw data from a spreadsheet, apply the
+                required data massaging, identify and load custom fields / drop down values and finally import the items,
+                creating a new Space if required.
             </para>
         </sect1>
         <sect1 id="roadmap-sso">            
