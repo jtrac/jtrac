@@ -57,7 +57,7 @@ public class ExcelFormAction extends AbstractFormAction {
     
     public Event deleteHandler(RequestContext context) throws Exception {  
         ExcelFile excelFile = (ExcelFile) getFormObject(context);
-        excelFile.delete();
+        excelFile.deleteSelectedRowsAndColumns();
         return success();
     }  
     

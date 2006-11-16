@@ -73,7 +73,7 @@ public class ExcelFile implements Serializable {
     //==========================================================================
     // edits
     
-    public void delete() {
+    public void deleteSelectedRowsAndColumns() {
         int cursor = 0;
         if (selRows != null) {
             for(int i : selRows) {
