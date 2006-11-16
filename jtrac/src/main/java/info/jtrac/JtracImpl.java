@@ -40,9 +40,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -54,6 +56,7 @@ import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.MessageSource;
+import org.springframework.util.StringUtils;
 
 /**
  * Jtrac Service Layer implementation
@@ -68,6 +71,17 @@ public class JtracImpl implements Jtrac {
     private Indexer indexer;
     private IndexSearcher indexSearcher;
     private MessageSource messageSource;
+    
+    Map<String, String> locales;
+    
+    public void setLocaleList(String[] array) {
+        locales = new LinkedHashMap<String, String>();
+        for(String localeString : array) {
+            Locale locale = StringUtils.parseLocaleString(localeString);
+            locales.put(localeString, localeString + " - " + locale.getDisplayName());
+        }
+        logger.info("available locales configured " + locales);
+    }    
     
     public void setDao(JtracDao dao) {
         this.dao = dao;
@@ -112,6 +126,10 @@ public class JtracImpl implements Jtrac {
     public String encodeClearText(String clearText) {
         return passwordEncoder.encodePassword(clearText, null);
     }
+
+    public Map<String, String> getLocales() {
+        return locales;
+    }    
     
     /**
      * initialize the email adapter

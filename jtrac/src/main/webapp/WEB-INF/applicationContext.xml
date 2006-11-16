@@ -29,6 +29,7 @@
                 <property name="indexer" ref="indexer"/>
                 <property name="indexSearcher" ref="indexSearcher"/>
                 <property name="messageSource" ref="messageSource"/>
+                <property name="localeList" value="${jtrac.locales}"/>
             </bean>
         </property>        
         <property name="transactionAttributes">

@@ -46,6 +46,10 @@ import org.springframework.web.context.ServletContextAware;
  * 3) then a servlet context init-parameter called "jtrac.home" is looked for 
  * 4) last resort, a ".jtrac" folder is created in the "user.home" and used as "jtrac.home"
  *
+ * Other tasks
+ * - initialize the "test" query for checking idle database connections
+ * - initialize list of available locales based on the properties files available
+ *
  * Note that later on during startup, the HibernateJtracDao would check if 
  * database tables exist, and if they dont, would proceed to create them
  */
@@ -81,6 +85,11 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
             jtracHome = props.getProperty("jtrac.home");
             if (jtracHome != null) {
                 logger.info("'jtrac.home' property initialized from 'jtrac-init.properties' as '" + jtracHome + "'");
+            }
+            String locales = props.getProperty("jtrac.locales");
+            if (locales != null) {
+                logger.info("locales available configured are '" + locales + "'");
+                System.setProperty("jtrac.locales", locales);
             }
         }
         if (jtracHome == null) {

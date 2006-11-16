@@ -27,8 +27,10 @@ import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.SecurityUtils;
 import info.jtrac.util.UserUtils;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.DataBinder;
 
 import org.springframework.validation.Errors;
@@ -56,11 +58,7 @@ public class UserFormAction extends AbstractFormAction {
     
     @Override
     public Object createFormObject(RequestContext context) {
-        // TODO get this from some config
-        Map<String, String> locales = new LinkedHashMap<String, String>();
-        locales.put("en", "en - English");
-        locales.put("de", "de - German");
-        context.getRequestScope().put("locales", locales);
+        context.getRequestScope().put("locales", jtrac.getLocales());
         UserForm userForm = new UserForm();
         // note that form has a hidden field 'userId' to handle re-show form on errors
         String userId = ValidationUtils.getParameter(context, "userId");
