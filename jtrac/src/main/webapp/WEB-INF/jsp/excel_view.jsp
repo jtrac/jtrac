@@ -1,21 +1,41 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Preview Excel File</span>
-
-<p/>
+<style>
+    .cb { background: #ADD8E6; text-align: center; } 
+</style>
 
 <form method="post" action="<c:url value='/flow'/>">
-    <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>    
-    <input type="submit" name="_eventId_cancel" value="Cancel"/>
-</form>
+    
+<span class="info">Preview Excel File</span>
+
+<input type="submit" name="_eventId_cancel" value="Cancel"/>
+
+<p/>    
+    
+<input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
+<input type="submit" name="_eventId_delete" value="Delete"/>
+
+<br/><br/>
 
 <table class="jtrac">
     <tr>
+        <td/>
+        <input type="hidden" name="_selCols"/>
+        <input type="hidden" name="_selRows"/>
+        <c:forEach items="${excelFile.labels}" var="label" varStatus="col">
+            <td class="cb">
+                <input type="checkbox" name="selCols" value="${col.count - 1}"/>
+                
+            </td>
+        </c:forEach>
+    </tr>        
+    <tr>
+        <td/>
         <c:forEach items="${excelFile.labels}" var="label">
             <th>${label}</th>
         </c:forEach>
     </tr>
-    <c:forEach items="${excelFile.cells}" var="rowData" varStatus="row">
+    <c:forEach items="${excelFile.rows}" var="rowData" varStatus="row">       
         <c:set var="rowClass">
             <c:choose>
                 <c:when test="${TODO == 1}">class="selected"</c:when>
@@ -23,11 +43,16 @@
             </c:choose>            
         </c:set>
         <tr ${rowClass}>
+            <td class="cb">
+                <input type="checkbox" name="selRows" value="${row.count - 1}"/>
+            </td>             
             <c:forEach items="${rowData}" var="cell">
                 <td>${cell}</td>
             </c:forEach>
         </tr>
     </c:forEach>
 </table>
+
+</form>
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>

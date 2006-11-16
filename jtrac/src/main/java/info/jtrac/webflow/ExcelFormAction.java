@@ -53,6 +53,12 @@ public class ExcelFormAction extends AbstractFormAction {
         }
         context.getFlowScope().put("excelFile", excelFile);
         return success();
-    }        
+    } 
+    
+    public Event deleteHandler(RequestContext context) throws Exception {  
+        ExcelFile excelFile = (ExcelFile) getFormObject(context);
+        excelFile.delete();
+        return success();
+    }  
     
 }
