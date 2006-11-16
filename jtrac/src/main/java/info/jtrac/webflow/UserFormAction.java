@@ -86,7 +86,7 @@ public class UserFormAction extends AbstractFormAction {
         
         public User getUser() {
             if (user == null) {
-                return new User();
+                user = new User();
             }
             return user;
         }
