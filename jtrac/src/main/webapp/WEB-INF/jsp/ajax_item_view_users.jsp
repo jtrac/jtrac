@@ -1,5 +1,5 @@
-<%@ page session="true" contentType="text/html; charset=UTF-8" %>
-<%@ taglib prefix="c" uri="/WEB-INF/tld/c.tld" %>
+<%@ include file="/WEB-INF/jsp/include.jsp" %>
+
 <select name="history.assignedTo" id="assignedTo">
     <option/>
     <c:forEach items="${userSpaceRoles}" var="usr">

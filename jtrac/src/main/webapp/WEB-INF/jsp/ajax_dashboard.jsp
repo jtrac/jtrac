@@ -1,5 +1,5 @@
-<%@ page session="true" contentType="text/html; charset=UTF-8" %>
-<%@ taglib prefix="c" uri="/WEB-INF/tld/c.tld" %>
+<%@ include file="/WEB-INF/jsp/include.jsp" %>
+
 <c:set var="principal" value="${ACEGI_SECURITY_CONTEXT.authentication.principal}"/>
 <c:forEach items="${states}" var="stateEntry" varStatus="row">
     <c:set var="stateId" value="${stateEntry.key}"/>
@@ -9,18 +9,18 @@
             <td rowSpan="${stateCount + 1}" class="icon">
                 <c:if test="${principal.spacesWhereAbleToCreateNewItem[space.id]}">
                     <a href="<c:url value='/flow/item?spaceId=${space.id}'/>">
-                        <img title="New" class="noborder" src="${pageContext.request.contextPath}/resources/document-new.png"/>
+                        <img title="<fmt:message key='dashboard.new'/>" class="noborder" src="${pageContext.request.contextPath}/resources/document-new.png"/>
                     </a>
                 </c:if>
             </td>
             <td rowSpan="${stateCount + 1}" class="icon">
                 <a href="<c:url value='/flow/item_search?spaceId=${space.id}'/>">
-                    <img title="Search" class="noborder" src="${pageContext.request.contextPath}/resources/system-search.png"/>
+                    <img title="<fmt:message key='dashboard.search'/>" class="noborder" src="${pageContext.request.contextPath}/resources/system-search.png"/>
                 </a>
             </td>
             <td rowSpan="${stateCount + 1}" valign="top" align="center" style="padding:0">
                 <a href="#" onclick="collapse(${space.id})">
-                    <img title="Hide Details" class="noborder" src="${pageContext.request.contextPath}/resources/expanded.png"/>
+                    <img title="<fmt:message key='dashboard.hideDetails'/>" class="noborder" src="${pageContext.request.contextPath}/resources/expanded.png"/>
                 </a>
             </td>
         </c:if>
