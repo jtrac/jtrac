@@ -35,17 +35,36 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
  */
 public class ExcelFile implements Serializable {    
     
-    protected final Log logger = LogFactory.getLog(getClass());
+    protected final Log logger = LogFactory.getLog(getClass());    
     
-    private List<String> labels;
+    public class Column {        
+        
+        private String label;
+        private Field field;
+        
+        public Column(String label) {
+            this.label = label;
+        }
+
+        public Field getField() {
+            return field;
+        }
+
+        public String getLabel() {
+            return label;
+        }       
+        
+    }
+    
+    private List<Column> columns;
     private List<List> rows;
 
     public List<List> getRows() {
         return rows;
     }
 
-    public List<String> getLabels() {
-        return labels;
+    public List<Column> getColumns() {
+        return columns;
     }
     
     //==========================================================================
@@ -84,7 +103,7 @@ public class ExcelFile implements Serializable {
         cursor = 0;
         if (selCols != null) {
             for(int i : selCols) {
-                labels.remove(i - cursor);
+                columns.remove(i - cursor);
                 for(List rowData : rows) {                
                     rowData.remove(i - cursor);
                 }
@@ -113,7 +132,7 @@ public class ExcelFile implements Serializable {
         HSSFCell c = null;
         int row = 0;
         int col = 0;
-        labels = new ArrayList<String>();
+        columns = new ArrayList<Column>();
         //========================== HEADER ====================================
         r = sheet.getRow(row);       
         while(true) {
@@ -125,7 +144,8 @@ public class ExcelFile implements Serializable {
             if (value == null || value.trim().length() == 0) {
                 break;
             }
-            labels.add(value.trim());
+            Column column = new Column(value.trim());
+            columns.add(column);
             col++;
         }
         //============================ DATA ====================================
@@ -136,19 +156,22 @@ public class ExcelFile implements Serializable {
             if (r == null) {
                 break;
             }
-            List rowData = new ArrayList(labels.size());
+            List rowData = new ArrayList(columns.size());
             boolean isEmptyRow = true;
-            for(col = 0; col < labels.size(); col++) {
+            for(col = 0; col < columns.size(); col++) {
                 c = r.getCell((short) col);
-                String value = null;
+                Object value = null;
                 switch(c.getCellType()) {
                     case(HSSFCell.CELL_TYPE_STRING) : value = c.getStringCellValue(); break;
-                    case(HSSFCell.CELL_TYPE_NUMERIC) : value = c.getNumericCellValue() + ""; break;
+                    case(HSSFCell.CELL_TYPE_NUMERIC) :
+                        value = c.getDateCellValue();
+                        // value = c.getNumericCellValue(); 
+                        break;
                     case(HSSFCell.CELL_TYPE_BLANK) : break;
                 }
-                if (value != null && value.trim().length() > 0) {
+                if (value != null && value.toString().length() > 0) {
                     isEmptyRow = false;
-                    rowData.add(value.trim());
+                    rowData.add(value);
                 } else {
                     rowData.add(null);
                 }

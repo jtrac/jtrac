@@ -1,7 +1,8 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
 <style>
-    .cb { background: #ADD8E6; text-align: center; } 
+    .cb { background: #ADD8E6; text-align: center; }
+    .rn { text-align: right; } 
 </style>
 
 <form method="post" action="<c:url value='/flow'/>">
@@ -20,19 +21,20 @@
 <table class="jtrac">
     <tr>
         <td/>
+        <td/>
         <input type="hidden" name="_selCols"/>
         <input type="hidden" name="_selRows"/>
-        <c:forEach items="${excelFile.labels}" var="label" varStatus="col">
+        <c:forEach items="${excelFile.columns}" var="column" varStatus="col">
             <td class="cb">
-                <input type="checkbox" name="selCols" value="${col.count - 1}"/>
-                
+                <input type="checkbox" name="selCols" value="${col.count - 1}"/>                
             </td>
         </c:forEach>
     </tr>        
     <tr>
         <td/>
-        <c:forEach items="${excelFile.labels}" var="label">
-            <th>${label}</th>
+        <td/>
+        <c:forEach items="${excelFile.columns}" var="column">
+            <th>${column.label}</th>
         </c:forEach>
     </tr>
     <c:forEach items="${excelFile.rows}" var="rowData" varStatus="row">       
@@ -45,7 +47,10 @@
         <tr ${rowClass}>
             <td class="cb">
                 <input type="checkbox" name="selRows" value="${row.count - 1}"/>
-            </td>             
+            </td>            
+            <th class="rn">
+                ${row.count}
+            </th>          
             <c:forEach items="${rowData}" var="cell">
                 <td>${cell}</td>
             </c:forEach>
