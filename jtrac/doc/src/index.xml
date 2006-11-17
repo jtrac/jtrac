@@ -150,9 +150,15 @@
             <para>
                 Each tracker project that you create can have a different workflow.  JTrac allows for 
                 complete customization of the tracker-item lifecycle, right down to the names of
-                each intermediate state.  You can even configure whether or not changing of values is
-                permitted given the current state within the workflow - and that too at a field-level.
+                each intermediate state.  It is possible to create very sophisticated workflows and a visual 
+                "map" of the workflow being edited is displayed below the state-transition toggle-buttons 
+                to make it easier to manage.
             </para>
+            <para>
+                The default workflow shown below is ideal if you simply want to track issues with just
+                two states - Open and Closed.  However, with just a few mouse clicks, you can turn this into 
+                a complex workflow with multiple states.
+            </para>            
             <para>
                 <mediaobject>
                     <imageobject role="html">
@@ -169,14 +175,16 @@
                         <imagedata align="center" fileref="../images/custom-workflow-after.png"/>
                     </imageobject>
                     <caption>
-                        <para>An example of a customized workflow</para>
+                        <para>Example of a workflow - after customization</para>
                     </caption>
                 </mediaobject>
             </para>
             <para>
-                This flexibility allows for some interesting possibilities.  For example if you want to maintain
-                a "percentage complete" field that can be updated at any time during the life-cycle of an item.
-                The snapshot below shows how you can set up a drop down field called "% Complete":
+                You can even configure whether or not changing of values is permitted given the current state 
+                within the workflow - and that too at a field-level.  This flexibility allows for some 
+                interesting possibilities.  For example, assume that you want to maintain a "percentage complete" 
+                field that can be updated at any time during the life-cycle of an item. The screenshot below 
+                demonstrates how you can set up a drop down field called "% Complete":
             </para>
             <para>
                 <mediaobject>
@@ -221,16 +229,12 @@
             <title>Custom Roles</title>
             <para>
                 JTrac customization does not stop at workflow - you can also define different roles for each tracker
-                project that you set up.  This allows for power and flexibility - for example you could define that
+                project that you set up.  This allows for power and flexibility.  For example you could define that
                 a "DEVELOPER" role can only mark "Assigned" items as "Fixed" and that only a "TESTER" role has the
-                power to mark a "Fixed" item as "Closed".  JTrac allows you complete control over the workflow and
-                you can easily tweak it to fit your existing process rather than the other way around.
-            </para>
-            <para>
-                A user-friendly "map" of the workflow is visible while it is being edited.  JTrac makes it possible 
-                for you to define very complex workflows complete with field level permission settings - all within
-                a single screen.
-            </para            
+                power to mark a "Fixed" item as "Closed".  You can even disallow some roles from being able to 
+                create new items.  JTrac allows you complete control over the workflow and you can easily tweak it 
+                to fit your existing process rather than the other way around.
+            </para>           
             <para>
                 <mediaobject>
                     <imageobject role="html">
@@ -241,10 +245,12 @@
                     </caption>
                 </mediaobject>
             </para>            
-            <para>
-                Also, field-level permissions can be mapped to roles.  This allows for even more flexibility - for
-                example, you can set a project up so that only a "MANAGER" can change the "Severity" level after a
-                bug is submitted.
+            <para>              
+                Field-level permissions can be mapped to roles which allows for even more flexibility. 
+                For example, you can set a project up so that only a "MANAGER" can change the "Severity" level 
+                after a bug is submitted.  JTrac makes it possible for you to define very complex workflows, complete 
+                with both Status and Role dependent field-level permissions, and you can do all this within a 
+                single admin screen.                  
             </para>                
         </sect1>        
         <sect1 id="features-search">
@@ -443,7 +449,16 @@
                     </caption>
                 </mediaobject>
             </para>            
-        </sect1>                
+        </sect1>
+        <sect1 id="features-i18n">
+            <title>Multi-Language Support</title>
+            <para>
+                JTrac already comes with German support and you can change the user interface language instantly 
+                by editing your user-profile.  Adding a translation is very easy and does not require any
+                Java  development expertise.  See <link linkend="dev-translating">this section</link> of the developer
+                guide for more details and please consider contributing language translations to JTrac!
+            </para>
+        </sect1>
     </chapter>
     
     <chapter id="installation">
@@ -581,6 +596,9 @@ set JAVA_OPTS=-Djtrac.home=C:/data/jtrac_home -Dfile.encoding=UTF-8
                     ".jtrac" in the user home directory and proceed to use that as "jtrac.home".
                 </para>
             </sect2>
+        </sect1>
+        <sect1 id="installation-database">
+            <title>Using a different database such as MySQL</title>
             <para>                    
                 You can configure the database that JTrac uses by editing the "jtrac.properties" file that JTrac expects
                 within the "jtrac.home" folder.  Note that if JTrac does not find a "jtrac.properties" file in the
@@ -1090,6 +1108,36 @@ mvn eclipse:eclipse
                 By now, you may have noticed that because of the 
                 <ulink url="http://ptrthomas.wordpress.com/2006/03/25/how-to-start-and-stop-tomcat-from-ant/">Ant script</ulink>, 
                 you don't even need a Tomcat or Jetty plugin in either NetBeans or Eclipse.
+            </para>            
+        </sect1>
+        <sect1 id="dev-translating">
+            <title>Adding a language translation for JTrac</title>
+            <para>
+                JTrac has internationalization support and you can actually add a new language without re-compiling JTrac.
+                First you have to unzip the WAR file and edit the "jtrac-init.properties" file that lies within the 
+                "/WEB-INF/classes" folder.  This would already contain an entry that looks something like this:               
+            </para>
+            <para>
+                <programlisting>
+
+jtrac.locales=en,de
+                </programlisting>
+            </para>
+            <para>
+                Simply add an entry corresponding to the language code, e.g. "es" for Spanish and "fr" for French.  You can 
+                refer Java locale codes <ulink url="http://java.sun.com/j2se/1.5.0/docs/guide/intl/locale.doc.html">here</ulink>.
+                For example:
+            </para>
+            <para>
+                <programlisting>
+
+jtrac.locales=en,de,es,fr
+                </programlisting>
+            </para>            
+            <para>
+                Of course the main task is to take a copy of the "messages.properties" file and create a mirror of it with
+                the properly translated text.  You can use the "messages_de.properties" file as an example. Note that
+                JTrac needs to be restarted for changes to the properties files to take effect.
             </para>            
         </sect1>
     </chapter>
