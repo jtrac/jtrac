@@ -34,7 +34,7 @@ public class AllTest extends WatijTestCase {
         assertTrue(ie.containsText("Spaces"));
         
         ie.link(text, "[ Create New Space ]").click();
-        assertTrue(ie.containsText("Create New Space"));
+        assertTrue(ie.containsText("Space Details"));
         
         ie.textField(name, "prefixCode").set("TEST");
         ie.textField(name, "name").set("Test Space");
@@ -57,7 +57,7 @@ public class AllTest extends WatijTestCase {
         ie.link(text, "DASHBOARD").click();
         assertTrue(ie.containsText("Test Space"));
         
-        ie.link(text, "(new)").click();
+        ie.link(url, "/jtrac/flow/item?spaceId=1").click();
         assertTrue(ie.containsText("Summary"));
         
         ie.textField(name, "summary").set("Test Summary");
@@ -70,10 +70,10 @@ public class AllTest extends WatijTestCase {
     public void testSearchAllContainsItem() throws Exception {
         
         ie.link(text, "SEARCH").click();
-        assertTrue(ie.containsText("View Item by Id"));
+        assertTrue(ie.containsText("View Item by ID"));
         
         ie.button("Search").click();
-        assertTrue(ie.containsText("1 record found"));
+        assertTrue(ie.containsText("1 Record Found"));
         
         ie.link(text, "TEST-1").click();
         assertTrue(ie.containsText("History"));
@@ -95,7 +95,7 @@ public class AllTest extends WatijTestCase {
         assertTrue(ie.containsText("Users and Allocated Trackers"));
         
         ie.link(text, "[ Create New User ]").click();
-        assertTrue(ie.containsText("Edit User"));
+        assertTrue(ie.containsText("User Details"));
         
         ie.textField(name, "user.loginName").set("testuser");
         ie.textField(name, "user.name").set("Test User");
