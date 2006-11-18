@@ -19,9 +19,7 @@
         </tr>    
     </table>       
     
-    <input type="hidden" name="param" value="${config.param}"/>
-    
-    <input type="hidden" name="stateKey" value="${stateKey}"/>
+    <input type="hidden" name="param" value="${config.param}"/>        
     <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
     
     <p/>

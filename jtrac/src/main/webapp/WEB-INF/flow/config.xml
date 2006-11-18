@@ -17,7 +17,7 @@
         <transition on="cancel" to="configListView"/>
     </view-state>
  
-    <end-state id="configListView" view="externalRedirect:/app/config_list.htm"/> 
+    <end-state id="configListView" view="externalRedirect:/app/config_list.htm?selected=${requestParameters.param}"/> 
     
 </flow>
 
