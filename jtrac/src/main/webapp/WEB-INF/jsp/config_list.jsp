@@ -1,8 +1,6 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Config</span>
-
-<p/>
+<div class="heading">Config</div>
 
 <table class="jtrac">
 
