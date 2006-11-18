@@ -92,6 +92,7 @@ public class ExcelFile implements Serializable {
     //==========================================================================
     // edits
     
+    /* note that selected rows and columns would be set by spring MVC */
     public void deleteSelectedRowsAndColumns() {
         int cursor = 0;
         if (selRows != null) {
@@ -110,6 +111,26 @@ public class ExcelFile implements Serializable {
                 cursor++;
             }
         }
+    }
+    
+    public void convertSelectedColumnsToDate() {
+        if (selCols == null) {
+            return;            
+        }
+        // could not find a better way to convert excel number to date
+        HSSFWorkbook wb = new HSSFWorkbook();
+        HSSFSheet sheet = wb.createSheet();
+        HSSFRow row = sheet.createRow(0);
+        HSSFCell cell = row.createCell((short) 0);
+        for(int i : selCols) {
+            for(List rowData : rows) {
+                Object o = rowData.get(i);                
+                if (o instanceof Double) {                    
+                    cell.setCellValue((Double) o);                    
+                    rowData.set(i, cell.getDateCellValue());
+                }
+            }            
+        }        
     }
     
     //==========================================================================
@@ -164,8 +185,8 @@ public class ExcelFile implements Serializable {
                 switch(c.getCellType()) {
                     case(HSSFCell.CELL_TYPE_STRING) : value = c.getStringCellValue(); break;
                     case(HSSFCell.CELL_TYPE_NUMERIC) :
-                        value = c.getDateCellValue();
-                        // value = c.getNumericCellValue(); 
+                        // value = c.getDateCellValue();
+                        value = c.getNumericCellValue(); 
                         break;
                     case(HSSFCell.CELL_TYPE_BLANK) : break;
                 }

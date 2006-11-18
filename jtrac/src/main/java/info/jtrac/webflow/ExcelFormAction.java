@@ -61,4 +61,10 @@ public class ExcelFormAction extends AbstractFormAction {
         return success();
     }  
     
+    public Event convertToDateHandler(RequestContext context) throws Exception {  
+        ExcelFile excelFile = (ExcelFile) getFormObject(context);
+        excelFile.convertSelectedColumnsToDate();
+        return success();
+    }    
+    
 }

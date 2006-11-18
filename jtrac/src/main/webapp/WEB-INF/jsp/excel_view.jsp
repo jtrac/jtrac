@@ -15,6 +15,7 @@
     
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 <input type="submit" name="_eventId_delete" value="Delete"/>
+<input type="submit" name="_eventId_convertToDate" value="Convert to Date"/>
 
 <br/><br/>
 

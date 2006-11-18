@@ -22,7 +22,11 @@
         <transition on="delete" to="excelView">
             <action bean="excelFormAction" method="bind"/>
             <action bean="excelFormAction" method="deleteHandler"/>
-        </transition>        
+        </transition>
+        <transition on="convertToDate" to="excelView">
+            <action bean="excelFormAction" method="bind"/>
+            <action bean="excelFormAction" method="convertToDateHandler"/>
+        </transition>          
     </view-state>    
     
     <end-state id="optionsView" view="externalRedirect:/app/options.htm"/>
