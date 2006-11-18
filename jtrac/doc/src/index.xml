@@ -1138,7 +1138,12 @@ jtrac.locales=en,de,es,fr
                 Of course the main task is to take a copy of the "messages.properties" file and create a mirror of it with
                 the properly translated text.  You can use the "messages_de.properties" file as an example. Note that
                 JTrac needs to be restarted for changes to the properties files to take effect.
-            </para>            
+            </para>
+            <para>
+                You can use this nice open-source tool called <ulink url="https://prbeditor.dev.java.net/">PRBEditor</ulink>
+                that really helps by showing the English and translated versions side by side on a single screen.  It also
+                takes care of handling special characters.
+            </para>
         </sect1>
     </chapter>
     
