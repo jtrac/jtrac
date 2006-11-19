@@ -16,6 +16,7 @@
 
 package info.jtrac.domain;
 
+import info.jtrac.util.ItemUtils;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -56,10 +57,31 @@ public class ExcelFile implements Serializable {
         
     }
     
-    private List<Column> columns;
-    private List<List> rows;
+    public class Cell {
+        
+        private Object value;
 
-    public List<List> getRows() {
+        public Cell(Object value) {
+            this.value = value;
+        }       
+        
+        @Override
+        public String toString() {
+            if (value == null) {
+                return "";
+            }
+            if (value instanceof String) {
+                return ItemUtils.fixWhiteSpace((String) value);
+            }
+            return value.toString();
+        }
+        
+    }
+    
+    private List<Column> columns;
+    private List<List<Cell>> rows;
+
+    public List<List<Cell>> getRows() {
         return rows;
     }
 
@@ -72,6 +94,15 @@ public class ExcelFile implements Serializable {
     
     private int[] selCols;
     private int[] selRows;
+    private int action;
+
+    public int getAction() {
+        return action;
+    }
+    
+    public void setAction(int action) {
+        this.action = action;
+    }
      
     public int[] getSelCols() {
         return selCols;
@@ -105,8 +136,8 @@ public class ExcelFile implements Serializable {
         if (selCols != null) {
             for(int i : selCols) {
                 columns.remove(i - cursor);
-                for(List rowData : rows) {                
-                    rowData.remove(i - cursor);
+                for(List<Cell> cells : rows) {                
+                    cells.remove(i - cursor);
                 }
                 cursor++;
             }
@@ -123,14 +154,67 @@ public class ExcelFile implements Serializable {
         HSSFRow row = sheet.createRow(0);
         HSSFCell cell = row.createCell((short) 0);
         for(int i : selCols) {
-            for(List rowData : rows) {
-                Object o = rowData.get(i);                
-                if (o instanceof Double) {                    
-                    cell.setCellValue((Double) o);                    
-                    rowData.set(i, cell.getDateCellValue());
+            for(List<Cell> cells : rows) {
+                Cell c = cells.get(i);                
+                if (c != null && c.value instanceof Double) {                    
+                    cell.setCellValue((Double) c.value);                    
+                    c.value = cell.getDateCellValue();
                 }
             }            
         }        
+    }
+    
+    public void concatenateSelectedColumns() {
+        if (selCols == null) {
+            return;            
+        }
+        List<Cell> list = new ArrayList<Cell>(rows.size());
+        for(List<Cell> cells : rows) {
+            list.add(new Cell(null));
+        }
+        int first = selCols[0];
+        for(int i : selCols) {
+            int rowIndex = 0;
+            for(List<Cell> cells : rows) {
+                Cell c = cells.get(i);                
+                if (c != null) {
+                    String s = (String) list.get(rowIndex).value;                    
+                    if (s == null) {
+                        s = (String) c.value;                        
+                    } else {
+                        s += "\n\n" + c.value;
+                    }                    
+                    list.set(rowIndex, new Cell(s));
+                }
+                rowIndex++;
+            }            
+        }
+        // update the first column
+        int rowIndex = 0;
+        for(List<Cell> cells : rows) {
+            cells.set(first, list.get(rowIndex));
+            rowIndex++;
+        }
+    }
+    
+    public void extractSummaryFromSelectedColumn() {
+        if (selCols == null) {
+            return;            
+        }
+        int first = selCols[0];           
+        for(List<Cell> cells : rows) {
+            Cell c = cells.get(first);                
+            if (c != null && c.value != null) {
+                String s = c.value.toString();
+                if (s.length() > 80) {
+                    s = s.substring(0, 80);
+                }
+                cells.add(0, new Cell(s));                
+            } else {
+                cells.add(0, null);
+            }         
+        }         
+        columns.add(0, new Column("Summary"));   
     }
     
     //==========================================================================
@@ -170,7 +254,7 @@ public class ExcelFile implements Serializable {
             col++;
         }
         //============================ DATA ====================================
-        rows = new ArrayList<List>();
+        rows = new ArrayList<List<Cell>>();
         while(true) {
             row++;            
             r = sheet.getRow(row);
@@ -192,7 +276,7 @@ public class ExcelFile implements Serializable {
                 }
                 if (value != null && value.toString().length() > 0) {
                     isEmptyRow = false;
-                    rowData.add(value);
+                    rowData.add(new Cell(value));
                 } else {
                     rowData.add(null);
                 }

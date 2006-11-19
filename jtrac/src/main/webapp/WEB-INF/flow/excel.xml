@@ -19,14 +19,10 @@
     <view-state id="excelView" view="excel_view">
         <transition on="refresh" to="excelView"/>
         <transition on="cancel" to="optionsView"/>
-        <transition on="delete" to="excelView">
+        <transition on="submit" to="excelView">
             <action bean="excelFormAction" method="bind"/>
-            <action bean="excelFormAction" method="deleteHandler"/>
-        </transition>
-        <transition on="convertToDate" to="excelView">
-            <action bean="excelFormAction" method="bind"/>
-            <action bean="excelFormAction" method="convertToDateHandler"/>
-        </transition>          
+            <action bean="excelFormAction" method="submitHandler"/>
+        </transition>         
     </view-state>    
     
     <end-state id="optionsView" view="externalRedirect:/app/options.htm"/>

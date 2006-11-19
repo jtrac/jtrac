@@ -7,15 +7,21 @@
 
 <form method="post" action="<c:url value='/flow'/>">
     
-<span class="info">Preview Excel File</span>
-
-<input type="submit" name="_eventId_cancel" value="Cancel"/>
-
-<p/>    
+<div class="heading">
+Preview Excel File <input type="submit" name="_eventId_cancel" value="Cancel"/>
+</div>  
     
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
-<input type="submit" name="_eventId_delete" value="Delete"/>
-<input type="submit" name="_eventId_convertToDate" value="Convert to Date"/>
+
+<select name="action">
+    <option>-- select action --</option>
+    <option value="1">Delete Selected Columns / Rows</option>    
+    <option value="2">Convert Column Format to Date</option>
+    <option value="3">Concatenate field contents</option>
+    <option value="4">Extract first 80 characters as Summary</option>
+</select>
+
+<input type="submit" name="_eventId_submit" value="Submit"/>
 
 <br/><br/>
 

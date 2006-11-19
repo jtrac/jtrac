@@ -26,12 +26,11 @@ import org.springframework.webflow.execution.RequestContext;
  */
 public class ValidationUtils {
     
-    public static final String ERROR_EMPTY_CODE = "error.empty";
-    public static final String ERROR_EMPTY_MSG = "Value Required.";
+    public static final String ERROR_EMPTY_CODE = "error.empty";    
     
     public static void rejectIfEmpty(Errors errors, String... names) {
         for (String name : names) {
-            org.springframework.validation.ValidationUtils.rejectIfEmpty(errors, name, ERROR_EMPTY_CODE, ERROR_EMPTY_MSG);
+            org.springframework.validation.ValidationUtils.rejectIfEmpty(errors, name, ERROR_EMPTY_CODE);
         }
     }
     

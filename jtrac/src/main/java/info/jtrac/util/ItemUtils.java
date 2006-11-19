@@ -40,7 +40,7 @@ import org.springframework.web.util.HtmlUtils;
  */
 public final class ItemUtils {    
     
-    private static String fixWhiteSpace(String text) {
+    public static String fixWhiteSpace(String text) {
         if (text == null) {
             return "";
         }

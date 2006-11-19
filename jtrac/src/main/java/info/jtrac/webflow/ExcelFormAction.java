@@ -55,16 +55,15 @@ public class ExcelFormAction extends AbstractFormAction {
         return success();
     } 
     
-    public Event deleteHandler(RequestContext context) throws Exception {  
+    public Event submitHandler(RequestContext context) throws Exception {  
         ExcelFile excelFile = (ExcelFile) getFormObject(context);
-        excelFile.deleteSelectedRowsAndColumns();
+        switch (excelFile.getAction()) {
+            case 1: excelFile.deleteSelectedRowsAndColumns(); break;            
+            case 2: excelFile.convertSelectedColumnsToDate(); break;
+            case 3: excelFile.concatenateSelectedColumns(); break;
+            case 4: excelFile.extractSummaryFromSelectedColumn(); break;
+        }        
         return success();
-    }  
-    
-    public Event convertToDateHandler(RequestContext context) throws Exception {  
-        ExcelFile excelFile = (ExcelFile) getFormObject(context);
-        excelFile.convertSelectedColumnsToDate();
-        return success();
-    }    
+    }      
     
 }

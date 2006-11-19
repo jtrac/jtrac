@@ -1,8 +1,6 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Edit Config</span>
-
-<p/>
+<div class="heading"><fmt:message key='config_form.editConfig'/></div>
 
 <form method="post" action="<c:url value='/flow'/>">
     
@@ -12,7 +10,7 @@
             <td>
                 <spring:bind path="config.value">
                     <input name="${status.expression}" value="${status.value}" id="focus"/>
-                    <input type="submit" name="_eventId_submit" value="Submit"/>
+                    <input type="submit" name="_eventId_submit" value="<fmt:message key='submit'/>"/>
                     <span class="error">${status.errorMessage}</span>
                 </spring:bind>
             </td>
@@ -24,7 +22,7 @@
     
     <p/>
     
-    <input type="submit" name="_eventId_cancel" value="Cancel"/>
+    <input type="submit" name="_eventId_cancel" value="<fmt:message key='cancel'/>"/>
     
 </form>
 
