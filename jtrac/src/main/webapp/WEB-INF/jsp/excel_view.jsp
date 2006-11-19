@@ -8,7 +8,7 @@
 <form method="post" action="<c:url value='/flow'/>">
     
 <div class="heading">
-Preview Excel File <input type="submit" name="_eventId_cancel" value="Cancel"/>
+    <fmt:message key='excel_view.previewImportedData'/> <input type="submit" name="_eventId_cancel" value="Cancel"/>
 </div>  
     
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>

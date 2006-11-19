@@ -1,6 +1,8 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<div class="heading"><fmt:message key='config_form.editConfig'/></div>
+<div class="heading">
+    <fmt:message key='config.${config.param}'/>
+</div>
 
 <form method="post" action="<c:url value='/flow'/>">
     

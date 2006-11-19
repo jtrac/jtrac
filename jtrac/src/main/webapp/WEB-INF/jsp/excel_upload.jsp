@@ -1,8 +1,6 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Upload Excel File</span>
-
-<br/><br/>
+<div class="heading"><fmt:message key='excel_upload.uploadExcelFile'/></div>
 
 <spring:bind path="excelFile">
     <span class="error">
@@ -15,10 +13,10 @@
 
 <form method="post" action="<c:url value='/flow'/>" enctype="multipart/form-data">
     <input type="file" name="file"/>
-    <input type="submit" name="_eventId_submit" value="Submit"/>
+    <input type="submit" name="_eventId_submit" value="<fmt:message key='submit'/>"/>
     <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>    
     <p/>    
-    <input type="submit" name="_eventId_cancel" value="Cancel"/>
+    <input type="submit" name="_eventId_cancel" value="<fmt:message key='cancel'/>"/>
 </form>
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>

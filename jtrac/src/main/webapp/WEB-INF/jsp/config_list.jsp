@@ -1,10 +1,15 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<div class="heading">Config</div>
+<div class="heading"><fmt:message key='config_list.configurationSettings'/></div>
 
 <table class="jtrac">
 
-    <tr><th>Param</th><th>Value</th><th>(edit)</th></tr>
+    <tr>
+        <th><fmt:message key='config_list.parameter'/></th>
+        <th><fmt:message key='config_list.value'/></th>
+        <th><fmt:message key='config_list.edit'/></th>
+        <th><fmt:message key='config_list.description'/></th>
+    </tr>
 
     <c:forEach items="${configParams}" var="configParam" varStatus="row">
         <c:set var="rowClass">
@@ -22,7 +27,10 @@
             </td>
             <td align="center">
                 <a href="<c:url value='/flow/config?param=${configParam}'/>">(+)</a>
-            </td>            
+            </td>
+            <td>
+                <fmt:message key='config.${configParam}'/>
+            </td>
         </tr>
     </c:forEach>
 
