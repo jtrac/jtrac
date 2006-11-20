@@ -141,6 +141,8 @@ public class ItemFormAction extends AbstractFormAction {
         
         if (isEdit) {            
             History history = new History(item);
+            history.setAssignedTo(null);
+            history.setStatus(null);
             history.setComment(comment);
             jtrac.storeHistoryForItem(item, history, attachment);
         } else {
