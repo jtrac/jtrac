@@ -50,7 +50,20 @@
                     <input type="hidden" name="_${status.expression}"/>                    
                 </td>
             </spring:bind>
-        </tr>   
+        </tr>
+        <c:if test="${space.id == 0}">
+            <tr>
+                <td class="label"><fmt:message key='space_form.copyExisting'/></td>
+                <td>
+                    <select name="copyFrom">
+                        <option>-- <fmt:message key='space_form.createFresh'/> --</option>
+                        <c:forEach items="${spaces}" var="s">
+                            <option value="${s.id}">${s.name} [${s.prefixCode}]</option>
+                        </c:forEach>
+                    </select>
+                </td>
+            </tr>
+        </c:if>
         <tr>
             <td/>
             <td>

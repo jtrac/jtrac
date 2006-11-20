@@ -61,8 +61,8 @@ public class SpaceFormAction extends AbstractFormAction {
             space.getMetadata().getXmlString();  // hack: ensure nothing left to be lazy loaded!
             return space;
         } else {
-            space = new Space();
-            space.getMetadata().initRoles();
+            space = new Space();            
+            context.getFlowScope().put("spaces", jtrac.findAllSpaces());
             return space;
         }
     }    
@@ -93,7 +93,14 @@ public class SpaceFormAction extends AbstractFormAction {
         if (temp != null && temp.getId() != space.getId()) {            
             errors.rejectValue("prefixCode", "space_form.error.prefixCode.exists");
             return error();
-        } 
+        }
+        String copyFrom = ValidationUtils.getParameter(context, "copyFrom");
+        if (copyFrom != null) {
+            temp = jtrac.loadSpace(Long.parseLong(copyFrom));
+            space.getMetadata().setXmlString(temp.getMetadata().getXmlString());
+        } else {
+            space.getMetadata().initRoles();
+        }
         return success();
     }
     
