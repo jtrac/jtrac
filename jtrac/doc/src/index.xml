@@ -453,7 +453,7 @@
         <sect1 id="features-i18n">
             <title>Multi-Language Support</title>
             <para>
-                JTrac already comes with German support and you can change the user interface language instantly 
+                JTrac has complete internationalization support and you can change the user interface language instantly 
                 by editing your user-profile.  Adding a translation is very easy and does not require any
                 Java  development expertise.  See <link linkend="dev-translating">this section</link> of the developer
                 guide for more details and please consider contributing language translations to JTrac!
@@ -1113,33 +1113,23 @@ mvn eclipse:eclipse
         <sect1 id="dev-translating">
             <title>Adding a language translation for JTrac</title>
             <para>
-                JTrac has internationalization support and you can actually add a new language without re-compiling JTrac.
-                First you have to unzip the WAR file and edit the "jtrac-init.properties" file that lies within the 
-                "/WEB-INF/classes" folder.  This would already contain an entry that looks something like this:               
+                JTrac has multi-language support and you can easily add a new language without re-compiling JTrac.
+                All you need to do is introduce a translated version of the existing "messages.properties" file into
+                the "/WEB-INF/classes" folder.  Note that you will need to unzip the WAR file in order to add more files to it.
             </para>
             <para>
-                <programlisting>
-
-jtrac.locales=en,de
-                </programlisting>
+                For example, if you need to add a transalation into French, a file called "messages_fr.properties" should exist.
+                You can refer the list of Java locale codes 
+                <ulink url="http://java.sun.com/j2se/1.5.0/docs/guide/intl/locale.doc.html">here</ulink>.  Note that country
+                specific locales are also supported, for example fr_CA means French, Canada.  
             </para>
             <para>
-                Simply add an entry corresponding to the language code, e.g. "es" for Spanish and "fr" for French.  You can 
-                refer Java locale codes <ulink url="http://java.sun.com/j2se/1.5.0/docs/guide/intl/locale.doc.html">here</ulink>.
-                For example:
+                You can look at the existing translations e.g. "messages_de.properties" as examples. Note that
+                JTrac needs to be restarted for changes to the properties files to take effect.  However,
+                switching the language for any user can easily be done anytime from the "Edit Your Profile" link on the
+                options screen and this takes effect the moment the user saves his profile.
             </para>
-            <para>
-                <programlisting>
-
-jtrac.locales=en,de,es,fr
-                </programlisting>
-            </para>            
-            <para>
-                Of course the main task is to take a copy of the "messages.properties" file and create a mirror of it with
-                the properly translated text.  You can use the "messages_de.properties" file as an example. Note that
-                JTrac needs to be restarted for changes to the properties files to take effect.
-            </para>
-            <para>
+            <para>                
                 You can use this nice open-source tool called <ulink url="https://prbeditor.dev.java.net/">PRBEditor</ulink>
                 that really helps by showing the English and translated versions side by side on a single screen.  It also
                 takes care of handling special characters.
