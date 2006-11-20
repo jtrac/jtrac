@@ -87,7 +87,7 @@ public class FieldFormAction extends AbstractFormAction {
             ValidationUtils.rejectIfEmpty(errors, "field.label");
             String option = fieldForm.option;
             if (fieldForm.field.hasOption(option)) {
-                errors.rejectValue("option", "fieldForm.option.exists", "Option already exists");
+                errors.rejectValue("option", "space_field_form.error.optionExists");
             }            
         }
         
@@ -117,7 +117,7 @@ public class FieldFormAction extends AbstractFormAction {
         String option = ValidationUtils.getParameter(context, "option");
         if (option == null) {
             Errors errors = getFormErrors(context);
-            errors.reject("error.field.option.empty", "Option text cannot be empty");
+            errors.reject("space_field_option_edit.error.optionEmpty");
             context.getRequestScope().put("option", option);
             context.getRequestScope().put("optionKey", optionKey);
             return error();

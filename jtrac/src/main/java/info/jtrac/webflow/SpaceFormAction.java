@@ -71,30 +71,27 @@ public class SpaceFormAction extends AbstractFormAction {
         Space space = (Space) getFormObject(context);        
         Errors errors = getFormErrors(context);               
         if (space.getPrefixCode() == null) {
-            errors.rejectValue("prefixCode", ValidationUtils.ERROR_EMPTY_CODE, ValidationUtils.ERROR_EMPTY_MSG);
+            errors.rejectValue("prefixCode", ValidationUtils.ERROR_EMPTY_CODE);
         } else {
             if (space.getPrefixCode().length() < 3) {
-                errors.rejectValue("prefixCode", "error.space.prefixCode.tooshort",
-                        "Length should be at least 3 characters.");
+                errors.rejectValue("prefixCode", "space_form.error.prefixCode.tooShort");
             }
             if (space.getPrefixCode().length() > 10) {
-                errors.rejectValue("prefixCode", "error.space.prefixCode.toolong",
-                        "Length should not be greater than 10 characters.");
+                errors.rejectValue("prefixCode", "space_form.error.prefixCode.tooLong");
             }            
             if (!ValidationUtils.isAllUpperCase(space.getPrefixCode())) {
-                errors.rejectValue("prefixCode", "error.space.prefixCode.badchars",
-                        "Only capital letters and numeric characters allowed.");
+                errors.rejectValue("prefixCode", "space_form.error.prefixCode.invalid");
             }
         }
         if (space.getName() == null) {
-            errors.rejectValue("name", ValidationUtils.ERROR_EMPTY_CODE, ValidationUtils.ERROR_EMPTY_MSG);
+            errors.rejectValue("name", ValidationUtils.ERROR_EMPTY_CODE);
         }
         if (errors.hasErrors()) {
             return error();
         }
         Space temp = jtrac.loadSpace(space.getPrefixCode());
         if (temp != null && temp.getId() != space.getId()) {            
-            errors.rejectValue("prefixCode", "error.space.prefixCode.exists", "Space already exists");
+            errors.rejectValue("prefixCode", "space_form.error.prefixCode.exists");
             return error();
         } 
         return success();
@@ -221,13 +218,12 @@ public class SpaceFormAction extends AbstractFormAction {
         context.getRequestScope().put("state", state);
         context.getRequestScope().put("stateKey", stateKey);        
         if (!ValidationUtils.isCamelDashCase(state)) {            
-            errors.reject("error.spaceRoles.state.badchars", 
-                    "State name has to be Camel-Case with dashes ('-') to separate words e.g. 'Fixed', 'On-Hold' or 'Work-In-Progress'");
+            errors.reject("space_state_form.error.state.invalid");
             return error();
         }
         Space space = (Space) context.getFlowScope().get("space");
         if(space.getMetadata().getStates().containsValue(state)) {
-            errors.reject("error.spaceRoles.state.exists", "A State by that name already exists.");
+            errors.reject("space_state_form.error.state.exists");
             return error();
         }
         if (stateKey == null) {
@@ -299,11 +295,11 @@ public class SpaceFormAction extends AbstractFormAction {
         context.getRequestScope().put("roleKey", roleKey);
         Errors errors = getFormErrors(context);
         if (!ValidationUtils.isAllUpperCase(roleKey)) {            
-            errors.reject("error.spaceRoles.role.badchars", "Role name has to be all capital letters or digits.");
+            errors.reject("space_role_form.error.role.invalid");
             return error();
         }
         if (space.getMetadata().getRoles().containsKey(roleKey)) {
-            errors.reject("error.spaceRoles.role.exists", "A Role by that name already exists.");
+            errors.reject("space_role_form.error.role.exists");
             return error();            
         }
         if (oldRoleKey == null) {

@@ -16,7 +16,9 @@
     <fmt:message key='item_search_form.viewItemById'/>
     <input name="refId" value="${refId}"/>
     <input type="submit" name="_eventId_view" value="<fmt:message key='view'/>"/>
-    <span class="error">${refIdError}</span>
+    <c:if test="${!empty refIdError}">
+        <span class="error"><fmt:message key='${refIdError}'/></span>
+    </c:if>
     <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 </form>
 

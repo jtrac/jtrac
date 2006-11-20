@@ -132,14 +132,14 @@ public class ItemSearchFormAction extends AbstractFormAction {
     public Event itemSearchViewByRefIdHandler(RequestContext context) throws Exception {        
         String refId = ValidationUtils.getParameter(context, "refId");
         if (refId == null) {
-            context.getRequestScope().put("refIdError", ValidationUtils.ERROR_EMPTY_MSG);
+            context.getRequestScope().put("refIdError", ValidationUtils.ERROR_EMPTY_CODE);
             return error();
         }
         // TODO make this flexible, sense current space etc.
         int pos = refId.indexOf('-');
         if (pos == -1) {
             context.getRequestScope().put("refId", refId);
-            context.getRequestScope().put("refIdError", "Invalid ID");
+            context.getRequestScope().put("refIdError", "item_search_form.error.refId.invalid");
             return error();            
         }
         long sequenceNum;
@@ -147,7 +147,7 @@ public class ItemSearchFormAction extends AbstractFormAction {
             sequenceNum = Long.parseLong(refId.substring(pos + 1));
         } catch (NumberFormatException e) {
             context.getRequestScope().put("refId", refId);
-            context.getRequestScope().put("refIdError", "Invalid ID");
+            context.getRequestScope().put("refIdError", "item_search_form.error.refId.invalid");
             return error();             
         }
         String prefixCode = refId.substring(0, pos).toUpperCase();
@@ -155,7 +155,7 @@ public class ItemSearchFormAction extends AbstractFormAction {
         Item item = jtrac.loadItem(sequenceNum, prefixCode);
         if (item == null) {
             context.getRequestScope().put("refId", refId);
-            context.getRequestScope().put("refIdError", "Item not found");
+            context.getRequestScope().put("refIdError", "item_search_form.error.refId.notFound");
             return error();             
         }
         context.getRequestScope().put("item", item);

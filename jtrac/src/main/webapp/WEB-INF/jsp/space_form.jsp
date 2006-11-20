@@ -2,11 +2,10 @@
 
 <form method="post" action="<c:url value='/flow'/>">
 
-<div class="heading"><fmt:message key='space_form.spaceDetails'/></div>
-
-<c:if test="${space.id > 0}"><input type="submit" name="_eventId_delete" value="<fmt:message key='delete'/>"/></c:if>
-
-<br/><br/>
+<div class="heading">    
+    <fmt:message key='space_form.spaceDetails'/>
+    <c:if test="${space.id > 0}"><input type="submit" name="_eventId_delete" value="<fmt:message key='delete'/>"/></c:if>
+</div>    
 
     <table class="jtrac">
         <tr>

@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<div class="info">
+<div class="heading">
     <fmt:message key='user_list.usersAndSpaces'/>    
     <a href="<c:url value='/flow/user'/>">[ <fmt:message key='user_list.createNewUser'/> ]</a>    
 </div>

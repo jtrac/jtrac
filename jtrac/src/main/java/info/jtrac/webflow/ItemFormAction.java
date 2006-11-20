@@ -115,7 +115,7 @@ public class ItemFormAction extends AbstractFormAction {
         for (Field field : space.getMetadata().getFields().values()) {
             Object o = item.getValue(field.getName());
             if (o == null && !field.isOptional()) {
-                errors.rejectValue(field.getName() + "", ValidationUtils.ERROR_EMPTY_CODE, ValidationUtils.ERROR_EMPTY_MSG);
+                errors.rejectValue(field.getName() + "", ValidationUtils.ERROR_EMPTY_CODE);
             }
         }
         
@@ -124,7 +124,7 @@ public class ItemFormAction extends AbstractFormAction {
         if (errors.hasErrors() || (isEdit && comment == null)) {
             context.getRequestScope().put("comment", comment);
             if ((isEdit && comment == null)) {
-                context.getRequestScope().put("commentError", ValidationUtils.ERROR_EMPTY_MSG);
+                context.getRequestScope().put("commentError", ValidationUtils.ERROR_EMPTY_CODE);
             }
             return error();
         }

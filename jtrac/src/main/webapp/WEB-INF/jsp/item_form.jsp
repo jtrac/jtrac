@@ -85,8 +85,10 @@
                                 <font color="red">*</font>
                             </td>
                             <td>
-                                <textarea name="comment" rows="5" cols="40">${comment}</textarea>                    
-                                <div class="error">${commentError}</div>
+                                <textarea name="comment" rows="5" cols="40">${comment}</textarea>
+                                <c:if test="${!empty commentError}">
+                                    <span class="error"><fmt:message key='error.empty'/></span>
+                                </c:if>
                             </td>
                         </tr>                        
                     </c:if>
