@@ -113,16 +113,20 @@ public class FieldFormAction extends AbstractFormAction {
     }
     
     public Event fieldOptionEditHandler(RequestContext context) throws Exception {
+        FieldForm fieldForm = (FieldForm) getFormObject(context);
         String optionKey = ValidationUtils.getParameter(context, "optionKey");
         String option = ValidationUtils.getParameter(context, "option");
+        Errors errors = getFormErrors(context);
+        context.getRequestScope().put("option", option);
+        context.getRequestScope().put("optionKey", optionKey);        
         if (option == null) {
-            Errors errors = getFormErrors(context);
             errors.reject("space_field_option_edit.error.optionEmpty");
-            context.getRequestScope().put("option", option);
-            context.getRequestScope().put("optionKey", optionKey);
             return error();
         }
-        FieldForm fieldForm = (FieldForm) getFormObject(context);
+        if (fieldForm.field.hasOption(option)) {
+            errors.reject("space_field_option_edit.error.exists");
+            return error();            
+        }            
         fieldForm.field.addOption(optionKey, option); // will overwrite
         return success();
     }

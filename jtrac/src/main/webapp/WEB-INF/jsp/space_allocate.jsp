@@ -8,7 +8,7 @@ function setDeallocate(userSpaceRoleId) {
 
 <form name="spaceAllocateForm" method="post" action="<c:url value='/flow'/>">
 
-<div class="info"><fmt:message key='space_allocate.usersAllocatedToSpace'/>: ${space.name} (${space.prefixCode})</div>
+<div class="heading"><fmt:message key='space_allocate.usersAllocatedToSpace'/>: ${space.name} (${space.prefixCode})</div>
 
 <table class="jtrac">
 
@@ -39,6 +39,8 @@ function setDeallocate(userSpaceRoleId) {
     </c:forEach>
     
 </table>
+
+<p/>
 
 <div class="heading"><fmt:message key='space_allocate.allocateUser'/>:</div>
 

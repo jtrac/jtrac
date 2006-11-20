@@ -1,12 +1,14 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<div class="heading"><fmt:message key='space_field_option_edit.editOption'/> : '${fieldForm.field.label}'</div>
+<div class="heading">
+    <fmt:message key='space_field_option_edit.editOption'/> : '${fieldForm.field.label}'
+    <input type="submit" name="_eventId_delete" value="<fmt:message key='delete'/>"/>
+</div>
 
 <form method="post" action="<c:url value='/flow'/>">
 
     <input name="option" value="${option}"/>
     <input type="submit" name="_eventId_submit" value="<fmt:message key='submit'/>"/>
-    <input type="submit" name="_eventId_delete" value="<fmt:message key='delete'/>"/>
     
     <spring:bind path="fieldForm">
         <span class="error">
