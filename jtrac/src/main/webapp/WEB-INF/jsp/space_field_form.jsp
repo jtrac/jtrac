@@ -6,7 +6,7 @@ function setOptionKey(optionKey) {
 }
 </script>
 
-<span class="info">Edit Field</span>
+<span class="info"><fmt:message key='space_field_form.editField'/></span>
 
 <br/><br/>
 
@@ -14,15 +14,15 @@ function setOptionKey(optionKey) {
 
     <table class="jtrac">
         <tr>
-            <td class="label">Internal Name</td>
+            <td class="label"><fmt:message key='space_field_form.internalName'/></td>
             <td>
                 ${fieldForm.field.name.text}
-                <input type="submit" name="_eventId_delete" value="Delete"/>
+                <input type="submit" name="_eventId_delete" value="<fmt:message key='delete'/>"/>
             </td>
         </tr>
         <tr>
             <td class="label">
-                Label
+                <fmt:message key='space_field_form.label'/>
                 <font color="red">*</font>
             </td>
             <spring:bind path="fieldForm.field.label">
@@ -33,7 +33,7 @@ function setOptionKey(optionKey) {
             </spring:bind>
         </tr>
         <tr>
-            <td class="label">Optional</td>
+            <td class="label"><fmt:message key='space_field_form.optional'/></td>
             <td>
                 <spring:bind path="fieldForm.field.optional">
                     <input type="checkbox" name="${status.expression}" <c:if test='${status.value}'>checked="true"</c:if>/>
@@ -43,7 +43,7 @@ function setOptionKey(optionKey) {
         </tr>
         <c:if test="${fieldForm.field.name.type < 4}">
             <tr>
-                <td class="label">Options</td>
+                <td class="label"><fmt:message key='space_field_form.options'/></td>
                 <td>
                     <table>
                         <c:forEach items="${fieldForm.field.options}" var="entry">
@@ -52,18 +52,18 @@ function setOptionKey(optionKey) {
                                 <td class="alt">${entry.value}</td>
                                 <td><input type="submit" name="_eventId_up" value="/\" onClick="setOptionKey('${entry.key}')"/></td>
                                 <td><input type="submit" name="_eventId_down" value="\/" onClick="setOptionKey('${entry.key}')"/></td>
-                                <td><input type="submit" name="_eventId_edit" value="Edit" onClick="setOptionKey('${entry.key}')"/></td>
+                                <td><input type="submit" name="_eventId_edit" value="<fmt:message key='edit'/>" onClick="setOptionKey('${entry.key}')"/></td>
                             </tr>
                         </c:forEach>
                     </table>
                 </td>
             </tr>
             <tr>
-                <td class="label">Add Option</td>
+                <td class="label"><fmt:message key='space_field_form.addOption'/></td>
                 <td>
                     <spring:bind path="fieldForm.option">
                         <input name="${status.expression}" value="${status.value}" id="focus"/>
-                        <input type="submit" name="_eventId_update" value="Update"/>
+                        <input type="submit" name="_eventId_update" value="<fmt:message key='space_field_form.update'/>"/>
                         <span class="error">${status.errorMessage}</span>
                     </spring:bind>                    
                 </td>
@@ -72,7 +72,7 @@ function setOptionKey(optionKey) {
         <tr>
             <td/>
             <td>
-                <input type="submit" name="_eventId_done" value="Done"/>
+                <input type="submit" name="_eventId_done" value="<fmt:message key='space_field_form.done'/>"/>
                 <input type="hidden" name="fieldName" value="${fieldForm.field.name.text}"/>
                 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
                 <input type="hidden" name="optionKey"/>
@@ -80,7 +80,7 @@ function setOptionKey(optionKey) {
         </tr>
     </table>
 
-    <input type="submit" name="_eventId_cancel" value="Cancel"/>
+    <input type="submit" name="_eventId_cancel" value="<fmt:message key='cancel'/>"/>
     
 </form>
 

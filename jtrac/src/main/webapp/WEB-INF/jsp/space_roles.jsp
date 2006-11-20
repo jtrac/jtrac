@@ -28,9 +28,7 @@ function editMask(stateKey, roleKey, fieldKey) {
     .transition { font-style: italic; }  
 </style>
 
-<span class="info">Space Roles and State-Transitions (Workflow) for Space: ${space.name} (${space.prefixCode})</span>
-
-<br/><br/>
+<div class="heading"><fmt:message key='space_roles.spaceRoles'/>: ${space.name} (${space.prefixCode})</div>
 
 <c:set var="states" value="${space.metadata.states}"/>
 <c:set var="roles" value="${space.metadata.roleList}"/>
@@ -43,14 +41,14 @@ function editMask(stateKey, roleKey, fieldKey) {
 
 <table class="jtrac">
     <tr class="center">
-        <td colspan="2"><input type="submit" name="_eventId_editState" value="Add State"/></td>
-        <td colspan="2"><input type="submit" name="_eventId_editRole" value="Add Role"/></td>
-        <th colspan="${stateCount - 1}">Next Allowed State</th>
-        <th colspan="${fieldCount}">Field Level Permissions<br/>E=Edit, V=view</th> <%-- H=hide support in future --%>        
+        <td colspan="2"><input type="submit" name="_eventId_editState" value="<fmt:message key='space_roles.addState'/>"/></td>
+        <td colspan="2"><input type="submit" name="_eventId_editRole" value="<fmt:message key='space_roles.addRole'/>"/></td>
+        <th colspan="${stateCount - 1}"><fmt:message key='space_roles.nextAllowedState'/></th>
+        <th colspan="${fieldCount}"><fmt:message key='space_roles.fieldLevelPermissions'/><br/><fmt:message key='space_roles.flpLegend'/></th> <%-- H=hide support in future --%>        
     </tr>
     <tr class="center alt">
-        <th colspan="2">State</th>
-        <th colspan="2">Role</th>
+        <th colspan="2"><fmt:message key='space_roles.state'/></th>
+        <th colspan="2"><fmt:message key='space_roles.role'/></th>
         <c:forEach items="${states}" var="mapEntry">
             <c:if test="${mapEntry.key != 0}">
                 <td>${mapEntry.value}</td>
@@ -117,7 +115,7 @@ function editMask(stateKey, roleKey, fieldKey) {
                                 </c:when>
                                 <c:otherwise>
                                     <input type="submit" name="_eventId_editTransition" value="${showTransition}"
-                                        <c:if test="${showTransition == 'Y'}">class='selected'</c:if> title="toggle"
+                                        <c:if test="${showTransition == 'Y'}">class='selected'</c:if> 
                                         onClick="editTransition('${stateRowEntry.key}', '${role.name}', '${stateColEntry.key}')"/>
                                 </c:otherwise>
                             </c:choose>                            
@@ -138,7 +136,7 @@ function editMask(stateKey, roleKey, fieldKey) {
                             <c:when test="${stateRowEntry.key == 0 || stateRowEntry.key == 99}">${showMask}</c:when>
                             <c:otherwise>
                                 <input type="submit" name="_eventId_editMask" value="${showMask}"
-                                    onClick="editMask('${stateRowEntry.key}', '${role.name}', '${field.name.text}')" title="toggle"/>
+                                    onClick="editMask('${stateRowEntry.key}', '${role.name}', '${field.name.text}')"/>
                             </c:otherwise>
                         </c:choose>                             
                     </td>
@@ -150,8 +148,8 @@ function editMask(stateKey, roleKey, fieldKey) {
 
 <br/>
 
-<input type="submit" name="_eventId_back" value="Back"/>
-<input type="submit" name="_eventId_save" value="Save"/>
+<input type="submit" name="_eventId_back" value="<fmt:message key='back'/>"/>
+<input type="submit" name="_eventId_save" value="<fmt:message key='save'/>"/>
 
 <input type="hidden" name="stateKey"/>
 <input type="hidden" name="roleKey"/>
@@ -161,7 +159,7 @@ function editMask(stateKey, roleKey, fieldKey) {
 
 <p/>
 
-<input type="submit" name="_eventId_cancel" value="Cancel"/>
+<input type="submit" name="_eventId_cancel" value="<fmt:message key='cancel'/>"/>
 
 </form>
 

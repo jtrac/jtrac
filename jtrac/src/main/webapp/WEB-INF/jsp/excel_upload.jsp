@@ -5,7 +5,7 @@
 <spring:bind path="excelFile">
     <span class="error">
         <c:forEach items="${status.errorMessages}" var="error">
-            <c:out value="${error}"/><br/>
+            ${error}<br/>
         </c:forEach>
     </span>
     <br/>

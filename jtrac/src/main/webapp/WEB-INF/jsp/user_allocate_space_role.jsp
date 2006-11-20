@@ -1,8 +1,8 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Allocate Role for User: ${user.loginName} within Space: ${space.name} (${space.prefixCode})</span>
-
-<p/>
+<div class="heading">
+    <fmt:message key='user_allocate_space_role.allocateRole'><fmt:param value="${user.loginName}"/></fmt:message>: ${space.name} (${space.prefixCode})
+</div>
 
 <form method="post" action="<c:url value='/flow'/>">
 
@@ -12,14 +12,14 @@
         </c:forEach>
     </select>   
     
-    <input type="submit" name="_eventId_allocate" value="Allocate"/>
+    <input type="submit" name="_eventId_allocate" value="<fmt:message key='user_allocate_space_role.allocate'/>"/>
     <%-- switch on in future version
     <input type="checkbox" name="admin" value="true"/>
     Also add as Admin for this space.
     --%>
     <p/>
     
-    <input type="submit" name="_eventId_cancel" value="Cancel"/>
+    <input type="submit" name="_eventId_cancel" value="<fmt:message key='cancel'/>"/>
 
     <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 

@@ -1,19 +1,17 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Confirm Space Delete: '${space.name}' (${space.prefixCode})</span>
-
-<p/>
+<div class="heading"><fmt:message key='space_delete.confirm'/> : '${space.name}' (${space.prefixCode})</div>
 
 <form method="post" action="<c:url value='/flow'/>">
 
-    <p>Are you sure that you want to delete this Space?</p>
-    <p>This will delete all items within this Space.</p>
-    <span class="error">You cannot undo database updates for this operation.</span>
-    <input type="submit" name="_eventId_submit" value="Submit"/>
+    <p><fmt:message key='space_delete.line1'/></p>
+    <p><fmt:message key='space_delete.line2'/></p>
+    <span class="error"><fmt:message key='space_delete.line3'/></span>
+    <input type="submit" name="_eventId_submit" value="<fmt:message key='submit'/>"/>
     
     <p/>
         
-    <input type="submit" name="_eventId_cancel" value="Cancel"/>
+    <input type="submit" name="_eventId_cancel" value="<fmt:message key='cancel'/>"/>
     <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>    
     
 </form>

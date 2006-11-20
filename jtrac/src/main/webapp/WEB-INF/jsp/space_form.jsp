@@ -2,16 +2,16 @@
 
 <form method="post" action="<c:url value='/flow'/>">
 
-<span class="info">Space Details</span>
+<div class="heading"><fmt:message key='space_form.spaceDetails'/></div>
 
-<c:if test="${space.id > 0}"><input type="submit" name="_eventId_delete" value="Delete"/></c:if>
+<c:if test="${space.id > 0}"><input type="submit" name="_eventId_delete" value="<fmt:message key='delete'/>"/></c:if>
 
 <br/><br/>
 
     <table class="jtrac">
         <tr>
             <td class="label">
-                Display Name
+                <fmt:message key='space_form.displayName'/>
                 <font color="red">*</font>
             </td>
             <spring:bind path="space.name">
@@ -23,7 +23,7 @@
         </tr>         
         <tr>
             <td class="label">
-                Space Key (short name)
+                <fmt:message key='space_form.spaceKey'/>
                 <font color="red">*</font>
             </td>
             <spring:bind path="space.prefixCode">
@@ -34,7 +34,7 @@
             </spring:bind>
         </tr>       
         <tr>
-            <td class="label">Description</td>
+            <td class="label"><fmt:message key='space_form.description'/></td>
             <spring:bind path="space.description">
                 <td>
                     <textarea name="${status.expression}" rows="3" cols="40">${status.value}</textarea>
@@ -43,11 +43,11 @@
             </spring:bind>
         </tr>
         <tr>
-            <td class="label">Make Public</td>
+            <td class="label"><fmt:message key='space_form.makePublic'/></td>
             <spring:bind path="space.guestAllowed">
                 <td>
                     <input type="checkbox" name="${status.expression}" value="true" <c:if test="${status.value}">checked="true"</c:if>/>                
-                    Allow Guest (read only) access
+                    <fmt:message key='space_form.allowGuest'/>
                     <input type="hidden" name="_${status.expression}"/>                    
                 </td>
             </spring:bind>
@@ -55,13 +55,13 @@
         <tr>
             <td/>
             <td>
-                <input type="submit" name="_eventId_submit" value="Next"/>
+                <input type="submit" name="_eventId_submit" value="<fmt:message key='next'/>"/>
                 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
             </td>
         </tr>
     </table>
 
-    <input type="submit" name="_eventId_cancel" value="Cancel"/>
+    <input type="submit" name="_eventId_cancel" value="<fmt:message key='cancel'/>"/>
     
 </form>
 

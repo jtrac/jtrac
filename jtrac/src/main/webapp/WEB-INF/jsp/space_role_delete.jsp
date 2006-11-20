@@ -1,19 +1,17 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Confirm Role Delete : '${roleKey}'</span>
-
-<p/>
+<div class="heading"><fmt:message key='space_role_delete.confirm'/> : '${roleKey}'</div>
 
 <form method="post" action="<c:url value='/flow'/>">
 
-    <p>There are users allocated to this space (${space.name}} with this Role.</p>
-    <p>Are you sure that you want to delete this role?</p>    
-    <span class="error">You cannot undo database updates for this operation.</span>
-    <input type="submit" name="_eventId_submit" value="Submit"/>
+    <p><fmt:message key='space_role_delete.line1'><fmt:param value="${space.name}"/></fmt:message></p>
+    <p><fmt:message key='space_role_delete.line2'/></p>    
+    <span class="error"><fmt:message key='space_role_delete.line3'/></span>
+    <input type="submit" name="_eventId_submit" value="<fmt:message key='submit'/>"/>
     
     <p/>
         
-    <input type="submit" name="_eventId_cancel" value="Cancel"/>
+    <input type="submit" name="_eventId_cancel" value="<fmt:message key='cancel'/>"/>
     <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
     <input type="hidden" name="oldRoleKey" value="${oldRoleKey}"/>
     <input type="hidden" name="roleKey" value="${roleKey}"/>

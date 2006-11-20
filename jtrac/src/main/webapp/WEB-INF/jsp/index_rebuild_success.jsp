@@ -1,5 +1,5 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Indexes Rebuilt Successfully</span>
+<div class="heading"><fmt:message key='index_rebuild_success.message'/></div>
 
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>

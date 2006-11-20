@@ -1,19 +1,17 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Edit Option for field '${fieldForm.field.label}'</span>
-
-<p/>
+<div class="heading"><fmt:message key='space_field_option_edit.editOption'/> : '${fieldForm.field.label}'</div>
 
 <form method="post" action="<c:url value='/flow'/>">
 
     <input name="option" value="${option}"/>
-    <input type="submit" name="_eventId_submit" value="Submit"/>
-    <input type="submit" name="_eventId_delete" value="Delete"/>
+    <input type="submit" name="_eventId_submit" value="<fmt:message key='submit'/>"/>
+    <input type="submit" name="_eventId_delete" value="<fmt:message key='delete'/>"/>
     
     <spring:bind path="fieldForm">
         <span class="error">
             <c:forEach items="${status.errorMessages}" var="error">
-                <c:out value="${error}"/><br/>
+                ${error}<br/>
             </c:forEach>
         </span>
     </spring:bind>    
@@ -23,7 +21,7 @@
     
     <p/>
     
-    <input type="submit" name="_eventId_cancel" value="Cancel"/>
+    <input type="submit" name="_eventId_cancel" value="<fmt:message key='cancel'/>"/>
     
 </form>
 

@@ -6,15 +6,17 @@ function setDeallocate(userSpaceRoleId) {
 }
 </script>
 
-<span class="info">Spaces allocated to User: ${user.loginName} (${user.name})</span>
-
-<p/>
+<div class="heading"><fmt:message key='user_allocate_space.spacesAllocated'/>: ${user.loginName} (${user.name})</div>
 
 <form name="userAllocateForm" method="post" action="<c:url value='/flow'/>">
 
 <table class="jtrac">
 
-    <tr><th>Space</th><th>Role</th><th>Remove</th></tr>
+    <tr>
+        <th><fmt:message key='user_allocate_space.space'/></th>
+        <th><fmt:message key='user_allocate_space.role'/></th>
+        <th><fmt:message key='user_allocate_space.remove'/></th>
+    </tr>
     
     <c:forEach items="${user.userSpaceRoles}" var="userSpaceRole" varStatus="row">
         <c:set var="rowClass">
@@ -40,9 +42,7 @@ function setDeallocate(userSpaceRoleId) {
 
 <p/>
 
-<span class="info">Choose a Space to allocate to this user.</span>
-
-<p/>
+<div class="heading"><fmt:message key='user_allocate_space.chooseSpace'/></div>
 
 <select name="spaceId">
     <c:forEach items="${unallocatedSpaces}" var="space">
@@ -50,20 +50,20 @@ function setDeallocate(userSpaceRoleId) {
     </c:forEach>
 </select>
 
-<input type="submit" name="_eventId_next" value="Next"/>
+<input type="submit" name="_eventId_next" value="<fmt:message key='next'/>"/>
 
 <c:if test="${!user.adminForAllSpaces}">
 
 <p/>
 
-<span class="info">Make this user an Administrator (for all spaces)</span>
-<input type="submit" name="_eventId_makeAdmin" value="Make Admin"/>
+<span class="info"><fmt:message key='user_allocate_space.makeUserAdmin'/></span>
+<input type="submit" name="_eventId_makeAdmin" value="<fmt:message key='user_allocate_space.makeAdmin'/>"/>
 
 </c:if>
 
 <p/>
 
-<input type="submit" name="_eventId_cancel" value="Cancel"/>
+<input type="submit" name="_eventId_cancel" value="<fmt:message key='cancel'/>"/>
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 <input type="hidden" name="deallocate"/>
 

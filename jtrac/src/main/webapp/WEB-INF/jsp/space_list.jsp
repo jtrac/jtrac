@@ -1,19 +1,18 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Spaces</span>
-
-<a href="<c:url value='/flow/space'/>">[ Create New Space ]</a>
-
-<p/>
+<div class="heading">
+    <fmt:message key='space_list.spaceList'/>    
+    <a href="<c:url value='/flow/space'/>">[ <fmt:message key='space_list.createNewSpace'/> ]</a>    
+</div>
 
 <table class="jtrac">
 
     <tr>
-        <th>Key</th>
-        <th>Name</th>
-        <th>Edit</th>
-        <th>Description</th>
-        <th>Users</th>
+        <th><fmt:message key='space_list.key'/></th>
+        <th><fmt:message key='space_list.name'/></th>
+        <th><fmt:message key='space_list.edit'/></th>
+        <th><fmt:message key='space_list.description'/></th>
+        <th><fmt:message key='space_list.users'/></th>
     </tr>
 
     <c:forEach items="${spaces}" var="space" varStatus="row">
@@ -27,7 +26,7 @@
             <td>${space.prefixCode}</td>
             <td>${space.name}</td>
             <td>
-                <a href="<c:url value='/flow/space?spaceId=${space.id}'/>">(edit)</a>
+                <a href="<c:url value='/flow/space?spaceId=${space.id}'/>">(<fmt:message key='edit'/>)</a>
             </td>
             <td>${space.description}</td>
             <td align="center">

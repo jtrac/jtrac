@@ -1,14 +1,19 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<span class="info">Users and Allocated Trackers</span>
-
-<a href="<c:url value='/flow/user'/>">[ Create New User ]</a>
-
-<p/>
+<div class="info">
+    <fmt:message key='user_list.usersAndSpaces'/>    
+    <a href="<c:url value='/flow/user'/>">[ <fmt:message key='user_list.createNewUser'/> ]</a>    
+</div>
 
 <table class="jtrac">
 
-    <tr><th>User Name</th><th>Edit Profile</th><th>Locked</th><th>Tracker (Role)</th><th>Assign</br>Tracker / Role</th></tr>
+    <tr>
+        <th><fmt:message key='user_list.userName'/></th>
+        <th><fmt:message key='user_list.editProfile'/></th>
+        <th><fmt:message key='user_list.locked'/></th>
+        <th><fmt:message key='user_list.spaceRole'/></th>
+        <th><fmt:message key='user_list.allocateSpaceRole'/></th>
+    </tr>
 
     <c:forEach items="${users}" var="user" varStatus="row">
         <c:set var="rowClass">
@@ -23,7 +28,7 @@
                 <a href="<c:url value='/flow/user?userId=${user.id}'/>">${user.loginName}</a>
             </td>
             <td>
-                <c:if test="${user.locked}">locked</c:if>
+                <c:if test="${user.locked}">Y</c:if>
             </td>                   
             <td>        
                 <c:forEach items="${user.userSpaceRoles}" var="userSpaceRole" varStatus="row">

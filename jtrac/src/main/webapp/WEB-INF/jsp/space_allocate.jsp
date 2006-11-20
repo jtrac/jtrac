@@ -8,13 +8,16 @@ function setDeallocate(userSpaceRoleId) {
 
 <form name="spaceAllocateForm" method="post" action="<c:url value='/flow'/>">
 
-<span class="info">Users allocated to Space: ${space.name} (${space.prefixCode})</span>
-
-<p/>
+<div class="info"><fmt:message key='space_allocate.usersAllocatedToSpace'/>: ${space.name} (${space.prefixCode})</div>
 
 <table class="jtrac">
 
-    <tr><th>Login Name</th><th>Full Name</th><th>Role</th><th>Remove</th></tr>
+    <tr>
+        <th><fmt:message key='space_allocate.loginName'/></th>
+        <th><fmt:message key='space_allocate.fullName'/></th>
+        <th><fmt:message key='space_allocate.role'/></th>
+        <th><fmt:message key='space_allocate.remove'/></th>
+    </tr>
     
     <c:forEach items="${userSpaceRoles}" var="userSpaceRole" varStatus="row">
         <c:set var="rowClass">
@@ -37,32 +40,30 @@ function setDeallocate(userSpaceRoleId) {
     
 </table>
 
-<p/>
-
-<span class="info">Choose User and Role to allocate:</span>
+<div class="heading"><fmt:message key='space_allocate.allocateUser'/>:</div>
 
 <table class="jtrac">
         
     <tr>
-        <th>User</th>
+        <th><fmt:message key='space_allocate.user'/></th>
         <td>
             <select name="userId">
                 <c:forEach items="${unallocatedUsers}" var="user">
                     <option value="${user.id}">${user.loginName} (${user.name})</option>
                 </c:forEach>
             </select>
-            <input type="submit" name="_eventId_userCreate" value="Create New User"/>
+            <input type="submit" name="_eventId_userCreate" value="<fmt:message key='space_allocate.createNewUser'/>"/>
         </td>
     </tr>
     <tr>
-        <th>Role</th>
+        <th><fmt:message key='space_allocate.role'/></th>
         <td>
             <select name="roleKey">
                 <c:forEach items="${space.metadata.roleList}" var="role">
                     <option>${role.name}</option>
                 </c:forEach>
             </select>
-            <input type="submit" name="_eventId_allocate" value="Allocate"/>
+            <input type="submit" name="_eventId_allocate" value="<fmt:message key='space_allocate.allocate'/>"/>
             <%-- switch on in future version
             <input type="checkbox" name="admin" value="true"/>
             Also add as Admin for this space.
@@ -74,7 +75,7 @@ function setDeallocate(userSpaceRoleId) {
 
 <p/>
 
-<input type="submit" name="_eventId_cancel" value="Cancel"/>
+<input type="submit" name="_eventId_cancel" value="<fmt:message key='cancel'/>"/>
 <input type="hidden" name="deallocate"/>
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 

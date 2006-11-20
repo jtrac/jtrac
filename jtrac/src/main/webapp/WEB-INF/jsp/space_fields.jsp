@@ -6,9 +6,7 @@ function setFieldName(fieldName) {
 }
 </script>
 
-<span class="info">Custom Fields for Space: ${space.name} (${space.prefixCode})</span>
-
-<p/>
+<div class="heading"><fmt:message key='space_fields.customFields'/>: ${space.name} (${space.prefixCode})</div>
 
 <c:set var="fields" value="${space.metadata.fields}"/>
 
@@ -16,12 +14,12 @@ function setFieldName(fieldName) {
 
 <table class="jtrac">
     <tr>
-        <th>Move</th>
-        <th>Internal Name</th>
-        <th>Type</th>
-        <th>Optional</th>
-        <th>Label</th>
-        <th>Option List</th>
+        <th><fmt:message key='space_fields.move'/></th>
+        <th><fmt:message key='space_fields.internalName'/></th>
+        <th><fmt:message key='space_fields.type'/></th>
+        <th><fmt:message key='space_fields.optional'/></th>
+        <th><fmt:message key='space_fields.label'/></th>
+        <th><fmt:message key='space_fields.optionList'/></th>
         <th/>
     </tr>
     <c:forEach items="${space.metadata.fieldOrder}" var="fieldName" varStatus="row">
@@ -46,14 +44,14 @@ function setFieldName(fieldName) {
                     ${entry.value}<br/>
                 </c:forEach>
             </td>
-            <td><input type="submit" name="_eventId_edit" value="Edit" onClick="setFieldName('${fieldName.text}')"/></td>
+            <td><input type="submit" name="_eventId_edit" value="<fmt:message key='edit'/>" onClick="setFieldName('${fieldName.text}')"/></td>
         </tr>
     </c:forEach>
 </table>
 
 <p/>
 
-<span class="info">Choose type of custom field to add:</span>
+<span class="info"><fmt:message key='space_fields.chooseType'/>:</span>
 
 <select name="fieldType">
     <c:forEach items="${space.metadata.availableFieldTypes}" var="entry">
@@ -61,13 +59,13 @@ function setFieldName(fieldName) {
     </c:forEach>
 </select>
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
-<input type="submit" name="_eventId_add" value="Add Field"/>    
+<input type="submit" name="_eventId_add" value="<fmt:message key='space_fields.addField'/>"/>    
 <p/>
-<input type="submit" name="_eventId_back" value="Back"/>
-<input type="submit" name="_eventId_next" value="Next"/>
+<input type="submit" name="_eventId_back" value="<fmt:message key='back'/>"/>
+<input type="submit" name="_eventId_next" value="<fmt:message key='next'/>"/>
 <input type="hidden" name="fieldName"/>
 <p/>
-<input type="submit" name="_eventId_cancel" value="Cancel"/>
+<input type="submit" name="_eventId_cancel" value="<fmt:message key='cancel'/>"/>
 
 </form>
 
