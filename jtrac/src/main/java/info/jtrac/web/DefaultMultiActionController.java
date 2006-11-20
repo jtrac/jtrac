@@ -26,6 +26,7 @@ import info.jtrac.util.SecurityUtils;
 import info.jtrac.util.SvnUtils;
 
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -78,10 +79,16 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
 
     public ModelAndView logoutHandler(HttpServletRequest request, HttpServletResponse response) {
         // next line moved to logout.jsp otherwise locale resolving issues
-        // request.getSession().invalidate(); 
-        Cookie terminate = new Cookie(TokenBasedRememberMeServices.ACEGI_SECURITY_HASHED_REMEMBER_ME_COOKIE_KEY, null);
-        terminate.setMaxAge(0);
-        response.addCookie(terminate);     
+        // request.getSession().invalidate();        
+        if(logger.isDebugEnabled() && request.getCookies() != null) {
+            for(Cookie c : request.getCookies()) {
+                logger.debug("found cookie: " + c.getDomain() + ":" + c.getName() + ":" + c.getPath());
+            }
+        }        
+        Cookie t = new Cookie(TokenBasedRememberMeServices.ACEGI_SECURITY_HASHED_REMEMBER_ME_COOKIE_KEY, null);
+        t.setMaxAge(0);
+        logger.debug("removing cookie: " + t.getDomain() + ":" + t.getName() + ":" + t.getPath());
+        response.addCookie(t);     
         return new ModelAndView("logout");
     }
 
@@ -89,11 +96,12 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
         User user = SecurityUtils.getPrincipal();
         ModelAndView mav = new ModelAndView("dashboard");
         mav.addObject("countsHolder", jtrac.loadCountsForUser(user));
+        mav.addObject("principal", user);
         // performance hack, because of the principal (loaded by Acegi) not in sync with our
         // open session in view.  Basically cache the "SpacesWhereAbleToCreateNewItem" else
         // rendering dashboard would require a lot of extra queries to load Space + Metadata
         // which the userSpaceRole.isAbleToCreateNewItem() method requires
-        if (user.getSpacesWhereAbleToCreateNewItem() == null) {
+        if (user.getSpacesWhereAbleToCreateNewItem() == null && user.getId() > 0) {
             Map<Long, Boolean> map = new HashMap<Long, Boolean>();
             for(UserSpaceRole usr : jtrac.loadUser(user.getId()).getSpaceRoles()) {
                 if (usr.isAbleToCreateNewItem()) {
