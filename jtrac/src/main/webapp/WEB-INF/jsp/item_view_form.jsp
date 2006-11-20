@@ -127,7 +127,7 @@ function handleAjaxResponse(ajaxRequest) {
         <td>
             <spring:bind path="itemViewForm.history.comment">
                 <textarea name="${status.expression}" rows="6" cols="70">${status.value}</textarea>
-                <div class="error">${status.errorMessage}</div>
+                <span class="error"><br/>${status.errorMessage}</span>
             </spring:bind>
         </td>        
     </tr>
