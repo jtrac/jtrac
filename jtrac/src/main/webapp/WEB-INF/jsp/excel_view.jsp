@@ -8,20 +8,20 @@
 <form method="post" action="<c:url value='/flow'/>">
     
 <div class="heading">
-    <fmt:message key='excel_view.previewImportedData'/> <input type="submit" name="_eventId_cancel" value="Cancel"/>
+    <fmt:message key='excel_view.previewImportedData'/> <input type="submit" name="_eventId_cancel" value="<fmt:message key='cancel'/>"/>
 </div>  
     
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
 
 <select name="action">
-    <option>-- select action --</option>
-    <option value="1">Delete Selected Columns / Rows</option>    
-    <option value="2">Convert Column Format to Date</option>
-    <option value="3">Concatenate field contents</option>
-    <option value="4">Extract first 80 characters as Summary</option>
+    <option>-- <fmt:message key='excel_view.selectActionToPerform'/> --</option>
+    <option value="1"><fmt:message key='excel_view.deleteSelected'/></option>    
+    <option value="2"><fmt:message key='excel_view.convertToDate'/></option>
+    <option value="3"><fmt:message key='excel_view.concatenateFields'/></option>
+    <option value="4"><fmt:message key='excel_view.extractFirstEighty'/></option>
 </select>
 
-<input type="submit" name="_eventId_submit" value="Submit"/>
+<input type="submit" name="_eventId_submit" value="<fmt:message key='submit'/>"/>
 
 <br/><br/>
 
