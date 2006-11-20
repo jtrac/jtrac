@@ -19,6 +19,7 @@ package info.jtrac.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -85,12 +86,24 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
             jtracHome = props.getProperty("jtrac.home");
             if (jtracHome != null) {
                 logger.info("'jtrac.home' property initialized from 'jtrac-init.properties' as '" + jtracHome + "'");
-            }
-            String locales = props.getProperty("jtrac.locales");
-            if (locales != null) {
-                logger.info("locales available configured are '" + locales + "'");
-                System.setProperty("jtrac.locales", locales);
-            }
+            }            
+            FilenameFilter ff = new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.startsWith("messages_") && name.endsWith(".properties");
+                }
+            };
+            File[] messagePropsFiles = initPropsFile.getParentFile().listFiles(ff);
+            String locales = "en";
+            for(File f : messagePropsFiles) {
+                int endIndex = f.getName().indexOf('.');
+                logger.debug("found " + f.getName());
+                String localeCode = f.getName().substring(9, endIndex);
+                locales += "," + localeCode;
+            }            
+            logger.info("locales available configured are '" + locales + "'");
+            System.setProperty("jtrac.locales", locales);            
+        } else {
+            System.setProperty("jtrac.locales", "en");
         }
         if (jtracHome == null) {
             logger.info("valid 'jtrac.home' property not available in 'jtrac-init.properties', trying system properties.");                
