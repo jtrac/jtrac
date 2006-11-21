@@ -36,7 +36,7 @@ import org.springframework.util.StringUtils;
 /**
  * Class to handle sending of E-mail and pre-formatted messages
  */
-public class EmailUtils {
+public class MailSender {
     
     private final Log logger = LogFactory.getLog(getClass());    
     private JavaMailSenderImpl sender;
@@ -44,7 +44,7 @@ public class EmailUtils {
     private String from;
     private String url;
     
-    public EmailUtils(String host, String port, String url, String from, String prefix, String userName, String password) {
+    public MailSender(String host, String port, String url, String from, String prefix, String userName, String password) {
         logger.debug("initializing email adapter: host = '" + host + "', port = '" + 
                 port + "', url = '" + url + "', from = '" + from + "', prefix = '" + prefix + "'");        
         this.prefix = prefix == null ? "[jtrac]" : prefix;

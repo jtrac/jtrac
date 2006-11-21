@@ -33,7 +33,7 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.lucene.IndexSearcher;
 import info.jtrac.lucene.Indexer;
-import info.jtrac.mail.EmailUtils;
+import info.jtrac.mail.MailSender;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -67,7 +67,7 @@ public class JtracImpl implements Jtrac {
     
     private JtracDao dao;
     private PasswordEncoder passwordEncoder;
-    private EmailUtils emailUtils;
+    private MailSender mailSender;
     private Indexer indexer;
     private IndexSearcher indexSearcher;
     private MessageSource messageSource;
@@ -156,7 +156,7 @@ public class JtracImpl implements Jtrac {
         String prefix = loadConfig("mail.subject.prefix");
         String userName = loadConfig("mail.server.username");
         String password = loadConfig("mail.server.password");
-        this.emailUtils = new EmailUtils(host, port, url, from, prefix, userName, password);
+        this.mailSender = new MailSender(host, port, url, from, prefix, userName, password);
     }      
     
     private void initDefaultLocale() {
@@ -195,8 +195,8 @@ public class JtracImpl implements Jtrac {
         dao.storeItem(item);
         indexer.index(item);
         indexer.index(history);
-        if (item.isSendNotifications() && emailUtils != null) {
-            emailUtils.send(item, messageSource);
+        if (item.isSendNotifications() && mailSender != null) {
+            mailSender.send(item, messageSource);
         }
     }
     
@@ -224,8 +224,8 @@ public class JtracImpl implements Jtrac {
         item.add(history);
         dao.storeItem(item);
         indexer.index(history);
-        if (history.isSendNotifications() && emailUtils != null) {
-            emailUtils.send(item, messageSource);
+        if (history.isSendNotifications() && mailSender != null) {
+            mailSender.send(item, messageSource);
         }
     }
     
@@ -347,8 +347,8 @@ public class JtracImpl implements Jtrac {
         }                        
         user.setPassword(encodeClearText(password));
         storeUser(user);
-        if (emailUtils != null) {                
-            emailUtils.sendUserPassword(user, password);
+        if (mailSender != null) {                
+            mailSender.sendUserPassword(user, password);
         }
     }
     
