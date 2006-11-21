@@ -61,7 +61,8 @@ public class MailSender {
         from = config.get("mail.from");
         prefix = config.get("mail.subject.prefix");
         String userName = config.get("mail.server.username");
-        String password = config.get("mail.server.password");        
+        String password = config.get("mail.server.password");
+        String startTls = config.get("mail.server.starttls.enable");
         logger.debug("initializing email adapter: host = '" + host + "', port = '" + 
                 port + "', url = '" + url + "', from = '" + from + "', prefix = '" + prefix + "'");        
         this.prefix = prefix == null ? "[jtrac]" : prefix;
@@ -85,6 +86,9 @@ public class MailSender {
             // authentication requested
             Properties props = new Properties();
             props.put("mail.smtp.auth", "true");
+            if (startTls != null && startTls.toLowerCase().equals("true")) {
+                props.put("mail.smtp.starttls.enable", "true");
+            }
             sender.setJavaMailProperties(props);
             sender.setUsername(userName);
             sender.setPassword(password);
