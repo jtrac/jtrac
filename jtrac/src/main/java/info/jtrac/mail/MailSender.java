@@ -23,6 +23,7 @@ import info.jtrac.util.ItemUtils;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import javax.mail.Header;
 import javax.mail.internet.MimeMessage;
@@ -43,8 +44,24 @@ public class MailSender {
     private String prefix;
     private String from;
     private String url;
+    private MessageSource messageSource;
+    private Locale defaultLocale;
     
-    public MailSender(String host, String port, String url, String from, String prefix, String userName, String password) {
+    public MailSender(Map<String, String> config, MessageSource messageSource, String defaultLocale) {
+        // initialize email sender
+        this.messageSource = messageSource;
+        this.defaultLocale = StringUtils.parseLocaleString(defaultLocale);
+        String host = config.get("mail.server.host");
+        if (host == null) {
+            logger.warn("'mail.server.host' config is null, mail adapter not initialized");
+            return;
+        }        
+        String port = config.get("mail.server.port");       
+        String url = config.get("jtrac.url.base");
+        from = config.get("mail.from");
+        prefix = config.get("mail.subject.prefix");
+        String userName = config.get("mail.server.username");
+        String password = config.get("mail.server.password");        
         logger.debug("initializing email adapter: host = '" + host + "', port = '" + 
                 port + "', url = '" + url + "', from = '" + from + "', prefix = '" + prefix + "'");        
         this.prefix = prefix == null ? "[jtrac]" : prefix;
@@ -107,6 +124,15 @@ public class MailSender {
             }
         }.start();
     }
+    
+    private String fmt(String key, Locale locale) {
+        try {
+            return messageSource.getMessage("mail_sender." + key, null, locale);
+        } catch (Exception e) {
+            logger.debug(e);
+            return "???mail_sender." + key + "???";
+        }
+    }    
 
     private String addHeaderAndFooter(StringBuffer html) {
         StringBuffer sb = new StringBuffer();
@@ -115,12 +141,13 @@ public class MailSender {
         // ItemUtils adds the main inline CSS when generating the email content, so we gracefully degrade
         sb.append("<html><body><style type='text/css'>table.jtrac th, table.jtrac td { padding-left: 0.2em; padding-right: 0.2em; }</style>");
         sb.append(html);
-        sb.append("</html>");
+        sb.append("<hr/></html>");
         return sb.toString();
     }
     
-    private String getItemViewAnchor(Item item) {
-        return "<p><a href='" + url + "flow/item_view?itemId=" + item.getId() + "'>Click here to access " + item.getRefId() + "</a></p>";
+    private String getItemViewAnchor(Item item, Locale locale) {
+        return "<p><a href='" + url + "flow/item_view?itemId=" + item.getId() + "'>" 
+                + fmt("clickHereToAccess", locale) + " " + item.getRefId() + "</a></p>";
     }
     
     private String getSubject(Item item) {       
@@ -136,14 +163,13 @@ public class MailSender {
     }
     
     public void send(Item item, MessageSource messageSource) {
-        // TODO make this locale sensitive per recipient
-        Locale locale = StringUtils.parseLocaleString("en");
+        // TODO make this locale sensitive per recipient        
         logger.debug("attempting to send mail for item update");
         // prepare message content
         StringBuffer sb = new StringBuffer();
-        String anchor = getItemViewAnchor(item);
+        String anchor = getItemViewAnchor(item, defaultLocale);
         sb.append(anchor);
-        sb.append(ItemUtils.getAsHtml(item, messageSource, locale));
+        sb.append(ItemUtils.getAsHtml(item, messageSource, defaultLocale));
         sb.append(anchor);
         if (logger.isDebugEnabled()) {
             logger.debug("html content: " + sb);
@@ -180,19 +206,28 @@ public class MailSender {
     
     public void sendUserPassword(User user, String clearText) {
         logger.debug("attempting to send mail for user password");
+        String localeString = user.getLocale();
+        Locale locale = null;
+        if(localeString == null) {
+            locale = defaultLocale;
+        } else {
+            locale = StringUtils.parseLocaleString(localeString);
+        }
         MimeMessage message = sender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");
         try {
             helper.setTo(user.getEmail());
-            helper.setSubject(prefix + " JTrac login details");
+            helper.setSubject(prefix + " " + fmt("loginMailSubject", locale));
             StringBuffer sb = new StringBuffer();
-            sb.append("<p>Hi " + user.getName()+ ",</p>");      
-            sb.append("<p>Your JTrac login details have been created / updated as follows:</p>");           
+            sb.append("<p>" + fmt("loginMailGreeting", locale) + " " + user.getName()+ ",</p>");      
+            sb.append("<p>" + fmt("loginMailLine1", locale) + "</p>");           
             sb.append("<table class='jtrac'>");
-            sb.append("<tr><th>Login Name</th><td>" + user.getLoginName() + "</td></tr>");
-            sb.append("<tr><th>Password</th><td>" + clearText + "</td></tr>");
+            sb.append("<tr><th style='background: #CCCCCC'>" + fmt("loginName", locale) 
+                + "</th><td style='border: 1px solid black'>" + user.getLoginName() + "</td></tr>");
+            sb.append("<tr><th style='background: #CCCCCC'>" + fmt("password", locale) 
+                + "</th><td style='border: 1px solid black'>" + clearText + "</td></tr>");
             sb.append("</table>");
-            sb.append("<p>Use the link below to log in:</p>");       
+            sb.append("<p>" + fmt("loginMailLine2", locale) + "</p>");       
             sb.append("<p><a href='" + url + "'>" + url + "</a></p>");
             helper.setText(addHeaderAndFooter(sb), true);
             helper.setSentDate(new Date());

@@ -71,7 +71,7 @@ public class JtracImpl implements Jtrac {
     private Indexer indexer;
     private IndexSearcher indexSearcher;
     private MessageSource messageSource;
-    
+
     private Map<String, String> locales;
     private String defaultLocale;
     
@@ -103,8 +103,7 @@ public class JtracImpl implements Jtrac {
     public void setMessageSource(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
-    
-    
+        
     private final Log logger = LogFactory.getLog(getClass());
     
     /**
@@ -134,40 +133,28 @@ public class JtracImpl implements Jtrac {
         return defaultLocale;
     }
     
-    public void init() {
-        initEmailUtils();
-        initDefaultLocale();
-    }
-    
-    //==========================================================================
-    
     /**
-     * initialize the email adapter
+     * this is automatically called by spring init-method hook on
+     * startup, also called whenever config is edited to refresh
      */
-    private void initEmailUtils() {
-        String host = loadConfig("mail.server.host");
-        if (host == null) {
-            logger.warn("'mail.server.host' config is null, mail adapter not initialized");
-            return;
-        }
-        String port = loadConfig("mail.server.port");       
-        String url = loadConfig("jtrac.url.base");
-        String from = loadConfig("mail.from");
-        String prefix = loadConfig("mail.subject.prefix");
-        String userName = loadConfig("mail.server.username");
-        String password = loadConfig("mail.server.password");
-        this.mailSender = new MailSender(host, port, url, from, prefix, userName, password);
-    }      
-    
-    private void initDefaultLocale() {
-        String temp = loadConfig("locale.default");
+    public void init() {
+        
+        Map<String, String> config = loadAllConfig();
+        
+        // initialize default locale
+        String temp = config.get("locale.default");
         if (temp == null || !locales.containsKey(temp)) {
-            logger.warn("invalid default locale configured, defaulting to 'en'");
+            logger.warn("invalid default locale configured = '" + temp + "', defaulting to 'en'");
             temp = "en";
         }
         logger.info("default locale set to '" + temp + "'");
-        defaultLocale = temp;
-    }
+        defaultLocale = temp;         
+        
+        // initialize mail sender
+        this.mailSender = new MailSender(config, messageSource, defaultLocale);
+        
+       
+    }    
     
     //==========================================================================
     
