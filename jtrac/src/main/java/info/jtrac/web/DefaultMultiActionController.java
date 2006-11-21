@@ -79,16 +79,11 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
 
     public ModelAndView logoutHandler(HttpServletRequest request, HttpServletResponse response) {
         // next line moved to logout.jsp otherwise locale resolving issues
-        // request.getSession().invalidate();        
-        if(logger.isDebugEnabled() && request.getCookies() != null) {
-            for(Cookie c : request.getCookies()) {
-                logger.debug("found cookie: " + c.getDomain() + ":" + c.getName() + ":" + c.getPath());
-            }
-        }        
-        Cookie t = new Cookie(TokenBasedRememberMeServices.ACEGI_SECURITY_HASHED_REMEMBER_ME_COOKIE_KEY, null);
-        t.setMaxAge(0);
-        logger.debug("removing cookie: " + t.getDomain() + ":" + t.getName() + ":" + t.getPath());
-        response.addCookie(t);     
+        // request.getSession().invalidate();
+        Cookie terminate = new Cookie(TokenBasedRememberMeServices.ACEGI_SECURITY_HASHED_REMEMBER_ME_COOKIE_KEY, null);      
+        terminate.setMaxAge(0);
+        terminate.setPath(request.getContextPath());
+        response.addCookie(terminate);            
         return new ModelAndView("logout");
     }
 
