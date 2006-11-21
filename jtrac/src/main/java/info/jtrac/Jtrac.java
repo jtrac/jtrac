@@ -93,6 +93,7 @@ public interface Jtrac extends UserDetailsService {
     String generatePassword();
     String encodeClearText(String clearText);
     Map<String, String> getLocales();
+    String getDefaultLocale();
     //========================================================
     Map<String, String> loadAllConfig();
     void storeConfig(Config config);

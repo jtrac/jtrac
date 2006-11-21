@@ -24,9 +24,9 @@ import info.jtrac.util.AttachmentUtils;
 import info.jtrac.util.ExcelUtils;
 import info.jtrac.util.SecurityUtils;
 import info.jtrac.util.SvnUtils;
+import info.jtrac.util.UserUtils;
 
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -73,7 +73,8 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
             mav.addObject("message", ae.getMessage());            
         }
         String loginName = (String) WebUtils.getSessionAttribute(request, AuthenticationProcessingFilter.ACEGI_SECURITY_LAST_USERNAME_KEY);              
-        mav.addObject("loginName", loginName);
+        mav.addObject("loginName", loginName);        
+        UserUtils.refreshLocale(request, response, jtrac.getDefaultLocale());
         return mav;
     }
 

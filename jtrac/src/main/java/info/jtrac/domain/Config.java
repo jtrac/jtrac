@@ -40,7 +40,8 @@ public class Config implements Serializable {
         params.add("mail.server.password");
         params.add("mail.subject.prefix");
         params.add("mail.from");
-        params.add("jtrac.url.base");        
+        params.add("jtrac.url.base");
+        params.add("locale.default");
     }
     
     public static Set<String> getParams() {

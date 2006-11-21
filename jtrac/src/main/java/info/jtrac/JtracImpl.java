@@ -72,7 +72,8 @@ public class JtracImpl implements Jtrac {
     private IndexSearcher indexSearcher;
     private MessageSource messageSource;
     
-    Map<String, String> locales;
+    private Map<String, String> locales;
+    private String defaultLocale;
     
     public void setLocaleList(String[] array) {
         locales = new LinkedHashMap<String, String>();
@@ -85,8 +86,6 @@ public class JtracImpl implements Jtrac {
     
     public void setDao(JtracDao dao) {
         this.dao = dao;
-        // performs one time init on Spring assisted startup        
-        initEmailUtils();
     }
     
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
@@ -129,7 +128,18 @@ public class JtracImpl implements Jtrac {
 
     public Map<String, String> getLocales() {
         return locales;
-    }    
+    }
+    
+    public String getDefaultLocale() {
+        return defaultLocale;
+    }
+    
+    public void init() {
+        initEmailUtils();
+        initDefaultLocale();
+    }
+    
+    //==========================================================================
     
     /**
      * initialize the email adapter
@@ -148,6 +158,16 @@ public class JtracImpl implements Jtrac {
         String password = loadConfig("mail.server.password");
         this.emailUtils = new EmailUtils(host, port, url, from, prefix, userName, password);
     }      
+    
+    private void initDefaultLocale() {
+        String temp = loadConfig("locale.default");
+        if (temp == null || !locales.containsKey(temp)) {
+            logger.warn("invalid default locale configured, defaulting to 'en'");
+            temp = "en";
+        }
+        logger.info("default locale set to '" + temp + "'");
+        defaultLocale = temp;
+    }
     
     //==========================================================================
     
@@ -461,8 +481,8 @@ public class JtracImpl implements Jtrac {
     public void storeConfig(Config config) {
         dao.storeConfig(config);
         // ugly hack, TODO make smarter in future
-        // email adapter to be re-initialized
-        initEmailUtils();
+        // init stuff that could have changed
+        init();
     }
     
     public String loadConfig(String param) {

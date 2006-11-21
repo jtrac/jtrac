@@ -19,6 +19,7 @@ package info.jtrac.acegi;
 import info.jtrac.Jtrac;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
+import info.jtrac.util.UserUtils;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.Filter;
@@ -28,8 +29,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import org.acegisecurity.context.HttpSessionContextIntegrationFilter;
-import org.acegisecurity.context.SecurityContext;
+import javax.servlet.http.HttpServletResponse;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.ui.AuthenticationDetailsSource;
 import org.acegisecurity.ui.AuthenticationDetailsSourceImpl;
@@ -76,6 +76,7 @@ public class GuestProcessingFilter implements Filter {
                 }
                 // this only happens once, see the hack in header.jsp for more
                 request.setAttribute("principal", authentication.getPrincipal());
+                UserUtils.refreshLocale((HttpServletRequest) request, (HttpServletResponse) response, jtrac.getDefaultLocale());
             }
         }       
         chain.doFilter(request, response);
