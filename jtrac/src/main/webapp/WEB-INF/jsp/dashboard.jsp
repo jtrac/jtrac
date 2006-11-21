@@ -32,11 +32,12 @@ function collapse(spaceId) {
 
 <c:choose>
     <c:when test="${principal.spaceCount == 0}">
-        <span class="info"><fmt:message key="dashboard.noSpaces"/></span>
-        <br/>
+        <div class="heading"><fmt:message key="dashboard.noSpaces"/></div>        
     </c:when>
     <c:otherwise>
     
+<div class="spacer">&nbsp;</div>  
+        
 <table class="jtrac">
     <tr>
         <th><fmt:message key="dashboard.space"/></th>

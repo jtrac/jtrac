@@ -56,4 +56,5 @@
 </td>
 </tr>
 </table>
-<hr style="margin-bottom:1em"/>
+<hr/>
+<div class="spacer">&nbsp;</div>
