@@ -128,8 +128,6 @@
 </tr>
 
 </table>
-
-<br/>
     
 <c:if test="${item.id != 0}">
     <input type="submit" name="_eventId_cancel" value="<fmt:message key='cancel'/>"/>
