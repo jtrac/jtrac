@@ -33,7 +33,7 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.lucene.IndexSearcher;
 import info.jtrac.lucene.Indexer;
-import info.jtrac.util.EmailUtils;
+import info.jtrac.mail.EmailUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

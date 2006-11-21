@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package info.jtrac.util;
+package info.jtrac.mail;
 
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.User;
+import info.jtrac.util.ItemUtils;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Locale;
