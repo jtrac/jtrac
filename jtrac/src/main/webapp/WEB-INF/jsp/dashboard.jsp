@@ -34,9 +34,7 @@ function collapse(spaceId) {
     <c:when test="${principal.spaceCount == 0}">
         <div class="heading"><fmt:message key="dashboard.noSpaces"/></div>        
     </c:when>
-    <c:otherwise>
-    
-<div class="spacer">&nbsp;</div>  
+    <c:otherwise>   
         
 <table class="jtrac">
     <tr>
