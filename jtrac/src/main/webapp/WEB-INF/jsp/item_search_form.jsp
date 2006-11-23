@@ -337,7 +337,7 @@
                                     ${field.label}
                                 </th>
                                 <td>
-                                    <input name="${field.name}" value="${itemSearch[field.name]}"/>
+                                    <input name="${field.name.text}" value="${itemSearch[field.name]}"/>
                                 </td>
                                 <td/>
                             </tr>
