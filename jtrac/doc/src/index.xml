@@ -6,7 +6,7 @@
     <bookinfo>
         <title>JTrac</title>
         <subtitle>User / Developer Guide</subtitle>
-        <releaseinfo>2.0-RC3</releaseinfo>
+        <releaseinfo>2.0</releaseinfo>
         <authorgroup>
             <author>
                 <firstname>Peter</firstname>
@@ -57,7 +57,7 @@
         </sect1>        
         
         <sect1 id="introduction-releasenotes">
-            <title>Release Notes: Version 2.0-RC3</title>
+            <title>Release Notes: Version 2.0 (final)</title>
             <para>
                 Note that the database schema has changed!  If you are using an earlier version of JTrac in production
                 you have to upgrade your database schema as well as the bundled Jetty web server.  
@@ -66,9 +66,9 @@
                 on the JTrac forums.
             </para>
             <para>
-                JTrac 2.0 final should be available by the end of October 2006. Development has been slower than 
-                expected and the earlier target of June 2006 has admittedly not been met.  RC3 has almost all the
-                "most wanted" features in place, and we are expecting 2.0 final to be out in October 2006 itself.
+                This version has the complete internationalization in place.  Please contribute a translation to your
+                language of choice if you can, this is very easy to do and you can find out how to do so in the
+                <link linkend="dev-translating">developer guide</link> section of this document.
             </para>
             <para>
                 You are encouraged to try out JTrac and communicate your feedback and interest in future versions
@@ -232,7 +232,7 @@
                 project that you set up.  This allows for power and flexibility.  For example you could define that
                 a "DEVELOPER" role can only mark "Assigned" items as "Fixed" and that only a "TESTER" role has the
                 power to mark a "Fixed" item as "Closed".  You can even disallow some roles from being able to 
-                create new items.  JTrac allows you complete control over the workflow and you can easily tweak it 
+                create new items.  JTrac gives you complete control over the workflow and you can easily tweak it 
                 to fit your existing process rather than the other way around.
             </para>           
             <para>
@@ -456,7 +456,7 @@
                 JTrac has complete internationalization support and you can change the user interface language instantly 
                 by editing your user-profile.  Adding a translation is very easy and does not require any
                 Java  development expertise.  See <link linkend="dev-translating">this section</link> of the developer
-                guide for more details and please consider contributing language translations to JTrac!
+                guide for more details and please consider contributing translations to the JTrac project.
             </para>
         </sect1>
     </chapter>
@@ -879,9 +879,9 @@ wrapper.exe -r etc/wrapper.conf
             <para>
                 Import from other issue tracking systems (such as BugZilla) to be considered.  The current version has
                 an experimental Excel sheet import feature which you can access from the options screen if you are an
-                admin user.  Once complete, this feature will allow you to import raw data from a spreadsheet, apply the
-                required data massaging, identify and load custom fields / drop down values and finally import the items,
-                creating a new Space if required.
+                admin user.  Once complete, this feature will allow you to import raw data from a spreadsheet, apply any
+                data cleanup needed, identify and load custom fields / drop down values and finally import the items,
+                creating a new Space and users if required.
             </para>
         </sect1>
         <sect1 id="roadmap-sso">            
@@ -1121,13 +1121,13 @@ mvn eclipse:eclipse
                 For example, if you need to add a transalation into French, a file called "messages_fr.properties" should exist.
                 You can refer the list of Java locale codes 
                 <ulink url="http://java.sun.com/j2se/1.5.0/docs/guide/intl/locale.doc.html">here</ulink>.  Note that country
-                specific locales are also supported, for example fr_CA means French, Canada.  
+                specific locales are also supported, for example "fr_CA" means "French, Canada".  
             </para>
             <para>
                 You can look at the existing translations e.g. "messages_de.properties" as examples. Note that
                 JTrac needs to be restarted for changes to the properties files to take effect.  However,
                 switching the language for any user can easily be done anytime from the "Edit Your Profile" link on the
-                options screen and this takes effect the moment the user saves his profile.
+                options screen and a locale change takes effect the instant the user saves his profile.
             </para>
             <para>                
                 You can use this nice open-source tool called <ulink url="https://prbeditor.dev.java.net/">PRBEditor</ulink>
