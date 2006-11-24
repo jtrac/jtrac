@@ -31,7 +31,7 @@ public class AllTest extends WatijTestCase {
         assertTrue(ie.containsText("Options Menu"));        
         
         ie.link(text, "Manage Spaces").click();
-        assertTrue(ie.containsText("Spaces"));
+        assertTrue(ie.containsText("Space List"));
         
         ie.link(text, "[ Create New Space ]").click();
         assertTrue(ie.containsText("Space Details"));
@@ -45,7 +45,7 @@ public class AllTest extends WatijTestCase {
         assertTrue(ie.containsText("Space Roles"));
         
         ie.button("Save").click();
-        assertTrue(ie.containsText("Users allocated to Space"));
+        assertTrue(ie.containsText("Users Allocated To Space"));
         
         ie.button("Allocate").click();
         assertTrue(ie.containsText("Admin"));  
@@ -92,7 +92,7 @@ public class AllTest extends WatijTestCase {
         
         ie.link(text, "OPTIONS").click();                
         ie.link(text, "Manage Users").click();
-        assertTrue(ie.containsText("Users and Allocated Trackers"));
+        assertTrue(ie.containsText("Users and allocated Spaces"));
         
         ie.link(text, "[ Create New User ]").click();
         assertTrue(ie.containsText("User Details"));
@@ -101,7 +101,7 @@ public class AllTest extends WatijTestCase {
         ie.textField(name, "user.name").set("Test User");
         ie.textField(name, "user.email").set("foo@bar.com");
         ie.button("Submit").click();
-        assertTrue(ie.containsText("Spaces allocated to User"));
+        assertTrue(ie.containsText("Spaces Allocated to User"));
         
         ie.button("Cancel").click();        
         assertTrue(ie.containsText("Test User"));    
