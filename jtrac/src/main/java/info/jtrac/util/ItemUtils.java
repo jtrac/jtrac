@@ -130,7 +130,7 @@ public final class ItemUtils {
                         String url = flowUrl + "&_eventId=viewRelated&itemId=" + itemItem.getItem().getId();
                         refId = "<a href='" + response.encodeURL(request.getContextPath() + url) + "'>" + refId + "</a>";
                     }
-                    sb.append(refId + " " + fmt(itemItem.getRelationText(), ms, loc) + " this. ");
+                    sb.append(refId + " " + fmt(itemItem.getRelationText() + "This", ms, loc) + ". ");
                 }
             }
         }
