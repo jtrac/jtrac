@@ -167,6 +167,10 @@ public class MailSender {
     }
     
     public void send(Item item, MessageSource messageSource) {
+        if (sender == null) {
+            logger.debug("mail sender is null, not sending notifications");
+            return;
+        }
         // TODO make this locale sensitive per recipient        
         logger.debug("attempting to send mail for item update");
         // prepare message content
@@ -209,6 +213,10 @@ public class MailSender {
     }
     
     public void sendUserPassword(User user, String clearText) {
+        if (sender == null) {
+            logger.debug("mail sender is null, not sending new user / password change notification");
+            return;
+        }        
         logger.debug("attempting to send mail for user password");
         String localeString = user.getLocale();
         Locale locale = null;

@@ -182,7 +182,7 @@ public class JtracImpl implements Jtrac {
         dao.storeItem(item);
         indexer.index(item);
         indexer.index(history);
-        if (item.isSendNotifications() && mailSender != null) {
+        if (item.isSendNotifications()) {
             mailSender.send(item, messageSource);
         }
     }
@@ -211,7 +211,7 @@ public class JtracImpl implements Jtrac {
         item.add(history);
         dao.storeItem(item);
         indexer.index(history);
-        if (history.isSendNotifications() && mailSender != null) {
+        if (history.isSendNotifications()) {
             mailSender.send(item, messageSource);
         }
     }
@@ -333,10 +333,8 @@ public class JtracImpl implements Jtrac {
             password = generatePassword();
         }                        
         user.setPassword(encodeClearText(password));
-        storeUser(user);
-        if (mailSender != null) {                
-            mailSender.sendUserPassword(user, password);
-        }
+        storeUser(user);                     
+        mailSender.sendUserPassword(user, password);     
     }
     
     public List<User> findAllUsers() {
