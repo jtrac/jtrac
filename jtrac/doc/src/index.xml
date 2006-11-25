@@ -909,6 +909,28 @@ wrapper.exe -r etc/wrapper.conf
             </para>
         </sect1>       
     </chapter>
+
+    <chapter id="interim-builds">
+        <title>Interim Builds</title>
+        <sect1 id="interim-overview">
+            <para>
+                For the convenience of those who would like to test the latest possible builds of JTrac without
+                having to check-out and compile from version-control, binaries in WAR form are periodically uploaded
+                to the JTrac web-site - here: <ulink url="http://j-trac.sourceforge.net/files/"/>
+            </para>
+            <para>
+                You would be able to see the time-stamp of the last uploaded binary when you access the above URL.
+                Subscribers to The JTrac mailing-list would be notified whenever a new binary is availble.  This
+                is not on a daily basis at the moment and happens only when significant changes / fixes are made in
+                the development version.
+            </para>
+            <para>
+                If you want to stay updated about the status of JTrac development as well as contribute and discuss 
+                ideas for incorporation into future releases, please consider joining the JTrac mailing-list:
+                <ulink url="https://lists.sourceforge.net/lists/listinfo/j-trac-users"/>
+            </para>
+        </sect1>
+    </chapter>
     
     <chapter id="dev-guide">
         <title>Developer Guide</title>

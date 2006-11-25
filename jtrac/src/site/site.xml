@@ -24,17 +24,18 @@
         </menu>
         <menu name="Documentation">
             <item name="HTML" href="doc/html/index.html"/>
-            <item name="PDF" href="http://j-trac.sourceforge.net/doc/pdf/jtrac-doc.zip"/>
+            <item name="PDF" href="http://j-trac.sourceforge.net/doc/pdf/jtrac-doc.pdf"/>
         </menu>
         <menu name="Project">
             <item name="License" href="license.html"/>
-            <item name="Dependencies" href="dependencies.html"/>
-            <item name="SourceForge" href="http://sourceforge.net/projects/j-trac"/>
+            <item name="Dependencies" href="dependencies.html"/>            
             <item name="Statistics" href="http://sourceforge.net/project/stats/?group_id=162983&amp;ugn=j-trac"/>
             <item name="Forums" href="http://sourceforge.net/forum/forum.php?forum_id=552477"/>
+            <item name="Mailing List" href="http://sourceforge.net/mailarchive/forum.php?forum_id=50111"/>
             <item name="Tracker" href="http://sourceforge.net/tracker/?group_id=162983"/>
-            <item name="Subversion" href="source-repository.html"/>
-            <item name="Developers" href="team-list.html"/>            
+            <item name="Source Code" href="source-repository.html"/>
+            <item name="Latest Build" href="doc/html/interim-builds.html"/>            
+            <item name="Developers" href="team-list.html"/>
         </menu>
     </body>
 </project>

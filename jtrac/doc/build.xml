@@ -49,10 +49,6 @@
             <arg value="${dist.doc.dir}/pdf/jtrac-doc.pdf"/>
         </java>
         <delete file="${dist.doc.dir}/pdf/docbook_fop.tmp"/>
-        <zip destfile="${dist.doc.dir}/pdf/jtrac-doc.zip">
-            <fileset dir="${dist.doc.dir}/pdf" includes="jtrac-doc.pdf"/>
-        </zip>
-        <delete file="${dist.doc.dir}/pdf/jtrac-doc.pdf"/>
     </target>
     
     <target name="doc-html" depends="copy-images">
