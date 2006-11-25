@@ -1053,6 +1053,15 @@ java -cp bsh-2.0b4.jar;hsqldb-1.8.0.1.jar bsh.Interpreter jtrac-hsqldb-2_0rc3-to
                 </itemizedlist>
             </para>
         </sect1>
+        <sect1 id="upgrading-jetty">
+            <title>Upgrading Jetty</title>
+            <para>
+                If you are using the embedded Jetty web-app server, you can also choose to upgrade the JAR files that 
+                make up Jetty.  This is optional, but is as simple as overwriting the contents of the "lib" directory 
+                with the corresponding files within the new distribution.  You can easily check if the Jetty related JAR 
+                file versions have changed because the file-names clearly include the version numbers.
+            </para>
+        </sect1>
         <sect1 id="upgrading-migrating">
             <title>Database Migration</title>
             <para>
@@ -1061,10 +1070,15 @@ java -cp bsh-2.0b4.jar;hsqldb-1.8.0.1.jar bsh.Interpreter jtrac-hsqldb-2_0rc3-to
                 HSQLDB database and then decide to scale up and move to something like MySQL.
             </para>
             <para>
+                First, you should start the application re-configured to point to the new database and let JTrac
+                do the hard work of creating all the database tables.  It is not necessary for Jtrac to be shut-down
+                before proceeding with the next step,  but don't log-in yet!
+            </para>
+            <para>
                 A Beanshell script called "jtrac-hsqldb-to-mysql.bsh" is available in the "etc" folder of the
-                JTrac distribution.  You can execute this just like described in the above section on upgrading.
+                JTrac distribution.  You can execute this just like described in the previous section on upgrading.
                 Note that you will need to have both the database drivers on the classpath in this case.  You should
-                of course edit the database connection parameters to suit your environment.
+                of course edit the database connection parameters (for database 1 and database 2) to suit your environment.
             </para>
             <para>
                 This particular script is extremely generic and it should be possible to use this to migrate across
@@ -1104,7 +1118,7 @@ java -cp bsh-2.0b4.jar;hsqldb-1.8.0.1.jar bsh.Interpreter jtrac-hsqldb-2_0rc3-to
                 <ulink url="http://ptrthomas.wordpress.com/2006/04/18/another-way-to-integrate-maven-2-with-ant-and-netbeans/">this blog post.</ulink>
             </para>
             <para>
-                Although NetBeans is preferred by the JTrac developers, the reliance on an "IDE Neutral" Ant script
+                Although NetBeans is preferred by the JTrac developers, depending on an "IDE Neutral" Ant script
                 ensures that you would easily be able to use Eclipse (or any other IDE of your choice) without any problems.
             </para>
             <para>
