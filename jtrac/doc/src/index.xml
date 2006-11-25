@@ -61,24 +61,24 @@
             <para>
                 Note that the database schema has changed!  If you are using an earlier version of JTrac in production
                 you have to upgrade your database schema as well as the bundled Jetty web server.  
-                Instructions on how to upgrade are available in <link linkend="upgrading">this section</link> of this
-                document.
+                Instructions on how to upgrade are available in the "<link linkend="upgrading">upgrading</link>" section
+                of this document.
             </para>
             <para>
                 This version has the complete internationalization in place.  Please contribute a translation to your
-                language of choice if you can, this is very easy to do and you can find out how to do so in the
-                <link linkend="dev-translating">developer guide</link> section of this document.
+                language of choice, this is very easy to do and you can find out how to do so in the
+                "<link linkend="dev-translating">developer guide</link>" section of this document.
             </para>
             <para>
                 You are encouraged to try out JTrac and communicate your feedback and interest in future versions
                 to the JTrac development team.  Note that you can be up and running with just Java 5 as a prerequisite
-                as JTrac comes bundled with a small-footprint web-application server called 
-                <ulink url="http://jetty.mortbay.org/">Jetty</ulink>. JTrac also uses an embedded database called 
-                <ulink url="http://www.hsqldb.org/">HSQLDB</ulink> by default which makes it extremely easy to evaluate.
+                because JTrac comes bundled with a small-footprint web-application server called 
+                <ulink url="http://jetty.mortbay.org/">Jetty</ulink>. Since an embedded database called 
+                <ulink url="http://www.hsqldb.org/">HSQLDB</ulink> is used by default, JTrac is extremely easy to evaluate.
             </para>
             <para>
-                Please see the <link linkend="installation">installation</link> section of this documentation for 
-                more details like how you can drop the WAR file into a server of your choice and immediately 
+                Please refer the <link linkend="installation">installation</link> section of this documentation for 
+                more details.  For example, you can drop the WAR file into a server of your choice and immediately 
                 start using JTrac.                
             </para>
         </sect1>         
@@ -105,10 +105,10 @@
             <para>
                 If you already have a web-application server that you wish to use (such as 
                 <ulink url="http://tomcat.apache.org/">Tomcat</ulink>), you can just drop in the WAR file 
-                provided and sign on into the application straight away.
+                provided and sign on into the application straight-away.
             </para>
             <para>
-                Please see the <link linkend="installation">installation</link> section of this documentation for 
+                You can refer the <link linkend="installation">installation</link> section of this document for 
                 more details.  JTrac uses <ulink url="http://www.hibernate.org">Hibernate</ulink> and so it can 
                 use any database <ulink url="http://www.hibernate.org/80.html">supported by Hibernate.</ulink>
             </para>                
@@ -156,7 +156,7 @@
             <para>
                 The default workflow shown below is ideal if you simply want to track issues with just
                 two states - Open and Closed.  However, with just a few mouse clicks, you can turn this into 
-                a complex workflow with multiple states.
+                a complex workflow involving multiple states.
             </para>            
             <para>
                 <mediaobject>
@@ -210,7 +210,7 @@
                 </mediaobject>
             </para>
             <para>
-                This results in the "% Complete" field being available for updating when anyone views an item
+                This results in the "% Complete" field being available for updating whenever anyone views an item
                 with a status of "Open".
             </para>
             <para>
@@ -228,9 +228,9 @@
             <title>Custom Roles</title>
             <para>
                 JTrac customization does not stop at workflow - you can also define different roles for each tracker
-                project that you set up.  This allows for power and flexibility.  For example you could define that
+                project that you set up.  This allows for power and flexibility.  For example you could enforce that
                 a "DEVELOPER" role can only mark "Assigned" items as "Fixed" and that only a "TESTER" role has the
-                power to mark a "Fixed" item as "Closed".  You can even disallow some roles from being able to 
+                power to mark a "Fixed" item as "Closed".  You can even disallow selected roles from being able to 
                 create new items.  JTrac gives you complete control over the workflow and you can easily tweak it 
                 to fit your existing process rather than the other way around.
             </para>           
@@ -294,7 +294,7 @@
                 </mediaobject>
             </para>
             <para>
-                For a Space, you can also drill-down to a finer level of detail  by clicking on the right-arrow 
+                For each Space, you can also drill-down to a finer level of detail  by clicking on the right-arrow 
                 'expand' icon.  This expands the dashboard rows so that you can see a break-up of item counts, not only by
                 whether 'logged by me' / 'assigned to me' - but against the custom workflow states defined for 
                 the Space as well.  Again, it is possible to directly navigate to the items by clicking on the dashboard numbers.
@@ -655,26 +655,19 @@ hibernate.show_sql=false
                 to not work for databases such as Derby and Progress because they consider this invalid SQL.  You can
                 customize the validation query by adding a "database.validationQuery" property in "jtrac.properties.
                 If you set the validation query to an empty string, this effectively disables the periodic testing of
-                idle database connections by Apache DBCP.
+                idle database connections that Apache DBCP performs.
             </para>            
-        </sect1>
-        <sect1 id="installation-upgrading">
-            <title>Upgrading from previous versions</title>
-            <para>
-                If you are using an earlier version of JTrac in production you may have to upgrade your database schema.  
-                Instructions on how to upgrade are available 
-                <ulink url="http://sourceforge.net/forum/forum.php?thread_id=1592046&amp;forum_id=552477">here</ulink>
-                on the JTrac forums.
-            </para>
         </sect1>
         <sect1 id="installation-windowsservice">
             <title>Installing as a Windows Service</title>
             <para>                    
                 If you choose to use the bundled <ulink url="http://jetty.mortbay.org/">Jetty</ulink> web-application 
                 server, you can easily install JTrac as a Windows service so that it can start automatically when 
-                the host machine is switched on.  One of the big advantages of this is that the "DOS Window" / console
-                will not be visible and it will run in the background.  You can therfore avoid the possibility of someone 
-                closing the console window and terminating the application by mistake.
+                the host machine is switched on.  One of the big advantages of this is that the console window will be invisible 
+                and will run in the background.  You can therefore avoid the possibility of the Jetty server getting
+                terminated because somebody decided to close "that pesky DOS Window that gets in the way".  Having JTrac
+                start automatically without requiring someone to log-in is ideal when you have a server that may be
+                restarted occasionally due to power outages or maintenance.
             </para>
             <para>
                 JTrac can be configured as a Windows service by using the 
@@ -751,8 +744,9 @@ wrapper.exe -r etc/wrapper.conf
                 version 2.4 compliant servlet engine is sufficient for deployment.
             </para>
             <para>
-                The presentation layer is JSP and JSTL based.  AJAX has been introduced only where there is clear value add
-                and using the <ulink url="http://prototype.conio.net/">Prototype</ulink> framework directly.
+                The presentation layer is JSP and JSTL based.  AJAX has been introduced only in a few screens where there 
+                is a very clear need for it.  The <ulink url="http://prototype.conio.net/">Prototype</ulink> framework has been 
+                used directly.
             </para>            
             <para>
                 <ulink url="http://www.hibernate.org/">Hibernate</ulink> is used for data persistence.  This allows for 
@@ -862,9 +856,9 @@ wrapper.exe -r etc/wrapper.conf
         <sect1 id="roadmap-tags">            
             <title>Tags</title>            
             <para>
-                A one-to-many data model for being able to tag items "Web 2.0 style" will be introduced before 
-                JTrac reaches version 2.0 final.  This would be ideal to track things such as mapping bugs to 
-                software release version numbers, keywords and all kinds of other cool stuff.
+                A one-to-many data model for being able to tag items "Web 2.0" style is already in place.  
+                This would be ideal to track things such as mapping bugs to software release version numbers, 
+                associating keywords with items and to do all kinds of other cool stuff.
             </para>
         </sect1>
         <sect1 id="roadmap-feeds">            
@@ -925,13 +919,13 @@ wrapper.exe -r etc/wrapper.conf
                 the development version.
             </para>
             <para>
-                If you want to stay updated about the status of JTrac development as well as contribute and discuss 
-                ideas for incorporation into future releases, please consider joining the JTrac mailing-list:
+                If you want to stay updated about the status of JTrac development as well as contribute and brainstorm 
+                ideas for incorporation into future releases, please consider joining the JTrac mailing-list at:
                 <ulink url="https://lists.sourceforge.net/lists/listinfo/j-trac-users"/>
             </para>
         </sect1>
         <sect1 id="interim-notes">
-            <title>How To</title>
+            <title>Notes on using Interim Builds</title>
             <para>
                 <itemizedlist>
                     <listitem>
@@ -945,7 +939,8 @@ wrapper.exe -r etc/wrapper.conf
                         <para>
                             When you are replacing the WAR file in an existing installation it is best that you 
                             delete the contents of the webapp-server temporary / work folder before re-starting.  
-                            Details on how to do this are provided in the section on <link linkend="upgrading">upgrading</link>.
+                            Details on how to do this are provided in the "<link linkend="upgrading">upgrading</link>"
+                            section of this document.
                         </para>
                     </listitem>
                     <listitem>
@@ -953,16 +948,16 @@ wrapper.exe -r etc/wrapper.conf
                             In rare cases, there may be database schema changes.  This will be made clear in
                             the upload notification that is broadcast on the mailing-list.  If you wish to retain 
                             existing data, you will have to run a database upgrade script.  Details on how to do this are 
-                            also provided in the section on <link linkend="upgrading">upgrading</link>.
+                            also provided in the "<link linkend="upgrading">upgrading</link>" section of this document.
                         </para>
                     </listitem>
                     <listitem>
                         <para>
                             Even if the database schema has changed, JTrac will re-create the database if one does
-                            not exist on startup.  So when trying out the interim builds, this may all that you need
-                            to do.  If you are using JTrac bundled with Jetty and / or with the embedded HSQLB database, 
+                            not exist on startup.  So when trying out the interim builds, this may be all that you really
+                            want to do.  If you are using JTrac bundled with Jetty and / or with the embedded HSQLB database, 
                             removing the old database is as simple as deleting the "db" folder in which HSQLDB keeps
-                            data files.
+                            the data files.
                         </para>
                     </listitem>                                
                 </itemizedlist>                     
@@ -975,7 +970,7 @@ wrapper.exe -r etc/wrapper.conf
         <para>
             Upgrading to higher versions of JTrac is usually as simple as replacing the WAR file and deleting the web-app
             server temporary / work folder before re-starting.  In some rare cases the database schema may have changed and a
-            script for updating the database would be provided.  It may also happen that upgrading the Jetty version would be 
+            script for updating the database would then be provided.  It may also happen that upgrading the Jetty version would be 
             recommended in case you happen to be using the bundled Jetty webapp-server for deploying JTrac.
         </para>
         <sect1 id="upgrading-war">
@@ -1000,10 +995,10 @@ wrapper.exe -r etc/wrapper.conf
             </para>
             <para>
                 These files are tested on HSQLDB and may need minor changes to work with
-                other databases.  No re-compilation is needed, therefore making it extremely easy for tweaking if required.
-                Of course it is strongly recommended that you backup your old data before an upgrade.  Please use the 
-                <ulink url="http://sourceforge.net/forum/forum.php?forum_id=552477">JTrac forums</ulink> for help or for 
-                helping other users with your experiences.
+                other databases.  No re-compilation is needed, therefore making it extremely easy for you to tweak them 
+                if required.  Of course it is strongly recommended that you backup your old data before an upgrade.  
+                Please use the <ulink url="http://sourceforge.net/forum/forum.php?forum_id=552477">JTrac forums</ulink> 
+                for help and for helping other users with your experiences.
             </para>
             <para>
                 If you are shadowing the development builds you would be able to obtain the latest database upgrade
@@ -1261,10 +1256,10 @@ mvn eclipse:eclipse
                 is already running and will perform a shutdown if required before re-starting.
             </para>
             <para>
-                Maven has been configured to download the Jetty web server which makes the amount of
-                setup that you need to do in order to set up your development environment - minimal.
-                Since JTrac creates the HSQLDB database if required on startup, you do not need to worry about 
-                installing, configuring and creating any database either.
+                Maven has been configured to download the Jetty web server which drastically reduces the amount of
+                setup that you need to do in order to set up your development environment.  Since JTrac creates 
+                the HSQLDB database if required on startup, you do not need to worry about  installing, configuring 
+                and creating any database either.
             </para>            
             <para>
                 Note that if you use NetBeans, you can debug and set breakpoints even in JSPs.  If you are interested
