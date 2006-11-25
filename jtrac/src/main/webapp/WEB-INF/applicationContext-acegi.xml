@@ -40,7 +40,7 @@
         <property name="rememberMeServices" ref="rememberMeServices"/>
     </bean>
    
-    <bean id="rememberMeServices" class="org.acegisecurity.ui.rememberme.TokenBasedRememberMeServices">
+    <bean id="rememberMeServices" class="info.jtrac.acegi.JtracRememberMeServices">
         <property name="userDetailsService" ref="jtrac"/>
         <property name="key" value="jtrac-reme"/>
     </bean>
