@@ -61,9 +61,8 @@
             <para>
                 Note that the database schema has changed!  If you are using an earlier version of JTrac in production
                 you have to upgrade your database schema as well as the bundled Jetty web server.  
-                Instructions on how to upgrade are available 
-                <ulink url="http://sourceforge.net/forum/forum.php?thread_id=1592046&amp;forum_id=552477">here</ulink>
-                on the JTrac forums.
+                Instructions on how to upgrade are available in <link linkend="upgrading">this section</link> of this
+                document.
             </para>
             <para>
                 This version has the complete internationalization in place.  Please contribute a translation to your
@@ -913,15 +912,16 @@ wrapper.exe -r etc/wrapper.conf
     <chapter id="interim-builds">
         <title>Interim Builds</title>
         <sect1 id="interim-overview">
+            <title>Overview</title>
             <para>
                 For the convenience of those who would like to test the latest possible builds of JTrac without
                 having to check-out and compile from version-control, binaries in WAR form are periodically uploaded
-                to the JTrac web-site - here: <ulink url="http://j-trac.sourceforge.net/files/"/>
+                to the JTrac web-site at this URL: <ulink url="http://j-trac.sourceforge.net/files/"/>
             </para>
             <para>
                 You would be able to see the time-stamp of the last uploaded binary when you access the above URL.
                 Subscribers to The JTrac mailing-list would be notified whenever a new binary is availble.  This
-                is not on a daily basis at the moment and happens only when significant changes / fixes are made in
+                is not on a daily basis at the moment and happens only when significant changes or fixes are made in
                 the development version.
             </para>
             <para>
@@ -930,6 +930,152 @@ wrapper.exe -r etc/wrapper.conf
                 <ulink url="https://lists.sourceforge.net/lists/listinfo/j-trac-users"/>
             </para>
         </sect1>
+        <sect1 id="interim-notes">
+            <title>How To</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>
+                            Interim builds are provided only as WAR files.  If you are using the embedded Jetty
+                            webapp-server, you have to replace the WAR that came along with the formal 
+                            downloadable distribution.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            When you are replacing the WAR file in an existing installation it is best that you 
+                            delete the contents of the webapp-server temporary / work folder before re-starting.  
+                            Details on how to do this are provided in the section on <link linkend="upgrading">upgrading</link>.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            In rare cases, there may be database schema changes.  This will be made clear in
+                            the upload notification that is broadcast on the mailing-list.  If you wish to retain 
+                            existing data, you will have to run a database upgrade script.  Details on how to do this are 
+                            also provided in the section on <link linkend="upgrading">upgrading</link>.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Even if the database schema has changed, JTrac will re-create the database if one does
+                            not exist on startup.  So when trying out the interim builds, this may all that you need
+                            to do.  If you are using JTrac bundled with Jetty and / or with the embedded HSQLB database, 
+                            removing the old database is as simple as deleting the "db" folder in which HSQLDB keeps
+                            data files.
+                        </para>
+                    </listitem>                                
+                </itemizedlist>                     
+            </para>
+        </sect1>
+    </chapter>
+    
+    <chapter id="upgrading">
+        <title>Upgrading</title>
+        <para>
+            Upgrading to higher versions of JTrac is usually as simple as replacing the WAR file and deleting the web-app
+            server temporary / work folder before re-starting.  In some rare cases the database schema may have changed and a
+            script for updating the database would be provided.  It may also happen that upgrading the Jetty version would be 
+            recommended in case you happen to be using the bundled Jetty webapp-server for deploying JTrac.
+        </para>
+        <sect1 id="upgrading-war">
+            <title>Deleting webapp temporary files</title>
+            <para>
+                In case you are using the bundled Jetty server in the JTrac distribution, you should delete the contents
+                of the folder called "work".  Note that Jetty expects a folder called "work" to exist when it starts, 
+                so ensure that you leave the empty "work" folder in place.
+            </para>
+            <para>
+                If you are using another application server please follow the steps for removing temporary files
+                corresponding to the server that you are using.
+            </para>
+        </sect1> 
+        <sect1 id="upgrading-database">
+            <title>Upgrading the Database</title>
+            <para>
+                If the JTrac release notes mention database schema changes, you need to additionally run an upgrade script
+                before restarting the webapp-server with the new WAR in place.  Upgrade scripts come in the form of 
+                <ulink url="http://www.beanshell.org/">Beanshell</ulink> scripts (*.bsh) and would be always released within
+                the "etc" folder of the JTrac downloadable distribution.
+            </para>
+            <para>
+                These files are tested on HSQLDB and may need minor changes to work with
+                other databases.  No re-compilation is needed, therefore making it extremely easy for tweaking if required.
+                Of course it is strongly recommended that you backup your old data before an upgrade.  Please use the 
+                <ulink url="http://sourceforge.net/forum/forum.php?forum_id=552477">JTrac forums</ulink> for help or for 
+                helping other users with your experiences.
+            </para>
+            <para>
+                If you are shadowing the development builds you would be able to obtain the latest database upgrade
+                scripts from here: <ulink url="http://svn.sourceforge.net/viewvc/j-trac/trunk/jtrac/etc/"/> Look for files 
+                that end with ".bsh" - e.g: "jtrac-hsqldb-2_0rc3-to-2_0.bsh"
+            </para>
+            <para>
+                Steps to follow:
+                <itemizedlist>
+                    <listitem>
+                        <para>
+                            The "java" command should be available on the command line.
+                        </para>                        
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Get the latest beanshell jar file (~300 KB) from here: <ulink url="http://www.beanshell.org/bsh-2.0b4.jar"/>
+                        </para>                        
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Get the right JDBC driver for your database. If you have been using the embedded HSQLDB 
+                            database, hsqldb.jar will be available in the jtrac war file within "lib".
+                        </para>                        
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Edit the connection params (jdbc URL, username, password) to match your database. For HSQLDB, 
+                            to make it easier - you can copy the beanshell jar and the hsqldb jar into the "db" folder of 
+                            "jtrac.home".  The db folder will contain a "jtrac.script" file. There may also be a "jtrac.log" 
+                            file. So when you are in the same directory as the HSQLDB data files, the URL is 
+                            "jdbc:hsqldb:file:jtrac". Otherwise, replace the "jtrac" part in the URL with the relative or 
+                            absolute path of where the "jtrac.script" file exists on your file-system.
+                        </para>                        
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Execute the beanshell script from the command line.  The database driver should be added to the
+                            classpath along with the beanshell jar.  This is how the command would look like:
+                <programlisting>
+
+java -cp bsh-2.0b4.jar;hsqldb-1.8.0.1.jar bsh.Interpreter jtrac-hsqldb-2_0rc3-to-2_0.bsh
+                </programlisting>                                                                            
+                        </para>                            
+                    </listitem>
+                    <listitem>
+                        <para>
+                            If there were no errors, you can now upgrade the WAR (don't forget to delete the temporary files) 
+                            and restart.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </sect1>
+        <sect1 id="upgrading-migrating">
+            <title>Database Migration</title>
+            <para>
+                Using the Beanshell based approach above, it is relatively straightforward to port data into another
+                database.  This is useful especially in those cases where you start off using JTrac with the embedded
+                HSQLDB database and then decide to scale up and move to something like MySQL.
+            </para>
+            <para>
+                A Beanshell script called "jtrac-hsqldb-to-mysql.bsh" is available in the "etc" folder of the
+                JTrac distribution.  You can execute this just like described in the above section on upgrading.
+                Note that you will need to have both the database drivers on the classpath in this case.  You should
+                of course edit the database connection parameters to suit your environment.
+            </para>
+            <para>
+                This particular script is extremely generic and it should be possible to use this to migrate across
+                combinations of databases other than HSQLDB and MySQL.
+            </para>
+        </sect1>         
     </chapter>
     
     <chapter id="dev-guide">
@@ -1140,7 +1286,7 @@ mvn eclipse:eclipse
                 the "/WEB-INF/classes" folder.  Note that you will need to unzip the WAR file in order to add more files to it.
             </para>
             <para>
-                For example, if you need to add a transalation into French, a file called "messages_fr.properties" should exist.
+                For example, if you need to add a translation into French, a file called "messages_fr.properties" should exist.
                 You can refer the list of Java locale codes 
                 <ulink url="http://java.sun.com/j2se/1.5.0/docs/guide/intl/locale.doc.html">here</ulink>.  Note that country
                 specific locales are also supported, for example "fr_CA" means "French, Canada".  
@@ -1149,7 +1295,7 @@ mvn eclipse:eclipse
                 You can look at the existing translations e.g. "messages_de.properties" as examples. Note that
                 JTrac needs to be restarted for changes to the properties files to take effect.  However,
                 switching the language for any user can easily be done anytime from the "Edit Your Profile" link on the
-                options screen and a locale change takes effect the instant the user saves his profile.
+                options screen and this takes effect the instant the user saves his profile.
             </para>
             <para>                
                 You can use this nice open-source tool called <ulink url="https://prbeditor.dev.java.net/">PRBEditor</ulink>
