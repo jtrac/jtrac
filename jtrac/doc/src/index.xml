@@ -6,7 +6,7 @@
     <bookinfo>
         <title>JTrac</title>
         <subtitle>User / Developer Guide</subtitle>
-        <releaseinfo>2.0</releaseinfo>
+        <releaseinfo>2.0 [development]</releaseinfo>
         <authorgroup>
             <author>
                 <firstname>Peter</firstname>
@@ -57,15 +57,21 @@
         </sect1>        
         
         <sect1 id="introduction-releasenotes">
-            <title>Release Notes: Version 2.0 (final)</title>
+            <title>Release Notes: Version 2.0 [development]</title>
             <para>
-                Note that the database schema has changed!  If you are using an earlier version of JTrac in production
+                The latest official release is 2.0-RC3-update1.  This documentation has been updated to reflect the features 
+                of the current version in development.  Please try out the latest 
+                <link linkend="interim-builds">development version</link> if you can, and it will be great to get your feedback.
+                This will really help us release the next version sooner!
+            </para>
+            <para>
+                Note that the database schema has changed since 2.0-RC3.  If you are using an earlier version of JTrac in production
                 you have to upgrade your database schema as well as the bundled Jetty web server.  
                 Instructions on how to upgrade are available in the "<link linkend="upgrading">upgrading</link>" section
                 of this document.
             </para>
             <para>
-                This version has the complete internationalization in place.  Please contribute a translation to your
+                JTrac now has internationalization in place.  Please contribute a translation to your
                 language of choice, this is very easy to do and you can find out how to do so in the
                 "<link linkend="dev-translating">developer guide</link>" section of this document.
             </para>
@@ -75,8 +81,6 @@
                 because JTrac comes bundled with a small-footprint web-application server called 
                 <ulink url="http://jetty.mortbay.org/">Jetty</ulink>. Since an embedded database called 
                 <ulink url="http://www.hsqldb.org/">HSQLDB</ulink> is used by default, JTrac is extremely easy to evaluate.
-            </para>
-            <para>
                 Please refer the <link linkend="installation">installation</link> section of this documentation for 
                 more details.  For example, you can drop the WAR file into a server of your choice and immediately 
                 start using JTrac.                
