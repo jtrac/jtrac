@@ -61,7 +61,8 @@ public class SpaceFormAction extends AbstractFormAction {
             space.getMetadata().getXmlString();  // hack: ensure nothing left to be lazy loaded!
             return space;
         } else {
-            space = new Space();            
+            space = new Space();
+            space.getMetadata().initRoles();
             context.getFlowScope().put("spaces", jtrac.findAllSpaces());
             return space;
         }
@@ -98,8 +99,6 @@ public class SpaceFormAction extends AbstractFormAction {
         if (copyFrom != null) {
             temp = jtrac.loadSpace(Long.parseLong(copyFrom));
             space.getMetadata().setXmlString(temp.getMetadata().getXmlString());
-        } else {
-            space.getMetadata().initRoles();
         }
         return success();
     }
