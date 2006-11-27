@@ -970,7 +970,7 @@ wrapper.exe -r etc/wrapper.conf
     </chapter>
     
     <chapter id="upgrading">
-        <title>Upgrading</title>
+        <title>Upgrading and Database Migration</title>
         <para>
             Upgrading to higher versions of JTrac is usually as simple as replacing the WAR file and deleting the web-app
             server temporary / work folder before re-starting.  In some rare cases the database schema may have changed and a
@@ -1014,6 +1014,11 @@ wrapper.exe -r etc/wrapper.conf
                 <itemizedlist>
                     <listitem>
                         <para>
+                            First, stop the server, JTrac should not be connected to the database.
+                        </para>                        
+                    </listitem>                    
+                    <listitem>
+                        <para>
                             The "java" command should be available on the command line.
                         </para>                        
                     </listitem>
@@ -1025,7 +1030,7 @@ wrapper.exe -r etc/wrapper.conf
                     <listitem>
                         <para>
                             Get the right JDBC driver for your database. If you have been using the embedded HSQLDB 
-                            database, hsqldb.jar will be available in the jtrac war file within "lib".
+                            database, hsqldb-x-x-x.jar will be available in the jtrac war file within "lib".
                         </para>                        
                     </listitem>
                     <listitem>
