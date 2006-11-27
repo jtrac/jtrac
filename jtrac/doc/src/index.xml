@@ -918,7 +918,7 @@ wrapper.exe -r etc/wrapper.conf
             </para>
             <para>
                 You would be able to see the time-stamp of the last uploaded binary when you access the above URL.
-                Subscribers to The JTrac mailing-list would be notified whenever a new binary is availble.  This
+                Subscribers to The JTrac mailing-list would be notified whenever a new binary is available.  This
                 is not on a daily basis at the moment and happens only when significant changes or fixes are made in
                 the development version.
             </para>
