@@ -31,7 +31,6 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
     
     private Jtrac jtrac;
     private JtracDao dao;
-    private DataSource ds;
     
     public JtracTest() {
         // have to do this because we have two beans of type DataSource (lazy-init)
