@@ -1315,6 +1315,13 @@ mvn eclipse:eclipse
                 switching the language for any user can easily be done anytime from the "Edit Your Profile" link on the
                 options screen and this takes effect the instant the user saves his profile.
             </para>
+            <para>
+                You can also get the latest versions of the "messages.properties" as well as the available
+                translations directly from version control at this url:
+                <ulink url="http://svn.sourceforge.net/viewvc/j-trac/trunk/jtrac/src/main/resources/"/>
+                Since these may change a lot, it is recommended that you check here as well before submitting
+                a translation.
+            </para>
             <para>                
                 You can use this nice open-source tool called <ulink url="https://prbeditor.dev.java.net/">PRBEditor</ulink>
                 that really helps by showing the English and translated versions side by side on a single screen.  It also
