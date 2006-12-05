@@ -32,6 +32,7 @@
         </td>
         <td>
             <input type="submit" name="_eventId_search" value="<fmt:message key='search'/>"/>
+            <spring:bind path="itemSearch.summary"><span class="error">${status.errorMessage}</span></spring:bind>            
         </td>        
     </tr>
 </table>

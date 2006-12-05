@@ -19,21 +19,20 @@ package info.jtrac.webflow;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
-import info.jtrac.domain.State;
 import info.jtrac.domain.User;
+import info.jtrac.exception.SearchQueryParseException;
 import info.jtrac.util.ValidationUtils;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.validation.DataBinder;
+import org.springframework.validation.Errors;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.ScopeType;
@@ -102,8 +101,16 @@ public class ItemSearchFormAction extends AbstractFormAction {
     }    
     
     public Event itemSearchFormHandler(RequestContext context) throws Exception {
-        ItemSearch itemSearch = (ItemSearch) getFormObject(context);
-        context.getRequestScope().put("items", jtrac.findItems(itemSearch));
+        ItemSearch itemSearch = (ItemSearch) getFormObject(context);         
+        List<Item> items = null;
+        try {
+            items = jtrac.findItems(itemSearch);
+        } catch (SearchQueryParseException e) {
+            Errors errors = getFormErrors(context);
+            errors.rejectValue("summary", "item_search_form.error.summary.invalid");
+            return error();
+        }
+        context.getRequestScope().put("items", items);
         return success();
     }
     

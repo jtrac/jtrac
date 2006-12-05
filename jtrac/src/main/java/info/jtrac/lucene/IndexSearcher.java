@@ -16,6 +16,7 @@
 
 package info.jtrac.lucene;
 
+import info.jtrac.exception.SearchQueryParseException;
 import java.util.List;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
@@ -38,7 +39,7 @@ public class IndexSearcher extends LuceneSearchSupport {
             query = parser.parse(text);
         } catch (ParseException e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
+            throw new SearchQueryParseException(e.getMessage(), e);
         }
         HitExtractor hitExtractor = new ItemIdHitExtractor();
         return template.search(query, hitExtractor);        
