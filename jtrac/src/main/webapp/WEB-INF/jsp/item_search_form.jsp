@@ -58,7 +58,14 @@
         <th <c:if test="${itemSearch.sortFieldName != 'id'}">class="selected"</c:if>><fmt:message key='item_search_form.sortOnColumn'/></th>
         <td>
             <select name="sortFieldName">
-                <option value="id"><fmt:message key='item_search_form.id'/></option>
+                <c:choose>
+                    <c:when test="${!empty itemSearch.space}">
+                        <option value="id"><fmt:message key='item_search_form.id'/></option>
+                    </c:when>
+                    <c:otherwise>
+                        <option/>
+                    </c:otherwise>
+                </c:choose>
                 <c:forEach items="${itemSearch.fields}" var="field">
                     <option value="${field.nameText}" <c:if test="${itemSearch.sortFieldName == field.nameText}">selected="true"</c:if>>
                         ${field.label}

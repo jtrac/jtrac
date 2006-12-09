@@ -94,6 +94,9 @@ public class ItemSearch implements Serializable {
     // have to do this as "order by" clause conflicts with "count (*)" clause
     // DAO has to use getCriteriaForCount() separately
     public DetachedCriteria getCriteria() {
+        if (sortFieldName == null) { // can happen only for multi-space search
+            sortFieldName = "id"; // effectively is a sort on created date
+        }
         DetachedCriteria criteria = getCriteriaForCount();
         if (sortDescending) {
             criteria.addOrder(Order.desc(sortFieldName));
