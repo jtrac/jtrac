@@ -100,9 +100,11 @@ function collapse(spaceId) {
                     <img title="Search" class="noborder" src="${pageContext.request.contextPath}/resources/system-search.png"/>
                 </a>
             </td>
-            <th colspan="2"/>                        
-            <td><a href="<c:url value='/flow/item_search?type=loggedBy'/>">${countsHolder.totalLoggedByMe}</a></td>
-            <td><a href="<c:url value='/flow/item_search?type=assignedTo'/>">${countsHolder.totalAssignedToMe}</a></td>
+            <th colspan="2"/>                                    
+            <c:if test="${principal.id != 0}">
+                <td><a href="<c:url value='/flow/item_search?type=loggedBy'/>">${countsHolder.totalLoggedByMe}</a></td>            
+                <td><a href="<c:url value='/flow/item_search?type=assignedTo'/>">${countsHolder.totalAssignedToMe}</a></td>
+            </c:if>
             <td class="selected"><a href="<c:url value='/flow/item_search?type=total'/>">${countsHolder.totalTotal}</a></td>
         </tr>
     </c:if>        
