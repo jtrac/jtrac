@@ -6,7 +6,7 @@
     <bookinfo>
         <title>JTrac</title>
         <subtitle>User / Developer Guide</subtitle>
-        <releaseinfo>2.0 [development]</releaseinfo>
+        <releaseinfo>2.0 [final]</releaseinfo>
         <authorgroup>
             <author>
                 <firstname>Peter</firstname>
@@ -57,13 +57,7 @@
         </sect1>        
         
         <sect1 id="introduction-releasenotes">
-            <title>Release Notes: Version 2.0 [development]</title>
-            <para>
-                The latest official release is 2.0-RC3-update1.  This documentation has been updated to reflect the features 
-                of the current version in development.  Please try out the latest 
-                <link linkend="interim-builds">development version</link> if you can, and it will be great to get your feedback.
-                This will really help us release the next version sooner!
-            </para>
+            <title>Release Notes: Version 2.0 [final]</title>
             <para>
                 Note that the database schema has changed since 2.0-RC3.  If you are using an earlier version of JTrac in production
                 you have to upgrade your database schema as well as the bundled Jetty web server.  
@@ -451,7 +445,12 @@
                         <para>Example of an e-mail sent by JTrac</para>
                     </caption>
                 </mediaobject>
-            </para>            
+            </para>
+            <para>
+                Admin users can configure the SMTP / e-mail server that JTrac should use in the "Manage Settings" page.
+                This page can be accessed from the "OPTIONS" menu.  JTrac also can handle an e-mail server that requires
+                authentication or even a secure connection over HTTPS.
+            </para>
         </sect1>
         <sect1 id="features-i18n">
             <title>Multi-Language Support</title>
