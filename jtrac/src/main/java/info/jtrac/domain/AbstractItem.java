@@ -158,14 +158,7 @@ public abstract class AbstractItem implements Serializable, DocumentCreator {
     public String getStatusValue() {
         // using accessor for space, getSpace() is overridden in subclass History
         return getSpace().getMetadata().getStatusValue(status);
-    }
-    
-    public void add(ItemItem itemItem) {
-        if (relatedItems == null) {
-            relatedItems = new LinkedHashSet<ItemItem>();
-        }
-        relatedItems.add(itemItem);
-    }
+    }    
     
     //===================================================
     

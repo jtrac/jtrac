@@ -65,6 +65,14 @@ public class Item extends AbstractItem {
         attachments.add(attachment);
     }
     
+    public void add(ItemItem itemItem) {
+        if (getRelatedItems() == null) {
+            setRelatedItems(new LinkedHashSet<ItemItem>());
+        }
+        itemItem.setItem(this);
+        getRelatedItems().add(itemItem);
+    }    
+    
     /**
      * Lucene DocumentCreator implementation
      */
