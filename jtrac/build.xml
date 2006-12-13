@@ -95,6 +95,7 @@
             <zipfileset dir="target" includes="*.war" prefix="jtrac"/>
             <zipfileset dir="target/jetty" prefix="jtrac"/>
             <zipfileset dir="etc" includes="*.bat" prefix="jtrac"/>
+            <zipfileset dir="etc" includes="*.bsh" prefix="jtrac/etc"/>
             <zipfileset dir="target/site/doc" prefix="jtrac/doc"/>
             <zipfileset dir="." includes="*.txt" prefix="jtrac"/>
         </zip>         
