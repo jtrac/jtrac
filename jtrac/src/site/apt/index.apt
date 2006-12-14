@@ -7,8 +7,8 @@ About
     JTrac is an open source and highly customizable issue-tracking web-application written in Java.
 
 *--                                             --+                                                
-|    The latest official release is 2.0-RC3-update1.  You can also try the current {{{doc/html/interim-builds.html} development version}}.
-|    JTrac 2.0 final will be released very soon with multi-language support.  Please {{{doc/html/dev-guide.html#dev-translating} contribute a translation}}!     
+|    JTrac 2.0 final has been released!  Please {{{doc/html/dev-guide.html#dev-translating} contribute a translation}}!
+|    The database schema has changed.  If you are using a previous version, please ensure that you {{{doc/html/upgrading.html} upgrade}}.
 *--                                             --+    
 
 * Features
