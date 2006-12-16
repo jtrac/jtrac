@@ -128,5 +128,9 @@ public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 			taskRepositoryListener.writeConfig();
 		}
 	}	
+	
+	public JtracTaskRepositoryListener getTaskRepositoryListener() {
+		return taskRepositoryListener;
+	}
 
 }

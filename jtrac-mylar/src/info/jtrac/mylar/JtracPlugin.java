@@ -24,11 +24,11 @@ import org.osgi.framework.BundleContext;
 /**
  * JTrac Mylar Connector core plugin class, headless
  */
-public class JtracPluginActivator extends Plugin {
+public class JtracPlugin extends Plugin {
 
 	public static final String PLUGIN_ID = "info.jtrac.mylar";
 	
-	private static JtracPluginActivator plugin;	
+	private static JtracPlugin plugin;	
 	private JtracRepositoryConnector connector;
 	
 	public JtracRepositoryConnector getConnector() {
@@ -39,7 +39,7 @@ public class JtracPluginActivator extends Plugin {
 		this.connector = connector;
 	}
 
-	public static JtracPluginActivator getDefault() {
+	public static JtracPlugin getDefault() {
 		return plugin;
 	}	
 
@@ -63,7 +63,7 @@ public class JtracPluginActivator extends Plugin {
 	 * Returns the path of the local config file used for storing repository details
 	 */
 	protected IPath getConfigFilePath() {
-		IPath stateLocation = Platform.getStateLocation(JtracPluginActivator.getDefault().getBundle());
+		IPath stateLocation = Platform.getStateLocation(JtracPlugin.getDefault().getBundle());
 		IPath configFile = stateLocation.append("repositories.xml");
 		return configFile;
 	}	

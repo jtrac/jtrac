@@ -3,11 +3,13 @@ Bundle-ManifestVersion: 2
 Bundle-Name: JTrac Mylar Connector
 Bundle-SymbolicName: info.jtrac.mylar; singleton:=true
 Bundle-Version: 0.1.0
-Bundle-Activator: info.jtrac.mylar.JtracPluginActivator
+Bundle-Activator: info.jtrac.mylar.JtracPlugin
 Bundle-Vendor: http://jtrac.info
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylar.tasks.core,
- org.eclipse.mylar.context.core
+ org.eclipse.mylar.context.core,
+ org.eclipse.ui,
+ org.eclipse.mylar.tasks.ui
 Eclipse-AutoStart: true
 Bundle-ClassPath: lib/dom4j-1.6.1.jar,
  lib/jaxen-1.1-beta-9.jar,
