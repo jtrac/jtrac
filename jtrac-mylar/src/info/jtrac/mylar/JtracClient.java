@@ -17,17 +17,35 @@
 package info.jtrac.mylar;
 
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
+import org.apache.commons.httpclient.methods.GetMethod;
 
 /**
  * this class has the responsibility of communicating with a JTrac
- * server / repository over HTTP.  REST concepts are used as far as possible
+ * server / repository over HTTP.  The REST style is used as far as possible
  */
 public class JtracClient {
 	
 	private HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
 	
 	private String repositoryUrl;
+	
+	public JtracClient(String repositoryUrl) {
+		this.repositoryUrl = repositoryUrl;
+	}
+	
+	public byte[] doGet(String url) throws Exception {
+		HttpMethod get = new GetMethod(url);
+		byte[] response = null;
+		try {
+			httpClient.executeMethod(get);
+			response = get.getResponseBody();
+		} finally {
+			get.releaseConnection();
+		}
+		return response;
+	} 
 	
 
 }

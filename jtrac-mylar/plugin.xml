@@ -2,29 +2,8 @@
 <?eclipse version="3.2"?>
 <plugin>
 
-   <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            label="Sample Action Set"
-            visible="true"
-            id="info.jtrac.mylar.actionSet">
-         <menu
-               label="Sample &amp;Menu"
-               id="sampleMenu">
-            <separator
-                  name="sampleGroup">
-            </separator>
-         </menu>
-         <action
-               label="&amp;Sample Action"
-               icon="icons/sample.gif"
-               class="info.jtrac.mylar.actions.SampleAction"
-               tooltip="Hello, Eclipse world"
-               menubarPath="sampleMenu/sampleGroup"
-               toolbarPath="sampleGroup"
-               id="info.jtrac.mylar.actions.SampleAction">
-         </action>
-      </actionSet>
-   </extension>
+<extension
+         point="org.eclipse.mylar.tasks.core.templates">
+</extension>         
 
 </plugin>
