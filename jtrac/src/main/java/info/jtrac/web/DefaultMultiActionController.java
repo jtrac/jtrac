@@ -132,12 +132,11 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
         return new ModelAndView("svn_view");
     }    
 
-    public ModelAndView attachmentViewHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void attachmentViewHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {
         AttachmentUtils.download(getServletContext(), request, response);
-        return null;
     }
 
-    public ModelAndView svnCommitsPerCommitterChartHandler(HttpServletRequest request,
+    public void svnCommitsPerCommitterChartHandler(HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         Map<String, Integer> commitsPerCommitter = (Map<String, Integer>) request.getSession().getAttribute("commitsPerCommitter");
         request.getSession().setAttribute("commitsPerCommitter", null);
@@ -150,7 +149,6 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
         OutputStream out = response.getOutputStream();
         ChartUtilities.writeChartAsJPEG(out, chart, 600, 300);
         out.close();
-        return null;
     }
 
     public ModelAndView userListHandler(HttpServletRequest request, HttpServletResponse response) {
@@ -168,7 +166,7 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
         return new ModelAndView("config_list", model);
     }
     
-    public ModelAndView itemListExcelHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {        
+    public void itemListExcelHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {        
         FlowExecution flow = getFlowExecution(request, response);        
         ItemSearch itemSearch = (ItemSearch) flow.getActiveSession().getScope().get("itemSearch");
         int pageSize = itemSearch.getPageSize();
@@ -181,8 +179,7 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
         Locale locale = RequestContextUtils.getLocale(request);
         MessageSource messageSource = RequestContextUtils.getWebApplicationContext(request);        
         eu.exportToExcel(messageSource, locale).write(out);
-        out.flush();        
-        return null;        
+        out.flush();       
     }       
     
 }
