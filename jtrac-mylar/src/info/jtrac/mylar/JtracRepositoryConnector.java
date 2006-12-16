@@ -29,6 +29,9 @@ import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 
+/**
+ * the heart of the mylar connector
+ */
 public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 	
 	private final static String UI_LABEL = "JTrac";

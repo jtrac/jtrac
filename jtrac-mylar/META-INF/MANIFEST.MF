@@ -6,7 +6,9 @@ Bundle-Version: 0.1.0
 Bundle-Activator: info.jtrac.mylar.JtracPluginActivator
 Bundle-Vendor: http://jtrac.info
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.mylar.tasks.core
+ org.eclipse.mylar.tasks.core,
+ org.eclipse.mylar.context.core
 Eclipse-LazyStart: true
 Bundle-ClassPath: lib/dom4j-1.6.1.jar,
  lib/jaxen-1.1-beta-9.jar
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

@@ -16,6 +16,18 @@
 
 package info.jtrac.mylar;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
+
+/**
+ * this class has the responsibility of communicating with a JTrac
+ * server / repository over HTTP.  REST concepts are used as far as possible
+ */
 public class JtracClient {
+	
+	private HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
+	
+	private String repositoryUrl;
+	
 
 }
