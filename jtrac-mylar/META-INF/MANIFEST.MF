@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JTrac Mylar Connector
+Bundle-SymbolicName: info.jtrac.mylar; singleton:=true
+Bundle-Version: 0.1.0
+Bundle-Activator: info.jtrac.mylar.JtracPluginActivator
+Bundle-Vendor: http://jtrac.info
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.mylar.tasks.core
+Eclipse-LazyStart: true
