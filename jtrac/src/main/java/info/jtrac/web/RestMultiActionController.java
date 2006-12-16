@@ -28,15 +28,20 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class RestMultiActionController extends AbstractMultiActionController {
     
-    public void itemHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String refId = null;
+    private String getPathParameter(HttpServletRequest request) {
         String pathInfo = request.getPathInfo();
         logger.debug("pathInfo = '" + pathInfo + "'");
         int index = pathInfo.lastIndexOf('/');
+        String parameter = null;
         if (index != -1) {
-            refId = pathInfo.substring(index + 1);
+            parameter = pathInfo.substring(index + 1);
         }
-        logger.debug("refId extracted from request path = '" + refId + "'");
+        logger.debug("parameter extracted from request path = '" + parameter + "'");
+        return parameter;
+    }
+    
+    public void itemHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String refId = getPathParameter(request);
         Item item = null;
         try {
             item = jtrac.loadItemByRefId(refId);

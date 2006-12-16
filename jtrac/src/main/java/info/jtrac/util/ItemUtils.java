@@ -213,14 +213,14 @@ public final class ItemUtils {
         Document d = XmlUtils.getNewDocument("item");
         Element root = d.getRootElement();
         root.addAttribute("refId", item.getRefId());
-        if (item.getRelatedItems() != null) {
+        if (item.getRelatedItems() != null && item.getRelatedItems().size() > 0) {
             Element relatedItems = root.addElement("relatedItems");
             for(ItemItem itemItem : item.getRelatedItems()) {
                 Element relatedItem = relatedItems.addElement("relatedItem");
                 relatedItem.addAttribute("refId", itemItem.getItem().getRefId());
             }           
         }
-        if (item.getRelatingItems() != null) {
+        if (item.getRelatingItems() != null && item.getRelatingItems().size() > 0) {
             Element relatingItems = root.addElement("relatingItems");
             for(ItemItem itemItem : item.getRelatingItems()) {
                 Element relatingItem = relatingItems.addElement("relatingItem");
