@@ -1,12 +1,12 @@
 /*
  * Copyright 2002-2005 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,7 @@ import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemItem;
+import info.jtrac.domain.ItemRefId;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
@@ -71,7 +72,7 @@ public class JtracImpl implements Jtrac {
     private Indexer indexer;
     private IndexSearcher indexSearcher;
     private MessageSource messageSource;
-
+    
     private Map<String, String> locales;
     private String defaultLocale;
     
@@ -82,7 +83,7 @@ public class JtracImpl implements Jtrac {
             locales.put(localeString, localeString + " - " + locale.getDisplayName());
         }
         logger.info("available locales configured " + locales);
-    }    
+    }
     
     public void setDao(JtracDao dao) {
         this.dao = dao;
@@ -91,24 +92,24 @@ public class JtracImpl implements Jtrac {
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
-
+    
     public void setIndexSearcher(IndexSearcher indexSearcher) {
         this.indexSearcher = indexSearcher;
     }
-
+    
     public void setIndexer(Indexer indexer) {
         this.indexer = indexer;
-    }    
-
+    }
+    
     public void setMessageSource(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
-        
+    
     private final Log logger = LogFactory.getLog(getClass());
     
     /**
      * this has not been factored into the util package or a helper class
-     * because it depends on the PasswordEncoder configured 
+     * because it depends on the PasswordEncoder configured
      */
     public String generatePassword() {
         byte[] ab = new byte[1];
@@ -119,12 +120,12 @@ public class JtracImpl implements Jtrac {
     
     /**
      * this has not been factored into the util package or a helper class
-     * because it depends on the PasswordEncoder configured 
-     */    
+     * because it depends on the PasswordEncoder configured
+     */
     public String encodeClearText(String clearText) {
         return passwordEncoder.encodePassword(clearText, null);
     }
-
+    
     public Map<String, String> getLocales() {
         return locales;
     }
@@ -148,18 +149,18 @@ public class JtracImpl implements Jtrac {
             temp = "en";
         }
         logger.info("default locale set to '" + temp + "'");
-        defaultLocale = temp;         
+        defaultLocale = temp;
         
         // initialize mail sender
         this.mailSender = new MailSender(config, messageSource, defaultLocale);
         
-       
-    }    
+        
+    }
     
     //==========================================================================
     
     public void storeItem(Item item, Attachment attachment) {
-        History history = new History(item);        
+        History history = new History(item);
         if (attachment != null) {
             dao.storeAttachment(attachment);
             attachment.setFilePrefix(attachment.getId());
@@ -195,10 +196,10 @@ public class JtracImpl implements Jtrac {
             if (value != null) {
                 item.setValue(field.getName(), value);
             }
-        }        
+        }
         if (history.getStatus() != null) {
             item.setStatus(history.getStatus());
-            item.setAssignedTo(history.getAssignedTo()); // this may be null, when closing                            
+            item.setAssignedTo(history.getAssignedTo()); // this may be null, when closing
         }
         item.setItemUsers(history.getItemUsers());
         history.setTimeStamp(new Date());
@@ -207,7 +208,7 @@ public class JtracImpl implements Jtrac {
             attachment.setFilePrefix(attachment.getId());
             item.add(attachment);
             history.setAttachment(attachment);
-        }        
+        }
         item.add(history);
         dao.storeItem(item);
         indexer.index(history);
@@ -220,8 +221,9 @@ public class JtracImpl implements Jtrac {
         return dao.loadItem(id);
     }
     
-    public Item loadItem(long sequenceNum, String prefixCode) {
-        List<Item> items = dao.findItems(sequenceNum, prefixCode);
+    public Item loadItemByRefId(String refId) {
+        ItemRefId itemRefId = new ItemRefId(refId); // throws runtime exception if invalid id
+        List<Item> items = dao.findItems(itemRefId.getSequenceNum(), itemRefId.getPrefixCode());
         if (items.size() == 0) {
             return null;
         }
@@ -240,7 +242,7 @@ public class JtracImpl implements Jtrac {
                 itemSearch.setResultCount(0);
                 return Collections.<Item>emptyList();
             }
-            itemSearch.setItemIds(hits);            
+            itemSearch.setItemIds(hits);
         }
         return dao.findItems(itemSearch);
     }
@@ -277,15 +279,15 @@ public class JtracImpl implements Jtrac {
         return dao.bulkUpdateStatusToOpen(space, status);
     }
     
-    public int bulkUpdateRenameSpaceRole(Space space, String oldRoleKey, String newRoleKey) {        
-        return dao.bulkUpdateRenameSpaceRole(space, oldRoleKey, newRoleKey);        
+    public int bulkUpdateRenameSpaceRole(Space space, String oldRoleKey, String newRoleKey) {
+        return dao.bulkUpdateRenameSpaceRole(space, oldRoleKey, newRoleKey);
     }
     
     public int bulkUpdateDeleteSpaceRole(Space space, String roleKey) {
         return dao.bulkUpdateDeleteSpaceRole(space, roleKey);
-    }    
+    }
     
-    //========================================================    
+    //========================================================
     
     public void rebuildIndexes() {
         indexer.clearIndexes();
@@ -323,18 +325,18 @@ public class JtracImpl implements Jtrac {
         }
         return users.get(0);
     }
-  
+    
     public void storeUser(User user) {
         dao.storeUser(user);
     }
     
-    public void storeUser(User user, String password) {        
+    public void storeUser(User user, String password) {
         if (password == null) {
             password = generatePassword();
-        }                        
+        }
         user.setPassword(encodeClearText(password));
-        storeUser(user);                     
-        mailSender.sendUserPassword(user, password);     
+        storeUser(user);
+        mailSender.sendUserPassword(user, password);
     }
     
     public List<User> findAllUsers() {
@@ -343,15 +345,15 @@ public class JtracImpl implements Jtrac {
     
     public List<User> findUsersForSpace(long spaceId) {
         return dao.findUsersForSpace(spaceId);
-    }      
+    }
     
     public List<UserSpaceRole> findUserRolesForSpace(long spaceId) {
         return dao.findUserRolesForSpace(spaceId);
-    } 
+    }
     
     public List<User> findUsersWithRoleForSpace(long spaceId, String roleKey) {
         return dao.findUsersWithRoleForSpace(spaceId, roleKey);
-    }    
+    }
     
     public List<User> findUsersForUser(User user) {
         Collection<Space> spaces = new HashSet<Space>(user.getUserSpaceRoles().size());
@@ -362,7 +364,7 @@ public class JtracImpl implements Jtrac {
         List<User> users = dao.findUsersForSpaceSet(spaces);
         Set<User> userSet = new LinkedHashSet<User>(users);
         return new ArrayList<User>(userSet);
-    }     
+    }
     
     public List<User> findUnallocatedUsersForSpace(long spaceId) {
         List<User> users = findAllUsers();
@@ -371,7 +373,7 @@ public class JtracImpl implements Jtrac {
             users.remove(userSpaceRole.getUser());
         }
         return users;
-    }    
+    }
     
     //==========================================================================
     
@@ -381,21 +383,21 @@ public class JtracImpl implements Jtrac {
     
     public Counts loadCountsForUserSpace(User user, Space space) {
         return dao.loadCountsForUserSpace(user, space);
-    }    
+    }
     
     //==========================================================================
     
-    public void storeUserSpaceRole(User user, Space space, String roleKey) {        
+    public void storeUserSpaceRole(User user, Space space, String roleKey) {
         user.addSpaceWithRole(space, roleKey);
-        dao.storeUser(user);      
+        dao.storeUser(user);
     }
     
     public void removeUserSpaceRole(UserSpaceRole userSpaceRole) {
         User user = userSpaceRole.getUser();
         user.removeSpaceWithRole(userSpaceRole.getSpace(), userSpaceRole.getRoleKey());
         // dao.storeUser(user);
-        dao.removeUserSpaceRole(userSpaceRole);       
-    }     
+        dao.removeUserSpaceRole(userSpaceRole);
+    }
     
     public UserSpaceRole loadUserSpaceRole(long id) {
         return dao.loadUserSpaceRole(id);
@@ -413,11 +415,11 @@ public class JtracImpl implements Jtrac {
             return null;
         }
         return spaces.get(0);
-    }    
+    }
     
     public void storeSpace(Space space) {
         dao.storeSpace(space);
-    }    
+    }
     
     public List<Space> findAllSpaces() {
         return dao.findAllSpaces();

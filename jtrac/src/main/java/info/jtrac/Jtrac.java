@@ -44,7 +44,7 @@ public interface Jtrac extends UserDetailsService {
     void storeItem(Item item, Attachment attachment);
     void storeHistoryForItem(Item item, History history, Attachment attachment);
     Item loadItem(long id);
-    Item loadItem(long sequenceNum, String prefixCode);
+    Item loadItemByRefId(String refId);
     History loadHistory(long id);
     List<Item> findItems(ItemSearch itemSearch);
     void removeItem(Item item);

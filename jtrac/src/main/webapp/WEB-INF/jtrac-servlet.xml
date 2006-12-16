@@ -45,6 +45,7 @@
             <map>
                 <entry key="/flow/**" value-ref="flowController"/>
                 <entry key="/app/ajax/**" value-ref="ajaxController"/>
+                <entry key="/api/**" value-ref="restController"/>
                 <entry key="/**" value-ref="defaultController"/>               
             </map>
         </property>
@@ -93,6 +94,23 @@
                     <props>
                         <prop key="/app/ajax/dashboard.htm">ajaxDashboardHandler</prop>
                         <prop key="/app/ajax/item_view_users.htm">ajaxItemViewUsersHandler</prop>
+                    </props>
+                </property>
+            </bean>        
+        </property>
+        <property name="jtrac" ref="jtrac"/>
+    </bean>
+    
+    <!--
+    - This is an additional MultiActionController that specifically handles remote-api REST requests    
+    -->
+    <bean id="restController" class="info.jtrac.web.RestMultiActionController">
+        <property name="methodNameResolver">
+            <bean class="org.springframework.web.servlet.mvc.multiaction.PropertiesMethodNameResolver">
+                <property name="alwaysUseFullPath" value="true"/>
+                <property name="mappings">
+                    <props>
+                        <prop key="/api/item/*">itemHandler</prop>
                     </props>
                 </property>
             </bean>        

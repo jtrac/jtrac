@@ -28,8 +28,9 @@ import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.dom4j.Document;
+import org.dom4j.Element;
 import org.springframework.context.MessageSource;
-import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.util.HtmlUtils;
 
@@ -206,6 +207,37 @@ public final class ItemUtils {
         }
         sb.append("</table>");
         return sb.toString();
+    }
+    
+    public static Document getAsXml(Item item) {
+        Document d = XmlUtils.getNewDocument("item");
+        Element root = d.getRootElement();
+        root.addAttribute("refId", item.getRefId());
+        if (item.getRelatedItems() != null) {
+            Element relatedItems = root.addElement("relatedItems");
+            for(ItemItem itemItem : item.getRelatedItems()) {
+                Element relatedItem = relatedItems.addElement("relatedItem");
+                relatedItem.addAttribute("refId", itemItem.getItem().getRefId());
+            }           
+        }
+        if (item.getRelatingItems() != null) {
+            Element relatingItems = root.addElement("relatingItems");
+            for(ItemItem itemItem : item.getRelatingItems()) {
+                Element relatingItem = relatingItems.addElement("relatingItem");
+                relatingItem.addAttribute("refId", itemItem.getItem().getRefId());
+            }
+        }
+        if (item.getSummary() != null) {
+            root.addElement("summary").addText(item.getSummary());
+        }
+        if (item.getDetail() != null) {
+            root.addElement("detail").addText(item.getDetail());
+        }
+        root.addElement("loggedBy").addText(item.getLoggedBy().getName());
+        if (item.getAssignedTo() != null) {
+            root.addElement("assignedTo").addText(item.getAssignedTo().getName());
+        }
+        return d;
     }
     
 }

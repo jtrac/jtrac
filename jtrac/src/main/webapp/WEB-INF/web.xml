@@ -116,6 +116,11 @@
     
     <servlet-mapping>
         <servlet-name>jtrac</servlet-name>
+        <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>    
+    
+    <servlet-mapping>
+        <servlet-name>jtrac</servlet-name>
         <url-pattern>/auth/*</url-pattern>
     </servlet-mapping>  
   

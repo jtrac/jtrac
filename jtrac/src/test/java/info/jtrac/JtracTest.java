@@ -10,11 +10,11 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.State;
 import info.jtrac.domain.UserSpaceRole;
+import info.jtrac.util.ItemUtils;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.sql.DataSource;
 
 import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.userdetails.UserDetails;
@@ -249,6 +249,7 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         jtrac.storeSpace(s);
         User u = new User();
         u.setLoginName("test");
+        u.setName("Test User");
         u.setEmail("test");
         u.addSpaceWithRole(s, "DEFAULT");
         jtrac.storeUser(u);
@@ -258,7 +259,8 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         i.setLoggedBy(u);
         i.setStatus(State.CLOSED);
         // next step will internally try to render item as Html for sending e-mail
-        jtrac.storeItem(i, null);        
+        jtrac.storeItem(i, null);
+        System.out.println(ItemUtils.getAsXml(i).asXML());
     }
     
 }

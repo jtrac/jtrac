@@ -17,9 +17,11 @@
 package info.jtrac.webflow;
 
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemRefId;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
+import info.jtrac.exception.InvalidRefIdException;
 import info.jtrac.exception.SearchQueryParseException;
 import info.jtrac.util.ValidationUtils;
 import java.text.SimpleDateFormat;
@@ -136,30 +138,20 @@ public class ItemSearchFormAction extends AbstractFormAction {
         return success();
     }    
     
-    public Event itemSearchViewByRefIdHandler(RequestContext context) throws Exception {        
+    public Event itemSearchViewByRefIdHandler(RequestContext context) {        
         String refId = ValidationUtils.getParameter(context, "refId");
         if (refId == null) {
             context.getRequestScope().put("refIdError", ValidationUtils.ERROR_EMPTY_CODE);
             return error();
         }
-        // TODO make this flexible, sense current space etc.
-        int pos = refId.indexOf('-');
-        if (pos == -1) {
-            context.getRequestScope().put("refId", refId);
-            context.getRequestScope().put("refIdError", "item_search_form.error.refId.invalid");
-            return error();            
-        }
-        long sequenceNum;
+        Item item = null;
         try {
-            sequenceNum = Long.parseLong(refId.substring(pos + 1));
-        } catch (NumberFormatException e) {
+            item = jtrac.loadItemByRefId(refId);
+        } catch (InvalidRefIdException e) {
             context.getRequestScope().put("refId", refId);
             context.getRequestScope().put("refIdError", "item_search_form.error.refId.invalid");
             return error();             
-        }
-        String prefixCode = refId.substring(0, pos).toUpperCase();
-        logger.debug("sequenceNum = '" + sequenceNum + "', prefixCode = '" + prefixCode + "'");
-        Item item = jtrac.loadItem(sequenceNum, prefixCode);
+        }        
         if (item == null) {
             context.getRequestScope().put("refId", refId);
             context.getRequestScope().put("refIdError", "item_search_form.error.refId.notFound");
