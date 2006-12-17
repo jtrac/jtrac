@@ -2,22 +2,27 @@
 <?eclipse version="3.2"?>
 <plugin>
 <extension
+      id="info.jtrac.mylar.repository"
+      name="JTrac Repository"
       point="org.eclipse.mylar.tasks.ui.repositories">
    <connectorCore
          class="info.jtrac.mylar.JtracRepositoryConnector"
+         id="info.jtrac.mylar.repository.connector.core"
          name="JTrac Connector"
          type="jtrac">
    </connectorCore>
+   <externalizer
+         class="info.jtrac.mylar.ui.JtracTaskExternalizer"
+         id="info.jtrac.mylar.repository.externalizer"
+         name="JTrac Externalizer">
+   </externalizer>
    <connectorUi
          brandingIcon="icons/task-repository.gif"
          class="info.jtrac.mylar.ui.JtracRepositoryConnectorUi"
+         id="info.jtrac.mylar.repository.connector.ui"
          name="JTrac Connector UI"
          overlayIcon="icons/task-repository.gif">
    </connectorUi>
-   <externalizer
-         class="info.jtrac.mylar.ui.JtracTaskExternalizer"
-         name="JTrac Externalizer">
-   </externalizer>
 </extension>
 
 <extension
@@ -26,7 +31,7 @@
          label="JTrac Repository"
          repositoryKind="jtrac"
          urlRepository="http://localhost:8080/jtrac"
-         version="2.0">
+         >
    </repository>
 </extension>
 <extension
