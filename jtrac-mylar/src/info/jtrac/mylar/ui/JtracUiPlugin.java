@@ -35,12 +35,12 @@ public class JtracUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);		
-		TasksUiPlugin.getRepositoryManager().addListener(JtracPlugin.getDefault().getConnector().getTaskRepositoryListener());
+		// TasksUiPlugin.getRepositoryManager().addListener(JtracPlugin.getDefault().getConnector().getTaskRepositoryListener());
 	}	
 	
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		TasksUiPlugin.getRepositoryManager().removeListener(JtracPlugin.getDefault().getConnector().getTaskRepositoryListener());		
+		// TasksUiPlugin.getRepositoryManager().removeListener(JtracPlugin.getDefault().getConnector().getTaskRepositoryListener());		
 		plugin = null;
 		super.stop(context);
 	}	

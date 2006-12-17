@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JTrac Mylar Connector
 Bundle-SymbolicName: info.jtrac.mylar.ui;singleton:=true
-Bundle-Version: 0.1.0
+Bundle-Version: 1.0.0
 Bundle-Activator: info.jtrac.mylar.ui.JtracUiPlugin
 Bundle-Vendor: JTrac.info
 Require-Bundle: org.eclipse.ui,
@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylar.tasks.core,
  org.eclipse.mylar.tasks.ui
 Eclipse-LazyStart: true
-Bundle-ClassPath: lib/dom4j-1.6.1.jar,
+Bundle-ClassPath: .,
+ lib/dom4j-1.6.1.jar,
  lib/jaxen-1.1-beta-9.jar,
  lib/commons-logging-1.0.4.jar
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
