@@ -16,12 +16,13 @@
 
 package info.jtrac.mylar;
 
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.TaskList;
 
-public class JtracRepositoryTask extends AbstractRepositoryTask {
+public class JtracRepositoryQuery extends AbstractRepositoryQuery {
 
-	public JtracRepositoryTask(String handle, String label, boolean newTask) {
-		super(handle, label, newTask);
+	public JtracRepositoryQuery(String description, TaskList taskList) {
+		super(description, taskList);
 	}
 
 	@Override

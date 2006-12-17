@@ -6,6 +6,7 @@ Bundle-Version: 0.1.0
 Bundle-Activator: info.jtrac.mylar.ui.JtracUiPlugin
 Bundle-Vendor: JTrac.info
 Require-Bundle: org.eclipse.ui,
+ org.eclipse.ui.forms,
  org.eclipse.core.runtime,
  org.eclipse.mylar.context.core,
  org.eclipse.mylar.tasks.core,

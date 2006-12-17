@@ -14,19 +14,27 @@
  * limitations under the License.
  */
 
-package info.jtrac.mylar;
+package info.jtrac.mylar.ui.editor;
 
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import info.jtrac.mylar.ui.JtracUiPlugin;
 
-public class JtracRepositoryTask extends AbstractRepositoryTask {
+import org.eclipse.mylar.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.ui.forms.editor.FormEditor;
 
-	public JtracRepositoryTask(String handle, String label, boolean newTask) {
-		super(handle, label, newTask);
+public class JtracRepositoryTaskEditor extends AbstractRepositoryTaskEditor {
+
+	public JtracRepositoryTaskEditor(FormEditor editor) {
+		super(editor);
 	}
 
 	@Override
-	public String getRepositoryKind() {
-		return JtracRepositoryConnector.REPO_TYPE;
+	protected String getPluginId() {
+		return JtracUiPlugin.PLUGIN_ID;
+	}
+
+	@Override
+	protected void validateInput() {
+		
 	}
 
 }
