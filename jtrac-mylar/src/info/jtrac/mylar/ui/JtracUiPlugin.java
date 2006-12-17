@@ -25,7 +25,6 @@ import org.osgi.framework.BundleContext;
 public class JtracUiPlugin extends AbstractUIPlugin {
 	
 	public static final String PLUGIN_ID = "info.jtrac.mylar.ui";
-	public static final String TITLE_MESSAGE_DIALOG = "Mylar JTrac Client";
 	
 	private static JtracUiPlugin plugin;
 	

@@ -16,36 +16,38 @@
 
 package info.jtrac.mylar.ui;
 
+import info.jtrac.mylar.JtracRepositoryConnector;
+import info.jtrac.mylar.ui.wizard.JtracRepositorySettingsPage;
+
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
 
+/**
+ * main plugin entry point
+ */
 public class JtracRepositoryConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public String getRepositoryType() {
-		// TODO Auto-generated method stub
-		return null;
+		return JtracRepositoryConnector.REPO_TYPE;
 	}
 
 	@Override
 	public AbstractRepositorySettingsPage getSettingsPage() {
-		// TODO Auto-generated method stub
-		return null;
+		return new JtracRepositorySettingsPage(this);
 	}
 
 	@Override
 	public boolean hasRichEditor() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean hasSearchPage() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override

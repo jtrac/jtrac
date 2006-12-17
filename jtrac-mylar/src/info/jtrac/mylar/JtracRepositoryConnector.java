@@ -16,6 +16,7 @@
 
 package info.jtrac.mylar;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -34,19 +35,19 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
  */
 public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 	
-	private final static String UI_LABEL = "JTrac";
-	private final static String REPO_TYPE = "jtrac";
+	public static final String UI_LABEL = "JTrac";
+	public static final String REPO_TYPE = "jtrac";
 	
 	private JtracTaskRepositoryListener taskRepositoryListener;
 
 	@Override
 	public boolean canCreateNewTask(TaskRepository repository) {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean canCreateTaskFromKey(TaskRepository repository) {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -79,8 +80,7 @@ public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public List<String> getSupportedVersions() {
-		// TODO Auto-generated method stub
-		return null;
+		return Collections.singletonList("2.0");
 	}
 
 	@Override
@@ -102,23 +102,20 @@ public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IStatus performQuery(AbstractRepositoryQuery query,
-			TaskRepository repository, IProgressMonitor monitor,
+	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
 			QueryHitCollector resultCollector) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void updateAttributes(TaskRepository repository,
-			IProgressMonitor monitor) throws CoreException {
+	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void updateTask(TaskRepository repository,
-			AbstractRepositoryTask repositoryTask) throws CoreException {
+	public void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask) throws CoreException {
 		// TODO Auto-generated method stub
 		
 	}
