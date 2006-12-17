@@ -9,8 +9,10 @@
          type="jtrac">
    </connectorCore>
    <connectorUi
+         brandingIcon="icons/task-repository.gif"
          class="info.jtrac.mylar.ui.JtracRepositoryConnectorUi"
-         name="JTrac Connector UI">
+         name="JTrac Connector UI"
+         overlayIcon="icons/task-repository.gif">
    </connectorUi>
    <externalizer
          class="info.jtrac.mylar.ui.JtracTaskExternalizer"
@@ -21,7 +23,6 @@
 <extension
       point="org.eclipse.mylar.tasks.core.templates">
    <repository
-         addAutomatically="false"
          label="JTrac Repository"
          repositoryKind="jtrac"
          urlRepository="http://localhost:8080/jtrac"

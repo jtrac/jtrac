@@ -17,7 +17,9 @@
 package info.jtrac.mylar.ui;
 
 import info.jtrac.mylar.JtracRepositoryConnector;
+import info.jtrac.mylar.ui.wizard.JtracQueryWizard;
 import info.jtrac.mylar.ui.wizard.JtracRepositorySettingsPage;
+import info.jtrac.mylar.ui.wizard.NewJtracTaskWizard;
 
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -52,15 +54,12 @@ public class JtracRepositoryConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public IWizard getNewTaskWizard(TaskRepository taskRepository) {
-		// TODO Auto-generated method stub
-		return null;
+		return new NewJtracTaskWizard();
 	}
 
 	@Override
-	public IWizard getQueryWizard(TaskRepository repository,
-			AbstractRepositoryQuery queryToEdit) {
-		// TODO Auto-generated method stub
-		return null;
+	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery queryToEdit) {
+		return new JtracQueryWizard();
 	}
 
 }

@@ -23,25 +23,21 @@ import org.eclipse.swt.widgets.Composite;
 public class JtracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 	public JtracRepositorySettingsPage(AbstractRepositoryConnectorUi repositoryUi) {
-		super("JTrac Repository Connection Settings", "", repositoryUi);
-		// TODO Auto-generated constructor stub
+		super("JTrac Connection", "Repository Connection Settings", repositoryUi);
 	}
 
 	@Override
 	protected void createAdditionalControls(Composite parent) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected boolean isValidUrl(String name) {
-		// TODO Auto-generated method stub
-		return false;
+	protected boolean isValidUrl(String name) { 
+		return true;
 	}
 
 	@Override
 	protected void validateSettings() {
-		// TODO Auto-generated method stub
 		
 	}
 
