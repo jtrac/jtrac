@@ -21,6 +21,8 @@ import info.jtrac.exception.InvalidRefIdException;
 import info.jtrac.util.ItemUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.servlet.mvc.multiaction.MethodNameResolver;
+import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 /**
  * Spring MultiActionController that handles REST requests
@@ -28,20 +30,37 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class RestMultiActionController extends AbstractMultiActionController {
     
-    private String getPathParameter(HttpServletRequest request) {
-        String pathInfo = request.getPathInfo();
-        logger.debug("pathInfo = '" + pathInfo + "'");
-        int index = pathInfo.lastIndexOf('/');
-        String parameter = null;
-        if (index != -1) {
-            parameter = pathInfo.substring(index + 1);
-        }
-        logger.debug("parameter extracted from request path = '" + parameter + "'");
-        return parameter;
+    /**
+     * custom MethodNameResolver is configured that checks the value of an expected
+     * paramter called "method" in the request and formats the value that may be
+     * in the form of  "namespace.subnamespace.action" into "namespaceSubnamespaceAction"
+     * or more like a java method name
+     */
+    public RestMultiActionController() {
+        setMethodNameResolver(new MethodNameResolver() {
+            public String getHandlerMethodName(HttpServletRequest request) throws NoSuchRequestHandlingMethodException {
+                String temp = request.getParameter("method");
+                if (temp == null) {
+                    return null;
+                }
+                StringBuffer sb = new StringBuffer();
+                for(int i = 0; i < temp.length(); i++) {
+                    char c = temp.charAt(i);
+                    if (c == '.') {
+                        i++;
+                        c = temp.charAt(i);
+                        sb.append(Character.toUpperCase(c));
+                    } else {
+                        sb.append(c);
+                    }
+                }
+                return sb.toString();
+            }
+        });
     }
     
-    public void itemHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String refId = getPathParameter(request);
+    public void itemGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String refId = request.getParameter("refId");
         Item item = null;
         try {
             item = jtrac.loadItemByRefId(refId);
