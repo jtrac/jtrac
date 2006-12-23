@@ -26,27 +26,30 @@ public class JtracUiPlugin extends AbstractUIPlugin {
 	
 	public static final String PLUGIN_ID = "info.jtrac.mylar.ui";
 	
-	private static JtracUiPlugin plugin;
+	private static JtracUiPlugin uiPlugin;
 	
 	public JtracUiPlugin() {
-		plugin = this;
+		uiPlugin = this;
 	}
 	
 	@Override
 	public void start(BundleContext context) throws Exception {
-		super.start(context);		
-		// TasksUiPlugin.getRepositoryManager().addListener(JtracPlugin.getDefault().getConnector().getTaskRepositoryListener());
+		super.start(context);
+		JtracPlugin plugin = new JtracPlugin();  // this has to be refactored into headless later
+		plugin.start(context);
+		TasksUiPlugin.getRepositoryManager().addListener(JtracPlugin.getDefault().getConnector().getTaskRepositoryListener());
 	}	
 	
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		// TasksUiPlugin.getRepositoryManager().removeListener(JtracPlugin.getDefault().getConnector().getTaskRepositoryListener());		
-		plugin = null;
+		TasksUiPlugin.getRepositoryManager().removeListener(JtracPlugin.getDefault().getConnector().getTaskRepositoryListener());		
+		uiPlugin = null;
 		super.stop(context);
+		JtracPlugin.getDefault().stop(context); // this has to be refactored into headless later
 	}	
 	
 	public static JtracUiPlugin getDefault() {
-		return plugin;
+		return uiPlugin;
 	}	
 
 }

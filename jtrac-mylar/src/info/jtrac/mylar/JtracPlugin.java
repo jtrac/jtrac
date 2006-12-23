@@ -29,7 +29,7 @@ public class JtracPlugin extends Plugin {
 	public static final String PLUGIN_ID = "info.jtrac.mylar";
 	
 	private static JtracPlugin plugin;	
-	private JtracRepositoryConnector connector;
+	private JtracRepositoryConnector connector;	
 	
 	public JtracRepositoryConnector getConnector() {
 		return connector;
@@ -47,6 +47,7 @@ public class JtracPlugin extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		connector = new JtracRepositoryConnector();
 	}
 
 	@Override

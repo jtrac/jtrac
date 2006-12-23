@@ -16,6 +16,7 @@
 
 package info.jtrac.mylar;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,11 +36,11 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
  */
 public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 	
-	public static final String UI_LABEL = "JTrac";
+	public static final String UI_LABEL = "JTrac (supports version 2.1 and later)";
 	public static final String REPO_TYPE = "jtrac";
 	
 	private JtracTaskRepositoryListener taskRepositoryListener;
-
+	
 	@Override
 	public boolean canCreateNewTask(TaskRepository repository) {
 		return true;
@@ -126,7 +127,14 @@ public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}	
 	
-	public JtracTaskRepositoryListener getTaskRepositoryListener() {
+	public synchronized JtracTaskRepositoryListener getTaskRepositoryListener() {
+		if (taskRepositoryListener == null) {
+			File configFile = null;
+			if (JtracPlugin.getDefault().getConfigFilePath() != null) {
+				configFile = JtracPlugin.getDefault().getConfigFilePath().toFile();
+			}
+			taskRepositoryListener = new JtracTaskRepositoryListener(configFile);
+		}
 		return taskRepositoryListener;
 	}
 
