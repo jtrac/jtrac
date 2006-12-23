@@ -19,10 +19,10 @@ package info.jtrac.mylar.ui.wizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 
-public class NewJtracTaskPage extends WizardPage {
+public class JtracNewTaskPage extends WizardPage {
 		
-	protected NewJtracTaskPage() {
-		super("New JTrac Task");
+	protected JtracNewTaskPage() {
+		super("JTrac: New Task");
 	}
 
 	public void createControl(Composite parent) {

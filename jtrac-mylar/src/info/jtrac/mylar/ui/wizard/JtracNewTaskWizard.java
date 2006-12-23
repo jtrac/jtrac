@@ -21,12 +21,12 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
-public class NewJtracTaskWizard extends Wizard implements INewWizard {
+public class JtracNewTaskWizard extends Wizard implements INewWizard {
 
-	private NewJtracTaskPage newTaskPage;
+	private JtracNewTaskPage newTaskPage;
 		
-	public NewJtracTaskWizard() {		
-		setWindowTitle("New JTrac Task Wizard");
+	public JtracNewTaskWizard() {		
+		setWindowTitle("JTrac: New Task Wizard");
 	}
 	
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
@@ -34,7 +34,7 @@ public class NewJtracTaskWizard extends Wizard implements INewWizard {
 	
 	@Override
 	public void addPages() {
-		newTaskPage = new NewJtracTaskPage();
+		newTaskPage = new JtracNewTaskPage();
 		newTaskPage.setWizard(this);
 		addPage(newTaskPage);
 	}	
