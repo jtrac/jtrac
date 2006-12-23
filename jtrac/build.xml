@@ -24,7 +24,7 @@
         </delete>        
     </target>    
     
-    <target name="compile">
+    <target name="compile" depends="dist-set-version">
         <mkdir dir="target/classes"/>
         <condition property="debug" value="false" else="true">            
             <isset property="production"/>
@@ -81,7 +81,30 @@
     
     <!-- ========================== DIST ============================ -->
     
-    <target name="war" depends="war-exploded">
+    <target name="dist-clean-version">
+        <delete file="etc/version.properties"/>
+    </target>
+    
+    <target name="dist-check-version">
+        <condition property="version.missing">
+            <not>
+                <available file="etc/version.properties"/>
+            </not>
+        </condition>
+    </target>
+     
+    <target name="dist-set-version" depends="dist-check-version" if="version.missing">
+        <input message="Release Version:" addproperty="version"/>
+        <concat destfile="etc/version.properties">version=${version}</concat>
+        <copy todir="src/main/java/info/jtrac" file="etc/Version.java"/>
+        <tstamp/>
+        <replace file="src/main/java/info/jtrac/Version.java" propertyfile="etc/version.properties">
+            <replacefilter token="@VERSION@" property="version"/>
+            <replacefilter token="@TIMESTAMP@" value="${DSTAMP}${TSTAMP}"/>
+        </replace>        
+    </target>        
+    
+    <target name="war" depends="dist-clean-version, dist-set-version, war-exploded">
         <copy todir="target/${war.name}/WEB-INF" file="etc/log4j.properties" overwrite="true"/>
         <zip destfile="target/${war.name}.war" basedir="target/${war.name}"/>
     </target>
