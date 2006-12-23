@@ -25,6 +25,7 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
+import info.jtrac.exception.InvalidRefIdException;
 import info.jtrac.util.AttachmentUtils;
 import info.jtrac.util.ItemUserEditor;
 import info.jtrac.util.UserEditor;
@@ -196,10 +197,12 @@ public class ItemViewFormAction extends AbstractFormAction {
         // related item handling
         if (itemViewForm.getRelatedItemRefId() != null) {
             String refId = itemViewForm.getRelatedItemRefId();
-            int pos = refId.indexOf('-');
-            long sequenceNum = Long.parseLong(refId.substring(pos + 1));
-            String prefixCode = refId.substring(0, pos).toUpperCase();
-            Item relatedItem = jtrac.loadItem(sequenceNum, prefixCode);
+            Item relatedItem = null;
+            try {
+                relatedItem = jtrac.loadItemByRefId(refId);
+            } catch (InvalidRefIdException e) {
+                // TODO
+            }
             ItemItem itemItem = new ItemItem(item, relatedItem, itemViewForm.getRelationType());
             item.add(itemItem);
         }         
