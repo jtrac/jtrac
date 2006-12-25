@@ -16,10 +16,19 @@
 
 package info.jtrac.mylar.ui.wizard;
 
+import info.jtrac.mylar.JtracClient;
+import info.jtrac.mylar.domain.JtracVersion;
+
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.tasks.core.RepositoryTemplate;
+import org.eclipse.mylar.tasks.core.web.WebClientUtil;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.widgets.Composite;
@@ -34,7 +43,7 @@ public class JtracRepositorySettingsPage extends AbstractRepositorySettingsPage 
 	@Override
 	protected void createAdditionalControls(Composite parent) {
 		for (RepositoryTemplate template : connector.getTemplates()) {
-			serverUrlCombo.add(template.label);
+			serverUrlCombo.add(template.repositoryUrl);
 		}				
 	}
 
@@ -52,7 +61,36 @@ public class JtracRepositorySettingsPage extends AbstractRepositorySettingsPage 
 
 	@Override
 	protected void validateSettings() {
-		
+		try {
+			final String serverUrl = getServerUrl();
+			final String username = getUserName();
+			final String password = getPassword();
+			final Proxy proxy;
+			if (getUseDefaultProxy()) {
+				proxy = WebClientUtil.getSystemProxy();
+			} else {
+				proxy = WebClientUtil.getProxy(getProxyHostname(), getProxyPort(), getProxyUsername(),
+						getProxyPassword());
+			}
+			getWizard().getContainer().run(true, false, new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					monitor.beginTask("Connecting...", IProgressMonitor.UNKNOWN);
+					try {				
+						JtracClient client = new JtracClient(serverUrl, username, password, proxy);
+						JtracVersion version = client.getJtracVersion();
+					} catch (Exception e) {
+						throw new InvocationTargetException(e);
+					} finally {
+						monitor.done();
+					}
+				}
+			});
+			MessageDialog.openInformation(null, "Success", "Repository is valid.");
+		} catch (InvocationTargetException e) {
+			MessageDialog.openWarning(null, "Error", e.getCause().getMessage());
+		} catch (Exception e) {
+			MessageDialog.openWarning(null, "Error", e.getMessage());
+		}
 	}
 
 }

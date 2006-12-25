@@ -16,8 +16,10 @@
 
 package info.jtrac.mylar;
 
-import info.jtrac.mylar.domain.Version;
+import info.jtrac.mylar.domain.JtracVersion;
+import info.jtrac.mylar.exception.HttpException;
 
+import java.net.HttpURLConnection;
 import java.net.Proxy;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -50,19 +52,23 @@ public class JtracClient {
 	private String doGet(String url) throws Exception {
 		HttpMethod get = new GetMethod(url);
 		String response = null;
+		int code;
 		try {
-			httpClient.executeMethod(get);
-			response = new String(get.getResponseBody());
+			code = httpClient.executeMethod(get);
+			if (code != HttpURLConnection.HTTP_OK) {
+				throw new HttpException("HTTP Response Code: " + code);
+			}
+			response = new String(get.getResponseBody());			
 		} finally {
 			get.releaseConnection();
 		}
 		return response;
 	} 
 	
-	public Version getVersion() throws Exception {
+	public JtracVersion getJtracVersion() throws Exception {
 		RequestUri uri = new RequestUri("version.get");
 		String xml = doGet(repoUrl + uri);
-		return new Version(xml);
+		return new JtracVersion(xml);
 	}
 	
 

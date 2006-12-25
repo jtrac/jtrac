@@ -4,12 +4,12 @@ import info.jtrac.mylar.util.XmlUtils;
 
 import org.dom4j.Document;
 
-public class Version {
+public class JtracVersion {
 	
 	private String number;
 	private String timestamp;
 	
-	public Version(String xml) {
+	public JtracVersion(String xml) {
 		Document d = XmlUtils.parse(xml);
 		number = d.getRootElement().attributeValue("number");
 		timestamp = d.getRootElement().attributeValue("timestamp");

@@ -18,7 +18,7 @@ public class RequestUri {
 	
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder("?method=");
+		StringBuilder sb = new StringBuilder("/api?method=");
 		sb.append(method);
 		for(Map.Entry<String, String> entry : parameters.entrySet()) {
 			sb.append('&').append(entry.getKey()).append('=').append(entry.getValue());
