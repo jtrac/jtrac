@@ -97,6 +97,9 @@ public interface Jtrac extends UserDetailsService {
     //========================================================
     Map<String, String> loadAllConfig();
     void storeConfig(Config config);
-    String loadConfig(String param);    
+    String loadConfig(String param); 
+    //========================================================
+    String getReleaseVersion();
+    String getReleaseTimestamp();
     
 }

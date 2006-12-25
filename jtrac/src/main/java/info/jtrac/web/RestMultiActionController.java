@@ -19,8 +19,11 @@ package info.jtrac.web;
 import info.jtrac.domain.Item;
 import info.jtrac.exception.InvalidRefIdException;
 import info.jtrac.util.ItemUtils;
+import info.jtrac.util.XmlUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.dom4j.Document;
+import org.dom4j.Element;
 import org.springframework.web.servlet.mvc.multiaction.MethodNameResolver;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
@@ -57,6 +60,16 @@ public class RestMultiActionController extends AbstractMultiActionController {
                 return sb.toString();
             }
         });
+    }
+    
+    public void versionGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Document d = XmlUtils.getNewDocument("version");
+        Element root = d.getRootElement();
+        root.addAttribute("number", jtrac.getReleaseVersion());
+        root.addAttribute("timestamp", jtrac.getReleaseTimestamp());
+        applyCacheSeconds(response, 0, true);
+        response.setContentType("text/xml");
+        d.write(response.getWriter());
     }
     
     public void itemGet(HttpServletRequest request, HttpServletResponse response) throws Exception {

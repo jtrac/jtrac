@@ -456,6 +456,8 @@ public class JtracImpl implements Jtrac {
         return dao.loadMetadata(id);
     }
     
+    //==========================================================================
+    
     public Map<String, String> loadAllConfig() {
         List<Config> list = dao.findAllConfig();
         Map<String, String> allConfig = new HashMap<String, String>(list.size());
@@ -482,6 +484,16 @@ public class JtracImpl implements Jtrac {
             return null;
         }
         return value;
+    }
+    
+    //==========================================================================
+    
+    public String getReleaseVersion() {
+        return Version.VERSION;
+    }
+    
+    public String getReleaseTimestamp() {
+        return Version.TIMESTAMP;
     }
     
 }
