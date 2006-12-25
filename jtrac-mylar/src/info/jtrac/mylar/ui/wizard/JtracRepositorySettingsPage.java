@@ -16,6 +16,10 @@
 
 package info.jtrac.mylar.ui.wizard;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.eclipse.mylar.tasks.core.RepositoryTemplate;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.widgets.Composite;
@@ -23,17 +27,27 @@ import org.eclipse.swt.widgets.Composite;
 public class JtracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 	public JtracRepositorySettingsPage(AbstractRepositoryConnectorUi repositoryUi) {
-		super("JTrac Connection", "Repository Connection Settings", repositoryUi);
+		super("JTrac Connection Settings", "Example: http://myserver/jtrac", repositoryUi);
+		setNeedsEncoding(false);
 	}
 
 	@Override
 	protected void createAdditionalControls(Composite parent) {
-		
+		for (RepositoryTemplate template : connector.getTemplates()) {
+			serverUrlCombo.add(template.label);
+		}				
 	}
 
 	@Override
 	protected boolean isValidUrl(String name) { 
-		return true;
+		if ((name.startsWith(URL_PREFIX_HTTPS) || name.startsWith(URL_PREFIX_HTTP)) && !name.endsWith("/")) {
+			try {
+				new URL(name);
+				return true;
+			} catch (MalformedURLException e) {
+			}
+		}
+		return false;
 	}
 
 	@Override

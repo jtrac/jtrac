@@ -16,6 +16,10 @@
 
 package info.jtrac.mylar;
 
+import info.jtrac.mylar.domain.Version;
+
+import java.net.Proxy;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
@@ -23,29 +27,43 @@ import org.apache.commons.httpclient.methods.GetMethod;
 
 /**
  * this class has the responsibility of communicating with a JTrac
- * server / repository over HTTP.  The REST style is used as far as possible
+ * server / repository over HTTP(S).  Messages are Plain Old XML (POX), 
+ * and requests are made REST style as HTTP GET / POST depending on the
+ * complexity of input parameters
  */
 public class JtracClient {
 	
 	private HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
 	
-	private String repositoryUrl;
+	private String repoUrl;
+	private String username;
+	private String password;
+	private Proxy proxy;
 	
-	public JtracClient(String repositoryUrl) {
-		this.repositoryUrl = repositoryUrl;
+	public JtracClient(String repoUrl, String username, String password, Proxy proxy) {
+		this.repoUrl = repoUrl;
+		this.username = username;
+		this.password = password;
+		this.proxy = proxy;
 	}
 	
-	public byte[] doGet(String url) throws Exception {
+	private String doGet(String url) throws Exception {
 		HttpMethod get = new GetMethod(url);
-		byte[] response = null;
+		String response = null;
 		try {
 			httpClient.executeMethod(get);
-			response = get.getResponseBody();
+			response = new String(get.getResponseBody());
 		} finally {
 			get.releaseConnection();
 		}
 		return response;
 	} 
+	
+	public Version getVersion() throws Exception {
+		RequestUri uri = new RequestUri("version.get");
+		String xml = doGet(repoUrl + uri);
+		return new Version(xml);
+	}
 	
 
 }
