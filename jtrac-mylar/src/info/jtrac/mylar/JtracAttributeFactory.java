@@ -6,26 +6,22 @@ public class JtracAttributeFactory extends AbstractAttributeFactory {
 
 	@Override
 	public boolean getIsHidden(String key) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public String getName(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		return key;
 	}
 
 	@Override
 	public boolean isReadOnly(String key) {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public String mapCommonAttributeKey(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		return key;
 	}
 
 }
