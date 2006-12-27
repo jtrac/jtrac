@@ -60,6 +60,15 @@ public class JtracRepositorySettingsPage extends AbstractRepositorySettingsPage 
 	}
 
 	@Override
+	public boolean isPageComplete() {
+		boolean isComplete = false;
+		String url = getServerUrl();
+		String label = getRepositoryLabel();
+		isComplete = isValidUrl(url) && label != null && label.length() > 0;
+		return isComplete;
+	}	
+	
+	@Override
 	protected void validateSettings() {
 		try {
 			final String serverUrl = getServerUrl();
@@ -69,8 +78,7 @@ public class JtracRepositorySettingsPage extends AbstractRepositorySettingsPage 
 			if (getUseDefaultProxy()) {
 				proxy = WebClientUtil.getSystemProxy();
 			} else {
-				proxy = WebClientUtil.getProxy(getProxyHostname(), getProxyPort(), getProxyUsername(),
-						getProxyPassword());
+				proxy = WebClientUtil.getProxy(getProxyHostname(), getProxyPort(), getProxyUsername(), getProxyPassword());
 			}
 			getWizard().getContainer().run(true, false, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {

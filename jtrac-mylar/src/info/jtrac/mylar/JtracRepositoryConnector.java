@@ -17,7 +17,6 @@
 package info.jtrac.mylar;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -27,8 +26,10 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 
 /**
@@ -40,6 +41,8 @@ public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 	public static final String REPO_TYPE = "jtrac";
 	
 	private JtracTaskRepositoryListener taskRepositoryListener;
+	private JtracTaskDataHandler taskDataHandler = new JtracTaskDataHandler(this);
+	private JtracAttachmentHandler attachmentHandler = new JtracAttachmentHandler(this);
 	
 	@Override
 	public boolean canCreateNewTask(TaskRepository repository) {
@@ -53,14 +56,23 @@ public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public AbstractRepositoryTask createTaskFromExistingKey(TaskRepository repository, String id) throws CoreException {
-		// TODO Auto-generated method stub
-		return null;
+		String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), id);
+		JtracRepositoryTask task;
+		ITask existingTask = taskList.getTask(handle);
+		if (existingTask instanceof JtracRepositoryTask) {
+			task = (JtracRepositoryTask) existingTask;
+		} else {
+			RepositoryTaskData taskData = taskDataHandler.getTaskData(repository, id);
+			task = new JtracRepositoryTask(handle, taskData.getLabel(), true);
+			task.setTaskData(taskData);
+			taskList.addTask(task);
+		}
+		return task;
 	}
 
 	@Override
 	public IAttachmentHandler getAttachmentHandler() {
-		// TODO Auto-generated method stub
-		return null;
+		return attachmentHandler;
 	}
 
 	@Override
@@ -81,13 +93,12 @@ public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public List<String> getSupportedVersions() {
-		return Collections.singletonList("2.0");
+		return null;
 	}
 
 	@Override
 	public ITaskDataHandler getTaskDataHandler() {
-		// TODO Auto-generated method stub
-		return null;
+		return taskDataHandler;
 	}
 
 	@Override

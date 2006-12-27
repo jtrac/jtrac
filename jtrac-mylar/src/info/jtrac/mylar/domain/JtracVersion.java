@@ -13,6 +13,9 @@ public class JtracVersion {
 		Document d = XmlUtils.parse(xml);
 		number = d.getRootElement().attributeValue("number");
 		timestamp = d.getRootElement().attributeValue("timestamp");
+		if (number == null) {
+			throw new RuntimeException("Unexpected XML response from server");
+		}
 	}
 	
 	//==========================================================================
