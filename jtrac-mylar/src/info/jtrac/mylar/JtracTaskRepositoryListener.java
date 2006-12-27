@@ -50,6 +50,13 @@ public class JtracTaskRepositoryListener implements ITaskRepositoryListener {
 		
 	}
 	
+	//==========================================================================
+	
+	public JtracClient getClient(TaskRepository repo) {
+		// TODO caching
+		return new JtracClient(repo.getUrl(), repo.getUserName(), repo.getPassword(), repo.getProxy());
+	}
+	
 	public void readConfig() {
 		
 	}

@@ -16,12 +16,15 @@
 
 package info.jtrac.mylar;
 
+import info.jtrac.mylar.util.ExceptionUtils;
+
 import java.io.File;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -39,6 +42,7 @@ public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 	
 	public static final String UI_LABEL = "JTrac (supports version 2.1 and later)";
 	public static final String REPO_TYPE = "jtrac";
+	private static final String URI_APP_ITEM = "/app/item/";
 	
 	private JtracTaskRepositoryListener taskRepositoryListener;
 	private JtracTaskDataHandler taskDataHandler = new JtracTaskDataHandler(this);
@@ -86,9 +90,12 @@ public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public String getRepositoryUrlFromTaskUrl(String taskFullUrl) {
-		// TODO Auto-generated method stub
-		return null;
+	public String getRepositoryUrlFromTaskUrl(String url) {
+		if (url == null) {
+			return null;
+		}
+		int index = url.lastIndexOf(URI_APP_ITEM);
+		return index == -1 ? null : url.substring(0, index);
 	}
 
 	@Override
@@ -102,22 +109,28 @@ public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public String getTaskIdFromTaskUrl(String taskFullUrl) {
-		// TODO Auto-generated method stub
-		return null;
+	public String getTaskIdFromTaskUrl(String url) {
+		if (url == null) {
+			return null;
+		}
+		int index = url.lastIndexOf(URI_APP_ITEM);
+		return index == -1 ? null : url.substring(index + URI_APP_ITEM.length());
 	}
 
 	@Override
 	public String getTaskWebUrl(String repositoryUrl, String taskId) {
-		// TODO Auto-generated method stub
-		return null;
+		return repositoryUrl + URI_APP_ITEM + taskId;
 	}
 
 	@Override
-	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
-			QueryHitCollector resultCollector) {
-		// TODO Auto-generated method stub
-		return null;
+	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor, QueryHitCollector resultCollector) {
+		// JtracClient client = taskRepositoryListener.getClient(repository);
+		try {
+			resultCollector.accept(new JtracQueryHit(taskList, query.getRepositoryUrl(), "Test Description", "TEST-123"));
+		} catch (Exception e) {
+			return ExceptionUtils.toStatus(e);
+		}
+		return Status.OK_STATUS;
 	}
 
 	@Override

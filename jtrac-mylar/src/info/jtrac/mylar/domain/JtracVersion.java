@@ -1,18 +1,13 @@
 package info.jtrac.mylar.domain;
 
-import info.jtrac.mylar.util.XmlUtils;
-
-import org.dom4j.Document;
-
 public class JtracVersion {
 	
 	private String number;
 	private String timestamp;
 	
-	public JtracVersion(String xml) {
-		Document d = XmlUtils.parse(xml);
-		number = d.getRootElement().attributeValue("number");
-		timestamp = d.getRootElement().attributeValue("timestamp");
+	public JtracVersion(JtracDocument d) {		
+		number = d.getText("/version/@number");
+		timestamp = d.getText("/version/@timestamp");
 		if (number == null) {
 			throw new RuntimeException("Unexpected XML response from server");
 		}

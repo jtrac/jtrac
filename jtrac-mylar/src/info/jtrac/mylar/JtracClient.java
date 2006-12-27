@@ -18,6 +18,7 @@ package info.jtrac.mylar;
 
 import info.jtrac.mylar.domain.JtracVersion;
 import info.jtrac.mylar.exception.HttpException;
+import info.jtrac.mylar.util.XmlUtils;
 
 import java.net.HttpURLConnection;
 import java.net.Proxy;
@@ -68,7 +69,7 @@ public class JtracClient {
 	public JtracVersion getJtracVersion() throws Exception {
 		RequestUri uri = new RequestUri("version.get");
 		String xml = doGet(repoUrl + uri);
-		return new JtracVersion(xml);
+		return new JtracVersion(XmlUtils.parseJtrac(xml));
 	}
 	
 

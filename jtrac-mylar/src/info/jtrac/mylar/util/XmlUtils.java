@@ -1,5 +1,7 @@
 package info.jtrac.mylar.util;
 
+import info.jtrac.mylar.domain.JtracDocument;
+
 import java.io.IOException;
 import java.io.StringWriter;
 
@@ -50,6 +52,10 @@ public class XmlUtils {
         } catch (DocumentException de) {
             throw new RuntimeException(de);
         }
+    }
+    
+    public static JtracDocument parseJtrac(String xmlString) {
+    	return new JtracDocument(parse(xmlString));
     }
     
     public static Document getNewDocument(String rootElementName) {
