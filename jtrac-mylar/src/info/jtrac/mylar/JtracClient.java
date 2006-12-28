@@ -16,7 +16,9 @@
 
 package info.jtrac.mylar;
 
+import info.jtrac.mylar.domain.Item;
 import info.jtrac.mylar.domain.JtracVersion;
+import info.jtrac.mylar.domain.Success;
 import info.jtrac.mylar.exception.HttpException;
 import info.jtrac.mylar.util.XmlUtils;
 
@@ -27,6 +29,8 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
 
 /**
  * this class has the responsibility of communicating with a JTrac
@@ -59,17 +63,41 @@ public class JtracClient {
 			if (code != HttpURLConnection.HTTP_OK) {
 				throw new HttpException("HTTP Response Code: " + code);
 			}
-			response = new String(get.getResponseBody());			
+			response = get.getResponseBodyAsString();			
 		} finally {
 			get.releaseConnection();
 		}
 		return response;
 	} 
 	
+	private String doPost(String url, String message) throws Exception {
+		PostMethod post = new PostMethod(url);
+		post.setRequestEntity(new StringRequestEntity(message, "text/xml", "UTF-8"));
+		String response = null;
+		int code;
+		try {
+			code = httpClient.executeMethod(post);
+			if (code != HttpURLConnection.HTTP_OK) {
+				throw new HttpException("HTTP Response Code: " + code);
+			}
+			response = post.getResponseBodyAsString();
+		} finally {
+			post.releaseConnection();
+		}
+		return response;
+	} 	
+	
 	public JtracVersion getJtracVersion() throws Exception {
 		RequestUri uri = new RequestUri("version.get");
 		String xml = doGet(repoUrl + uri);
 		return new JtracVersion(XmlUtils.parseJtrac(xml));
+	}
+	
+	public String putItem(Item item) throws Exception {
+		RequestUri uri = new RequestUri("item.put");
+		String xml = doPost(repoUrl + uri, item.getAsXml());
+		Success success = new Success(XmlUtils.parse(xml));
+		return success.getValue("refId");
 	}
 	
 

@@ -1,5 +1,10 @@
 package info.jtrac.mylar.domain;
 
+import info.jtrac.mylar.util.XmlUtils;
+
+import org.dom4j.Document;
+import org.dom4j.Element;
+
 public class Item {
 	
 	private String refId;
@@ -8,12 +13,31 @@ public class Item {
 	private String loggedBy;
 	private String assignedTo;
 	
+	public Item() {
+		
+	}
+	
 	public Item(JtracDocument d) {
 		refId = d.getText("/item/@refId");
 		summary = d.getText("/item/summary");
 		detail = d.getText("/item/detail");
 		loggedBy = d.getText("/item/loggedBy");
 		assignedTo = d.getText("/item/assignedTo");
+	}
+	
+	public String getAsXml() {
+        Document d = XmlUtils.getNewDocument("item");
+        Element root = d.getRootElement();
+        if (refId != null) { // may be new item
+        	root.addAttribute("refId", refId);
+        }
+        if (summary != null) {
+            root.addElement("summary").addText(summary);
+        }
+        if (detail != null) {
+            root.addElement("detail").addText(detail);
+        }
+        return d.asXML();		
 	}
 	
 	//==========================================================================
