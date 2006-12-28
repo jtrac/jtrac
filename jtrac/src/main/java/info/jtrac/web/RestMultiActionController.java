@@ -20,6 +20,8 @@ import info.jtrac.domain.Item;
 import info.jtrac.exception.InvalidRefIdException;
 import info.jtrac.util.ItemUtils;
 import info.jtrac.util.XmlUtils;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.dom4j.Document;
@@ -62,6 +64,17 @@ public class RestMultiActionController extends AbstractMultiActionController {
         });
     }
     
+    private String getContent(HttpServletRequest request) throws Exception {
+        InputStream is = request.getInputStream();        
+        int ch;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        while ((ch = is.read()) != -1) {
+            baos.write((byte) ch);
+        }
+        return new String(baos.toByteArray());
+    }
+    
+    
     public void versionGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Document d = XmlUtils.getNewDocument("version");
         Element root = d.getRootElement();
@@ -86,7 +99,17 @@ public class RestMultiActionController extends AbstractMultiActionController {
         if (item != null) {
             ItemUtils.getAsXml(item).write(response.getWriter());
         }              
-    } 
+    }
+    
+    public void itemPut(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.debug(getContent(request));
+        Document d = XmlUtils.getNewDocument("success");
+        Element root = d.getRootElement();
+        root.addElement("refId").addText("FOOBAR-123");
+        applyCacheSeconds(response, 0, true);
+        response.setContentType("text/xml");      
+        d.write(response.getWriter());       
+    }
     
     
 }

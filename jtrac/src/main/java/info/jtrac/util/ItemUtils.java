@@ -233,9 +233,13 @@ public final class ItemUtils {
         if (item.getDetail() != null) {
             root.addElement("detail").addText(item.getDetail());
         }
-        root.addElement("loggedBy").addText(item.getLoggedBy().getName());
+        Element loggedBy = root.addElement("loggedBy");
+        loggedBy.addAttribute("userId", item.getLoggedBy().getId() + "");
+        loggedBy.addText(item.getLoggedBy().getName());
         if (item.getAssignedTo() != null) {
-            root.addElement("assignedTo").addText(item.getAssignedTo().getName());
+            Element assignedTo = root.addElement("assignedTo");
+            assignedTo.addAttribute("userId", item.getAssignedTo().getId() + "");
+            assignedTo.addText(item.getAssignedTo().getName());
         }
         return d;
     }
