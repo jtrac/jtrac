@@ -22,8 +22,7 @@ public class JtracTaskDataHandler implements ITaskDataHandler {
 	}
 	
 	public AbstractAttributeFactory getAttributeFactory() {
-		// TODO Auto-generated method stub
-		return null;
+		return attributeFactory;
 	}
 
 	public Set<AbstractRepositoryTask> getChangedSinceLastSync(

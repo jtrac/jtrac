@@ -54,7 +54,7 @@ public class JtracRepositoryConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public IWizard getNewTaskWizard(TaskRepository taskRepository) {
-		return new JtracNewTaskWizard();
+		return new JtracNewTaskWizard(taskRepository);
 	}
 
 	@Override

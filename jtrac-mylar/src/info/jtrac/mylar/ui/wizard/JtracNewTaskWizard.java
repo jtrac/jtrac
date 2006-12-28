@@ -16,16 +16,30 @@
 
 package info.jtrac.mylar.ui.wizard;
 
+import info.jtrac.mylar.JtracPlugin;
+import info.jtrac.mylar.JtracRepositoryConnector;
+import info.jtrac.mylar.JtracTaskDataHandler;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylar.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 
 public class JtracNewTaskWizard extends Wizard implements INewWizard {
 
+	private TaskRepository taskRepository;
 	private JtracNewTaskPage newTaskPage;
 		
-	public JtracNewTaskWizard() {		
+	public JtracNewTaskWizard(TaskRepository taskRepository) {
+		this.taskRepository = taskRepository;
 		setWindowTitle("JTrac: New Task Wizard");
 	}
 	
@@ -34,7 +48,7 @@ public class JtracNewTaskWizard extends Wizard implements INewWizard {
 	
 	@Override
 	public void addPages() {
-		newTaskPage = new JtracNewTaskPage();
+		newTaskPage = new JtracNewTaskPage(taskRepository);
 		newTaskPage.setWizard(this);
 		addPage(newTaskPage);
 	}	
@@ -46,6 +60,14 @@ public class JtracNewTaskWizard extends Wizard implements INewWizard {
 	
 	@Override
 	public boolean performFinish() {
+		JtracRepositoryConnector connector = JtracPlugin.getDefault().getConnector();
+		JtracTaskDataHandler taskDataHandler = (JtracTaskDataHandler) connector.getTaskDataHandler();
+		RepositoryTaskData repositoryTaskData = new RepositoryTaskData(taskDataHandler.getAttributeFactory(), 
+				JtracRepositoryConnector.REPO_TYPE, taskRepository.getUrl(), 
+				TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
+		NewTaskEditorInput editorInput = new NewTaskEditorInput(taskRepository, repositoryTaskData);
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		TasksUiUtil.openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 		return true;
 	}
 
