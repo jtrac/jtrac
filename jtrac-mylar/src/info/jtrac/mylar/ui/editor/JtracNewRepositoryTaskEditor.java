@@ -16,9 +16,13 @@
 
 package info.jtrac.mylar.ui.editor;
 
+import info.jtrac.mylar.JtracPlugin;
+import info.jtrac.mylar.JtracRepositoryConnector;
 import info.jtrac.mylar.JtracRepositoryQuery;
+import info.jtrac.mylar.JtracRepositoryTask;
 import info.jtrac.mylar.ui.JtracUiPlugin;
 
+import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
 import org.eclipse.mylar.tasks.ui.search.SearchHitCollector;
@@ -43,5 +47,24 @@ public class JtracNewRepositoryTaskEditor extends AbstractNewRepositoryTaskEdito
 	protected String getPluginId() {
 		return JtracUiPlugin.PLUGIN_ID;
 	}
+	
+	@Override
+	public void submitToRepository() {
+		if (!prepareSubmit()) {
+			return;
+		}		
+		JtracRepositoryConnector connector = JtracPlugin.getDefault().getConnector();
+		updateTask();
+		AbstractTaskContainer category = getCategory();
+		String refId = "TEST-101";
+		JtracRepositoryTask newTask = new JtracRepositoryTask(connector.getTaskWebUrl(repository.getUrl(), refId),
+				taskData.getSummary(), true);
+		if (category != null) {
+			TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask, category);
+		} else {
+			TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask);
+		}		
+	}
+	
 
 }

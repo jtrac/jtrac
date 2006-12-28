@@ -33,11 +33,20 @@ import org.eclipse.ui.IEditorPart;
 public class JtracTaskEditorFactory implements ITaskEditorFactory {
 
 	public boolean canCreateEditorFor(ITask task) {
-		return true;
+		return task instanceof JtracRepositoryTask;
 	}
 
 	public boolean canCreateEditorFor(IEditorInput input) {
-		return true;
+		if (input instanceof RepositoryTaskEditorInput) {
+			RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) input;
+			return existingInput.getTaskData() != null 
+				&& JtracRepositoryConnector.REPO_TYPE.equals(existingInput.getRepository().getKind());
+		} else if (input instanceof NewTaskEditorInput) {
+			NewTaskEditorInput newInput = (NewTaskEditorInput) input;
+			return newInput.getTaskData() != null
+				&& JtracRepositoryConnector.REPO_TYPE.equals(newInput.getRepository().getKind());
+		}
+		return false;
 	}
 
 	public IEditorPart createEditor(TaskEditor parentEditor, IEditorInput editorInput) {
@@ -45,6 +54,7 @@ public class JtracTaskEditorFactory implements ITaskEditorFactory {
 			return new JtracRepositoryTaskEditor(parentEditor);
 		}
 		if (editorInput instanceof NewTaskEditorInput) {
+			// for item that does not yet exist on the server
 			return new JtracNewRepositoryTaskEditor(parentEditor);
 		}		
 		return null;
@@ -52,8 +62,10 @@ public class JtracTaskEditorFactory implements ITaskEditorFactory {
 
 	public IEditorInput createEditorInput(ITask task) {
 		JtracRepositoryTask repositoryTask = (JtracRepositoryTask) task;
-		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(JtracRepositoryConnector.REPO_TYPE, repositoryTask.getRepositoryUrl());		
-		return new RepositoryTaskEditorInput(repository, repositoryTask.getHandleIdentifier(), repositoryTask.getUrl());
+		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+				JtracRepositoryConnector.REPO_TYPE, repositoryTask.getRepositoryUrl());		
+		return new RepositoryTaskEditorInput(repository, 
+				repositoryTask.getHandleIdentifier(), repositoryTask.getUrl());
 	}
 
 	public String getTitle() {

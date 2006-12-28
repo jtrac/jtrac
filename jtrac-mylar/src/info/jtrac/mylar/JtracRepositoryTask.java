@@ -20,6 +20,8 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 
 public class JtracRepositoryTask extends AbstractRepositoryTask {
 
+	private static final String URI_APP_ITEM = "/app/item/";
+	
 	public JtracRepositoryTask(String handle, String label, boolean newTask) {
 		super(handle, label, newTask);
 	}
@@ -28,5 +30,30 @@ public class JtracRepositoryTask extends AbstractRepositoryTask {
 	public String getRepositoryKind() {
 		return JtracRepositoryConnector.REPO_TYPE;
 	}
-
+	
+	@Override
+	public String getIdLabel() {
+		return getRefIdFromHandle(handleIdentifier);
+	}
+	
+	public static String getHandleForRefId(String repositoryUrl, String refId) {
+		return repositoryUrl + URI_APP_ITEM + refId;
+	}
+	
+	public static String getRefIdFromHandle(String handle) {
+		if (handle == null) {
+			return null;
+		}
+		int index = handle.lastIndexOf(URI_APP_ITEM);
+		return index == -1 ? null : handle.substring(index + URI_APP_ITEM.length());		
+	}
+	
+	public static String getRepositoryUrlFromHandle(String handle) {
+		if (handle == null) {
+			return null;
+		}
+		int index = handle.lastIndexOf(URI_APP_ITEM);
+		return index == -1 ? null : handle.substring(0, index);		
+	}
+	
 }

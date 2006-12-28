@@ -42,8 +42,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 	
 	public static final String UI_LABEL = "JTrac (supports version 2.1 and later)";
-	public static final String REPO_TYPE = "jtrac";
-	private static final String URI_APP_ITEM = "/app/item/";
+	public static final String REPO_TYPE = "jtrac";	
 	
 	private JtracTaskRepositoryListener taskRepositoryListener;
 	private JtracTaskDataHandler taskDataHandler = new JtracTaskDataHandler(this);
@@ -60,14 +59,14 @@ public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public AbstractRepositoryTask createTaskFromExistingKey(TaskRepository repository, String id) throws CoreException {
-		String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), id);
+	public AbstractRepositoryTask createTaskFromExistingKey(TaskRepository repository, String refId) throws CoreException {
+		String handle = getTaskWebUrl(repository.getUrl(), refId);
 		JtracRepositoryTask task;
 		ITask existingTask = taskList.getTask(handle);
 		if (existingTask instanceof JtracRepositoryTask) {
 			task = (JtracRepositoryTask) existingTask;
 		} else {
-			RepositoryTaskData taskData = taskDataHandler.getTaskData(repository, id);
+			RepositoryTaskData taskData = taskDataHandler.getTaskData(repository, refId);
 			task = new JtracRepositoryTask(handle, taskData.getLabel(), true);
 			task.setTaskData(taskData);
 			taskList.addTask(task);
@@ -92,11 +91,7 @@ public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getRepositoryUrlFromTaskUrl(String url) {
-		if (url == null) {
-			return null;
-		}
-		int index = url.lastIndexOf(URI_APP_ITEM);
-		return index == -1 ? null : url.substring(0, index);
+		return JtracRepositoryTask.getRepositoryUrlFromHandle(url);
 	}
 
 	@Override
@@ -111,16 +106,12 @@ public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getTaskIdFromTaskUrl(String url) {
-		if (url == null) {
-			return null;
-		}
-		int index = url.lastIndexOf(URI_APP_ITEM);
-		return index == -1 ? null : url.substring(index + URI_APP_ITEM.length());
+		return JtracRepositoryTask.getRefIdFromHandle(url);
 	}
 
 	@Override
-	public String getTaskWebUrl(String repositoryUrl, String taskId) {
-		return repositoryUrl + URI_APP_ITEM + taskId;
+	public String getTaskWebUrl(String repositoryUrl, String refId) {
+		return JtracRepositoryTask.getHandleForRefId(repositoryUrl, refId);
 	}
 
 	@Override
@@ -162,5 +153,6 @@ public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 		}
 		return taskRepositoryListener;
 	}
+	
 
 }
