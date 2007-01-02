@@ -718,6 +718,12 @@ wrapper.exe -r etc/wrapper.conf
                 [jtrac.home] folder would contain the application log called "jtrac.log" as well.
             </para>
         </sect1>
+        <sect1 id="installation-upgrading">
+            <title>Upgrading</title>
+            <para>
+                Please refer to the "<link linkend="upgrading">upgrading</link>" section of this document.
+            </para>
+        </sect1>
     </chapter>      
     
     <chapter id="faq">
