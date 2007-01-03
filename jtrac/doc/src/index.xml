@@ -499,14 +499,16 @@ java -version
                         <para>
                             First, download the latest release from  
                             <ulink url="http://sourceforge.net/project/showfiles.php?group_id=162983&amp;package_id=184104">
-                            the JTrac downloads area</ulink>.                            
+                            the JTrac downloads area</ulink>                           
                         </para>
                     </listitem>
                     <listitem>
-                        <para>Extract the zip file into a directory of your choice.</para>
+                        <para>Extract the zip file into a directory of your choice</para>
                     </listitem>
                     <listitem>
-                        <para>Double-click on "start.bat" to start JTrac.</para>
+                        <para>
+                            Double-click on "start.bat" to start JTrac.  (If you are not on Windows, see below.) 
+                        </para>
                     </listitem>
                     <listitem>
                         <para>Point your web-browser to <ulink url="http://localhost/jtrac"/></para>
@@ -515,14 +517,17 @@ java -version
                         <para>Sign on with the user name "admin" and password "admin"</para>
                     </listitem>
                     <listitem>
-                        <para>Start using JTrac.</para>
+                        <para>Start using JTrac</para>
                     </listitem>                                 
                 </itemizedlist>                 
             </para>
             <para>
-                Note that you can use the "stop.bat" script to stop the application.
-                (If you are using Linux we are quite sure that you would be able to port these scripts to what you need
-                and kindly don't forget to contribute the scripts to the JTrac project with your feedback ;)
+                Note that you can use the "stop.bat" script to stop the application.  If you are not on Windows, you may want 
+                to rename the start and stop *.bat files to e.g. *.sh for Linux (reported to be not required for Ubuntu).  
+                The commands within the batch files will work unchanged as long as Java has been installed correctly i.e. "java" 
+                is in the PATH and it is the expected 1.5 or greater version.  You may need to do things like give executable 
+                permissions to the batch files on Linux, e.g. "chmod +x *.bat".  And also unless you have "root" permissions, 
+                you may have problems starting services on port 80 etc.
             </para>
             <para>
                 JTrac by default will use a "data" directory that it will automatically create
