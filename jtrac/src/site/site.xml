@@ -15,12 +15,13 @@
             <item name="Author" href="http://ptrthomas.wordpress.com"/>
         </links>
         <menu name="JTrac">
-            <item name="Download" href="http://sourceforge.net/project/showfiles.php?group_id=162983&amp;package_id=184104"/>            
             <item name="Features" href="doc/html/features.html"/>            
             <item name="Installation" href="doc/html/installation.html"/>
-            <item name="FAQ" href="doc/html/faq.html"/>
+            <item name="Upgrading" href="doc/html/upgrading.html"/>
+            <item name="F A Q" href="doc/html/faq.html"/>
             <item name="Roadmap" href="doc/html/roadmap.html"/>
-            <item name="Developer Guide" href="doc/html/dev-guide.html"/>            
+            <item name="Developer Guide" href="doc/html/dev-guide.html"/>
+            <item name="Download" href="http://sourceforge.net/project/showfiles.php?group_id=162983&amp;package_id=184104"/>            
         </menu>
         <menu name="Documentation">
             <item name="HTML" href="doc/html/index.html"/>
@@ -34,6 +35,7 @@
             <item name="Mailing List" href="http://sourceforge.net/mailarchive/forum.php?forum_id=50111"/>
             <item name="Tracker" href="http://sourceforge.net/tracker/?group_id=162983"/>
             <item name="Source Code" href="source-repository.html"/>
+            <item name="Fisheye" href="http://fisheye3.cenqua.com/browse/j-trac"/>
             <item name="Latest Build" href="doc/html/interim-builds.html"/>            
             <item name="Developers" href="team-list.html"/>
         </menu>
