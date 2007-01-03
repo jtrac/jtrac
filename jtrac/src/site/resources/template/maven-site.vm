@@ -315,10 +315,13 @@
        #mainMenu( $decoration.body.menus )
        <br/>
        <a href="http://www.springframework.org/" title="Spring Framework">
-           <img src="http://www.springframework.org/buttons/spring_80x15.png" style="margin: 0px 0px 15px 16px;"/>
+           <img src="http://www.springframework.org/buttons/spring_80x15.png" style="margin:0px 0px 15px 16px;"/>
        </a>       
        <a href="http://www.netbeans.org/downloads/index.html" title="Created with NetBeans!">
-           <img src="http://www.netbeans.org/images/created-with-nb-1.gif" style="margin: 0px 0px 15px 16px;">
+           <img src="http://www.netbeans.org/images/created-with-nb-1.gif" style="margin:0px 0px 15px 16px; border:1;">
+       </a>
+       <a href="http://www.cenqua.com/fisheye" title="Perspective by Fisheye">
+           <img src="http://www.cenqua.com/images/fisheyed2.gif" style="margin:0px 0px 15px 16px;"/>
        </a>       
        #publishDate( "navigation-bottom" $decoration.publishDate $decoration.version )
       </div>
