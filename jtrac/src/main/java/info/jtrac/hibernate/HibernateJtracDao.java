@@ -210,6 +210,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
                 Criteria criteria = session.createCriteria(UserSpaceRole.class);
                 criteria.setFetchMode("user", FetchMode.JOIN);
                 criteria.add(Restrictions.eq("space.id", spaceId));
+                criteria.createCriteria("user").addOrder(Order.asc("name"));
                 return criteria.list();
             }
         });        
