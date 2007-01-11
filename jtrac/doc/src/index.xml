@@ -537,6 +537,28 @@ java -version
                 if for example JTrac does not start because a web-server (like Apache or IIS) is already running on port 80.
             </para>           
         </sect1>
+        <sect1 id="installation-settings">
+            <title>Settings</title>
+            <para>
+                For e-mail notifications to work, an SMTP server needs to be configured in JTrac.
+                Users who have the ADMIN role will be able to access the JTrac configuration settings
+                screen from a link on the "OPTIONS" screen.  Note that you will need to provide values
+                for the "mail.from" and the "jtrac.url.base" properties also, for things like the hyperlinks
+                within e-mail to work properly.  JTrac also supports mail servers that require authentication
+                or secure connections using SSL.  You can refer the descriptions of the available configuration 
+                property settings available from the settings screen as shown below.             
+            </para>
+            <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="../images/settings.png"/>
+                    </imageobject>
+                    <caption>
+                        <para>The JTrac settings screen where you can configure an e-mail / SMTP server</para>
+                    </caption>
+                </mediaobject>
+            </para>            
+        </sect1>        
         <sect1 id="installation-war">
             <title>Using only the WAR file</title>
             <para>
@@ -722,7 +744,7 @@ wrapper.exe -r etc/wrapper.conf
                 "wrapper.log" file in the "jtrac/logs" folder for troubleshooting.  Note that the 
                 [jtrac.home] folder would contain the application log called "jtrac.log" as well.
             </para>
-        </sect1>
+        </sect1>        
         <sect1 id="installation-upgrading">
             <title>Upgrading</title>
             <para>
