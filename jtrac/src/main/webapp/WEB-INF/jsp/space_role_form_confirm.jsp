@@ -1,6 +1,11 @@
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 
-<div class="heading"><fmt:message key='space_role_form_confirm.confirm'/> : '${oldRoleKey}' to '${roleKey}'</div>
+<div class="heading">
+    <fmt:message key='space_role_form_confirm.confirm'>
+        <fmt:param value="${oldRoleKey}"/>
+        <fmt:param value="${roleKey}"/>
+    </fmt:message>
+</div>
 
 <form method="post" action="<c:url value='/flow'/>">
 
