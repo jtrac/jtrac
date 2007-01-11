@@ -203,13 +203,14 @@
                         <imagedata align="center" fileref="../images/percent-complete-roles.png"/>
                     </imageobject>
                     <caption>
-                        <para>Making a custom field editable even after an item is newly created</para>
+                        <para>Making a custom field editable when updating an item (after new item has been created)</para>
                     </caption>
                 </mediaobject>
             </para>
             <para>
                 This results in the "% Complete" field being available for updating whenever anyone views an item
-                with a status of "Open".
+                with a status of "Open".  Notice also how the "% Complete" field is added as a column to the "History"
+                section so that the complete history of changes to this custom field can be viewed.
             </para>
             <para>
                 <mediaobject>
