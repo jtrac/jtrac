@@ -68,6 +68,13 @@ import org.dom4j.Element;
  * 4) the order in which the fields are displayed
  * on the data entry screens and the query result screens etc.
  *
+ * There is one downside to this approach and that is there is a limit
+ * to the nunmbers of custom fields available.  The existing limits are
+ * - Drop Down: 10
+ * - Free Text: 5
+ * - Numeric: 3
+ * - Date/Time: 3 
+ *
  * Metadata can be inherited, and this allows for "reuse" TODO
  */
 public class Metadata implements Serializable {    
@@ -255,7 +262,14 @@ public class Metadata implements Serializable {
     public Map<String, String> getAvailableFieldTypes() {
         Map<String, String> fieldTypes = new LinkedHashMap<String, String>();
         for (Field.Name fieldName : getUnusedFieldNames()) {
-            fieldTypes.put(fieldName.getType() + "", fieldName.getDescription());
+            String type = fieldTypes.get(fieldName.getType() + "");
+            if (type == null) {
+                fieldTypes.put(fieldName.getType() + "", "1");
+            } else {
+                int count = Integer.parseInt(type);
+                count++;
+                fieldTypes.put(fieldName.getType() + "", count + "");
+            }
         }
         return fieldTypes;        
     }

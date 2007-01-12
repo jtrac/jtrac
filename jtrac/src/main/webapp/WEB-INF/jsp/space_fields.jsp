@@ -55,7 +55,12 @@ function setFieldName(fieldName) {
 
 <select name="fieldType">
     <c:forEach items="${space.metadata.availableFieldTypes}" var="entry">
-        <option value="${entry.key}">${entry.value}</option>
+        <option value="${entry.key}">
+            <fmt:message key='space_fields.type_${entry.key}'/> -
+            <fmt:message key='space_fields.typeRemaining'>
+                <fmt:param value='${entry.value}'/>
+            </fmt:message>
+        </option>
     </c:forEach>
 </select>
 <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
