@@ -115,7 +115,7 @@
             <title>Custom Fields</title>
             <para>                    
                 JTrac can be used to effectively track various kinds of things such as Bugs, Action Items and Tasks.
-                You can easily add the following types of custom fields to a tracker project:
+                You can easily add the following types of custom fields to a tracker project (Space):
                 <itemizedlist>
                     <listitem>
                         <para>Drop Down List</para>
@@ -140,7 +140,12 @@
                         <para>Setting up custom fields for a project</para>
                     </caption>
                 </mediaobject>
-            </para>                
+            </para>
+            <para>
+                There is a limit to how many custom fields of each type that you can configure for a Space.
+                These limits have been set after careful consideration and would very rarely fail to suffice. 
+                They are as follows: Drop Down - 10, Free Text - 5, Numeric - 3, Date/Time - 3.                
+            </para>
         </sect1>
         <sect1 id="features-customworkflow">
             <title>Custom Workflow</title>
