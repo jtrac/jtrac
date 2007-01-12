@@ -124,11 +124,16 @@ public class ItemViewFormAction extends AbstractFormAction {
     @Override
     public Object createFormObject(RequestContext context) {
         Item item = null;
-        String itemId = ValidationUtils.getParameter(context, "itemId");
-        if (itemId != null && !itemId.equals("0")) {            
-            item = jtrac.loadItem(Long.parseLong(itemId));            
+        String refId = ValidationUtils.getParameter(context, "refId");
+        if (refId != null) {
+            item = jtrac.loadItemByRefId(refId);
         } else {
-            item = (Item) context.getRequestScope().get("item");
+            String itemId = ValidationUtils.getParameter(context, "itemId");        
+            if (itemId != null && !itemId.equals("0")) {            
+                item = jtrac.loadItem(Long.parseLong(itemId));            
+            } else {
+                item = (Item) context.getRequestScope().get("item");
+            }
         }
         // not flow scope because of weird Hibernate Lazy loading issues
         // hidden field "itemId" added to item_view_form.jsp        

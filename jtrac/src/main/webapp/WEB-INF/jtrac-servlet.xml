@@ -61,19 +61,20 @@
                 <property name="alwaysUseFullPath" value="true"/>
                 <property name="mappings">
                     <props>
-                        <prop key="/auth/login.htm">loginHandler</prop>
-                        <prop key="/auth/logout.htm">logoutHandler</prop>
-                        <prop key="/app/options.htm">optionsHandler</prop>
-                        <prop key="/app/svn_form.htm">svnFormHandler</prop>
-                        <prop key="/app">dashboardHandler</prop>                        
-                        <prop key="/app/reindex.htm">reindexHandler</prop>
+                        <prop key="/app">dashboardHandler</prop>
+                        <prop key="/app/item/*">itemViewHandler</prop>
+                        <prop key="/app/attachments/*">attachmentViewHandler</prop>                        
+                        <prop key="/app/item_list_excel.htm">itemListExcelHandler</prop>
                         <prop key="/app/user_list.htm">userListHandler</prop>
                         <prop key="/app/space_list.htm">spaceListHandler</prop>
                         <prop key="/app/config_list.htm">configListHandler</prop>
+                        <prop key="/app/options.htm">optionsHandler</prop>
+                        <prop key="/app/svn_form.htm">svnFormHandler</prop>                       
+                        <prop key="/app/reindex.htm">reindexHandler</prop>
                         <prop key="/app/svn_view.htm">svnViewHandler</prop>
-                        <prop key="/app/item_list_excel.htm">itemListExcelHandler</prop>
-                        <prop key="/app/attachments/*">attachmentViewHandler</prop>
                         <prop key="/app/chart/svn_commits_per_committer.jpg">svnCommitsPerCommitterChartHandler</prop>
+                        <prop key="/auth/login.htm">loginHandler</prop>
+                        <prop key="/auth/logout.htm">logoutHandler</prop>                        
                     </props>
                 </property>
             </bean>        

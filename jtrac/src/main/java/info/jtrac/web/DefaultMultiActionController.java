@@ -180,6 +180,16 @@ public class DefaultMultiActionController extends AbstractMultiActionController 
         MessageSource messageSource = RequestContextUtils.getWebApplicationContext(request);        
         eu.exportToExcel(messageSource, locale).write(out);
         out.flush();       
-    }       
+    }   
+    
+    public ModelAndView itemViewHandler(HttpServletRequest request, HttpServletResponse response) {
+        String refId = null;
+        String pathInfo = request.getPathInfo();
+        int index = pathInfo.lastIndexOf('/');
+        if (index != -1) {
+            refId = pathInfo.substring(index + 1);
+        }
+        return new ModelAndView("redirect:/flow/item_view?refId=" + refId);
+    } 
     
 }
