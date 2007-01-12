@@ -17,11 +17,14 @@
 package info.jtrac.web;
 
 import info.jtrac.domain.Item;
+import info.jtrac.domain.Space;
+import info.jtrac.domain.User;
 import info.jtrac.exception.InvalidRefIdException;
 import info.jtrac.util.ItemUtils;
 import info.jtrac.util.XmlUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.dom4j.Document;
@@ -64,6 +67,12 @@ public class RestMultiActionController extends AbstractMultiActionController {
         });
     }
     
+    private void writeXml(Document document, HttpServletResponse response) throws Exception {
+        applyCacheSeconds(response, 0, true);
+        response.setContentType("text/xml");
+        document.write(response.getWriter());
+    }
+    
     private String getContent(HttpServletRequest request) throws Exception {
         InputStream is = request.getInputStream();        
         int ch;
@@ -73,16 +82,13 @@ public class RestMultiActionController extends AbstractMultiActionController {
         }
         return new String(baos.toByteArray());
     }
-    
-    
+        
     public void versionGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Document d = XmlUtils.getNewDocument("version");
         Element root = d.getRootElement();
         root.addAttribute("number", jtrac.getReleaseVersion());
         root.addAttribute("timestamp", jtrac.getReleaseTimestamp());
-        applyCacheSeconds(response, 0, true);
-        response.setContentType("text/xml");
-        d.write(response.getWriter());
+        writeXml(d, response);
     }
     
     public void itemGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -94,11 +100,11 @@ public class RestMultiActionController extends AbstractMultiActionController {
             // TODO
         }
         // TODO if item == null
-        applyCacheSeconds(response, 0, true);
-        response.setContentType("text/xml");      
-        if (item != null) {
-            ItemUtils.getAsXml(item).write(response.getWriter());
-        }              
+        if (item == null) {
+            return;
+        }
+        Document d = ItemUtils.getAsXml(item);
+        writeXml(d, response);
     }
     
     public void itemPut(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -106,9 +112,20 @@ public class RestMultiActionController extends AbstractMultiActionController {
         Document d = XmlUtils.getNewDocument("success");
         Element root = d.getRootElement();
         root.addElement("refId").addText("FOOBAR-123");
-        applyCacheSeconds(response, 0, true);
-        response.setContentType("text/xml");      
-        d.write(response.getWriter());       
+        writeXml(d, response);      
+    }
+    
+    public void spaceUsersGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String prefixCode = request.getParameter("prefixCode");
+        Space space = jtrac.loadSpace(prefixCode);
+        Document d = XmlUtils.getNewDocument("users");
+        Element root = d.getRootElement();
+        root.addAttribute("prefixCode", prefixCode);
+        List<User> users = jtrac.findUsersForSpace(space.getId());
+        for(User user : users) {
+            root.addElement("user").addAttribute("loginName", user.getLoginName()).addText(user.getName());
+        }
+        writeXml(d, response);
     }
     
     
