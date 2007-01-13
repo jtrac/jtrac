@@ -88,6 +88,16 @@
         <listener-class>org.acegisecurity.ui.session.HttpSessionEventPublisher</listener-class>
     </listener>
     
+    <servlet>
+        <servlet-name>jtrac-app</servlet-name>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+            <param-name>applicationClassName</param-name>
+            <param-value>info.jtrac.wicket.JtracApplication</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>    
+    
     <!-- spring MVC DispatcherServlet (front controller)
     Spring looks for /WEB-INF/<servlet-name>-servlet.xml by default 
     and loads a web application context from it -->
@@ -127,6 +137,11 @@
     <servlet-mapping>
         <servlet-name>jtrac</servlet-name>
         <url-pattern>/flow/*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>jtrac-app</servlet-name>
+        <url-pattern>/wkt/*</url-pattern>
     </servlet-mapping>    
     
     <welcome-file-list>

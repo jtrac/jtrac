@@ -33,6 +33,9 @@
             <!-- <compilerarg value="-Xlint:unchecked"/> -->
         </javac>
         <copy todir="target/classes">
+            <fileset dir="src/main/java" includes="**/*.html"/>
+        </copy>         
+        <copy todir="target/classes">
             <fileset dir="src/main/resources"/>
         </copy>              
     </target>           
