@@ -39,8 +39,14 @@ public class Space implements Serializable {
     private String name;
     private String description;
     private boolean guestAllowed;
-    private SpaceSequence spaceSequence = new SpaceSequence();
-    private Metadata metadata = new Metadata();    
+    private SpaceSequence spaceSequence;
+    private Metadata metadata;
+    
+    public Space() {
+        spaceSequence = new SpaceSequence();
+        spaceSequence.setSpace(this);
+        metadata = new Metadata();
+    }
     
     //=======================================================
     

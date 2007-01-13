@@ -199,9 +199,12 @@
     
     <class name="SpaceSequence" table="space_sequence">
         <id name="id" column="id">
-            <generator class="native"/>
+            <generator class="foreign"> 
+                <param name="property">space</param> 
+            </generator> 
         </id>        
         <property name="nextSeqNum" column="next_seq_num"/>
+        <one-to-one name="space" constrained="true"/>
     </class>
     
     <class name="Metadata" table="metadata">
