@@ -531,12 +531,12 @@ java -version
                 Note that you can use the "stop.bat" script to stop the application.  If you are not on Windows, you may want 
                 to rename the start and stop *.bat files to e.g. *.sh for Linux (reported to be not required for Ubuntu).  
                 The commands within the batch files will work unchanged as long as Java has been installed correctly i.e. "java" 
-                is in the PATH and it is the expected 1.5 or greater version.  You may need to do things like give executable 
-                permissions to the batch files on Linux, e.g. "chmod +x *.bat".  And also unless you have "root" permissions, 
-                you may have problems starting services on port 80 etc.
+                is in the PATH and it is the expected 1.5 or greater version.  You may need to do things like apply executable 
+                permissions to the batch files on Linux, e.g. "chmod +x *.bat".  And also, unless you have "root" permissions, 
+                you may face problems starting services on port 80 etc.
             </para>
             <para>
-                JTrac by default will use a "data" directory that it will automatically create
+                JTrac by default will use a "data" directory that will be automatically created
                 within the root (jtrac) folder.  The data directory will contain the files needed by HSQLDB
                 (the embedded database) as well as hold uploaded attachments.  The "start.bat" file configures the 
                 Jetty server to use port 80 which you can easily change by editing "start.bat".  You may need to do this 
@@ -696,6 +696,10 @@ hibernate.show_sql=false
         </sect1>
         <sect1 id="installation-windowsservice">
             <title>Installing as a Windows Service</title>
+            <para>
+                Note that this approach can reportedly apply to other operating systems.  If you have been able to do
+                this successfully on Linux or Mac, please consider contributing some documentation on this.
+            </para>
             <para>                    
                 If you choose to use the bundled <ulink url="http://jetty.mortbay.org/">Jetty</ulink> web-application 
                 server, you can easily install JTrac as a Windows service so that it can start automatically when 
@@ -710,6 +714,7 @@ hibernate.show_sql=false
                 <ulink url="http://wrapper.tanukisoftware.org/">Java Service Wrapper</ulink> project.  For convenience, 
                 the JTrac distribution contains a "wrapper.conf" file in the "etc" folder that is pre-configured for 
                 the Java Service Wrapper.  But first you have to download the Java Service Wrapper distribution separately.
+                Note that the Java Service Wrapper project supports other operating systems such as Linux or Mac also.
             </para>
             <para>
                 Place some of the files from the Java Service Wrapper distribution into the JTrac folder structure
@@ -813,6 +818,11 @@ wrapper.exe -r etc/wrapper.conf
             JTrac has one of the most "developer-friendly" setups among open-source projects.  It will take you
             only a few minutes to be up and running no matter which java IDE you use.  We actively encourage 
             contributions and with your support JTrac can become better than it is today.
+        </para>
+        <para>
+            Apart from using the <ulink url="http://sourceforge.net/forum/forum.php?forum_id=552477">forums</ulink>
+            you can also consider joining the JTrac 
+            <ulink url="https://lists.sourceforge.net/lists/listinfo/j-trac-users">mailing-list</ulink>.
         </para>       
         <sect1 id="roadmap-hide">
             <title>Field-Level "Hide" Permissions</title>
@@ -936,6 +946,14 @@ wrapper.exe -r etc/wrapper.conf
                 invoked / integrated with other systems.
             </para>
         </sect1>
+        <sect1 id="roadmap-mylar">            
+            <title>Eclipse Mylar integration</title>            
+            <para>
+                <ulink url="http://www.eclipse.org/mylar/">Mylar</ulink> integration in the form of a connector
+                (Eclipse plugin) is currently being implemented.  The remote API mentioned above is also being 
+                developed (REST).
+            </para>
+        </sect1>        
         <sect1 id="roadmap-timetracking">            
             <title>Time Tracking</title>            
             <para>
@@ -999,7 +1017,8 @@ wrapper.exe -r etc/wrapper.conf
                             not exist on startup.  So when trying out the interim builds, this may be all that you really
                             want to do.  If you are using JTrac bundled with Jetty and / or with the embedded HSQLB database, 
                             removing the old database is as simple as deleting the "db" folder in which HSQLDB keeps
-                            the data files.
+                            the data files.  Of course, you don't have to disturb your existing data at all since running a 
+                            fresh instance of JTrac is as easy as extracting the distribution to a new directory.
                         </para>
                     </listitem>                                
                 </itemizedlist>                     
