@@ -14,6 +14,7 @@ public class JtracApplication extends WebApplication {
         return jtrac;
     }
     
+    @Override
     public void init() {
         ServletContext sc = getWicketServlet().getServletContext();
         ApplicationContext ac = WebApplicationContextUtils.getWebApplicationContext(sc);
@@ -21,8 +22,7 @@ public class JtracApplication extends WebApplication {
     }    
     
     public Class getHomePage() {
-        // return HelloWorld.class;
-        return null;
+        return DashboardPage.class;
     }    
     
 }
