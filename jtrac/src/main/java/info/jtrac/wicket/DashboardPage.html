@@ -2,10 +2,18 @@
     <head>
         <title wicket:id="title">Title Here</title>
         <link rel="stylesheet" type="text/css" href="resources/jtrac.css"/>
+        <script type="text/javascript" src="resources/prototype.js"></script>
     </head>
     <body>
         <span wicket:id="border">
-            <span wicket:id="dashboard">Dashboard Here</span>
+            <table border="1">
+                <span wicket:id="dashboard">
+                    <tbody wicket:id="dashboardCollapsed">
+                    </tbody>
+                    <tbody wicket:id="dashboardExpanded">                    
+                    </tbody>
+                </span>
+            </table>
         </span>
     </body>
 </html>
