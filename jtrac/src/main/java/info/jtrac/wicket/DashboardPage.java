@@ -1,12 +1,14 @@
 package info.jtrac.wicket;
 
+import info.jtrac.domain.Counts;
+import info.jtrac.domain.CountsHolder;
+import info.jtrac.domain.User;
+import info.jtrac.util.SecurityUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import wicket.AttributeModifier;
 import wicket.Component;
-import wicket.ajax.AjaxRequestTarget;
-import wicket.ajax.markup.html.AjaxFallbackLink;
-import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.Model;
@@ -17,19 +19,18 @@ public class DashboardPage extends BasePage {
         
         super("Dashboard");
         
-        List<String[]> data = new ArrayList<String[]>();
+        User user = SecurityUtils.getPrincipal();
+        CountsHolder countsHolder = getJtrac().loadCountsForUser(user);        
+        List<Counts> countsList = new ArrayList<Counts>(countsHolder.getCounts().size());        
+        for(Map.Entry<Long, Counts> entry : countsHolder.getCounts().entrySet()) {
+            countsList.add(entry.getValue());
+        }               
         
-        data.add(new String[]{ "foo", "bar", "baz"});
-        data.add(new String[]{ "goo", "gar", "gaz"});
-        data.add(new String[]{ "hoo", "har", "haz"});
-        
-        border.add(new ListView("dashboard", data) {
+        border.add(new ListView("dashboard", countsList) {
             protected void populateItem(final ListItem listItem) {
-                String[] cols = (String[]) listItem.getModelObject();
-                DashboardRowPanel a = new DashboardRowPanel("dashboardCollapsed", cols);               
-                DashboardRowPanel b = new DashboardRowPanel("dashboardExpanded", cols);
-                a.setOutputMarkupId(true);
-                b.setOutputMarkupId(true);
+                Counts counts = (Counts) listItem.getModelObject();
+                DashboardRowPanel a = new DashboardRowPanel("dashboardCollapsed", counts);               
+                DashboardRowPanel b = new DashboardRowPanel("dashboardExpanded", counts);
                 b.add(new AttributeModifier("style", true, new Model(){
                     public Object getObject(Component c) {
                         return "display:none";

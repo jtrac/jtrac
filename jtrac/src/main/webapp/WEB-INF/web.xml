@@ -70,6 +70,11 @@
     <filter-mapping>
         <filter-name>acegiSecurityFilter</filter-name>
         <url-pattern>/flow/*</url-pattern>
+    </filter-mapping> 
+    
+    <filter-mapping>
+        <filter-name>acegiSecurityFilter</filter-name>
+        <url-pattern>/wkt/*</url-pattern>
     </filter-mapping>    
     
     <!-- Leave the listener commented-out if using JBoss -->
