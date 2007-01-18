@@ -16,6 +16,7 @@ public class JtracApplication extends WebApplication {
     
     @Override
     public void init() {
+        super.init();
         ServletContext sc = getWicketServlet().getServletContext();
         ApplicationContext ac = WebApplicationContextUtils.getWebApplicationContext(sc);
         jtrac = (Jtrac) ac.getBean("jtrac");

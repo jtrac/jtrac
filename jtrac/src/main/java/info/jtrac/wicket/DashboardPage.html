@@ -7,14 +7,19 @@
     <body>
         <span wicket:id="border">
             <table class="jtrac">
+                <tr>
+                    <th>Space</th>
+                    <th colspan="2">Action</th>
+                    <th colspan="2">Status</th>                    
+                    <th>Logged<br>By Me</th>
+                    <th>Assigned<br>To Me</th>
+                    <th style="width:4.5em">All</th>
+                </tr>
                 <span wicket:id="dashboard">
-                    <tbody wicket:id="dashboardCollapsed">
+                    <tbody wicket:id="dashboardRow">
                     </tbody>
-                    <tbody wicket:id="dashboardExpanded">                    
-                    </tbody>
-                    <tbody>
-                        <tr><td>&nbsp;</td></tr>
-                    </tbody>
+                    <tbody wicket:id="dashboardRowExpanded">
+                    </tbody>                    
                 </span>
             </table>
         </span>

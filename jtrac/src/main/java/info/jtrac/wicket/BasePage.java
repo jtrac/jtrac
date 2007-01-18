@@ -16,9 +16,9 @@ public abstract class BasePage extends WebPage {
     }  
     
     public BasePage(String title) {
-        super.add(new Label("title", title));
+        add(new Label("title", title));
         border = new TemplateBorder();
-        super.add(border);    
+        add(border);    
     }
     
 }
