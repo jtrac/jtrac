@@ -52,15 +52,20 @@
         </init-param>
     </filter>    
 
+    <filter>
+        <filter-name>openSessionInView</filter-name>
+        <filter-class>org.springframework.orm.hibernate3.support.OpenSessionInViewFilter</filter-class>
+    </filter>
+
     <filter-mapping>
-        <filter-name>encodingFilter</filter-name>
-        <url-pattern>/app/*</url-pattern>
+        <filter-name>openSessionInView</filter-name>
+        <servlet-name>jtrac-app</servlet-name>
     </filter-mapping>    
     
     <filter-mapping>
         <filter-name>encodingFilter</filter-name>
-        <url-pattern>/flow/*</url-pattern>
-    </filter-mapping>    
+        <servlet-name>jtrac</servlet-name>
+    </filter-mapping>       
     
     <filter-mapping>
         <filter-name>acegiSecurityFilter</filter-name>
