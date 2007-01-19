@@ -16,12 +16,9 @@ public class DashboardPage extends BasePage {
         
         super("Dashboard");
         
-        final User user = SecurityUtils.getPrincipal();
+        User user = SecurityUtils.getPrincipal();
         CountsHolder countsHolder = getJtrac().loadCountsForUser(user);        
-        List<Counts> countsList = new ArrayList<Counts>(countsHolder.getCounts().size());        
-        for(Map.Entry<Long, Counts> entry : countsHolder.getCounts().entrySet()) {
-            countsList.add(entry.getValue());
-        }               
+        List<Counts> countsList = new ArrayList<Counts>(countsHolder.getCounts().values());                    
         
         border.add(new ListView("dashboard", countsList) {
             protected void populateItem(final ListItem listItem) {

@@ -17,16 +17,14 @@ import wicket.markup.html.list.ListView;
 
 public class DashboardRowExpandedPanel extends BasePanel {    
     
-    public DashboardRowExpandedPanel(String id, User user, Space space) {        
+    public DashboardRowExpandedPanel(String id, final Counts counts) {        
         
         super(id);
-        setOutputMarkupId(true);
-        
-        final Counts counts = getJtrac().loadCountsForUserSpace(user, space);
-        
+        setOutputMarkupId(true);    
+
         SimpleAttributeModifier sam = new SimpleAttributeModifier("rowspan", counts.getTotalMap().size() + "");
         
-        Map<Integer, String> states = new TreeMap(space.getMetadata().getStates());
+        Map<Integer, String> states = new TreeMap(counts.getSpace().getMetadata().getStates());    
         states.remove(State.NEW);        
         List<Integer> stateKeys = new ArrayList<Integer>(states.keySet());
         

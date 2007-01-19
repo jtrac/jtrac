@@ -231,14 +231,12 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         }
         StringBuffer sb = new StringBuffer();
         sb.append('(');
-        Space space = null; // holds the only space if only one 
         for (Space s : spaces) {
             sb.append(s.getId());
             sb.append(',');
-            space = s;
         }
         sb.setCharAt(sb.length() - 1, ')');
-        CountsHolder ch = new CountsHolder();
+        CountsHolder ch = new CountsHolder(user);
         HibernateTemplate ht = getHibernateTemplate();        
         List<Object[]> loggedByList = ht.find("select item.space.id, count(item) from Item item" 
                 + " where item.loggedBy.id = ? group by item.space.id", user.getId());
@@ -247,13 +245,13 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         List<Object[]> statusList = ht.find("select item.space.id, count(item) from Item item" 
                 + " where item.space.id in " + sb.toString() + " group by item.space.id");
         for(Object[] oa : loggedByList) {
-            ch.add((Long) oa[0], Counts.LOGGED_BY_ME, 0, (Integer) oa[1]);
+            ch.add((Long) oa[0], Counts.LOGGED_BY_ME, (Integer) oa[1]);
         }
         for(Object[] oa : assignedToList) {
-            ch.add((Long) oa[0], Counts.ASSIGNED_TO_ME, 0, (Integer) oa[1]);
+            ch.add((Long) oa[0], Counts.ASSIGNED_TO_ME, (Integer) oa[1]);
         }
         for(Object[] oa : statusList) {
-            ch.add((Long) oa[0], Counts.TOTAL, 0, (Integer) oa[1]);
+            ch.add((Long) oa[0], Counts.TOTAL, (Integer) oa[1]);
         }
         return ch;
     }
@@ -266,7 +264,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
                 + " where item.assignedTo.id = ? and item.space.id = ? group by item.status", new Object[] { user.getId(), space.getId() });
         List<Object[]> statusList = ht.find("select status, count(item) from Item item" 
                 + " where item.space.id = ? group by item.status", space.getId());
-        Counts c = new Counts();
+        Counts c = new Counts(space, true);
         for(Object[] oa : loggedByList) {
             c.add(Counts.LOGGED_BY_ME, (Integer) oa[0], (Integer) oa[1]);
         }

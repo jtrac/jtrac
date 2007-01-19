@@ -34,6 +34,22 @@ public class Counts implements Serializable {
     
     private Map<Integer, Map<Integer, Integer>> typeCounts = new HashMap<Integer, Map<Integer, Integer>>();     
     
+    private Space space;
+    private boolean detailed;
+
+    public Space getSpace() {
+        return space;
+    }        
+
+    public boolean isDetailed() {
+        return detailed;
+    }
+    
+    public Counts(Space space, boolean detailed) {
+        this.space = space;
+        this.detailed = detailed;
+    }
+    
     public void add(int type, int state, int count) {
         Map<Integer, Integer> stateCounts = typeCounts.get(type);
         if (stateCounts == null) {
