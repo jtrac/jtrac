@@ -2,7 +2,6 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.Counts;
 import info.jtrac.domain.CountsHolder;
-import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.util.SecurityUtils;
 import java.util.ArrayList;
@@ -28,11 +27,7 @@ public class DashboardPage extends BasePage {
             protected void populateItem(final ListItem listItem) {
                 Counts counts = (Counts) listItem.getModelObject();
                 DashboardRowPanel a = new DashboardRowPanel("dashboardRow", counts);
-                Space space = getJtrac().loadSpace(1);
-                Counts detailed = getJtrac().loadCountsForUserSpace(user, space);
-                DashboardRowExpandedPanel b = new DashboardRowExpandedPanel("dashboardRowExpanded", detailed, space);
                 listItem.add(a);
-                listItem.add(b);
             }
         });        
     }

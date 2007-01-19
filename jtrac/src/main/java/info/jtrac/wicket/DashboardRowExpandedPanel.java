@@ -3,22 +3,26 @@ package info.jtrac.wicket;
 import info.jtrac.domain.Counts;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
+import info.jtrac.domain.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
-import wicket.model.PropertyModel;
 
 public class DashboardRowExpandedPanel extends BasePanel {    
     
-    public DashboardRowExpandedPanel(String id, final Counts counts, Space space) {
+    public DashboardRowExpandedPanel(String id, User user, Space space) {        
         
         super(id);
         setOutputMarkupId(true);
+        
+        final Counts counts = getJtrac().loadCountsForUserSpace(user, space);
         
         SimpleAttributeModifier sam = new SimpleAttributeModifier("rowspan", counts.getTotalMap().size() + "");
         
@@ -31,8 +35,16 @@ public class DashboardRowExpandedPanel extends BasePanel {
         add(new Label("space", "SPACE").add(sam));
         add(new Label("new", "NEW").add(sam));
         add(new Label("search", "SEARCH").add(sam));
-        add(new Label("pink", "(-)").add(sam));                
-        add(new Label("status", "XXX"));
+        
+        add(new AjaxFallbackLink("link") {
+            public void onClick(AjaxRequestTarget target) {
+                DashboardRowPanel a = new DashboardRowPanel("dashboardRow", counts);
+                DashboardRowExpandedPanel.this.replaceWith(a);
+                target.addComponent(a);
+            }
+        }.add(sam));
+        
+        add(new Label("status", first + ""));
         add(new Label("loggedByMe", counts.getLoggedByMeMap().get(first) + ""));
         add(new Label("assignedToMe", counts.getAssignedToMeMap().get(first) + ""));
         add(new Label("total", counts.getTotalMap().get(first) + ""));                      
@@ -42,7 +54,7 @@ public class DashboardRowExpandedPanel extends BasePanel {
         add(new ListView("rows", stateKeys) {
             protected void populateItem(ListItem listItem) {
                 Integer i = (Integer) listItem.getModelObject();
-                listItem.add(new Label("status", listItem.getIndex() + ""));
+                listItem.add(new Label("status", i + ""));
                 listItem.add(new Label("loggedByMe", counts.getLoggedByMeMap().get(i) + ""));
                 listItem.add(new Label("assignedToMe", counts.getAssignedToMeMap().get(i) + ""));
                 listItem.add(new Label("total", counts.getTotalMap().get(i) + ""));                
