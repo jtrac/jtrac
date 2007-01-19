@@ -30,6 +30,7 @@ import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
+import wicket.model.StringResourceModel;
 
 /**
  * panel for expanded view of statistics for a single space
@@ -51,7 +52,7 @@ public class DashboardRowExpandedPanel extends BasePanel {
         int first = stateKeys.get(0);
         
         add(new Label("space", "SPACE").add(sam));
-        add(new Label("new", "NEW").add(sam));
+        add(new Label("new", new StringResourceModel("new", this, null)).add(sam));
         add(new Label("search", "SEARCH").add(sam));
         
         add(new AjaxFallbackLink("link") {

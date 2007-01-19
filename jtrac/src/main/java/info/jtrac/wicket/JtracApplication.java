@@ -17,10 +17,12 @@
 package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
+import java.util.Locale;
 import javax.servlet.ServletContext;
-import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import wicket.protocol.http.WebApplication;
+import wicket.resource.loader.IStringResourceLoader;
 
 /**
  * main wicket application for jtrac
@@ -38,8 +40,16 @@ public class JtracApplication extends WebApplication {
     public void init() {
         super.init();
         ServletContext sc = getWicketServlet().getServletContext();
-        ApplicationContext ac = WebApplicationContextUtils.getWebApplicationContext(sc);
-        jtrac = (Jtrac) ac.getBean("jtrac");
+        final WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(sc);        
+        jtrac = (Jtrac) wac.getBean("jtrac");
+        
+        getResourceSettings().addStringResourceLoader(new IStringResourceLoader() {
+            public String loadStringResource(Class clazz, String key, Locale locale, String style) {
+                return wac.getMessage(key, null, locale);
+            }
+        });
+
+
     }    
     
     public Class getHomePage() {
