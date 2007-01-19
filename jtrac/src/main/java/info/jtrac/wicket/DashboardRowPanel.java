@@ -1,3 +1,19 @@
+/*
+ * Copyright 2002-2005 the original author or authors.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Counts;
@@ -9,6 +25,10 @@ import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.markup.html.basic.Label;
 import wicket.model.PropertyModel;
 
+/**
+ * panel for showing the total (un-expanded) statistics for
+ * a single space, will be replaced by expanded view through ajax
+ */
 public class DashboardRowPanel extends BasePanel {    
     
     private Counts counts;
@@ -25,14 +45,14 @@ public class DashboardRowPanel extends BasePanel {
                 Counts temp = DashboardRowPanel.this.counts;
                 User user = SecurityUtils.getPrincipal();
                 if (!temp.isDetailed()) {
-                    // space instance held in Counts originated from Acegi
+                    // space instance held in Counts may have originated from Acegi
                     // so incompatible with open session in view, get proper one
                     Space space = getJtrac().loadSpace(temp.getSpace().getId());
                     temp = getJtrac().loadCountsForUserSpace(user, space);
                 }
-                DashboardRowExpandedPanel b = new DashboardRowExpandedPanel("dashboardRow", temp);
-                DashboardRowPanel.this.replaceWith(b);
-                target.addComponent(b);
+                DashboardRowExpandedPanel dashboardRow = new DashboardRowExpandedPanel("dashboardRow", temp);
+                DashboardRowPanel.this.replaceWith(dashboardRow);
+                target.addComponent(dashboardRow);
             }
         });          
         
