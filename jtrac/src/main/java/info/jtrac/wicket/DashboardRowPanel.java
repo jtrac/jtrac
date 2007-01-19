@@ -31,18 +31,14 @@ import wicket.model.PropertyModel;
  */
 public class DashboardRowPanel extends BasePanel {    
     
-    private Counts counts;
-    
-    public DashboardRowPanel(String id, Counts counts) {
+    public DashboardRowPanel(String id, final Counts counts) {
         
         super(id);
-        setOutputMarkupId(true);        
-        
-        this.counts = counts;
+        setOutputMarkupId(true);                
         
         add(new AjaxFallbackLink("link") {
             public void onClick(AjaxRequestTarget target) {
-                Counts temp = DashboardRowPanel.this.counts;
+                Counts temp = counts;  // get non-final instance
                 User user = SecurityUtils.getPrincipal();
                 if (!temp.isDetailed()) {
                     // space instance held in Counts may have originated from Acegi
