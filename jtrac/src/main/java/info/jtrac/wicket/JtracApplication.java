@@ -49,7 +49,11 @@ public class JtracApplication extends WebApplication {
         // delegate wicket i18n support to spring i18n
         getResourceSettings().addStringResourceLoader(new IStringResourceLoader() {
             public String loadStringResource(Class clazz, String key, Locale locale, String style) {
-                return ac.getMessage(key, null, locale);
+                try {
+                    return ac.getMessage(key, null, locale);
+                } catch(Exception e) {
+                    return "?*?" + key + "?*?" ;
+                }
             }
         });        
         

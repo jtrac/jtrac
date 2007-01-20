@@ -17,6 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Counts;
+import info.jtrac.domain.Item;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.util.SecurityUtils;
@@ -41,7 +42,8 @@ public class DashboardRowPanel extends BasePanel {
         
         add(new Link("new") {
             public void onClick() {
-                
+                Item item = new Item();
+                setResponsePage(new ItemFormPage(item));
             }
         });
 
