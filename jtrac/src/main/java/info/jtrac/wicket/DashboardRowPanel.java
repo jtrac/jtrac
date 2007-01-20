@@ -23,6 +23,7 @@ import info.jtrac.util.SecurityUtils;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.link.Link;
 import wicket.model.PropertyModel;
 
 /**
@@ -34,7 +35,21 @@ public class DashboardRowPanel extends BasePanel {
     public DashboardRowPanel(String id, final Counts counts) {
         
         super(id);
-        setOutputMarkupId(true);                
+        setOutputMarkupId(true);      
+        
+        add(new Label("space", new PropertyModel(counts, "space.name")));
+        
+        add(new Link("new") {
+            public void onClick() {
+                
+            }
+        });
+
+        add(new Link("search") {
+            public void onClick() {
+                
+            }
+        });        
         
         add(new AjaxFallbackLink("link") {
             public void onClick(AjaxRequestTarget target) {

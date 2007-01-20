@@ -17,9 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Counts;
-import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
-import info.jtrac.domain.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +26,7 @@ import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.StringResourceModel;
@@ -41,19 +40,28 @@ public class DashboardRowExpandedPanel extends BasePanel {
     public DashboardRowExpandedPanel(String id, final Counts counts) {        
         
         super(id);
-        setOutputMarkupId(true);    
-
-        SimpleAttributeModifier sam = new SimpleAttributeModifier("rowspan", counts.getTotalMap().size() + "");
+        setOutputMarkupId(true);
         
-        Map<Integer, String> states = new TreeMap(counts.getSpace().getMetadata().getStates());    
+        final Map<Integer, String> states = new TreeMap(counts.getSpace().getMetadata().getStates());    
         states.remove(State.NEW);        
+        SimpleAttributeModifier sam = new SimpleAttributeModifier("rowspan", states.size() + "");
         List<Integer> stateKeys = new ArrayList<Integer>(states.keySet());
         
         int first = stateKeys.get(0);
         
-        add(new Label("space", "SPACE").add(sam));
-        add(new Label("new", new StringResourceModel("new", this, null)).add(sam));
-        add(new Label("search", "SEARCH").add(sam));
+        add(new Label("space", counts.getSpace().getName()).add(sam));
+        
+        add(new Link("new") {
+            public void onClick() {
+                
+            }
+        }.add(sam));
+
+        add(new Link("search") {
+            public void onClick() {
+                
+            }
+        }.add(sam));
         
         add(new AjaxFallbackLink("link") {
             public void onClick(AjaxRequestTarget target) {
@@ -63,20 +71,20 @@ public class DashboardRowExpandedPanel extends BasePanel {
             }
         }.add(sam));
         
-        add(new Label("status", first + ""));
-        add(new Label("loggedByMe", counts.getLoggedByMeMap().get(first) + ""));
-        add(new Label("assignedToMe", counts.getAssignedToMeMap().get(first) + ""));
-        add(new Label("total", counts.getTotalMap().get(first) + ""));                      
+        add(new Label("status", states.get(first)));
+        add(new Label("loggedByMe", counts.getLoggedByMeForState(first)));
+        add(new Label("assignedToMe", counts.getAssignedToMeForState(first)));
+        add(new Label("total", counts.getTotalForState(first)));                      
         
         stateKeys.remove(0);
         
         add(new ListView("rows", stateKeys) {
             protected void populateItem(ListItem listItem) {
                 Integer i = (Integer) listItem.getModelObject();
-                listItem.add(new Label("status", i + ""));
-                listItem.add(new Label("loggedByMe", counts.getLoggedByMeMap().get(i) + ""));
-                listItem.add(new Label("assignedToMe", counts.getAssignedToMeMap().get(i) + ""));
-                listItem.add(new Label("total", counts.getTotalMap().get(i) + ""));                
+                listItem.add(new Label("status", states.get(i)));
+                listItem.add(new Label("loggedByMe", counts.getLoggedByMeForState(i)));
+                listItem.add(new Label("assignedToMe", counts.getAssignedToMeForState(i)));
+                listItem.add(new Label("total", counts.getTotalForState(i)));                
             }
             
         });

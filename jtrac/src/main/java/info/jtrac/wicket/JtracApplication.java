@@ -38,18 +38,21 @@ public class JtracApplication extends WebApplication {
     
     @Override
     public void init() {
+        
         super.init();
+        
+        // get hold of spring managed service layer (see BasePage, BasePanel etc for how it is used)
         ServletContext sc = getWicketServlet().getServletContext();
         final WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(sc);        
         jtrac = (Jtrac) wac.getBean("jtrac");
         
+        // delegate wicket i18n support to spring i18n
         getResourceSettings().addStringResourceLoader(new IStringResourceLoader() {
             public String loadStringResource(Class clazz, String key, Locale locale, String style) {
                 return wac.getMessage(key, null, locale);
             }
-        });
-
-
+        });        
+        
     }    
     
     public Class getHomePage() {

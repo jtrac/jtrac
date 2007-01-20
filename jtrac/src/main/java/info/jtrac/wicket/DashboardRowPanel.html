@@ -1,14 +1,23 @@
 <wicket:panel>
     <tr class="nav-table">
-        <th>Space</th>
-        <td>New</td>
-        <td>Search</td>
-        <td style="padding:0pt">
-            <a href="#" wicket:id="link">(+)</a>
+        <th wicket:id="space"></th>
+        <td class="icon">
+            <a href="#" wicket:id="new">
+                <img src="resources/document-new.png" wicket:message="title=dashboard.new"/>
+            </a>            
         </td>
-        <td></td>
+        <td class="icon">
+            <a href="#" wicket:id="search">
+                <img src="resources/system-search.png" wicket:message="title=dashboard.search"/>
+            </a>            
+        </td>
+        <td style="padding:0pt" colspan="2">
+            <a href="#" wicket:id="link" style="text-align:left">
+                <img src="resources/collapsed.png" wicket:message="title=dashboard.showDetails"/>
+            </a>
+        </td>
         <td wicket:id="loggedByMe"></td>
         <td wicket:id="assignedToMe"></td>
         <td wicket:id="total" class="selected"></td>
     </tr>
-</wicket:panel>       
+</wicket:panel>

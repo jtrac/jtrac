@@ -98,6 +98,22 @@ public class Counts implements Serializable {
     
     public Map<Integer, Integer> getTotalMap() {
         return typeCounts.get(TOTAL);
+    }
+    
+    // return string for easier rendering on dashboard screen    
+    public String getLoggedByMeForState(int stateKey) {
+        Integer i = typeCounts.get(LOGGED_BY_ME).get(stateKey);
+        return i == null ? "" : i.toString();
+    }
+    
+    public String getAssignedToMeForState(int stateKey) {
+        Integer i = typeCounts.get(ASSIGNED_TO_ME).get(stateKey);
+        return i == null ? "" : i.toString();
+    } 
+    
+    public String getTotalForState(int stateKey) {
+        Integer i = typeCounts.get(TOTAL).get(stateKey);
+        return i == null ? "" : i.toString();
     }    
     
 }

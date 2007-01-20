@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title wicket:id="title">Title Here</title>
+        <title wicket:id="title">title here</title>
         <link rel="stylesheet" type="text/css" href="resources/jtrac.css"/>
         <script type="text/javascript" src="resources/prototype.js"></script>
     </head>
@@ -8,16 +8,18 @@
         <span wicket:id="border">
             <table class="jtrac">
                 <tr>
-                    <th>Space</th>
-                    <th colspan="2">Action</th>
-                    <th colspan="2">Status</th>                    
-                    <th>Logged<br>By Me</th>
-                    <th>Assigned<br>To Me</th>
-                    <th style="width:4.5em">All</th>
+                    <th><wicket:message key="dashboard.space"/></th>
+                    <th colspan="2"><wicket:message key="dashboard.action"/></th>
+                    <th colspan="2"><wicket:message key="dashboard.status"/></th>                    
+                    <th><wicket:message key="dashboard.loggedByMe"/></th>
+                    <th><wicket:message key="dashboard.assignedToMe"/></th>
+                    <th style="width:4.5em"><wicket:message key="dashboard.all"/></th>
                 </tr>
+                <tr><td>&nbsp;</td></tr>
                 <span wicket:id="dashboard">
                     <tbody wicket:id="dashboardRow">
                     </tbody>
+                    <tr><td>&nbsp;</td></tr>
                 </span>
             </table>
         </span>

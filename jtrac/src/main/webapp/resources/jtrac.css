@@ -19,4 +19,4 @@ a:hover { color: red; }
 .bdr-collapse { border-collapse: collapse; }
 .bdr-collapse td { padding: 0; }
 .page-links { font-weight: bold; }
-img.noborder { border: none; }
+.nav-table img { border: none; }
