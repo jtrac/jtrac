@@ -21,6 +21,9 @@ import java.util.Locale;
 import javax.servlet.ServletContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import wicket.markup.MarkupParser;
+import wicket.markup.MarkupParserFactory;
+import wicket.markup.parser.filter.WicketMessageTagHandler;
 import wicket.protocol.http.WebApplication;
 import wicket.resource.loader.IStringResourceLoader;
 
@@ -55,7 +58,17 @@ public class JtracApplication extends WebApplication {
                     return "?*?" + key + "?*?" ;
                 }
             }
-        });        
+        });                        
+
+        WicketMessageTagHandler.enable = true;
+        
+//        getMarkupSettings().setMarkupParserFactory(new MarkupParserFactory(this) {
+//            @Override
+//            protected void initMarkupFilters(final MarkupParser parser) {
+//                super.initMarkupFilters(parser);
+//                parser.registerMarkupFilter(new WicketMessageTagHandler());
+//            }            
+//        });
         
     }    
     
