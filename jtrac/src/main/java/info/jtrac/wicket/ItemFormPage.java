@@ -18,11 +18,10 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.Item;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextArea;
+import wicket.markup.html.form.TextField;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.CompoundPropertyModel;
-import wicket.model.PropertyModel;
 
 /**
  * Create / Edit item form page
@@ -39,13 +38,16 @@ public class ItemFormPage extends BasePage {
         
         public ItemForm(String id, Item item) {
             super(id, new CompoundPropertyModel(item));
-            add(new RequiredTextField("summary"));
-            add(new TextArea("detail", new PropertyModel(item, "detail")));
+            add(new TextField("summary").setRequired(true).add(new ErrorHighlighter()));
+            add(new TextArea("detail").setRequired(true).add(new ErrorHighlighter()));
         }
         
         @Override
         protected void onSubmit() {
             info("the form was submitted");
+            Item item = (Item) getModelObject();
+            info("summary: " + item.getSummary());
+            info("detail: " + item.getDetail());
         }
         
     }
