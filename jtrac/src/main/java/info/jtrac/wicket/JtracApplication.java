@@ -19,7 +19,7 @@ package info.jtrac.wicket;
 import info.jtrac.Jtrac;
 import java.util.Locale;
 import javax.servlet.ServletContext;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import wicket.protocol.http.WebApplication;
 import wicket.resource.loader.IStringResourceLoader;
@@ -43,13 +43,13 @@ public class JtracApplication extends WebApplication {
         
         // get hold of spring managed service layer (see BasePage, BasePanel etc for how it is used)
         ServletContext sc = getWicketServlet().getServletContext();
-        final WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(sc);        
-        jtrac = (Jtrac) wac.getBean("jtrac");
+        final ApplicationContext ac = WebApplicationContextUtils.getWebApplicationContext(sc);        
+        jtrac = (Jtrac) ac.getBean("jtrac");
         
         // delegate wicket i18n support to spring i18n
         getResourceSettings().addStringResourceLoader(new IStringResourceLoader() {
             public String loadStringResource(Class clazz, String key, Locale locale, String style) {
-                return wac.getMessage(key, null, locale);
+                return ac.getMessage(key, null, locale);
             }
         });        
         

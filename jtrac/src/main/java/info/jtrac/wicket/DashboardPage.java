@@ -47,7 +47,11 @@ public class DashboardPage extends BasePage {
             }
         });
         
-        border.add(new DashboardTotalPanel("total", countsHolder));
+        DashboardTotalPanel panel = new DashboardTotalPanel("total", countsHolder);
+        if(countsList.size() == 1) {
+            panel.setVisible(false);
+        }
+        border.add(panel);      
         
     }
     
