@@ -45,7 +45,10 @@ public class DashboardPage extends BasePage {
                 DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", counts);
                 listItem.add(dashboardRow);
             }
-        });        
+        });
+        
+        border.add(new DashboardTotalPanel("total", countsHolder));
+        
     }
     
 }

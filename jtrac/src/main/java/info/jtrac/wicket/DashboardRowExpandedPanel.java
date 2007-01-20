@@ -29,7 +29,7 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
-import wicket.model.StringResourceModel;
+import wicket.model.PropertyModel;
 
 /**
  * panel for expanded view of statistics for a single space
@@ -43,8 +43,9 @@ public class DashboardRowExpandedPanel extends BasePanel {
         setOutputMarkupId(true);
         
         final Map<Integer, String> states = new TreeMap(counts.getSpace().getMetadata().getStates());    
-        states.remove(State.NEW);        
-        SimpleAttributeModifier sam = new SimpleAttributeModifier("rowspan", states.size() + "");
+        states.remove(State.NEW);
+        int rowspan = states.size() + 1; // add one totals row also
+        SimpleAttributeModifier sam = new SimpleAttributeModifier("rowspan", rowspan + "");
         List<Integer> stateKeys = new ArrayList<Integer>(states.keySet());
         
         int first = stateKeys.get(0);
@@ -88,6 +89,10 @@ public class DashboardRowExpandedPanel extends BasePanel {
             }
             
         });
+        
+        add(new Label("loggedByMeTotal", new PropertyModel(counts, "loggedByMe")));
+        add(new Label("assignedToMeTotal", new PropertyModel(counts, "assignedToMe")));
+        add(new Label("totalTotal", new PropertyModel(counts, "total")));
         
     }
     
