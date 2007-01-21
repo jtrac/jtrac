@@ -21,8 +21,10 @@ import static info.jtrac.Constants.*;
 import info.jtrac.util.XmlUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -124,6 +126,31 @@ public class Field implements Serializable {
         public String toString() {
             return text;
         }
+    }
+    
+    /**
+     * simple class just to wrap a name value pair
+     * representing a drop down option, used mainly for 
+     * ui rendering
+     */
+    public class Option implements Serializable {
+        
+        private String key;
+        private String value;
+        
+        public Option(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+        
     }
     
     //===================================================================
@@ -259,6 +286,15 @@ public class Field implements Serializable {
     // e.g. Glassfish vs Apache
     public String getNameText() {
         return name.text;
+    }
+    
+    // convenience for rendering ui
+    public List<Option> getOptionsList() {
+        List<Option> temp = new ArrayList<Option>(options.size() + 1);
+        for(Map.Entry<String, String> entry : options.entrySet()) {
+            temp.add(new Option(entry.getKey(), entry.getValue()));
+        }
+        return temp;
     }
     
     //===================================================================  

@@ -17,12 +17,14 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Field;
+import info.jtrac.domain.Field.Option;
 import info.jtrac.domain.Item;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
+import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.form.TextArea;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.list.ListItem;
@@ -51,19 +53,29 @@ public class ItemFormPage extends BasePage {
             add(new TextField("summary").setRequired(true).add(new ErrorHighlighter()));
             add(new TextArea("detail").setRequired(true).add(new ErrorHighlighter()));
             List<Field> fields = item.getSpace().getMetadata().getFieldList();
-            add(new ListView("fields", fields) {
+            ListView listView = new ListView("fields", fields) {
                 protected void populateItem(ListItem listItem) {
                     Field field = (Field) listItem.getModelObject();
                     listItem.add(new Label("label", field.getLabel()));
-                    listItem.add(new Label("star", "*"));
+                    listItem.add(new Label("star", field.isOptional() ? null : "*"));
                     if (field.getName().getType() < 4) {
-                        Fragment f = new Fragment("field", "select");
-                        List<String> list = Arrays.asList(new String[] { "foo", "bar", "baz" });
-                        f.add(model.bind(new DropDownChoice("select", list), field.getNameText()));
+                        Fragment f = new Fragment("field", "select");                        
+                        DropDownChoice choice = new DropDownChoice("select", field.getOptionsList(), new IChoiceRenderer() {
+                            public Object getDisplayValue(Object o) {
+                                return ((Option) o).getValue();
+                            };
+                            public String getIdValue(Object o, int i) {
+                                return ((Option) o).getKey();
+                            };
+                        });
+                        choice.setNullValid(true);
+                        f.add(model.bind(choice, field.getNameText()));
                         listItem.add(f);
                     }
                 }
-            });
+            };
+            listView.setReuseItems(true);
+            add(listView);
         }
         
         @Override
