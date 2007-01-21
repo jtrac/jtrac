@@ -1330,7 +1330,7 @@ mvn eclipse:eclipse
             <title>Building And Running JTrac</title>
             <para>
                 You can explore all the Ant targets that are available. You can also try the "jetty-start" 
-                Ant target straight away that will compile, create and deploy the WAR as well as boot a Jetty server.
+                Ant target straight away that will compile, create and deploy the exploded war as well as boot a Jetty server.
                 For NetBeans users, the "jetty-start" target is neatly mapped to the "Run Main Project (F6)" shortcut, 
                 once you make JTrac the "main project".  Note that this Ant target is smart enough to detect if Jetty 
                 is already running and will perform a shutdown if required before re-starting.
