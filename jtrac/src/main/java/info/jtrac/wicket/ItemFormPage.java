@@ -17,8 +17,8 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Field;
-import info.jtrac.domain.Field.Option;
 import info.jtrac.domain.Item;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import wicket.markup.html.basic.Label;
@@ -59,13 +59,15 @@ public class ItemFormPage extends BasePage {
                     listItem.add(new Label("label", field.getLabel()));
                     listItem.add(new Label("star", field.isOptional() ? null : "*"));
                     if (field.getName().getType() < 4) {
-                        Fragment f = new Fragment("field", "select");                        
-                        DropDownChoice choice = new DropDownChoice("select", field.getOptionsList(), new IChoiceRenderer() {
+                        Fragment f = new Fragment("field", "select");
+                        final Map<String, String> options = field.getOptions();                                
+                        List<String> keys = new ArrayList(options.keySet());
+                        DropDownChoice choice = new DropDownChoice("select", keys, new IChoiceRenderer() {
                             public Object getDisplayValue(Object o) {
-                                return ((Option) o).getValue();
+                                return options.get(o);
                             };
                             public String getIdValue(Object o, int i) {
-                                return ((Option) o).getKey();
+                                return o.toString();
                             };
                         });
                         choice.setNullValid(true);
@@ -84,6 +86,10 @@ public class ItemFormPage extends BasePage {
             Item item = (Item) getModelObject();
             info("summary: " + item.getSummary());
             info("detail: " + item.getDetail());
+            info("detail: " + item.getDetail());
+            for(Field f : item.getSpace().getMetadata().getFieldList()) {
+                info(f.getName() + ": " + item.getValue(f.getName()));
+            }
         }
         
     }
