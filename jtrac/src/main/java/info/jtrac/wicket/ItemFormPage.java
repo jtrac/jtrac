@@ -41,7 +41,8 @@ public class ItemFormPage extends BasePage {
     public ItemFormPage(Item item) {
         super("Edit Item");
         border.add(new FeedbackPanel("feedback"));        
-        border.add(new ItemForm("form", item));        
+        border.add(new ItemForm("form", item));
+        border.add(new DatePicker("datePicker"));
     }
     
     private class ItemForm extends Form {
@@ -52,13 +53,14 @@ public class ItemFormPage extends BasePage {
             setModel(model);
             add(new TextField("summary").setRequired(true).add(new ErrorHighlighter()));
             add(new TextArea("detail").setRequired(true).add(new ErrorHighlighter()));
+            // custom fields
             List<Field> fields = item.getSpace().getMetadata().getFieldList();
             ListView listView = new ListView("fields", fields) {
                 protected void populateItem(ListItem listItem) {
                     Field field = (Field) listItem.getModelObject();
                     listItem.add(new Label("label", field.getLabel()));
                     listItem.add(new Label("star", field.isOptional() ? null : "*"));
-                    if (field.getName().getType() < 4) {
+                    if (field.getName().getType() < 4) { // drop down list
                         Fragment f = new Fragment("field", "select");
                         final Map<String, String> options = field.getOptions();                                
                         List<String> keys = new ArrayList(options.keySet());
@@ -73,6 +75,10 @@ public class ItemFormPage extends BasePage {
                         choice.setNullValid(true);
                         f.add(model.bind(choice, field.getNameText()));
                         listItem.add(f);
+                    } else if (field.getName().getType() == 6){ // date picker
+                        
+                    } else {
+                        
                     }
                 }
             };
