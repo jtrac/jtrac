@@ -26,6 +26,13 @@
                             <textarea wicket:id="detail" rows="10" cols="80"></textarea>                                                        
                         </td>
                     </tr>
+                    <tr wicket:id="fields">
+                        <td class="label">
+                            <span wicket:id="label"></span>
+                            <font color="red" wicket:id="star"></font>
+                        </td>    
+                        <td wicket:id="field"></td>
+                    </tr>
                     <tr>
                         <td/>
                         <td>
@@ -35,5 +42,6 @@
                 </table>
             </form>
         </span>
+        <wicket:fragment wicket:id="select"><select wicket:id="select"/></wicket:fragment>
     </body>
 </html>

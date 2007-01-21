@@ -1,4 +1,4 @@
-/*
+  /*
  * Copyright 2002-2005 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,12 +16,20 @@
 
 package info.jtrac.wicket;
 
+import info.jtrac.domain.Field;
 import info.jtrac.domain.Item;
+import java.util.Arrays;
+import java.util.List;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextArea;
 import wicket.markup.html.form.TextField;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
-import wicket.model.CompoundPropertyModel;
+import wicket.markup.html.panel.Fragment;
+import wicket.model.BoundCompoundPropertyModel;
 
 /**
  * Create / Edit item form page
@@ -37,9 +45,25 @@ public class ItemFormPage extends BasePage {
     private class ItemForm extends Form {
         
         public ItemForm(String id, Item item) {
-            super(id, new CompoundPropertyModel(item));
+            super(id);
+            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(item);
+            setModel(model);
             add(new TextField("summary").setRequired(true).add(new ErrorHighlighter()));
             add(new TextArea("detail").setRequired(true).add(new ErrorHighlighter()));
+            List<Field> fields = item.getSpace().getMetadata().getFieldList();
+            add(new ListView("fields", fields) {
+                protected void populateItem(ListItem listItem) {
+                    Field field = (Field) listItem.getModelObject();
+                    listItem.add(new Label("label", field.getLabel()));
+                    listItem.add(new Label("star", "*"));
+                    if (field.getName().getType() < 4) {
+                        Fragment f = new Fragment("field", "select");
+                        List<String> list = Arrays.asList(new String[] { "foo", "bar", "baz" });
+                        f.add(model.bind(new DropDownChoice("select", list), field.getNameText()));
+                        listItem.add(f);
+                    }
+                }
+            });
         }
         
         @Override
