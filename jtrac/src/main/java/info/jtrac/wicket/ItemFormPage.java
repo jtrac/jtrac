@@ -19,8 +19,10 @@ package info.jtrac.wicket;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Item;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import wicket.feedback.FeedbackMessage;
 import wicket.feedback.IFeedbackMessageFilter;
 import wicket.markup.html.basic.Label;
@@ -43,17 +45,19 @@ public class ItemFormPage extends BasePage {
     private MyFilter filter;
     
     private class MyFilter implements IFeedbackMessageFilter {
-        private boolean hasRequiredError;
+        
+        private Set<String> previous = new HashSet<String>();
+        
+        public void reset() {
+            previous.clear();
+        }
+        
         public boolean accept(FeedbackMessage fm) {
-            if(fm.getMessage().equals("RequiredValidator")) {
-                if (!hasRequiredError) {
-                    hasRequiredError = true;
-                    return true;
-                } else {
-                    return false;
-                }
+            if(!previous.contains(fm.getMessage())) {
+                previous.add(fm.getMessage());
+                return true;
             }
-            return true;
+            return false;
         }
     }
     
@@ -123,7 +127,7 @@ public class ItemFormPage extends BasePage {
         
         @Override
         protected void validate() {
-            filter.hasRequiredError = false;
+            filter.reset();
             super.validate();
         }
         

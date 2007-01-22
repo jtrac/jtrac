@@ -53,7 +53,7 @@ public class JtracApplication extends WebApplication {
         getResourceSettings().addStringResourceLoader(new IStringResourceLoader() {
             public String loadStringResource(Class clazz, String key, Locale locale, String style) {
                 if (key.endsWith(".RequiredValidator")) {
-                    return "RequiredValidator";
+                    key = "requiredValidator";
                 }
                 try {
                     return ac.getMessage(key, null, locale);
