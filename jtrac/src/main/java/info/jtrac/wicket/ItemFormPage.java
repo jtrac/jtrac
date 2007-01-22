@@ -42,7 +42,6 @@ public class ItemFormPage extends BasePage {
         super("Edit Item");
         border.add(new FeedbackPanel("feedback"));        
         border.add(new ItemForm("form", item));
-        border.add(new DatePicker("datePicker"));
     }
     
     private class ItemForm extends Form {
@@ -61,10 +60,10 @@ public class ItemFormPage extends BasePage {
                     listItem.add(new Label("label", field.getLabel()));
                     listItem.add(new Label("star", field.isOptional() ? null : "*"));
                     if (field.getName().getType() < 4) { // drop down list
-                        Fragment f = new Fragment("field", "select");
+                        Fragment f = new Fragment("field", "dropDown");
                         final Map<String, String> options = field.getOptions();                                
-                        List<String> keys = new ArrayList(options.keySet());
-                        DropDownChoice choice = new DropDownChoice("select", keys, new IChoiceRenderer() {
+                        List<String> keys = new ArrayList(options.keySet());  // bound value
+                        DropDownChoice choice = new DropDownChoice("field", keys, new IChoiceRenderer() {
                             public Object getDisplayValue(Object o) {
                                 return options.get(o);
                             };
@@ -75,10 +74,12 @@ public class ItemFormPage extends BasePage {
                         choice.setNullValid(true);
                         f.add(model.bind(choice, field.getNameText()));
                         listItem.add(f);
-                    } else if (field.getName().getType() == 6){ // date picker
-                        
+                    } else if (field.getName().getType() == 6){ // date picker                        
+                        listItem.add(new DatePicker("field", model, field.getNameText()));
                     } else {
-                        
+                        Fragment f = new Fragment("field", "textField");
+                        f.add(model.bind(new TextField("field"), field.getNameText()));
+                        listItem.add(f);
                     }
                 }
             };

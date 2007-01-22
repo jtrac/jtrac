@@ -16,27 +16,51 @@
 
 package info.jtrac.wicket;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import wicket.Component;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.panel.Panel;
-import wicket.model.AbstractModel;
-import wicket.model.IModel;
+import wicket.model.AbstractReadOnlyModel;
+import wicket.model.BoundCompoundPropertyModel;
+import wicket.util.convert.ConversionException;
+import wicket.util.convert.IConverter;
+import wicket.util.convert.SimpleConverterAdapter;
 
 /**
  * date picker panel
  */
 public class DatePicker extends Panel {
     
-    public DatePicker(String id) {
+    public DatePicker(String id, BoundCompoundPropertyModel model, String expression) {
         super(id);
-        final TextField dateField = new TextField("date");
+        final TextField dateField = new TextField("date") {
+            @Override
+            public IConverter getConverter() {
+                return new SimpleConverterAdapter() {
+                    private DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                    public String toString(Object o) {
+                        Date d = (Date) o;                        
+                        return df.format(d);
+                    }
+                    public Object toObject(String s) {
+                        try {
+                            return df.parse(s);
+                        } catch (Exception e) {
+                            throw new ConversionException(e);
+                        }
+                    }                    
+                };
+            }
+        };
         dateField.setOutputMarkupId(true);
-        add(dateField);
+        add(model.bind(dateField, expression));
         final Label button = new Label("button", "...");
         button.setOutputMarkupId(true);
         add(button);
-        Label script = new Label("script", new AbstractModel() {
+        Label script = new Label("script", new AbstractReadOnlyModel() {
             public Object getObject(Component component) {
                 return "Calendar.setup({"
                     + " inputField : '" + dateField.getMarkupId() + "',"
@@ -44,8 +68,6 @@ public class DatePicker extends Panel {
                     + " button : '" + button.getMarkupId() + "',"
                     + " step : 1"
                     + " });";                
-            }
-            public void setObject(Component component, Object object) {
             }
         });
         script.setEscapeModelStrings(false);
