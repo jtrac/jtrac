@@ -72,17 +72,25 @@ public class ItemFormPage extends BasePage {
                             };
                         });
                         choice.setNullValid(true);
+                        choice.add(new ErrorHighlighter());
+                        if (!field.isOptional()) {
+                            choice.setRequired(true);
+                        }
                         f.add(model.bind(choice, field.getNameText()));
                         listItem.add(f);
                     } else if (field.getName().getType() == 6){ // date picker                        
-                        listItem.add(new DatePicker("field", model, field.getNameText()));
+                        listItem.add(new DatePicker("field", model, field.getNameText(), !field.isOptional()));
                     } else {
                         Fragment f = new Fragment("field", "textField");
-                            if (field.getName().getType() == 4) {
-                                f.add(model.bind(new TextField("field", Double.class), field.getNameText()));
-                            } else {
-                                f.add(model.bind(new TextField("field"), field.getNameText()));
-                            }
+                        TextField textField = new TextField("field");
+                        if (field.getName().getType() == 4) {
+                            textField.setType(Double.class);
+                        }
+                        textField.add(new ErrorHighlighter());
+                        if (!field.isOptional()) {
+                            textField.setRequired(true);
+                        }                        
+                        f.add(model.bind(textField, field.getNameText()));
                         listItem.add(f);
                     }
                 }

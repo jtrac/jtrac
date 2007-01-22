@@ -34,7 +34,7 @@ import wicket.util.convert.SimpleConverterAdapter;
  */
 public class DatePicker extends Panel {
     
-    public DatePicker(String id, BoundCompoundPropertyModel model, String expression) {
+    public DatePicker(String id, BoundCompoundPropertyModel model, String expression, boolean required) {
         super(id);
         final TextField dateField = new TextField("date", Date.class) {
             @Override
@@ -56,6 +56,8 @@ public class DatePicker extends Panel {
             }
         };
         dateField.setOutputMarkupId(true);
+        dateField.setRequired(required);
+        dateField.add(new ErrorHighlighter());
         add(model.bind(dateField, expression));
         final Label button = new Label("button", "...");
         button.setOutputMarkupId(true);
