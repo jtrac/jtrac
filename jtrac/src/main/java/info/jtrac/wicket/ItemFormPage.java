@@ -21,6 +21,8 @@ import info.jtrac.domain.Item;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import wicket.feedback.FeedbackMessage;
+import wicket.feedback.IFeedbackMessageFilter;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
@@ -36,11 +38,31 @@ import wicket.model.BoundCompoundPropertyModel;
 /**
  * Create / Edit item form page
  */
-public class ItemFormPage extends BasePage {
+public class ItemFormPage extends BasePage {        
+    
+    private MyFilter filter;
+    
+    private class MyFilter implements IFeedbackMessageFilter {
+        private boolean hasRequiredError;
+        public boolean accept(FeedbackMessage fm) {
+            if(fm.getMessage().equals("RequiredValidator")) {
+                if (!hasRequiredError) {
+                    hasRequiredError = true;
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
     
     public ItemFormPage(Item item) {
         super("Edit Item");
-        border.add(new FeedbackPanel("feedback"));        
+        FeedbackPanel feedback = new FeedbackPanel("feedback");
+        filter = new MyFilter();
+        feedback.setFilter(filter);
+        border.add(feedback);        
         border.add(new ItemForm("form", item));
     }
     
@@ -58,7 +80,7 @@ public class ItemFormPage extends BasePage {
                 protected void populateItem(ListItem listItem) {
                     Field field = (Field) listItem.getModelObject();
                     listItem.add(new Label("label", field.getLabel()));
-                    listItem.add(new Label("star", field.isOptional() ? null : "*"));
+                    listItem.add(new Label("star", field.isOptional() ? "&nbsp;" : "*").setEscapeModelStrings(false));
                     if (field.getName().getType() < 4) { // drop down list
                         Fragment f = new Fragment("field", "dropDown");
                         final Map<String, String> options = field.getOptions();                                
@@ -100,15 +122,15 @@ public class ItemFormPage extends BasePage {
         }
         
         @Override
+        protected void validate() {
+            filter.hasRequiredError = false;
+            super.validate();
+        }
+        
+        @Override
         protected void onSubmit() {
+            ItemFormPage.this.
             info("the form was submitted");
-            Item item = (Item) getModelObject();
-            info("summary: " + item.getSummary());
-            info("detail: " + item.getDetail());
-            info("detail: " + item.getDetail());
-            for(Field f : item.getSpace().getMetadata().getFieldList()) {
-                info(f.getName() + ": " + item.getValue(f.getName()));
-            }
         }
         
     }
