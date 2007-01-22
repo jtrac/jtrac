@@ -78,7 +78,11 @@ public class ItemFormPage extends BasePage {
                         listItem.add(new DatePicker("field", model, field.getNameText()));
                     } else {
                         Fragment f = new Fragment("field", "textField");
-                        f.add(model.bind(new TextField("field"), field.getNameText()));
+                            if (field.getName().getType() == 4) {
+                                f.add(model.bind(new TextField("field", Double.class), field.getNameText()));
+                            } else {
+                                f.add(model.bind(new TextField("field"), field.getNameText()));
+                            }
                         listItem.add(f);
                     }
                 }

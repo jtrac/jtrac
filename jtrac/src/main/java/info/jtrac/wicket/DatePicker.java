@@ -36,7 +36,7 @@ public class DatePicker extends Panel {
     
     public DatePicker(String id, BoundCompoundPropertyModel model, String expression) {
         super(id);
-        final TextField dateField = new TextField("date") {
+        final TextField dateField = new TextField("date", Date.class) {
             @Override
             public IConverter getConverter() {
                 return new SimpleConverterAdapter() {
