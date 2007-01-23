@@ -2,8 +2,8 @@
 
 <select name="history.assignedTo" id="assignedTo">
     <option/>
-    <c:forEach items="${userSpaceRoles}" var="usr">
-        <option value="${usr.user.id}" <c:if test='${selected == usr.user.id}'>selected="true"</c:if>>${usr.user.name}</option>
+    <c:forEach items="${userSpaceRoles}" var="user">
+        <option value="${user.id}" <c:if test='${selected == user.id}'>selected="true"</c:if>>${user.name}</option>
     </c:forEach>
 </select>    
 

@@ -17,6 +17,7 @@
 package info.jtrac.util;
 
 import info.jtrac.domain.Space;
+import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,12 +58,12 @@ public class UserUtils {
      * This is why the item_view / history update screen has to be Ajaxed so that the drop
      * down list of users has to dynamically change based on the TO state
      */    
-     public static List<UserSpaceRole> filterUsersAbleToTransitionFrom(List<UserSpaceRole> userSpaceRoles, Space space, int state) {
+     public static List<User> filterUsersAbleToTransitionFrom(List<UserSpaceRole> userSpaceRoles, Space space, int state) {
         Set<String> set = space.getMetadata().getRolesAbleToTransitionFrom(state);
-        List<UserSpaceRole> list = new ArrayList<UserSpaceRole>(userSpaceRoles.size());
+        List<User> list = new ArrayList<User>(userSpaceRoles.size());
         for(UserSpaceRole usr : userSpaceRoles) {
             if(set.contains(usr.getRoleKey())) {
-                list.add(usr);
+                list.add(usr.getUser());
             }
         } 
         return list;         

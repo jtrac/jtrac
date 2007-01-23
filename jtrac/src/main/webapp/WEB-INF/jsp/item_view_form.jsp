@@ -104,8 +104,8 @@ function handleAjaxResponse(ajaxRequest) {
                         <select name="${status.expression}" id="assignedTo" <c:if test="${empty usersAbleToTransitionFrom}">disabled='true'</c:if>>
                             <c:if test="${!empty usersAbleToTransitionFrom}">
                                 <option/>
-                                <c:forEach items="${usersAbleToTransitionFrom}" var="usr">
-                                    <option value="${usr.user.id}" <c:if test='${status.value == usr.user.id}'>selected="true"</c:if>>${usr.user.name}</option>
+                                <c:forEach items="${usersAbleToTransitionFrom}" var="user">
+                                    <option value="${user.id}" <c:if test='${status.value == user.id}'>selected="true"</c:if>>${user.name}</option>
                                 </c:forEach>                         
                             </c:if>
                         </select>                       

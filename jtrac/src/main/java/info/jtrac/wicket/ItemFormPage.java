@@ -18,6 +18,11 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Item;
+import info.jtrac.domain.Space;
+import info.jtrac.domain.State;
+import info.jtrac.domain.User;
+import info.jtrac.domain.UserSpaceRole;
+import info.jtrac.util.UserUtils;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -135,6 +140,21 @@ public class ItemFormPage extends BasePage {
             };
             listView.setReuseItems(true);
             add(listView);
+            Space space = item.getSpace();
+            List<UserSpaceRole> userSpaceRoles = getJtrac().findUserRolesForSpace(space.getId());
+            List<User> assignable = UserUtils.filterUsersAbleToTransitionFrom(userSpaceRoles, space, State.OPEN);
+            DropDownChoice choice = new DropDownChoice("assignedTo", assignable, new IChoiceRenderer() {
+                public Object getDisplayValue(Object o) {
+                    return ((User) o).getName();
+                }
+                public String getIdValue(Object o, int i) {
+                    return ((User) o).getId() + "";
+                }                
+            });
+            choice.setNullValid(true);
+            choice.setRequired(true);
+            choice.add(new ErrorHighlighter());            
+            add(choice);
         }
         
         @Override

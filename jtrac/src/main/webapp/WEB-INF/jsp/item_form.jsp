@@ -69,8 +69,8 @@
                                 <spring:bind path="item.assignedTo">                
                                     <select name="${status.expression}">
                                         <option/>
-                                        <c:forEach items="${usersAbleToTransitionFrom}" var="usr">                                            
-                                            <option value="${usr.user.id}" <c:if test='${usr.user.id == status.value}'>selected='true'</c:if>>${usr.user.name}</option>                                            
+                                        <c:forEach items="${usersAbleToTransitionFrom}" var="user">                                            
+                                            <option value="${user.id}" <c:if test='${user.id == status.value}'>selected='true'</c:if>>${user.name}</option>                                            
                                         </c:forEach>   
                                     </select>
                                     <span class="error">${status.errorMessage}</span>
