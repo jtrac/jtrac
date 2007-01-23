@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import wicket.Component;
 import wicket.feedback.FeedbackMessage;
 import wicket.feedback.IFeedbackMessageFilter;
 import wicket.markup.html.basic.Label;
@@ -35,6 +36,7 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.markup.html.panel.Fragment;
+import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
 
 /**
@@ -82,7 +84,7 @@ public class ItemFormPage extends BasePage {
             List<Field> fields = item.getSpace().getMetadata().getFieldList();
             ListView listView = new ListView("fields", fields) {
                 protected void populateItem(ListItem listItem) {
-                    Field field = (Field) listItem.getModelObject();
+                    final Field field = (Field) listItem.getModelObject();
                     listItem.add(new Label("label", field.getLabel()));
                     listItem.add(new Label("star", field.isOptional() ? "&nbsp;" : "*").setEscapeModelStrings(false));
                     if (field.getName().getType() < 4) { // drop down list
@@ -99,13 +101,18 @@ public class ItemFormPage extends BasePage {
                         });
                         choice.setNullValid(true);
                         choice.add(new ErrorHighlighter());
+                        choice.setLabel(new AbstractReadOnlyModel() {
+                            public Object getObject(Component c) {
+                                return field.getLabel();
+                            }
+                        });                        
                         if (!field.isOptional()) {
                             choice.setRequired(true);
                         }
                         f.add(model.bind(choice, field.getNameText()));
                         listItem.add(f);
                     } else if (field.getName().getType() == 6){ // date picker                        
-                        listItem.add(new DatePicker("field", model, field.getNameText(), !field.isOptional()));
+                        listItem.add(new DatePicker("field", model, field));
                     } else {
                         Fragment f = new Fragment("field", "textField");
                         TextField textField = new TextField("field");
@@ -115,7 +122,12 @@ public class ItemFormPage extends BasePage {
                         textField.add(new ErrorHighlighter());
                         if (!field.isOptional()) {
                             textField.setRequired(true);
-                        }                        
+                        }
+                        textField.setLabel(new AbstractReadOnlyModel() {
+                            public Object getObject(Component c) {
+                                return field.getLabel();
+                            }
+                        });                         
                         f.add(model.bind(textField, field.getNameText()));
                         listItem.add(f);
                     }

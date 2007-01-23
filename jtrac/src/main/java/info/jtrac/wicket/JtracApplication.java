@@ -52,7 +52,9 @@ public class JtracApplication extends WebApplication {
         // delegate wicket i18n support to spring i18n
         getResourceSettings().addStringResourceLoader(new IStringResourceLoader() {
             public String loadStringResource(Class clazz, String key, Locale locale, String style) {
-                if (key.endsWith(".RequiredValidator")) {
+                if (key.equals("nullValid")) {
+                    return "";
+                } else if (key.endsWith(".RequiredValidator")) {
                     key = "requiredValidator";
                 }
                 try {

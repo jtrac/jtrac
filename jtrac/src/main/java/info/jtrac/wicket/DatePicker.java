@@ -16,6 +16,7 @@
 
 package info.jtrac.wicket;
 
+import info.jtrac.domain.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,9 +35,9 @@ import wicket.util.convert.SimpleConverterAdapter;
  */
 public class DatePicker extends Panel {
     
-    public DatePicker(String id, BoundCompoundPropertyModel model, String expression, boolean required) {
+    public DatePicker(String id, BoundCompoundPropertyModel model, final Field field) {
         super(id);
-        final TextField dateField = new TextField("date", Date.class) {
+        final TextField dateField = new TextField("field", Date.class) {
             @Override
             public IConverter getConverter() {
                 return new SimpleConverterAdapter() {
@@ -56,9 +57,14 @@ public class DatePicker extends Panel {
             }
         };
         dateField.setOutputMarkupId(true);
-        dateField.setRequired(required);
+        dateField.setRequired(!field.isOptional());
+        dateField.setLabel(new AbstractReadOnlyModel() {
+            public Object getObject(Component component) {
+                return field.getLabel();
+            }
+        });
         dateField.add(new ErrorHighlighter());
-        add(model.bind(dateField, expression));
+        add(model.bind(dateField, field.getName().getText()));
         final Label button = new Label("button", "...");
         button.setOutputMarkupId(true);
         add(button);
