@@ -39,6 +39,8 @@ import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.TextArea;
 import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.upload.FileUpload;
+import wicket.markup.html.form.upload.FileUploadField;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
@@ -81,8 +83,11 @@ public class ItemFormPage extends BasePage {
     
     private class ItemForm extends Form {
         
+        private FileUploadField fileUploadField;
+        
         public ItemForm(String id, Item item) {
             super(id);
+            setMultiPart(true);
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(item);
             setModel(model);
             add(new TextField("summary").setRequired(true).add(new ErrorHighlighter()));
@@ -167,6 +172,9 @@ public class ItemFormPage extends BasePage {
                 }               
             });
             add(itemUsers);
+            fileUploadField = new FileUploadField("file");
+            // TODO file size limit
+            add(fileUploadField);            
         }
         
         @Override
@@ -177,8 +185,9 @@ public class ItemFormPage extends BasePage {
         
         @Override
         protected void onSubmit() {
-            ItemFormPage.this.
+            final FileUpload fileUpload = fileUploadField.getFileUpload();
             info("the form was submitted");
+            info(fileUpload + "");
         }
         
     }
