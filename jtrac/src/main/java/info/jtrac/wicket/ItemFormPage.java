@@ -18,6 +18,7 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
@@ -35,6 +36,7 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.IChoiceRenderer;
+import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.TextArea;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.list.ListItem;
@@ -155,6 +157,16 @@ public class ItemFormPage extends BasePage {
             choice.setRequired(true);
             choice.add(new ErrorHighlighter());            
             add(choice);
+            List<ItemUser> choices = UserUtils.convertToItemUserList(userSpaceRoles);
+            ListMultipleChoice itemUsers = new JtracCheckBoxMultipleChoice("itemUsers", choices, new IChoiceRenderer() {
+                public Object getDisplayValue(Object o) {
+                    return ((ItemUser) o).getUser().getName();
+                }
+                public String getIdValue(Object o, int i) {
+                    return ((ItemUser) o).getUser().getId() + "";
+                }               
+            });
+            add(itemUsers);
         }
         
         @Override

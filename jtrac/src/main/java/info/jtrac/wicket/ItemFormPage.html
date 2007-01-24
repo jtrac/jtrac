@@ -7,47 +7,77 @@
         <span wicket:id="border">
             <span wicket:id="feedback"></span>
             <form wicket:id="form">
-                <table class="jtrac">
-                    <tr>    
-                        <td class="label">
-                            <wicket:message key="item_form.summary"/>
-                            <font color="red">*</font>
-                        </td>    
-                        <td>
-                            <input wicket:id="summary" size="107"/>                                                            
-                        </td>
-                    </tr>
-                    <tr>    
-                        <td class="label">
-                            <wicket:message key="item_form.detail"/>
-                            <font color="red">*</font>
-                        </td>    
-                        <td>
-                            <textarea wicket:id="detail" rows="10" cols="80"></textarea>                                                        
-                        </td>
-                    </tr>
-                    <tr wicket:id="fields">
-                        <td class="label">
-                            <span wicket:id="label"></span>
-                            <font color="red" wicket:id="star"></font>
-                        </td>    
-                        <td wicket:id="field"></td>
-                    </tr>
-                    <tr>    
-                        <td class="label">
-                            <wicket:message key="item_form.assignTo"/>
-                            <font color="red">*</font>
-                        </td>    
-                        <td>
-                            <select wicket:id="assignedTo"/>                                                       
-                        </td>
-                    </tr>                    
+                <table class="bdr-collapse">
                     <tr>
-                        <td/>
-                        <td>
-                            <input type="submit" wicket:message="value=submit"/>
+                        <td colspan="2">
+                            <table class="jtrac">
+                                <tr>    
+                                    <td class="label">
+                                        <wicket:message key="item_form.summary"/>
+                                        <font color="red">*</font>
+                                    </td>    
+                                    <td>
+                                        <input wicket:id="summary" style="width:49.7em"/>                                                            
+                                    </td>
+                                </tr>
+                                <tr>    
+                                    <td class="label">
+                                        <wicket:message key="item_form.detail"/>
+                                        <font color="red">*</font>
+                                    </td>    
+                                    <td>
+                                        <textarea wicket:id="detail" rows="10" style="width:51em"></textarea>                                                        
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
+                    <tr valign="top">
+                        <td>
+                            <table class="jtrac">
+                                <tr wicket:id="fields">
+                                    <td class="label">
+                                        <span wicket:id="label"></span>
+                                        <font color="red" wicket:id="star"></font>
+                                    </td>    
+                                    <td wicket:id="field"></td>
+                                </tr>
+                                <tr>    
+                                    <td class="label">
+                                        <wicket:message key="item_form.assignTo"/>
+                                        <font color="red">*</font>
+                                    </td>    
+                                    <td>
+                                        <select wicket:id="assignedTo"/>                                                       
+                                    </td>
+                                </tr>                    
+                                <tr>
+                                    <td/>
+                                    <td>
+                                        <input type="submit" wicket:message="value=submit"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td align="right">
+                            <table class="jtrac">
+                                <tr>
+                                    <th><wicket:message key="item_form.notifyByEmail"/></th>
+                                </tr>
+                                <tr>
+                                    <td wicket:id="itemUsers"></td>
+                                </tr>
+                                <tr>
+                                    <th><wicket:message key="item_form.attachment"/></th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input name="file" size="15" type="file">
+                                    </td>
+                                </tr>
+                            </table>                            
+                        </td>
+                    </tr>                            
                 </table>
             </form>
         </span>

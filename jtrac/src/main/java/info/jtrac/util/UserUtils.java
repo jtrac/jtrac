@@ -16,6 +16,7 @@
 
 package info.jtrac.util;
 
+import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
@@ -67,5 +68,16 @@ public class UserUtils {
             }
         } 
         return list;         
-     }    
+     }
+     
+     /**
+      * used to init backing form object in wicket corresponding to ItemUser / notifyList
+      */
+     public static List<ItemUser> convertToItemUserList(List<UserSpaceRole> userSpaceRoles) {
+         List<ItemUser> itemUsers = new ArrayList<ItemUser>(userSpaceRoles.size());
+         for(UserSpaceRole usr : userSpaceRoles) {
+             itemUsers.add(new ItemUser(usr.getUser()));
+         }
+         return itemUsers;
+     }
 }
