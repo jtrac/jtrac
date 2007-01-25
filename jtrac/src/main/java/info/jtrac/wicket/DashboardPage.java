@@ -39,7 +39,7 @@ public class DashboardPage extends BasePage {
         CountsHolder countsHolder = getJtrac().loadCountsForUser(user);        
         List<Counts> countsList = new ArrayList<Counts>(countsHolder.getCounts().values());                    
         
-        border.add(new ListView("dashboard", countsList) {
+        border.add(new ListView("dashboardRows", countsList) {
             protected void populateItem(final ListItem listItem) {
                 Counts counts = (Counts) listItem.getModelObject();
                 DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", counts);

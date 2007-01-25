@@ -16,8 +16,13 @@
 
 package info.jtrac.wicket;
 
+import info.jtrac.domain.Field;
 import info.jtrac.domain.Item;
+import java.util.Map;
+import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
 import wicket.model.PropertyModel;
 
 /**
@@ -25,7 +30,7 @@ import wicket.model.PropertyModel;
  */
 public class ItemViewPanel extends BasePanel {    
     
-    public ItemViewPanel(String id, Item item) {
+    public ItemViewPanel(String id, final Item item) {
         
         super(id);    
         
@@ -35,6 +40,20 @@ public class ItemViewPanel extends BasePanel {
         add(new Label("assignedTo", new PropertyModel(item, "assignedTo.name")));
         add(new Label("summary", new PropertyModel(item, "summary")));
         add(new Label("detail", new PropertyModel(item, "detail")));
+        
+        final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
+        final Map<Field.Name, Field> fields = item.getSpace().getMetadata().getFields();
+        add(new ListView("fields", item.getSpace().getMetadata().getFieldOrder()) {
+            protected void populateItem(ListItem listItem) {
+                if(listItem.getIndex() % 2 == 0) {
+                    listItem.add(sam);
+                }
+                Field.Name fieldName = (Field.Name) listItem.getModelObject();
+                Field field = fields.get(fieldName);
+                listItem.add(new Label("label", field.getLabel()));
+                listItem.add(new Label("value", item.getCustomValue(fieldName)));
+            }            
+        });
       
     }
     
