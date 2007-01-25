@@ -1,0 +1,26 @@
+<wicket:panel>
+    <table class="jtrac" width="100%">
+        <tr class="alt">
+            <td class="label"><wicket:message key="item_view.id"/></td>
+            <td wicket:id="refId"></td>
+            <td class="label"><wicket:message key="item_view.relatedItems"/></td>
+            <td colspan="3"></td>
+        </tr>
+        <tr>
+            <td class="label" width="20%"><wicket:message key="item_view.status"/></td>
+            <td wicket:id="status"></td>
+            <td class="label"><wicket:message key="item_view.loggedBy"/></td>
+            <td wicket:id="loggedBy"></td>
+            <td class="label"><wicket:message key="item_view.assignedTo"/></td>
+            <td wicket:id="assignedTo"></td>
+        </tr>
+        <tr class="alt">
+            <td class="label"><wicket:message key="item_view.summary"/></td>
+            <td wicket:id="summary" colspan="5"></td>
+        </tr>
+        <tr>
+            <td class="label" valign="top"><wicket:message key="item_view.detail"/></td>
+            <td wicket:id="detail" colspan="5"></td>
+        </tr>                
+    </table>
+</wicket:panel>

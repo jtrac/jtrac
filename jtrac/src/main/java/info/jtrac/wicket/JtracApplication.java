@@ -20,9 +20,8 @@ import info.jtrac.Jtrac;
 import java.util.Locale;
 import javax.servlet.ServletContext;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.MessageSource;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import wicket.markup.MarkupParser;
-import wicket.markup.MarkupParserFactory;
 import wicket.markup.parser.filter.WicketMessageTagHandler;
 import wicket.protocol.http.WebApplication;
 import wicket.resource.loader.IStringResourceLoader;
@@ -34,9 +33,14 @@ import wicket.resource.loader.IStringResourceLoader;
 public class JtracApplication extends WebApplication {        
     
     private Jtrac jtrac;
+    private ApplicationContext applicationContext;
 
     public Jtrac getJtrac() {
         return jtrac;
+    }
+
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
     }
     
     @Override
@@ -46,8 +50,8 @@ public class JtracApplication extends WebApplication {
         
         // get hold of spring managed service layer (see BasePage, BasePanel etc for how it is used)
         ServletContext sc = getWicketServlet().getServletContext();
-        final ApplicationContext ac = WebApplicationContextUtils.getWebApplicationContext(sc);        
-        jtrac = (Jtrac) ac.getBean("jtrac");
+        applicationContext = WebApplicationContextUtils.getWebApplicationContext(sc);        
+        jtrac = (Jtrac) applicationContext.getBean("jtrac");
         
         // delegate wicket i18n support to spring i18n
         getResourceSettings().addStringResourceLoader(new IStringResourceLoader() {
@@ -58,7 +62,7 @@ public class JtracApplication extends WebApplication {
                     key = "requiredValidator";
                 }
                 try {
-                    return ac.getMessage(key, null, locale);
+                    return applicationContext.getMessage(key, null, locale);
                 } catch(Exception e) {
                     return "?*?" + key + "?*?" ;
                 }

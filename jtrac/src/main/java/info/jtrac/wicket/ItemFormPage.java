@@ -23,6 +23,7 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
+import info.jtrac.util.SecurityUtils;
 import info.jtrac.util.UserUtils;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -186,8 +187,12 @@ public class ItemFormPage extends BasePage {
         @Override
         protected void onSubmit() {
             final FileUpload fileUpload = fileUploadField.getFileUpload();
-            info("the form was submitted");
-            info(fileUpload + "");
+            Item item = (Item) getModelObject();
+            User user = SecurityUtils.getPrincipal();
+            item.setLoggedBy(user);
+            item.setStatus(State.OPEN);
+            getJtrac().storeItem(item, null);
+            setResponsePage(new ItemViewPage(item));
         }
         
     }
