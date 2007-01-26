@@ -53,7 +53,10 @@ public class DashboardRowPanel extends BasePanel {
 
         add(new Link("search") {
             public void onClick() {
-                
+                // space instance held in Counts may have originated from Acegi
+                // so incompatible with open session in view, get proper one                
+                Space space = getJtrac().loadSpace(counts.getSpace().getId());
+                setResponsePage(new ItemSearchPage(space));
             }
         });        
         

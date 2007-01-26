@@ -30,7 +30,7 @@ public class ItemViewPage extends BasePage {
         
         super("Item View");      
         
-        border.add(new ItemViewPanel("itemView", item));
+        border.add(new ItemViewPanel("itemViewPanel", item));
         
     }
     
