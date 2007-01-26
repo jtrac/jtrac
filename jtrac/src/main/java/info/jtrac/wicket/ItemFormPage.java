@@ -91,7 +91,13 @@ public class ItemFormPage extends BasePage {
             setMultiPart(true);
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(item);
             setModel(model);
-            add(new TextField("summary").setRequired(true).add(new ErrorHighlighter()));
+            final Component summaryField = new TextField("summary").setRequired(true).add(new ErrorHighlighter()).setOutputMarkupId(true);
+            add(summaryField);
+            ItemFormPage.this.getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
+                public Object getObject(Component component) {
+                    return "document.getElementById('" + summaryField.getMarkupId() + "').focus()";
+                }
+            }, summaryField);
             add(new TextArea("detail").setRequired(true).add(new ErrorHighlighter()));
             // custom fields
             List<Field> fields = item.getSpace().getMetadata().getFieldList();
