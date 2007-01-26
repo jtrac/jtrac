@@ -6,12 +6,22 @@
     <body>
         <span wicket:id="border">
             <table class="jtrac" width="100%">
+                <tr>
+                    <th><wicket:message key="item_list.id"/></th>
+                    <th><wicket:message key="item_list.summary"/></th>
+                    <th><wicket:message key="item_list.loggedBy"/></th>
+                    <th><wicket:message key="item_list.status"/></th>
+                    <th><wicket:message key="item_list.assignedTo"/></th>
+                    <th wicket:id="labels"><span wicket:id="label"></span></th>
+                    <th><wicket:message key="item_list.timeStamp"/></th>
+                </tr>
                 <tr wicket:id="itemList">
                     <td wicket:id="refId"></td>
                     <td wicket:id="summary"></td>
                     <td wicket:id="loggedBy"></td>
                     <td wicket:id="status"></td>
                     <td wicket:id="assignedTo"></td>
+                    <td wicket:id="fields"></td>
                     <td wicket:id="timeStamp"></td>
                 </tr>
             </table>

@@ -18,6 +18,7 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.Item;
 import java.util.List;
+import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -32,8 +33,13 @@ public class ItemListPage extends BasePage {
         
         super("Item Search Results");
         
+        final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
+        
         ListView listView = new ListView("itemList", items) {
             protected void populateItem(ListItem listItem) {
+                if(listItem.getIndex() % 2 != 0) {
+                    listItem.add(sam);
+                }                
                 Item item = (Item) listItem.getModelObject();
                 listItem.add(new Label("refId", new PropertyModel(item, "refId")));
                 listItem.add(new Label("summary", new PropertyModel(item, "summary")));                
