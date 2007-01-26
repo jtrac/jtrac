@@ -27,9 +27,9 @@ import wicket.model.BoundCompoundPropertyModel;
 /**
  * dashboard page
  */
-public class ItemSearchPage extends BasePage {
+public class ItemSearchFormPage extends BasePage {
       
-    public ItemSearchPage(Space space) {
+    public ItemSearchFormPage(Space space) {
         
         super("Item Search");
         border.add(new FeedbackPanel("feedback"));
@@ -50,7 +50,7 @@ public class ItemSearchPage extends BasePage {
         protected void onSubmit() {
             ItemSearch itemSearch = (ItemSearch) getModelObject();
             List<Item> items = getJtrac().findItems(itemSearch);
-            setResponsePage(new ItemListPage(items));
+            setResponsePage(new ItemListPage(items, itemSearch));
         }        
             
     }

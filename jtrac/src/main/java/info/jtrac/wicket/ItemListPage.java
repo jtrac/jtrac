@@ -16,7 +16,10 @@
 
 package info.jtrac.wicket;
 
+import info.jtrac.domain.Field;
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemSearch;
+import info.jtrac.util.DateUtils;
 import java.util.List;
 import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.basic.Label;
@@ -29,28 +32,48 @@ import wicket.model.PropertyModel;
  */
 public class ItemListPage extends BasePage {
       
-    public ItemListPage(List<Item> items) {
+    public ItemListPage(List<Item> items, ItemSearch itemSearch) {
         
         super("Item Search Results");
         
+        final List<Field> fields = itemSearch.getFields();
+        
+        ListView labels = new ListView("labels", fields) {
+            protected void populateItem(ListItem listItem) {
+                Field field = (Field) listItem.getModelObject();
+                listItem.add(new Label("label", field.getLabel()));
+            }            
+        };        
+        
+        border.add(labels);
+        
         final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
         
-        ListView listView = new ListView("itemList", items) {
+        ListView itemList = new ListView("itemList", items) {
             protected void populateItem(ListItem listItem) {
                 if(listItem.getIndex() % 2 != 0) {
                     listItem.add(sam);
                 }                
-                Item item = (Item) listItem.getModelObject();
+                final Item item = (Item) listItem.getModelObject();
                 listItem.add(new Label("refId", new PropertyModel(item, "refId")));
                 listItem.add(new Label("summary", new PropertyModel(item, "summary")));                
                 listItem.add(new Label("loggedBy", new PropertyModel(item, "loggedBy.name")));
                 listItem.add(new Label("status", new PropertyModel(item, "statusValue")));
                 listItem.add(new Label("assignedTo", new PropertyModel(item, "assignedTo.name")));
-                listItem.add(new Label("timeStamp", new PropertyModel(item, "timeStamp")));
+                               
+                ListView fieldValues = new ListView("fields", fields) {
+                    protected void populateItem(ListItem listItem) {
+                        Field field = (Field) listItem.getModelObject();
+                        listItem.add(new Label("field", item.getCustomValue(field.getName())));
+                    }                    
+                };                
+                listItem.add(fieldValues);
+                
+                listItem.add(new Label("timeStamp", DateUtils.formatTimeStamp(item.getTimeStamp())));
             }            
         };
         
-        border.add(listView);        
+        border.add(itemList);        
         
     }
 

@@ -21,14 +21,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Date Formatting helper
+ * Date Formatting helper, currently date formats are hard-coded for the entire app
+ * hence the use of static SimpleDateFormat instances, although they are known not to be synchronized
  */
 public class DateUtils {
     
     private static Format dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static Format dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     
     public static String format(Date date) {
         return date == null ? "" : dateFormat.format(date);
+    }
+
+    public static String formatTimeStamp(Date date) {
+        return date == null ? "" : dateTimeFormat.format(date);
     }
     
 }

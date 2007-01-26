@@ -56,7 +56,7 @@ public class DashboardRowPanel extends BasePanel {
                 // space instance held in Counts may have originated from Acegi
                 // so incompatible with open session in view, get proper one                
                 Space space = getJtrac().loadSpace(counts.getSpace().getId());
-                setResponsePage(new ItemSearchPage(space));
+                setResponsePage(new ItemSearchFormPage(space));
             }
         });        
         
