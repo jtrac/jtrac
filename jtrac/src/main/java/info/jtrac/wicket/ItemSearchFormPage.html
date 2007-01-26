@@ -7,6 +7,19 @@
         <span wicket:id="border">
             <span wicket:id="feedback"></span>
             <form wicket:id="form">
+                <table class="jtrac">
+                    <tr>
+                        <th><wicket:message key="item_search_form.textSearch"/></th>
+                        <td><input size="30"/></td>
+                        <td>button here</td>        
+                    </tr>
+                </table>
+                <table class="jtrac">
+                    <tr>
+                        <th><wicket:message key="item_search_form.resultsPerPage"/></th>
+                        <td><select wicket:id="pageSize"/></td>
+                    </tr>
+                </table>
                 <input type="submit" wicket:message="value=submit"/>
             </form>
         </span>

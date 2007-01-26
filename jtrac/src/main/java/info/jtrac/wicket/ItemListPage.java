@@ -27,16 +27,21 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
+import wicket.markup.html.panel.Fragment;
 import wicket.model.PropertyModel;
 
 /**
  * dashboard page
  */
-public class ItemListPage extends BasePage {
-      
-    public ItemListPage(List<Item> items, ItemSearch itemSearch) {
+public class ItemListPage extends BasePage {      
+    
+    public ItemListPage(final ItemSearch itemSearch) {
         
         super("Item Search Results");
+
+        final List<Item> items = getJtrac().findItems(itemSearch);
+        
+        //======================== PAGINATION ===================================
         
         long resultCount = itemSearch.getResultCount();
         border.add(new Label("count", resultCount + ""));
@@ -45,39 +50,75 @@ public class ItemListPage extends BasePage {
         int pageCount = 0;
         if (pageSize != -1) {
             pageCount = (int) Math.ceil((double) resultCount / pageSize);
-        }        
+        }                
         
-        border.add(new Link("prev") {
-            public void onClick() {
-                
+        if(pageCount > 1) {
+            
+            Fragment pagination = new Fragment("pagination", "pagination");
+            final int currentPage = itemSearch.getCurrentPage();
+            
+            List<Integer> pageNumbers = new ArrayList<Integer>(pageCount);        
+            for(int i = 0; i < pageCount; i++) {
+                pageNumbers.add(new Integer(i));
             }            
-        });
-        
-        List<Integer> pageNumbers = new ArrayList<Integer>(pageCount);        
-        for(int i = 0; i < pageCount; i++) {
-            pageNumbers.add(new Integer(i));
+                        
+            if (currentPage == 0) {
+                pagination.add(new Label("prev", "<<"));
+            } else {
+                Fragment prev = new Fragment("prev", "prev");
+                prev.add(new Link("prev") {
+                    public void onClick() {
+                        itemSearch.setCurrentPage(currentPage - 1);
+                        setResponsePage(new ItemListPage(itemSearch));
+                    }            
+                });
+                pagination.add(prev);
+            }
+
+            ListView pages = new ListView("pages", pageNumbers) {
+                protected void populateItem(ListItem listItem) {
+                    final Integer i = (Integer) listItem.getModelObject();
+                    String pageNumber = i + 1 + "";
+                    if (currentPage == i) {
+                        listItem.add(new Label("page", pageNumber));
+                    } else {
+                        Fragment page = new Fragment("page", "page");
+                        Link link = new Link("page") {
+                            public void onClick() {
+                                itemSearch.setCurrentPage(i);
+                                setResponsePage(new ItemListPage(itemSearch));
+                            }
+                        };
+                        link.add(new Label("page", pageNumber));
+                        page.add(link);
+                        listItem.add(page);
+                    }
+                }            
+            };                
+            pagination.add(pages);            
+                        
+            final int lastPage = pageCount - 1;
+            if (currentPage == lastPage) {
+                pagination.add(new Label("next", ">>"));
+            } else {
+                Fragment next = new Fragment("next", "next");
+
+                next.add(new Link("next") {
+                    public void onClick() {
+                        itemSearch.setCurrentPage(currentPage + 1);
+                        setResponsePage(new ItemListPage(itemSearch));
+                    }            
+                });
+                pagination.add(next);
+            }
+            
+            border.add(pagination);
+            
+        } else {
+            border.add(new Label("pagination", ""));
         }
         
-        ListView pages = new ListView("pages", pageNumbers) {
-            protected void populateItem(ListItem listItem) {
-                Integer i = (Integer) listItem.getModelObject();
-                Link link = new Link("page") {
-                    public void onClick() {
-                        
-                    }
-                };
-                link.add(new Label("page", i + 1 + ""));
-                listItem.add(link);
-            }            
-        };
-                
-        border.add(pages);
-        
-        border.add(new Link("next") {
-            public void onClick() {
-                
-            }            
-        });        
+        //======================== ITEMS =======================================
         
         final List<Field> fields = itemSearch.getFields();
         

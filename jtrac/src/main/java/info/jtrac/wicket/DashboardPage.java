@@ -34,6 +34,7 @@ public class DashboardPage extends BasePage {
     public DashboardPage() {
         
         super("Dashboard");
+        setVersioned(false);
         
         User user = SecurityUtils.getPrincipal();
         CountsHolder countsHolder = getJtrac().loadCountsForUser(user);        

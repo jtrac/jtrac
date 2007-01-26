@@ -5,10 +5,9 @@
     </head>
     <body>
         <span wicket:id="border">
-            <span wicket:id="count"></span> <wicket:message key="item_list.recordsFound"/>
-            <span wicket:id="prev"><a href="#">&lt;&lt;</a></span>            
-            <span wicket:id="pages"><a href="#" wicket:id="page"><span wicket:id="page"></span></a></span>
-            <span wicket:id="next"><a href="#">&gt;&gt;</a></span>
+            <div class="space-below">
+                <span wicket:id="count"></span> <wicket:message key="item_list.recordsFound"/>&nbsp;&nbsp;<span wicket:id="pagination" class="page-links"></span>
+            </div>
             <table class="jtrac" width="100%">
                 <tr>
                     <th><wicket:message key="item_list.id"/></th>
@@ -20,7 +19,7 @@
                     <th><wicket:message key="item_list.timeStamp"/></th>
                 </tr>
                 <tr wicket:id="itemList">
-                    <td><a href="#" wicket:id="refId"><span wicket:id="refId"></span></a></td>
+                    <td><span wicket:id="refId"><a href="#" wicket:id="refId"></a></span></td>
                     <td wicket:id="summary"></td>
                     <td wicket:id="loggedBy"></td>
                     <td wicket:id="status"></td>
@@ -30,5 +29,11 @@
                 </tr>
             </table>
         </span>
+        <wicket:fragment wicket:id="pagination">
+            <span wicket:id="prev"></span>&nbsp;&nbsp;<span wicket:id="pages"><span wicket:id="page"></span>&nbsp;&nbsp;</span><span wicket:id="next"></span>        
+        </wicket:fragment>
+        <wicket:fragment id="prev"><span wicket:id="prev"><span wicket:id="prev"><a href="#">&lt;&lt;</a></span></span></wicket:fragment>        
+        <wicket:fragment id="next"><span wicket:id="next"><span wicket:id="next"><a href="#">&gt;&gt;</a></span></span></wicket:fragment>
+        <wicket:fragment id="page"><span wicket:id="page"><span wicket:id="page"><a href="#" wicket:id="page"></a></span></span></wicket:fragment>
     </body>
 </html>

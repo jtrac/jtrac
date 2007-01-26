@@ -21,3 +21,4 @@ a:hover { color: red; }
 .bdr-collapse td { padding: 0; }
 .page-links { font-weight: bold; }
 .nav-table img { border: none; }
+.space-below { padding-bottom: 0.5em; }

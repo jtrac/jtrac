@@ -19,8 +19,11 @@ package info.jtrac.wicket;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
+import java.util.Arrays;
 import java.util.List;
+import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
+import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.BoundCompoundPropertyModel;
 
@@ -44,13 +47,23 @@ public class ItemSearchFormPage extends BasePage {
             ItemSearch itemSearch = new ItemSearch(space);
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(itemSearch);
             setModel(model);
+            List<Integer> sizes = Arrays.asList(new Integer[] { 5, 10, 15, 25, 50, 100, -1 });
+            final String noLimit = getLocalizer().getString("item_search_form.noLimit", null);
+            DropDownChoice choice = new DropDownChoice("pageSize", sizes, new IChoiceRenderer() {
+                public Object getDisplayValue(Object o) {
+                    return ((Integer) o) == -1 ? noLimit : o.toString();
+                }
+                public String getIdValue(Object o, int i) {
+                    return o.toString();
+                }
+            });
+            add(choice);
         }
         
         @Override
         protected void onSubmit() {
-            ItemSearch itemSearch = (ItemSearch) getModelObject();
-            List<Item> items = getJtrac().findItems(itemSearch);
-            setResponsePage(new ItemListPage(items, itemSearch));
+            ItemSearch itemSearch = (ItemSearch) getModelObject();            
+            setResponsePage(new ItemListPage(itemSearch));
         }        
             
     }
