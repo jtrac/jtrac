@@ -33,6 +33,14 @@ import wicket.model.PropertyModel;
  */
 public class DashboardRowPanel extends BasePanel {    
     
+    /**
+     * space instance held in Counts may have originated from Acegi
+     * so incompatible with open session in view, get proper one      
+     */      
+    private Space reloadSpace(Space space) {
+        return getJtrac().loadSpace(space.getId());
+    }
+    
     public DashboardRowPanel(String id, final Counts counts) {
         
         super(id);
@@ -41,10 +49,8 @@ public class DashboardRowPanel extends BasePanel {
         add(new Label("space", new PropertyModel(counts, "space.name")));
         
         add(new Link("new") {
-            public void onClick() {
-                // space instance held in Counts may have originated from Acegi
-                // so incompatible with open session in view, get proper one                
-                Space space = getJtrac().loadSpace(counts.getSpace().getId());
+            public void onClick() {               
+                Space space = reloadSpace(counts.getSpace());
                 Item item = new Item();
                 item.setSpace(space);
                 setResponsePage(new ItemFormPage(item));
@@ -53,9 +59,7 @@ public class DashboardRowPanel extends BasePanel {
 
         add(new Link("search") {
             public void onClick() {
-                // space instance held in Counts may have originated from Acegi
-                // so incompatible with open session in view, get proper one                
-                Space space = getJtrac().loadSpace(counts.getSpace().getId());
+                Space space = reloadSpace(counts.getSpace());
                 setResponsePage(new ItemSearchFormPage(space));
             }
         });        
@@ -65,9 +69,7 @@ public class DashboardRowPanel extends BasePanel {
                 Counts temp = counts;  // get non-final instance
                 User user = SecurityUtils.getPrincipal();
                 if (!temp.isDetailed()) {
-                    // space instance held in Counts may have originated from Acegi
-                    // so incompatible with open session in view, get proper one
-                    Space space = getJtrac().loadSpace(temp.getSpace().getId());
+                    Space space = reloadSpace(counts.getSpace());
                     temp = getJtrac().loadCountsForUserSpace(user, space);
                 }
                 DashboardRowExpandedPanel dashboardRow = new DashboardRowExpandedPanel("dashboardRow", temp);
