@@ -44,7 +44,14 @@ public class ItemListPage extends BasePage {
         //======================== PAGINATION ===================================
         
         long resultCount = itemSearch.getResultCount();
-        border.add(new Label("count", resultCount + ""));
+        
+        Link link = new Link("count") {
+            public void onClick() {                
+                setResponsePage(new ItemSearchFormPage(itemSearch));
+            }
+        };
+        link.add(new Label("count", resultCount + ""));        
+        border.add(link);
         
         int pageSize = itemSearch.getPageSize();
         int pageCount = 0;

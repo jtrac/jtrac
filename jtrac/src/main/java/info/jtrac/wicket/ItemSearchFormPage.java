@@ -39,12 +39,32 @@ public class ItemSearchFormPage extends BasePage {
         border.add(new ItemSearchForm("form", space));
         
     }
+    
+    public ItemSearchFormPage(ItemSearch itemSearch) {
+        
+        super("Item Search");
+        border.add(new FeedbackPanel("feedback"));
+        border.add(new ItemSearchForm("form", itemSearch));
+        
+    }    
 
     private class ItemSearchForm extends Form {
         
+        private ItemSearch itemSearch;
+        
         public ItemSearchForm(String id, Space space) {
             super(id);
-            ItemSearch itemSearch = new ItemSearch(space);
+            itemSearch = new ItemSearch(space);
+            addComponents();
+        }
+        
+        public ItemSearchForm(String id, ItemSearch itemSearch) {
+            super(id);
+            this.itemSearch = itemSearch;
+            addComponents();
+        }        
+        
+        private void addComponents() {
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(itemSearch);
             setModel(model);
             List<Integer> sizes = Arrays.asList(new Integer[] { 5, 10, 15, 25, 50, 100, -1 });
@@ -57,7 +77,7 @@ public class ItemSearchFormPage extends BasePage {
                     return o.toString();
                 }
             });
-            add(choice);
+            add(choice);            
         }
         
         @Override
