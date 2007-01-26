@@ -5,6 +5,10 @@
     </head>
     <body>
         <span wicket:id="border">
+            <span wicket:id="count"></span> <wicket:message key="item_list.recordsFound"/>
+            <span wicket:id="prev"><a href="#">&lt;&lt;</a></span>            
+            <span wicket:id="pages"><a href="#" wicket:id="page"><span wicket:id="page"></span></a></span>
+            <span wicket:id="next"><a href="#">&gt;&gt;</a></span>
             <table class="jtrac" width="100%">
                 <tr>
                     <th><wicket:message key="item_list.id"/></th>

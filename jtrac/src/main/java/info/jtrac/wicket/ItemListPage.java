@@ -20,6 +20,7 @@ import info.jtrac.domain.Field;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.util.DateUtils;
+import java.util.ArrayList;
 import java.util.List;
 import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.basic.Label;
@@ -36,6 +37,47 @@ public class ItemListPage extends BasePage {
     public ItemListPage(List<Item> items, ItemSearch itemSearch) {
         
         super("Item Search Results");
+        
+        long resultCount = itemSearch.getResultCount();
+        border.add(new Label("count", resultCount + ""));
+        
+        int pageSize = itemSearch.getPageSize();
+        int pageCount = 0;
+        if (pageSize != -1) {
+            pageCount = (int) Math.ceil((double) resultCount / pageSize);
+        }        
+        
+        border.add(new Link("prev") {
+            public void onClick() {
+                
+            }            
+        });
+        
+        List<Integer> pageNumbers = new ArrayList<Integer>(pageCount);        
+        for(int i = 0; i < pageCount; i++) {
+            pageNumbers.add(new Integer(i));
+        }
+        
+        ListView pages = new ListView("pages", pageNumbers) {
+            protected void populateItem(ListItem listItem) {
+                Integer i = (Integer) listItem.getModelObject();
+                Link link = new Link("page") {
+                    public void onClick() {
+                        
+                    }
+                };
+                link.add(new Label("page", i + 1 + ""));
+                listItem.add(link);
+            }            
+        };
+                
+        border.add(pages);
+        
+        border.add(new Link("next") {
+            public void onClick() {
+                
+            }            
+        });        
         
         final List<Field> fields = itemSearch.getFields();
         
