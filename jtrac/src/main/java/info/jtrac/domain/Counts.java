@@ -17,7 +17,6 @@
 package info.jtrac.domain;
 
 import java.io.Serializable;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,19 +33,13 @@ public class Counts implements Serializable {
     
     private Map<Integer, Map<Integer, Integer>> typeCounts = new HashMap<Integer, Map<Integer, Integer>>();     
     
-    private Space space;
-    private boolean detailed;
-
-    public Space getSpace() {
-        return space;
-    }        
-
+    private boolean detailed;  
+    
     public boolean isDetailed() {
         return detailed;
     }
     
-    public Counts(Space space, boolean detailed) {
-        this.space = space;
+    public Counts(boolean detailed) {        
         this.detailed = detailed;
     }
     

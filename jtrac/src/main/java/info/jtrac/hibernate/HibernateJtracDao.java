@@ -236,7 +236,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
             sb.append(',');
         }
         sb.setCharAt(sb.length() - 1, ')');
-        CountsHolder ch = new CountsHolder(user);
+        CountsHolder ch = new CountsHolder();
         HibernateTemplate ht = getHibernateTemplate();        
         List<Object[]> loggedByList = ht.find("select item.space.id, count(item) from Item item" 
                 + " where item.loggedBy.id = ? group by item.space.id", user.getId());
@@ -264,7 +264,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
                 + " where item.assignedTo.id = ? and item.space.id = ? group by item.status", new Object[] { user.getId(), space.getId() });
         List<Object[]> statusList = ht.find("select status, count(item) from Item item" 
                 + " where item.space.id = ? group by item.status", space.getId());
-        Counts c = new Counts(space, true);
+        Counts c = new Counts(true);
         for(Object[] oa : loggedByList) {
             c.add(Counts.LOGGED_BY_ME, (Integer) oa[0], (Integer) oa[1]);
         }

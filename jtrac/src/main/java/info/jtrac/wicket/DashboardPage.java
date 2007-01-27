@@ -18,11 +18,10 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.Counts;
 import info.jtrac.domain.CountsHolder;
+import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
+import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.SecurityUtils;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 
@@ -30,7 +29,7 @@ import wicket.markup.html.list.ListView;
  * dashboard page
  */
 public class DashboardPage extends BasePage {
-      
+    
     public DashboardPage() {
         
         super("Dashboard");
@@ -39,19 +38,19 @@ public class DashboardPage extends BasePage {
         add(new HeaderPanel(null));
         
         final User user = getJtrac().loadUser(SecurityUtils.getPrincipal().getId());
-        CountsHolder countsHolder = getJtrac().loadCountsForUser(user);        
-        List<Counts> countsList = new ArrayList<Counts>(countsHolder.getCounts().values());                    
+        final CountsHolder countsHolder = getJtrac().loadCountsForUser(user);        
         
-        border.add(new ListView("dashboardRows", countsList) {
+        border.add(new ListView("dashboardRows", user.getSpaceRoles()) {
             protected void populateItem(final ListItem listItem) {
-                Counts counts = (Counts) listItem.getModelObject();
-                DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", counts, user);
+                UserSpaceRole usr = (UserSpaceRole) listItem.getModelObject();
+                Counts counts = countsHolder.getCounts().get(usr.getSpace().getId());
+                DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", usr.getSpace(), counts, user);
                 listItem.add(dashboardRow);
             }
         });
         
         DashboardTotalPanel panel = new DashboardTotalPanel("total", countsHolder);
-        if(countsList.size() == 1) {
+        if(user.getSpaceRoles().size() == 1) {
             panel.setVisible(false);
         }
         border.add(panel);      

@@ -17,10 +17,8 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Counts;
-import info.jtrac.domain.Item;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
-import info.jtrac.util.SecurityUtils;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.markup.html.basic.Label;
@@ -34,42 +32,38 @@ import wicket.model.PropertyModel;
 public class DashboardRowPanel extends BasePanel {    
     
     /**
-     * space instance held in Counts may have originated from Acegi
-     * so incompatible with open session in view, get proper one      
+     * space item has to be synced with hibernate     
      */      
     private Space reloadSpace(Space space) {
-        return getJtrac().loadSpace(space.getId());
+        return getJtrac().loadSpace(space.getId());        
     }
     
-    public DashboardRowPanel(String id, final Counts counts, final User user) {
+    public DashboardRowPanel(String id, final Space space, final Counts counts, final User user) {
         
         super(id);
         setOutputMarkupId(true);      
         
-        add(new Label("space", new PropertyModel(counts, "space.name")));
+        add(new Label("space", space.getName()));
         
         add(new Link("new") {
             public void onClick() {               
-                Space space = reloadSpace(counts.getSpace());
-                setResponsePage(new ItemFormPage(space));
+                setResponsePage(new ItemFormPage(reloadSpace(space)));
             }
         });
 
         add(new Link("search") {
             public void onClick() {
-                Space space = reloadSpace(counts.getSpace());
-                setResponsePage(new ItemSearchFormPage(space));
+                setResponsePage(new ItemSearchFormPage(reloadSpace(space)));
             }
         });        
         
         add(new AjaxFallbackLink("link") {
             public void onClick(AjaxRequestTarget target) {
                 Counts temp = counts;  // get non-final instance
-                if (!temp.isDetailed()) {
-                    Space space = reloadSpace(counts.getSpace());
+                if (!temp.isDetailed()) {                    
                     temp = getJtrac().loadCountsForUserSpace(user, space);
                 }
-                DashboardRowExpandedPanel dashboardRow = new DashboardRowExpandedPanel("dashboardRow", temp, user);
+                DashboardRowExpandedPanel dashboardRow = new DashboardRowExpandedPanel("dashboardRow", reloadSpace(space), temp, user);
                 DashboardRowPanel.this.replaceWith(dashboardRow);
                 target.addComponent(dashboardRow);
             }

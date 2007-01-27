@@ -17,7 +17,6 @@
 package info.jtrac.domain;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,20 +27,11 @@ import java.util.Map;
 public class CountsHolder implements Serializable {
 
     Map<Long, Counts> counts = new HashMap<Long, Counts>();
-    private Map<Long, Space> spaceMap;
-    
-    public CountsHolder(User user) {
-        Collection<Space> spaces = user.getSpaces();
-        spaceMap = new HashMap<Long, Space>(spaces.size());
-        for(Space s : spaces) {
-            spaceMap.put(s.getId(), s);
-        }
-    }
     
     public void add(long spaceId, int type, int count) {
         Counts c = counts.get(spaceId);
         if (c == null) {
-            c = new Counts(spaceMap.get(spaceId), false);
+            c = new Counts(false);
             counts.put(spaceId, c);
         }
         c.add(type, -1, count);

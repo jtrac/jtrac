@@ -17,6 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Counts;
+import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import java.util.ArrayList;
@@ -38,12 +39,12 @@ import wicket.model.PropertyModel;
  */
 public class DashboardRowExpandedPanel extends BasePanel {    
     
-    public DashboardRowExpandedPanel(String id, final Counts counts, final User user) {        
+    public DashboardRowExpandedPanel(String id, final Space space, final Counts counts, final User user) {        
         
         super(id);
         setOutputMarkupId(true);
         
-        final Map<Integer, String> states = new TreeMap(counts.getSpace().getMetadata().getStates());    
+        final Map<Integer, String> states = new TreeMap(space.getMetadata().getStates());    
         states.remove(State.NEW);
         int rowspan = states.size() + 1; // add one totals row also
         SimpleAttributeModifier sam = new SimpleAttributeModifier("rowspan", rowspan + "");
@@ -51,23 +52,23 @@ public class DashboardRowExpandedPanel extends BasePanel {
         
         int first = stateKeys.get(0);
         
-        add(new Label("space", counts.getSpace().getName()).add(sam));
+        add(new Label("space", space.getName()).add(sam));
         
         add(new Link("new") {
             public void onClick() {
-                
+                setResponsePage(new ItemFormPage(space));
             }
         }.add(sam));
 
         add(new Link("search") {
             public void onClick() {
-                
+                setResponsePage(new ItemSearchFormPage(space));
             }
         }.add(sam));
         
         add(new AjaxFallbackLink("link") {
             public void onClick(AjaxRequestTarget target) {
-                DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", counts, user);
+                DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", space, counts, user);
                 DashboardRowExpandedPanel.this.replaceWith(dashboardRow);
                 target.addComponent(dashboardRow);
             }

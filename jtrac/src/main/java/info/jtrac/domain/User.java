@@ -91,7 +91,7 @@ public class User implements UserDetails, Serializable {
             }
         }
         return spaces;
-    }
+    }    
     
     public int getSpaceCount() {
         return getSpaces().size();
