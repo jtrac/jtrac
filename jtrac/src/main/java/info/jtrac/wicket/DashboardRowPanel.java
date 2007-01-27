@@ -41,7 +41,7 @@ public class DashboardRowPanel extends BasePanel {
         return getJtrac().loadSpace(space.getId());
     }
     
-    public DashboardRowPanel(String id, final Counts counts) {
+    public DashboardRowPanel(String id, final Counts counts, final User user) {
         
         super(id);
         setOutputMarkupId(true);      
@@ -51,9 +51,7 @@ public class DashboardRowPanel extends BasePanel {
         add(new Link("new") {
             public void onClick() {               
                 Space space = reloadSpace(counts.getSpace());
-                Item item = new Item();
-                item.setSpace(space);
-                setResponsePage(new ItemFormPage(item));
+                setResponsePage(new ItemFormPage(space));
             }
         });
 
@@ -67,12 +65,11 @@ public class DashboardRowPanel extends BasePanel {
         add(new AjaxFallbackLink("link") {
             public void onClick(AjaxRequestTarget target) {
                 Counts temp = counts;  // get non-final instance
-                User user = SecurityUtils.getPrincipal();
                 if (!temp.isDetailed()) {
                     Space space = reloadSpace(counts.getSpace());
                     temp = getJtrac().loadCountsForUserSpace(user, space);
                 }
-                DashboardRowExpandedPanel dashboardRow = new DashboardRowExpandedPanel("dashboardRow", temp);
+                DashboardRowExpandedPanel dashboardRow = new DashboardRowExpandedPanel("dashboardRow", temp, user);
                 DashboardRowPanel.this.replaceWith(dashboardRow);
                 target.addComponent(dashboardRow);
             }

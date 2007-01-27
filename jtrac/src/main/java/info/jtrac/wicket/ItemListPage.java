@@ -39,6 +39,8 @@ public class ItemListPage extends BasePage {
         
         super("Item Search Results");
 
+        add(new HeaderPanel(null));
+        
         final List<Item> items = getJtrac().findItems(itemSearch);
         
         //======================== PAGINATION ===================================

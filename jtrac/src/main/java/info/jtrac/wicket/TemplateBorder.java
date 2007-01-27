@@ -27,7 +27,6 @@ public class TemplateBorder extends Border {
 
     public TemplateBorder() {
         super("border");
-        add(new HeaderPanel());
         add(new Label("version", Version.VERSION));
     }
     

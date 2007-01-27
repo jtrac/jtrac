@@ -34,15 +34,22 @@ public class ItemSearchFormPage extends BasePage {
       
     public ItemSearchFormPage(Space space) {
         
-        super("Item Search");
+        super("Item Search");        
+        add(new HeaderPanel(space));        
         border.add(new FeedbackPanel("feedback"));
         border.add(new ItemSearchForm("form", space));
         
     }
     
+    /**
+     * here we are returning to the filter criteria screen from
+     * the search results screen
+     */
     public ItemSearchFormPage(ItemSearch itemSearch) {
         
         super("Item Search");
+        add(new HeaderPanel(itemSearch.getSpace()));
+        itemSearch.setCurrentPage(0);
         border.add(new FeedbackPanel("feedback"));
         border.add(new ItemSearchForm("form", itemSearch));
         

@@ -16,15 +16,74 @@
 
 package info.jtrac.wicket;
 
+import info.jtrac.domain.Space;
+import info.jtrac.domain.User;
+import info.jtrac.util.SecurityUtils;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.link.Link;
 
 /**
  * header navigation
  */
-public class HeaderPanel extends BasePanel {
+public class HeaderPanel extends BasePanel {    
     
-    public HeaderPanel() {
+    public HeaderPanel(final Space space) {
         super("header");
+        
+        User user = SecurityUtils.getPrincipal();
+        
+        add(new Link("dashboard") {
+            public void onClick() {
+                setResponsePage(new DashboardPage());
+            }            
+        });
+        
+        if (space == null) {
+            add(new Label("space", "").setVisible(false));
+            add(new Label("new", "").setVisible(false));
+            add(new Link("search") {
+                public void onClick() {
+                    
+                }            
+            });            
+        } else {
+            add(new Label("space", space.getName()));
+            add(new Link("new") {
+                public void onClick() {
+                    setResponsePage(new ItemFormPage(space));
+                }            
+            });
+            add(new Link("search") {
+                public void onClick() {
+                    setResponsePage(new ItemSearchFormPage(space));
+                }            
+            });            
+        }
+        
+        if(user.getId() == 0) {
+            add(new Label("options", "").setVisible(false));
+            add(new Label("logout", "").setVisible(false));
+            add(new Link("login") {
+                public void onClick() {
+
+                }            
+            });
+            add(new Label("user", "").setVisible(false));
+        } else {
+            add(new Link("options") {
+                public void onClick() {
+
+                }            
+            }); 
+            add(new Link("logout") {
+                public void onClick() {
+
+                }            
+            });
+            add(new Label("login", "").setVisible(false));
+            add(new Label("user", user.getName()));
+        }             
+        
     }
     
 }

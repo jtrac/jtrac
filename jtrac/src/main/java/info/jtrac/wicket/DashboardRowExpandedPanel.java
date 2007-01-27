@@ -18,6 +18,7 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.Counts;
 import info.jtrac.domain.State;
+import info.jtrac.domain.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,7 @@ import wicket.model.PropertyModel;
  */
 public class DashboardRowExpandedPanel extends BasePanel {    
     
-    public DashboardRowExpandedPanel(String id, final Counts counts) {        
+    public DashboardRowExpandedPanel(String id, final Counts counts, final User user) {        
         
         super(id);
         setOutputMarkupId(true);
@@ -66,7 +67,7 @@ public class DashboardRowExpandedPanel extends BasePanel {
         
         add(new AjaxFallbackLink("link") {
             public void onClick(AjaxRequestTarget target) {
-                DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", counts);
+                DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", counts, user);
                 DashboardRowExpandedPanel.this.replaceWith(dashboardRow);
                 target.addComponent(dashboardRow);
             }

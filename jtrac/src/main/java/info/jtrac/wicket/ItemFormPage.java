@@ -73,8 +73,11 @@ public class ItemFormPage extends BasePage {
         }
     }
     
-    public ItemFormPage(Item item) {
+    public ItemFormPage(Space space) {
         super("Edit Item");
+        add(new HeaderPanel(space));
+        Item item = new Item();
+        item.setSpace(space);        
         FeedbackPanel feedback = new FeedbackPanel("feedback");
         filter = new MyFilter();
         feedback.setFilter(filter);

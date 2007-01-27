@@ -36,14 +36,16 @@ public class DashboardPage extends BasePage {
         super("Dashboard");
         setVersioned(false);
         
-        User user = SecurityUtils.getPrincipal();
+        add(new HeaderPanel(null));
+        
+        final User user = getJtrac().loadUser(SecurityUtils.getPrincipal().getId());
         CountsHolder countsHolder = getJtrac().loadCountsForUser(user);        
         List<Counts> countsList = new ArrayList<Counts>(countsHolder.getCounts().values());                    
         
         border.add(new ListView("dashboardRows", countsList) {
             protected void populateItem(final ListItem listItem) {
                 Counts counts = (Counts) listItem.getModelObject();
-                DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", counts);
+                DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", counts, user);
                 listItem.add(dashboardRow);
             }
         });
