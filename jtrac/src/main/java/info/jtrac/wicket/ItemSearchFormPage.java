@@ -16,11 +16,14 @@
 
 package info.jtrac.wicket;
 
-import info.jtrac.domain.Item;
+import info.jtrac.domain.Field;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.IChoiceRenderer;
@@ -74,9 +77,10 @@ public class ItemSearchFormPage extends BasePage {
         private void addComponents() {
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(itemSearch);
             setModel(model);
+            // page size =======================================================
             List<Integer> sizes = Arrays.asList(new Integer[] { 5, 10, 15, 25, 50, 100, -1 });
             final String noLimit = getLocalizer().getString("item_search_form.noLimit", null);
-            DropDownChoice choice = new DropDownChoice("pageSize", sizes, new IChoiceRenderer() {
+            DropDownChoice pageSizeChoice = new DropDownChoice("pageSize", sizes, new IChoiceRenderer() {
                 public Object getDisplayValue(Object o) {
                     return ((Integer) o) == -1 ? noLimit : o.toString();
                 }
@@ -84,7 +88,35 @@ public class ItemSearchFormPage extends BasePage {
                     return o.toString();
                 }
             });
-            add(choice);            
+            add(pageSizeChoice);
+            // sort column =====================================================
+            List<String> sortFieldNames = new ArrayList<String>();
+            if (itemSearch.getSpace() != null) {
+                sortFieldNames.add("id");
+            }
+            for(Field field : itemSearch.getFields()) {
+                sortFieldNames.add(field.getName().getText());
+            }
+            final Map<String, Field> fieldMap = itemSearch.getFieldMap();
+            DropDownChoice sortFieldNameChoice = new DropDownChoice("sortFieldName", sortFieldNames, new IChoiceRenderer() {
+                public Object getDisplayValue(Object o) {
+                    if (o.toString().equals("id")) {
+                        return getLocalizer().getString("item_search_form.id", null);
+                    }
+                    return fieldMap.get(o.toString()).getLabel();
+                }
+                public String getIdValue(Object o, int i) {
+                    return o.toString();
+                }
+            });
+            add(sortFieldNameChoice);
+            // sort descending =================================================
+            add(new CheckBox("sortDescending"));
+            // show detail =====================================================
+            add(new CheckBox("showDetail"));
+            // show history ====================================================
+            add(new CheckBox("showHistory"));
+            
         }
         
         @Override

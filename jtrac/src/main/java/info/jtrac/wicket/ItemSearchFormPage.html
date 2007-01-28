@@ -12,16 +12,31 @@
                     <tr>
                         <th><wicket:message key="item_search_form.textSearch"/></th>
                         <td><input size="30"/></td>
-                        <td>button here</td>        
+                        <td><input type="submit" wicket:message="value=search"/></td>                       
                     </tr>
                 </table>
                 <table class="jtrac">
                     <tr>
                         <th><wicket:message key="item_search_form.resultsPerPage"/></th>
                         <td><select wicket:id="pageSize"/></td>
+                        <td/>
+                        <th><wicket:message key="item_search_form.sortOnColumn"/></th>
+                        <td><select wicket:id="sortFieldName"/></td>
+                        <th>
+                            <input type="checkbox" wicket:id="sortDescending"/>
+                            <wicket:message key="item_search_form.descending"/>
+                        </th>
+                        <td/>
+                        <th>
+                            <wicket:message key="item_search_form.showDetail"/>
+                            <input type="checkbox" wicket:id="showDetail"/>
+                        </th>
+                        <th>
+                            <wicket:message key="item_search_form.showHistory"/>
+                            <input type="checkbox" wicket:id="showHistory"/>                            
+                        </th>                        
                     </tr>
-                </table>
-                <input type="submit" wicket:message="value=submit"/>
+                </table>                
             </form>
         </span>
     </body>
