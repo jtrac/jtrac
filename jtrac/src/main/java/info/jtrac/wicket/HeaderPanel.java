@@ -30,7 +30,7 @@ public class HeaderPanel extends BasePanel {
     public HeaderPanel(final Space space) {
         super("header");
         
-        User user = SecurityUtils.getPrincipal();
+        final User user = SecurityUtils.getPrincipal();
         
         add(new Link("dashboard") {
             public void onClick() {
@@ -43,7 +43,7 @@ public class HeaderPanel extends BasePanel {
             add(new Label("new", "").setVisible(false));
             add(new Link("search") {
                 public void onClick() {
-                    
+                    setResponsePage(new ItemSearchFormPage(user)); 
                 }            
             });            
         } else {

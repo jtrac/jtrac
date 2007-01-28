@@ -145,50 +145,50 @@ public class ItemSearch implements Serializable {
             
         }         
         //======================================================================
-        if (statusSet != null) {
+        if (statusSet != null && statusSet.size() > 0) {
             criteria.add(Restrictions.in("status", statusSet));
         }
-        if (severitySet != null) {
+        if (severitySet != null && severitySet.size() > 0) {
             criteria.add(Restrictions.in("severity", severitySet));
         }
-        if (prioritySet != null) {
+        if (prioritySet != null && prioritySet.size() > 0) {
             criteria.add(Restrictions.in("priority", prioritySet));
         }
-        if (loggedBySet != null) {
+        if (loggedBySet != null && loggedBySet.size() > 0) {
             criteria.add(Restrictions.in("loggedBy.id", loggedBySet));
         }
-        if (assignedToSet != null) {
+        if (assignedToSet != null && assignedToSet.size() > 0) {
             criteria.add(Restrictions.in("assignedTo.id", assignedToSet));
         }
         //======================================================================
-        if (cusInt01Set != null) {
+        if (cusInt01Set != null && cusInt01Set.size() > 0) {
             criteria.add(Restrictions.in("cusInt01", cusInt01Set));
         }
-        if (cusInt02Set != null) {
+        if (cusInt02Set != null && cusInt02Set.size() > 0) {
             criteria.add(Restrictions.in("cusInt02", cusInt02Set));
         }
-        if (cusInt03Set != null) {
+        if (cusInt03Set != null && cusInt03Set.size() > 0) {
             criteria.add(Restrictions.in("cusInt03", cusInt03Set));
         }
-        if (cusInt04Set != null) {
+        if (cusInt04Set != null && cusInt04Set.size() > 0) {
             criteria.add(Restrictions.in("cusInt04", cusInt04Set));
         }
-        if (cusInt05Set != null) {
+        if (cusInt05Set != null && cusInt05Set.size() > 0) {
             criteria.add(Restrictions.in("cusInt05", cusInt05Set));
         }
-        if (cusInt06Set != null) {
+        if (cusInt06Set != null && cusInt06Set.size() > 0) {
             criteria.add(Restrictions.in("cusInt06", cusInt06Set));
         }
-        if (cusInt07Set != null) {
+        if (cusInt07Set != null && cusInt07Set.size() > 0) {
             criteria.add(Restrictions.in("cusInt07", cusInt07Set));
         }
-        if (cusInt08Set != null) {
+        if (cusInt08Set != null && cusInt08Set.size() > 0) {
             criteria.add(Restrictions.in("cusInt08", cusInt08Set));
         }
-        if (cusInt09Set != null) {
+        if (cusInt09Set != null && cusInt09Set.size() > 0) {
             criteria.add(Restrictions.in("cusInt09", cusInt09Set));
         }
-        if (cusInt10Set != null) {
+        if (cusInt10Set != null && cusInt10Set.size() > 0) {
             criteria.add(Restrictions.in("cusInt10", cusInt10Set));
         }
         //======================================================================
@@ -233,7 +233,7 @@ public class ItemSearch implements Serializable {
     // private routine to help with the space "in" clause
     private Collection<Long> getSpaceIdSet() {
         if (space == null) {
-            if (spaceSet != null) {
+            if (spaceSet != null && spaceSet.size() > 0) {
                 return spaceSet;
             }
             Set<Long> spaceIdSet = new HashSet<Long>(user.getUserSpaceRoles().size());
@@ -282,7 +282,7 @@ public class ItemSearch implements Serializable {
             map.put(o.toString(), new Boolean(true));
         }
         return map;
-    }
+    }    
     
     public Map getSearchMap() {
         Map<String, Map> map = new HashMap<String, Map>();
@@ -296,7 +296,7 @@ public class ItemSearch implements Serializable {
         map.put("cusInt02Set", setToMap(cusInt02Set));
         map.put("cusInt03Set", setToMap(cusInt03Set));
         map.put("cusInt04Set", setToMap(cusInt04Set));
-        map.put("cusInt05Set", setToMap(cusInt05Set));
+        map.put("cusInt05Set", setToMap(cusInt04Set));
         map.put("cusInt06Set", setToMap(cusInt06Set));
         map.put("cusInt07Set", setToMap(cusInt07Set));
         map.put("cusInt08Set", setToMap(cusInt08Set));
@@ -344,11 +344,8 @@ public class ItemSearch implements Serializable {
     }
     
     public Map<String, Field> getFieldMap() {
-        if (space == null) {
-            return null;
-        }
-        Map<String, Field> fieldMap = new HashMap<String, Field>(space.getMetadata().getFieldCount());
-        for (Field f : space.getMetadata().getFields().values()) {
+        Map<String, Field> fieldMap = new HashMap<String, Field>(fields.size());
+        for (Field f : fields) {
             fieldMap.put(f.getName().toString(), f);
         }
         return fieldMap;

@@ -19,22 +19,40 @@ package info.jtrac.wicket;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
+import info.jtrac.domain.User;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.IChoiceRenderer;
+import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.panel.FeedbackPanel;
+import wicket.markup.html.panel.Fragment;
 import wicket.model.BoundCompoundPropertyModel;
 
 /**
  * dashboard page
  */
 public class ItemSearchFormPage extends BasePage {
-      
+     
+    public class JtracListMultipleChoice extends ListMultipleChoice {
+        
+        public JtracListMultipleChoice(String id, List choices, IChoiceRenderer renderer) {
+            super(id, choices, renderer);
+        } 
+    
+        @Override
+        protected java.lang.Object convertValue(String[] ids) {            
+            List list = (List) super.convertValue(ids);
+            return new HashSet(list);
+        }        
+    }
+    
     public ItemSearchFormPage(Space space) {
         
         super("Item Search");        
@@ -43,6 +61,15 @@ public class ItemSearchFormPage extends BasePage {
         border.add(new ItemSearchForm("form", space));
         
     }
+    
+    public ItemSearchFormPage(User user) {
+        
+        super("Item Search");        
+        add(new HeaderPanel(null));        
+        border.add(new FeedbackPanel("feedback"));
+        border.add(new ItemSearchForm("form", user));
+        
+    }    
     
     /**
      * here we are returning to the filter criteria screen from
@@ -61,6 +88,12 @@ public class ItemSearchFormPage extends BasePage {
     private class ItemSearchForm extends Form {
         
         private ItemSearch itemSearch;
+        
+        public ItemSearchForm(String id, User user) {
+            super(id);
+            itemSearch = new ItemSearch(user);
+            addComponents();
+        }        
         
         public ItemSearchForm(String id, Space space) {
             super(id);
@@ -99,16 +132,20 @@ public class ItemSearchFormPage extends BasePage {
             }
             final Map<String, Field> fieldMap = itemSearch.getFieldMap();
             DropDownChoice sortFieldNameChoice = new DropDownChoice("sortFieldName", sortFieldNames, new IChoiceRenderer() {
-                public Object getDisplayValue(Object o) {
-                    if (o.toString().equals("id")) {
+                public Object getDisplayValue(Object o) {                    
+                    if (o.equals("id")) {                    
                         return getLocalizer().getString("item_search_form.id", null);
+                    } else {
+                        return fieldMap.get(o).getLabel();
                     }
-                    return fieldMap.get(o.toString()).getLabel();
                 }
                 public String getIdValue(Object o, int i) {
                     return o.toString();
                 }
             });
+            if (itemSearch.getSpace() == null) {
+                sortFieldNameChoice.setNullValid(true);
+            }
             add(sortFieldNameChoice);
             // sort descending =================================================
             add(new CheckBox("sortDescending"));
@@ -116,7 +153,53 @@ public class ItemSearchFormPage extends BasePage {
             add(new CheckBox("showDetail"));
             // show history ====================================================
             add(new CheckBox("showHistory"));
-            
+            // severity / priority =============================================
+            if (itemSearch.getSpace() == null) {
+                Fragment f = new Fragment("severityPriority", "severityPriority");
+                final Map<String, String> severityMap = itemSearch.getSeverityOptions();
+                List<Integer> severityList = new ArrayList(severityMap.size());
+                for(String s : severityMap.keySet()) {
+                    severityList.add(new Integer(s));
+                }
+                ListMultipleChoice severitySetChoice = new JtracListMultipleChoice("severitySet", severityList, new IChoiceRenderer() {
+                    public Object getDisplayValue(Object o) {
+                        return severityMap.get(o.toString());
+                    }
+                    public String getIdValue(Object o, int i) {
+                        return o.toString();
+                    }                
+                });            
+                f.add(severitySetChoice);
+                final Map<String, String> priorityMap = itemSearch.getPriorityOptions();
+                List<Integer> priorityList = new ArrayList(priorityMap.size());
+                for(String s : priorityMap.keySet()) {
+                    priorityList.add(new Integer(s));
+                }
+                ListMultipleChoice prioritySetChoice = new JtracListMultipleChoice("prioritySet", priorityList, new IChoiceRenderer() {
+                    public Object getDisplayValue(Object o) {
+                        return priorityMap.get(o.toString());
+                    }
+                    public String getIdValue(Object o, int i) {
+                        return o.toString();
+                    }                
+                });            
+                f.add(prioritySetChoice);
+                add(f);
+            } else {
+                add(new Label("severityPriority", ""));
+            }
+            // status ==========================================================
+            final Map<Integer, String> statusMap = itemSearch.getStatusOptions();
+            List<Integer> statusList = new ArrayList(statusMap.keySet());
+            ListMultipleChoice statusSetChoice = new JtracListMultipleChoice("statusSet", statusList, new IChoiceRenderer() {
+                public Object getDisplayValue(Object o) {
+                    return statusMap.get(o);
+                }
+                public String getIdValue(Object o, int i) {
+                    return o.toString();
+                }                
+            });            
+            add(statusSetChoice);
         }
         
         @Override

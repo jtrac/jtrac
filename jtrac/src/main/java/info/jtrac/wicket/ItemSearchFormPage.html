@@ -36,8 +36,45 @@
                             <input type="checkbox" wicket:id="showHistory"/>                            
                         </th>                        
                     </tr>
-                </table>                
+                </table>
+                <table class="bdr-collapse">
+                    <tr>
+                        <span wicket:id="severityPriority"></span>
+                        <td>
+                            <table class="jtrac">
+                                <tr>
+                                    <th><wicket:message key="item_search_form.status"/></th>
+                                </tr>
+                                <tr>
+                                    <td><select wicket:id="statusSet" size="8"/></td>
+                                </tr>
+                            </table>                            
+                        </td>
+                    </tr>
+                </table>
             </form>
         </span>
+        <wicket:fragment wicket:id="severityPriority">        
+            <td>
+                <table class="jtrac">
+                    <tr>
+                        <th><wicket:message key="item_search_form.severity"/></th>
+                    </tr>
+                    <tr>                        
+                        <td><select wicket:id="severitySet" size="8"/></td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table class="jtrac">
+                    <tr>
+                        <th><wicket:message key="item_search_form.priority"/></th>
+                    </tr>
+                    <tr>                        
+                        <td><select wicket:id="prioritySet" size="8"/></td>
+                    </tr>
+                </table>
+            </td>          
+        </wicket:fragment>
     </body>
 </html>
