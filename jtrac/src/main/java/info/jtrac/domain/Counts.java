@@ -41,14 +41,13 @@ public class Counts implements Serializable {
     
     public Counts(boolean detailed) {        
         this.detailed = detailed;
+        for(int i = 1; i < 4; i++) {
+            typeCounts.put(i, new HashMap<Integer, Integer>());
+        }
     }
     
     public void add(int type, int state, int count) {
         Map<Integer, Integer> stateCounts = typeCounts.get(type);
-        if (stateCounts == null) {
-            stateCounts = new HashMap<Integer, Integer>();
-            typeCounts.put(type, stateCounts);
-        }
         Integer i = stateCounts.get(state);
         if (i == null) {            
             stateCounts.put(state, count);

@@ -17,6 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.CountsHolder;
+import info.jtrac.domain.User;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.model.PropertyModel;
@@ -27,13 +28,13 @@ import wicket.model.PropertyModel;
  */
 public class DashboardTotalPanel extends BasePanel {    
     
-    public DashboardTotalPanel(String id, final CountsHolder countsHolder) {
+    public DashboardTotalPanel(String id, final CountsHolder countsHolder, final User user) {
         
         super(id);    
         
         add(new Link("search") {
             public void onClick() {
-                
+                setResponsePage(new ItemSearchFormPage(user));
             }
         });       
         

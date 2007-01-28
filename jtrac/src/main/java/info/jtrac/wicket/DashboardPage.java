@@ -18,12 +18,15 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.Counts;
 import info.jtrac.domain.CountsHolder;
-import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.SecurityUtils;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
+import wicket.markup.html.panel.Fragment;
+import wicket.model.PropertyModel;
 
 /**
  * dashboard page
@@ -44,16 +47,28 @@ public class DashboardPage extends BasePage {
             protected void populateItem(final ListItem listItem) {
                 UserSpaceRole usr = (UserSpaceRole) listItem.getModelObject();
                 Counts counts = countsHolder.getCounts().get(usr.getSpace().getId());
+                if (counts == null) {
+                    counts = new Counts(false);
+                }
                 DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", usr.getSpace(), counts, user);
                 listItem.add(dashboardRow);
             }
         });
         
-        DashboardTotalPanel panel = new DashboardTotalPanel("total", countsHolder);
         if(user.getSpaceRoles().size() == 1) {
-            panel.setVisible(false);
-        }
-        border.add(panel);      
+            border.add(new Label("total", ""));
+        } else {             
+            Fragment total = new Fragment("total", "total");
+            total.add(new Link("search") {
+                public void onClick() {
+                    setResponsePage(new ItemSearchFormPage(user));
+                }
+            });       
+            total.add(new Label("loggedByMe", new PropertyModel(countsHolder, "totalLoggedByMe")));
+            total.add(new Label("assignedToMe", new PropertyModel(countsHolder, "totalAssignedToMe")));
+            total.add(new Label("total", new PropertyModel(countsHolder, "totalTotal")));
+            border.add(total);
+        }               
         
     }
     

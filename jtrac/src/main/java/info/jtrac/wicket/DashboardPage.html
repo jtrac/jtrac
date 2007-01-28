@@ -20,8 +20,22 @@
                     <tbody wicket:id="dashboardRow"></tbody>
                     <tr><td>&nbsp;</td></tr>
                 </span>
-                <tbody wicket:id="total"></tbody>
+                <span wicket:id="total"></span>
             </table>
         </span>
+        <wicket:fragment wicket:id="total">
+            <tr class="nav-table">
+                <th colspan="2"/>
+                <td class="icon">
+                    <a href="#" wicket:id="search">
+                        <img src="resources/system-search.png" wicket:message="title=dashboard.search"/>
+                    </a>            
+                </td>
+                <th colspan="2"/>
+                <td wicket:id="loggedByMe"></td>
+                <td wicket:id="assignedToMe"></td>
+                <td wicket:id="total" class="selected"></td>
+            </tr>        
+        </wicket:fragment>
     </body>
 </html>

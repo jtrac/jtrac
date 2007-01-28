@@ -59,11 +59,14 @@ public class DashboardRowPanel extends BasePanel {
         
         add(new AjaxFallbackLink("link") {
             public void onClick(AjaxRequestTarget target) {
-                Counts temp = counts;  // get non-final instance
-                if (!temp.isDetailed()) {                    
-                    temp = getJtrac().loadCountsForUserSpace(user, space);
+                Counts tempCounts = counts;
+                Space tempSpace = space;
+                // avoid hitting the database again if re-expanding
+                if (!tempCounts.isDetailed()) {                    
+                    tempCounts = getJtrac().loadCountsForUserSpace(user, space);
+                    tempSpace = reloadSpace(space); 
                 }
-                DashboardRowExpandedPanel dashboardRow = new DashboardRowExpandedPanel("dashboardRow", reloadSpace(space), temp, user);
+                DashboardRowExpandedPanel dashboardRow = new DashboardRowExpandedPanel("dashboardRow", tempSpace, tempCounts, user);
                 DashboardRowPanel.this.replaceWith(dashboardRow);
                 target.addComponent(dashboardRow);
             }
