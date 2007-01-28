@@ -17,10 +17,12 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Counts;
+import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -50,7 +52,9 @@ public class DashboardRowExpandedPanel extends BasePanel {
         SimpleAttributeModifier sam = new SimpleAttributeModifier("rowspan", rowspan + "");
         List<Integer> stateKeys = new ArrayList<Integer>(states.keySet());
         
-        int first = stateKeys.get(0);
+        // first row space & new / search links ================================
+        
+        final int first = stateKeys.get(0);
         
         add(new Label("space", space.getName()).add(sam));
         
@@ -74,27 +78,98 @@ public class DashboardRowExpandedPanel extends BasePanel {
             }
         }.add(sam));
         
+        // first row status counts =============================================
+        
         add(new Label("status", states.get(first)));
-        add(new Label("loggedByMe", counts.getLoggedByMeForState(first)));
-        add(new Label("assignedToMe", counts.getAssignedToMeForState(first)));
-        add(new Label("total", counts.getTotalForState(first)));                      
+        
+        add(new Link("loggedByMe") {
+            public void onClick() {
+                ItemSearch itemSearch = new ItemSearch(space);
+                itemSearch.setLoggedBySet(Collections.singleton(user.getId()));
+                itemSearch.setStatusSet(Collections.singleton(first));
+                setResponsePage(new ItemListPage(itemSearch));
+            }
+        }.add(new Label("loggedByMe", counts.getLoggedByMeForState(first))));
+        
+        add(new Link("assignedToMe") {
+            public void onClick() {
+                ItemSearch itemSearch = new ItemSearch(space);
+                itemSearch.setAssignedToSet(Collections.singleton(user.getId()));
+                itemSearch.setStatusSet(Collections.singleton(first));
+                setResponsePage(new ItemListPage(itemSearch));
+            }
+        }.add(new Label("assignedToMe", counts.getAssignedToMeForState(first))));
+        
+        add(new Link("total") {
+            public void onClick() {
+                ItemSearch itemSearch = new ItemSearch(space);
+                itemSearch.setStatusSet(Collections.singleton(first));
+                setResponsePage(new ItemListPage(itemSearch));
+            }
+        }.add(new Label("total", counts.getTotalForState(first))));                      
+        
+        // remaining rows (2 onwards) ==========================================
         
         stateKeys.remove(0);
         
         add(new ListView("rows", stateKeys) {
             protected void populateItem(ListItem listItem) {
-                Integer i = (Integer) listItem.getModelObject();
+                final Integer i = (Integer) listItem.getModelObject();
                 listItem.add(new Label("status", states.get(i)));
-                listItem.add(new Label("loggedByMe", counts.getLoggedByMeForState(i)));
-                listItem.add(new Label("assignedToMe", counts.getAssignedToMeForState(i)));
-                listItem.add(new Label("total", counts.getTotalForState(i)));                
+                
+                listItem.add(new Link("loggedByMe") {
+                    public void onClick() {
+                        ItemSearch itemSearch = new ItemSearch(space);
+                        itemSearch.setLoggedBySet(Collections.singleton(user.getId()));
+                        itemSearch.setStatusSet(Collections.singleton(i));
+                        setResponsePage(new ItemListPage(itemSearch));
+                    }
+                }.add(new Label("loggedByMe", counts.getLoggedByMeForState(i))));
+                
+                listItem.add(new Link("assignedToMe") {
+                    public void onClick() {
+                        ItemSearch itemSearch = new ItemSearch(space);
+                        itemSearch.setAssignedToSet(Collections.singleton(user.getId()));
+                        itemSearch.setStatusSet(Collections.singleton(i));
+                        setResponsePage(new ItemListPage(itemSearch));
+                    }
+                }.add(new Label("assignedToMe", counts.getAssignedToMeForState(i))));
+                
+                listItem.add(new Link("total") {
+                    public void onClick() {
+                        ItemSearch itemSearch = new ItemSearch(space);                        
+                        itemSearch.setStatusSet(Collections.singleton(i));
+                        setResponsePage(new ItemListPage(itemSearch));
+                    }
+                }.add(new Label("total", counts.getTotalForState(i))));                
             }
             
         });
         
-        add(new Label("loggedByMeTotal", new PropertyModel(counts, "loggedByMe")));
-        add(new Label("assignedToMeTotal", new PropertyModel(counts, "assignedToMe")));
-        add(new Label("totalTotal", new PropertyModel(counts, "total")));
+        // sub totals ==========================================================
+        
+        add(new Link("loggedByMeTotal") {
+            public void onClick() {
+                ItemSearch itemSearch = new ItemSearch(space);
+                itemSearch.setLoggedBySet(Collections.singleton(user.getId()));
+                setResponsePage(new ItemListPage(itemSearch));
+            }
+        }.add(new Label("loggedByMe", new PropertyModel(counts, "loggedByMe"))));
+                
+        add(new Link("assignedToMeTotal") {
+            public void onClick() {
+                ItemSearch itemSearch = new ItemSearch(space);
+                itemSearch.setAssignedToSet(Collections.singleton(user.getId()));
+                setResponsePage(new ItemListPage(itemSearch));
+            }
+        }.add(new Label("assignedToMe", new PropertyModel(counts, "assignedToMe"))));
+        
+        add(new Link("totalTotal") {
+            public void onClick() {
+                ItemSearch itemSearch = new ItemSearch(space);                
+                setResponsePage(new ItemListPage(itemSearch));
+            }
+        }.add(new Label("total", new PropertyModel(counts, "total"))));
         
     }
     

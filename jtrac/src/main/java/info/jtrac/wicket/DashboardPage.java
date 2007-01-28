@@ -18,9 +18,11 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.Counts;
 import info.jtrac.domain.CountsHolder;
+import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.SecurityUtils;
+import java.util.Collections;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
@@ -63,10 +65,31 @@ public class DashboardPage extends BasePage {
                 public void onClick() {
                     setResponsePage(new ItemSearchFormPage(user));
                 }
-            });       
-            total.add(new Label("loggedByMe", new PropertyModel(countsHolder, "totalLoggedByMe")));
-            total.add(new Label("assignedToMe", new PropertyModel(countsHolder, "totalAssignedToMe")));
-            total.add(new Label("total", new PropertyModel(countsHolder, "totalTotal")));
+            });
+            
+            total.add(new Link("loggedByMe") {
+                public void onClick() {
+                    ItemSearch itemSearch = new ItemSearch(user);
+                    itemSearch.setLoggedBySet(Collections.singleton(user.getId()));
+                    setResponsePage(new ItemListPage(itemSearch));
+                }
+            }.add(new Label("loggedByMe", new PropertyModel(countsHolder, "totalLoggedByMe"))));
+            
+            total.add(new Link("assignedToMe") {
+                public void onClick() {
+                    ItemSearch itemSearch = new ItemSearch(user);
+                    itemSearch.setAssignedToSet(Collections.singleton(user.getId()));
+                    setResponsePage(new ItemListPage(itemSearch));
+                }
+            }.add(new Label("assignedToMe", new PropertyModel(countsHolder, "totalAssignedToMe"))));
+            
+            total.add(new Link("total") {
+                public void onClick() {
+                    ItemSearch itemSearch = new ItemSearch(user);                    
+                    setResponsePage(new ItemListPage(itemSearch));
+                }
+            }.add(new Label("total", new PropertyModel(countsHolder, "totalTotal"))));
+            
             border.add(total);
         }               
         
