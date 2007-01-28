@@ -48,7 +48,7 @@ public class DashboardPage extends BasePage {
                 UserSpaceRole usr = (UserSpaceRole) listItem.getModelObject();
                 Counts counts = countsHolder.getCounts().get(usr.getSpace().getId());
                 if (counts == null) {
-                    counts = new Counts(false);
+                    counts = new Counts(false); // this can happen if fresh space
                 }
                 DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", usr.getSpace(), counts, user);
                 listItem.add(dashboardRow);
