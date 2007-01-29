@@ -16,6 +16,7 @@
 
 package info.jtrac.wicket;
 
+import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
@@ -24,11 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import wicket.behavior.SimpleAttributeModifier;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.basic.MultiLineLabel;
+import wicket.markup.html.link.ExternalLink;
+import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
-import wicket.model.IModel;
-import wicket.model.LoadableDetachableModel;
 import wicket.model.PropertyModel;
 
 /**
@@ -38,25 +41,16 @@ public class ItemViewPanel extends BasePanel {
     
     public ItemViewPanel(String id, final Item tempItem) {
         
-        super(id);    
+        super(id);        
         
-        IModel itemModel = new LoadableDetachableModel() {
-            protected Object load() {
-                System.out.println("loading detached!");
-                return getJtrac().loadItem(tempItem.getId());
-            }            
-        };
-        
-        setModel(itemModel);
-        
-        final Item item = (Item) getModelObject();
+        final Item item = getJtrac().loadItem(tempItem.getId());
         
         add(new Label("refId", new PropertyModel(item, "refId")));
         add(new Label("status", new PropertyModel(item, "statusValue")));
         add(new Label("loggedBy", new PropertyModel(item, "loggedBy.name")));
         add(new Label("assignedTo", new PropertyModel(item, "assignedTo.name")));
         add(new Label("summary", new PropertyModel(item, "summary")));
-        add(new Label("detail", new PropertyModel(item, "detail")));
+        add(new MultiLineLabel("detail", new PropertyModel(item, "detail")));
         
         final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
         final Map<Field.Name, Field> fields = item.getSpace().getMetadata().getFields();
@@ -88,7 +82,19 @@ public class ItemViewPanel extends BasePanel {
                     listItem.add(new Label("loggedBy", new PropertyModel(h, "loggedBy.name")));
                     listItem.add(new Label("status", new PropertyModel(h, "statusValue")));
                     listItem.add(new Label("assignedTo", new PropertyModel(h, "assignedTo.name")));
-                    listItem.add(new Label("comment", new PropertyModel(h, "comment")));
+                    
+                    WebMarkupContainer comment = new WebMarkupContainer("comment");                    
+                    final Attachment attachment = h.getAttachment();
+                    if (attachment != null) {
+                        CharSequence fileName = getResponse().encodeURL(attachment.getFileName());
+                        String href = "app/attachments/" + fileName +"?filePrefix=" + attachment.getFilePrefix();                        
+                        comment.add(new ExternalLink("attachment", href, attachment.getFileName()));                      
+                    } else {
+                        comment.add(new Label("attachment", "").setVisible(false));
+                    }
+                    comment.add(new MultiLineLabel("comment", new PropertyModel(h, "comment")));
+                    listItem.add(comment);
+                    
                     listItem.add(new Label("timeStamp", DateUtils.formatTimeStamp(h.getTimeStamp())));
                     listItem.add(new ListView("fields", editable) {
                         protected void populateItem(ListItem listItem) {
