@@ -11,14 +11,14 @@
                 &nbsp;<span wicket:id="pagination" class="page-links"></span>
             </div>
             <table class="jtrac" width="100%">
-                <tr>
-                    <th><wicket:message key="item_list.id"/></th>
-                    <th><wicket:message key="item_list.summary"/></th>
-                    <th><wicket:message key="item_list.loggedBy"/></th>
-                    <th><wicket:message key="item_list.status"/></th>
-                    <th><wicket:message key="item_list.assignedTo"/></th>
+                <tr class="sortable">
+                    <th wicket:id="id"></th>
+                    <th wicket:id="summary"></th>
+                    <th wicket:id="loggedBy"></th>
+                    <th wicket:id="status"></th>
+                    <th wicket:id="assignedTo"></th>
                     <th wicket:id="labels"><span wicket:id="label"></span></th>
-                    <th><wicket:message key="item_list.timeStamp"/></th>
+                    <th wicket:id="timeStamp"></th>
                 </tr>
                 <tr wicket:id="itemList">
                     <td><span wicket:id="refId"><a href="#" wicket:id="refId"></a></span></td>

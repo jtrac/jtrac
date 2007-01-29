@@ -29,6 +29,7 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Fragment;
 import wicket.model.PropertyModel;
+import wicket.model.StringResourceModel;
 
 /**
  * dashboard page
@@ -133,18 +134,51 @@ public class ItemListPage extends BasePage {
             border.add(new Label("pagination", ""));
         }
         
-        //======================== ITEMS =======================================
+        //====================== HEADER ========================================
+                
+        final SimpleAttributeModifier orderClass;
+        
+        if (itemSearch.isSortDescending()) {
+             orderClass = new SimpleAttributeModifier("class", "order-down");
+        } else {
+             orderClass = new SimpleAttributeModifier("class", "order-up");
+        }
+        
+        String[] headings = new String[] { "id", "summary", "loggedBy", "status", "assignedTo" };
+        
+        for(String s : headings) {
+            Label label = new Label(s, getLocalizer().getString("item_view." + s, null));
+            if (s.equals(itemSearch.getSortFieldName())) {
+                label.add(orderClass);
+            }
+            border.add(label);
+        }        
         
         final List<Field> fields = itemSearch.getFields();
         
         ListView labels = new ListView("labels", fields) {
             protected void populateItem(ListItem listItem) {
                 Field field = (Field) listItem.getModelObject();
-                listItem.add(new Label("label", field.getLabel()));
+                Label label = new Label("label", field.getLabel());
+                listItem.add(label);
+                if (field.getName().getText().equals(itemSearch.getSortFieldName())) {
+                    label.getParent().add(orderClass);
+                }                
             }            
         };        
         
-        border.add(labels);
+        border.add(labels);  
+        
+        Label label = new Label("timeStamp", getLocalizer().getString("item_view.timeStamp", null));
+        if ("timeStamp".equals(itemSearch.getSortFieldName())) {
+            label.add(orderClass);
+        }        
+              
+        border.add(label);
+        
+        //======================== ITEMS =======================================
+        
+
         
         final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
         

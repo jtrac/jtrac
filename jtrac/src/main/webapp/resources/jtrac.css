@@ -22,3 +22,7 @@ a:hover { color: red; }
 .page-links { font-weight: bold; }
 .nav-table img { border: none; }
 .space-below { padding-bottom: 0.5em; }
+tr.sortable th { background-position: right; background-repeat: no-repeat; }
+tr.sortable th.order-none { background-image: url("arrow_off.png"); }
+tr.sortable th.order-up { background-color: #ADD8E6; background-image: url("arrow_up.png"); }
+tr.sortable th.order-down { background-color: #ADD8E6; background-image: url("arrow_down.png"); }
