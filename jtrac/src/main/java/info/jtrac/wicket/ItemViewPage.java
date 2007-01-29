@@ -17,20 +17,32 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Item;
-import info.jtrac.util.ItemUtils;
-import org.springframework.context.MessageSource;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.link.Link;
 
 /**
  * dashboard page
  */
 public class ItemViewPage extends BasePage {
       
-    public ItemViewPage(Item item) {
+    public ItemViewPage(Item item, final WebPage previous) {
         
         super("Item View");      
         
         add(new HeaderPanel(null));
+                
+        Link link = new Link("back") {
+            public void onClick() {
+                setResponsePage(previous);
+            }
+        };
+
+        if(previous == null) {
+            link.setVisible(false);
+        }
+        
+        border.add(link);
         
         border.add(new ItemViewPanel("itemViewPanel", item));
         

@@ -16,6 +16,7 @@
 
 package info.jtrac.wicket;
 
+import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemUser;
@@ -23,8 +24,10 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
+import info.jtrac.util.AttachmentUtils;
 import info.jtrac.util.SecurityUtils;
 import info.jtrac.util.UserUtils;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -196,12 +199,26 @@ public class ItemFormPage extends BasePage {
         @Override
         protected void onSubmit() {
             final FileUpload fileUpload = fileUploadField.getFileUpload();
+            Attachment attachment = null;
+            if (fileUpload != null) {
+                String fileName = AttachmentUtils.cleanFileName(fileUpload.getClientFileName());
+                attachment = new Attachment();
+                attachment.setFileName(fileName);
+            }
             Item item = (Item) getModelObject();
             User user = SecurityUtils.getPrincipal();
             item.setLoggedBy(user);
             item.setStatus(State.OPEN);
-            getJtrac().storeItem(item, null);
-            setResponsePage(new ItemViewPage(item));
+            getJtrac().storeItem(item, attachment);
+            if (attachment != null) {
+                File file = new File(System.getProperty("jtrac.home") + "/attachments/" + attachment.getFilePrefix() + "_" + attachment.getFileName());
+                try {
+                    fileUpload.writeTo(file);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }            
+            setResponsePage(new ItemViewPage(item, null));
         }
         
     }

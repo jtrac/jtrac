@@ -150,7 +150,7 @@ public class ItemListPage extends BasePage {
                 final Item item = (Item) listItem.getModelObject();                
                 Link link = new Link("refId") {
                     public void onClick() {
-                        setResponsePage(new ItemViewPage(item));
+                        setResponsePage(new ItemViewPage(item, ItemListPage.this));
                     }
                 };
                 link.add(new Label("refId", new PropertyModel(item, "refId")));                                
