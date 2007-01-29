@@ -35,6 +35,12 @@ import wicket.model.PropertyModel;
  */
 public class ItemListPage extends BasePage {      
     
+    private long selectedItemId;
+
+    public void setSelectedItemId(long selectedItemId) {
+        this.selectedItemId = selectedItemId;
+    }    
+    
     public ItemListPage(final ItemSearch itemSearch) {
         
         super("Item Search Results");
@@ -143,11 +149,15 @@ public class ItemListPage extends BasePage {
         final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
         
         ListView itemList = new ListView("itemList", items) {
-            protected void populateItem(ListItem listItem) {
-                if(listItem.getIndex() % 2 == 1) {
+            protected void populateItem(ListItem listItem) {               
+                final Item item = (Item) listItem.getModelObject(); 
+                
+                if (selectedItemId == item.getId()) {
+                    listItem.add(new SimpleAttributeModifier("class", "selected"));
+                } else if(listItem.getIndex() % 2 == 1) {
                     listItem.add(sam);
-                }                
-                final Item item = (Item) listItem.getModelObject();                
+                }                 
+                
                 Link link = new Link("refId") {
                     public void onClick() {
                         setResponsePage(new ItemViewPage(item, ItemListPage.this));

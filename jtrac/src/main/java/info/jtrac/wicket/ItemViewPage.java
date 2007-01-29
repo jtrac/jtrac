@@ -17,8 +17,6 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Item;
-import wicket.markup.html.WebPage;
-import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 
 /**
@@ -26,7 +24,7 @@ import wicket.markup.html.link.Link;
  */
 public class ItemViewPage extends BasePage {
       
-    public ItemViewPage(Item item, final WebPage previous) {
+    public ItemViewPage(final Item item, final ItemListPage previous) {
         
         super("Item View");      
         
@@ -34,6 +32,7 @@ public class ItemViewPage extends BasePage {
                 
         Link link = new Link("back") {
             public void onClick() {
+                previous.setSelectedItemId(item.getId());
                 setResponsePage(previous);
             }
         };
