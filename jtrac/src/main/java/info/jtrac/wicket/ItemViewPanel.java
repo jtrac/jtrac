@@ -17,12 +17,18 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Field;
+import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
+import info.jtrac.util.DateUtils;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
+import wicket.model.IModel;
+import wicket.model.LoadableDetachableModel;
 import wicket.model.PropertyModel;
 
 /**
@@ -30,9 +36,20 @@ import wicket.model.PropertyModel;
  */
 public class ItemViewPanel extends BasePanel {    
     
-    public ItemViewPanel(String id, final Item item) {
+    public ItemViewPanel(String id, final Item tempItem) {
         
         super(id);    
+        
+        IModel itemModel = new LoadableDetachableModel() {
+            protected Object load() {
+                System.out.println("loading detached!");
+                return getJtrac().loadItem(tempItem.getId());
+            }            
+        };
+        
+        setModel(itemModel);
+        
+        final Item item = (Item) getModelObject();
         
         add(new Label("refId", new PropertyModel(item, "refId")));
         add(new Label("status", new PropertyModel(item, "statusValue")));
@@ -54,7 +71,35 @@ public class ItemViewPanel extends BasePanel {
                 listItem.add(new Label("value", item.getCustomValue(fieldName)));
             }            
         });
+        
+        final List<Field> editable = item.getSpace().getMetadata().getEditableFields();
+        add(new ListView("labels", editable) {
+            protected void populateItem(ListItem listItem) {
+                Field field = (Field) listItem.getModelObject();
+                listItem.add(new Label("label", field.getLabel()));
+            }            
+        });
       
+        if (item.getHistory() != null) {
+            List<History> history = new ArrayList(item.getHistory());
+            add(new ListView("history", history) {
+                protected void populateItem(ListItem listItem) {
+                    final History h = (History) listItem.getModelObject();
+                    listItem.add(new Label("loggedBy", new PropertyModel(h, "loggedBy.name")));
+                    listItem.add(new Label("status", new PropertyModel(h, "statusValue")));
+                    listItem.add(new Label("assignedTo", new PropertyModel(h, "assignedTo.name")));
+                    listItem.add(new Label("comment", new PropertyModel(h, "comment")));
+                    listItem.add(new Label("timeStamp", DateUtils.formatTimeStamp(h.getTimeStamp())));
+                    listItem.add(new ListView("fields", editable) {
+                        protected void populateItem(ListItem listItem) {
+                            Field field = (Field) listItem.getModelObject();
+                            listItem.add(new Label("field", h.getCustomValue(field.getName())));
+                        }                        
+                    });
+                }                
+            });            
+        }
+        
     }
     
 }

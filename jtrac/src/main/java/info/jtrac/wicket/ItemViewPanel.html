@@ -27,4 +27,26 @@
             <td wicket:id="value" colspan="5"></td>
         </tr>
     </table>
+    
+    <br/><div class="space-below">&nbsp;<b><wicket:message key="item_view.history"/></b></div>
+    
+    <table class="jtrac" width="100%">
+        <tr>
+            <th><wicket:message key="item_view.loggedBy"/></th>
+            <th><wicket:message key="item_view.status"/></th>
+            <th><wicket:message key="item_view.assignedTo"/></th>
+            <th><wicket:message key="item_view.comment"/></th>
+            <th><wicket:message key="item_view.timeStamp"/></th>
+            <th wicket:id="labels"><span wicket:id="label"></span></th>
+        </tr>
+        <tr wicket:id="history">
+            <td wicket:id="loggedBy"></td>
+            <td wicket:id="status"></td>
+            <td wicket:id="assignedTo"></td>
+            <td wicket:id="comment"></td>
+            <td wicket:id="timeStamp"></td>
+            <td wicket:id="fields"><span wicket:id="field"></span></td>
+        </tr>
+    </table>
+    
 </wicket:panel>

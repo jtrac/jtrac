@@ -144,7 +144,7 @@ public class ItemListPage extends BasePage {
         
         ListView itemList = new ListView("itemList", items) {
             protected void populateItem(ListItem listItem) {
-                if(listItem.getIndex() % 2 != 0) {
+                if(listItem.getIndex() % 2 == 1) {
                     listItem.add(sam);
                 }                
                 final Item item = (Item) listItem.getModelObject();                
