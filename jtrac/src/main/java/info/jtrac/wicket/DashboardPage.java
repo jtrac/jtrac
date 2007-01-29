@@ -57,9 +57,8 @@ public class DashboardPage extends BasePage {
             }
         });
         
-        if(user.getSpaceRoles().size() == 1) {
-            border.add(new Label("total", ""));
-        } else {             
+        if(user.getSpaceRoles().size() > 1) {
+            
             Fragment total = new Fragment("total", "total");
             total.add(new Link("search") {
                 public void onClick() {
@@ -90,7 +89,9 @@ public class DashboardPage extends BasePage {
                 }
             }.add(new Label("total", new PropertyModel(countsHolder, "totalTotal"))));
             
-            border.add(total);
+            border.add(total);            
+        } else {             
+            border.add(new Label("total", ""));
         }               
         
     }

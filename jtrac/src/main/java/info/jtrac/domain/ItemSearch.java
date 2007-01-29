@@ -242,6 +242,11 @@ public class ItemSearch implements Serializable {
                     spaceIdSet.add(usr.getSpace().getId());
                 }
             }
+            if (spaceIdSet.size() == 0) {
+                // no spaces allocated
+                // hack so that search screen does not bomb
+                return Collections.singleton(new Long(0)); 
+            }            
             return spaceIdSet;
         } else {
             return Collections.singleton(space.getId());
