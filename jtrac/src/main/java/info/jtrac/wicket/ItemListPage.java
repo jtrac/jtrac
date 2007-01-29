@@ -29,7 +29,6 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Fragment;
 import wicket.model.PropertyModel;
-import wicket.model.StringResourceModel;
 
 /**
  * dashboard page
@@ -146,35 +145,70 @@ public class ItemListPage extends BasePage {
         
         String[] headings = new String[] { "id", "summary", "loggedBy", "status", "assignedTo" };
         
-        for(String s : headings) {
-            Label label = new Label(s, getLocalizer().getString("item_view." + s, null));
-            if (s.equals(itemSearch.getSortFieldName())) {
-                label.add(orderClass);
+        for(final String s : headings) {
+            final boolean sorted = s.equals(itemSearch.getSortFieldName());
+            Link headingLink = new Link(s) {
+                public void onClick() {                    
+                    itemSearch.setCurrentPage(0);
+                    if (sorted) {  
+                        itemSearch.toggleSortDirection();
+                    } else {
+                        itemSearch.setSortFieldName(s);
+                    }                  
+                    setResponsePage(new ItemListPage(itemSearch));
+                }                
+            };
+            headingLink.add(new Label(s, getLocalizer().getString("item_view." + s, null)));
+            if (sorted) {
+                headingLink.add(orderClass);
             }
-            border.add(label);
+            border.add(headingLink);
         }        
         
         final List<Field> fields = itemSearch.getFields();
         
         ListView labels = new ListView("labels", fields) {
             protected void populateItem(ListItem listItem) {
-                Field field = (Field) listItem.getModelObject();
-                Label label = new Label("label", field.getLabel());
-                listItem.add(label);
-                if (field.getName().getText().equals(itemSearch.getSortFieldName())) {
-                    label.getParent().add(orderClass);
+                final Field field = (Field) listItem.getModelObject();
+                final boolean sorted = field.getName().getText().equals(itemSearch.getSortFieldName());
+                Link headingLink = new Link("label") {
+                    public void onClick() {                        
+                        itemSearch.setCurrentPage(0);
+                        if (sorted) {
+                            itemSearch.toggleSortDirection();
+                        } else {
+                            itemSearch.setSortFieldName(field.getName().getText());
+                        }
+                        setResponsePage(new ItemListPage(itemSearch));                        
+                    }                
+                };
+                listItem.add(headingLink);
+                headingLink.add(new Label("label", field.getLabel()));
+                if (sorted) {
+                    headingLink.getParent().add(orderClass);
                 }                
             }            
         };        
         
         border.add(labels);  
         
-        Label label = new Label("timeStamp", getLocalizer().getString("item_view.timeStamp", null));
-        if ("timeStamp".equals(itemSearch.getSortFieldName())) {
-            label.add(orderClass);
-        }        
-              
-        border.add(label);
+        final boolean sorted = "timeStamp".equals(itemSearch.getSortFieldName());
+        Link headingLink = new Link("timeStamp") {
+            public void onClick() {                
+                itemSearch.setCurrentPage(0);
+                if (sorted) {
+                    itemSearch.toggleSortDirection();
+                } else {
+                    itemSearch.setSortFieldName("timeStamp");
+                }
+                setResponsePage(new ItemListPage(itemSearch));                 
+            }                
+        };
+        headingLink.add(new Label("timeStamp", getLocalizer().getString("item_view.timeStamp", null)));
+        if (sorted) {
+            headingLink.add(orderClass);
+        }
+        border.add(headingLink);       
         
         //======================== ITEMS =======================================
         

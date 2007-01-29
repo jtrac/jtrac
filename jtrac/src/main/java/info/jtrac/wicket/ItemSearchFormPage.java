@@ -16,7 +16,6 @@
 
 package info.jtrac.wicket;
 
-import info.jtrac.domain.Field;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
@@ -122,33 +121,6 @@ public class ItemSearchFormPage extends BasePage {
                 }
             });
             add(pageSizeChoice);
-            // sort column =====================================================
-            List<String> sortFieldNames = new ArrayList<String>();
-            if (itemSearch.getSpace() != null) {
-                sortFieldNames.add("id");
-            }
-            for(Field field : itemSearch.getFields()) {
-                sortFieldNames.add(field.getName().getText());
-            }
-            final Map<String, Field> fieldMap = itemSearch.getFieldMap();
-            DropDownChoice sortFieldNameChoice = new DropDownChoice("sortFieldName", sortFieldNames, new IChoiceRenderer() {
-                public Object getDisplayValue(Object o) {                    
-                    if (o.equals("id")) {                    
-                        return getLocalizer().getString("item_search_form.id", null);
-                    } else {
-                        return fieldMap.get(o).getLabel();
-                    }
-                }
-                public String getIdValue(Object o, int i) {
-                    return o.toString();
-                }
-            });
-            if (itemSearch.getSpace() == null) {
-                sortFieldNameChoice.setNullValid(true);
-            }
-            add(sortFieldNameChoice);
-            // sort descending =================================================
-            add(new CheckBox("sortDescending"));
             // show detail =====================================================
             add(new CheckBox("showDetail"));
             // show history ====================================================

@@ -356,6 +356,10 @@ public class ItemSearch implements Serializable {
         return fieldMap;
     }
     
+    public void toggleSortDirection() {
+        sortDescending = !sortDescending;
+    }
+    
     //=====================================================================
     
     public void setFields(List<Field> fields) {
