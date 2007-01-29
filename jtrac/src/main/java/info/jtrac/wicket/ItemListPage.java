@@ -35,16 +35,28 @@ import wicket.model.PropertyModel;
  */
 public class ItemListPage extends BasePage {      
     
-    private long selectedItemId;
+    private long selectedItemId;    
 
     public void setSelectedItemId(long selectedItemId) {
         this.selectedItemId = selectedItemId;
     }    
     
+    private ItemListPage getItemListPage(ItemSearch itemSearch, String sortFieldName) {
+        itemSearch.setCurrentPage(0);        
+        if (itemSearch.getSortFieldName().equals(sortFieldName)) {  
+            itemSearch.toggleSortDirection();
+        } else {
+            itemSearch.setSortFieldName(sortFieldName);
+        }      
+        ItemListPage page = new ItemListPage(itemSearch);
+        page.setSelectedItemId(selectedItemId);
+        return page;
+    }
+    
     public ItemListPage(final ItemSearch itemSearch) {
         
         super("Item Search Results");
-
+        
         add(new HeaderPanel(null));
         
         final List<Item> items = getJtrac().findItems(itemSearch);
@@ -145,21 +157,14 @@ public class ItemListPage extends BasePage {
         
         String[] headings = new String[] { "id", "summary", "loggedBy", "status", "assignedTo" };
         
-        for(final String s : headings) {
-            final boolean sorted = s.equals(itemSearch.getSortFieldName());
+        for(final String s : headings) {            
             Link headingLink = new Link(s) {
-                public void onClick() {                    
-                    itemSearch.setCurrentPage(0);
-                    if (sorted) {  
-                        itemSearch.toggleSortDirection();
-                    } else {
-                        itemSearch.setSortFieldName(s);
-                    }                  
-                    setResponsePage(new ItemListPage(itemSearch));
+                public void onClick() {                                    
+                    setResponsePage(getItemListPage(itemSearch, s));
                 }                
             };
             headingLink.add(new Label(s, getLocalizer().getString("item_view." + s, null)));
-            if (sorted) {
+            if (s.equals(itemSearch.getSortFieldName())) {
                 headingLink.add(orderClass);
             }
             border.add(headingLink);
@@ -169,43 +174,29 @@ public class ItemListPage extends BasePage {
         
         ListView labels = new ListView("labels", fields) {
             protected void populateItem(ListItem listItem) {
-                final Field field = (Field) listItem.getModelObject();
-                final boolean sorted = field.getName().getText().equals(itemSearch.getSortFieldName());
+                final Field field = (Field) listItem.getModelObject();                
                 Link headingLink = new Link("label") {
                     public void onClick() {                        
-                        itemSearch.setCurrentPage(0);
-                        if (sorted) {
-                            itemSearch.toggleSortDirection();
-                        } else {
-                            itemSearch.setSortFieldName(field.getName().getText());
-                        }
-                        setResponsePage(new ItemListPage(itemSearch));                        
+                        setResponsePage(getItemListPage(itemSearch, field.getName().getText()));                       
                     }                
                 };
                 listItem.add(headingLink);
                 headingLink.add(new Label("label", field.getLabel()));
-                if (sorted) {
+                if (field.getName().getText().equals(itemSearch.getSortFieldName())) {
                     headingLink.getParent().add(orderClass);
                 }                
             }            
         };        
         
         border.add(labels);  
-        
-        final boolean sorted = "timeStamp".equals(itemSearch.getSortFieldName());
+                
         Link headingLink = new Link("timeStamp") {
             public void onClick() {                
-                itemSearch.setCurrentPage(0);
-                if (sorted) {
-                    itemSearch.toggleSortDirection();
-                } else {
-                    itemSearch.setSortFieldName("timeStamp");
-                }
-                setResponsePage(new ItemListPage(itemSearch));                 
+                setResponsePage(getItemListPage(itemSearch, "timeStamp"));                  
             }                
         };
         headingLink.add(new Label("timeStamp", getLocalizer().getString("item_view.timeStamp", null)));
-        if (sorted) {
+        if ("timeStamp".equals(itemSearch.getSortFieldName())) {
             headingLink.add(orderClass);
         }
         border.add(headingLink);       
