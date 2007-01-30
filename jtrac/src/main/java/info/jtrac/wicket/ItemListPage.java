@@ -25,6 +25,7 @@ import info.jtrac.util.DateUtils;
 import java.util.ArrayList;
 import java.util.List;
 import wicket.behavior.SimpleAttributeModifier;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
@@ -213,24 +214,40 @@ public class ItemListPage extends BasePage {
                     listItem.add(new SimpleAttributeModifier("class", "selected"));
                 } else if(listItem.getIndex() % 2 == 1) {
                     listItem.add(sam);
-                }                 
+                }                                 
+                
+                // detail <--> refId link <--> showHistory logic ===============
+                
+                WebMarkupContainer detail = new WebMarkupContainer("detail");                
+                detail.setVisible(false);
                 
                 Link refIdLink = null;
+                
                 if (itemSearch.isShowHistory()) { 
+                    final History history = (History) item;
                     refIdLink = new Link("refId") {
                         public void onClick() {
                             // this is a history record
-                            setResponsePage(new ItemViewPage(item.getParent(), ItemListPage.this));
+                            setResponsePage(new ItemViewPage(history.getParent(), ItemListPage.this));
                         }
                     };
-                    History h = (History) item;
-                    String refId = h.getRefId();
-                    int index = h.getIndex();                    
+                    String refId = history.getRefId();
+                    int index = history.getIndex();                    
                     if (index > 0) {
-                        refId = refId + " (" + index + ")";
+                        refIdLink.add(new Label("index", " (" + index + ")"));
+                    } else {
+                        refIdLink.add(new Label("index", "").setVisible(false));
                     }
-                    refIdLink.add(new Label("refId", refId));
-                   
+                    refIdLink.add(new Label("refId", history.getRefId()));
+                    if(itemSearch.isShowDetail()) {
+                        detail.setVisible(true);
+                        detail.add(new AttachmentLinkPanel("attachment", history.getAttachment()));
+                        if (index > 0) {
+                            detail.add(new Label("detail", new PropertyModel(history, "comment")));
+                        } else {
+                            detail.add(new Label("detail", new PropertyModel(history, "detail")));
+                        }
+                    }                   
                 } else {                
                     refIdLink = new Link("refId") {
                         public void onClick() {
@@ -238,18 +255,22 @@ public class ItemListPage extends BasePage {
                             setResponsePage(new ItemViewPage((Item) item, ItemListPage.this));
                         }
                     };
-                    refIdLink.add(new Label("refId", new PropertyModel(item, "refId")));                    
-                }
+                    refIdLink.add(new Label("refId", new PropertyModel(item, "refId")));
+                    if(itemSearch.isShowDetail()) {
+                        detail.setVisible(true);
+                        detail.add(new Label("attachment", "").setVisible(false));
+                        detail.add(new Label("detail", new PropertyModel(item, "detail")));
+                    } 
+                    refIdLink.add(new Label("index", "").setVisible(false));
+                }                                
                                                
-                listItem.add(refIdLink);                               
+                listItem.add(refIdLink);    
                 
-                listItem.add(new Label("summary", new PropertyModel(item, "summary"))); 
+                listItem.add(detail);
                 
-                if(itemSearch.isShowDetail()) {
-                    listItem.add(new Label("detail", new PropertyModel(item, "detail")));
-                } else {
-                    listItem.add(new Label("detail", "").setVisible(false));
-                }                
+                // end detail <--> refId link <--> showHistory logic ===========
+                
+                listItem.add(new Label("summary", new PropertyModel(item, "summary")));                                
                 
                 listItem.add(new Label("loggedBy", new PropertyModel(item, "loggedBy.name")));
                 listItem.add(new Label("status", new PropertyModel(item, "statusValue")));

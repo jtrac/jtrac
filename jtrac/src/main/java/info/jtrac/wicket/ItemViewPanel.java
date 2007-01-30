@@ -85,14 +85,7 @@ public class ItemViewPanel extends BasePanel {
                     listItem.add(new Label("assignedTo", new PropertyModel(h, "assignedTo.name")));
                     
                     WebMarkupContainer comment = new WebMarkupContainer("comment");                    
-                    final Attachment attachment = h.getAttachment();
-                    if (attachment != null) {
-                        CharSequence fileName = getResponse().encodeURL(attachment.getFileName());
-                        String href = "app/attachments/" + fileName +"?filePrefix=" + attachment.getFilePrefix();                        
-                        comment.add(new ExternalLink("attachment", href, attachment.getFileName()));                      
-                    } else {
-                        comment.add(new Label("attachment", "").setVisible(false));
-                    }
+                    comment.add(new AttachmentLinkPanel("attachment", h.getAttachment()));
                     comment.add(new Label("comment", ItemUtils.fixWhiteSpace(h.getComment())).setEscapeModelStrings(false));
                     listItem.add(comment);
                     

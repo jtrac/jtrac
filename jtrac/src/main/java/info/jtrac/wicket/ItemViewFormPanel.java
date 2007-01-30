@@ -82,12 +82,12 @@ public class ItemViewFormPanel extends BasePanel {
     private class ItemViewForm extends Form {
         
         private FileUploadField fileUploadField;
-        private Item item;
+        private long itemId;
         
         public ItemViewForm(String id, Item item) {
             super(id);
             setMultiPart(true);
-            this.item = item;
+            this.itemId = item.getId();
             History history = new History();
             history.setItemUsers(item.getItemUsers());
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(history);
@@ -163,6 +163,7 @@ public class ItemViewFormPanel extends BasePanel {
             History history = (History) getModelObject();
             User user = SecurityUtils.getPrincipal();
             history.setLoggedBy(user);
+            Item item = getJtrac().loadItem(itemId);
             getJtrac().storeHistoryForItem(item, history, attachment);
             
             if (attachment != null) {
