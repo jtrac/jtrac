@@ -18,20 +18,21 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Field;
+import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Space;
-import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.AttachmentUtils;
 import info.jtrac.util.SecurityUtils;
 import info.jtrac.util.UserUtils;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import wicket.Component;
 import wicket.feedback.FeedbackMessage;
 import wicket.feedback.IFeedbackMessageFilter;
 import wicket.markup.html.form.CheckBox;
@@ -40,17 +41,15 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.TextArea;
-import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.upload.FileUpload;
 import wicket.markup.html.form.upload.FileUploadField;
 import wicket.markup.html.panel.FeedbackPanel;
-import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
 
 /**
- * Create / Edit item form page
+ * Form to update history for item
  */
-public class ItemFormPage extends BasePage {        
+public class ItemViewFormPanel extends BasePanel {
     
     private MyFilter filter;
     
@@ -69,47 +68,54 @@ public class ItemFormPage extends BasePage {
             }
             return false;
         }
-    }
+    }    
     
-    public ItemFormPage(Space space) {
-        super("Edit Item");
-        add(new HeaderPanel(space));
-        Item item = new Item();
-        item.setSpace(space);        
+    public ItemViewFormPanel(String id, Item item) {
+        super(id);                           
         FeedbackPanel feedback = new FeedbackPanel("feedback");
         filter = new MyFilter();
         feedback.setFilter(filter);
-        border.add(feedback);        
-        border.add(new ItemForm("form", item));
+        add(feedback);        
+        add(new ItemViewForm("form", item));
     }
     
-    private class ItemForm extends Form {
+    private class ItemViewForm extends Form {
         
         private FileUploadField fileUploadField;
+        private Item item;
         
-        public ItemForm(String id, Item item) {
+        public ItemViewForm(String id, Item item) {
             super(id);
             setMultiPart(true);
-            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(item);
+            this.item = item;
+            History history = new History();
+            history.setItemUsers(item.getItemUsers());
+            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(history);
             setModel(model);
-            // summary =========================================================
-            final Component summaryField = new TextField("summary").setRequired(true).add(new ErrorHighlighter()).setOutputMarkupId(true);
-            add(summaryField);
-            ItemFormPage.this.getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                public Object getObject(Component component) {
-                    return "document.getElementById('" + summaryField.getMarkupId() + "').focus()";
-                }
-            }, summaryField);
-            // detail ==========================================================
-            add(new TextArea("detail").setRequired(true).add(new ErrorHighlighter()));
+            add(new TextArea("comment").setRequired(true).add(new ErrorHighlighter()));
             // custom fields ===================================================
-            List<Field> fields = item.getSpace().getMetadata().getFieldList();            
+            User user = SecurityUtils.getPrincipal();
+            List<Field> fields = item.getEditableFieldList(user);                   
             add(new CustomFieldsFormPanel("fields", model, fields));
+            // status ==========================================================
+            final Map<Integer, String> statesMap = item.getPermittedTransitions(user);
+            List<Integer> states = new ArrayList(statesMap.keySet());            
+            DropDownChoice statusChoice = new DropDownChoice("status", states, new IChoiceRenderer() {
+                public Object getDisplayValue(Object o) {
+                    return statesMap.get(o);
+                }
+                public String getIdValue(Object o, int i) {
+                    return o.toString();
+                }                
+            });            
+            statusChoice.setNullValid(true);
+            statusChoice.add(new ErrorHighlighter());
+            add(statusChoice);
             // assigned to =====================================================
             Space space = item.getSpace();
             List<UserSpaceRole> userSpaceRoles = getJtrac().findUserRolesForSpace(space.getId());
-            List<User> assignable = UserUtils.filterUsersAbleToTransitionFrom(userSpaceRoles, space, State.OPEN);
-            DropDownChoice choice = new DropDownChoice("assignedTo", assignable, new IChoiceRenderer() {
+            List<User> assignable = UserUtils.filterUsersAbleToTransitionFrom(userSpaceRoles, space, item.getStatus());
+            DropDownChoice assignedToChoice = new DropDownChoice("assignedTo", assignable, new IChoiceRenderer() {
                 public Object getDisplayValue(Object o) {
                     return ((User) o).getName();
                 }
@@ -117,10 +123,9 @@ public class ItemFormPage extends BasePage {
                     return ((User) o).getId() + "";
                 }                
             });
-            choice.setNullValid(true);
-            choice.setRequired(true);
-            choice.add(new ErrorHighlighter());            
-            add(choice);
+            assignedToChoice.setNullValid(true);            
+            assignedToChoice.add(new ErrorHighlighter());            
+            add(assignedToChoice);
             // notify list =====================================================
             List<ItemUser> choices = UserUtils.convertToItemUserList(userSpaceRoles);
             ListMultipleChoice itemUsers = new JtracCheckBoxMultipleChoice("itemUsers", choices, new IChoiceRenderer() {
@@ -135,7 +140,7 @@ public class ItemFormPage extends BasePage {
             // attachment ======================================================
             fileUploadField = new FileUploadField("file");
             // TODO file size limit
-            add(fileUploadField);    
+            add(fileUploadField);
             // send notifications===============================================
             add(new CheckBox("sendNotifications"));
         }
@@ -155,11 +160,11 @@ public class ItemFormPage extends BasePage {
                 attachment = new Attachment();
                 attachment.setFileName(fileName);
             }
-            Item item = (Item) getModelObject();
+            History history = (History) getModelObject();
             User user = SecurityUtils.getPrincipal();
-            item.setLoggedBy(user);
-            item.setStatus(State.OPEN);
-            getJtrac().storeItem(item, attachment);
+            history.setLoggedBy(user);
+            getJtrac().storeHistoryForItem(item, history, attachment);
+            
             if (attachment != null) {
                 File file = new File(System.getProperty("jtrac.home") + "/attachments/" + attachment.getFilePrefix() + "_" + attachment.getFileName());
                 try {

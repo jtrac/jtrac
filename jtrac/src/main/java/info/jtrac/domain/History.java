@@ -85,7 +85,20 @@ public class History extends AbstractItem {
     @Override
     public Space getSpace() {
         return getParent().getSpace();
-    }            
+    }                
+    
+    public int getIndex() {
+        int index = 0;
+        for(History h : getParent().getHistory()) {
+            if (getId() == h.getId()) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
+    }
+    
+    //==========================================================================
     
     public Integer getType() {
         return type;

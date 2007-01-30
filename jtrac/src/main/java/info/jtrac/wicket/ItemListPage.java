@@ -16,7 +16,9 @@
 
 package info.jtrac.wicket;
 
+import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.Field;
+import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.util.DateUtils;
@@ -147,6 +149,12 @@ public class ItemListPage extends BasePage {
         
         //====================== HEADER ========================================
                 
+        if(itemSearch.isShowDetail()) {
+            border.add(new Label("detail", getLocalizer().getString("item_view.detail", null)));
+        } else {
+            border.add(new Label("detail", "").setVisible(false));
+        }
+        
         final SimpleAttributeModifier orderClass;
         
         if (itemSearch.isSortDescending()) {
@@ -155,7 +163,7 @@ public class ItemListPage extends BasePage {
              orderClass = new SimpleAttributeModifier("class", "order-up");
         }
         
-        String[] headings = new String[] { "id", "summary", "loggedBy", "status", "assignedTo" };
+        String[] headings = new String[] { "id", "summary", "loggedBy", "status", "assignedTo", "timeStamp" };
         
         for(final String s : headings) {            
             Link headingLink = new Link(s) {
@@ -188,18 +196,7 @@ public class ItemListPage extends BasePage {
             }            
         };        
         
-        border.add(labels);  
-                
-        Link headingLink = new Link("timeStamp") {
-            public void onClick() {                
-                setResponsePage(getItemListPage(itemSearch, "timeStamp"));                  
-            }                
-        };
-        headingLink.add(new Label("timeStamp", getLocalizer().getString("item_view.timeStamp", null)));
-        if ("timeStamp".equals(itemSearch.getSortFieldName())) {
-            headingLink.add(orderClass);
-        }
-        border.add(headingLink);       
+        border.add(labels);                     
         
         //======================== ITEMS =======================================
         
@@ -208,8 +205,9 @@ public class ItemListPage extends BasePage {
         final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
         
         ListView itemList = new ListView("itemList", items) {
-            protected void populateItem(ListItem listItem) {               
-                final Item item = (Item) listItem.getModelObject(); 
+            protected void populateItem(ListItem listItem) { 
+                // cast to AbstactItem - show history may be == true
+                final AbstractItem item = (AbstractItem) listItem.getModelObject(); 
                 
                 if (selectedItemId == item.getId()) {
                     listItem.add(new SimpleAttributeModifier("class", "selected"));
@@ -217,14 +215,42 @@ public class ItemListPage extends BasePage {
                     listItem.add(sam);
                 }                 
                 
-                Link link = new Link("refId") {
-                    public void onClick() {
-                        setResponsePage(new ItemViewPage(item, ItemListPage.this));
+                Link refIdLink = null;
+                if (itemSearch.isShowHistory()) { 
+                    refIdLink = new Link("refId") {
+                        public void onClick() {
+                            // this is a history record
+                            setResponsePage(new ItemViewPage(item.getParent(), ItemListPage.this));
+                        }
+                    };
+                    History h = (History) item;
+                    String refId = h.getRefId();
+                    int index = h.getIndex();                    
+                    if (index > 0) {
+                        refId = refId + " (" + index + ")";
                     }
-                };
-                link.add(new Label("refId", new PropertyModel(item, "refId")));                                
-                listItem.add(link);                
-                listItem.add(new Label("summary", new PropertyModel(item, "summary")));                
+                    refIdLink.add(new Label("refId", refId));
+                   
+                } else {                
+                    refIdLink = new Link("refId") {
+                        public void onClick() {
+                            // this is an item record
+                            setResponsePage(new ItemViewPage((Item) item, ItemListPage.this));
+                        }
+                    };
+                    refIdLink.add(new Label("refId", new PropertyModel(item, "refId")));                    
+                }
+                                               
+                listItem.add(refIdLink);                               
+                
+                listItem.add(new Label("summary", new PropertyModel(item, "summary"))); 
+                
+                if(itemSearch.isShowDetail()) {
+                    listItem.add(new Label("detail", new PropertyModel(item, "detail")));
+                } else {
+                    listItem.add(new Label("detail", "").setVisible(false));
+                }                
+                
                 listItem.add(new Label("loggedBy", new PropertyModel(item, "loggedBy.name")));
                 listItem.add(new Label("status", new PropertyModel(item, "statusValue")));
                 listItem.add(new Label("assignedTo", new PropertyModel(item, "assignedTo.name")));                               

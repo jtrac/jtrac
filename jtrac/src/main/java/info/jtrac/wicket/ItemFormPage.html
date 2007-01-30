@@ -36,13 +36,7 @@
                     <tr valign="top">
                         <td>
                             <table class="jtrac">
-                                <tr wicket:id="fields">
-                                    <td class="label">
-                                        <span wicket:id="label"></span>
-                                        <font color="red" wicket:id="star"></font>
-                                    </td>    
-                                    <td wicket:id="field"></td>
-                                </tr>
+                                <span wicket:id="fields"></span>
                                 <tr>    
                                     <td class="label">
                                         <wicket:message key="item_form.assignTo"/>
@@ -56,6 +50,8 @@
                                     <td/>
                                     <td>
                                         <input type="submit" wicket:message="value=submit"/>
+                                        <input type="checkbox" wicket:id="sendNotifications"/>
+                                        <wicket:message key="item_form.sendNotifications"/>                                        
                                     </td>
                                 </tr>
                             </table>
@@ -82,7 +78,5 @@
                 </table>
             </form>
         </span>
-        <wicket:fragment wicket:id="dropDown"><select wicket:id="field"/></wicket:fragment>
-        <wicket:fragment wicket:id="textField"><input wicket:id="field"/></wicket:fragment>
     </body>
 </html>

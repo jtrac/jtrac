@@ -21,6 +21,7 @@ import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.util.DateUtils;
+import info.jtrac.util.ItemUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,6 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.basic.MultiLineLabel;
 import wicket.markup.html.link.ExternalLink;
-import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.PropertyModel;
@@ -39,11 +39,9 @@ import wicket.model.PropertyModel;
  */
 public class ItemViewPanel extends BasePanel {    
     
-    public ItemViewPanel(String id, final Item tempItem) {
+    public ItemViewPanel(String id, final Item item) {
         
-        super(id);        
-        
-        final Item item = getJtrac().loadItem(tempItem.getId());
+        super(id);                        
         
         add(new Label("refId", new PropertyModel(item, "refId")));
         add(new Label("status", new PropertyModel(item, "statusValue")));
@@ -78,6 +76,9 @@ public class ItemViewPanel extends BasePanel {
             List<History> history = new ArrayList(item.getHistory());
             add(new ListView("history", history) {
                 protected void populateItem(ListItem listItem) {
+                    if(listItem.getIndex() % 2 != 0) {
+                        listItem.add(sam);
+                    }                    
                     final History h = (History) listItem.getModelObject();
                     listItem.add(new Label("loggedBy", new PropertyModel(h, "loggedBy.name")));
                     listItem.add(new Label("status", new PropertyModel(h, "statusValue")));
@@ -92,7 +93,7 @@ public class ItemViewPanel extends BasePanel {
                     } else {
                         comment.add(new Label("attachment", "").setVisible(false));
                     }
-                    comment.add(new MultiLineLabel("comment", new PropertyModel(h, "comment")));
+                    comment.add(new Label("comment", ItemUtils.fixWhiteSpace(h.getComment())).setEscapeModelStrings(false));
                     listItem.add(comment);
                     
                     listItem.add(new Label("timeStamp", DateUtils.formatTimeStamp(h.getTimeStamp())));

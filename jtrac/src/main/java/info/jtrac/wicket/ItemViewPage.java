@@ -24,12 +24,14 @@ import wicket.markup.html.link.Link;
  */
 public class ItemViewPage extends BasePage {
       
-    public ItemViewPage(final Item item, final ItemListPage previous) {
+    public ItemViewPage(Item tempItem, final ItemListPage previous) {
         
         super("Item View");      
         
         add(new HeaderPanel(null));
                 
+        final Item item = getJtrac().loadItem(tempItem.getId());
+        
         Link link = new Link("back") {
             public void onClick() {
                 previous.setSelectedItemId(item.getId());
@@ -44,6 +46,7 @@ public class ItemViewPage extends BasePage {
         border.add(link);
         
         border.add(new ItemViewPanel("itemViewPanel", item));
+        border.add(new ItemViewFormPanel("itemViewFormPanel", item));
         
     }
     
