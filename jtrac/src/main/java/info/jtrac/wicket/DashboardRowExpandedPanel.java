@@ -29,6 +29,7 @@ import java.util.TreeMap;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.behavior.SimpleAttributeModifier;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
@@ -36,8 +37,7 @@ import wicket.markup.html.list.ListView;
 import wicket.model.PropertyModel;
 
 /**
- * panel for expanded view of statistics for a single space
- * some complication to handle a table with "rowspan" involved
+ * panel for expanded view of statistics for a single space 
  */
 public class DashboardRowExpandedPanel extends BasePanel {    
     
@@ -49,71 +49,44 @@ public class DashboardRowExpandedPanel extends BasePanel {
         final Map<Integer, String> states = new TreeMap(space.getMetadata().getStates());    
         states.remove(State.NEW);
         int rowspan = states.size() + 1; // add one totals row also
-        SimpleAttributeModifier sam = new SimpleAttributeModifier("rowspan", rowspan + "");
-        List<Integer> stateKeys = new ArrayList<Integer>(states.keySet());
-        
-        // first row space & new / search links ================================
-        
-        final int first = stateKeys.get(0);
-        
-        add(new Label("space", space.getName()).add(sam));
-        
-        add(new Link("new") {
-            public void onClick() {
-                setResponsePage(new ItemFormPage(space));
-            }
-        }.add(sam));
-
-        add(new Link("search") {
-            public void onClick() {
-                setResponsePage(new ItemSearchFormPage(space));
-            }
-        }.add(sam));
-        
-        add(new AjaxFallbackLink("link") {
-            public void onClick(AjaxRequestTarget target) {
-                DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", space, counts, user);
-                DashboardRowExpandedPanel.this.replaceWith(dashboardRow);
-                target.addComponent(dashboardRow);
-            }
-        }.add(sam));
-        
-        // first row status counts =============================================
-        
-        add(new Label("status", states.get(first)));
-        
-        add(new Link("loggedByMe") {
-            public void onClick() {
-                ItemSearch itemSearch = new ItemSearch(space);
-                itemSearch.setLoggedBySet(Collections.singleton(user.getId()));
-                itemSearch.setStatusSet(Collections.singleton(first));
-                setResponsePage(new ItemListPage(itemSearch));
-            }
-        }.add(new Label("loggedByMe", counts.getLoggedByMeForState(first))));
-        
-        add(new Link("assignedToMe") {
-            public void onClick() {
-                ItemSearch itemSearch = new ItemSearch(space);
-                itemSearch.setAssignedToSet(Collections.singleton(user.getId()));
-                itemSearch.setStatusSet(Collections.singleton(first));
-                setResponsePage(new ItemListPage(itemSearch));
-            }
-        }.add(new Label("assignedToMe", counts.getAssignedToMeForState(first))));
-        
-        add(new Link("total") {
-            public void onClick() {
-                ItemSearch itemSearch = new ItemSearch(space);
-                itemSearch.setStatusSet(Collections.singleton(first));
-                setResponsePage(new ItemListPage(itemSearch));
-            }
-        }.add(new Label("total", counts.getTotalForState(first))));                      
-        
-        // remaining rows (2 onwards) ==========================================
-        
-        stateKeys.remove(0);
+        final SimpleAttributeModifier sam = new SimpleAttributeModifier("rowspan", rowspan + "");
+        List<Integer> stateKeys = new ArrayList<Integer>(states.keySet());                                                
         
         add(new ListView("rows", stateKeys) {
-            protected void populateItem(ListItem listItem) {
+            
+            protected void populateItem(ListItem listItem) {                                
+                
+                if (listItem.getIndex() == 0) { // rowspan output only for first row            
+                    
+                    listItem.add(new Label("space", space.getName()).add(sam));
+
+                    listItem.add(new Link("new") {
+                        public void onClick() {
+                            setResponsePage(new ItemFormPage(space));
+                        }
+                    }.add(sam));
+
+                    listItem.add(new Link("search") {
+                        public void onClick() {
+                            setResponsePage(new ItemSearchFormPage(space));
+                        }
+                    }.add(sam));
+
+                    listItem.add(new AjaxFallbackLink("link") {
+                        public void onClick(AjaxRequestTarget target) {
+                            DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", space, counts, user);
+                            DashboardRowExpandedPanel.this.replaceWith(dashboardRow);
+                            target.addComponent(dashboardRow);
+                        }
+                    }.add(sam)); 
+                    
+                } else {
+                    listItem.add(new Label("space", "").setVisible(false));
+                    listItem.add(new Label("new", "").setVisible(false));
+                    listItem.add(new Label("search", "").setVisible(false));
+                    listItem.add(new Label("link", "").setVisible(false));
+                }
+                
                 final Integer i = (Integer) listItem.getModelObject();
                 listItem.add(new Label("status", states.get(i)));
                 

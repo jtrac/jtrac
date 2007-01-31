@@ -1,6 +1,5 @@
 <wicket:panel>
-    <tr class="nav-table">
-        <!- rowspan start -->
+    <tr class="nav-table" wicket:id="rows">        
         <th wicket:id="space"></th>
         <td wicket:id="new" class="icon">
             <a href="#"><img src="resources/document-new.png" wicket:message="title=dashboard.new"/></a>            
@@ -10,15 +9,7 @@
         </td>
         <td wicket:id="link" style="padding:0pt" valign="top">
             <a href="#"><img class="noborder" src="resources/expanded.png" wicket:message="title=dashboard.hideDetails"/></a>
-        </td>
-        <!- rowspan end, first row data starts -->
-        <td wicket:id="status"></td>
-        <td wicket:id="loggedByMe"><a href="#" wicket:id="loggedByMe"></a></td>
-        <td wicket:id="assignedToMe"><a href="#" wicket:id="assignedToMe"></a></td>
-        <td wicket:id="total"><a href="#" wicket:id="total"></a></td>
-        <!- first row ends -->
-    </tr>
-    <tr class="nav-table" wicket:id="rows">
+        </td>                    
         <td wicket:id="status"></td>
         <td wicket:id="loggedByMe"><a href="#" wicket:id="loggedByMe"></a></td>
         <td wicket:id="assignedToMe"><a href="#" wicket:id="assignedToMe"></a></td>
