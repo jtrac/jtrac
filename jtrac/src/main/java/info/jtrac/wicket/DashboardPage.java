@@ -23,6 +23,7 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.SecurityUtils;
 import java.util.Collections;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
@@ -57,9 +58,10 @@ public class DashboardPage extends BasePage {
             }
         });
         
+        WebMarkupContainer total = new WebMarkupContainer("total");
+        
         if(user.getSpaceRoles().size() > 1) {
             
-            Fragment total = new Fragment("total", "total");
             total.add(new Link("search") {
                 public void onClick() {
                     setResponsePage(new ItemSearchFormPage(user));
@@ -88,11 +90,12 @@ public class DashboardPage extends BasePage {
                     setResponsePage(new ItemListPage(itemSearch));
                 }
             }.add(new Label("total", new PropertyModel(countsHolder, "totalTotal"))));
-            
-            border.add(total);            
+                       
         } else {             
-            border.add(new Label("total", ""));
-        }               
+            total.setVisible(false);
+        }   
+        
+        border.add(total); 
         
     }
     
