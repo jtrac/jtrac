@@ -67,6 +67,10 @@ public class ItemSearch implements Serializable {
     private Set<Long> loggedBySet;
     private Set<Long> assignedToSet;
     
+    // added for wicket
+    private List<User> loggedByList;
+    private List<User> assignedToList;
+    
     private Set<Integer> cusInt01Set;
     private Set<Integer> cusInt02Set;
     private Set<Integer> cusInt03Set;
@@ -114,12 +118,13 @@ public class ItemSearch implements Serializable {
         if (showHistory == true) {
             criteria = DetachedCriteria.forClass(History.class);           
             // apply restrictions to parent, this is an inner join =============
-            criteria.createCriteria("parent").add(Restrictions.in("space.id", getSpaceIdSet()));            
+            DetachedCriteria parent = criteria.createCriteria("parent");
+            parent.add(Restrictions.in("space.id", getSpaceIdSet()));            
             if (createdDateStart != null) {
-                criteria.createCriteria("parent").add(Restrictions.ge("timeStamp", createdDateStart));
+                parent.add(Restrictions.ge("timeStamp", createdDateStart));
             }
             if (createdDateEnd != null) {
-                criteria.createCriteria("parent").add(Restrictions.le("timeStamp", createdDateEnd));
+                parent.add(Restrictions.le("timeStamp", createdDateEnd));
             }              
             //==================================================================            
             if (modifiedDateStart != null) {
@@ -160,6 +165,12 @@ public class ItemSearch implements Serializable {
         if (assignedToSet != null && assignedToSet.size() > 0) {
             criteria.add(Restrictions.in("assignedTo.id", assignedToSet));
         }
+        if (loggedByList != null && loggedByList.size() > 0) {
+            criteria.add(Restrictions.in("loggedBy", loggedByList));
+        }
+        if (assignedToList != null && assignedToList.size() > 0) {
+            criteria.add(Restrictions.in("assignedTo", assignedToList));
+        }        
         //======================================================================
         if (cusInt01Set != null && cusInt01Set.size() > 0) {
             criteria.add(Restrictions.in("cusInt01", cusInt01Set));
@@ -704,6 +715,22 @@ public class ItemSearch implements Serializable {
     
     public void setResultCount(long resultCount) {
         this.resultCount = resultCount;
+    }
+
+    public List<User> getLoggedByList() {
+        return loggedByList;
+    }
+
+    public void setLoggedByList(List<User> loggedByList) {
+        this.loggedByList = loggedByList;
+    }
+
+    public List<User> getAssignedToList() {
+        return assignedToList;
+    }
+
+    public void setAssignedToList(List<User> assignedToList) {
+        this.assignedToList = assignedToList;
     }
             
 }
