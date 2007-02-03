@@ -1,0 +1,37 @@
+import java.sql.*;
+
+Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+
+conn = DriverManager.getConnection("jdbc:odbc:jtrac", "admin", "");
+
+md = conn.getMetaData();
+rs = md.getTables(null, null, null, new String[] { "TABLE" });
+
+tableNames = new ArrayList();
+
+while (rs.next()) {
+    tableName = rs.getString("TABLE_NAME");
+    // print(tableName);
+    tableNames.add(tableName);
+}
+
+stmt = conn.createStatement();
+
+for (tableName : tableNames) {
+    rs = stmt.executeQuery("select * from " + tableName);
+    md = rs.getMetaData();
+    cols = "";
+    vals = "";
+    for (int i = 1; i <= md.getColumnCount(); i++) {
+        cols = cols + md.getColumnName(i);
+        vals = vals + "?";
+        if (i != md.getColumnCount()) {
+            cols = cols + ", ";
+            vals = vals + ", ";
+        }
+    }
+    ins = "insert into " + tableName + " (" + cols + ") values (" + vals + ")";
+    print(ins);
+}
+
+conn.close();
