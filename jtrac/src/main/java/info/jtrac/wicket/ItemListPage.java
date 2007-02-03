@@ -48,8 +48,9 @@ public class ItemListPage extends BasePage {
         itemSearch.setCurrentPage(0);        
         if (itemSearch.getSortFieldName().equals(sortFieldName)) {  
             itemSearch.toggleSortDirection();
-        } else {
+        } else {            
             itemSearch.setSortFieldName(sortFieldName);
+            itemSearch.setSortDescending(false);
         }      
         ItemListPage page = new ItemListPage(itemSearch);
         page.setSelectedItemId(selectedItemId);
