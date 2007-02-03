@@ -52,6 +52,7 @@ import wicket.model.BoundCompoundPropertyModel;
 public class ItemViewFormPanel extends BasePanel {
     
     private MyFilter filter;
+    private ItemListPage previous;
     
     private class MyFilter implements IFeedbackMessageFilter {
         
@@ -70,8 +71,9 @@ public class ItemViewFormPanel extends BasePanel {
         }
     }    
     
-    public ItemViewFormPanel(String id, Item item) {
-        super(id);                           
+    public ItemViewFormPanel(String id, Item item, ItemListPage previous) {
+        super(id);
+        this.previous = previous;
         FeedbackPanel feedback = new FeedbackPanel("feedback");
         filter = new MyFilter();
         feedback.setFilter(filter);
@@ -174,7 +176,7 @@ public class ItemViewFormPanel extends BasePanel {
                     throw new RuntimeException(e);
                 }
             }            
-            setResponsePage(new ItemViewPage(item, null));
+            setResponsePage(new ItemViewPage(item, ItemViewFormPanel.this.previous));
         }
         
     }

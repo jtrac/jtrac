@@ -46,7 +46,7 @@ public class ItemViewPage extends BasePage {
         border.add(link);
         
         border.add(new ItemViewPanel("itemViewPanel", item));
-        border.add(new ItemViewFormPanel("itemViewFormPanel", item));
+        border.add(new ItemViewFormPanel("itemViewFormPanel", item, previous));
         
     }
     
