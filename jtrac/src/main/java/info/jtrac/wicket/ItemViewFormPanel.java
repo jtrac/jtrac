@@ -33,6 +33,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import wicket.feedback.FeedbackMessage;
 import wicket.feedback.IFeedbackMessageFilter;
 import wicket.markup.html.form.CheckBox;
@@ -86,7 +88,7 @@ public class ItemViewFormPanel extends BasePanel {
         private FileUploadField fileUploadField;
         private long itemId;
         
-        public ItemViewForm(String id, Item item) {
+        public ItemViewForm(String id, final Item item) {
             super(id);
             setMultiPart(true);
             this.itemId = item.getId();
@@ -99,6 +101,23 @@ public class ItemViewFormPanel extends BasePanel {
             User user = SecurityUtils.getPrincipal();
             List<Field> fields = item.getEditableFieldList(user);                   
             add(new CustomFieldsFormPanel("fields", model, fields));
+            // assigned to =====================================================
+            final Space space = item.getSpace();
+            final List<UserSpaceRole> userSpaceRoles = getJtrac().findUserRolesForSpace(space.getId());
+            List<User> empty = new ArrayList<User>(0);
+            final DropDownChoice assignedToChoice = new DropDownChoice("assignedTo", empty, new IChoiceRenderer() {
+                public Object getDisplayValue(Object o) {
+                    return ((User) o).getName();
+                }
+                public String getIdValue(Object o, int i) {
+                    return ((User) o).getId() + "";
+                }                
+            });
+            assignedToChoice.setNullValid(true);            
+            assignedToChoice.add(new ErrorHighlighter());
+            assignedToChoice.setOutputMarkupId(true);
+            assignedToChoice.setEnabled(false);
+            add(assignedToChoice);
             // status ==========================================================
             final Map<Integer, String> statesMap = item.getPermittedTransitions(user);
             List<Integer> states = new ArrayList(statesMap.keySet());            
@@ -111,23 +130,22 @@ public class ItemViewFormPanel extends BasePanel {
                 }                
             });            
             statusChoice.setNullValid(true);
-            statusChoice.add(new ErrorHighlighter());
-            add(statusChoice);
-            // assigned to =====================================================
-            Space space = item.getSpace();
-            List<UserSpaceRole> userSpaceRoles = getJtrac().findUserRolesForSpace(space.getId());
-            List<User> assignable = UserUtils.filterUsersAbleToTransitionFrom(userSpaceRoles, space, item.getStatus());
-            DropDownChoice assignedToChoice = new DropDownChoice("assignedTo", assignable, new IChoiceRenderer() {
-                public Object getDisplayValue(Object o) {
-                    return ((User) o).getName();
+            statusChoice.add(new ErrorHighlighter());            
+            statusChoice.add(new AjaxFormComponentUpdatingBehavior("onChange") {
+                protected void onUpdate(AjaxRequestTarget target) {
+                    Integer selectedStatus = (Integer) getFormComponent().getConvertedInput();
+                    if (selectedStatus == null) {
+                        assignedToChoice.setEnabled(false);
+                    } else {
+                        List<User> assignable = UserUtils.filterUsersAbleToTransitionFrom(userSpaceRoles, space, selectedStatus);
+                        assignedToChoice.setChoices(assignable);                    
+                        assignedToChoice.setEnabled(true);
+                    }
+                    target.addComponent(assignedToChoice);
                 }
-                public String getIdValue(Object o, int i) {
-                    return ((User) o).getId() + "";
-                }                
-            });
-            assignedToChoice.setNullValid(true);            
-            assignedToChoice.add(new ErrorHighlighter());            
-            add(assignedToChoice);
+            });           
+            
+            add(statusChoice);            
             // notify list =====================================================
             List<ItemUser> choices = UserUtils.convertToItemUserList(userSpaceRoles);
             ListMultipleChoice itemUsers = new JtracCheckBoxMultipleChoice("itemUsers", choices, new IChoiceRenderer() {
