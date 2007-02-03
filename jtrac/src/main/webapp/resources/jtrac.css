@@ -26,3 +26,5 @@ tr.sortable th { background-position: right; background-repeat: no-repeat; }
 tr.sortable th.order-none { background-image: url("arrow_off.png"); }
 tr.sortable th.order-up { background-color: #ADD8E6; background-image: url("arrow_up.png"); }
 tr.sortable th.order-down { background-color: #ADD8E6; background-image: url("arrow_down.png"); }
+li.feedbackPanelERROR { list-style: none; padding-left: 1.8em; padding-bottom: 0.5em;
+    background-repeat: no-repeat; background-image: url("dialog-error.png"); }
