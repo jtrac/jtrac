@@ -16,6 +16,7 @@
 
 package info.jtrac.util;
 
+import info.jtrac.domain.Attachment;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -35,6 +36,10 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class AttachmentUtils {
     
+    private static String getJtracHome() {
+        return System.getProperty("jtrac.home");
+    }
+    
     public static String cleanFileName(String path) {
         // the client browser could be on Unix or Windows, we don't know
         int index = path.lastIndexOf('/');
@@ -44,11 +49,15 @@ public class AttachmentUtils {
         return (index != -1 ? path.substring(index + 1) : path);
     }
     
+    public static File getNewFile(Attachment attachment) {
+        return new File(getJtracHome() + "/attachments/" + attachment.getFilePrefix() + "_" + attachment.getFileName());
+    }
+    
     public static void download(ServletContext servletContext, HttpServletRequest request, HttpServletResponse response) throws Exception {
         
         String fileName = URLDecoder.decode(cleanFileName(request.getRequestURI()), "UTF-8");
         String filePrefix = request.getParameter("filePrefix");
-        File file = new File(System.getProperty("jtrac.home") + "/attachments/" + filePrefix + "_" + fileName);        
+        File file = new File(getJtracHome() + "/attachments/" + filePrefix + "_" + fileName);        
         if (file.canRead()) {
             InputStream in = null;
             OutputStream out = null;

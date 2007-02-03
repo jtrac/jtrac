@@ -26,6 +26,7 @@ import wicket.markup.html.form.TextField;
 import wicket.markup.html.panel.Panel;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
+import wicket.model.Model;
 import wicket.util.convert.ConversionException;
 import wicket.util.convert.IConverter;
 import wicket.util.convert.SimpleConverterAdapter;
@@ -58,12 +59,8 @@ public class DatePicker extends Panel {
         };
         dateField.setOutputMarkupId(true);
         dateField.setRequired(!field.isOptional());
-        // this is only used for resolving the localized error message
-        dateField.setLabel(new AbstractReadOnlyModel() {
-            public Object getObject(Component component) {
-                return field.getLabel();
-            }
-        });
+        // this is only used for substituting ${label} when resolving error message
+        dateField.setLabel(new Model(field.getLabel()));
         dateField.add(new ErrorHighlighter());
         add(model.bind(dateField, field.getName().getText()));
         final Label button = new Label("button", "...");

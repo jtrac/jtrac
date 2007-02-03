@@ -22,6 +22,7 @@ import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Space;
+import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.AttachmentUtils;
@@ -29,23 +30,23 @@ import info.jtrac.util.SecurityUtils;
 import info.jtrac.util.UserUtils;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import wicket.Component;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import wicket.feedback.FeedbackMessage;
-import wicket.feedback.IFeedbackMessageFilter;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
+import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.TextArea;
 import wicket.markup.html.form.upload.FileUpload;
 import wicket.markup.html.form.upload.FileUploadField;
+import wicket.markup.html.form.validation.AbstractValidator;
 import wicket.markup.html.panel.FeedbackPanel;
+import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
 
 /**
@@ -53,31 +54,14 @@ import wicket.model.BoundCompoundPropertyModel;
  */
 public class ItemViewFormPanel extends BasePanel {
     
-    private MyFilter filter;
-    private ItemListPage previous;
-    
-    private class MyFilter implements IFeedbackMessageFilter {
-        
-        private Set<String> previous = new HashSet<String>();
-        
-        public void reset() {
-            previous.clear();
-        }
-        
-        public boolean accept(FeedbackMessage fm) {
-            if(!previous.contains(fm.getMessage())) {
-                previous.add(fm.getMessage());
-                return true;
-            }
-            return false;
-        }
-    }    
+    private JtracFeedbackMessageFilter filter;
+    private ItemListPage previous;      
     
     public ItemViewFormPanel(String id, Item item, ItemListPage previous) {
         super(id);
         this.previous = previous;
         FeedbackPanel feedback = new FeedbackPanel("feedback");
-        filter = new MyFilter();
+        filter = new JtracFeedbackMessageFilter();
         feedback.setFilter(filter);
         add(feedback);        
         add(new ItemViewForm("form", item));
@@ -87,6 +71,8 @@ public class ItemViewFormPanel extends BasePanel {
         
         private FileUploadField fileUploadField;
         private long itemId;
+        private DropDownChoice assignedToChoice;
+        private DropDownChoice statusChoice;
         
         public ItemViewForm(String id, final Item item) {
             super(id);
@@ -101,27 +87,13 @@ public class ItemViewFormPanel extends BasePanel {
             User user = SecurityUtils.getPrincipal();
             List<Field> fields = item.getEditableFieldList(user);                   
             add(new CustomFieldsFormPanel("fields", model, fields));
-            // assigned to =====================================================
+            // =================================================================
             final Space space = item.getSpace();
             final List<UserSpaceRole> userSpaceRoles = getJtrac().findUserRolesForSpace(space.getId());
-            List<User> empty = new ArrayList<User>(0);
-            final DropDownChoice assignedToChoice = new DropDownChoice("assignedTo", empty, new IChoiceRenderer() {
-                public Object getDisplayValue(Object o) {
-                    return ((User) o).getName();
-                }
-                public String getIdValue(Object o, int i) {
-                    return ((User) o).getId() + "";
-                }                
-            });
-            assignedToChoice.setNullValid(true);            
-            assignedToChoice.add(new ErrorHighlighter());
-            assignedToChoice.setOutputMarkupId(true);
-            assignedToChoice.setEnabled(false);
-            add(assignedToChoice);
             // status ==========================================================
             final Map<Integer, String> statesMap = item.getPermittedTransitions(user);
             List<Integer> states = new ArrayList(statesMap.keySet());            
-            DropDownChoice statusChoice = new DropDownChoice("status", states, new IChoiceRenderer() {
+            statusChoice = new DropDownChoice("status", states, new IChoiceRenderer() {
                 public Object getDisplayValue(Object o) {
                     return statesMap.get(o);
                 }
@@ -143,9 +115,37 @@ public class ItemViewFormPanel extends BasePanel {
                     }
                     target.addComponent(assignedToChoice);
                 }
-            });           
-            
-            add(statusChoice);            
+            });
+            add(statusChoice);
+            // assigned to =====================================================            
+            List<User> empty = new ArrayList<User>(0);
+            assignedToChoice = new DropDownChoice("assignedTo", empty, new IChoiceRenderer() {
+                public Object getDisplayValue(Object o) {
+                    return ((User) o).getName();
+                }
+                public String getIdValue(Object o, int i) {
+                    return ((User) o).getId() + "";
+                }                
+            });
+            assignedToChoice.setNullValid(true);            
+            assignedToChoice.add(new ErrorHighlighter());
+            assignedToChoice.setOutputMarkupId(true);
+            assignedToChoice.setEnabled(false);
+            assignedToChoice.add(new AbstractValidator() {
+                public void validate(FormComponent c) {                    
+                    if(c.getConvertedInput() == null) {
+                        Integer i = (Integer) statusChoice.getConvertedInput();
+                        if (i != null && i != State.CLOSED) {
+                            error(c);
+                        }
+                    }
+                }
+                @Override
+                protected String resourceKey(FormComponent c) {                    
+                    return "required";
+                }
+            });            
+            add(assignedToChoice);            
             // notify list =====================================================
             List<ItemUser> choices = UserUtils.convertToItemUserList(userSpaceRoles);
             ListMultipleChoice itemUsers = new JtracCheckBoxMultipleChoice("itemUsers", choices, new IChoiceRenderer() {
@@ -169,6 +169,16 @@ public class ItemViewFormPanel extends BasePanel {
         protected void validate() {
             filter.reset();
             super.validate();
+//            History history = (History) getModelObject();
+//            if (history.getStatus() != null) {
+//                if (history.getStatus() != State.CLOSED && history.getAssignedTo() == null) {                    
+//                    error(getLocalizer().getString("item_view_form.assignedTo.error", null));                    
+//                }
+//            } else {
+//                if (history.getAssignedTo() != null) {                    
+//                    error(getLocalizer().getString("item_view_form.status.error", null));                    
+//                }
+//            }            
         }
         
         @Override
@@ -180,14 +190,14 @@ public class ItemViewFormPanel extends BasePanel {
                 attachment = new Attachment();
                 attachment.setFileName(fileName);
             }
-            History history = (History) getModelObject();
+            History history = (History) getModelObject();                                  
             User user = SecurityUtils.getPrincipal();
             history.setLoggedBy(user);
             Item item = getJtrac().loadItem(itemId);
             getJtrac().storeHistoryForItem(item, history, attachment);
             
             if (attachment != null) {
-                File file = new File(System.getProperty("jtrac.home") + "/attachments/" + attachment.getFilePrefix() + "_" + attachment.getFileName());
+                File file = AttachmentUtils.getNewFile(attachment);
                 try {
                     fileUpload.writeTo(file);
                 } catch (Exception e) {

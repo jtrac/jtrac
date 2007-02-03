@@ -28,12 +28,8 @@ import info.jtrac.util.AttachmentUtils;
 import info.jtrac.util.SecurityUtils;
 import info.jtrac.util.UserUtils;
 import java.io.File;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import wicket.Component;
-import wicket.feedback.FeedbackMessage;
-import wicket.feedback.IFeedbackMessageFilter;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
@@ -52,24 +48,7 @@ import wicket.model.BoundCompoundPropertyModel;
  */
 public class ItemFormPage extends BasePage {        
     
-    private MyFilter filter;
-    
-    private class MyFilter implements IFeedbackMessageFilter {
-        
-        private Set<String> previous = new HashSet<String>();
-        
-        public void reset() {
-            previous.clear();
-        }
-        
-        public boolean accept(FeedbackMessage fm) {
-            if(!previous.contains(fm.getMessage())) {
-                previous.add(fm.getMessage());
-                return true;
-            }
-            return false;
-        }
-    }
+    private JtracFeedbackMessageFilter filter;    
     
     public ItemFormPage(Space space) {
         super("Edit Item");
@@ -77,7 +56,7 @@ public class ItemFormPage extends BasePage {
         Item item = new Item();
         item.setSpace(space);        
         FeedbackPanel feedback = new FeedbackPanel("feedback");
-        filter = new MyFilter();
+        filter = new JtracFeedbackMessageFilter();
         feedback.setFilter(filter);
         border.add(feedback);        
         border.add(new ItemForm("form", item));
@@ -161,7 +140,7 @@ public class ItemFormPage extends BasePage {
             item.setStatus(State.OPEN);
             getJtrac().storeItem(item, attachment);
             if (attachment != null) {
-                File file = new File(System.getProperty("jtrac.home") + "/attachments/" + attachment.getFilePrefix() + "_" + attachment.getFileName());
+                File file = AttachmentUtils.getNewFile(attachment);
                 try {
                     fileUpload.writeTo(file);
                 } catch (Exception e) {
