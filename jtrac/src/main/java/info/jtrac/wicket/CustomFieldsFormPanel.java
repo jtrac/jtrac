@@ -68,7 +68,7 @@ public class CustomFieldsFormPanel extends BasePanel {
                     f.add(model.bind(choice, field.getNameText()));
                     listItem.add(f);
                 } else if (field.getName().getType() == 6){ // date picker                        
-                    listItem.add(new DatePicker("field", model, field));
+                    listItem.add(new DatePicker("field", model, field.getName().getText(), !field.isOptional(), field.getLabel()));
                 } else {
                     Fragment f = new Fragment("field", "textField");
                     TextField textField = new TextField("field");

@@ -43,6 +43,52 @@
                                 </tr>
                             </table>                            
                         </td>
+                        <td>
+                            <table class="jtrac">
+                                <tr>
+                                    <th><wicket:message key="item_search_form.loggedBy"/></th>
+                                </tr>
+                                <tr>
+                                    <td><select wicket:id="loggedByList" size="8"/></td>
+                                </tr>
+                            </table>                         
+                        </td>
+                        <td>
+                            <table class="jtrac">
+                                <tr>
+                                    <th><wicket:message key="item_search_form.assignedTo"/></th>
+                                </tr>
+                                <tr>
+                                    <td><select wicket:id="assignedToList" size="8"/></td>
+                                </tr>
+                            </table>                         
+                        </td>
+                        <td valign="top">
+                            <table class="jtrac">
+                                <tr>
+                                    <th colspan="2"><wicket:message key="item_search_form.createdDate"/></th>                                    
+                                </tr>
+                                <tr>
+                                    <td class="label"><wicket:message key="item_search_form.onOrAfter"/></td>
+                                    <td><span wicket:id="createdDateStart"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="label"><wicket:message key="item_search_form.onOrBefore"/></td>
+                                    <td><span wicket:id="createdDateEnd"></span></td>
+                                </tr>                                
+                                <tr>
+                                    <th colspan="2"><wicket:message key="item_search_form.historyUpdatedDate"/></th>                                    
+                                </tr>
+                                <tr>
+                                    <td class="label"><wicket:message key="item_search_form.onOrAfter"/></td>
+                                    <td><span wicket:id="modifiedDateStart"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="label"><wicket:message key="item_search_form.onOrBefore"/></td>
+                                    <td><span wicket:id="modifiedDateEnd"></span></td>
+                                </tr>                                  
+                            </table>
+                        </td>
                     </tr>
                 </table>
             </form>

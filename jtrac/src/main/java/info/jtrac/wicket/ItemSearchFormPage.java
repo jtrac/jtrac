@@ -19,6 +19,7 @@ package info.jtrac.wicket;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
+import info.jtrac.util.SecurityUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -172,6 +173,33 @@ public class ItemSearchFormPage extends BasePage {
                 }                
             });            
             add(statusSetChoice);
+            // =================================================================
+            List<User> users = null;
+            if (itemSearch.getSpace() == null) {
+                User user = SecurityUtils.getPrincipal();
+                users = getJtrac().findUsersForUser(user);
+            } else {
+                users = getJtrac().findUsersForSpace(itemSearch.getSpace().getId());
+            }
+            IChoiceRenderer userChoiceRenderer = new IChoiceRenderer() {
+                public Object getDisplayValue(Object o) {
+                    return ((User) o).getName();
+                }
+                public String getIdValue(Object o, int i) {
+                    return ((User) o).getId() + "";
+                }                
+            };
+            // loggedBy ========================================================
+            ListMultipleChoice loggedByChoice = new ListMultipleChoice("loggedByList", users, userChoiceRenderer);
+            add(loggedByChoice);
+            // assignedTo ======================================================
+            ListMultipleChoice assignedToChoice = new ListMultipleChoice("assignedToList", users, userChoiceRenderer);            
+            add(assignedToChoice);
+            // dates ===========================================================
+            add(new DatePicker("createdDateStart", model, "createdDateStart", false, null));
+            add(new DatePicker("createdDateEnd", model, "createdDateEnd", false, null));
+            add(new DatePicker("modifiedDateStart", model, "modifiedDateStart", false, null));
+            add(new DatePicker("modifiedDateEnd", model, "modifiedDateEnd", false, null));            
         }
         
         @Override

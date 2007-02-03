@@ -16,7 +16,6 @@
 
 package info.jtrac.wicket;
 
-import info.jtrac.domain.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,7 +35,7 @@ import wicket.util.convert.SimpleConverterAdapter;
  */
 public class DatePicker extends Panel {
     
-    public DatePicker(String id, BoundCompoundPropertyModel model, final Field field) {
+    public DatePicker(String id, BoundCompoundPropertyModel model, String path, boolean required, String label) {
         super(id);
         final TextField dateField = new TextField("field", Date.class) {
             @Override
@@ -58,11 +57,11 @@ public class DatePicker extends Panel {
             }
         };
         dateField.setOutputMarkupId(true);
-        dateField.setRequired(!field.isOptional());
+        dateField.setRequired(required);
         // this is only used for substituting ${label} when resolving error message
-        dateField.setLabel(new Model(field.getLabel()));
+        dateField.setLabel(new Model(label));
         dateField.add(new ErrorHighlighter());
-        add(model.bind(dateField, field.getName().getText()));
+        add(model.bind(dateField, path));
         final Label button = new Label("button", "...");
         button.setOutputMarkupId(true);
         add(button);
