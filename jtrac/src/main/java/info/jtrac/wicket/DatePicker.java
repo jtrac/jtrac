@@ -58,6 +58,7 @@ public class DatePicker extends Panel {
         };
         dateField.setOutputMarkupId(true);
         dateField.setRequired(!field.isOptional());
+        // this is only used for resolving the localized error message
         dateField.setLabel(new AbstractReadOnlyModel() {
             public Object getObject(Component component) {
                 return field.getLabel();
