@@ -281,6 +281,7 @@
     #foreach( $author in $authors )
       <meta name="author" content="$author" />
     #end
+    <meta name="verify-v1" content="otD4JR1njRiR5O87EaE14/GUQMVjC1Lg5QKBOdD+N+Y=" />
     <meta name="description" content="JTrac is a generic issue-tracking web-application that can be easily customized by adding custom fields and drop-downs. Features include customizable workflow, field level permissions, e-mail integration, file attachments and a detailed history view."/>
     <meta name="keywords" content="bug tracker, issue tracker, bug tracking, issue tracking, open source, free, opensource"/>
     <meta http-equiv="Content-Type" content="text/html; charset=${outputEncoding}" />
