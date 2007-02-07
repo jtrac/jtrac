@@ -21,8 +21,10 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -80,4 +82,18 @@ public class UserUtils {
          }
          return itemUsers;
      }
+     
+     /**
+      * used to prepare drop down lists for the search screen in the ui
+      */
+     public static Map<Long, String> getSpaceNamesMap(User user) {
+         Map<Long, String> map = new HashMap<Long, String>(user.getUserSpaceRoles().size());
+         for(UserSpaceRole usr : user.getUserSpaceRoles()) {
+             if (usr.getSpace() != null) {
+                 map.put(usr.getSpace().getId(), usr.getSpace().getName());
+             }
+         }
+         return map;
+     }
+     
 }

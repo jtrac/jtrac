@@ -20,19 +20,19 @@ import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.util.SecurityUtils;
+import info.jtrac.util.UserUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import wicket.markup.html.basic.Label;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.panel.FeedbackPanel;
-import wicket.markup.html.panel.Fragment;
 import wicket.model.BoundCompoundPropertyModel;
 
 /**
@@ -127,8 +127,8 @@ public class ItemSearchFormPage extends BasePage {
             // show history ====================================================
             add(new CheckBox("showHistory"));
             // severity / priority =============================================
-            if (itemSearch.getSpace() == null) {
-                Fragment f = new Fragment("severityPriority", "severityPriority");
+            WebMarkupContainer sp = new WebMarkupContainer("severityPriority");
+            if (itemSearch.getSpace() == null) {                
                 final Map<String, String> severityMap = itemSearch.getSeverityOptions();
                 List<Integer> severityList = new ArrayList(severityMap.size());
                 for(String s : severityMap.keySet()) {
@@ -142,7 +142,7 @@ public class ItemSearchFormPage extends BasePage {
                         return o.toString();
                     }                
                 });            
-                f.add(severitySetChoice);
+                sp.add(severitySetChoice);
                 final Map<String, String> priorityMap = itemSearch.getPriorityOptions();
                 List<Integer> priorityList = new ArrayList(priorityMap.size());
                 for(String s : priorityMap.keySet()) {
@@ -156,12 +156,12 @@ public class ItemSearchFormPage extends BasePage {
                         return o.toString();
                     }                
                 });            
-                f.add(prioritySetChoice);
-                add(f);
+                sp.add(prioritySetChoice);
             } else {
-                add(new Label("severityPriority", ""));
+                sp.setVisible(false);
             }
-            // status ==========================================================
+            add(sp);
+            // status ==========================================================           
             final Map<Integer, String> statusMap = itemSearch.getStatusOptions();
             List<Integer> statusList = new ArrayList(statusMap.keySet());
             ListMultipleChoice statusSetChoice = new JtracListMultipleChoice("statusSet", statusList, new IChoiceRenderer() {
@@ -199,7 +199,25 @@ public class ItemSearchFormPage extends BasePage {
             add(new DatePicker("createdDateStart", model, "createdDateStart", false, null));
             add(new DatePicker("createdDateEnd", model, "createdDateEnd", false, null));
             add(new DatePicker("modifiedDateStart", model, "modifiedDateStart", false, null));
-            add(new DatePicker("modifiedDateEnd", model, "modifiedDateEnd", false, null));            
+            add(new DatePicker("modifiedDateEnd", model, "modifiedDateEnd", false, null));
+            // spaces ===========================================================
+            WebMarkupContainer spaces = new WebMarkupContainer("spaces");
+            if (itemSearch.getSpace() == null) {
+                final Map<Long, String> spaceOptions = UserUtils.getSpaceNamesMap(itemSearch.getUser());
+                List<Long> spaceIds = new ArrayList(spaceOptions.keySet());
+                ListMultipleChoice spaceChoice = new JtracListMultipleChoice("spaceSet", spaceIds, new IChoiceRenderer() {
+                    public Object getDisplayValue(Object o) {
+                        return spaceOptions.get(o);
+                    }
+                    public String getIdValue(Object o, int i) {
+                        return o.toString();
+                    }
+                });
+                spaces.add(spaceChoice);
+            } else {
+                spaces.setVisible(false);
+            }
+            add(spaces);
         }
         
         @Override

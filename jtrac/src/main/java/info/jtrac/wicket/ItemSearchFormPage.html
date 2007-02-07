@@ -32,7 +32,28 @@
                 </table>
                 <table class="bdr-collapse">
                     <tr>
-                        <span wicket:id="severityPriority"></span>
+                        <span wicket:id="severityPriority">
+                            <td>
+                                <table class="jtrac">
+                                    <tr>
+                                        <th><wicket:message key="item_search_form.severity"/></th>
+                                    </tr>
+                                    <tr>                        
+                                        <td><select wicket:id="severitySet" size="8"/></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td>
+                                <table class="jtrac">
+                                    <tr>
+                                        <th><wicket:message key="item_search_form.priority"/></th>
+                                    </tr>
+                                    <tr>                        
+                                        <td><select wicket:id="prioritySet" size="8"/></td>
+                                    </tr>
+                                </table>
+                            </td>                             
+                        </span>
                         <td>
                             <table class="jtrac">
                                 <tr>
@@ -89,31 +110,22 @@
                                 </tr>                                  
                             </table>
                         </td>
+                        <td wicket:id="spaces">
+                            <table class="jtrac">
+                                <tr>
+                                    <th><wicket:message key="item_search_form.space"/></th>
+                                </tr>
+                                <tr>
+                                    <td><select wicket:id="spaceSet" size="8"/></td>
+                                </tr>                                
+                            </table>
+                        </td>                        
+                    </tr>
+                    <tr>
+
                     </tr>
                 </table>
             </form>
         </span>
-        <wicket:fragment wicket:id="severityPriority">        
-            <td>
-                <table class="jtrac">
-                    <tr>
-                        <th><wicket:message key="item_search_form.severity"/></th>
-                    </tr>
-                    <tr>                        
-                        <td><select wicket:id="severitySet" size="8"/></td>
-                    </tr>
-                </table>
-            </td>
-            <td>
-                <table class="jtrac">
-                    <tr>
-                        <th><wicket:message key="item_search_form.priority"/></th>
-                    </tr>
-                    <tr>                        
-                        <td><select wicket:id="prioritySet" size="8"/></td>
-                    </tr>
-                </table>
-            </td>          
-        </wicket:fragment>
     </body>
 </html>
