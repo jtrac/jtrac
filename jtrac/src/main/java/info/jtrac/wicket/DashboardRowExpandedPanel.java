@@ -63,12 +63,21 @@ public class DashboardRowExpandedPanel extends BasePanel {
                 if (listItem.getIndex() == 0) { // rowspan output only for first row            
                     
                     listItem.add(new Label("space", space.getName()).add(sam));
+                                        
+                    WebMarkupContainer newColumn = new WebMarkupContainer("new");
+                    newColumn.add(sam);   
+                    listItem.add(newColumn);
+                    
+                    if(usr.isAbleToCreateNewItem()) {
+                        newColumn.add(new Link("new") {
+                            public void onClick() {
+                                setResponsePage(new ItemFormPage(space));
+                            }
+                        });
 
-                    listItem.add(new Link("new") {
-                        public void onClick() {
-                            setResponsePage(new ItemFormPage(space));
-                        }
-                    }.add(sam));
+                    } else {
+                        newColumn.add(new WebMarkupContainer("new").setVisible(false));
+                    }
 
                     listItem.add(new Link("search") {
                         public void onClick() {
@@ -85,10 +94,10 @@ public class DashboardRowExpandedPanel extends BasePanel {
                     }.add(sam)); 
                     
                 } else {
-                    listItem.add(new Label("space", "").setVisible(false));
-                    listItem.add(new Label("new", "").setVisible(false));
-                    listItem.add(new Label("search", "").setVisible(false));
-                    listItem.add(new Label("link", "").setVisible(false));
+                    listItem.add(new WebMarkupContainer("space").setVisible(false));
+                    listItem.add(new WebMarkupContainer("new").setVisible(false));
+                    listItem.add(new WebMarkupContainer("search").setVisible(false));
+                    listItem.add(new WebMarkupContainer("link").setVisible(false));
                 }
                 
                 final Integer i = (Integer) listItem.getModelObject();

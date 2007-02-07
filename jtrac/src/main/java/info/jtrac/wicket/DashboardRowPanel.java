@@ -44,11 +44,15 @@ public class DashboardRowPanel extends BasePanel {
         
         add(new Label("space", space.getName()));
         
-        add(new Link("new") {
-            public void onClick() {                
-                setResponsePage(new ItemFormPage(space));
-            }
-        });
+        if(usr.isAbleToCreateNewItem()) {
+            add(new Link("new") {
+                public void onClick() {                
+                    setResponsePage(new ItemFormPage(space));
+                }
+            });
+        } else {
+            add(new Label("new").setVisible(false));
+        }
 
         add(new Link("search") {
             public void onClick() {

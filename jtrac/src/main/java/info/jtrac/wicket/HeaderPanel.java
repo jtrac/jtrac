@@ -17,6 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Space;
+import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.util.SecurityUtils;
 import wicket.markup.html.basic.Label;
@@ -48,11 +49,17 @@ public class HeaderPanel extends BasePanel {
             });            
         } else {
             add(new Label("space", space.getName()));
-            add(new Link("new") {
-                public void onClick() {
-                    setResponsePage(new ItemFormPage(space));
-                }            
-            });
+            
+            if (user.getPermittedTransitions(space, State.NEW).size() > 0) {            
+                add(new Link("new") {
+                    public void onClick() {
+                        setResponsePage(new ItemFormPage(space));
+                    }            
+                });
+            } else {
+                add(new Label("new").setVisible(false));       
+            }
+            
             add(new Link("search") {
                 public void onClick() {
                     setResponsePage(new ItemSearchFormPage(space));
