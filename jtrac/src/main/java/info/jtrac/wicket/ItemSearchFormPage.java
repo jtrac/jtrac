@@ -16,6 +16,7 @@
 
 package info.jtrac.wicket;
 
+import info.jtrac.domain.Field;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
@@ -27,11 +28,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.form.ListMultipleChoice;
+import wicket.markup.html.form.TextField;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.BoundCompoundPropertyModel;
 
@@ -196,10 +201,12 @@ public class ItemSearchFormPage extends BasePage {
             ListMultipleChoice assignedToChoice = new ListMultipleChoice("assignedToList", users, userChoiceRenderer);            
             add(assignedToChoice);
             // dates ===========================================================
-            add(new DatePicker("createdDateStart", model, "createdDateStart", false, null));
-            add(new DatePicker("createdDateEnd", model, "createdDateEnd", false, null));
-            add(new DatePicker("modifiedDateStart", model, "modifiedDateStart", false, null));
-            add(new DatePicker("modifiedDateEnd", model, "modifiedDateEnd", false, null));
+            String createdDateLabel = getLocalizer().getString("item_search_form.createdDate", null);
+            String modifiedDateLabel = getLocalizer().getString("item_search_form.historyUpdatedDate", null);
+            add(new DatePicker("createdDateStart", model, "createdDateStart", false, createdDateLabel));
+            add(new DatePicker("createdDateEnd", model, "createdDateEnd", false, createdDateLabel));
+            add(new DatePicker("modifiedDateStart", model, "modifiedDateStart", false, modifiedDateLabel));
+            add(new DatePicker("modifiedDateEnd", model, "modifiedDateEnd", false, modifiedDateLabel));
             // spaces ===========================================================
             WebMarkupContainer spaces = new WebMarkupContainer("spaces");
             if (itemSearch.getSpace() == null) {
@@ -218,6 +225,69 @@ public class ItemSearchFormPage extends BasePage {
                 spaces.setVisible(false);
             }
             add(spaces);
+            // custom drop downs ===============================================
+            if (itemSearch.getSpace() != null) {
+                ListView listView = new ListView("customDropDowns", itemSearch.getDropDownFields()) {
+                    protected void populateItem(ListItem listItem) {
+                        Field field = (Field) listItem.getModelObject();
+                        listItem.add(new Label("label", field.getLabel()));
+                        final Map<String, String> options = field.getOptions();
+                        List<Integer> optionKeys = new ArrayList<Integer>(options.size());
+                        // the types have to match perfectly for binding TODO - remove JSP-ishness
+                        for(String s : options.keySet()) {
+                            optionKeys.add(new Integer(s));
+                        }
+                        ListMultipleChoice spaceChoice = new JtracListMultipleChoice("field", optionKeys, new IChoiceRenderer() {
+                            public Object getDisplayValue(Object o) {
+                                return options.get(o.toString());
+                            }
+                            public String getIdValue(Object o, int i) {
+                                return o.toString();
+                            }
+                        });
+                        listItem.add(model.bind(spaceChoice, field.getName().getText() + "Set"));
+                    }                    
+                };
+                add(listView);
+            } else {
+                WebMarkupContainer customDropDowns = new WebMarkupContainer("customDropDowns");
+                customDropDowns.setVisible(false);
+                add(customDropDowns);
+            }
+            // custom dates ====================================================
+            if (itemSearch.getSpace() != null) {
+                ListView listView = new ListView("customDates", itemSearch.getDateFields()) {
+                    protected void populateItem(ListItem listItem) {
+                        Field field = (Field) listItem.getModelObject();
+                        listItem.add(new Label("label", field.getLabel()));
+                        listItem.add(new DatePicker("fieldStart", model, field.getName().getText() + "Start", false, field.getLabel()));
+                        listItem.add(new DatePicker("fieldEnd", model, field.getName().getText() + "End", false, field.getLabel()));
+                    }                    
+                };
+                listView.setReuseItems(true);
+                add(listView);
+            } else {
+                WebMarkupContainer customDates = new WebMarkupContainer("customDates");
+                customDates.setVisible(false);
+                add(customDates);
+            }
+            // custom text =====================================================
+            if (itemSearch.getSpace() != null) {
+                ListView listView = new ListView("customTexts", itemSearch.getTextFields()) {
+                    protected void populateItem(ListItem listItem) {
+                        Field field = (Field) listItem.getModelObject();
+                        listItem.add(new Label("label", field.getLabel()));
+                        TextField textField = new TextField("field");
+                        listItem.add(model.bind(textField, field.getName().getText()));
+                    }                    
+                };
+                listView.setReuseItems(true);
+                add(listView);
+            } else {
+                WebMarkupContainer customTexts = new WebMarkupContainer("customTexts");
+                customTexts.setVisible(false);
+                add(customTexts);
+            }            
         }
         
         @Override

@@ -8,6 +8,7 @@
         <span wicket:id="border">
             <span wicket:id="feedback"></span>
             <form wicket:id="form">
+                
                 <table class="jtrac">
                     <tr>
                         <th><wicket:message key="item_search_form.textSearch"/></th>
@@ -15,6 +16,7 @@
                         <td><input type="submit" wicket:message="value=search"/></td>                       
                     </tr>
                 </table>
+                
                 <table class="jtrac">
                     <tr>
                         <th><wicket:message key="item_search_form.resultsPerPage"/></th>
@@ -30,6 +32,7 @@
                         </th>                        
                     </tr>
                 </table>
+                
                 <table class="bdr-collapse">
                     <tr>
                         <span wicket:id="severityPriority">
@@ -121,10 +124,53 @@
                             </table>
                         </td>                        
                     </tr>
+                </table>
+                
+                <table class="bdr-collapse">
                     <tr>
-
+                        <td wicket:id="customDropDowns">
+                            <table class="jtrac">
+                                <tr>
+                                    <th wicket:id="label"></th>
+                                </tr>
+                                <tr>
+                                    <td><select wicket:id="field" size="8"/></td>
+                                </tr>                                
+                            </table>                            
+                        </td>
                     </tr>
                 </table>
+                
+                <table class="bdr-collapse">
+                    <tr valign="top">
+                        <td>
+                            <table class="jtrac">
+                                <tbody wicket:id="customDates">
+                                    <tr>
+                                        <th colspan="2" wicket:id="label"></th>                                    
+                                    </tr>                                
+                                    <tr>
+                                        <td class="label"><wicket:message key="item_search_form.onOrAfter"/></td>
+                                        <td wicket:id="fieldStart"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label"><wicket:message key="item_search_form.onOrBefore"/></td>
+                                        <td wicket:id="fieldEnd"></td>
+                                    </tr>
+                                </tbody>
+                            </table>                            
+                        </td>
+                        <td>
+                            <table class="jtrac">
+                                <tr wicket:id="customTexts">
+                                    <td wicket:id="label" class="label"></td>
+                                    <td><input wicket:id="field"/></td>
+                                </tr>
+                            </table>                            
+                        </td>                        
+                    </tr>
+                </table>                
+                
             </form>
         </span>
     </body>

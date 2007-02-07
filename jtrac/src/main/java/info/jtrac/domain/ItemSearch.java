@@ -357,7 +357,37 @@ public class ItemSearch implements Serializable {
             }
         }
         return map;
+    }    
+    
+    public List<Field> getDropDownFields() {
+        List<Field> temp = new ArrayList<Field>();
+        for(Field f : fields) {
+            if (f.getName().getType() < 4) {
+                temp.add(f);
+            }
+        }
+        return temp;
     }
+    
+    public List<Field> getDateFields() {
+        List<Field> temp = new ArrayList<Field>();
+        for(Field f : fields) {
+            if (f.getName().getType() == 6) {
+                temp.add(f);
+            }
+        }
+        return temp;
+    }    
+    
+    public List<Field> getTextFields() {
+        List<Field> temp = new ArrayList<Field>();
+        for(Field f : fields) {
+            if (f.getName().getType() == 5) {
+                temp.add(f);
+            }
+        }
+        return temp;
+    }    
     
     public Map<String, Field> getFieldMap() {
         Map<String, Field> fieldMap = new HashMap<String, Field>(fields.size());
