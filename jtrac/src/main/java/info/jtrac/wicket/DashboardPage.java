@@ -42,8 +42,8 @@ public class DashboardPage extends BasePage {
         setVersioned(false);
         
         add(new HeaderPanel(null));
-        
-        final User user = getJtrac().loadUser(SecurityUtils.getPrincipal().getId());
+                
+        final User user = SecurityUtils.getPrincipal();
         final CountsHolder countsHolder = getJtrac().loadCountsForUser(user);        
         
         border.add(new ListView("dashboardRows", user.getSpaceRoles()) {
@@ -53,7 +53,7 @@ public class DashboardPage extends BasePage {
                 if (counts == null) {
                     counts = new Counts(false); // this can happen if fresh space
                 }
-                DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", usr.getSpace(), counts, user);
+                DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", usr, counts);
                 listItem.add(dashboardRow);
             }
         });

@@ -175,28 +175,12 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return getHibernateTemplate().find("from User user order by user.name");
     }
     
-    public List<User> findUsersByLoginName(final String loginName) {
-        // using criteria query to override lazy loading during authentication
-        return (List<User>) getHibernateTemplate().execute(new HibernateCallback() {
-            public Object doInHibernate(Session session) {
-                Criteria criteria = session.createCriteria(User.class);
-                criteria.setFetchMode("userSpaceRoles", FetchMode.JOIN);
-                criteria.add(Restrictions.eq("loginName", loginName));
-                return criteria.list();
-            }
-        });
+    public List<User> findUsersByLoginName(String loginName) {
+        return getHibernateTemplate().find("from User user where user.loginName = ?", loginName);
     }
     
-    public List<User> findUsersByEmail(final String email) {
-        // using criteria query to override lazy loading during authentication
-        return (List<User>) getHibernateTemplate().execute(new HibernateCallback() {
-            public Object doInHibernate(Session session) {
-                Criteria criteria = session.createCriteria(User.class);
-                criteria.setFetchMode("userSpaceRoles", FetchMode.JOIN);
-                criteria.add(Restrictions.eq("email", email));
-                return criteria.list();
-            }
-        });
+    public List<User> findUsersByEmail(String email) {
+        return getHibernateTemplate().find("from User user where user.email = ?", email);
     }
     
     public List<UserSpaceRole> findUserRolesForSpace(final long spaceId) {        

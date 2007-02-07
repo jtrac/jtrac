@@ -21,6 +21,7 @@ import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
+import info.jtrac.domain.UserSpaceRole;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,10 +42,13 @@ import wicket.model.PropertyModel;
  */
 public class DashboardRowExpandedPanel extends BasePanel {    
     
-    public DashboardRowExpandedPanel(String id, final Space space, final Counts counts, final User user) {        
+    public DashboardRowExpandedPanel(String id, final UserSpaceRole usr, final Counts counts) {        
         
         super(id);
         setOutputMarkupId(true);
+        
+        final Space space = usr.getSpace();
+        final User user = usr.getUser();
         
         final Map<Integer, String> states = new TreeMap(space.getMetadata().getStates());    
         states.remove(State.NEW);
@@ -74,7 +78,7 @@ public class DashboardRowExpandedPanel extends BasePanel {
 
                     listItem.add(new AjaxFallbackLink("link") {
                         public void onClick(AjaxRequestTarget target) {
-                            DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", space, counts, user);
+                            DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", usr, counts);
                             DashboardRowExpandedPanel.this.replaceWith(dashboardRow);
                             target.addComponent(dashboardRow);
                         }

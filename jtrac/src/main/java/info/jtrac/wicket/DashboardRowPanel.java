@@ -20,6 +20,7 @@ import info.jtrac.domain.Counts;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
+import info.jtrac.domain.UserSpaceRole;
 import java.util.Collections;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
@@ -33,48 +34,36 @@ import wicket.model.PropertyModel;
  */
 public class DashboardRowPanel extends BasePanel {    
     
-    // used to check if space is synced with hibernate and will not have
-    // lazy init problem, can avoid hitting the database
-    private boolean detailed;
-    private Space space;
-    
-    private Space getSpace() {
-        if (detailed) {
-            return space;
-        }
-        return getJtrac().loadSpace(space.getId());        
-    }
-    
-    public DashboardRowPanel(String id, Space space, final Counts counts, final User user) {
+    public DashboardRowPanel(String id, final UserSpaceRole usr, final Counts counts) {
         
         super(id);
         setOutputMarkupId(true);
-        this.detailed = counts.isDetailed();
-        this.space = space;
+        
+        final Space space = usr.getSpace();
+        final User user = usr.getUser();
         
         add(new Label("space", space.getName()));
         
         add(new Link("new") {
             public void onClick() {                
-                setResponsePage(new ItemFormPage(getSpace()));
+                setResponsePage(new ItemFormPage(space));
             }
         });
 
         add(new Link("search") {
             public void onClick() {
-                setResponsePage(new ItemSearchFormPage(getSpace()));
+                setResponsePage(new ItemSearchFormPage(space));
             }
         });        
         
         add(new AjaxFallbackLink("link") {
             public void onClick(AjaxRequestTarget target) {
-                Counts tempCounts = counts;
-                Space tempSpace = getSpace();
+                Counts tempCounts = counts;                
                 // avoid hitting the database again if re-expanding
-                if (!detailed) {                    
-                    tempCounts = getJtrac().loadCountsForUserSpace(user, tempSpace);                    
+                if (!tempCounts.isDetailed()) {                    
+                    tempCounts = getJtrac().loadCountsForUserSpace(user, space);                    
                 }
-                DashboardRowExpandedPanel dashboardRow = new DashboardRowExpandedPanel("dashboardRow", tempSpace, tempCounts, user);
+                DashboardRowExpandedPanel dashboardRow = new DashboardRowExpandedPanel("dashboardRow", usr, tempCounts);
                 DashboardRowPanel.this.replaceWith(dashboardRow);
                 target.addComponent(dashboardRow);
             }
@@ -82,7 +71,7 @@ public class DashboardRowPanel extends BasePanel {
         
         add(new Link("loggedByMe") {
             public void onClick() {
-                ItemSearch itemSearch = new ItemSearch(getSpace());
+                ItemSearch itemSearch = new ItemSearch(space);
                 itemSearch.setLoggedBySet(Collections.singleton(user.getId()));
                 setResponsePage(new ItemListPage(itemSearch));
             }
@@ -91,7 +80,7 @@ public class DashboardRowPanel extends BasePanel {
         
         add(new Link("assignedToMe") {
             public void onClick() {
-                ItemSearch itemSearch = new ItemSearch(getSpace());
+                ItemSearch itemSearch = new ItemSearch(space);
                 itemSearch.setAssignedToSet(Collections.singleton(user.getId()));
                 setResponsePage(new ItemListPage(itemSearch));
             }
@@ -99,7 +88,7 @@ public class DashboardRowPanel extends BasePanel {
         
         add(new Link("total") {
             public void onClick() {
-                ItemSearch itemSearch = new ItemSearch(getSpace());                
+                ItemSearch itemSearch = new ItemSearch(space);                
                 setResponsePage(new ItemListPage(itemSearch));
             }
         }.add(new Label("total", new PropertyModel(counts, "total"))));

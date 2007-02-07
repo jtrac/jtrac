@@ -310,7 +310,17 @@ public class JtracImpl implements Jtrac {
         }
         logger.debug("acegi: loadUserByUserName success for '" + loginName + "'");
         User user = users.get(0);
-        logger.debug("spaceRoles: " + user.getUserSpaceRoles());
+        Map<Long, Boolean> map = new HashMap<Long, Boolean>();
+        for(UserSpaceRole usr : user.getSpaceRoles()) {
+            logger.debug("UserSpaceRole: " + usr);            
+            // this is a hack, the effect of the next line would be to
+            // override hibernate lazy loading and get the space and associated metadata.
+            // since this only happens only once on authentication and simplifies a lot of
+            // code later because the security principal is "fully prepared",
+            // this is hopefully pardonable.  The downside is that there may be as many extra db hits
+            // as there are spaces allocated for the user.  Hibernate caching should alleviate this
+            usr.isAbleToCreateNewItem();
+        }               
         return user;
     }
     
