@@ -36,6 +36,7 @@ public class OptionsPage extends BasePage {
         
         border.add(new Link("users") {
             public void onClick() {
+                setResponsePage(new UserListPage());
             }            
         }); 
         

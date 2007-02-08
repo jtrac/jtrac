@@ -72,10 +72,13 @@ public class ItemFormPage extends BasePage {
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(item);
             setModel(model);
             // summary =========================================================
-            final Component summaryField = new TextField("summary").setRequired(true).add(new ErrorHighlighter()).setOutputMarkupId(true);
+            final TextField summaryField = new TextField("summary");
+            summaryField.setRequired(true);
+            summaryField.add(new ErrorHighlighter());
+            summaryField.setOutputMarkupId(true);
             add(summaryField);
             ItemFormPage.this.getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                public Object getObject(Component component) {
+                public Object getObject(Component c) {
                     return "document.getElementById('" + summaryField.getMarkupId() + "').focus()";
                 }
             }, summaryField);
@@ -115,7 +118,7 @@ public class ItemFormPage extends BasePage {
             fileUploadField = new FileUploadField("file");
             // TODO file size limit
             add(fileUploadField);    
-            // send notifications===============================================
+            // send notifications ==============================================
             add(new CheckBox("sendNotifications"));
         }
         
