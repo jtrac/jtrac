@@ -156,7 +156,16 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     }
     
     public List<Space> findSpacesWhereGuestAllowed() {
-        return getHibernateTemplate().find("from Space space where space.guestAllowed = true");
+        // forcing eager load of metadata, this is used for populating guest user security principal
+        // return getHibernateTemplate().find("from Space space where space.guestAllowed = true");
+        return (List<Space>) getHibernateTemplate().execute(new HibernateCallback() {
+            public Object doInHibernate(Session session) {
+                Criteria criteria = session.createCriteria(Space.class);
+                criteria.setFetchMode("metadata", FetchMode.JOIN);
+                criteria.add(Restrictions.eq("guestAllowed", true));                
+                return criteria.list();
+            }
+        });        
     }
     
     public void removeSpace(Space space) {        
