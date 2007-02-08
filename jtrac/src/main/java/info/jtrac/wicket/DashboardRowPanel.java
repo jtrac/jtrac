@@ -24,6 +24,7 @@ import info.jtrac.domain.UserSpaceRole;
 import java.util.Collections;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.model.PropertyModel;
@@ -73,22 +74,27 @@ public class DashboardRowPanel extends BasePanel {
             }
         });          
         
-        add(new Link("loggedByMe") {
-            public void onClick() {
-                ItemSearch itemSearch = new ItemSearch(space);
-                itemSearch.setLoggedBySet(Collections.singleton(user.getId()));
-                setResponsePage(new ItemListPage(itemSearch));
-            }
-        }.add(new Label("loggedByMe", new PropertyModel(counts, "loggedByMe"))));        
-        
-        
-        add(new Link("assignedToMe") {
-            public void onClick() {
-                ItemSearch itemSearch = new ItemSearch(space);
-                itemSearch.setAssignedToSet(Collections.singleton(user.getId()));
-                setResponsePage(new ItemListPage(itemSearch));
-            }
-        }.add(new Label("assignedToMe", new PropertyModel(counts, "assignedToMe"))));
+        if(user.getId() > 0) {        
+            add(new Link("loggedByMe") {
+                public void onClick() {
+                    ItemSearch itemSearch = new ItemSearch(space);
+                    itemSearch.setLoggedBySet(Collections.singleton(user.getId()));
+                    setResponsePage(new ItemListPage(itemSearch));
+                }
+            }.add(new Label("loggedByMe", new PropertyModel(counts, "loggedByMe"))));        
+
+
+            add(new Link("assignedToMe") {
+                public void onClick() {
+                    ItemSearch itemSearch = new ItemSearch(space);
+                    itemSearch.setAssignedToSet(Collections.singleton(user.getId()));
+                    setResponsePage(new ItemListPage(itemSearch));
+                }
+            }.add(new Label("assignedToMe", new PropertyModel(counts, "assignedToMe"))));
+        } else {
+            add(new WebMarkupContainer("loggedByMe").setVisible(false));
+            add(new WebMarkupContainer("assignedToMe").setVisible(false));            
+        }
         
         add(new Link("total") {
             public void onClick() {

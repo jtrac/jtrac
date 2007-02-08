@@ -46,6 +46,15 @@ public class DashboardPage extends BasePage {
         final User user = SecurityUtils.getPrincipal();
         final CountsHolder countsHolder = getJtrac().loadCountsForUser(user);        
         
+        WebMarkupContainer hideLogged = new WebMarkupContainer("hideLogged");
+        WebMarkupContainer hideAssigned = new WebMarkupContainer("hideAssigned");
+        if(user.getId() == 0) {
+            hideLogged.setVisible(false);
+            hideAssigned.setVisible(false);
+        }
+        border.add(hideLogged);
+        border.add(hideAssigned);
+        
         border.add(new ListView("dashboardRows", user.getSpaceRoles()) {
             protected void populateItem(final ListItem listItem) {
                 UserSpaceRole usr = (UserSpaceRole) listItem.getModelObject();
@@ -68,21 +77,26 @@ public class DashboardPage extends BasePage {
                 }
             });
             
-            total.add(new Link("loggedByMe") {
-                public void onClick() {
-                    ItemSearch itemSearch = new ItemSearch(user);
-                    itemSearch.setLoggedBySet(Collections.singleton(user.getId()));
-                    setResponsePage(new ItemListPage(itemSearch));
-                }
-            }.add(new Label("loggedByMe", new PropertyModel(countsHolder, "totalLoggedByMe"))));
-            
-            total.add(new Link("assignedToMe") {
-                public void onClick() {
-                    ItemSearch itemSearch = new ItemSearch(user);
-                    itemSearch.setAssignedToSet(Collections.singleton(user.getId()));
-                    setResponsePage(new ItemListPage(itemSearch));
-                }
-            }.add(new Label("assignedToMe", new PropertyModel(countsHolder, "totalAssignedToMe"))));
+            if(user.getId() > 0) {            
+                total.add(new Link("loggedByMe") {
+                    public void onClick() {
+                        ItemSearch itemSearch = new ItemSearch(user);
+                        itemSearch.setLoggedBySet(Collections.singleton(user.getId()));
+                        setResponsePage(new ItemListPage(itemSearch));
+                    }
+                }.add(new Label("loggedByMe", new PropertyModel(countsHolder, "totalLoggedByMe"))));
+
+                total.add(new Link("assignedToMe") {
+                    public void onClick() {
+                        ItemSearch itemSearch = new ItemSearch(user);
+                        itemSearch.setAssignedToSet(Collections.singleton(user.getId()));
+                        setResponsePage(new ItemListPage(itemSearch));
+                    }
+                }.add(new Label("assignedToMe", new PropertyModel(countsHolder, "totalAssignedToMe"))));
+            } else {
+                total.add(new WebMarkupContainer("loggedByMe").setVisible(false));
+                total.add(new WebMarkupContainer("assignedToMe").setVisible(false));
+            }
             
             total.add(new Link("total") {
                 public void onClick() {
