@@ -17,6 +17,9 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Item;
+import info.jtrac.domain.User;
+import info.jtrac.util.SecurityUtils;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.Link;
 
 /**
@@ -46,7 +49,14 @@ public class ItemViewPage extends BasePage {
         border.add(link);
         
         border.add(new ItemViewPanel("itemViewPanel", item));
-        border.add(new ItemViewFormPanel("itemViewFormPanel", item, previous));
+        
+        User user = SecurityUtils.getPrincipal();
+        
+        if(user.getId() > 0) {        
+            border.add(new ItemViewFormPanel("itemViewFormPanel", item, previous));
+        } else {
+            border.add(new WebMarkupContainer("itemViewFormPanel").setVisible(false));
+        }
         
     }
     
