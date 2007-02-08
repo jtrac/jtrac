@@ -30,3 +30,5 @@ tr.sortable a { color: black; }
 tr.sortable a:hover { color: blue; }
 li.feedbackPanelERROR { list-style: none; padding-left: 1.8em; padding-bottom: 0.5em;
     background-repeat: no-repeat; background-image: url("dialog-error.png"); }
+.menu-option { font-weight: bold; background-color: #DEDEFF; padding-left: 1em; 
+    padding-right: 1em; margin-bottom: 1.5em; text-align: right; }

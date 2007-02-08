@@ -79,7 +79,7 @@ public class HeaderPanel extends BasePanel {
         } else {
             add(new Link("options") {
                 public void onClick() {
-
+                    setResponsePage(new OptionsPage());
                 }            
             }); 
             add(new Link("logout") {
