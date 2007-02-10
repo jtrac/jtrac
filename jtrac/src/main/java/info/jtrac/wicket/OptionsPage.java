@@ -46,6 +46,7 @@ public class OptionsPage extends BasePage {
         
         border.add(new Link("spaces") {
             public void onClick() {
+                setResponsePage(new SpaceListPage());
             }            
         });      
         

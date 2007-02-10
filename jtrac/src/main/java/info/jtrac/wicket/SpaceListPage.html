@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <title wicket:id="title">title here</title>
+        <link rel="stylesheet" type="text/css" href="resources/jtrac.css"/>
+    </head>
+    <body>
+        <span wicket:id="header"></span>
+        <span wicket:id="border">
+            <div class="heading">
+                <wicket:message key="space_list.spaceList"/>
+                [ <a href="#" wicket:id="create"><wicket:message key="space_list.createNewSpace"/></a> ]
+            </div>            
+            <table class="jtrac">
+                <tr>
+                    <th><wicket:message key="space_list.key"/></th>
+                    <th><wicket:message key="space_list.name"/></th>
+                    <th><wicket:message key="space_list.edit"/></th>
+                    <th><wicket:message key="space_list.description"/></th>
+                    <th><wicket:message key="space_list.users"/></th>
+                </tr>            
+                <tr wicket:id="spaces">
+                    <td wicket:id="prefixCode"></td>
+                    <td wicket:id="name"></td>
+                    <td wicket:id="edit"><a href="#"><wicket:message key="edit"/></a></td>
+                    <td wicket:id="description"></td>
+                    <td wicket:id="allocate"><a href="#">(+)</a></td>
+                </tr>                
+            </table>
+        </span>
+    </body>
+</html>
