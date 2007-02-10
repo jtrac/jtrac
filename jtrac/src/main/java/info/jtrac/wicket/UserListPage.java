@@ -31,6 +31,12 @@ import wicket.model.PropertyModel;
  * user management page
  */
 public class UserListPage extends BasePage {
+    
+    private long selectedUserId;
+    
+    public void setSelectedUserId(long selectedUserId) {
+        this.selectedUserId = selectedUserId;
+    }
       
     public UserListPage() {
         
@@ -39,8 +45,10 @@ public class UserListPage extends BasePage {
         add(new HeaderPanel(null));
         
         border.add(new Link("create") {
-            public void onClick() {                
-                setResponsePage(new UserFormPage());
+            public void onClick() {
+                UserFormPage page = new UserFormPage();
+                page.setPrevious(UserListPage.this);
+                setResponsePage(page);
             }            
         });
         
@@ -49,15 +57,19 @@ public class UserListPage extends BasePage {
         final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
         
         ListView listView = new ListView("users", users) {
-            protected void populateItem(ListItem listItem) {
-                final User user = (User) listItem.getModelObject();
-                if(listItem.getIndex() % 2 == 1) {
+            protected void populateItem(ListItem listItem) {                
+                final User user = (User) listItem.getModelObject();                
+                if (selectedUserId == user.getId()) {
+                    listItem.add(new SimpleAttributeModifier("class", "selected"));
+                } else if(listItem.getIndex() % 2 == 1) {
                     listItem.add(sam);
-                }                
+                }                                 
                 listItem.add(new Label("name", new PropertyModel(user, "name")));
                 Link loginName = new Link("loginName") {
                     public void onClick() {
-                        setResponsePage(new UserFormPage(user));
+                        UserFormPage page = new UserFormPage(user);
+                        page.setPrevious(UserListPage.this);
+                        setResponsePage(page);
                     }                    
                 };
                 loginName.add(new Label("loginName", new PropertyModel(user, "loginName")));

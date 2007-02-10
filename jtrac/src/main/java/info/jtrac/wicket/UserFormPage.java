@@ -32,6 +32,7 @@ import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.AbstractValidator;
+import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
@@ -150,6 +151,19 @@ public class UserFormPage extends BasePage {
             add(confirmPasswordField);            
             // send notifications ==============================================
             add(new CheckBox("sendNotifications"));
+            // cancel link
+            add(new Link("cancel") {
+                public void onClick() {
+                    if(previous == null) {
+                        setResponsePage(new OptionsPage());
+                    } else {
+                        if (previous instanceof UserListPage) {
+                            ((UserListPage) previous).setSelectedUserId(user.getId());
+                        }                      
+                        setResponsePage(previous);
+                    }                    
+                }                
+            });
         }
      
         @Override
@@ -169,8 +183,13 @@ public class UserFormPage extends BasePage {
             }
             SecurityUtils.refreshSecurityContextIfPrincipal(user);
             if(previous == null) {
-                setResponsePage(new UserListPage());
-            } else {
+                UserListPage page = new UserListPage();
+                page.setSelectedUserId(user.getId());
+                setResponsePage(page);
+            } else {                
+                if (previous instanceof UserListPage) {
+                    ((UserListPage) previous).setSelectedUserId(user.getId());
+                }
                 setResponsePage(previous);
             }
         }        
