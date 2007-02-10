@@ -22,11 +22,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import wicket.Component;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
+import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.validation.AbstractValidator;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
@@ -48,15 +51,20 @@ public class UserFormPage extends BasePage {
     }
     
     public UserFormPage() {
-        super("Options Menu");   
+        super("Edit User");   
         User user = new User();
         user.setLocale(getJtrac().getDefaultLocale());
         addComponents(user);
     }    
     
+    public UserFormPage(User user) {
+        super("Edit User");
+        addComponents(user);
+    }
+    
     private class UserForm extends Form {
         
-        public UserForm(String id, User user) {
+        public UserForm(String id, final User user) {
             
             super(id);
             UserFormModel modelObject = new UserFormModel();
@@ -74,6 +82,20 @@ public class UserFormPage extends BasePage {
                     return "document.getElementById('" + loginName.getMarkupId() + "').focus()";
                 }
             }, loginName);
+            // validation: does user already exist with same loginName?
+            loginName.add(new AbstractValidator() {
+                public void validate(FormComponent c) {
+                    String s = (String) c.getConvertedInput();
+                    User temp = getJtrac().loadUser(s);
+                    if(temp != null && temp.getId() != user.getId()) {
+                        error(c);
+                    }
+                }
+                @Override
+                protected String resourceKey(FormComponent c) {                    
+                    return "user_form.loginId.error.exists";
+                }                
+            });
             add(loginName);
             // name ============================================================
             add(new TextField("user.name").setRequired(true).add(new ErrorHighlighter()));
@@ -91,18 +113,58 @@ public class UserFormPage extends BasePage {
                 }                
             });
             add(localeChoice);
+            // hide e-mail message if edit =====================================
+            WebMarkupContainer hide = new WebMarkupContainer("hide");
+            if(user.getId() > 0) {
+                hide.setVisible(false);
+            }
+            add(hide);
             // password ========================================================
-            add(new TextField("password").add(new ErrorHighlighter()));
+            final TextField passwordField = new TextField("password");            
+            add(passwordField);
             // confirm password ================================================
-            add(new TextField("passwordConfirm").add(new ErrorHighlighter()));            
+            TextField confirmPasswordField = new TextField("passwordConfirm");
+            confirmPasswordField.add(new ErrorHighlighter());
+            // validation: do the passwords match?
+            confirmPasswordField.add(new AbstractValidator() {
+                public void validate(FormComponent c) {
+                    String b = (String) c.getConvertedInput();
+                    String a = (String) passwordField.getConvertedInput();
+                    if((a != null && !a.equals(b)) || (b!= null && !b.equals(a))) {
+                        error(c);
+                    }
+                }
+                @Override
+                protected String resourceKey(FormComponent c) {                    
+                    return "user_form.passwordConfirm.error";
+                }                
+            });
+            add(confirmPasswordField);            
             // send notifications ==============================================
             add(new CheckBox("sendNotifications"));
         }
-                        
-    }
+     
+        @Override
+        protected void validate() {
+            filter.reset();
+            super.validate();          
+        }        
+        
+        @Override
+        protected void onSubmit() {
+            UserFormModel model = (UserFormModel) getModelObject();
+            if(model.getPassword() != null) {
+                getJtrac().storeUser(model.getUser(), model.getPassword(), model.isSendNotifications());
+            } else {
+                getJtrac().storeUser(model.getUser());
+            }
+            setResponsePage(new UserListPage());
+        }        
+    }        
         
     /**
-     * form backing object
+     * custom form backing object that wraps User and adds some fields
+     * required for the create / edit use case
      */
     private class UserFormModel implements Serializable {
         

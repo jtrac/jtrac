@@ -132,7 +132,7 @@ public class ItemViewFormPanel extends BasePanel {
             assignedToChoice.setEnabled(false);
             assignedToChoice.add(new AbstractValidator() {
                 public void validate(FormComponent c) {
-                    // assignedTo cannot be null if status is not null
+                    // validation: assignedTo cannot be null if status is not null
                     // unless the status is CLOSED
                     if(c.getConvertedInput() == null) {
                         Integer i = (Integer) statusChoice.getConvertedInput();
@@ -145,8 +145,7 @@ public class ItemViewFormPanel extends BasePanel {
                 protected String resourceKey(FormComponent c) {                    
                     return "item_view_form.assignedTo.error";
                 }
-            });
-            assignedToChoice.setLabel(new Model(getLocalizer().getString("item_view_form.assignTo", null)));
+            });            
             add(assignedToChoice);            
             // notify list =====================================================
             List<ItemUser> choices = UserUtils.convertToItemUserList(userSpaceRoles);

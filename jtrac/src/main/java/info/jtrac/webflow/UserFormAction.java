@@ -145,7 +145,7 @@ public class UserFormAction extends AbstractFormAction {
             return error();
         }
         if (userForm.getPassword() != null || user.getId() == 0) {
-            jtrac.storeUser(user, userForm.getPassword());
+            jtrac.storeUser(user, userForm.getPassword(), true);
         } else {
             jtrac.storeUser(user);
         }

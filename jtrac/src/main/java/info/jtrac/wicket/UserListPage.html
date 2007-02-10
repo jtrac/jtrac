@@ -8,8 +8,29 @@
         <span wicket:id="border">
             <div class="heading">
                 <wicket:message key="user_list.usersAndSpaces"/>
-                <a href="#" wicket:id="create"><wicket:message key="user_list.createNewUser"/></a>
-            </div>
+                [ <a href="#" wicket:id="create"><wicket:message key="user_list.createNewUser"/></a> ]
+            </div>            
+            <table class="jtrac">
+                <tr>
+                    <th><wicket:message key="user_list.userName"/></th>
+                    <th><wicket:message key="user_list.editProfile"/></th>
+                    <th><wicket:message key="user_list.locked"/></th>
+                    <th><wicket:message key="user_list.spaceRole"/></th>
+                    <th><wicket:message key="user_list.allocateSpaceRole"/></th>
+                </tr>            
+                <tr wicket:id="users">
+                    <td wicket:id="name"></td>
+                    <td wicket:id="loginName"><a href="#" wicket:id="loginName"></a></td>
+                    <td wicket:id="locked"></td>
+                    <td>
+                        <span wicket:id="spaceRoles">
+                            <span wicket:id="space"><a href="#" wicket:id="space"></a></span>
+                            (<i wicket:id="role"></i>)
+                        </span>
+                    </td>
+                    <td wicket:id="allocate"><a href="#">(+)</a></td>
+                </tr>                
+            </table>
         </span>
     </body>
 </html>

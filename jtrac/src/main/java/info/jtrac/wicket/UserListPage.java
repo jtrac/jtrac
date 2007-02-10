@@ -17,7 +17,15 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.User;
+import info.jtrac.domain.UserSpaceRole;
+import java.util.ArrayList;
+import java.util.List;
+import wicket.behavior.SimpleAttributeModifier;
+import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
+import wicket.model.PropertyModel;
 
 /**
  * user management page
@@ -26,7 +34,7 @@ public class UserListPage extends BasePage {
       
     public UserListPage() {
         
-        super("Options Menu");      
+        super("User List");      
         
         add(new HeaderPanel(null));
         
@@ -34,7 +42,47 @@ public class UserListPage extends BasePage {
             public void onClick() {                
                 setResponsePage(new UserFormPage());
             }            
-        });                
+        });
+        
+        List<User> users = getJtrac().findAllUsers();
+        
+        final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
+        
+        ListView listView = new ListView("users", users) {
+            protected void populateItem(ListItem listItem) {
+                final User user = (User) listItem.getModelObject();
+                if(listItem.getIndex() % 2 == 1) {
+                    listItem.add(sam);
+                }                
+                listItem.add(new Label("name", new PropertyModel(user, "name")));
+                Link loginName = new Link("loginName") {
+                    public void onClick() {
+                        setResponsePage(new UserFormPage(user));
+                    }                    
+                };
+                loginName.add(new Label("loginName", new PropertyModel(user, "loginName")));
+                listItem.add(loginName);
+                String locked = user.isLocked() ? "Y" : "";
+                listItem.add(new Label("locked", locked));
+                ListView spaceRoles = new ListView("spaceRoles", new ArrayList(user.getUserSpaceRoles())) {
+                    protected void populateItem(ListItem item) {
+                        UserSpaceRole usr = (UserSpaceRole) item.getModelObject();
+                        item.add(new Link("space") {
+                            public void onClick() {
+                            }                            
+                        }.add(new Label("space", new PropertyModel(usr, "space.prefixCode"))));
+                        item.add(new Label("role", new PropertyModel(usr, "roleKey")));
+                    }                    
+                };
+                listItem.add(spaceRoles);
+                listItem.add(new Link("allocate") {
+                    public void onClick() {
+                    }                    
+                });
+            }            
+        };
+        
+        border.add(listView);
         
     }
     
