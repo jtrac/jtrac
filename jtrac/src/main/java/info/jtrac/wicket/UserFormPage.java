@@ -17,12 +17,14 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.User;
+import info.jtrac.util.SecurityUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import wicket.Component;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
@@ -39,7 +41,13 @@ import wicket.model.BoundCompoundPropertyModel;
  */
 public class UserFormPage extends BasePage {
       
+    private WebPage previous;        
+    
     private JtracFeedbackMessageFilter filter;
+
+    public void setPrevious(WebPage previous) {
+        this.previous = previous;
+    }   
     
     private void addComponents(User user) {
         FeedbackPanel feedback = new FeedbackPanel("feedback");
@@ -153,12 +161,18 @@ public class UserFormPage extends BasePage {
         @Override
         protected void onSubmit() {
             UserFormModel model = (UserFormModel) getModelObject();
+            User user = model.getUser();
             if(model.getPassword() != null) {
-                getJtrac().storeUser(model.getUser(), model.getPassword(), model.isSendNotifications());
+                getJtrac().storeUser(user, model.getPassword(), model.isSendNotifications());
             } else {
-                getJtrac().storeUser(model.getUser());
+                getJtrac().storeUser(user);
             }
-            setResponsePage(new UserListPage());
+            SecurityUtils.refreshSecurityContextIfPrincipal(user);
+            if(previous == null) {
+                setResponsePage(new UserListPage());
+            } else {
+                setResponsePage(previous);
+            }
         }        
     }        
         
