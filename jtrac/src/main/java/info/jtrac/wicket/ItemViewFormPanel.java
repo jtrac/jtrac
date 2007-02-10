@@ -32,7 +32,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import wicket.Component;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import wicket.markup.html.form.CheckBox;
@@ -46,8 +45,8 @@ import wicket.markup.html.form.upload.FileUpload;
 import wicket.markup.html.form.upload.FileUploadField;
 import wicket.markup.html.form.validation.AbstractValidator;
 import wicket.markup.html.panel.FeedbackPanel;
-import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
+import wicket.model.Model;
 
 /**
  * Form to update history for item
@@ -132,7 +131,9 @@ public class ItemViewFormPanel extends BasePanel {
             assignedToChoice.setOutputMarkupId(true);
             assignedToChoice.setEnabled(false);
             assignedToChoice.add(new AbstractValidator() {
-                public void validate(FormComponent c) {                    
+                public void validate(FormComponent c) {
+                    // assignedTo cannot be null if status is not null
+                    // unless the status is CLOSED
                     if(c.getConvertedInput() == null) {
                         Integer i = (Integer) statusChoice.getConvertedInput();
                         if (i != null && i != State.CLOSED) {
@@ -142,9 +143,10 @@ public class ItemViewFormPanel extends BasePanel {
                 }
                 @Override
                 protected String resourceKey(FormComponent c) {                    
-                    return "required";
+                    return "item_view_form.assignedTo.error";
                 }
-            });            
+            });
+            assignedToChoice.setLabel(new Model(getLocalizer().getString("item_view_form.assignTo", null)));
             add(assignedToChoice);            
             // notify list =====================================================
             List<ItemUser> choices = UserUtils.convertToItemUserList(userSpaceRoles);
@@ -168,17 +170,7 @@ public class ItemViewFormPanel extends BasePanel {
         @Override
         protected void validate() {
             filter.reset();
-            super.validate();
-//            History history = (History) getModelObject();
-//            if (history.getStatus() != null) {
-//                if (history.getStatus() != State.CLOSED && history.getAssignedTo() == null) {                    
-//                    error(getLocalizer().getString("item_view_form.assignedTo.error", null));                    
-//                }
-//            } else {
-//                if (history.getAssignedTo() != null) {                    
-//                    error(getLocalizer().getString("item_view_form.status.error", null));                    
-//                }
-//            }            
+            super.validate();          
         }
         
         @Override
