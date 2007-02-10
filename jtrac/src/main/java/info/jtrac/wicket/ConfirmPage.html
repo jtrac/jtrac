@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <title wicket:id="title">title here</title>
+        <link rel="stylesheet" type="text/css" href="resources/jtrac.css"/>
+    </head>
+    <body>
+        <span wicket:id="header"></span>
+        <span wicket:id="border">
+            <div class="heading" wicket:id="heading"></div>
+            <form wicket:id="form">
+                <p wicket:id="lines"><span wicket:id="line"></span></p>                
+                <span class="error" wicket:id="warning"></span><input type="submit" wicket:message="value=submit"/>
+                <p/>
+                <input type="submit" wicket:message="value=cancel" wicket:id="cancel"/>
+            </form>
+        </span>
+    </body>
+</html>

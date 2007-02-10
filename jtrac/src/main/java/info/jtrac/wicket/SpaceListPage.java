@@ -44,7 +44,9 @@ public class SpaceListPage extends BasePage {
         
         border.add(new Link("create") {
             public void onClick() {
-
+                SpaceFormPage page = new SpaceFormPage();
+                page.setPrevious(SpaceListPage.this);
+                setResponsePage(page);
             }            
         });
         
@@ -64,7 +66,9 @@ public class SpaceListPage extends BasePage {
                 listItem.add(new Label("name", new PropertyModel(space, "name")));
                 Link edit = new Link("edit") {
                     public void onClick() {
-
+                        SpaceFormPage page = new SpaceFormPage(space);
+                        page.setPrevious(SpaceListPage.this);
+                        setResponsePage(page);                        
                     }                    
                 };
                 listItem.add(edit);

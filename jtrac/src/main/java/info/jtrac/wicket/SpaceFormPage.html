@@ -1,0 +1,69 @@
+<html>
+    <head>
+        <title wicket:id="title">title here</title>
+        <link rel="stylesheet" type="text/css" href="resources/jtrac.css"/>
+    </head>
+    <body>
+        <span wicket:id="header"></span>
+        <span wicket:id="border">
+            <form wicket:id="form">
+                <div class="heading">
+                    <wicket:message key="space_form.spaceDetails"/>
+                    <input type="submit" wicket:message="value=delete" wicket:id="delete"/>
+                </div>
+                <span wicket:id="feedback"></span>
+                <table class="jtrac">
+                    <tr>
+                        <td class="label">
+                            <wicket:message key="space_form.displayName"/>
+                            <font color="red">*</font>
+                        </td>    
+                        <td>
+                            <input wicket:id="space.name"/>                                                            
+                        </td>                        
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <wicket:message key="space_form.spaceKey"/>
+                            <font color="red">*</font>
+                        </td>    
+                        <td>
+                            <input wicket:id="space.prefixCode" size="10"/>                                                            
+                        </td>                        
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <wicket:message key="space_form.description"/>                            
+                        </td>    
+                        <td>
+                            <textarea wicket:id="space.description" rows="3" cols="40"></textarea>                                                                                      
+                        </td>                        
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <wicket:message key="space_form.makePublic"/>                            
+                        </td>    
+                        <td>
+                            <input type="checkbox" wicket:id="space.guestAllowed"/>                                                            
+                        </td>                        
+                    </tr> 
+                    <tr wicket:id="hide">
+                        <td class="label">
+                            <wicket:message key="space_form.copyExisting"/>
+                        </td>
+                        <td>
+                            <select wicket:id="copyFrom"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td/>
+                        <td>
+                            <input type="submit" wicket:message="value=submit"/>                                                              
+                        </td>
+                    </tr>                    
+                </table>
+                <a href="#" wicket:id="cancel"><wicket:message key="cancel"/></a>
+            </form>
+        </span>
+    </body>
+</html>
