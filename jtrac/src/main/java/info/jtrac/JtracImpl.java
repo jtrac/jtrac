@@ -340,13 +340,15 @@ public class JtracImpl implements Jtrac {
         dao.storeUser(user);
     }
     
-    public void storeUser(User user, String password) {
+    public void storeUser(User user, String password, boolean sendNotifications) {
         if (password == null) {
             password = generatePassword();
         }
         user.setPassword(encodeClearText(password));
         storeUser(user);
-        mailSender.sendUserPassword(user, password);
+        if(sendNotifications) {
+            mailSender.sendUserPassword(user, password);
+        }
     }
     
     public List<User> findAllUsers() {

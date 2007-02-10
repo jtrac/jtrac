@@ -62,7 +62,7 @@ public interface Jtrac extends UserDetailsService {
     void rebuildIndexes();
     //========================================================
     void storeUser(User user);
-    void storeUser(User user, String password);
+    void storeUser(User user, String password, boolean sendNotifications);
     List<User> findAllUsers();
     User loadUser(long id);
     User loadUser(String loginName);
