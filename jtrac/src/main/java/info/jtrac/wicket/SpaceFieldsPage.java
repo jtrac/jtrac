@@ -19,7 +19,9 @@ package info.jtrac.wicket;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Space;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
@@ -30,29 +32,74 @@ import wicket.markup.html.list.ListView;
 /**
  * space edit form
  */
-public class SpaceFieldsPage extends BasePage {      
+public class SpaceFieldsPage extends BasePage {              
     
-    private void addComponents(Space space) {
+    private void addComponents(Space space, String selectedFieldName) {
         add(new HeaderPanel(null)); 
-        border.add(new SpaceFieldsForm("form", space));
+        border.add(new SpaceFieldsForm("form", space, selectedFieldName));
     }     
     
-    public SpaceFieldsPage(Space space) {
+    public SpaceFieldsPage(Space space, String selectedFieldName) {
         super("Edit Space Fields");
-        addComponents(space);
+        addComponents(space, selectedFieldName);
     }
     
     private class SpaceFieldsForm extends Form {        
         
-        public SpaceFieldsForm(String id, final Space space) {
+        public SpaceFieldsForm(String id, final Space space, final String selectedFieldName) {
             super(id);
+            
             add(new Label("name", space.getName()));
             add(new Label("prefixCode", space.getPrefixCode()));
+            
+            final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
+            
             ListView listView = new ListView("fields", space.getMetadata().getFieldList()) {
                 protected void populateItem(ListItem listItem) {
-                    Field field = (Field) listItem.getModelObject();
-                    listItem.add(new Button("up"));
-                    listItem.add(new Button("down"));
+                    final Field field = (Field) listItem.getModelObject();
+                    
+                    if (field.getName().getText().equals(selectedFieldName)) {
+                        listItem.add(new SimpleAttributeModifier("class", "selected"));
+                    } else if(listItem.getIndex() % 2 == 1) {
+                        listItem.add(sam);
+                    }                     
+                    
+                    listItem.add(new Button("up") {
+                        @Override
+                        protected void onSubmit() {    
+                            List<Field.Name> fieldOrder = space.getMetadata().getFieldOrder();
+                            int index = fieldOrder.indexOf(field.getName());
+                            int swapIndex = index - 1;
+                            if (swapIndex < 0) {
+                                if (fieldOrder.size() > 1) {        
+                                    swapIndex = fieldOrder.size() - 1;
+                                } else {
+                                    swapIndex = 0;
+                                }
+                            }
+                            if (index != swapIndex) {
+                                Collections.swap(fieldOrder, index, swapIndex);
+                                setResponsePage(new SpaceFieldsPage(space, field.getName().getText()));
+                            }                            
+                        }                    
+                    });
+                    
+                    listItem.add(new Button("down") {
+                        @Override
+                        protected void onSubmit() {  
+                            List<Field.Name> fieldOrder = space.getMetadata().getFieldOrder();
+                            int index = fieldOrder.indexOf(field.getName());
+                            int swapIndex = index + 1;
+                            if (swapIndex == fieldOrder.size() ) {
+                                swapIndex = 0;
+                            }
+                            if (index != swapIndex) {
+                                Collections.swap(fieldOrder, index, swapIndex);
+                                setResponsePage(new SpaceFieldsPage(space, field.getName().getText()));
+                            }                            
+                        }                        
+                    });
+                    
                     listItem.add(new Label("name", field.getName().getText()));
                     listItem.add(new Label("type", field.getName().getDescription()));
                     listItem.add(new Label("optional", field.isOptional() ? "Y" : ""));
@@ -71,7 +118,7 @@ public class SpaceFieldsPage extends BasePage {
                     listItem.add(options);
                     listItem.add(new Button("edit"));
                 }                
-            };
+            };            
             add(listView);
             add(new Link("cancel") {
                 public void onClick() {
@@ -84,7 +131,8 @@ public class SpaceFieldsPage extends BasePage {
         @Override
         protected void onSubmit() {
 
-        }        
+        } 
+        
     }        
         
 
