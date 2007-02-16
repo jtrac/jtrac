@@ -180,7 +180,7 @@ public class SpaceFormPage extends BasePage {
         protected void onSubmit() {
             SpaceFormModel model = (SpaceFormModel) getModelObject();
             Space space = getJtrac().loadSpace(model.getSpace().getId());
-            setResponsePage(new SpaceFieldsPage(space, null));
+            setResponsePage(new SpaceFieldsPage(space, null, previous));
         }        
     }        
         

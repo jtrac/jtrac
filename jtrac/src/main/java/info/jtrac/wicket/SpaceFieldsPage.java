@@ -18,11 +18,13 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Space;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import wicket.behavior.SimpleAttributeModifier;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.DropDownChoice;
@@ -31,20 +33,24 @@ import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
+import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.StringResourceModel;
 
 /**
- * space edit form
+ * space fields add / re-order page
  */
 public class SpaceFieldsPage extends BasePage {              
+    
+    private WebPage previous;
     
     private void addComponents(Space space, String selectedFieldName) {
         add(new HeaderPanel(null)); 
         border.add(new SpaceFieldsForm("form", space, selectedFieldName));
     }     
     
-    public SpaceFieldsPage(Space space, String selectedFieldName) {
+    public SpaceFieldsPage(Space space, String selectedFieldName, WebPage previous) {
         super("Edit Space Fields");
+        this.previous = previous;
         addComponents(space, selectedFieldName);
     }
     
@@ -52,6 +58,9 @@ public class SpaceFieldsPage extends BasePage {
         
         public SpaceFieldsForm(String id, final Space space, final String selectedFieldName) {
             super(id);
+            
+            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(new SpaceFieldsFormModel());
+            setModel(model);
             
             add(new Label("name", space.getName()));
             add(new Label("prefixCode", space.getPrefixCode()));
@@ -83,7 +92,7 @@ public class SpaceFieldsPage extends BasePage {
                             }
                             if (index != swapIndex) {
                                 Collections.swap(fieldOrder, index, swapIndex);
-                                setResponsePage(new SpaceFieldsPage(space, field.getName().getText()));
+                                setResponsePage(new SpaceFieldsPage(space, field.getName().getText(), previous));
                             }                            
                         }                    
                     });
@@ -99,7 +108,7 @@ public class SpaceFieldsPage extends BasePage {
                             }
                             if (index != swapIndex) {
                                 Collections.swap(fieldOrder, index, swapIndex);
-                                setResponsePage(new SpaceFieldsPage(space, field.getName().getText()));
+                                setResponsePage(new SpaceFieldsPage(space, field.getName().getText(), previous));
                             }                            
                         }                        
                     });
@@ -137,21 +146,63 @@ public class SpaceFieldsPage extends BasePage {
                 public String getIdValue(Object o, int i) {
                     return o.toString();
                 }
-            });
+            });            
             add(choice);
+            
+            add(new Button("add") {
+                @Override
+                protected void onSubmit() {
+
+                }           
+            });           
+            
+            add(new Button("back") {
+                @Override
+                protected void onSubmit() {
+                    SpaceFormPage page = new SpaceFormPage(space);
+                    page.setPrevious(previous);
+                    setResponsePage(page);
+                }           
+            });
+            
+            add(new Button("next") {
+                @Override
+                protected void onSubmit() {
+
+                }           
+            });            
             
             add(new Link("cancel") {
                 public void onClick() {
-                  
+                    if(previous == null) {
+                        setResponsePage(new OptionsPage());
+                    } else {
+                        if (previous instanceof SpaceListPage) {
+                            ((SpaceListPage) previous).setSelectedSpaceId(space.getId());
+                        }                      
+                        setResponsePage(previous);
+                    }                   
                 }                
             });            
             
-        }
+        }        
         
-        @Override
-        protected void onSubmit() {
+        
+        /**
+         * trivial form backing object
+         */
+        private class SpaceFieldsFormModel implements Serializable {
+            private String type;
 
-        } 
+            public String getType() {
+                return type;
+            }
+
+            public void setType(String type) {
+                this.type = type;
+            }            
+            
+        }
         
     }        
         

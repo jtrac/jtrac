@@ -42,7 +42,11 @@
                 </table>
                 <p/>
                 <span class="info"><wicket:message key="space_fields.chooseType"/>:</span>
-                <select wicket:id="type"/>                  
+                <select wicket:id="type"/>
+                <input type="submit" wicket:id="add" wicket:message="value=space_fields.addField"/>
+                <p/>
+                <input type="submit" wicket:id="back" wicket:message="value=back"/>
+                <input type="submit" wicket:id="next" wicket:message="value=next"/>
                 <p/>
                 <a href="#" wicket:id="cancel"><wicket:message key="cancel"/></a>
             </form>
