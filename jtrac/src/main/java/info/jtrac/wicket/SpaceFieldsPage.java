@@ -21,13 +21,17 @@ import info.jtrac.domain.Space;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Button;
+import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
+import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
+import wicket.model.StringResourceModel;
 
 /**
  * space edit form
@@ -120,6 +124,22 @@ public class SpaceFieldsPage extends BasePage {
                 }                
             };            
             add(listView);
+            
+            final Map<String, String> types = space.getMetadata().getAvailableFieldTypes();
+            List<String> typesList = new ArrayList(types.keySet());
+            DropDownChoice choice = new DropDownChoice("type", typesList, new IChoiceRenderer() {
+                public Object getDisplayValue(Object o) {
+                    StringResourceModel m = new StringResourceModel("space_fields.typeRemaining", null, null, new Object[]{types.get(o)});
+                    m.setLocalizer(getLocalizer());
+                    return getLocalizer().getString("space_fields.type_" + o, null)
+                        + " - " + m.getString();
+                }
+                public String getIdValue(Object o, int i) {
+                    return o.toString();
+                }
+            });
+            add(choice);
+            
             add(new Link("cancel") {
                 public void onClick() {
                   
