@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <title wicket:id="title">title here</title>
+        <link rel="stylesheet" type="text/css" href="resources/jtrac.css"/>
+    </head>
+    <body>
+        <span wicket:id="header"></span>
+        <span wicket:id="border">
+            <form wicket:id="form">
+                <div class="heading">
+                    <wicket:message key="space_fields.customFields"/>:
+                    <span wicket:id="name"></span> (<span wicket:id="prefixCode"></span>)
+                </div>
+                <table class="jtrac">
+                    <tr>
+                        <th><wicket:message key="space_fields.move"/></th>
+                        <th><wicket:message key="space_fields.internalName"/></th>
+                        <th><wicket:message key="space_fields.type"/></th>
+                        <th><wicket:message key="space_fields.optional"/></th>
+                        <th><wicket:message key="space_fields.label"/></th>
+                        <th><wicket:message key="space_fields.optionList"/></th>
+                        <th/>
+                    </tr>
+                    <tr wicket:id="fields">
+                        <td>
+                            <input type="submit" wicket:id="up" value="/\"/>
+                            <input type="submit" wicket:id="down" value="\/"/>
+                        </td>
+                        <td wicket:id="name"></td>
+                        <td wicket:id="type"></td>
+                        <td wicket:id="optional"></td>
+                        <td wicket:id="label"></td>
+                        <td>
+                            <span wicket:id="options">
+                                <span wicket:id="option"></span><br/>
+                            </span>
+                        </td>
+                        <td>
+                            <input type="submit" wicket:id="edit" wicket:message="value=edit"/>
+                        </td>
+                    </tr>                    
+                </table>
+                <a href="#" wicket:id="cancel"><wicket:message key="cancel"/></a>
+            </form>
+        </span>
+    </body>
+</html>
