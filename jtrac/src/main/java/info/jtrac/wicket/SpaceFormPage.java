@@ -54,12 +54,13 @@ public class SpaceFormPage extends BasePage {
     
     public SpaceFormPage() {
         super("Edit Space");   
-        Space space = new Space();        
+        Space space = new Space();    
+        space.getMetadata().initRoles();
         addComponents(space);
     }    
     
     public SpaceFormPage(Space space) {
-        super("Edit Space");
+        super("Edit Space");        
         addComponents(space);
     }
     
@@ -179,8 +180,7 @@ public class SpaceFormPage extends BasePage {
         @Override
         protected void onSubmit() {
             SpaceFormModel model = (SpaceFormModel) getModelObject();
-            Space space = getJtrac().loadSpace(model.getSpace().getId());
-            setResponsePage(new SpaceFieldsPage(space, null, previous));
+            setResponsePage(new SpaceFieldListPage(model.getSpace(), null, previous));
         }        
     }        
         

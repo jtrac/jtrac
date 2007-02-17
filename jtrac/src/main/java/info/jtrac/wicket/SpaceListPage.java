@@ -66,7 +66,9 @@ public class SpaceListPage extends BasePage {
                 listItem.add(new Label("name", new PropertyModel(space, "name")));
                 Link edit = new Link("edit") {
                     public void onClick() {
-                        SpaceFormPage page = new SpaceFormPage(space);
+                        Space temp = getJtrac().loadSpace(space.getId());
+                        temp.getMetadata().getXmlString();  // hack to override lazy loading
+                        SpaceFormPage page = new SpaceFormPage(temp);
                         page.setPrevious(SpaceListPage.this);
                         setResponsePage(page);                        
                     }                    

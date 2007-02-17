@@ -34,12 +34,13 @@ import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.BoundCompoundPropertyModel;
+import wicket.model.PropertyModel;
 import wicket.model.StringResourceModel;
 
 /**
  * space fields add / re-order page
  */
-public class SpaceFieldsPage extends BasePage {              
+public class SpaceFieldListPage extends BasePage {              
     
     private WebPage previous;
     
@@ -48,7 +49,7 @@ public class SpaceFieldsPage extends BasePage {
         border.add(new SpaceFieldsForm("form", space, selectedFieldName));
     }     
     
-    public SpaceFieldsPage(Space space, String selectedFieldName, WebPage previous) {
+    public SpaceFieldListPage(Space space, String selectedFieldName, WebPage previous) {
         super("Edit Space Fields");
         this.previous = previous;
         addComponents(space, selectedFieldName);
@@ -62,8 +63,8 @@ public class SpaceFieldsPage extends BasePage {
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(new SpaceFieldsFormModel());
             setModel(model);
             
-            add(new Label("name", space.getName()));
-            add(new Label("prefixCode", space.getPrefixCode()));
+            add(new Label("name", new PropertyModel(space, "name")));
+            add(new Label("prefixCode", new PropertyModel(space, "prefixCode")));
             
             final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
             
@@ -92,7 +93,7 @@ public class SpaceFieldsPage extends BasePage {
                             }
                             if (index != swapIndex) {
                                 Collections.swap(fieldOrder, index, swapIndex);
-                                setResponsePage(new SpaceFieldsPage(space, field.getName().getText(), previous));
+                                setResponsePage(new SpaceFieldListPage(space, field.getName().getText(), previous));
                             }                            
                         }                    
                     });
@@ -108,15 +109,15 @@ public class SpaceFieldsPage extends BasePage {
                             }
                             if (index != swapIndex) {
                                 Collections.swap(fieldOrder, index, swapIndex);
-                                setResponsePage(new SpaceFieldsPage(space, field.getName().getText(), previous));
+                                setResponsePage(new SpaceFieldListPage(space, field.getName().getText(), previous));
                             }                            
                         }                        
                     });
                     
-                    listItem.add(new Label("name", field.getName().getText()));
-                    listItem.add(new Label("type", field.getName().getDescription()));
+                    listItem.add(new Label("name", new PropertyModel(field, "name.text")));
+                    listItem.add(new Label("type", new PropertyModel(field, "name.description")));
                     listItem.add(new Label("optional", field.isOptional() ? "Y" : ""));
-                    listItem.add(new Label("label", field.getLabel()));
+                    listItem.add(new Label("label", new PropertyModel(field, "label")));
                     List<String> optionsList;
                     if(field.getOptions() != null) {
                         optionsList = new ArrayList(field.getOptions().values());
