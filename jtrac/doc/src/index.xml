@@ -1214,14 +1214,14 @@ java -cp bsh-2.0b4.jar;hsqldb-1.8.0.1.jar bsh.Interpreter jtrac-hsqldb-2_0rc3-to
                Subversion URL for the Maven 2 "Antprops" plugin:
                 <programlisting>
 
-https://svn.sourceforge.net/svnroot/j-trac/trunk/maven-antprops-plugin
+https://j-trac.svn.sourceforge.net/svnroot/j-trac/trunk/maven-antprops-plugin
                 </programlisting>               
            </para>
            <para>
                Subversion URL for the JTrac source code:
                 <programlisting>
 
-https://svn.sourceforge.net/svnroot/j-trac/trunk/jtrac
+https://j-trac.svn.sourceforge.net/svnroot/j-trac/trunk/jtrac
                 </programlisting>               
            </para>
            <para>

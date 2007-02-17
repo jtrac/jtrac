@@ -22,7 +22,7 @@
     </licenses>
 
     <scm>
-        <connection>scm:svn:https://svn.sourceforge.net/svnroot/j-trac/trunk/jtrac</connection>
+        <connection>scm:svn:https://j-trac.svn.sourceforge.net/svnroot/j-trac/trunk/jtrac</connection>
         <url>http://svn.sourceforge.net/viewcvs.cgi/j-trac/trunk/jtrac</url>
     </scm>
     
