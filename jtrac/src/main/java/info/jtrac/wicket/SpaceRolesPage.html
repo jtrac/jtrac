@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <title wicket:id="title">title here</title>
+        <link rel="stylesheet" type="text/css" href="resources/jtrac.css"/>
+    </head>
+    <body>
+        <span wicket:id="header"></span>
+        <span wicket:id="border">
+            <form wicket:id="form">
+                <div class="heading">
+                    <wicket:message key="space_roles.spaceRoles"/>:
+                    <span wicket:id="label"></span>
+                </div>                
+                <table class="jtrac">
+                    <tr class="center">
+                        <td colspan="2"><input type="submit" wicket:id="addState" wicket:message="value=space_roles.addState"/></td>
+                        <td colspan="2"><input type="submit" wicket:id="addRole" wicket:message="value=space_roles.addRole"/></td>
+                        <th wicket:id="statesColspan"><wicket:message key="space_roles.nextAllowedState"/></th>
+                        <th wicket:id="fieldsColspan"><wicket:message key="space_roles.fieldLevelPermissions"/><br/><wicket:message key="space_roles.flpLegend"/></th>       
+                    </tr>
+                    <tr class="center alt">
+                        <th colspan="2"><wicket:message key="space_roles.state"/></th>
+                        <th colspan="2"><wicket:message key="space_roles.role"/></th>
+                        <td wicket:id="states"><span wicket:id="state"></span></td>
+                        <td wicket:id="fields" class="info"><span wicket:id="field"></span></td>                        
+                    </tr>                    
+                </table>
+                <input type="submit" wicket:id="back" wicket:message="value=back"/>
+                <input type="submit" wicket:id="save" wicket:message="value=save"/>
+                <p/>
+                <a href="#" wicket:id="cancel"><wicket:message key="cancel"/></a>
+            </form>
+        </span>
+    </body>
+</html>

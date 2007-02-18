@@ -181,7 +181,7 @@ public class SpaceFieldListPage extends BasePage {
             add(new Button("next") {
                 @Override
                 protected void onSubmit() {
-
+                    setResponsePage(new SpaceRolesPage(space, previous));
                 }           
             });            
             
