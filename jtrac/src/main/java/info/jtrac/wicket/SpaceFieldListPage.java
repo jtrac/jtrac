@@ -135,7 +135,7 @@ public class SpaceFieldListPage extends BasePage {
                     listItem.add(new Button("edit") {
                         @Override
                         protected void onSubmit() { 
-                            setResponsePage(new SpaceFieldFormPage(space, field, SpaceFieldListPage.this));
+                            setResponsePage(new SpaceFieldFormPage(space, field, previous));
                         }                        
                     });
                 }                
@@ -156,6 +156,20 @@ public class SpaceFieldListPage extends BasePage {
                 }
             });            
             add(choice);                      
+            
+            add(new Button("add") {
+                @Override
+                protected void onSubmit() {
+                    SpaceFieldListFormModel model = (SpaceFieldListFormModel) SpaceFieldsForm.this.getModelObject();
+                    if(model.getType() == null) {
+                        return;
+                    }
+                    int type = Integer.parseInt(model.getType());            
+                    Field field = space.getMetadata().getNextAvailableField(type);
+                    field.initOptions();
+                    setResponsePage(new SpaceFieldFormPage(space, field, previous));          
+                }                 
+            });
             
             add(new Button("back") {
                 @Override
@@ -186,19 +200,7 @@ public class SpaceFieldListPage extends BasePage {
                 }                
             });            
             
-        }        
-        
-        @Override
-        protected void onSubmit() {
-            SpaceFieldListFormModel model = (SpaceFieldListFormModel) getModelObject();
-            if(model.getType() == null) {
-                return;
-            }
-            int type = Integer.parseInt(model.getType());            
-            Field field = space.getMetadata().getNextAvailableField(type);
-            field.initOptions();
-            setResponsePage(new SpaceFieldFormPage(space, field, SpaceFieldListPage.this));          
-        }        
+        }                      
         
         /**
          * trivial form backing object

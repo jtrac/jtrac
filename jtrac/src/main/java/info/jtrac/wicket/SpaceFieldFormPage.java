@@ -20,6 +20,7 @@ import info.jtrac.domain.Field;
 import info.jtrac.domain.Space;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import wicket.markup.html.WebMarkupContainer;
@@ -28,7 +29,9 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.Form;
+import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.validation.AbstractValidator;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -92,9 +95,9 @@ public class SpaceFieldFormPage extends BasePage {
                 }                
             };
             delete.setDefaultFormProcessing(false);
-//            if(space.getId() <= 0) {
-//                delete.setVisible(false);
-//            } 
+            if(!space.getMetadata().getFields().containsKey(field.getName())) {
+                delete.setVisible(false);
+            } 
             add(delete);
             // internal name ===================================================
             add(new Label("name", new PropertyModel(field, "name.text")));
@@ -109,7 +112,12 @@ public class SpaceFieldFormPage extends BasePage {
             // options =========================================================
             WebMarkupContainer hide = new WebMarkupContainer("hide");
             if(field.getName().getType() < 4) { // drop down type
-                final Map<String, String> optionsMap = field.getOptions();
+                final Map<String, String> optionsMap;
+                if (field.getOptions() == null) {
+                    optionsMap = new HashMap<String, String>();
+                } else {
+                    optionsMap = field.getOptions();
+                }
                 List<String> options = new ArrayList(optionsMap.keySet());
                 ListView listView = new ListView("options", options) {
                     protected void populateItem(ListItem listItem) {
@@ -120,14 +128,46 @@ public class SpaceFieldFormPage extends BasePage {
                         listItem.add(new Button("down"));
                         listItem.add(new Button("edit"));
                     }                    
-                };
+                };                
                 hide.add(listView);
-                hide.add(new TextField("option"));
-                hide.add(new Button("add"));
+                TextField option = new TextField("option");
+                // validation, does option already exist?
+                option.add(new AbstractValidator() {
+                    public void validate(FormComponent c) {
+                        String s = (String) c.getConvertedInput();
+                        if(field.hasOption(s)) {
+                            error(c);
+                        }
+                    }
+                    @Override
+                    protected String resourceKey(FormComponent c) {                    
+                        return "space_field_form.error.optionExists";
+                    }                
+                });
+                option.add(new ErrorHighlighter());
+                hide.add(option);
+                hide.add(new Button("add") {
+                    @Override
+                    protected void onSubmit() {
+                        Field f = onSubmitBefore();
+                        setResponsePage(new SpaceFieldFormPage(space, f, previous));
+                    }                     
+                });
             } else {
                 hide.setVisible(false);    
             }
             add(hide);
+            // done ============================================================
+            add(new Button("done") {
+                @Override
+                protected void onSubmit() {
+                    Field field = onSubmitBefore();
+                    if(!space.getMetadata().getFields().containsKey(field.getName())) {
+                        space.getMetadata().add(field);
+                    }                    
+                    setResponsePage(new SpaceFieldListPage(space, field.getName().getText(), previous));
+                }
+            });
             // cancel ==========================================================
             add(new Link("cancel") {
                 public void onClick() {
@@ -142,10 +182,16 @@ public class SpaceFieldFormPage extends BasePage {
             super.validate();          
         }        
         
-        @Override
-        protected void onSubmit() {
-            SpaceFieldFormModel model = (SpaceFieldFormModel) getModelObject();            
-        }        
+        private Field onSubmitBefore() {
+            SpaceFieldFormModel model = (SpaceFieldFormModel) getModelObject();
+            Field field = model.getField();
+            String option = model.getOption();
+            if(option != null) {
+                field.addOption(option);
+            }
+            return field;
+        }
+                
     }        
         
     /**
