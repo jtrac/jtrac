@@ -86,10 +86,10 @@ public class SpaceFormPage extends BasePage {
             Button delete = new Button("delete") {
                 @Override
                 protected void onSubmit() {
-                    String heading = getLocalizer().getString("space_delete.confirm", null);
-                    String warning = getLocalizer().getString("space_delete.line3", null);
-                    String line1 = getLocalizer().getString("space_delete.line1", null);
-                    String line2 = getLocalizer().getString("space_delete.line2", null);
+                    String heading = localize("space_delete.confirm");
+                    String warning = localize("space_delete.line3");
+                    String line1 = localize("space_delete.line1");
+                    String line2 = localize("space_delete.line2");
                     ConfirmPage confirm = new ConfirmPage(SpaceFormPage.this, heading, warning, new String[] {line1, line2}) {
                         public void onConfirm() {
                             getJtrac().removeSpace(space);

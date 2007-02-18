@@ -20,7 +20,9 @@ import info.jtrac.domain.Field;
 import info.jtrac.domain.Space;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import wicket.markup.html.WebMarkupContainer;
@@ -118,8 +120,7 @@ public class SpaceFieldFormPage extends BasePage {
             // label ===========================================================
             final TextField label = new TextField("field.label");
             label.setRequired(true);
-            label.add(new ErrorHighlighter());
-            label.setOutputMarkupId(true);
+            label.add(new ErrorHighlighter());            
             add(label);
             // optional ========================================================
             add(new CheckBox("field.optional"));            
@@ -132,15 +133,60 @@ public class SpaceFieldFormPage extends BasePage {
                 } else {
                     optionsMap = field.getOptions();
                 }
-                List<String> options = new ArrayList(optionsMap.keySet());
+                final List<String> options = new ArrayList(optionsMap.keySet());
                 ListView listView = new ListView("options", options) {
                     protected void populateItem(ListItem listItem) {
-                        String key = (String) listItem.getModelObject();
+                        final String key = (String) listItem.getModelObject();
                         listItem.add(new Label("key", key));
                         listItem.add(new Label("value", optionsMap.get(key)));
-                        listItem.add(new Button("up"));
-                        listItem.add(new Button("down"));
-                        listItem.add(new Button("edit"));
+                        listItem.add(new Button("up") {
+                            @Override
+                            protected void onSubmit() {                                
+                                int index = options.indexOf(key);
+                                int swapIndex = index - 1;
+                                if (swapIndex < 0) {
+                                    if (options.size() > 1) {
+                                        swapIndex = options.size() - 1;
+                                    } else {
+                                        swapIndex = 0;
+                                    }
+                                }
+                                if (index != swapIndex) {
+                                    Collections.swap(options, index, swapIndex);
+                                }
+                                Map<String, String> updated = new LinkedHashMap<String, String>(options.size());
+                                for (String s : options) {
+                                    updated.put(s, optionsMap.get(s));
+                                }
+                                field.setOptions(updated);
+                                setResponsePage(new SpaceFieldFormPage(space, field, previous));
+                            }                            
+                        });
+                        listItem.add(new Button("down") {
+                            @Override
+                            protected void onSubmit() {
+                                int index = options.indexOf(key);
+                                int swapIndex = index + 1;
+                                if (swapIndex == options.size() ) {
+                                    swapIndex = 0;
+                                }
+                                if (index != swapIndex) {
+                                    Collections.swap(options, index, swapIndex);
+                                }
+                                Map<String, String> updated = new LinkedHashMap<String, String>(options.size());
+                                for (String s : options) {
+                                    updated.put(s, optionsMap.get(s));
+                                }
+                                field.setOptions(updated);
+                                setResponsePage(new SpaceFieldFormPage(space, field, previous));
+                            }                            
+                        });
+                        listItem.add(new Button("edit") {
+                            @Override
+                            protected void onSubmit() {     
+                                setResponsePage(new SpaceFieldOptionPage(space, field, key, previous));
+                            }                       
+                        });
                     }                    
                 };                
                 hide.add(listView);
@@ -203,7 +249,7 @@ public class SpaceFieldFormPage extends BasePage {
                 field.addOption(option);
             }
             return field;
-        }
+        }      
                 
     }        
         
