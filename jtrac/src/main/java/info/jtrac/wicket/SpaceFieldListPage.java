@@ -134,8 +134,9 @@ public class SpaceFieldListPage extends BasePage {
                     listItem.add(options);
                     listItem.add(new Button("edit") {
                         @Override
-                        protected void onSubmit() { 
-                            setResponsePage(new SpaceFieldFormPage(space, field, previous));
+                        protected void onSubmit() {
+                            Field f = field.getClone();
+                            setResponsePage(new SpaceFieldFormPage(space, f, previous));
                         }                        
                     });
                 }                
@@ -146,10 +147,7 @@ public class SpaceFieldListPage extends BasePage {
             List<String> typesList = new ArrayList(types.keySet());
             DropDownChoice choice = new DropDownChoice("type", typesList, new IChoiceRenderer() {
                 public Object getDisplayValue(Object o) {
-                    StringResourceModel m = new StringResourceModel("space_fields.typeRemaining", null, null, new Object[]{types.get(o)});
-                    m.setLocalizer(getLocalizer());
-                    return getLocalizer().getString("space_fields.type_" + o, null)
-                        + " - " + m.getString();
+                    return localize("space_fields.type_" + o) + " - " + localize("space_fields.typeRemaining", types.get(o));
                 }
                 public String getIdValue(Object o, int i) {
                     return o.toString();

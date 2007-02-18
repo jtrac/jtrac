@@ -81,17 +81,31 @@ public class SpaceFieldFormPage extends BasePage {
             Button delete = new Button("delete") {
                 @Override
                 protected void onSubmit() {
-                    String heading = getLocalizer().getString("space_delete.confirm", null);
-                    String warning = getLocalizer().getString("space_delete.line3", null);
-                    String line1 = getLocalizer().getString("space_delete.line1", null);
-                    String line2 = getLocalizer().getString("space_delete.line2", null);
-                    ConfirmPage confirm = new ConfirmPage(SpaceFieldFormPage.this, heading, warning, new String[] {line1, line2}) {
-                        public void onConfirm() {
-                            getJtrac().removeSpace(space);
-                            setResponsePage(new SpaceListPage());
-                        }                        
-                    };
-                    setResponsePage(confirm);
+                    int affectedCount = getJtrac().loadCountOfRecordsHavingFieldNotNull(space, field);
+                    if (affectedCount > 0) {
+                        String heading = localize("space_field_delete.confirm") + " : " + field.getLabel() 
+                            + " [" + field.getName().getDescription() + " - " + field.getName().getText() + "]";
+                        String warning = localize("space_field_delete.line3");
+                        String line1 = localize("space_field_delete.line1");
+                        String line2 = localize("space_field_delete.line2", affectedCount + "");                        
+                        ConfirmPage confirm = new ConfirmPage(SpaceFieldFormPage.this, heading, warning, new String[] {line1, line2}) {
+                            public void onConfirm() {
+                                // database will be updated, if we don't do this
+                                // user may leave without committing metadata change                                
+                                getJtrac().bulkUpdateFieldToNull(space, field);
+                                space.getMetadata().removeField(field.getName().getText());       
+                                getJtrac().storeSpace(space);
+                                // synchronize metadata version or else if we save again we get Stale Object Exception
+                                space.setMetadata(getJtrac().loadMetadata(space.getMetadata().getId()));
+                                setResponsePage(new SpaceFieldListPage(space, null, previous));
+                            }                        
+                        };
+                        setResponsePage(confirm);
+                    } else {
+                        // this is an unsaved space or there are no impacted items
+                        space.getMetadata().removeField(field.getName().getText());
+                        setResponsePage(new SpaceFieldListPage(space, null, previous));
+                    }
                 }                
             };
             delete.setDefaultFormProcessing(false);
@@ -162,16 +176,15 @@ public class SpaceFieldFormPage extends BasePage {
                 @Override
                 protected void onSubmit() {
                     Field field = onSubmitBefore();
-                    if(!space.getMetadata().getFields().containsKey(field.getName())) {
-                        space.getMetadata().add(field);
-                    }                    
+                    // may be clone, overwrite anyway
+                    space.getMetadata().add(field);                    
                     setResponsePage(new SpaceFieldListPage(space, field.getName().getText(), previous));
                 }
             });
             // cancel ==========================================================
             add(new Link("cancel") {
                 public void onClick() {
-                    setResponsePage(previous);
+                    setResponsePage(new SpaceFieldListPage(space, field.getName().getText(), previous));
                 }                
             });            
         }

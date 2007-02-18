@@ -17,11 +17,10 @@
 package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
-import wicket.Component;
-import wicket.MarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.border.Border;
+import wicket.model.StringResourceModel;
 
 /**
  * base class for all wicket pages, this provides
@@ -35,12 +34,26 @@ public abstract class BasePage extends WebPage {
     
     protected Jtrac getJtrac() {
         return ((JtracApplication) getApplication()).getJtrac();
-    }  
+    }          
     
     public BasePage(String title) {
         add(new Label("title", title));
         border = new TemplateBorder();
         add(border);    
     }
+    
+    /**
+     * localization helper
+     */
+    protected String localize(String key) {
+        return getLocalizer().getString(key, null);
+    }
+    
+    protected String localize(String key, Object... params) {
+        // integer params cause problems, go with String only
+        StringResourceModel m = new StringResourceModel(key, null, null, params);
+        m.setLocalizer(getLocalizer());
+        return m.getString();
+    }    
     
 }
