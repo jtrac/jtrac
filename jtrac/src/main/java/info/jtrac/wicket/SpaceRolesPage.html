@@ -21,10 +21,21 @@
                     <tr class="center alt">
                         <th colspan="2"><wicket:message key="space_roles.state"/></th>
                         <th colspan="2"><wicket:message key="space_roles.role"/></th>
-                        <td wicket:id="states"><span wicket:id="state"></span></td>
-                        <td wicket:id="fields" class="info"><span wicket:id="field"></span></td>                        
-                    </tr>                    
+                        <td wicket:id="stateHeads"><span wicket:id="state"></span></td>
+                        <td wicket:id="fieldHeads" class="info"><span wicket:id="field"></span></td>                        
+                    </tr>
+                    <tbody wicket:id="states">
+                        <tr wicket:id="roles">
+                            <td wicket:id="state"></td>
+                            <td wicket:id="editState"><input type="submit" value="..."/></td>
+                            <td wicket:id="role" class="transition"></td>
+                            <td><input type="submit" value="..."/></td>
+                            <td wicket:id="stateHeads"><span wicket:id="state"></span></td>
+                            <td wicket:id="fieldHeads" class="info"><span wicket:id="field"></span></td>
+                        </tr>
+                    </tbody>
                 </table>
+                <p/>
                 <input type="submit" wicket:id="back" wicket:message="value=back"/>
                 <input type="submit" wicket:id="save" wicket:message="value=save"/>
                 <p/>

@@ -17,6 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Field;
+import info.jtrac.domain.Role;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ public class SpaceRolesPage extends BasePage {
             SimpleAttributeModifier statesColspan = new SimpleAttributeModifier("colspan", (statesMap.size() - 1) + "");
             add(new WebMarkupContainer("statesColspan").add(statesColspan));
             // fields colspan ==================================================
-            List<Field> fields = space.getMetadata().getFieldList();
+            final List<Field> fields = space.getMetadata().getFieldList();
             SimpleAttributeModifier fieldsColspan = new SimpleAttributeModifier("colspan", fields.size() + "");
             add(new WebMarkupContainer("fieldsColspan").add(fieldsColspan));
             // add state =======================================================
@@ -84,20 +85,55 @@ public class SpaceRolesPage extends BasePage {
                 }
             });
             // states col headings =============================================
-            List<Integer> stateKeys = new ArrayList(statesMap.keySet());            
-            stateKeys.remove(State.NEW);
-            add(new ListView("states", stateKeys) {
-                protected void populateItem(ListItem listItem) {                    
-                    listItem.add(new Label("state", statesMap.get(listItem.getModelObject())));
+            final List<Integer> stateKeysNoNew = new ArrayList(statesMap.keySet());
+            stateKeysNoNew.remove(State.NEW);
+            add(new ListView("stateHeads", stateKeysNoNew) {
+                protected void populateItem(ListItem listItem) {
+                    Integer stateKey = (Integer) listItem.getModelObject();
+                    listItem.add(new Label("state", statesMap.get(stateKey)));
                 }
             });
             // fields col headings =============================================
-            add(new ListView("fields", fields) {
+            add(new ListView("fieldHeads", fields) {
                 protected void populateItem(ListItem listItem) {
                     Field f = (Field) listItem.getModelObject();
                     listItem.add(new Label("field", f.getLabel()));
                 }
-            });            
+            });
+            // states rows =====================================================
+            List<Integer> stateKeys = new ArrayList(statesMap.keySet());
+            final List<Role> roles = new ArrayList(space.getMetadata().getRoleList());
+            final SimpleAttributeModifier rowspan = new SimpleAttributeModifier("rowspan", roles.size() + "");
+            add(new ListView("states", stateKeys) {
+                protected void populateItem(ListItem listItem) {
+                    final Integer stateKeyRow = (Integer) listItem.getModelObject();
+                    listItem.add(new ListView("roles", roles) {
+                        protected void populateItem(ListItem listItem) {
+                            Role role = (Role) listItem.getModelObject();
+                            if(listItem.getIndex() == 0) {
+                                listItem.add(new Label("state", statesMap.get(stateKeyRow)).add(rowspan));
+                                listItem.add(new WebMarkupContainer("editState").add(rowspan));
+                            } else {
+                                listItem.add(new WebMarkupContainer("state").setVisible(false));
+                                listItem.add(new WebMarkupContainer("editState").setVisible(false));
+                            }
+                            listItem.add(new Label("role", role.getName()));
+                            listItem.add(new ListView("stateHeads", stateKeysNoNew) {
+                                protected void populateItem(ListItem listItem) {
+                                    Integer stateKeyCol = (Integer) listItem.getModelObject();
+                                    listItem.add(new Label("state", stateKeyRow + ":" + stateKeyCol));                                    
+                                }                                
+                            });
+                            listItem.add(new ListView("fieldHeads", fields) {
+                                protected void populateItem(ListItem listItem) {
+                                    Field field = (Field) listItem.getModelObject();
+                                    listItem.add(new Label("field", stateKeyRow + ":" + field.getName().getText()));                                    
+                                }                                
+                            });                            
+                        }                        
+                    });
+                }                
+            });
             // back ============================================================
             add(new Button("back") {
                 @Override
