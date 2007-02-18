@@ -42,6 +42,7 @@ import wicket.model.StringResourceModel;
  */
 public class SpaceFieldListPage extends BasePage {              
     
+    private Space space;
     private WebPage previous;
     
     private void addComponents(Space space, String selectedFieldName) {
@@ -52,6 +53,7 @@ public class SpaceFieldListPage extends BasePage {
     public SpaceFieldListPage(Space space, String selectedFieldName, WebPage previous) {
         super("Edit Space Fields");
         this.previous = previous;
+        this.space = space;
         addComponents(space, selectedFieldName);
     }
     
@@ -60,7 +62,7 @@ public class SpaceFieldListPage extends BasePage {
         public SpaceFieldsForm(String id, final Space space, final String selectedFieldName) {
             super(id);
             
-            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(new SpaceFieldsFormModel());
+            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(new SpaceFieldListFormModel());
             setModel(model);
             
             add(new Label("name", new PropertyModel(space, "name")));
@@ -130,7 +132,12 @@ public class SpaceFieldListPage extends BasePage {
                         }                        
                     };
                     listItem.add(options);
-                    listItem.add(new Button("edit"));
+                    listItem.add(new Button("edit") {
+                        @Override
+                        protected void onSubmit() { 
+                            setResponsePage(new SpaceFieldFormPage(space, field, SpaceFieldListPage.this));
+                        }                        
+                    });
                 }                
             };            
             add(listView);
@@ -148,14 +155,7 @@ public class SpaceFieldListPage extends BasePage {
                     return o.toString();
                 }
             });            
-            add(choice);
-            
-            add(new Button("add") {
-                @Override
-                protected void onSubmit() {
-
-                }           
-            });           
+            add(choice);                      
             
             add(new Button("back") {
                 @Override
@@ -188,11 +188,22 @@ public class SpaceFieldListPage extends BasePage {
             
         }        
         
+        @Override
+        protected void onSubmit() {
+            SpaceFieldListFormModel model = (SpaceFieldListFormModel) getModelObject();
+            if(model.getType() == null) {
+                return;
+            }
+            int type = Integer.parseInt(model.getType());            
+            Field field = space.getMetadata().getNextAvailableField(type);
+            field.initOptions();
+            setResponsePage(new SpaceFieldFormPage(space, field, SpaceFieldListPage.this));          
+        }        
         
         /**
          * trivial form backing object
          */
-        private class SpaceFieldsFormModel implements Serializable {
+        private class SpaceFieldListFormModel implements Serializable {
             private String type;
 
             public String getType() {

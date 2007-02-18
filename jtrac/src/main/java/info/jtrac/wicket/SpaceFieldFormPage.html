@@ -10,6 +10,7 @@
                 <div class="heading">
                     <wicket:message key="space_field_form.editField"/>
                 </div>
+                <span wicket:id="feedback"></span>
                 <table class="jtrac">
                     <tr>
                         <td class="label"><wicket:message key="space_field_form.internalName"/></td>
@@ -24,14 +25,14 @@
                             <font color="red">*</font>
                         </td>
                         <td>
-                            <input wicket:id="label"/>
+                            <input wicket:id="field.label"/>
                         </td>
                     </tr>
                     <tr>
                         <td class="label"><wicket:message key="space_field_form.optional"/></td>
-                        <td><input type="checkbox" wicket:id="optional"/></td>
+                        <td><input type="checkbox" wicket:id="field.optional"/></td>
                     </tr>
-                    <tbody wicket:id="optionsRow">
+                    <tbody wicket:id="hide">
                         <tr>
                             <td class="label"><wicket:message key="space_field_form.options"/></td>
                             <td>
@@ -48,12 +49,15 @@
                         </tr>
                         <tr>
                             <td class="label"><wicket:message key="space_field_form.addOption"/></td>
-                            <td><input type="submit" wicket:id="add" wicket:message="value=space_field_form.update"/></td>
+                            <td>
+                                <input wicket:id="option"/>
+                                <input type="submit" wicket:id="add" wicket:message="value=space_field_form.update"/>
+                            </td>
                         </tr>
                     </tbody>
                     <tr>
                         <td/>
-                        <td><input type="submit" wicket:message="value=space_field_form.update"/></td>
+                        <td><input type="submit" wicket:message="value=space_field_form.done"/></td>
                     </tr>
                 </table>                
                 <a href="#" wicket:id="cancel"><wicket:message key="cancel"/></a>
