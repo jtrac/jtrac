@@ -43,7 +43,7 @@
                         <input type="password" name="j_password" value="${status.value}" size="20"/>
                     </td>
                     <td align="right">
-                        <input type="submit" value="<fmt:message key='submit'/>"/>
+                        <input type="submit" value="<fmt:message key='login.submit'/>"/>
                     </td>
                 </tr> 
                 <tr>
