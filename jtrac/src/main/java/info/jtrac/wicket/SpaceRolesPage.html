@@ -2,6 +2,15 @@
     <head>
         <title wicket:id="title">title here</title>
         <link rel="stylesheet" type="text/css" href="resources/jtrac.css"/>
+        <style>
+            .roles input { width: 2em; }
+            .workflow { border-collapse: collapse; }
+            .workflow table { width: 100%; height: 100%; }
+            .workflow td { border: 1px solid black; font-size: 80%; padding-left: 0.2em; padding-right: 0.2em; }
+            .state { background: #DEDEFF; }
+            .mirror { background: #CCCCCC; }
+            .transition { font-style: italic; }  
+        </style>        
     </head>
     <body>
         <span wicket:id="header"></span>
@@ -11,7 +20,7 @@
                     <wicket:message key="space_roles.spaceRoles"/>:
                     <span wicket:id="label"></span>
                 </div>                
-                <table class="jtrac">
+                <table class="jtrac" style="empty-cells:show">
                     <tr class="center">
                         <td colspan="2"><input type="submit" wicket:id="addState" wicket:message="value=space_roles.addState"/></td>
                         <td colspan="2"><input type="submit" wicket:id="addRole" wicket:message="value=space_roles.addRole"/></td>
@@ -24,14 +33,14 @@
                         <td wicket:id="stateHeads"><span wicket:id="state"></span></td>
                         <td wicket:id="fieldHeads" class="info"><span wicket:id="field"></span></td>                        
                     </tr>
-                    <tbody wicket:id="states">
+                    <tbody wicket:id="states" class="roles">
                         <tr wicket:id="roles">
                             <td wicket:id="state"></td>
-                            <td wicket:id="editState"><input type="submit" value="..."/></td>
+                            <td wicket:id="editState"><input type="submit" wicket:id="editState" value=".."/></td>
                             <td wicket:id="role" class="transition"></td>
-                            <td><input type="submit" value="..."/></td>
-                            <td wicket:id="stateHeads"><span wicket:id="state"></span></td>
-                            <td wicket:id="fieldHeads" class="info"><span wicket:id="field"></span></td>
+                            <td><input type="submit" wicket:id="editRole" value=".."/></td>
+                            <td wicket:id="stateHeads"><input type="submit" wicket:id="state"/></td>
+                            <td wicket:id="fieldHeads" class="info"><input type="submit" wicket:id="field"/></td>
                         </tr>
                     </tbody>
                 </table>
@@ -40,6 +49,8 @@
                 <input type="submit" wicket:id="save" wicket:message="value=save"/>
                 <p/>
                 <a href="#" wicket:id="cancel"><wicket:message key="cancel"/></a>
+                <p/>
+                <span wicket:id="workflow"></span>
             </form>
         </span>
     </body>

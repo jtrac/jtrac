@@ -20,6 +20,7 @@ import info.jtrac.domain.Field;
 import info.jtrac.domain.Role;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
+import info.jtrac.domain.WorkflowRenderer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -100,34 +101,98 @@ public class SpaceRolesPage extends BasePage {
                     listItem.add(new Label("field", f.getLabel()));
                 }
             });
-            // states rows =====================================================
+            // rows init =======================================================
             List<Integer> stateKeys = new ArrayList(statesMap.keySet());
             final List<Role> roles = new ArrayList(space.getMetadata().getRoleList());
             final SimpleAttributeModifier rowspan = new SimpleAttributeModifier("rowspan", roles.size() + "");
-            add(new ListView("states", stateKeys) {
+            final SimpleAttributeModifier yes = new SimpleAttributeModifier("value", "Y");
+            final SimpleAttributeModifier no = new SimpleAttributeModifier("value", " ");
+            final SimpleAttributeModifier selected = new SimpleAttributeModifier("class", "selected");
+            final SimpleAttributeModifier view = new SimpleAttributeModifier("value", "V");
+            final SimpleAttributeModifier edit = new SimpleAttributeModifier("value", "E");
+            final SimpleAttributeModifier hide = new SimpleAttributeModifier("value", "H");
+            //==================================================================
+            add(new ListView("states", stateKeys) {               
                 protected void populateItem(ListItem listItem) {
+                    final boolean firstState = listItem.getIndex() == 0;
+                    final String stateClass = listItem.getIndex() % 2 == 1 ? "bdr-bottom alt" : "bdr-bottom";
                     final Integer stateKeyRow = (Integer) listItem.getModelObject();
                     listItem.add(new ListView("roles", roles) {
                         protected void populateItem(ListItem listItem) {
-                            Role role = (Role) listItem.getModelObject();
+                            String roleClass = listItem.getIndex() % 2 == 1 ? " alt" : "";
+                            String lastRole = listItem.getIndex() == roles.size() - 1 ? " bdr-bottom" : "";
+                            listItem.add(new SimpleAttributeModifier("class", "center" + roleClass + lastRole));                            
+                            final Role role = (Role) listItem.getModelObject();
                             if(listItem.getIndex() == 0) {
-                                listItem.add(new Label("state", statesMap.get(stateKeyRow)).add(rowspan));
-                                listItem.add(new WebMarkupContainer("editState").add(rowspan));
+                                SimpleAttributeModifier rowClass = new SimpleAttributeModifier("class", stateClass);
+                                listItem.add(new Label("state", statesMap.get(stateKeyRow)).add(rowspan).add(rowClass));
+                                WebMarkupContainer editState = new WebMarkupContainer("editState");
+                                editState.add(rowspan).add(rowClass);
+                                Button editStateButton = new Button("editState") {
+                                    @Override
+                                    protected void onSubmit() {
+
+                                    }                                    
+                                };
+                                editState.add(editStateButton);
+                                if(stateKeyRow == State.NEW || stateKeyRow == State.CLOSED) {
+                                    editStateButton.setVisible(false);
+                                }
+                                listItem.add(editState);
                             } else {
                                 listItem.add(new WebMarkupContainer("state").setVisible(false));
                                 listItem.add(new WebMarkupContainer("editState").setVisible(false));
                             }
                             listItem.add(new Label("role", role.getName()));
+                            Button editRoleButton = new Button("editRole") {
+                                @Override
+                                protected void onSubmit() {
+
+                                }                                
+                            };
+                            listItem.add(editRoleButton);
+                            if(!firstState) {
+                                editRoleButton.setVisible(false);
+                            }
                             listItem.add(new ListView("stateHeads", stateKeysNoNew) {
                                 protected void populateItem(ListItem listItem) {
                                     Integer stateKeyCol = (Integer) listItem.getModelObject();
-                                    listItem.add(new Label("state", stateKeyRow + ":" + stateKeyCol));                                    
+                                    Button stateButton = new Button("state") {
+                                        @Override
+                                        protected void onSubmit() {
+
+                                        }                                          
+                                    };
+                                    if(stateKeyRow == State.NEW && stateKeyCol != State.OPEN) {
+                                        stateButton.setVisible(false);
+                                    }
+                                    State state = role.getStates().get(stateKeyRow);
+                                    if(state != null && state.getTransitions().contains(stateKeyCol)) {
+                                        stateButton.add(yes);
+                                        stateButton.add(selected);
+                                    } else {
+                                        stateButton.add(no);
+                                    }
+                                    listItem.add(stateButton);                                    
                                 }                                
                             });
                             listItem.add(new ListView("fieldHeads", fields) {
                                 protected void populateItem(ListItem listItem) {
                                     Field field = (Field) listItem.getModelObject();
-                                    listItem.add(new Label("field", stateKeyRow + ":" + field.getName().getText()));                                    
+                                    Button fieldButton = new Button("field") {
+                                        @Override
+                                        protected void onSubmit() {
+
+                                        }                                          
+                                    };
+                                    State state = role.getStates().get(stateKeyRow);                                    
+                                    int mask = state.getFields().get(field.getName());
+                                    switch(mask) {
+                                        case State.MASK_EDIT : fieldButton.add(edit); break;
+                                        case State.MASK_VIEW : fieldButton.add(view); break;
+                                        case State.MASK_HIDE : fieldButton.add(hide); break;
+                                    }
+                                    listItem.add(fieldButton);                                   
                                 }                                
                             });                            
                         }                        
@@ -153,7 +218,9 @@ public class SpaceRolesPage extends BasePage {
                 public void onClick() {
                     setResponsePage(previous);
                 }                
-            });            
+            });
+            WorkflowRenderer workflow = new WorkflowRenderer(space.getMetadata().getRoles(), space.getMetadata().getStates());
+            add(new Label("workflow", workflow.getAsHtml()).setEscapeModelStrings(false));
         }                        
                 
     }                
