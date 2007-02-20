@@ -37,7 +37,7 @@ import wicket.markup.html.list.ListView;
 /**
  * space roles and workflow form
  */
-public class SpaceRolesPage extends BasePage {
+public class SpacePermissionsPage extends BasePage {
       
     private WebPage previous;
     private Space space;
@@ -47,7 +47,7 @@ public class SpaceRolesPage extends BasePage {
         border.add(new SpaceRolesForm("form"));
     }     
     
-    public SpaceRolesPage(Space space, WebPage previous) {
+    public SpacePermissionsPage(Space space, WebPage previous) {
         super("Edit Roles");
         this.space = space;
         this.previous = previous;

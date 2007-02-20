@@ -17,6 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Space;
+import info.jtrac.domain.State;
 import info.jtrac.util.ValidationUtils;
 import java.io.Serializable;
 import wicket.markup.html.WebPage;
@@ -48,12 +49,16 @@ public class SpaceStatePage extends BasePage {
     
     private class SpaceStateForm extends Form {                
         
+        private int stateKey;
+        
         public SpaceStateForm(String id, final int stateKey) {
             
             super(id);          
             add(new FeedbackPanel("feedback"));            
-
+            this.stateKey = stateKey;
+            
             SpaceStateModel modelObject = new SpaceStateModel();
+            // stateKey is -1 if add new state
             final String stateName = space.getMetadata().getStates().get(stateKey);            
             modelObject.setStateName(stateName);
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(modelObject);
@@ -78,18 +83,21 @@ public class SpaceStatePage extends BasePage {
                                 getJtrac().storeSpace(space);
                                 // synchronize metadata else when we save again we get Stale Object Exception
                                 space.setMetadata(getJtrac().loadMetadata(space.getMetadata().getId()));
-                                setResponsePage(new SpaceRolesPage(space, previous));
+                                setResponsePage(new SpacePermissionsPage(space, previous));
                             }                        
                         };
                         setResponsePage(confirm);
                     } else {
                         // this is an unsaved space / field or there are no impacted items
                         space.getMetadata().removeState(stateKey);
-                        setResponsePage(new SpaceRolesPage(space, previous));
+                        setResponsePage(new SpacePermissionsPage(space, previous));
                     }
                 }                
             };
             delete.setDefaultFormProcessing(false);
+            if(stateKey == State.OPEN) {
+                delete.setEnabled(false);
+            }
             add(delete);
             // option ===========================================================
             final TextField field = new TextField("stateName");
@@ -125,15 +133,20 @@ public class SpaceStatePage extends BasePage {
             // cancel ==========================================================
             add(new Link("cancel") {
                 public void onClick() {
-                    setResponsePage(new SpaceRolesPage(space, previous));
+                    setResponsePage(new SpacePermissionsPage(space, previous));
                 }                
             });            
         }
                 
         @Override
         protected void onSubmit() {                    
-            SpaceStateModel model = (SpaceStateModel) getModelObject();            
-            setResponsePage(new SpaceRolesPage(space, previous));
+            SpaceStateModel model = (SpaceStateModel) getModelObject();
+            if (stateKey == -1) {
+                space.getMetadata().addState(model.getStateName());
+            } else {
+                space.getMetadata().getStates().put(stateKey, model.getStateName());
+            }            
+            setResponsePage(new SpacePermissionsPage(space, previous));
         }     
                         
     }        
