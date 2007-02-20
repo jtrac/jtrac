@@ -75,7 +75,7 @@ public class SpaceRolesPage extends BasePage {
             add(new Button("addState") {
                 @Override
                 protected void onSubmit() {
-
+                    setResponsePage(new SpaceStatePage(space, -1, previous));
                 }
             }); 
             // add state =======================================================
