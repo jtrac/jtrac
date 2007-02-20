@@ -20,6 +20,8 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.util.SecurityUtils;
+import java.util.ArrayList;
+import java.util.List;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 
@@ -44,7 +46,13 @@ public class HeaderPanel extends BasePanel {
             add(new Label("new", "").setVisible(false));
             add(new Link("search") {
                 public void onClick() {
-                    setResponsePage(new ItemSearchFormPage(user)); 
+                    List<Space> spaces = new ArrayList(user.getSpaces());
+                    // if only one space don't use generic search screen
+                    if(spaces.size() == 1) {
+                        setResponsePage(new ItemSearchFormPage(spaces.get(0)));
+                    } else {
+                        setResponsePage(new ItemSearchFormPage(user));
+                    }                                         
                 }            
             });            
         } else {
