@@ -21,6 +21,7 @@ import info.jtrac.domain.Role;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.WorkflowRenderer;
+import info.jtrac.util.SecurityUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class SpacePermissionsPage extends BasePage {
     
     private void addComponents() {        
         add(new HeaderPanel(null)); 
-        border.add(new SpaceRolesForm("form"));
+        border.add(new SpacePermissionsForm("form"));
     }     
     
     public SpacePermissionsPage(Space space, WebPage previous) {
@@ -54,11 +55,11 @@ public class SpacePermissionsPage extends BasePage {
         addComponents();
     }
     
-    private class SpaceRolesForm extends Form {
+    private class SpacePermissionsForm extends Form {
         
        private JtracFeedbackMessageFilter filter;
         
-        public SpaceRolesForm(String id) {
+        public SpacePermissionsForm(String id) {
             
             super(id);
             // label / heading =================================================
@@ -82,7 +83,7 @@ public class SpacePermissionsPage extends BasePage {
             add(new Button("addRole") {
                 @Override
                 protected void onSubmit() {
-
+                    setResponsePage(new SpaceRolePage(space, null, previous));
                 }
             });
             // states col headings =============================================
@@ -147,7 +148,7 @@ public class SpacePermissionsPage extends BasePage {
                             Button editRoleButton = new Button("editRole") {
                                 @Override
                                 protected void onSubmit() {
-
+                                    setResponsePage(new SpaceRolePage(space, role.getName(), previous));
                                 }                                
                             };
                             listItem.add(editRoleButton);
@@ -210,7 +211,17 @@ public class SpacePermissionsPage extends BasePage {
             add(new Button("save") {
                 @Override
                 protected void onSubmit() {
-
+                    getJtrac().storeSpace(space);
+                    // current user may be allocated to this space, and e.g. name could have changed
+                    SecurityUtils.refreshSecurityContext();
+                    if(previous == null) {
+                        setResponsePage(new OptionsPage());
+                    } else {
+                        if (previous instanceof SpaceListPage) {
+                            ((SpaceListPage) previous).setSelectedSpaceId(space.getId());
+                        }                      
+                        setResponsePage(previous);
+                    }                    
                 }
             });
             // cancel ==========================================================
