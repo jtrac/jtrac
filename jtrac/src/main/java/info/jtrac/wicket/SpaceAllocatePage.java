@@ -43,23 +43,19 @@ public class SpaceAllocatePage extends BasePage {
     private WebPage previous;
     private Space space;        
     
-    public SpaceAllocatePage(Space space, WebPage previous) {
+    public SpaceAllocatePage(Space s, WebPage previous) {
         super("Edit State");
-        this.space = space;
+        this.space = getJtrac().loadSpace(s.getId());
         this.previous = previous;
         add(new HeaderPanel(null));
         border.add(new SpaceAllocateForm("form"));
     }
     
-    private class SpaceAllocateForm extends Form {                
-        
-        private int stateKey;
+    private class SpaceAllocateForm extends Form {                        
         
         public SpaceAllocateForm(String id) {
             
-            super(id);          
-                    
-            this.stateKey = stateKey;
+            super(id);                                
             
             UserSpaceRole usr = new UserSpaceRole();            
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(usr);
@@ -128,8 +124,10 @@ public class SpaceAllocatePage extends BasePage {
                     if(usr.getUser() == null || usr.getRoleKey() == null) {
                         return;
                     }
-                    getJtrac().storeUserSpaceRole(usr.getUser(), space, usr.getRoleKey());
-                    SecurityUtils.refreshSecurityContextIfPrincipal(usr.getUser());
+                    // avoid lazy init problem
+                    User temp = getJtrac().loadUser(usr.getUser().getId());
+                    getJtrac().storeUserSpaceRole(temp, space, usr.getRoleKey());
+                    SecurityUtils.refreshSecurityContextIfPrincipal(temp);
                     setResponsePage(new SpaceAllocatePage(space, previous));
                 }                   
             });            
