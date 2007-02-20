@@ -157,11 +157,12 @@ public class SpacePermissionsPage extends BasePage {
                             }
                             listItem.add(new ListView("stateHeads", stateKeysNoNew) {
                                 protected void populateItem(ListItem listItem) {
-                                    Integer stateKeyCol = (Integer) listItem.getModelObject();
+                                    final Integer stateKeyCol = (Integer) listItem.getModelObject();
                                     Button stateButton = new Button("state") {
                                         @Override
                                         protected void onSubmit() {
-
+                                            space.getMetadata().toggleTransition(role.getName(), stateKeyRow, stateKeyCol);
+                                            setResponsePage(new SpacePermissionsPage(space, previous));
                                         }                                          
                                     };
                                     if(stateKeyRow == State.NEW && stateKeyCol != State.OPEN) {
@@ -179,11 +180,12 @@ public class SpacePermissionsPage extends BasePage {
                             });
                             listItem.add(new ListView("fieldHeads", fields) {
                                 protected void populateItem(ListItem listItem) {
-                                    Field field = (Field) listItem.getModelObject();
+                                    final Field field = (Field) listItem.getModelObject();
                                     Button fieldButton = new Button("field") {
                                         @Override
                                         protected void onSubmit() {
-
+                                            space.getMetadata().switchMask(stateKeyRow, role.getName(), field.getName().getText());
+                                            setResponsePage(new SpacePermissionsPage(space, previous));
                                         }                                          
                                     };
                                     State state = role.getStates().get(stateKeyRow);                                    
