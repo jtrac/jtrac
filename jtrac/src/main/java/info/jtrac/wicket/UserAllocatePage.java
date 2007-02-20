@@ -81,14 +81,18 @@ public class UserAllocatePage extends BasePage {
                     final UserSpaceRole usr = (UserSpaceRole) listItem.getModelObject();
                     listItem.add(new Label("space.name", new PropertyModel(usr, "space.name")));                    
                     listItem.add(new Label("roleKey", new PropertyModel(usr, "roleKey")));
-                    listItem.add(new Button("deallocate") {
+                    Button deallocate = new Button("deallocate") {
                         @Override
                         protected void onSubmit() {
                             getJtrac().removeUserSpaceRole(usr);
                             SecurityUtils.refreshSecurityContextIfPrincipal(usr.getUser());
                             setResponsePage(new UserAllocatePage(user, previous));
                         }                   
-                    });
+                    };
+                    if(usr.getUser().getId() == 1 && "ROLE_ADMIN".equals(usr.getRoleKey())) {
+                        deallocate.setEnabled(false);
+                    }
+                    listItem.add(deallocate);
                 }
             });                       
             
