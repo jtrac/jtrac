@@ -16,6 +16,7 @@
 
 package info.jtrac;
 
+import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Config;
 import info.jtrac.domain.Counts;
@@ -47,6 +48,7 @@ public interface Jtrac extends UserDetailsService {
     Item loadItemByRefId(String refId);
     History loadHistory(long id);
     List<Item> findItems(ItemSearch itemSearch);
+    List<AbstractItem> findAllItems();    
     void removeItem(Item item);
     void removeItemItem(ItemItem itemItem);
     //========================================================
@@ -58,8 +60,6 @@ public interface Jtrac extends UserDetailsService {
     int bulkUpdateStatusToOpen(Space space, int status);
     int bulkUpdateRenameSpaceRole(Space space, String oldRoleKey, String newRoleKey);
     int bulkUpdateDeleteSpaceRole(Space space, String roleKey);
-    //========================================================
-    void rebuildIndexes();
     //========================================================
     void storeUser(User user);
     void storeUser(User user, String password, boolean sendNotifications);
@@ -98,6 +98,10 @@ public interface Jtrac extends UserDetailsService {
     Map<String, String> loadAllConfig();
     void storeConfig(Config config);
     String loadConfig(String param); 
+    //========================================================    
+    void rebuildIndexes();
+    void index(AbstractItem item);
+    void clearIndexes();    
     //========================================================
     String getReleaseVersion();
     String getReleaseTimestamp();

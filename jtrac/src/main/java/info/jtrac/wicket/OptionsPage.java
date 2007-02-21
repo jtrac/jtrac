@@ -58,6 +58,7 @@ public class OptionsPage extends BasePage {
         
         border.add(new Link("indexes") {
             public void onClick() {
+                setResponsePage(new IndexRebuildPage(false));
             }            
         });        
         

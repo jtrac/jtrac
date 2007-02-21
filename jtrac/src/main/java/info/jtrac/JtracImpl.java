@@ -285,17 +285,7 @@ public class JtracImpl implements Jtrac {
     
     public int bulkUpdateDeleteSpaceRole(Space space, String roleKey) {
         return dao.bulkUpdateDeleteSpaceRole(space, roleKey);
-    }
-    
-    //========================================================
-    
-    public void rebuildIndexes() {
-        indexer.clearIndexes();
-        List<AbstractItem> items = dao.findAllItems();
-        for (AbstractItem item : items) {
-            indexer.index(item);
-        }
-    }
+    }    
     
     // =========  Acegi UserDetailsService implementation ==========
     public UserDetails loadUserByUsername(String loginName) {
@@ -496,6 +486,29 @@ public class JtracImpl implements Jtrac {
             return null;
         }
         return value;
+    }
+    
+    //========================================================
+    
+    public void rebuildIndexes() {
+        indexer.clearIndexes();
+        List<AbstractItem> items = dao.findAllItems();
+        for (AbstractItem item : items) {
+            indexer.index(item);
+        }
+    }
+    
+    public List<AbstractItem> findAllItems() {
+        // this returns all Item and all History records for indexing
+        return dao.findAllItems();
+    }
+    
+    public void clearIndexes() {
+        indexer.clearIndexes();
+    }
+    
+    public void index(AbstractItem item) {
+        indexer.index(item);
     }
     
     //==========================================================================
