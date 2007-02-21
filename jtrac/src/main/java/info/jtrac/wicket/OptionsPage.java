@@ -52,6 +52,7 @@ public class OptionsPage extends BasePage {
         
         border.add(new Link("settings") {
             public void onClick() {
+                setResponsePage(new ConfigListPage(null));
             }            
         });        
         

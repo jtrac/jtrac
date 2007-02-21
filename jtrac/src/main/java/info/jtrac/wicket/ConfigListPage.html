@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title wicket:id="title">title here</title>
+        <link rel="stylesheet" type="text/css" href="resources/jtrac.css"/>
+    </head>
+    <body>
+        <span wicket:id="header"></span>
+        <span wicket:id="border">
+            <div class="heading"><wicket:message key="config_list.configurationSettings"/></div>
+            <table class="jtrac">
+                <tr>
+                    <th><wicket:message key="config_list.parameter"/></th>
+                    <th><wicket:message key="config_list.value"/></th>
+                    <th><wicket:message key="config_list.edit"/></th>
+                    <th><wicket:message key="config_list.description"/></th>
+                </tr>
+                <tr wicket:id="configs">
+                    <td wicket:id="param"></td>
+                    <td wicket:id="value"></td>
+                    <td wicket:id="link" align="center"><a href="#">(+)</a></td>
+                    <td wicket:id="description"></td>                   
+                </tr>
+            </table>
+        </span>
+    </body>
+</html>
