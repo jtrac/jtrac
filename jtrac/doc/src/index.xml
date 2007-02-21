@@ -922,9 +922,8 @@ wrapper.exe -r etc/wrapper.conf
         <sect1 id="roadmap-import">            
             <title>Import from other tools</title>            
             <para>
-                Import from other issue tracking systems (such as BugZilla) to be considered.  The current version has
-                an experimental Excel sheet import feature which you can access from the options screen if you are an
-                admin user.  Once complete, this feature will allow you to import raw data from a spreadsheet, apply any
+                Import from other issue tracking systems (such as BugZilla) to be considered.  Work is in progress
+                and once complete, this feature will allow you to import raw data from a spreadsheet, apply any
                 data cleanup needed, identify and load custom fields / drop down values and finally import the items,
                 creating a new Space and users if required.
             </para>
