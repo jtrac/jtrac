@@ -49,7 +49,7 @@ public class ConfigFormPage extends BasePage {
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(modelObject);
             setModel(model);
             
-            add(new Label("heading", param));
+            add(new Label("heading", localize("config." + param)));
             add(new Label("param", param));
 
             add(new TextField("value"));
