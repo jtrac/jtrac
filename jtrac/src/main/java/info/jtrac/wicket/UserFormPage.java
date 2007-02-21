@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.springframework.util.StringUtils;
 import wicket.Component;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
@@ -180,6 +181,9 @@ public class UserFormPage extends BasePage {
                 getJtrac().storeUser(user, model.getPassword(), model.isSendNotifications());
             } else {
                 getJtrac().storeUser(user);
+            }
+            if(user.getLocale()!= null && !getLocale().getDisplayName().equals(user.getLocale())) {
+                getSession().setLocale(StringUtils.parseLocaleString(user.getLocale()));
             }
             SecurityUtils.refreshSecurityContextIfPrincipal(user);
             if(previous == null) {

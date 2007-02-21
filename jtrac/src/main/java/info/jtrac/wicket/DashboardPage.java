@@ -23,6 +23,7 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.SecurityUtils;
 import java.util.Collections;
+import org.springframework.util.StringUtils;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
@@ -44,6 +45,9 @@ public class DashboardPage extends BasePage {
         add(new HeaderPanel(null));
                 
         final User user = SecurityUtils.getPrincipal();
+        if(user.getLocale()!= null && !getLocale().getDisplayName().equals(user.getLocale())) {
+            getSession().setLocale(StringUtils.parseLocaleString(user.getLocale()));
+        }
         final CountsHolder countsHolder = getJtrac().loadCountsForUser(user);        
         
         WebMarkupContainer hideLogged = new WebMarkupContainer("hideLogged");
