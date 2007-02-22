@@ -31,6 +31,7 @@ import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Fragment;
+import wicket.model.LoadableDetachableModel;
 import wicket.model.PropertyModel;
 
 /**
@@ -39,7 +40,7 @@ import wicket.model.PropertyModel;
 public class ItemListPage extends BasePage {      
     
     private long selectedItemId;    
-
+    
     public void setSelectedItemId(long selectedItemId) {
         this.selectedItemId = selectedItemId;
     }    
@@ -63,7 +64,12 @@ public class ItemListPage extends BasePage {
         
         add(new HeaderPanel(null));
         
-        final List<Item> items = getJtrac().findItems(itemSearch);
+        LoadableDetachableModel itemListModel = new LoadableDetachableModel() {
+            protected Object load() {
+                logger.debug("loading item list from database");
+                return getJtrac().findItems(itemSearch);
+            }
+        };        
         
         //======================== PAGINATION ===================================
         
@@ -206,7 +212,7 @@ public class ItemListPage extends BasePage {
         
         final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
         
-        ListView itemList = new ListView("itemList", items) {
+        ListView itemList = new ListView("itemList", itemListModel) {
             protected void populateItem(ListItem listItem) { 
                 // cast to AbstactItem - show history may be == true
                 final AbstractItem item = (AbstractItem) listItem.getModelObject(); 

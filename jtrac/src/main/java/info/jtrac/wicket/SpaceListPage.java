@@ -17,12 +17,12 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Space;
-import java.util.List;
 import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
+import wicket.model.LoadableDetachableModel;
 import wicket.model.PropertyModel;
 
 /**
@@ -50,11 +50,16 @@ public class SpaceListPage extends BasePage {
             }            
         });
         
-        List<Space> spaces = getJtrac().findAllSpaces();
+        LoadableDetachableModel spaceListModel = new LoadableDetachableModel() {
+            protected Object load() {
+                logger.debug("loading space list from database");
+                return getJtrac().findAllSpaces();
+            }
+        };
         
         final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
         
-        ListView listView = new ListView("spaces", spaces) {
+        ListView listView = new ListView("spaces", spaceListModel) {
             protected void populateItem(ListItem listItem) {                
                 final Space space = (Space) listItem.getModelObject();                
                 if (selectedSpaceId == space.getId()) {

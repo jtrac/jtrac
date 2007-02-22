@@ -19,12 +19,12 @@ package info.jtrac.wicket;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import java.util.ArrayList;
-import java.util.List;
 import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
+import wicket.model.LoadableDetachableModel;
 import wicket.model.PropertyModel;
 
 /**
@@ -52,11 +52,16 @@ public class UserListPage extends BasePage {
             }            
         });
         
-        List<User> users = getJtrac().findAllUsers();
+        LoadableDetachableModel userListModel = new LoadableDetachableModel() {
+            protected Object load() {
+                logger.debug("loading user list from database");
+                return getJtrac().findAllUsers();
+            }
+        };        
         
         final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
         
-        ListView listView = new ListView("users", users) {
+        ListView listView = new ListView("users", userListModel) {
             protected void populateItem(ListItem listItem) {                
                 final User user = (User) listItem.getModelObject();                
                 if (selectedUserId == user.getId()) {
