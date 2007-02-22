@@ -19,7 +19,6 @@ package info.jtrac.wicket;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
-import info.jtrac.util.SecurityUtils;
 import java.util.ArrayList;
 import java.util.List;
 import wicket.behavior.SimpleAttributeModifier;
@@ -82,7 +81,7 @@ public class SpaceAllocatePage extends BasePage {
                             // avoid lazy loading problem
                             UserSpaceRole temp = getJtrac().loadUserSpaceRole(usr.getId());
                             getJtrac().removeUserSpaceRole(temp);
-                            SecurityUtils.refreshSecurityContextIfPrincipal(temp.getUser());
+                            refreshPrincipal(temp.getUser());
                             setResponsePage(new SpaceAllocatePage(space, previous));
                         }                   
                     });
@@ -127,7 +126,7 @@ public class SpaceAllocatePage extends BasePage {
                     // avoid lazy init problem
                     User temp = getJtrac().loadUser(usr.getUser().getId());
                     getJtrac().storeUserSpaceRole(temp, space, usr.getRoleKey());
-                    SecurityUtils.refreshSecurityContextIfPrincipal(temp);
+                    refreshPrincipal(temp);
                     setResponsePage(new SpaceAllocatePage(space, previous));
                 }                   
             });            

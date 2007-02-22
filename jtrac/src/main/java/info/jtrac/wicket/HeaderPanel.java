@@ -19,7 +19,6 @@ package info.jtrac.wicket;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
-import info.jtrac.util.SecurityUtils;
 import java.util.ArrayList;
 import java.util.List;
 import wicket.markup.html.basic.Label;
@@ -33,7 +32,7 @@ public class HeaderPanel extends BasePanel {
     public HeaderPanel(final Space space) {
         super("header");
         
-        final User user = SecurityUtils.getPrincipal();
+        final User user = getPrincipal();
         
         add(new Link("dashboard") {
             public void onClick() {

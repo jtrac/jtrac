@@ -19,7 +19,6 @@ package info.jtrac.wicket;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
-import info.jtrac.util.SecurityUtils;
 import java.util.ArrayList;
 import java.util.List;
 import wicket.ajax.AjaxRequestTarget;
@@ -85,7 +84,7 @@ public class UserAllocatePage extends BasePage {
                         @Override
                         protected void onSubmit() {
                             getJtrac().removeUserSpaceRole(usr);
-                            SecurityUtils.refreshSecurityContextIfPrincipal(usr.getUser());
+                            refreshPrincipal(usr.getUser());
                             setResponsePage(new UserAllocatePage(user, previous));
                         }                   
                     };
@@ -124,7 +123,7 @@ public class UserAllocatePage extends BasePage {
                         return;
                     }
                     getJtrac().storeUserSpaceRole(user, usr.getSpace(), usr.getRoleKey());
-                    SecurityUtils.refreshSecurityContextIfPrincipal(user);
+                    refreshPrincipal(user);
                     setResponsePage(new UserAllocatePage(user, previous));
                 }                   
             };
@@ -160,7 +159,7 @@ public class UserAllocatePage extends BasePage {
                     @Override
                     protected void onSubmit() {     
                         getJtrac().storeUserSpaceRole(user, null, "ROLE_ADMIN");
-                        SecurityUtils.refreshSecurityContextIfPrincipal(user);
+                        refreshPrincipal(user);
                         setResponsePage(new UserAllocatePage(user, previous));
                     }                   
                 });

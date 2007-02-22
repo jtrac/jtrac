@@ -25,7 +25,6 @@ import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.AttachmentUtils;
-import info.jtrac.util.SecurityUtils;
 import info.jtrac.util.UserUtils;
 import java.io.File;
 import java.util.List;
@@ -138,7 +137,7 @@ public class ItemFormPage extends BasePage {
                 attachment.setFileName(fileName);
             }
             Item item = (Item) getModelObject();
-            User user = SecurityUtils.getPrincipal();
+            User user = getPrincipal();
             item.setLoggedBy(user);
             item.setStatus(State.OPEN);
             getJtrac().storeItem(item, attachment);

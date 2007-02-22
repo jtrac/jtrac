@@ -72,7 +72,7 @@ public class LoginPage extends WebPage {
         protected void onSubmit() {                    
             LoginFormModel model = (LoginFormModel) getModelObject();
             Jtrac jtrac = ((JtracApplication) getApplication()).getJtrac();
-            User user = jtrac.loadUser(model.getLoginName());
+            User user = (User) jtrac.loadUserByUsername(model.getLoginName());
             if(user != null) {
                 if (user.getPassword().equals(jtrac.encodeClearText(model.getPassword()))) {
                     ((JtracSession) getSession()).setUser(user);

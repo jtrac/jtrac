@@ -21,15 +21,12 @@ import info.jtrac.domain.CountsHolder;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
-import info.jtrac.util.SecurityUtils;
 import java.util.Collections;
-import org.springframework.util.StringUtils;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
-import wicket.markup.html.panel.Fragment;
 import wicket.model.PropertyModel;
 
 /**
@@ -44,10 +41,8 @@ public class DashboardPage extends BasePage {
         
         add(new HeaderPanel(null));
                 
-        final User user = SecurityUtils.getPrincipal();
-        if(user.getLocale()!= null && !getLocale().getDisplayName().equals(user.getLocale())) {
-            getSession().setLocale(StringUtils.parseLocaleString(user.getLocale()));
-        }
+        final User user = getPrincipal();
+        
         final CountsHolder countsHolder = getJtrac().loadCountsForUser(user);        
         
         WebMarkupContainer hideLogged = new WebMarkupContainer("hideLogged");

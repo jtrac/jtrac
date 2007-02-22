@@ -21,7 +21,6 @@ import info.jtrac.domain.Role;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.WorkflowRenderer;
-import info.jtrac.util.SecurityUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -215,7 +214,7 @@ public class SpacePermissionsPage extends BasePage {
                 protected void onSubmit() {
                     getJtrac().storeSpace(space);
                     // current user may be allocated to this space, and e.g. name could have changed
-                    SecurityUtils.refreshSecurityContext();
+                    refreshPrincipal();
                     if(previous == null) {
                         setResponsePage(new OptionsPage());
                     } else {

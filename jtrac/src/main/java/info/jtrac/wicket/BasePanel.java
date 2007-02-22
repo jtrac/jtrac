@@ -17,6 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
+import info.jtrac.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import wicket.markup.html.panel.Panel;
@@ -32,6 +33,10 @@ public class BasePanel extends Panel {
     protected Jtrac getJtrac() {
         return ((JtracApplication) getApplication()).getJtrac();
     }
+    
+    protected User getPrincipal() {
+        return ((JtracSession) getSession()).getUser();
+    }    
     
     public BasePanel(String id) {
         super(id);

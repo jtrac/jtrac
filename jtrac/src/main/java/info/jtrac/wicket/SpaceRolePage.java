@@ -17,9 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Space;
-import info.jtrac.domain.State;
 import info.jtrac.domain.User;
-import info.jtrac.util.SecurityUtils;
 import info.jtrac.util.ValidationUtils;
 import java.io.Serializable;
 import java.util.List;
@@ -86,7 +84,7 @@ public class SpaceRolePage extends BasePage {
                                 // synchronize metadata else when we save again we get Stale Object Exception
                                 space.setMetadata(getJtrac().loadMetadata(space.getMetadata().getId()));
                                 // current user may be allocated to this space with this role - refresh
-                                SecurityUtils.refreshSecurityContext();                                
+                                refreshPrincipal();                                
                                 setResponsePage(new SpacePermissionsPage(space, previous));
                             }                        
                         };
@@ -161,7 +159,7 @@ public class SpaceRolePage extends BasePage {
                             // synchronize metadata else when we save again we get Stale Object Exception
                             space.setMetadata(getJtrac().loadMetadata(space.getMetadata().getId()));
                             // current user may be allocated to this space with this role - refresh
-                            SecurityUtils.refreshSecurityContext();                                
+                            refreshPrincipal();                                
                             setResponsePage(new SpacePermissionsPage(space, previous));
                         }                        
                     };

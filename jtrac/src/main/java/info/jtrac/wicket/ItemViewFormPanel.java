@@ -26,7 +26,6 @@ import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.AttachmentUtils;
-import info.jtrac.util.SecurityUtils;
 import info.jtrac.util.UserUtils;
 import java.io.File;
 import java.util.ArrayList;
@@ -46,7 +45,6 @@ import wicket.markup.html.form.upload.FileUploadField;
 import wicket.markup.html.form.validation.AbstractValidator;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.BoundCompoundPropertyModel;
-import wicket.model.Model;
 
 /**
  * Form to update history for item
@@ -83,7 +81,7 @@ public class ItemViewFormPanel extends BasePanel {
             setModel(model);
             add(new TextArea("comment").setRequired(true).add(new ErrorHighlighter()));
             // custom fields ===================================================
-            User user = SecurityUtils.getPrincipal();
+            User user = getPrincipal();
             List<Field> fields = item.getEditableFieldList(user);                   
             add(new CustomFieldsFormPanel("fields", model, fields));
             // =================================================================
@@ -182,7 +180,7 @@ public class ItemViewFormPanel extends BasePanel {
                 attachment.setFileName(fileName);
             }
             History history = (History) getModelObject();                                  
-            User user = SecurityUtils.getPrincipal();
+            User user = getPrincipal();
             history.setLoggedBy(user);
             Item item = getJtrac().loadItem(itemId);
             getJtrac().storeHistoryForItem(item, history, attachment);

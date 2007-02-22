@@ -17,6 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
+import info.jtrac.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import wicket.markup.html.WebPage;
@@ -39,6 +40,26 @@ public abstract class BasePage extends WebPage {
     protected Jtrac getJtrac() {
         return ((JtracApplication) getApplication()).getJtrac();
     }          
+    
+    protected User getPrincipal() {
+        return ((JtracSession) getSession()).getUser();
+    }
+    
+    /**
+     * conditional flip of session if same user id
+     */
+    protected void refreshPrincipal(User user) {
+        if(user.getId() == getPrincipal().getId()) {
+            refreshPrincipal();
+        }
+    }
+    
+    protected void refreshPrincipal() {
+        logger.debug("refreshing principal");
+        User temp = getJtrac().loadUser(getPrincipal().getId());
+        // loadUserByUsername forces hibernate eager load
+        ((JtracSession) getSession()).setUser((User) getJtrac().loadUserByUsername(temp.getLoginName()));        
+    }    
     
     public BasePage(String title) {
         add(new Label("title", title));

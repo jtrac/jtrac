@@ -20,7 +20,6 @@ import info.jtrac.domain.Field;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
-import info.jtrac.util.SecurityUtils;
 import info.jtrac.util.UserUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -181,7 +180,7 @@ public class ItemSearchFormPage extends BasePage {
             // =================================================================
             List<User> users = null;
             if (itemSearch.getSpace() == null) {
-                User user = SecurityUtils.getPrincipal();
+                User user = getPrincipal();
                 users = getJtrac().findUsersForUser(user);
             } else {
                 users = getJtrac().findUsersForSpace(itemSearch.getSpace().getId());

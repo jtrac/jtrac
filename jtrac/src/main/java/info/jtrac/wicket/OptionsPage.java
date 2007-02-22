@@ -16,7 +16,6 @@
 
 package info.jtrac.wicket;
 
-import info.jtrac.util.SecurityUtils;
 import wicket.markup.html.link.Link;
 
 /**
@@ -32,7 +31,7 @@ public class OptionsPage extends BasePage {
         
         border.add(new Link("profile") {
             public void onClick() {
-                UserFormPage page = new UserFormPage(SecurityUtils.getPrincipal());
+                UserFormPage page = new UserFormPage(getPrincipal());
                 page.setPrevious(OptionsPage.this);
                 setResponsePage(page);
             }            
