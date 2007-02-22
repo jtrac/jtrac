@@ -31,6 +31,7 @@ public class LogoutPage extends WebPage {
     protected final Log logger = LogFactory.getLog(getClass());
     
     public LogoutPage() {
+        add(new Label("title", getLocalizer().getString("logout.title", null)));
         add(new Link("home") {
             public void onClick() {
                 setResponsePage(DashboardPage.class);

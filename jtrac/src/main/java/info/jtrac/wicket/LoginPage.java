@@ -20,6 +20,7 @@ import info.jtrac.Jtrac;
 import info.jtrac.Version;
 import info.jtrac.domain.User;
 import java.io.Serializable;
+import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import wicket.Component;
@@ -42,6 +43,7 @@ public class LoginPage extends WebPage {
     protected final Log logger = LogFactory.getLog(getClass());
     
     public LoginPage() {
+        add(new Label("title", getLocalizer().getString("login.title", null)));
         add(new Link("home") {
             public void onClick() {
             }
@@ -59,34 +61,51 @@ public class LoginPage extends WebPage {
             final TextField loginName = new TextField("loginName");
             loginName.setOutputMarkupId(true);
             add(loginName);
+            final PasswordTextField password = new PasswordTextField("password");
+            password.setRequired(false);
+            password.setOutputMarkupId(true);
+            add(password);
+            // set focus on right textbox
             getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
                 public Object getObject(Component c) {
-                    return "document.getElementById('" + loginName.getMarkupId() + "').focus()";
+                    String markupId;
+                    if(loginName.getConvertedInput() == null) {
+                        markupId = loginName.getMarkupId();
+                    } else {
+                        markupId = password.getMarkupId();
+                    }
+                    return "document.getElementById('" + markupId + "').focus()";
                 }
             });            
-            add(new PasswordTextField("password").setRequired(false));
             add(new CheckBox("rememberMe"));
         }
                 
         @Override
         protected void onSubmit() {                    
             LoginFormModel model = (LoginFormModel) getModelObject();
+            if(model.getLoginName() == null || model.getPassword() == null) {
+                logger.debug("login failed login name and password are mandatory");
+                error(getLocalizer().getString("login.error", null));
+                return;
+            }
             Jtrac jtrac = ((JtracApplication) getApplication()).getJtrac();
-            User user = (User) jtrac.loadUserByUsername(model.getLoginName());
-            if(user != null) {
-                if (user.getPassword().equals(jtrac.encodeClearText(model.getPassword()))) {
-                    ((JtracSession) getSession()).setUser(user);
-                    if (!continueToOriginalDestination()) {
-                        setResponsePage(DashboardPage.class);
-                    } 
-                } else {
-                    logger.debug("login failed - password does not match");
-                    error(getLocalizer().getString("login.error", null));                    
-                }
-            } else {
+            User user = null;
+            try {
+                user = (User) jtrac.loadUserByUsername(model.getLoginName());
+            } catch (UsernameNotFoundException e) {
                 logger.debug("login failed - user not found");
-                error(getLocalizer().getString("login.error", null));                
-            }          
+                error(getLocalizer().getString("login.error", null));
+                return;
+            }            
+            if (user.getPassword().equals(jtrac.encodeClearText(model.getPassword()))) {
+                ((JtracSession) getSession()).setUser(user);
+                if (!continueToOriginalDestination()) {
+                    setResponsePage(DashboardPage.class);
+                } 
+            } else {
+                logger.debug("login failed - password does not match");
+                error(getLocalizer().getString("login.error", null));                    
+            }                  
         }     
                         
     }     
