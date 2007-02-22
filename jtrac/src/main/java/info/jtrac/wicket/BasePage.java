@@ -17,6 +17,8 @@
 package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.border.Border;
@@ -29,6 +31,8 @@ import wicket.model.StringResourceModel;
  * pages which is a wicket border
  */
 public abstract class BasePage extends WebPage {
+    
+    protected final Log logger = LogFactory.getLog(getClass());
     
     protected Border border;        
     

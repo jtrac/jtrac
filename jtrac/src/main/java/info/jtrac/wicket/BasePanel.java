@@ -17,6 +17,8 @@
 package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import wicket.markup.html.panel.Panel;
 
 /**
@@ -24,6 +26,8 @@ import wicket.markup.html.panel.Panel;
  * a way to access the spring managed service layer
  */
 public class BasePanel extends Panel {
+    
+    protected final Log logger = LogFactory.getLog(getClass());
     
     protected Jtrac getJtrac() {
         return ((JtracApplication) getApplication()).getJtrac();
