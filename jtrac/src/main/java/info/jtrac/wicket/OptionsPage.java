@@ -65,7 +65,19 @@ public class OptionsPage extends BasePage {
         border.add(new Link("import") {
             public void onClick() {
             }            
-        }.setVisible(false));        
+        }.setVisible(false));   
+        
+        border.add(new Link("login") {
+            public void onClick() {
+                setResponsePage(new LoginPage());
+            }            
+        });  
+        
+        border.add(new Link("logout") {
+            public void onClick() {
+                setResponsePage(new LogoutPage());
+            }            
+        });         
         
     }
     

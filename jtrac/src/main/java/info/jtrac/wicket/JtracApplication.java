@@ -20,8 +20,13 @@ import info.jtrac.Jtrac;
 import java.util.Locale;
 import javax.servlet.ServletContext;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.MessageSource;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import wicket.Component;
+import wicket.ISessionFactory;
+import wicket.RestartResponseAtInterceptPageException;
+import wicket.Session;
+import wicket.authorization.Action;
+import wicket.authorization.IAuthorizationStrategy;
 import wicket.markup.parser.filter.WicketMessageTagHandler;
 import wicket.protocol.http.WebApplication;
 import wicket.resource.loader.IStringResourceLoader;
@@ -68,15 +73,33 @@ public class JtracApplication extends WebApplication {
 
         WicketMessageTagHandler.enable = true;
         
-//        getMarkupSettings().setMarkupParserFactory(new MarkupParserFactory(this) {
-//            @Override
-//            protected void initMarkupFilters(final MarkupParser parser) {
-//                super.initMarkupFilters(parser);
-//                parser.registerMarkupFilter(new WicketMessageTagHandler());
-//            }            
-//        });
+        getPageSettings().setMaxPageVersions(3);
         
-    }    
+        getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy() {
+            public boolean isActionAuthorized(Component c, Action a) {
+                return true;
+            }
+            public boolean isInstantiationAuthorized(Class clazz) {
+                if (BasePage.class.isAssignableFrom(clazz)) {
+                    if (((JtracSession) Session.get()).isAuthenticated()) {
+                        return true;
+                    }
+                    throw new RestartResponseAtInterceptPageException(LoginPage.class);
+                }
+                return true;
+            }
+        });       
+        
+    }   
+    
+    @Override
+    public ISessionFactory getSessionFactory() {
+        return new ISessionFactory() {
+            public Session newSession() {
+                return new JtracSession(JtracApplication.this);
+            }
+        };      
+    }
     
     public Class getHomePage() {
         return DashboardPage.class;

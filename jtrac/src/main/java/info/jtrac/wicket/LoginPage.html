@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <title><wicket:message key="login.title"/></title>
+        <link rel="stylesheet" type="text/css" href="resources/jtrac.css"/>
+    </head>
+    <body>
+        <table width="100%" class="jtrac alt">
+            <tr>
+                <td wicket:id="home"><a href="#"><wicket:message key="login.home"/></a></td>
+                <td align="right"></td>
+            </tr>
+        </table>             
+        <form wicket:id="form">
+            <div style="padding-bottom:2em"></div>
+            <span wicket:id="feedback"></span>
+            <table class="jtrac">
+                <tr>
+                    <td class="label"><wicket:message key="login.loginName"/></td>
+                    <td colspan="2"><input wicket:id="loginName" size="35"/></td>
+                </tr>
+                <tr>
+                    <td class="label"><wicket:message key="login.password"/></td>
+                    <td><input type="password" wicket:id="password" size="20"/></td>
+                    <td align="right"><input type="submit" wicket:message="value=login.submit"/>
+                    </td>
+                </tr> 
+                <tr>
+                    <td/>
+                    <td colspan="2" align="right">
+                        <wicket:message key="login.rememberMe"/>
+                        <input type="checkbox" wicket:id="rememberMe"/>
+                    </td>
+                </tr>                                              
+            </table>
+        </form>
+        <table width="100%" class="jtrac">
+            <tr class="alt">
+                <td align="right">
+                    <i>powered by <a href="http://jtrac.info" target="_blank">JTrac</a> <span wicket:id="version"></span></i>
+                </td>
+            </tr>
+        </table>            
+    </body>
+</html>

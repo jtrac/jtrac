@@ -92,7 +92,8 @@ public class HeaderPanel extends BasePanel {
             }); 
             add(new Link("logout") {
                 public void onClick() {
-
+                    getSession().invalidate();
+                    setResponsePage(LogoutPage.class);
                 }            
             });
             add(new Label("login", "").setVisible(false));

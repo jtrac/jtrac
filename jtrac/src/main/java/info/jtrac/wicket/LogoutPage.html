@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <title><wicket:message key="logout.title"/></title>
+        <link rel="stylesheet" type="text/css" href="resources/jtrac.css"/>
+    </head>
+    <body>
+        <table width="100%" class="jtrac alt">
+            <tr>
+                <td wicket:id="home"><a href="#"><wicket:message key="logout.home"/></a></td>
+                <td align="right"></td>
+            </tr>
+        </table> 
+        <div style="padding-bottom:2em"></div>
+        <table class="jtrac">
+            <tr>
+                <td class="info"><wicket:message key="logout.message"/></td>
+            </tr>
+            <tr>
+                <td><br/></td>
+            </tr>
+            <tr>
+                <td class="info" align="center" wicket:id="login"><a href="#"><wicket:message key="logout.login"/></a></td>
+            </tr>
+        </table>
+        <div style="padding-bottom:2em"></div>
+        <table width="100%" class="jtrac">
+            <tr class="alt">
+                <td align="right">
+                    <i>powered by <a href="http://jtrac.info" target="_blank">JTrac</a> <span wicket:id="version"></span></i>
+                </td>
+            </tr>
+        </table>            
+    </body>
+</html>
