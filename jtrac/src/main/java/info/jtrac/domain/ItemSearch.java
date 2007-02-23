@@ -399,26 +399,7 @@ public class ItemSearch implements Serializable {
     
     public void toggleSortDirection() {
         sortDescending = !sortDescending;
-    }
-    
-    public int getPageCount() {        
-        int pageCount = 0;       
-        if (pageSize != -1) {
-            pageCount = (int) Math.ceil((double) resultCount / pageSize);
-        }
-        if(pageCount == 0) {
-            pageCount = 1;
-        }
-        return pageCount;
-    }
-    
-    public boolean isFirstPage() {
-        return currentPage == 0;
-    }
-    
-    public boolean isLastPage() {
-        return currentPage == getPageCount() - 1;
-    }    
+    }      
     
     //=====================================================================
     

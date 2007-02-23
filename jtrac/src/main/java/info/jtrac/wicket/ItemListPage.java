@@ -73,109 +73,93 @@ public class ItemListPage extends BasePage {
             }
         };        
         
-        // ensure that wicket model "attach" is called so itemSearch is properly
-        // initialized above
+        // hack - ensure that wicket model "attach" happens NOW so that
+        // itemSearch is properly initialized in the LoadableDetachableModel#load() above
         itemListModel.getObject(null);
         
-        //======================== PAGINATION ==================================
-        // on the pagination components below, isVisible() methods have been 
-        // carefully overridden to dynamically hide / show components 
-        // but ensure lazy loading
+        //======================== PAGINATION ==================================                                                   
+        
+        int pageCount = 1;
+        int pageSize = itemSearch.getPageSize();
+        long resultCount = itemSearch.getResultCount();
+        if (pageSize != -1) {
+            pageCount = (int) Math.ceil((double) resultCount / pageSize);
+        }        
+        final int currentPage = itemSearch.getCurrentPage();
         
         Link link = new Link("count") {
             public void onClick() {                
                 setResponsePage(new ItemSearchFormPage(itemSearch));
             }
         };        
-        link.add(new Label("count", new PropertyModel(itemSearch, "resultCount")));        
-        border.add(link);                                             
+        link.add(new Label("count", resultCount + ""));        
+        border.add(link);          
         
-        WebMarkupContainer pagination = new WebMarkupContainer("pagination") {
-            @Override
-            public boolean isVisible() {
-                return itemSearch.getPageCount() > 1;
-            }            
-        };
-                
-        final int currentPage = itemSearch.getCurrentPage();                        
+        WebMarkupContainer pagination = new WebMarkupContainer("pagination");                                                        
+        
+        if(pageCount > 1) {        
+            Link prevOn = new Link("prevOn") {
+                public void onClick() {
+                    itemSearch.setCurrentPage(currentPage - 1);
+                    setResponsePage(new ItemListPage(itemSearch));
+                }            
+            };
+            prevOn.add(new Label("prevOn", "<<"));
+            Label prevOff = new Label("prevOff", "<<");
+            if(currentPage == 0) {
+                prevOn.setVisible(false);
+            } else {
+                prevOff.setVisible(false);
+            }
+            pagination.add(prevOn);
+            pagination.add(prevOff);
 
-        AbstractReadOnlyModel pageNumbersModel = new AbstractReadOnlyModel() {            
-            public Object getObject(Component c) {
-                int pageCount = itemSearch.getPageCount();                
-                List<Integer> pageNumbers = new ArrayList<Integer>(pageCount);        
-                for(int i = 0; i < pageCount; i++) {
-                    pageNumbers.add(new Integer(i));
+            List<Integer> pageNumbers = new ArrayList<Integer>(pageCount);        
+            for(int i = 0; i < pageCount; i++) {
+                pageNumbers.add(new Integer(i));
+            }            
+            
+            ListView pages = new ListView("pages", pageNumbers) {
+                protected void populateItem(ListItem listItem) {
+                    final Integer i = (Integer) listItem.getModelObject();
+                    String pageNumber = i + 1 + "";
+                    Link pageOn = new Link("pageOn") {
+                        public void onClick() {
+                            itemSearch.setCurrentPage(i);
+                            setResponsePage(new ItemListPage(itemSearch));
+                        }                   
+                    };
+                    pageOn.add(new Label("pageOn", pageNumber));
+                    Label pageOff = new Label("pageOff", pageNumber);
+                    if(i == currentPage) {
+                        pageOn.setVisible(false);
+                    } else {
+                        pageOff.setVisible(false);
+                    }
+                    listItem.add(pageOn);
+                    listItem.add(pageOff);
                 }
-                return pageNumbers;
-            }
-        };
+            };                
+            pagination.add(pages);            
 
-        Link prevOn = new Link("prevOn") {
-            public void onClick() {
-                itemSearch.setCurrentPage(currentPage - 1);
-                setResponsePage(new ItemListPage(itemSearch));
-            } 
-            @Override
-            public boolean isVisible() {
-                return !itemSearch.isFirstPage();
-            }             
-        };
-        prevOn.add(new Label("prevOn", "<<"));
-        Label prevOff = new Label("prevOff", "<<") {
-            @Override
-            public boolean isVisible() {
-                return itemSearch.isFirstPage();
-            }             
-        };          
-        pagination.add(prevOn);
-        pagination.add(prevOff);
-
-        ListView pages = new ListView("pages", pageNumbersModel) {
-            protected void populateItem(ListItem listItem) {
-                final Integer i = (Integer) listItem.getModelObject();
-                String pageNumber = i + 1 + "";
-                Link pageOn = new Link("pageOn") {
-                    public void onClick() {
-                        itemSearch.setCurrentPage(i);
-                        setResponsePage(new ItemListPage(itemSearch));
-                    } 
-                    @Override
-                    public boolean isVisible() {
-                        return i != itemSearch.getCurrentPage();
-                    }                    
-                };
-                pageOn.add(new Label("pageOn", pageNumber));
-                Label pageOff = new Label("pageOff", pageNumber) {
-                    @Override
-                    public boolean isVisible() {
-                        return i == itemSearch.getCurrentPage();
-                    }                     
-                };
-                listItem.add(pageOn);
-                listItem.add(pageOff);
+            Link nextOn = new Link("nextOn") {
+                public void onClick() {
+                    itemSearch.setCurrentPage(currentPage + 1);
+                    setResponsePage(new ItemListPage(itemSearch));
+                }
+            };
+            nextOn.add(new Label("nextOn", ">>"));
+            Label nextOff = new Label("nextOff", ">>");
+            if(currentPage == pageCount - 1) {
+                nextOn.setVisible(false);
+            } else {
+                nextOff.setVisible(false);
             }
-        };                
-        pagination.add(pages);            
-        
-        Link nextOn = new Link("nextOn") {
-            public void onClick() {
-                itemSearch.setCurrentPage(currentPage + 1);
-                setResponsePage(new ItemListPage(itemSearch));
-            }
-            @Override
-            public boolean isVisible() {
-                return !itemSearch.isLastPage();
-            }
-        };
-        nextOn.add(new Label("nextOn", ">>"));
-        Label nextOff = new Label("nextOff", ">>") {
-            @Override
-            public boolean isVisible() {
-                return itemSearch.isLastPage();
-            }            
-        };
-        pagination.add(nextOn);
-        pagination.add(nextOff);            
+            pagination.add(nextOn);
+            pagination.add(nextOff);
+        } else { // if pageCount == 1
+            pagination.setVisible(false);
+        }
         
         border.add(pagination);
         
