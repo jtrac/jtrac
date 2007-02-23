@@ -18,6 +18,7 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.User;
 import org.springframework.util.StringUtils;
+import wicket.Request;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebSession;
 
@@ -28,8 +29,8 @@ public class JtracSession extends WebSession {
     
     private User user;
     
-    public JtracSession(final WebApplication application) {
-        super(application);
+    public JtracSession(final WebApplication application, Request request) {
+        super(application, request);
     }
 
     public void setUser(User user) {

@@ -82,7 +82,7 @@ public class UserAllocatePage extends BasePage {
                     listItem.add(new Label("roleKey", new PropertyModel(usr, "roleKey")));
                     Button deallocate = new Button("deallocate") {
                         @Override
-                        protected void onSubmit() {
+                        public void onSubmit() {
                             getJtrac().removeUserSpaceRole(usr);
                             refreshPrincipal(usr.getUser());
                             setResponsePage(new UserAllocatePage(user, previous));
@@ -117,7 +117,7 @@ public class UserAllocatePage extends BasePage {
             
             final Button allocateButton = new Button("allocate") {
                 @Override
-                protected void onSubmit() {     
+                public void onSubmit() {     
                     UserSpaceRole usr = (UserSpaceRole) UserAllocateForm.this.getModelObject();
                     if(usr.getSpace() == null || usr.getRoleKey() == null) {
                         return;
@@ -157,7 +157,7 @@ public class UserAllocatePage extends BasePage {
             } else {
                 makeAdmin.add(new Button("makeAdmin") {
                     @Override
-                    protected void onSubmit() {     
+                    public void onSubmit() {     
                         getJtrac().storeUserSpaceRole(user, null, "ROLE_ADMIN");
                         refreshPrincipal(user);
                         setResponsePage(new UserAllocatePage(user, previous));

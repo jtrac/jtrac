@@ -60,7 +60,7 @@ public abstract class ConfirmPage extends BasePage {
             add(new Label("warning", warning));
             Button cancel = new Button("cancel") {
                 @Override
-                protected void onSubmit() {
+                public void onSubmit() {
                     setResponsePage(back);
                 }                
             };

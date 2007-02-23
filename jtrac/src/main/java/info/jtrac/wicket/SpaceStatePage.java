@@ -69,7 +69,7 @@ public class SpaceStatePage extends BasePage {
             // delete ==========================================================
             Button delete = new Button("delete") {
                 @Override
-                protected void onSubmit() {
+                public void onSubmit() {
                     int affectedCount = getJtrac().loadCountOfRecordsHavingStatus(space, stateKey);
                     if (affectedCount > 0) {
                         String heading = localize("space_state_delete.confirm") + " : " + stateName;

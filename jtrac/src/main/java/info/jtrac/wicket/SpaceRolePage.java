@@ -68,7 +68,7 @@ public class SpaceRolePage extends BasePage {
             // delete ==========================================================
             Button delete = new Button("delete") {
                 @Override
-                protected void onSubmit() {
+                public void onSubmit() {
                     List<User> users = getJtrac().findUsersWithRoleForSpace(space.getId(), roleKey);
                     int affectedCount = users.size();
                     if (affectedCount > 0) {

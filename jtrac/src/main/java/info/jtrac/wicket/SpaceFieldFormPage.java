@@ -82,7 +82,7 @@ public class SpaceFieldFormPage extends BasePage {
             // delete button only if edit ======================================
             Button delete = new Button("delete") {
                 @Override
-                protected void onSubmit() {
+                public void onSubmit() {
                     int affectedCount = getJtrac().loadCountOfRecordsHavingFieldNotNull(space, field);
                     if (affectedCount > 0) {
                         String heading = localize("space_field_delete.confirm") + " : " + field.getLabel() 
@@ -141,7 +141,7 @@ public class SpaceFieldFormPage extends BasePage {
                         listItem.add(new Label("value", optionsMap.get(key)));
                         listItem.add(new Button("up") {
                             @Override
-                            protected void onSubmit() {                                
+                            public void onSubmit() {                                
                                 int index = options.indexOf(key);
                                 int swapIndex = index - 1;
                                 if (swapIndex < 0) {
@@ -164,7 +164,7 @@ public class SpaceFieldFormPage extends BasePage {
                         });
                         listItem.add(new Button("down") {
                             @Override
-                            protected void onSubmit() {
+                            public void onSubmit() {
                                 int index = options.indexOf(key);
                                 int swapIndex = index + 1;
                                 if (swapIndex == options.size() ) {
@@ -183,7 +183,7 @@ public class SpaceFieldFormPage extends BasePage {
                         });
                         listItem.add(new Button("edit") {
                             @Override
-                            protected void onSubmit() {     
+                            public void onSubmit() {    
                                 setResponsePage(new SpaceFieldOptionPage(space, field, key, previous));
                             }                       
                         });
@@ -208,7 +208,7 @@ public class SpaceFieldFormPage extends BasePage {
                 hide.add(option);
                 hide.add(new Button("add") {
                     @Override
-                    protected void onSubmit() {
+                    public void onSubmit() {
                         Field f = onSubmitBefore();
                         setResponsePage(new SpaceFieldFormPage(space, f, previous));
                     }                     
@@ -220,7 +220,7 @@ public class SpaceFieldFormPage extends BasePage {
             // done ============================================================
             add(new Button("done") {
                 @Override
-                protected void onSubmit() {
+                public void onSubmit() {
                     Field field = onSubmitBefore();
                     // may be clone, overwrite anyway
                     space.getMetadata().add(field);                    

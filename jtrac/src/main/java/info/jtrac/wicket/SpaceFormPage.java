@@ -85,7 +85,7 @@ public class SpaceFormPage extends BasePage {
             // delete button only if edit ======================================
             Button delete = new Button("delete") {
                 @Override
-                protected void onSubmit() {
+                public void onSubmit() {
                     String heading = localize("space_delete.confirm");
                     String warning = localize("space_delete.line3");
                     String line1 = localize("space_delete.line1");

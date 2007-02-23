@@ -77,7 +77,7 @@ public class SpaceAllocatePage extends BasePage {
                     listItem.add(new Label("roleKey", new PropertyModel(usr, "roleKey")));
                     listItem.add(new Button("deallocate") {
                         @Override
-                        protected void onSubmit() {
+                        public void onSubmit() {
                             // avoid lazy loading problem
                             UserSpaceRole temp = getJtrac().loadUserSpaceRole(usr.getId());
                             getJtrac().removeUserSpaceRole(temp);
@@ -90,7 +90,7 @@ public class SpaceAllocatePage extends BasePage {
             
             add(new Button("createNewUser") {
                 @Override
-                protected void onSubmit() {     
+                public void onSubmit() {     
                     UserFormPage page = new UserFormPage();
                     page.setPrevious(SpaceAllocatePage.this);
                     setResponsePage(page);
@@ -118,7 +118,7 @@ public class SpaceAllocatePage extends BasePage {
             
             add(new Button("allocate") {
                 @Override
-                protected void onSubmit() {     
+                public void onSubmit() {     
                     UserSpaceRole usr = (UserSpaceRole) SpaceAllocateForm.this.getModelObject();
                     if(usr.getUser() == null || usr.getRoleKey() == null) {
                         return;

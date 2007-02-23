@@ -80,7 +80,7 @@ public class SpaceFieldOptionPage extends BasePage {
             // delete ==========================================================
             Button delete = new Button("delete") {
                 @Override
-                protected void onSubmit() {
+                public void onSubmit() {
                     int affectedCount = getJtrac().loadCountOfRecordsHavingFieldWithValue(space, field, Integer.parseInt(key));
                     if (affectedCount > 0) {
                         String heading = localize("space_field_option_delete.confirm") + " : " + field.getCustomValue(key) 

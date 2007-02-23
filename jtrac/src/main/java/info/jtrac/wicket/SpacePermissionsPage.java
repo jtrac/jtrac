@@ -74,14 +74,14 @@ public class SpacePermissionsPage extends BasePage {
             // add state =======================================================
             add(new Button("addState") {
                 @Override
-                protected void onSubmit() {
+                public void onSubmit() {
                     setResponsePage(new SpaceStatePage(space, -1, previous));
                 }
             }); 
             // add state =======================================================
             add(new Button("addRole") {
                 @Override
-                protected void onSubmit() {
+                public void onSubmit() {
                     setResponsePage(new SpaceRolePage(space, null, previous));
                 }
             });
@@ -130,7 +130,7 @@ public class SpacePermissionsPage extends BasePage {
                                 editState.add(rowspan).add(rowClass);
                                 Button editStateButton = new Button("editState") {
                                     @Override
-                                    protected void onSubmit() {
+                                    public void onSubmit() {
                                         setResponsePage(new SpaceStatePage(space, stateKeyRow, previous));
                                     }                                    
                                 };
@@ -146,7 +146,7 @@ public class SpacePermissionsPage extends BasePage {
                             listItem.add(new Label("role", role.getName()));
                             Button editRoleButton = new Button("editRole") {
                                 @Override
-                                protected void onSubmit() {
+                                public void onSubmit() {
                                     setResponsePage(new SpaceRolePage(space, role.getName(), previous));
                                 }                                
                             };
@@ -159,7 +159,7 @@ public class SpacePermissionsPage extends BasePage {
                                     final Integer stateKeyCol = (Integer) listItem.getModelObject();
                                     Button stateButton = new Button("state") {
                                         @Override
-                                        protected void onSubmit() {
+                                        public void onSubmit() {
                                             space.getMetadata().toggleTransition(role.getName(), stateKeyRow, stateKeyCol);
                                             setResponsePage(new SpacePermissionsPage(space, previous));
                                         }                                          
@@ -182,7 +182,7 @@ public class SpacePermissionsPage extends BasePage {
                                     final Field field = (Field) listItem.getModelObject();
                                     Button fieldButton = new Button("field") {
                                         @Override
-                                        protected void onSubmit() {
+                                        public void onSubmit() {
                                             space.getMetadata().switchMask(stateKeyRow, role.getName(), field.getName().getText());
                                             setResponsePage(new SpacePermissionsPage(space, previous));
                                         }                                          
@@ -204,14 +204,14 @@ public class SpacePermissionsPage extends BasePage {
             // back ============================================================
             add(new Button("back") {
                 @Override
-                protected void onSubmit() {
+                public void onSubmit() {
                     setResponsePage(new SpaceFieldListPage(space, null, previous));
                 }
             });            
             // save ============================================================
             add(new Button("save") {
                 @Override
-                protected void onSubmit() {
+                public void onSubmit() {
                     getJtrac().storeSpace(space);
                     // current user may be allocated to this space, and e.g. name could have changed
                     refreshPrincipal();

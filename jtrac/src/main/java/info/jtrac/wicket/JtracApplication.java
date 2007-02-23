@@ -23,11 +23,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import wicket.Component;
 import wicket.ISessionFactory;
+import wicket.Request;
 import wicket.RestartResponseAtInterceptPageException;
 import wicket.Session;
 import wicket.authorization.Action;
 import wicket.authorization.IAuthorizationStrategy;
-import wicket.markup.parser.filter.WicketMessageTagHandler;
 import wicket.protocol.http.WebApplication;
 import wicket.resource.loader.IStringResourceLoader;
 
@@ -54,7 +54,7 @@ public class JtracApplication extends WebApplication {
         super.init();
         
         // get hold of spring managed service layer (see BasePage, BasePanel etc for how it is used)
-        ServletContext sc = getWicketServlet().getServletContext();
+        ServletContext sc = getServletContext();
         applicationContext = WebApplicationContextUtils.getWebApplicationContext(sc);        
         jtrac = (Jtrac) applicationContext.getBean("jtrac");
         
@@ -71,7 +71,16 @@ public class JtracApplication extends WebApplication {
             }
         });                        
 
-        WicketMessageTagHandler.enable = true;
+        // for wicket 1.2.X
+        // WicketMessageTagHandler.enable = true;
+        
+//        getMarkupSettings().setMarkupParserFactory(new MarkupParserFactory(this) {
+//            @Override
+//            protected void initMarkupFilters(final MarkupParser parser) {
+//                super.initMarkupFilters(parser);
+//                parser.registerMarkupFilter(new WicketMessageTagHandler());
+//            }            
+//        });        
         
         getPageSettings().setMaxPageVersions(3);
         
@@ -95,8 +104,8 @@ public class JtracApplication extends WebApplication {
     @Override
     public ISessionFactory getSessionFactory() {
         return new ISessionFactory() {
-            public Session newSession() {
-                return new JtracSession(JtracApplication.this);
+            public Session newSession(Request request) {
+                return new JtracSession(JtracApplication.this, request);
             }
         };      
     }

@@ -82,7 +82,7 @@ public class SpaceFieldListPage extends BasePage {
                     
                     listItem.add(new Button("up") {
                         @Override
-                        protected void onSubmit() {    
+                        public void onSubmit() {    
                             List<Field.Name> fieldOrder = space.getMetadata().getFieldOrder();
                             int index = fieldOrder.indexOf(field.getName());
                             int swapIndex = index - 1;
@@ -102,7 +102,7 @@ public class SpaceFieldListPage extends BasePage {
                     
                     listItem.add(new Button("down") {
                         @Override
-                        protected void onSubmit() {  
+                        public void onSubmit() {  
                             List<Field.Name> fieldOrder = space.getMetadata().getFieldOrder();
                             int index = fieldOrder.indexOf(field.getName());
                             int swapIndex = index + 1;
@@ -134,7 +134,7 @@ public class SpaceFieldListPage extends BasePage {
                     listItem.add(options);
                     listItem.add(new Button("edit") {
                         @Override
-                        protected void onSubmit() {
+                        public void onSubmit() {
                             Field f = field.getClone();
                             setResponsePage(new SpaceFieldFormPage(space, f, previous));
                         }                        
@@ -157,7 +157,7 @@ public class SpaceFieldListPage extends BasePage {
             
             add(new Button("add") {
                 @Override
-                protected void onSubmit() {
+                public void onSubmit() {
                     SpaceFieldListFormModel model = (SpaceFieldListFormModel) SpaceFieldsForm.this.getModelObject();
                     if(model.getType() == null) {
                         return;
@@ -171,7 +171,7 @@ public class SpaceFieldListPage extends BasePage {
             
             add(new Button("back") {
                 @Override
-                protected void onSubmit() {
+                public void onSubmit() {
                     SpaceFormPage page = new SpaceFormPage(space);
                     page.setPrevious(previous);
                     setResponsePage(page);
@@ -180,7 +180,7 @@ public class SpaceFieldListPage extends BasePage {
             
             add(new Button("next") {
                 @Override
-                protected void onSubmit() {
+                public void onSubmit() {
                     setResponsePage(new SpacePermissionsPage(space, previous));
                 }           
             });            

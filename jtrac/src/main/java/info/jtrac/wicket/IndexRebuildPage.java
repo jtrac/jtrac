@@ -61,7 +61,7 @@ public class IndexRebuildPage extends BasePage {
             
             add(new Button("start") {
                 @Override
-                protected void onSubmit() {
+                public void onSubmit() {
                     // hide the button
                     this.setVisible(false);
                     // long running process, use thread
