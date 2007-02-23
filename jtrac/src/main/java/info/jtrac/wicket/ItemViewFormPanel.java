@@ -186,7 +186,7 @@ public class ItemViewFormPanel extends BasePanel {
             getJtrac().storeHistoryForItem(item, history, attachment);
             
             if (attachment != null) {
-                File file = AttachmentUtils.getNewFile(attachment);
+                File file = AttachmentUtils.getFile(attachment);
                 try {
                     fileUpload.writeTo(file);
                 } catch (Exception e) {

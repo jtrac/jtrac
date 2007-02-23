@@ -49,9 +49,9 @@ public class AttachmentUtils {
         return (index != -1 ? path.substring(index + 1) : path);
     }
     
-    public static File getNewFile(Attachment attachment) {
+    public static File getFile(Attachment attachment) {
         return new File(getJtracHome() + "/attachments/" + attachment.getFilePrefix() + "_" + attachment.getFileName());
-    }
+    }        
     
     public static void download(ServletContext servletContext, HttpServletRequest request, HttpServletResponse response) throws Exception {
         

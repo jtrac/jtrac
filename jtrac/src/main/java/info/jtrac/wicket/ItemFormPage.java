@@ -142,7 +142,7 @@ public class ItemFormPage extends BasePage {
             item.setStatus(State.OPEN);
             getJtrac().storeItem(item, attachment);
             if (attachment != null) {
-                File file = AttachmentUtils.getNewFile(attachment);
+                File file = AttachmentUtils.getFile(attachment);
                 try {
                     fileUpload.writeTo(file);
                 } catch (Exception e) {
