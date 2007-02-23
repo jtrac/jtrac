@@ -401,6 +401,22 @@ public class ItemSearch implements Serializable {
         sortDescending = !sortDescending;
     }
     
+    public int getPageCount() {        
+        int pageCount = 0;        
+        if (pageSize != -1) {
+            pageCount = (int) Math.ceil((double) resultCount / pageSize);
+        }
+        return pageCount;
+    }
+    
+    public boolean isFirstPage() {
+        return currentPage == 0;
+    }
+    
+    public boolean isLastPage() {
+        return currentPage == getPageCount() - 1;
+    }    
+    
     //=====================================================================
     
     public void setFields(List<Field> fields) {

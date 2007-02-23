@@ -24,6 +24,7 @@ import info.jtrac.domain.ItemSearch;
 import info.jtrac.util.DateUtils;
 import java.util.ArrayList;
 import java.util.List;
+import wicket.Component;
 import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
@@ -31,6 +32,7 @@ import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Fragment;
+import wicket.model.AbstractReadOnlyModel;
 import wicket.model.LoadableDetachableModel;
 import wicket.model.PropertyModel;
 
@@ -71,89 +73,104 @@ public class ItemListPage extends BasePage {
             }
         };        
         
-        //======================== PAGINATION ===================================
-        
-        long resultCount = itemSearch.getResultCount();
+        //======================== PAGINATION ===================================        
         
         Link link = new Link("count") {
             public void onClick() {                
                 setResponsePage(new ItemSearchFormPage(itemSearch));
             }
-        };
-        link.add(new Label("count", resultCount + ""));        
-        border.add(link);
+        };        
+        link.add(new Label("count", new PropertyModel(itemSearch, "resultCount")));        
+        border.add(link);                                             
         
-        int pageSize = itemSearch.getPageSize();
-        int pageCount = 0;
-        if (pageSize != -1) {
-            pageCount = (int) Math.ceil((double) resultCount / pageSize);
-        }                
-        
-        if(pageCount > 1) {
-            
-            Fragment pagination = new Fragment("pagination", "pagination");
-            final int currentPage = itemSearch.getCurrentPage();
-            
-            List<Integer> pageNumbers = new ArrayList<Integer>(pageCount);        
-            for(int i = 0; i < pageCount; i++) {
-                pageNumbers.add(new Integer(i));
+        WebMarkupContainer pagination = new WebMarkupContainer("pagination") {
+            @Override
+            public boolean isVisible() {
+                return itemSearch.getPageCount() > 1;
             }            
-                        
-            if (currentPage == 0) {
-                pagination.add(new Label("prev", "<<"));
-            } else {
-                Fragment prev = new Fragment("prev", "prev");
-                prev.add(new Link("prev") {
-                    public void onClick() {
-                        itemSearch.setCurrentPage(currentPage - 1);
-                        setResponsePage(new ItemListPage(itemSearch));
-                    }            
-                });
-                pagination.add(prev);
-            }
+        };
+                
+        final int currentPage = itemSearch.getCurrentPage();                        
 
-            ListView pages = new ListView("pages", pageNumbers) {
-                protected void populateItem(ListItem listItem) {
-                    final Integer i = (Integer) listItem.getModelObject();
-                    String pageNumber = i + 1 + "";
-                    if (currentPage == i) {
-                        listItem.add(new Label("page", pageNumber));
-                    } else {
-                        Fragment page = new Fragment("page", "page");
-                        Link link = new Link("page") {
-                            public void onClick() {
-                                itemSearch.setCurrentPage(i);
-                                setResponsePage(new ItemListPage(itemSearch));
-                            }
-                        };
-                        link.add(new Label("page", pageNumber));
-                        page.add(link);
-                        listItem.add(page);
-                    }
-                }            
-            };                
-            pagination.add(pages);            
-                        
-            final int lastPage = pageCount - 1;
-            if (currentPage == lastPage) {
-                pagination.add(new Label("next", ">>"));
-            } else {
-                Fragment next = new Fragment("next", "next");
-
-                next.add(new Link("next") {
-                    public void onClick() {
-                        itemSearch.setCurrentPage(currentPage + 1);
-                        setResponsePage(new ItemListPage(itemSearch));
-                    }            
-                });
-                pagination.add(next);
+        AbstractReadOnlyModel pageNumbersModel = new AbstractReadOnlyModel() {            
+            public Object getObject(Component c) {
+                int pageCount = itemSearch.getPageCount();                
+                List<Integer> pageNumbers = new ArrayList<Integer>(pageCount);        
+                for(int i = 0; i < pageCount; i++) {
+                    pageNumbers.add(new Integer(i));
+                }
+                return pageNumbers;
             }
-            
-            border.add(pagination);
-            
-        } else {
-            border.add(new Label("pagination", ""));
-        }
+        };
+
+        Link prevOn = new Link("prevOn") {
+            public void onClick() {
+                itemSearch.setCurrentPage(currentPage - 1);
+                setResponsePage(new ItemListPage(itemSearch));
+            } 
+            @Override
+            public boolean isVisible() {
+                return !itemSearch.isFirstPage();
+            }             
+        };
+        prevOn.add(new Label("prevOn", "<<"));
+        Label prevOff = new Label("prevOff", "<<") {
+            @Override
+            public boolean isVisible() {
+                return itemSearch.isFirstPage();
+            }             
+        };          
+        pagination.add(prevOn);
+        pagination.add(prevOff);
+
+        ListView pages = new ListView("pages", pageNumbersModel) {
+            protected void populateItem(ListItem listItem) {
+                final Integer i = (Integer) listItem.getModelObject();
+                String pageNumber = i + 1 + "";
+                Link pageOn = new Link("pageOn") {
+                    public void onClick() {
+                        itemSearch.setCurrentPage(i);
+                        setResponsePage(new ItemListPage(itemSearch));
+                    } 
+                    @Override
+                    public boolean isVisible() {
+                        return i != itemSearch.getCurrentPage();
+                    }                    
+                };
+                pageOn.add(new Label("pageOn", pageNumber));
+                Label pageOff = new Label("pageOff", pageNumber) {
+                    @Override
+                    public boolean isVisible() {
+                        return i == itemSearch.getCurrentPage();
+                    }                     
+                };
+                listItem.add(pageOn);
+                listItem.add(pageOff);
+            }            
+        };                
+        pagination.add(pages);            
+        
+        Link nextOn = new Link("nextOn") {
+            public void onClick() {
+                itemSearch.setCurrentPage(currentPage + 1);
+                setResponsePage(new ItemListPage(itemSearch));
+            }
+            @Override
+            public boolean isVisible() {
+                return !itemSearch.isLastPage();
+            }
+        };
+        nextOn.add(new Label("nextOn", ">>"));
+        Label nextOff = new Label("nextOff", ">>") {
+            @Override
+            public boolean isVisible() {
+                return itemSearch.isLastPage();
+            }            
+        };
+        pagination.add(nextOn);
+        pagination.add(nextOff);            
+        
+        border.add(pagination);
         
         //====================== HEADER ========================================
                 
@@ -296,6 +313,5 @@ public class ItemListPage extends BasePage {
         border.add(itemList);        
         
     }
-
     
 }

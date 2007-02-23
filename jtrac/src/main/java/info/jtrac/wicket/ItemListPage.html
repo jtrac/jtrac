@@ -7,8 +7,13 @@
         <span wicket:id="header"></span>
         <span wicket:id="border">
             <div class="space-below">
-                <span wicket:id="count"><a href="#"><span wicket:id="count"></span> <wicket:message key="item_list.recordsFound"/></a></span>
-                &nbsp;<span wicket:id="pagination" class="page-links"></span>
+                <span wicket:id="count"><a href="#"><span wicket:id="count"></span> <wicket:message key="item_list.recordsFound"/></a></span>&nbsp;                
+                <span wicket:id="pagination" class="page-links">
+                    <span wicket:id="prevOn"><a href="#" wicket:id="prevOn"></a></span><span wicket:id="prevOff"></span>&nbsp;
+                    <span wicket:id="pages">
+                        <span wicket:id="pageOn"><a href="#" wicket:id="pageOn"></a></span><span wicket:id="pageOff"></span>&nbsp;
+                    </span><span wicket:id="nextOn"><a href="#" wicket:id="nextOn"></a></span><span wicket:id="nextOff"></span>                    
+                </span>
             </div>
             <table class="jtrac" width="100%">
                 <tr class="sortable">
@@ -33,11 +38,5 @@
                 </tr>
             </table>
         </span>
-        <wicket:fragment wicket:id="pagination">
-            <span wicket:id="prev"></span>&nbsp;&nbsp;<span wicket:id="pages"><span wicket:id="page"></span>&nbsp;&nbsp;</span><span wicket:id="next"></span>        
-        </wicket:fragment>
-        <wicket:fragment id="prev"><span wicket:id="prev"><span wicket:id="prev"><a href="#">&lt;&lt;</a></span></span></wicket:fragment>        
-        <wicket:fragment id="next"><span wicket:id="next"><span wicket:id="next"><a href="#">&gt;&gt;</a></span></span></wicket:fragment>
-        <wicket:fragment id="page"><span wicket:id="page"><span wicket:id="page"><a href="#" wicket:id="page"></a></span></span></wicket:fragment>
     </body>
 </html>
