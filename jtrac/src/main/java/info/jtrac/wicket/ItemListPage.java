@@ -73,7 +73,10 @@ public class ItemListPage extends BasePage {
             }
         };        
         
-        //======================== PAGINATION ===================================        
+        //======================== PAGINATION ==================================
+        // on the pagination components below, isVisible() methods have been 
+        // carefully overridden to dynamically hide / show components 
+        // but ensure lazy loading
         
         Link link = new Link("count") {
             public void onClick() {                
