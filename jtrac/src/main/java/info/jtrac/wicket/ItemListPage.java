@@ -73,6 +73,10 @@ public class ItemListPage extends BasePage {
             }
         };        
         
+        // ensure that wicket model "attach" is called so itemSearch is properly
+        // initialized above
+        itemListModel.getObject(null);
+        
         //======================== PAGINATION ==================================
         // on the pagination components below, isVisible() methods have been 
         // carefully overridden to dynamically hide / show components 
@@ -149,7 +153,7 @@ public class ItemListPage extends BasePage {
                 };
                 listItem.add(pageOn);
                 listItem.add(pageOff);
-            }            
+            }
         };                
         pagination.add(pages);            
         

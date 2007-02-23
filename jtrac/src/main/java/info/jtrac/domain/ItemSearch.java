@@ -402,9 +402,12 @@ public class ItemSearch implements Serializable {
     }
     
     public int getPageCount() {        
-        int pageCount = 0;        
+        int pageCount = 0;       
         if (pageSize != -1) {
             pageCount = (int) Math.ceil((double) resultCount / pageSize);
+        }
+        if(pageCount == 0) {
+            pageCount = 1;
         }
         return pageCount;
     }
