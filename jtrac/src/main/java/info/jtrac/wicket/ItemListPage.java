@@ -22,19 +22,21 @@ import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.util.DateUtils;
+import info.jtrac.util.ExcelUtils;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import wicket.Component;
+import wicket.IRequestTarget;
+import wicket.RequestCycle;
 import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
-import wicket.markup.html.panel.Fragment;
-import wicket.model.AbstractReadOnlyModel;
 import wicket.model.LoadableDetachableModel;
 import wicket.model.PropertyModel;
+import wicket.protocol.http.WebResponse;
 
 /**
  * dashboard page
@@ -80,7 +82,7 @@ public class ItemListPage extends BasePage {
         //======================== PAGINATION ==================================                                                   
         
         int pageCount = 1;
-        int pageSize = itemSearch.getPageSize();
+        final int pageSize = itemSearch.getPageSize();
         long resultCount = itemSearch.getResultCount();
         if (pageSize != -1) {
             pageCount = (int) Math.ceil((double) resultCount / pageSize);
@@ -162,6 +164,33 @@ public class ItemListPage extends BasePage {
         }
         
         border.add(pagination);
+        
+        //========================== EXCEL EXPORT ==============================
+        
+        border.add(new Link("export") {
+            public void onClick() {
+                // temporarily switch off paging of results
+                itemSearch.setPageSize(-1);
+                final ExcelUtils eu = new ExcelUtils(getJtrac().findItems(itemSearch), itemSearch);
+                // restore page size
+                itemSearch.setPageSize(pageSize);
+                getRequestCycle().setRequestTarget(new IRequestTarget() {
+                    public void detach(RequestCycle requestCycle) {
+                    }
+                    public void respond(RequestCycle requestCycle) {
+                        WebResponse r = (WebResponse) requestCycle.getResponse();
+                        r.setAttachmentHeader("jtrac-export.xls");
+                        try {
+                            // TODO better localization
+                            eu.exportToExcel(((JtracApplication) getApplication()).getApplicationContext(), 
+                                    getLocale()).write(r.getOutputStream());
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }                        
+                    }
+                });                
+            }            
+        });
         
         //====================== HEADER ========================================
                 
