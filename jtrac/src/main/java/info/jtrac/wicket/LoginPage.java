@@ -25,6 +25,7 @@ import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import wicket.Component;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.CheckBox;
@@ -41,11 +42,11 @@ import wicket.model.BoundCompoundPropertyModel;
  */
 public class LoginPage extends WebPage {              
     
-    protected final Log logger = LogFactory.getLog(getClass());
+    protected final Log logger = LogFactory.getLog(getClass());    
     
     private Jtrac getJtrac() {
         return ((JtracApplication) getApplication()).getJtrac();
-    }    
+    }        
     
     public LoginPage() {
         // attempt remember-me auto login
@@ -73,17 +74,18 @@ public class LoginPage extends WebPage {
         add(new Label("title", getLocalizer().getString("login.title", null)));
         add(new Link("home") {
             public void onClick() {
+                setResponsePage(DashboardPage.class);
             }
         });
         add(new LoginForm("form"));
         add(new Label("version", Version.VERSION));
     }
     
-    private class LoginForm extends Form {        
+    private class LoginForm extends Form {                
         
         public LoginForm(String id) {            
             super(id);          
-            add(new FeedbackPanel("feedback"));
+            add(new FeedbackPanel("feedback"));            
             setModel(new BoundCompoundPropertyModel(new LoginFormModel()));
             final TextField loginName = new TextField("loginName");
             loginName.setOutputMarkupId(true);
@@ -92,7 +94,7 @@ public class LoginPage extends WebPage {
             password.setRequired(false);
             password.setOutputMarkupId(true);
             add(password);
-            // set focus on right textbox
+            // intelligently set focus on the appropriate textbox
             getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
                 public Object getObject(Component c) {
                     String markupId;
@@ -115,7 +117,7 @@ public class LoginPage extends WebPage {
             String password = model.getPassword();
             if(loginName == null || password == null) {
                 logger.debug("login failed - login name or password is null");
-                error(getLocalizer().getString("login.error", null));
+                error(getLocalizer().getString("login.error", null));                
                 return;
             }            
             User user = null;
@@ -123,7 +125,7 @@ public class LoginPage extends WebPage {
                 user = (User) getJtrac().loadUserByUsername(loginName);
             } catch (UsernameNotFoundException e) {
                 logger.debug("login failed - user not found");
-                error(getLocalizer().getString("login.error", null));
+                error(getLocalizer().getString("login.error", null));                
                 return;
             }
             String encodedPassword = getJtrac().encodeClearText(password);
@@ -141,7 +143,7 @@ public class LoginPage extends WebPage {
                 } 
             } else {
                 logger.debug("login failed - password does not match");
-                error(getLocalizer().getString("login.error", null));                    
+                error(getLocalizer().getString("login.error", null));                
             }                  
         }     
                         
