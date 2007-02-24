@@ -66,26 +66,14 @@ public class LoginPage extends WebPage {
                         if(encodedPassword.equals(user.getPassword())) {
                             logger.debug("remember me login success, redirecting");
                             ((JtracSession) getSession()).setUser(user);
-                            setResponsePage(DashboardPage.class);
+                            if (!continueToOriginalDestination()) {
+                                setResponsePage(DashboardPage.class);
+                            }
                         }
                     }
                 }                
             }
         }
-//        // attempt guest access if there are "public" spaces ===================
-//        List<Space> spaces = getJtrac().findSpacesWhereGuestAllowed();
-//        if (spaces.size() > 0) {
-//            logger.debug("public spaces available, initializing guest user");
-//            User guestUser = new User();
-//            guestUser.setLoginName("guest");
-//            guestUser.setName("Guest");
-//            guestUser.addSpaceWithRole(null, "ROLE_GUEST");
-//            for (Space space : spaces) {            
-//                guestUser.addSpaceWithRole(space, "ROLE_GUEST");
-//            }
-//            ((JtracSession) getSession()).setUser(guestUser);
-//            setResponsePage(DashboardPage.class);
-//        }                
         //======================================================================
         add(new Label("title", getLocalizer().getString("login.title", null)));
         add(new Link("home") {
