@@ -17,8 +17,13 @@
 package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
+import info.jtrac.domain.Space;
+import info.jtrac.domain.User;
+import java.util.List;
 import java.util.Locale;
 import javax.servlet.ServletContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import wicket.Component;
@@ -35,11 +40,13 @@ import wicket.resource.loader.IStringResourceLoader;
  * main wicket application for jtrac
  * holds singleton service layer instance pulled from spring
  */
-public class JtracApplication extends WebApplication {        
+public class JtracApplication extends WebApplication {                
     
     private Jtrac jtrac;
     private ApplicationContext applicationContext;
 
+    protected final Log logger = LogFactory.getLog(getClass());    
+    
     public Jtrac getJtrac() {
         return jtrac;
     }
@@ -82,6 +89,22 @@ public class JtracApplication extends WebApplication {
                     if (((JtracSession) Session.get()).isAuthenticated()) {
                         return true;
                     }
+                    // attempt guest access if there are "public" spaces =======
+                    List<Space> spaces = getJtrac().findSpacesWhereGuestAllowed();
+                    if (spaces.size() > 0) {
+                        logger.debug(spaces.size() + " public space(s) available, initializing guest user");
+                        User guestUser = new User();
+                        guestUser.setLoginName("guest");
+                        guestUser.setName("Guest");
+                        guestUser.addSpaceWithRole(null, "ROLE_GUEST");
+                        for (Space space : spaces) {            
+                            guestUser.addSpaceWithRole(space, "ROLE_GUEST");
+                        }
+                        ((JtracSession) Session.get()).setUser(guestUser);
+                        logger.debug("page requested was " + clazz.getName() + ", redirecting");
+                        throw new RestartResponseAtInterceptPageException(clazz);                        
+                    }
+                    // not authenticated, go to login page
                     throw new RestartResponseAtInterceptPageException(LoginPage.class);
                 }
                 return true;

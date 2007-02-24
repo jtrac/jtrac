@@ -18,14 +18,15 @@ package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
 import info.jtrac.Version;
+import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import java.io.Serializable;
+import java.util.List;
 import javax.servlet.http.Cookie;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import wicket.Component;
-import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.CheckBox;
@@ -49,7 +50,7 @@ public class LoginPage extends WebPage {
     }        
     
     public LoginPage() {
-        // attempt remember-me auto login
+        // attempt remember-me auto login ======================================
         Cookie[] cookies = getWebRequestCycle().getWebRequest().getCookies();
         for(Cookie c : cookies) {
             if(c.getName().equals("jtrac")) {
@@ -71,6 +72,21 @@ public class LoginPage extends WebPage {
                 }                
             }
         }
+//        // attempt guest access if there are "public" spaces ===================
+//        List<Space> spaces = getJtrac().findSpacesWhereGuestAllowed();
+//        if (spaces.size() > 0) {
+//            logger.debug("public spaces available, initializing guest user");
+//            User guestUser = new User();
+//            guestUser.setLoginName("guest");
+//            guestUser.setName("Guest");
+//            guestUser.addSpaceWithRole(null, "ROLE_GUEST");
+//            for (Space space : spaces) {            
+//                guestUser.addSpaceWithRole(space, "ROLE_GUEST");
+//            }
+//            ((JtracSession) getSession()).setUser(guestUser);
+//            setResponsePage(DashboardPage.class);
+//        }                
+        //======================================================================
         add(new Label("title", getLocalizer().getString("login.title", null)));
         add(new Link("home") {
             public void onClick() {
@@ -129,15 +145,17 @@ public class LoginPage extends WebPage {
                 return;
             }
             String encodedPassword = getJtrac().encodeClearText(password);
-            if (user.getPassword().equals(encodedPassword)) {
-                // login successful
+            if (user.getPassword().equals(encodedPassword)) { // login successful
+                // remember me cookie
                 if(model.isRememberMe()) {                    
                     Cookie cookie = new Cookie("jtrac", loginName + ":" + encodedPassword);
                     cookie.setMaxAge(30 * 24 * 60 * 60); // 30 days in seconds 
                     getWebRequestCycle().getWebResponse().addCookie(cookie);
                     logger.debug("remember me requested, cookie added: " + cookie.getValue());
-                }                
-                ((JtracSession) getSession()).setUser(user);                
+                }
+                // setup session with principal
+                ((JtracSession) getSession()).setUser(user);
+                // proceed to bookmarkable page or default dashboard
                 if (!continueToOriginalDestination()) {
                     setResponsePage(DashboardPage.class);
                 } 

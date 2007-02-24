@@ -17,6 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Space;
+import info.jtrac.util.ValidationUtils;
 import java.io.Serializable;
 import java.util.List;
 import wicket.Component;
@@ -108,17 +109,49 @@ public class SpaceFormPage extends BasePage {
             final TextField name = new TextField("space.name");
             name.setRequired(true);
             name.add(new ErrorHighlighter());
-            name.setOutputMarkupId(true);
-            SpaceFormPage.this.getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                public Object getObject(Component c) {
-                    return "document.getElementById('" + name.getMarkupId() + "').focus()";
-                }
-            }, name);
             add(name);
             // prefix Code =====================================================
             TextField prefixCode = new TextField("space.prefixCode");
             prefixCode.setRequired(true);
             prefixCode.add(new ErrorHighlighter());
+            // validation: greater than 3 chars?
+            prefixCode.add(new AbstractValidator() {
+                public void validate(FormComponent c) {
+                    String s = (String) c.getConvertedInput();
+                    if(s.length() < 3) {
+                        error(c);
+                    }
+                }
+                @Override
+                protected String resourceKey(FormComponent c) {                    
+                    return "space_form.error.prefixCode.tooShort";
+                }                
+            });
+            prefixCode.add(new AbstractValidator() {
+                public void validate(FormComponent c) {
+                    String s = (String) c.getConvertedInput();
+                    if(s.length() > 10) {
+                        error(c);
+                    }
+                }
+                @Override
+                protected String resourceKey(FormComponent c) {                    
+                    return "space_form.error.prefixCode.tooLong";
+                }                
+            });             
+            // validation: format ok?
+            prefixCode.add(new AbstractValidator() {
+                public void validate(FormComponent c) {
+                    String s = (String) c.getConvertedInput();
+                    if(!ValidationUtils.isAllUpperCase(s)) {
+                        error(c);
+                    }
+                }
+                @Override
+                protected String resourceKey(FormComponent c) {                    
+                    return "space_form.error.prefixCode.invalid";
+                }                
+            });            
             // validation: does space already exist with same prefixCode ?
             prefixCode.add(new AbstractValidator() {
                 public void validate(FormComponent c) {

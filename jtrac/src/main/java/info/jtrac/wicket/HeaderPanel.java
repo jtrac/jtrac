@@ -22,6 +22,7 @@ import info.jtrac.domain.User;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.Cookie;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.protocol.http.WebResponse;
@@ -57,8 +58,7 @@ public class HeaderPanel extends BasePanel {
                 }            
             });            
         } else {
-            add(new Label("space", space.getName()));
-            
+            add(new Label("space", space.getName()));            
             if (user.getPermittedTransitions(space, State.NEW).size() > 0) {            
                 add(new Link("new") {
                     public void onClick() {
@@ -66,7 +66,7 @@ public class HeaderPanel extends BasePanel {
                     }            
                 });
             } else {
-                add(new Label("new").setVisible(false));       
+                add(new WebMarkupContainer("new").setVisible(false));       
             }
             
             add(new Link("search") {
@@ -77,14 +77,14 @@ public class HeaderPanel extends BasePanel {
         }
         
         if(user.getId() == 0) {
-            add(new Label("options", "").setVisible(false));
-            add(new Label("logout", "").setVisible(false));
+            add(new WebMarkupContainer("options").setVisible(false));
+            add(new WebMarkupContainer("logout").setVisible(false));
             add(new Link("login") {
                 public void onClick() {
-
+                    setResponsePage(LoginPage.class);
                 }            
             });
-            add(new Label("user", "").setVisible(false));
+            add(new WebMarkupContainer("user").setVisible(false));
         } else {
             add(new Link("options") {
                 public void onClick() {
@@ -102,7 +102,7 @@ public class HeaderPanel extends BasePanel {
                     setResponsePage(LogoutPage.class);
                 }            
             });
-            add(new Label("login", "").setVisible(false));
+            add(new WebMarkupContainer("login").setVisible(false));
             add(new Label("user", user.getName()));
         }             
         
