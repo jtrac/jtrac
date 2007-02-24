@@ -24,7 +24,7 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 
 /**
- * logout page
+ * logout page.  the session invalidation code is in HeaderPanel
  */
 public class LogoutPage extends WebPage {              
     
@@ -42,7 +42,7 @@ public class LogoutPage extends WebPage {
                 setResponsePage(LoginPage.class);
             }
         });
-        add(new Label("version", Version.VERSION));
+        add(new Label("version", Version.VERSION));               
     }    
     
 }

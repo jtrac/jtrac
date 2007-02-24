@@ -69,18 +69,7 @@ public class JtracApplication extends WebApplication {
                     return null;
                 }
             }
-        });                        
-
-        // for wicket 1.2.X
-        // WicketMessageTagHandler.enable = true;
-        
-//        getMarkupSettings().setMarkupParserFactory(new MarkupParserFactory(this) {
-//            @Override
-//            protected void initMarkupFilters(final MarkupParser parser) {
-//                super.initMarkupFilters(parser);
-//                parser.registerMarkupFilter(new WicketMessageTagHandler());
-//            }            
-//        });        
+        });                               
         
         getPageSettings().setMaxPageVersions(3);
         

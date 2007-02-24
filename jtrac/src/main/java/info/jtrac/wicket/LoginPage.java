@@ -20,6 +20,7 @@ import info.jtrac.Jtrac;
 import info.jtrac.Version;
 import info.jtrac.domain.User;
 import java.io.Serializable;
+import javax.servlet.http.Cookie;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,7 +43,32 @@ public class LoginPage extends WebPage {
     
     protected final Log logger = LogFactory.getLog(getClass());
     
+    private Jtrac getJtrac() {
+        return ((JtracApplication) getApplication()).getJtrac();
+    }    
+    
     public LoginPage() {
+        Cookie[] cookies = getWebRequestCycle().getWebRequest().getCookies();
+        for(Cookie c : cookies) {
+            if(c.getName().equals("jtrac")) {
+                String value = c.getValue();
+                logger.debug("found jtrac cookie: " + value);                
+                if (value != null) {
+                    int index = value.indexOf(':');
+                    if (index != -1) {
+                        String loginName = value.substring(0, index);
+                        String encodedPassword = value.substring(index + 1);
+                        logger.debug("valid cookie, attempting authentication");
+                        User user = (User) getJtrac().loadUserByUsername(loginName);                                              
+                        if(encodedPassword.equals(user.getPassword())) {
+                            logger.debug("remember me login success, redirecting");
+                            ((JtracSession) getSession()).setUser(user);
+                            setResponsePage(DashboardPage.class);
+                        }
+                    }
+                }		                 
+            }
+        }
         add(new Label("title", getLocalizer().getString("login.title", null)));
         add(new Link("home") {
             public void onClick() {
@@ -78,27 +104,37 @@ public class LoginPage extends WebPage {
                 }
             });            
             add(new CheckBox("rememberMe"));
+
         }
                 
         @Override
         protected void onSubmit() {                    
             LoginFormModel model = (LoginFormModel) getModelObject();
-            if(model.getLoginName() == null || model.getPassword() == null) {
-                logger.debug("login failed login name and password are mandatory");
+            String loginName = model.getLoginName();
+            String password = model.getPassword();
+            if(loginName == null || password == null) {
+                logger.debug("login failed - login name or password is null");
                 error(getLocalizer().getString("login.error", null));
                 return;
-            }
-            Jtrac jtrac = ((JtracApplication) getApplication()).getJtrac();
+            }            
             User user = null;
             try {
-                user = (User) jtrac.loadUserByUsername(model.getLoginName());
+                user = (User) getJtrac().loadUserByUsername(loginName);
             } catch (UsernameNotFoundException e) {
                 logger.debug("login failed - user not found");
                 error(getLocalizer().getString("login.error", null));
                 return;
-            }            
-            if (user.getPassword().equals(jtrac.encodeClearText(model.getPassword()))) {
-                ((JtracSession) getSession()).setUser(user);
+            }
+            String encodedPassword = getJtrac().encodeClearText(password);
+            if (user.getPassword().equals(encodedPassword)) {
+                // login successful
+                if(model.isRememberMe()) {                    
+                    Cookie cookie = new Cookie("jtrac", loginName + ":" + encodedPassword);
+                    cookie.setMaxAge(30 * 24 * 60 * 60); // 30 days in seconds 
+                    getWebRequestCycle().getWebResponse().addCookie(cookie);
+                    logger.debug("remember me requested, cookie added: " + cookie.getValue());
+                }                
+                ((JtracSession) getSession()).setUser(user);                
                 if (!continueToOriginalDestination()) {
                     setResponsePage(DashboardPage.class);
                 } 

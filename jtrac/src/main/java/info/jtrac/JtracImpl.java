@@ -298,7 +298,7 @@ public class JtracImpl implements Jtrac {
         if (users.size() == 0) {
             throw new UsernameNotFoundException("User not found for '" + loginName + "'");
         }
-        logger.debug("acegi: loadUserByUserName success for '" + loginName + "'");
+        logger.debug("loadUserByUserName success for '" + loginName + "'");
         User user = users.get(0);
         Map<Long, Boolean> map = new HashMap<Long, Boolean>();
         for(UserSpaceRole usr : user.getSpaceRoles()) {

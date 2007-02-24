@@ -49,6 +49,7 @@ public class AttachmentLinkPanel extends BasePanel {
         
         Link link = new Link("attachment") {
             // adapted from wicket.markup.html.link.DownloadLink
+            // with the difference that the File is instantiated only after onClick
             public void onClick() {
                 getRequestCycle().setRequestTarget(new IRequestTarget() {
                     

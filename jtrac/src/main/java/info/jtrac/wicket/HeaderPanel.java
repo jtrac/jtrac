@@ -21,8 +21,10 @@ import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.Cookie;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
+import wicket.protocol.http.WebResponse;
 
 /**
  * header navigation
@@ -90,8 +92,13 @@ public class HeaderPanel extends BasePanel {
                 }            
             }); 
             add(new Link("logout") {
-                public void onClick() {
+                public void onClick() {                    
+                    User user = getPrincipal();
+                    Cookie cookie = new Cookie("jtrac", user.getLoginName() 
+                        + ":" + getJtrac().encodeClearText(user.getPassword()));
+                    ((WebResponse) getRequestCycle().getResponse()).clearCookie(cookie);                    
                     getSession().invalidate();
+                    logger.debug("invalidated session and cleared cookie");                    
                     setResponsePage(LogoutPage.class);
                 }            
             });
