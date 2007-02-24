@@ -48,6 +48,7 @@ public class LoginPage extends WebPage {
     }    
     
     public LoginPage() {
+        // attempt remember-me auto login
         Cookie[] cookies = getWebRequestCycle().getWebRequest().getCookies();
         for(Cookie c : cookies) {
             if(c.getName().equals("jtrac")) {
@@ -66,7 +67,7 @@ public class LoginPage extends WebPage {
                             setResponsePage(DashboardPage.class);
                         }
                     }
-                }		                 
+                }                
             }
         }
         add(new Label("title", getLocalizer().getString("login.title", null)));
