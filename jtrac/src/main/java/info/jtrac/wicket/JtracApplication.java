@@ -22,6 +22,7 @@ import info.jtrac.domain.User;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
@@ -29,11 +30,14 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import wicket.Component;
 import wicket.ISessionFactory;
 import wicket.Request;
+import wicket.RequestCycle;
 import wicket.RestartResponseAtInterceptPageException;
 import wicket.Session;
 import wicket.authorization.Action;
 import wicket.authorization.IAuthorizationStrategy;
 import wicket.protocol.http.WebApplication;
+import wicket.protocol.http.WebRequest;
+import wicket.request.target.coding.IndexedParamUrlCodingStrategy;
 import wicket.resource.loader.IStringResourceLoader;
 
 /**
@@ -89,6 +93,29 @@ public class JtracApplication extends WebApplication {
                     if (((JtracSession) Session.get()).isAuthenticated()) {
                         return true;
                     }
+                    // attempt remember-me auto login ==========================
+                    Cookie[] cookies =  ((WebRequest) RequestCycle.get().getRequest()).getCookies();
+                    for(Cookie c : cookies) {
+                        if(c.getName().equals("jtrac")) {
+                            String value = c.getValue();
+                            logger.debug("found jtrac cookie: " + value);                
+                            if (value != null) {
+                                int index = value.indexOf(':');
+                                if (index != -1) {
+                                    String loginName = value.substring(0, index);
+                                    String encodedPassword = value.substring(index + 1);
+                                    logger.debug("valid cookie, attempting authentication");
+                                    User user = (User) getJtrac().loadUserByUsername(loginName);                                              
+                                    if(encodedPassword.equals(user.getPassword())) {                                        
+                                        ((JtracSession) Session.get()).setUser(user);
+                                        logger.debug("remember me login success");
+                                        // and proceed
+                                        return true;
+                                    }
+                                }
+                            }                
+                        }
+                    }                    
                     // attempt guest access if there are "public" spaces =======
                     List<Space> spaces = getJtrac().findSpacesWhereGuestAllowed();
                     if (spaces.size() > 0) {
@@ -102,14 +129,21 @@ public class JtracApplication extends WebApplication {
                         }
                         ((JtracSession) Session.get()).setUser(guestUser);
                         logger.debug("page requested was " + clazz.getName() + ", redirecting");
-                        throw new RestartResponseAtInterceptPageException(clazz);                        
+                        // and proceed
+                        return true;
                     }
                     // not authenticated, go to login page
                     throw new RestartResponseAtInterceptPageException(LoginPage.class);
                 }
                 return true;
             }
-        });       
+        });
+        
+        // friendly urls for selected pages
+        mountBookmarkablePage("/login", LoginPage.class);
+        mountBookmarkablePage("/logout", LogoutPage.class);        
+        // bookmarkable url for viewing items
+        mount("/item", new IndexedParamUrlCodingStrategy("/item", ItemViewPage.class));        
         
     }   
     

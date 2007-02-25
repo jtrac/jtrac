@@ -39,7 +39,7 @@ public class HeaderPanel extends BasePanel {
         
         add(new Link("dashboard") {
             public void onClick() {
-                setResponsePage(new DashboardPage());
+                setResponsePage(DashboardPage.class);
             }            
         });
         
@@ -88,7 +88,7 @@ public class HeaderPanel extends BasePanel {
         } else {
             add(new Link("options") {
                 public void onClick() {
-                    setResponsePage(new OptionsPage());
+                    setResponsePage(OptionsPage.class);
                 }            
             }); 
             add(new Link("logout") {

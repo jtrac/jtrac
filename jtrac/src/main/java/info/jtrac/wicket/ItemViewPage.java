@@ -18,6 +18,7 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.Item;
 import info.jtrac.domain.User;
+import wicket.PageParameters;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.Link;
 
@@ -25,14 +26,31 @@ import wicket.markup.html.link.Link;
  * dashboard page
  */
 public class ItemViewPage extends BasePage {
-      
-    public ItemViewPage(Item tempItem, final ItemListPage previous) {
-        
-        super("Item View");      
+          
+    public ItemViewPage(PageParameters params) {
+        super("Item View");        
+        String itemId = params.getString("0");
+        logger.debug("item id parsed from url = '" + itemId + "'");
+        Item item;
+        if(itemId.indexOf('-') != -1) { 
+            // this in the form SPACE-123
+            item = getJtrac().loadItemByRefId(itemId);
+        } else {
+            // internal id of type long
+            item = getJtrac().loadItem(Long.parseLong(itemId));
+        }
+        addComponents(item, null);
+    }
+    
+    public ItemViewPage(Item tempItem, final ItemListPage previous) {        
+        super("Item View");                        
+        final Item item = getJtrac().loadItem(tempItem.getId());
+        addComponents(item, previous);
+    }
+    
+    private void addComponents(final Item item, final ItemListPage previous) {
         
         add(new HeaderPanel(null));
-                
-        final Item item = getJtrac().loadItem(tempItem.getId());
         
         Link link = new Link("back") {
             public void onClick() {
@@ -40,7 +58,6 @@ public class ItemViewPage extends BasePage {
                 setResponsePage(previous);
             }
         };
-
         if(previous == null) {
             link.setVisible(false);
         }
@@ -55,8 +72,7 @@ public class ItemViewPage extends BasePage {
             border.add(new ItemViewFormPanel("itemViewFormPanel", item, previous));
         } else {
             border.add(new WebMarkupContainer("itemViewFormPanel").setVisible(false));
-        }
-        
+        }        
     }
     
 }
