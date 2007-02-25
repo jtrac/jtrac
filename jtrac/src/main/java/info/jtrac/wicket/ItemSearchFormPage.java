@@ -26,24 +26,32 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import wicket.Component;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
+import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.validation.AbstractValidator;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
+import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
 
 /**
  * dashboard page
  */
-public class ItemSearchFormPage extends BasePage {
-     
+public class ItemSearchFormPage extends BasePage {        
+    
+    /**
+     * convert Wicket form binding collection default to Set
+     * used by existing domain object TODO wicketize
+     */
     public class JtracListMultipleChoice extends ListMultipleChoice {
         
         public JtracListMultipleChoice(String id, List choices, IChoiceRenderer renderer) {
@@ -57,41 +65,33 @@ public class ItemSearchFormPage extends BasePage {
         }        
     }
     
-    public ItemSearchFormPage(Space space) {
-        
+    public ItemSearchFormPage(Space space) {        
         super("Item Search");        
-        add(new HeaderPanel(space));        
-        border.add(new FeedbackPanel("feedback"));
-        border.add(new ItemSearchForm("form", space));
-        
+        add(new HeaderPanel(space));                
+        border.add(new ItemSearchForm("form", space));        
     }
     
-    public ItemSearchFormPage(User user) {
-        
+    public ItemSearchFormPage(User user) {        
         super("Item Search");        
-        add(new HeaderPanel(null));        
-        border.add(new FeedbackPanel("feedback"));
-        border.add(new ItemSearchForm("form", user));
-        
+        add(new HeaderPanel(null));
+        border.add(new ItemSearchForm("form", user));        
     }    
     
     /**
      * here we are returning to the filter criteria screen from
      * the search results screen
      */
-    public ItemSearchFormPage(ItemSearch itemSearch) {
-        
+    public ItemSearchFormPage(ItemSearch itemSearch) {        
         super("Item Search");
         add(new HeaderPanel(itemSearch.getSpace()));
-        itemSearch.setCurrentPage(0);
-        border.add(new FeedbackPanel("feedback"));
-        border.add(new ItemSearchForm("form", itemSearch));
-        
+        itemSearch.setCurrentPage(0);        
+        border.add(new ItemSearchForm("form", itemSearch));      
     }    
 
     private class ItemSearchForm extends Form {
         
-        private ItemSearch itemSearch;
+        private ItemSearch itemSearch;        
+        private JtracFeedbackMessageFilter filter;
         
         public ItemSearchForm(String id, User user) {
             super(id);
@@ -114,6 +114,34 @@ public class ItemSearchFormPage extends BasePage {
         private void addComponents() {
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(itemSearch);
             setModel(model);
+            // feedback panel ==================================================
+            FeedbackPanel feedback = new FeedbackPanel("feedback");
+            filter =  new JtracFeedbackMessageFilter();
+            feedback.setFilter(filter);
+            add(feedback);            
+            // summary / text search ===========================================
+            final TextField summary = new TextField("summary");
+            summary.setOutputMarkupId(true);
+            ItemSearchFormPage.this.getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
+                public Object getObject(Component c) {
+                    return "document.getElementById('" + summary.getMarkupId() + "').focus()";
+                }
+            }, summary);
+            // validation: is Lucene search query ok?
+            summary.add(new AbstractValidator() {
+                public void validate(FormComponent c) {
+                    String s = (String) c.getConvertedInput();                    
+                    if(s != null && !getJtrac().validateTextSearchQuery(s)) {
+                        error(c);
+                    }
+                }
+                @Override
+                protected String resourceKey(FormComponent c) {                    
+                    return "item_search_form.error.summary.invalid";
+                } 
+            });
+            summary.add(new ErrorHighlighter());
+            add(summary);
             // page size =======================================================
             List<Integer> sizes = Arrays.asList(new Integer[] { 5, 10, 15, 25, 50, 100, -1 });
             final String noLimit = getLocalizer().getString("item_search_form.noLimit", null);
@@ -288,6 +316,12 @@ public class ItemSearchFormPage extends BasePage {
                 add(customTexts);
             }            
         }
+        
+        @Override
+        protected void validate() {
+            filter.reset();
+            super.validate();          
+        }         
         
         @Override
         protected void onSubmit() {

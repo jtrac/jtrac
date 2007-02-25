@@ -511,6 +511,10 @@ public class JtracImpl implements Jtrac {
         indexer.index(item);
     }
     
+    public boolean validateTextSearchQuery(String text) {
+        return indexSearcher.validateQuery(text);
+    }
+    
     //==========================================================================
     
     public String getReleaseVersion() {

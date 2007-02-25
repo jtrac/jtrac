@@ -31,6 +31,16 @@ import org.springmodules.lucene.search.support.LuceneSearchSupport;
  */
 public class IndexSearcher extends LuceneSearchSupport {
     
+    public boolean validateQuery(String text) {
+        QueryParser parser = new QueryParser("text", getAnalyzer());
+        try {
+            Query query = parser.parse(text);
+        } catch (ParseException e) {
+            return false;
+        }
+        return true;
+    }
+    
     public List<Long> findItemIdsContainingText(String text) {       
         LuceneSearchTemplate template = getTemplate();
         QueryParser parser = new QueryParser("text", getAnalyzer());

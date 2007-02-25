@@ -70,7 +70,7 @@ public class ItemListPage extends BasePage {
         
         LoadableDetachableModel itemListModel = new LoadableDetachableModel() {
             protected Object load() {
-                logger.debug("loading item list from database");
+                logger.debug("loading item list from database");                
                 return getJtrac().findItems(itemSearch);
             }
         };        
