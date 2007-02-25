@@ -377,6 +377,7 @@
                 <jvmarg value="-Dfile.encoding=UTF-8"/>
                 <jvmarg value="-Djtrac.home=${basedir}/home"/>
                 <jvmarg value="-Djtrac.webapp=@{webapp}"/>
+                <jvmarg value="-Dwicket.configuration=DEVELOPMENT"/>
                 <jvmarg value="-DSTOP.PORT=8079"/>
                 <jvmarg value="-DSTOP.KEY=jtrac"/>
                 <jvmarg value="@{arg1}"/>
