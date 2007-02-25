@@ -30,6 +30,7 @@
         <param-value>/WEB-INF/log4j.properties</param-value>
     </context-param>
    
+    <!--
     <filter>
         <filter-name>acegiSecurityFilter</filter-name>
         <filter-class>org.acegisecurity.util.FilterToBeanProxy</filter-class>
@@ -51,7 +52,8 @@
             <param-value>true</param-value> 
         </init-param>
     </filter>    
-
+    -->
+    
     <filter>
         <filter-name>openSessionInView</filter-name>
         <filter-class>org.springframework.orm.hibernate3.support.OpenSessionInViewFilter</filter-class>
@@ -73,14 +75,15 @@
     <!-- this should be above the wicket filter -->
     <filter-mapping>
         <filter-name>openSessionInView</filter-name>
-        <url-pattern>/wkt/*</url-pattern>
+        <url-pattern>/app/*</url-pattern>
     </filter-mapping>     
     
     <filter-mapping>
         <filter-name>jtrac-app</filter-name>
-        <url-pattern>/wkt/*</url-pattern>
+        <url-pattern>/app/*</url-pattern>
     </filter-mapping>    
            
+    <!--
     <filter-mapping>
         <filter-name>encodingFilter</filter-name>
         <servlet-name>jtrac</servlet-name>
@@ -95,6 +98,7 @@
         <filter-name>acegiSecurityFilter</filter-name>
         <url-pattern>/flow/*</url-pattern>
     </filter-mapping>      
+    -->
     
     <!-- Leave the listener commented-out if using JBoss -->
     <listener>
@@ -126,40 +130,30 @@
         <servlet-class>edu.yale.its.tp.cas.proxy.ProxyTicketReceptor</servlet-class>
     </servlet>
     
+    <servlet>
+        <servlet-name>jtracContextRedirector</servlet-name>
+        <servlet-class>info.jtrac.wicket.JtracContextRedirectServlet</servlet-class>        
+    </servlet>
+    
     <!-- JSPC_TOKEN -->
     
     <servlet-mapping>
         <servlet-name>casproxy</servlet-name>
         <url-pattern>/casProxy/*</url-pattern>
-    </servlet-mapping>
-       
-    <servlet-mapping>
-        <servlet-name>jtrac</servlet-name>
-        <url-pattern>/app/*</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping>       
     
     <servlet-mapping>
         <servlet-name>jtrac</servlet-name>
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>    
-    
-    <servlet-mapping>
-        <servlet-name>jtrac</servlet-name>
-        <url-pattern>/auth/*</url-pattern>
-    </servlet-mapping>  
   
     <servlet-mapping>
         <servlet-name>jtrac</servlet-name>
         <url-pattern>/flow/*</url-pattern>
-    </servlet-mapping>       
-    
+    </servlet-mapping>
+        
     <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>index.html</welcome-file>
     </welcome-file-list>
-    
-    <error-page>
-        <exception-type>java.lang.Exception</exception-type>
-        <location>/WEB-INF/jsp/exception.jsp</location>
-    </error-page>   
     
 </web-app>
