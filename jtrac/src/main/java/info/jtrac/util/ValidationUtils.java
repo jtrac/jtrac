@@ -17,7 +17,6 @@
 package info.jtrac.util;
 
 import org.springframework.validation.Errors;
-import org.springframework.webflow.execution.RequestContext;
 
 /**
  * Helper class that improves on the Spring ValidationUtils
@@ -33,15 +32,7 @@ public class ValidationUtils {
         for (String name : names) {
             org.springframework.validation.ValidationUtils.rejectIfEmpty(errors, name, ERROR_EMPTY_CODE);
         }
-    }
-    
-    public static String getParameter(RequestContext context, String name) {
-        String value = (String) context.getRequestParameters().get(name);
-        if (value == null || value.trim().equals("")) {
-            return null;
-        }
-        return value.trim();
-    }
+    }    
     
     public static boolean isAllUpperCase(String input) {
         if (input == null) {

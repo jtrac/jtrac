@@ -17,19 +17,10 @@
 package info.jtrac.web;
 
 import info.jtrac.Jtrac;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
-import org.springframework.webflow.context.ExternalContext;
-import org.springframework.webflow.context.ExternalContextHolder;
-import org.springframework.webflow.context.servlet.ServletExternalContext;
-import org.springframework.webflow.execution.FlowExecution;
-import org.springframework.webflow.execution.repository.FlowExecutionRepository;
-import org.springframework.webflow.executor.FlowExecutor;
-import org.springframework.webflow.executor.FlowExecutorImpl;
 
 /**
  * base class for all Spring MVC MultiActionControllers
@@ -40,27 +31,10 @@ public abstract class AbstractMultiActionController extends MultiActionControlle
     
     protected final Log logger = LogFactory.getLog(getClass());
     
-    protected Jtrac jtrac;
-    private FlowExecutionRepository repository;
+    protected Jtrac jtrac;    
     
     public void setJtrac(Jtrac jtrac) {
         this.jtrac = jtrac;
-    }
-
-    public void setFlowExecutor(FlowExecutor flowExecutor) {
-        FlowExecutorImpl executor = (FlowExecutorImpl) flowExecutor;
-        this.repository = executor.getExecutionRepository();
-    }
-    
-    /**
-     * this is the bridge between the Spring WebFlow world and the Spring MVC world
-     * needed for getting access to "stateful" objects within a flow
-     */  
-    protected FlowExecution getFlowExecution(HttpServletRequest request, HttpServletResponse response) {        
-        ExternalContext externalContext = new ServletExternalContext(getServletContext(), request, response);
-        ExternalContextHolder.setExternalContext(externalContext);
-        String flowExecutionKey = request.getParameter("_flowExecutionKey");
-        return repository.getFlowExecution(repository.parseFlowExecutionKey(flowExecutionKey));        
-    }
+    }    
     
 }
