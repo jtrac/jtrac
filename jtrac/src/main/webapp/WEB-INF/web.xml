@@ -128,12 +128,7 @@
     <servlet>
         <servlet-name>casproxy</servlet-name>
         <servlet-class>edu.yale.its.tp.cas.proxy.ProxyTicketReceptor</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>jtracContextRedirector</servlet-name>
-        <servlet-class>info.jtrac.wicket.JtracContextRedirectServlet</servlet-class>        
-    </servlet>
+    </servlet>    
     
     <!-- JSPC_TOKEN -->
     
