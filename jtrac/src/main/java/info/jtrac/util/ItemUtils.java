@@ -21,7 +21,6 @@ import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemItem;
-import info.jtrac.webflow.ItemViewFormAction.ItemViewForm;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -103,16 +102,16 @@ public final class ItemUtils {
                 flowUrl = "/flow?" + flowUrlParam;
             }
             if (item.getRelatedItems() != null) {
-                ItemViewForm itemViewForm = null;
+                // ItemViewForm itemViewForm = null;
                 if (isWeb) {
-                    itemViewForm = (ItemViewForm) request.getAttribute("itemViewForm");
+                    // itemViewForm = (ItemViewForm) request.getAttribute("itemViewForm");
                     sb.append("<input type='hidden' name='_removeRelated'/>");
                 }
                 for(ItemItem itemItem : item.getRelatedItems()) {                    
                     String refId = itemItem.getRelatedItem().getRefId();
                     if (isWeb) {
                         String checked = "";
-                        Set<Long> set = itemViewForm.getRemoveRelated();
+                        Set<Long> set = null; // itemViewForm.getRemoveRelated();
                         if (set != null && set.contains(itemItem.getId())) {
                             checked = " checked='true'";
                         }
