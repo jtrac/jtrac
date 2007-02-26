@@ -193,7 +193,7 @@ public class ItemViewFormPanel extends BasePanel {
                     throw new RuntimeException(e);
                 }
             }            
-            setResponsePage(new ItemViewPage(item, ItemViewFormPanel.this.previous));
+            setResponsePage(new ItemViewPage(item.getId(), ItemViewFormPanel.this.previous));
         }
         
     }

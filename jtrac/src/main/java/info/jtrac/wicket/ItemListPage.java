@@ -19,7 +19,6 @@ package info.jtrac.wicket;
 import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
-import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.util.DateUtils;
 import info.jtrac.util.ExcelUtils;
@@ -272,7 +271,7 @@ public class ItemListPage extends BasePage {
                     refIdLink = new Link("refId") {
                         public void onClick() {
                             // this is a history record
-                            setResponsePage(new ItemViewPage(history.getParent(), ItemListPage.this));
+                            setResponsePage(new ItemViewPage(history.getParent().getId(), ItemListPage.this));
                         }
                     };
                     String refId = history.getRefId();
@@ -296,7 +295,7 @@ public class ItemListPage extends BasePage {
                     refIdLink = new Link("refId") {
                         public void onClick() {
                             // this is an item record
-                            setResponsePage(new ItemViewPage((Item) item, ItemListPage.this));
+                            setResponsePage(new ItemViewPage(item.getId(), ItemListPage.this));
                         }
                     };
                     refIdLink.add(new Label("refId", new PropertyModel(item, "refId")));

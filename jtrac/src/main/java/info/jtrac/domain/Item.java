@@ -36,6 +36,9 @@ public class Item extends AbstractItem {
     private Set<History> history;
     private Set<Item> children;
     private Set<Attachment> attachments;
+    
+    // should be ideally in form backing object but for convenience
+    private String editReason;
 
     @Override
     public String getRefId() {
@@ -155,6 +158,14 @@ public class Item extends AbstractItem {
     public void setAttachments(Set<Attachment> attachments) {
         this.attachments = attachments;
     }      
+
+    public String getEditReason() {
+        return editReason;
+    }
+
+    public void setEditReason(String editReason) {
+        this.editReason = editReason;
+    }   
     
     @Override
     public String toString() {

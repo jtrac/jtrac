@@ -18,6 +18,7 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Field;
+import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Space;
@@ -29,6 +30,7 @@ import info.jtrac.util.UserUtils;
 import java.io.File;
 import java.util.List;
 import wicket.Component;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
@@ -38,6 +40,7 @@ import wicket.markup.html.form.TextArea;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.upload.FileUpload;
 import wicket.markup.html.form.upload.FileUploadField;
+import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
@@ -45,29 +48,37 @@ import wicket.model.BoundCompoundPropertyModel;
 /**
  * Create / Edit item form page
  */
-public class ItemFormPage extends BasePage {        
+public class ItemFormPage extends BasePage {                           
     
-    private JtracFeedbackMessageFilter filter;    
-    
+    ItemViewPage previous;
+            
     public ItemFormPage(Space space) {
         super("Edit Item");
         add(new HeaderPanel(space));
         Item item = new Item();
-        item.setSpace(space);        
-        FeedbackPanel feedback = new FeedbackPanel("feedback");
-        filter = new JtracFeedbackMessageFilter();
-        feedback.setFilter(filter);
-        border.add(feedback);        
+        item.setSpace(space);
         border.add(new ItemForm("form", item));
     }
     
+    public ItemFormPage(Item item, ItemViewPage previous) {
+        super("Edit Item");
+        this.previous = previous;
+        add(new HeaderPanel(null));
+        border.add(new ItemForm("form", item));        
+    }   
+    
     private class ItemForm extends Form {
         
-        private FileUploadField fileUploadField;
+        private JtracFeedbackMessageFilter filter;
+        private FileUploadField fileUploadField = new FileUploadField("file");
         
         public ItemForm(String id, Item item) {
             super(id);
             setMultiPart(true);
+            FeedbackPanel feedback = new FeedbackPanel("feedback");
+            filter = new JtracFeedbackMessageFilter();
+            feedback.setFilter(filter);
+            add(feedback);
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(item);
             setModel(model);
             // summary =========================================================
@@ -86,39 +97,58 @@ public class ItemFormPage extends BasePage {
             // custom fields ===================================================
             List<Field> fields = item.getSpace().getMetadata().getFieldList();            
             add(new CustomFieldsFormPanel("fields", model, fields));
-            // assigned to =====================================================
-            Space space = item.getSpace();
-            List<UserSpaceRole> userSpaceRoles = getJtrac().findUserRolesForSpace(space.getId());
-            List<User> assignable = UserUtils.filterUsersAbleToTransitionFrom(userSpaceRoles, space, State.OPEN);
-            DropDownChoice choice = new DropDownChoice("assignedTo", assignable, new IChoiceRenderer() {
-                public Object getDisplayValue(Object o) {
-                    return ((User) o).getName();
-                }
-                public String getIdValue(Object o, int i) {
-                    return ((User) o).getId() + "";
-                }                
-            });
-            choice.setNullValid(true);
-            choice.setRequired(true);
-            choice.add(new ErrorHighlighter());            
-            add(choice);
-            // notify list =====================================================
-            List<ItemUser> choices = UserUtils.convertToItemUserList(userSpaceRoles);
-            ListMultipleChoice itemUsers = new JtracCheckBoxMultipleChoice("itemUsers", choices, new IChoiceRenderer() {
-                public Object getDisplayValue(Object o) {
-                    return ((ItemUser) o).getUser().getName();
-                }
-                public String getIdValue(Object o, int i) {
-                    return ((ItemUser) o).getUser().getId() + "";
-                }               
-            });
-            add(itemUsers);
-            // attachment ======================================================
-            fileUploadField = new FileUploadField("file");
-            // TODO file size limit
-            add(fileUploadField);    
-            // send notifications ==============================================
+            // hide some components if editing item
+            WebMarkupContainer hideAssignedTo = new WebMarkupContainer("hideAssignedTo");
+            WebMarkupContainer hideNotifyList = new WebMarkupContainer("hideNotifyList");
+            WebMarkupContainer hideEditReason = new WebMarkupContainer("hideEditReason");
+            add(hideAssignedTo);
+            add(hideNotifyList);
+            add(hideEditReason);
+            if(item.getId() > 0) {
+                hideAssignedTo.setVisible(false);
+                hideNotifyList.setVisible(false);
+                hideEditReason.add(new TextArea("editReason").setRequired(true).add(new ErrorHighlighter()));
+            } else {
+                hideEditReason.setVisible(false);
+                // assigned to =================================================
+                Space space = item.getSpace();
+                List<UserSpaceRole> userSpaceRoles = getJtrac().findUserRolesForSpace(space.getId());
+                List<User> assignable = UserUtils.filterUsersAbleToTransitionFrom(userSpaceRoles, space, State.OPEN);
+                DropDownChoice choice = new DropDownChoice("assignedTo", assignable, new IChoiceRenderer() {
+                    public Object getDisplayValue(Object o) {
+                        return ((User) o).getName();
+                    }
+                    public String getIdValue(Object o, int i) {
+                        return ((User) o).getId() + "";
+                    }                
+                });
+                choice.setNullValid(true);
+                choice.setRequired(true);
+                choice.add(new ErrorHighlighter());            
+                hideAssignedTo.add(choice);
+                // notify list =================================================
+                List<ItemUser> choices = UserUtils.convertToItemUserList(userSpaceRoles);
+                ListMultipleChoice itemUsers = new JtracCheckBoxMultipleChoice("itemUsers", choices, new IChoiceRenderer() {
+                    public Object getDisplayValue(Object o) {
+                        return ((ItemUser) o).getUser().getName();
+                    }
+                    public String getIdValue(Object o, int i) {
+                        return ((ItemUser) o).getUser().getId() + "";
+                    }               
+                });
+                hideNotifyList.add(itemUsers);
+                // attachment ==================================================                
+                // TODO file size limit
+                hideNotifyList.add(fileUploadField);                
+            }
+            // send notifications ==========================================
             add(new CheckBox("sendNotifications"));
+            // cancel ==========================================================
+            add(new Link("cancel") {
+                public void onClick() {
+                    setResponsePage(previous);
+                }                
+            }.setVisible(previous != null));            
         }
         
         @Override
@@ -138,9 +168,18 @@ public class ItemFormPage extends BasePage {
             }
             Item item = (Item) getModelObject();
             User user = getPrincipal();
-            item.setLoggedBy(user);
-            item.setStatus(State.OPEN);
-            getJtrac().storeItem(item, attachment);
+            if(item.getId() > 0) { // edit mode
+                History history = new History(item);
+                history.setAssignedTo(null);
+                history.setStatus(null);
+                history.setLoggedBy(user);
+                history.setComment(item.getEditReason());
+                getJtrac().storeHistoryForItem(item, history, attachment);                   
+            } else {
+                item.setLoggedBy(user);
+                item.setStatus(State.OPEN);
+                getJtrac().storeItem(item, attachment);                 
+            }
             if (attachment != null) {
                 File file = AttachmentUtils.getFile(attachment);
                 try {
@@ -148,8 +187,15 @@ public class ItemFormPage extends BasePage {
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-            }            
-            setResponsePage(new ItemViewPage(item, null));
+            }
+            // allow user to navigate back to search results if applicable
+            ItemListPage itemListPage = null;
+            if(previous != null) {
+                itemListPage = previous.getPrevious();
+            }
+            // item view always loads fresh instance from database
+            setResponsePage(new ItemViewPage(item.getId(), itemListPage));
+
         }
         
     }

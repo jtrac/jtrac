@@ -5,9 +5,9 @@
     </head>
     <body>
         <span wicket:id="header"></span>
-        <span wicket:id="border">
-            <span wicket:id="feedback"></span>
+        <span wicket:id="border">            
             <form wicket:id="form">
+                <span wicket:id="feedback"></span>
                 <table class="bdr-collapse">
                     <tr>
                         <td colspan="2">
@@ -37,7 +37,7 @@
                         <td>
                             <table class="jtrac">
                                 <span wicket:id="fields"></span>
-                                <tr>    
+                                <tr wicket:id="hideAssignedTo">    
                                     <td class="label">
                                         <wicket:message key="item_form.assignTo"/>
                                         <font color="red">*</font>
@@ -45,7 +45,16 @@
                                     <td>
                                         <select wicket:id="assignedTo"/>                                                       
                                     </td>
-                                </tr>                    
+                                </tr>
+                                <tr wicket:id="hideEditReason">    
+                                    <td class="label">
+                                        <wicket:message key="item_form.editReason"/>
+                                        <font color="red">*</font>
+                                    </td>
+                                    <td>
+                                        <textarea wicket:id="editReason" rows="5" cols="40"></textarea>
+                                    </td>
+                                </tr>                                 
                                 <tr>
                                     <td/>
                                     <td>
@@ -54,9 +63,14 @@
                                         <wicket:message key="item_form.sendNotifications"/>                                        
                                     </td>
                                 </tr>
-                            </table>
+                                <tr>
+                                    <td colspan="2">
+                                        <a href="#" wicket:id="cancel"><wicket:message key="cancel"/></a>
+                                    </td>
+                                </tr>
+                            </table>                                                                                    
                         </td>
-                        <td align="right">
+                        <td align="right" wicket:id="hideNotifyList">
                             <table class="jtrac">
                                 <tr>
                                     <th><wicket:message key="item_form.notifyByEmail"/></th>

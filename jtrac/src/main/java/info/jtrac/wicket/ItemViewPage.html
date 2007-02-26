@@ -6,7 +6,16 @@
     <body>
         <span wicket:id="header"></span>
         <span wicket:id="border">
-            <div wicket:id="back" class="space-below"><a href="#"><wicket:message key="back"/></a></div>
+            <table class="jtrac" width="100%">
+                <tr>
+                    <td wicket:id="back">
+                        <a href="#"><wicket:message key="back"/></a>
+                    </td>
+                    <td wicket:id="edit" align="right">
+                        <a href="#"><wicket:message key="edit"/></a>
+                    </td>
+                </tr>
+            </table>            
             <div wicket:id="itemViewPanel" class="space-below"></div>            
             <span wicket:id="itemViewFormPanel"></span>
         </span>

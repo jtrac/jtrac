@@ -35,6 +35,11 @@ public class History extends AbstractItem {
         // zero arg constructor
     }
     
+    /**
+     * this is used a) when creating snapshot of item when inserting history
+     * and b) to create snapshot of item when editing item in which case
+     * the status, loggedBy and assignedTo fields are additionally tweaked
+     */
     public History(Item item) {
         setStatus(item.getStatus());
         setSummary(item.getSummary());
