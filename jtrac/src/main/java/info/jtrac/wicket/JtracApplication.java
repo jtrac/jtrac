@@ -141,7 +141,8 @@ public class JtracApplication extends WebApplication {
         
         // friendly urls for selected pages
         mountBookmarkablePage("/login", LoginPage.class);
-        mountBookmarkablePage("/logout", LogoutPage.class);        
+        mountBookmarkablePage("/logout", LogoutPage.class);
+        mountBookmarkablePage("/svn", SvnStatsPage.class);
         // bookmarkable url for viewing items
         mount("/item", new IndexedParamUrlCodingStrategy("/item", ItemViewPage.class));        
         

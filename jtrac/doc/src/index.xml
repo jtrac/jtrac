@@ -892,7 +892,7 @@ wrapper.exe -r etc/wrapper.conf
                 Integration with <ulink url="http://subversion.tigris.org/">Subversion</ulink> has already been implemented 
                 using the <ulink url="http://tmate.org/svn/">JavaSVN</ulink> library and this will enable effective 
                 integration of bug reports with commit history in the future. You can try out the existing experimental 
-                support by going to the following url of your JTrac installation: http://[hostname]/jtrac/app/svn_form.htm                
+                support by going to the following url of your JTrac installation: http://[hostname]/jtrac/app/svn                
             </para>
             <para>
                 <mediaobject>
