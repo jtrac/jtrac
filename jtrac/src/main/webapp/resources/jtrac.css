@@ -28,6 +28,6 @@ tr.sortable th.order-up { background-color: #ADD8E6; background-image: url("arro
 tr.sortable th.order-down { background-color: #ADD8E6; background-image: url("arrow_down.png"); }
 tr.sortable a { color: black; }
 tr.sortable a:hover { color: blue; }
-li.feedbackPanelERROR { list-style: none; background: url("dialog-error.png") no-repeat; padding-left: 2em; }
+li.feedbackPanelERROR { list-style: none; background: url("dialog-error.png") no-repeat; padding-left: 2em; padding-bottom: 0.5em; }
 .menu-option div { font-weight: bold; background-color: #DEDEFF; padding-left: 1em; 
     padding-right: 1em; margin-bottom: 1.5em; text-align: right; }
