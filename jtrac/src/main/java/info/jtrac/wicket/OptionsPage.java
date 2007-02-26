@@ -16,6 +16,7 @@
 
 package info.jtrac.wicket;
 
+import info.jtrac.domain.User;
 import wicket.markup.html.link.Link;
 
 /**
@@ -29,37 +30,41 @@ public class OptionsPage extends BasePage {
         
         add(new HeaderPanel(null));
         
+        final User user = getPrincipal();
+        
         border.add(new Link("profile") {
             public void onClick() {
-                UserFormPage page = new UserFormPage(getPrincipal());
+                UserFormPage page = new UserFormPage(user);
                 page.setPrevious(OptionsPage.this);
                 setResponsePage(page);
             }            
         });
         
+        boolean isAdmin = user.isAdminForAllSpaces();
+        
         border.add(new Link("users") {
             public void onClick() {
                 setResponsePage(new UserListPage());
             }            
-        }); 
+        }.setVisible(isAdmin)); 
         
         border.add(new Link("spaces") {
             public void onClick() {
                 setResponsePage(new SpaceListPage());
             }            
-        });      
+        }.setVisible(isAdmin));      
         
         border.add(new Link("settings") {
             public void onClick() {
                 setResponsePage(new ConfigListPage(null));
             }            
-        });        
+        }.setVisible(isAdmin));        
         
         border.add(new Link("indexes") {
             public void onClick() {
                 setResponsePage(new IndexRebuildPage(false));
             }            
-        });        
+        }.setVisible(isAdmin));        
         
         border.add(new Link("import") {
             public void onClick() {
