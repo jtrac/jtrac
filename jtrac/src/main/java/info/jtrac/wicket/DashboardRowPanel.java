@@ -47,7 +47,8 @@ public class DashboardRowPanel extends BasePanel {
         
         if(usr.isAbleToCreateNewItem()) {
             add(new Link("new") {
-                public void onClick() {                
+                public void onClick() {
+                    setCurrentSpace(space);
                     setResponsePage(new ItemFormPage(space));
                 }
             });
@@ -57,6 +58,7 @@ public class DashboardRowPanel extends BasePanel {
 
         add(new Link("search") {
             public void onClick() {
+                setCurrentSpace(space);
                 setResponsePage(new ItemSearchFormPage(space));
             }
         });        

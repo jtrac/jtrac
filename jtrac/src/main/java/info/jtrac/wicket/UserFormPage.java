@@ -53,20 +53,17 @@ public class UserFormPage extends BasePage {
         FeedbackPanel feedback = new FeedbackPanel("feedback");
         filter = new JtracFeedbackMessageFilter();
         feedback.setFilter(filter);
-        border.add(feedback);  
-        add(new HeaderPanel(null)); 
-        border.add(new UserForm("form", user));
+        add(feedback);  
+        add(new UserForm("form", user));
     }
     
-    public UserFormPage() {
-        super("Edit User");   
+    public UserFormPage() {  
         User user = new User();
         user.setLocale(getJtrac().getDefaultLocale());
         addComponents(user);
     }    
     
     public UserFormPage(User user) {
-        super("Edit User");
         addComponents(user);
     }
     

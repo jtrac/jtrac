@@ -34,15 +34,13 @@ import wicket.util.time.Duration;
  */
 public class IndexRebuildPage extends BasePage {      
     
-    public IndexRebuildPage(boolean success) {                
-        super("Rebuild Indexes");              
-        add(new HeaderPanel(null));
+    public IndexRebuildPage(boolean success) {                    
         if(success) {
-            border.add(new Label("heading", localize("index_rebuild_success.message")));
-            border.add(new WebMarkupContainer("form").setVisible(false));
+            add(new Label("heading", localize("index_rebuild_success.message")));
+            add(new WebMarkupContainer("form").setVisible(false));
         } else {
-            border.add(new Label("heading", localize("index_rebuild.heading")));
-            border.add(new RebuildIndexesForm("form"));
+            add(new Label("heading", localize("index_rebuild.heading")));
+            add(new RebuildIndexesForm("form"));
         }
     }
     

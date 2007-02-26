@@ -32,10 +32,11 @@ import wicket.protocol.http.WebResponse;
  */
 public class HeaderPanel extends BasePanel {    
     
-    public HeaderPanel(final Space space) {
+    public HeaderPanel() {
         super("header");
         
-        final User user = getPrincipal();
+        final User user = ((JtracSession) getSession()).getUser();
+        final Space space = ((JtracSession) getSession()).getCurrentSpace();
         
         add(new Link("dashboard") {
             public void onClick() {
@@ -92,8 +93,7 @@ public class HeaderPanel extends BasePanel {
                 }            
             }); 
             add(new Link("logout") {
-                public void onClick() {                    
-                    User user = getPrincipal();
+                public void onClick() {                                        
                     Cookie cookie = new Cookie("jtrac", user.getLoginName() 
                         + ":" + getJtrac().encodeClearText(user.getPassword()));
                     ((WebResponse) getRequestCycle().getResponse()).clearCookie(cookie);                    

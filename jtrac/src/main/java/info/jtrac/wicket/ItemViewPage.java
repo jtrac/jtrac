@@ -33,8 +33,7 @@ public class ItemViewPage extends BasePage {
         return previous;
     }    
     
-    public ItemViewPage(PageParameters params) {
-        super("Item View");        
+    public ItemViewPage(PageParameters params) {        
         String itemId = params.getString("0");
         logger.debug("item id parsed from url = '" + itemId + "'");
         Item item;
@@ -44,20 +43,17 @@ public class ItemViewPage extends BasePage {
         } else {
             // internal id of type long
             item = getJtrac().loadItem(Long.parseLong(itemId));
-        }
+        }        
         addComponents(item);
     }
     
-    public ItemViewPage(long itemId, final ItemListPage previous) {
-        super("Item View");  
+    public ItemViewPage(long itemId, final ItemListPage previous) { 
         this.previous = previous;
         final Item item = getJtrac().loadItem(itemId);
         addComponents(item);
     }
     
-    private void addComponents(final Item item) {
-        
-        add(new HeaderPanel(null));                
+    private void addComponents(final Item item) {                            
         
         Link link = new Link("back") {
             public void onClick() {
@@ -69,22 +65,22 @@ public class ItemViewPage extends BasePage {
             link.setVisible(false);
         }
         
-        border.add(link);
+        add(link);
                         
         User user = getPrincipal();
         
-        border.add(new Link("edit") {
+        add(new Link("edit") {
             public void onClick() {
                 setResponsePage(new ItemFormPage(item, ItemViewPage.this));
             }
         }.setVisible(user.isAdminForAllSpaces()));        
         
-        border.add(new ItemViewPanel("itemViewPanel", item));
+        add(new ItemViewPanel("itemViewPanel", item));
         
         if(user.getId() > 0) {        
-            border.add(new ItemViewFormPanel("itemViewFormPanel", item, previous));
+            add(new ItemViewFormPanel("itemViewFormPanel", item, previous));
         } else {
-            border.add(new WebMarkupContainer("itemViewFormPanel").setVisible(false));
+            add(new WebMarkupContainer("itemViewFormPanel").setVisible(false));
         }        
     }
     

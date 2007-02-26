@@ -36,11 +36,10 @@ public class DashboardPage extends BasePage {
     
     public DashboardPage() {
         
-        super("Dashboard");
-        setVersioned(false);
+        setVersioned(false);        
+               
+        ((JtracSession) getSession()).setCurrentSpace(null);
         
-        add(new HeaderPanel(null));
-                
         final User user = getPrincipal();
         
         final CountsHolder countsHolder = getJtrac().loadCountsForUser(user);        
@@ -51,10 +50,10 @@ public class DashboardPage extends BasePage {
             hideLogged.setVisible(false);
             hideAssigned.setVisible(false);
         }
-        border.add(hideLogged);
-        border.add(hideAssigned);
+        add(hideLogged);
+        add(hideAssigned);
         
-        border.add(new ListView("dashboardRows", user.getSpaceRoles()) {
+        add(new ListView("dashboardRows", user.getSpaceRoles()) {
             protected void populateItem(final ListItem listItem) {
                 UserSpaceRole usr = (UserSpaceRole) listItem.getModelObject();
                 Counts counts = countsHolder.getCounts().get(usr.getSpace().getId());
@@ -108,7 +107,7 @@ public class DashboardPage extends BasePage {
             total.setVisible(false);
         }   
         
-        border.add(total); 
+        add(total); 
         
     }
     

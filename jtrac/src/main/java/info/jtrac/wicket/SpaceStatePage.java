@@ -40,11 +40,9 @@ public class SpaceStatePage extends BasePage {
     private Space space;        
     
     public SpaceStatePage(Space space, int stateKey, WebPage previous) {
-        super("Edit State");
         this.space = space;
         this.previous = previous;
-        add(new HeaderPanel(null));
-        border.add(new SpaceStateForm("form", stateKey));
+        add(new SpaceStateForm("form", stateKey));
     }
     
     private class SpaceStateForm extends Form {                

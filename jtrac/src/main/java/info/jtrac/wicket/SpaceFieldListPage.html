@@ -1,11 +1,6 @@
 <html>
-    <head>
-        <title wicket:id="title">title here</title>
-        <link rel="stylesheet" type="text/css" href="resources/jtrac.css"/>
-    </head>
     <body>
-        <span wicket:id="header"></span>
-        <span wicket:id="border">
+        <wicket:extend>
             <form wicket:id="form">
                 <div class="heading">
                     <wicket:message key="space_fields.customFields"/>:
@@ -50,6 +45,6 @@
                 <p/>
                 <a href="#" wicket:id="cancel"><wicket:message key="cancel"/></a>
             </form>
-        </span>
+        </wicket:extend>
     </body>
 </html>

@@ -1,11 +1,6 @@
 <html>
-    <head>
-        <title wicket:id="title">title here</title>
-        <link rel="stylesheet" type="text/css" href="resources/jtrac.css"/>
-    </head>
     <body>
-        <span wicket:id="header"></span>
-        <span wicket:id="border">
+        <wicket:extend>
             <table class="jtrac" width="100%">
                 <tr>
                     <td>
@@ -44,6 +39,6 @@
                     <td wicket:id="timeStamp"></td>
                 </tr>
             </table>
-        </span>
+        </wicket:extend>
     </body>
 </html>

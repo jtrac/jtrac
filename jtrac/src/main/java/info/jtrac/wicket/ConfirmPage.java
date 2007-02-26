@@ -16,7 +16,6 @@
 
 package info.jtrac.wicket;
 
-import bsh.This;
 import java.util.Arrays;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
@@ -34,14 +33,12 @@ public abstract class ConfirmPage extends BasePage {
     private String[] lines;
     private WebPage back; 
     
-    public ConfirmPage(WebPage back, String heading, String warning, String[] lines) {        
-        super("Confirm");        
+    public ConfirmPage(WebPage back, String heading, String warning, String[] lines) {              
         this.back = back;
         this.warning = warning;
-        this.lines = lines;
-        add(new HeaderPanel(null));
-        border.add(new Label("heading", heading));
-        border.add(new ConfirmForm("form"));                
+        this.lines = lines;        
+        add(new Label("heading", heading));
+        add(new ConfirmForm("form"));                
     }
     
     public abstract void onConfirm();

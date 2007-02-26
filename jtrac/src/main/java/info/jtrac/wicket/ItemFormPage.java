@@ -52,19 +52,15 @@ public class ItemFormPage extends BasePage {
     
     ItemViewPage previous;
             
-    public ItemFormPage(Space space) {
-        super("Edit Item");
-        add(new HeaderPanel(space));
+    public ItemFormPage(Space space) {       
         Item item = new Item();
         item.setSpace(space);
-        border.add(new ItemForm("form", item));
+        add(new ItemForm("form", item));
     }
     
     public ItemFormPage(Item item, ItemViewPage previous) {
-        super("Edit Item");
-        this.previous = previous;
-        add(new HeaderPanel(null));
-        border.add(new ItemForm("form", item));        
+        this.previous = previous;        
+        add(new ItemForm("form", item));        
     }   
     
     private class ItemForm extends Form {

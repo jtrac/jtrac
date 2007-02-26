@@ -1,12 +1,12 @@
 /*
  * Copyright 2002-2005 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,25 +38,23 @@ import wicket.model.PropertyModel;
  * space allocate page
  */
 public class SpaceAllocatePage extends BasePage {
-      
+    
     private WebPage previous;
-    private Space space;        
+    private Space space;
     
     public SpaceAllocatePage(Space s, WebPage previous) {
-        super("Edit State");
         this.space = getJtrac().loadSpace(s.getId());
         this.previous = previous;
-        add(new HeaderPanel(null));
-        border.add(new SpaceAllocateForm("form"));
+        add(new SpaceAllocateForm("form"));
     }
     
-    private class SpaceAllocateForm extends Form {                        
+    private class SpaceAllocateForm extends Form {
         
         public SpaceAllocateForm(String id) {
             
-            super(id);                                
+            super(id);
             
-            UserSpaceRole usr = new UserSpaceRole();            
+            UserSpaceRole usr = new UserSpaceRole();
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(usr);
             setModel(model);
             
@@ -70,7 +68,7 @@ public class SpaceAllocatePage extends BasePage {
                 protected void populateItem(ListItem listItem) {
                     if(listItem.getIndex() % 2 == 1) {
                         listItem.add(sam);
-                    }                    
+                    }
                     final UserSpaceRole usr = (UserSpaceRole) listItem.getModelObject();
                     listItem.add(new Label("loginName", new PropertyModel(usr, "user.loginName")));
                     listItem.add(new Label("name", new PropertyModel(usr, "user.name")));
@@ -83,19 +81,19 @@ public class SpaceAllocatePage extends BasePage {
                             getJtrac().removeUserSpaceRole(temp);
                             refreshPrincipal(temp.getUser());
                             setResponsePage(new SpaceAllocatePage(space, previous));
-                        }                   
+                        }
                     });
                 }
             });
             
             add(new Button("createNewUser") {
                 @Override
-                public void onSubmit() {     
+                public void onSubmit() {
                     UserFormPage page = new UserFormPage();
                     page.setPrevious(SpaceAllocatePage.this);
                     setResponsePage(page);
-                }                   
-            });            
+                }
+            });
             
             List<User> users = getJtrac().findUnallocatedUsersForSpace(space.getId());
             
@@ -106,10 +104,10 @@ public class SpaceAllocatePage extends BasePage {
                 public String getIdValue(Object o, int i) {
                     return ((User) o).getId() + "";
                 }
-            });            
-            userChoice.setNullValid(true);                        
+            });
+            userChoice.setNullValid(true);
             add(userChoice);
-                        
+            
             List<String> roleKeys = new ArrayList(space.getMetadata().getRoles().keySet());
             
             DropDownChoice roleKeyChoice = new DropDownChoice("roleKey", roleKeys);
@@ -118,7 +116,7 @@ public class SpaceAllocatePage extends BasePage {
             
             add(new Button("allocate") {
                 @Override
-                public void onSubmit() {     
+                public void onSubmit() {
                     UserSpaceRole usr = (UserSpaceRole) SpaceAllocateForm.this.getModelObject();
                     if(usr.getUser() == null || usr.getRoleKey() == null) {
                         return;
@@ -128,19 +126,19 @@ public class SpaceAllocatePage extends BasePage {
                     getJtrac().storeUserSpaceRole(temp, space, usr.getRoleKey());
                     refreshPrincipal(temp);
                     setResponsePage(new SpaceAllocatePage(space, previous));
-                }                   
-            });            
+                }
+            });
             
             // cancel ==========================================================
             add(new Link("cancel") {
                 public void onClick() {
                     setResponsePage(previous);
-                }                
-            });            
-        }              
-                        
-    }        
+                }
+            });
+        }
         
-
+    }
+    
+    
     
 }

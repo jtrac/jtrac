@@ -61,12 +61,7 @@ public class ItemListPage extends BasePage {
         return page;
     }
     
-    public ItemListPage(final ItemSearch itemSearch) {
-        
-        super("Item Search Results");
-        
-        add(new HeaderPanel(null));
-        
+    public ItemListPage(final ItemSearch itemSearch) {                
         LoadableDetachableModel itemListModel = new LoadableDetachableModel() {
             protected Object load() {
                 logger.debug("loading item list from database");                
@@ -94,7 +89,7 @@ public class ItemListPage extends BasePage {
             }
         };        
         link.add(new Label("count", resultCount + ""));        
-        border.add(link);          
+        add(link);          
         
         WebMarkupContainer pagination = new WebMarkupContainer("pagination");                                                        
         
@@ -162,11 +157,11 @@ public class ItemListPage extends BasePage {
             pagination.setVisible(false);
         }
         
-        border.add(pagination);
+        add(pagination);
         
         //========================== EXCEL EXPORT ==============================
         
-        border.add(new Link("export") {
+        add(new Link("export") {
             public void onClick() {
                 // temporarily switch off paging of results
                 itemSearch.setPageSize(-1);
@@ -194,9 +189,9 @@ public class ItemListPage extends BasePage {
         //====================== HEADER ========================================
                 
         if(itemSearch.isShowDetail()) {
-            border.add(new Label("detail", getLocalizer().getString("item_view.detail", null)));
+            add(new Label("detail", getLocalizer().getString("item_view.detail", null)));
         } else {
-            border.add(new Label("detail", "").setVisible(false));
+            add(new Label("detail", "").setVisible(false));
         }
         
         final SimpleAttributeModifier orderClass;
@@ -219,7 +214,7 @@ public class ItemListPage extends BasePage {
             if (s.equals(itemSearch.getSortFieldName())) {
                 headingLink.add(orderClass);
             }
-            border.add(headingLink);
+            add(headingLink);
         }        
         
         final List<Field> fields = itemSearch.getFields();
@@ -240,7 +235,7 @@ public class ItemListPage extends BasePage {
             }            
         };        
         
-        border.add(labels);                     
+        add(labels);                     
         
         //======================== ITEMS =======================================
         
@@ -329,7 +324,7 @@ public class ItemListPage extends BasePage {
             }            
         };
         
-        border.add(itemList);        
+        add(itemList);        
         
     }
     

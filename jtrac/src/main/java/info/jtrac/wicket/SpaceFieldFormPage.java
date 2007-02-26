@@ -50,12 +50,10 @@ public class SpaceFieldFormPage extends BasePage {
     private Space space;
     
     private void addComponents(Field field) {        
-        add(new HeaderPanel(null)); 
-        border.add(new SpaceFieldForm("form", field));
+        add(new SpaceFieldForm("form", field));
     }     
     
     public SpaceFieldFormPage(Space space, Field field, WebPage previous) {
-        super("Edit Field");
         this.space = space;
         this.previous = previous;
         addComponents(field);

@@ -270,6 +270,9 @@ public class User implements UserDetails, Serializable {
     
     @Override
     public int hashCode() {
+        if(loginName == null) {
+            return 0;
+        }
         return loginName.hashCode();
     }
     

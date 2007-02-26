@@ -1,11 +1,6 @@
 <html>
-    <head>
-        <title wicket:id="title">title here</title>
-        <link rel="stylesheet" type="text/css" href="resources/jtrac.css"/>
-    </head>
     <body>
-        <span wicket:id="header"></span>
-        <span wicket:id="border">
+        <wicket:extend>
             <div class="heading"><wicket:message key="options.optionsMenu"/></div>
             <table class="jtrac">
                 <tr>
@@ -19,6 +14,6 @@
                     </td>
                 </tr>
             </table>
-        </span>
+        </wicket:extend>
     </body>
 </html>

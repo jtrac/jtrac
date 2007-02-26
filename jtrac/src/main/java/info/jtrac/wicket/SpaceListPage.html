@@ -1,11 +1,6 @@
 <html>
-    <head>
-        <title wicket:id="title">title here</title>
-        <link rel="stylesheet" type="text/css" href="resources/jtrac.css"/>
-    </head>
     <body>
-        <span wicket:id="header"></span>
-        <span wicket:id="border">
+        <wicket:extend>
             <div class="heading">
                 <wicket:message key="space_list.spaceList"/>
                 [ <a href="#" wicket:id="create"><wicket:message key="space_list.createNewSpace"/></a> ]
@@ -26,6 +21,6 @@
                     <td wicket:id="allocate" align="center"><a href="#">(+)</a></td>
                 </tr>                
             </table>
-        </span>
+        </wicket:extend>
     </body>
 </html>

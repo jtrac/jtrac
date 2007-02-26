@@ -47,13 +47,11 @@ public class SpaceFieldOptionPage extends BasePage {
     private WebPage previous;
     private Space space;
     
-    private void addComponents(Field field, String key) {        
-        add(new HeaderPanel(null)); 
-        border.add(new SpaceFieldOptionForm("form", field, key));
+    private void addComponents(Field field, String key) {                
+        add(new SpaceFieldOptionForm("form", field, key));
     }     
     
     public SpaceFieldOptionPage(Space space, Field field, String key, WebPage previous) {
-        super("Edit Field Option");
         this.space = space;
         this.previous = previous;
         addComponents(field, key);

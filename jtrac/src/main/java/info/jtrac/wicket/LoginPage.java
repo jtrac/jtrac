@@ -48,6 +48,7 @@ public class LoginPage extends WebPage {
     }        
     
     public LoginPage() {
+        setVersioned(false);
         add(new Label("title", getLocalizer().getString("login.title", null)));
         add(new Link("home") {
             public void onClick() {

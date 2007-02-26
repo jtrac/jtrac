@@ -24,15 +24,15 @@ import wicket.markup.html.link.Link;
  */
 public class OptionsPage extends BasePage {
       
-    public OptionsPage() {
+    public OptionsPage() {                  
         
-        super("Options Menu");      
-        
-        add(new HeaderPanel(null));
+        setVersioned(false);
+                    
+        ((JtracSession) getSession()).setCurrentSpace(null);    
         
         final User user = getPrincipal();
         
-        border.add(new Link("profile") {
+        add(new Link("profile") {
             public void onClick() {
                 UserFormPage page = new UserFormPage(user);
                 page.setPrevious(OptionsPage.this);
@@ -42,31 +42,31 @@ public class OptionsPage extends BasePage {
         
         boolean isAdmin = user.isAdminForAllSpaces();
         
-        border.add(new Link("users") {
+        add(new Link("users") {
             public void onClick() {
                 setResponsePage(new UserListPage());
             }            
         }.setVisible(isAdmin)); 
         
-        border.add(new Link("spaces") {
+        add(new Link("spaces") {
             public void onClick() {
                 setResponsePage(new SpaceListPage());
             }            
         }.setVisible(isAdmin));      
         
-        border.add(new Link("settings") {
+        add(new Link("settings") {
             public void onClick() {
                 setResponsePage(new ConfigListPage(null));
             }            
         }.setVisible(isAdmin));        
         
-        border.add(new Link("indexes") {
+        add(new Link("indexes") {
             public void onClick() {
                 setResponsePage(new IndexRebuildPage(false));
             }            
         }.setVisible(isAdmin));        
         
-        border.add(new Link("import") {
+        add(new Link("import") {
             public void onClick() {
             }            
         }.setVisible(false));                 

@@ -43,12 +43,10 @@ public class SpacePermissionsPage extends BasePage {
     private Space space;
     
     private void addComponents() {        
-        add(new HeaderPanel(null)); 
-        border.add(new SpacePermissionsForm("form"));
+        add(new SpacePermissionsForm("form"));
     }     
     
     public SpacePermissionsPage(Space space, WebPage previous) {
-        super("Edit Roles");
         this.space = space;
         this.previous = previous;
         addComponents();

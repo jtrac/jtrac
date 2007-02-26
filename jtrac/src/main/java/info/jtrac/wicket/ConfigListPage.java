@@ -31,11 +31,7 @@ import wicket.markup.html.list.ListView;
  */
 public class ConfigListPage extends BasePage {
       
-    public ConfigListPage(final String selectedParam) {
-        
-        super("Configuration Settings");      
-        
-        add(new HeaderPanel(null));
+    public ConfigListPage(final String selectedParam) {                           
         
         final Map<String, String> configMap = getJtrac().loadAllConfig();
         
@@ -43,7 +39,7 @@ public class ConfigListPage extends BasePage {
         
         final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
         
-        border.add(new ListView("configs", params) {
+        add(new ListView("configs", params) {
             protected void populateItem(ListItem listItem) {
                 final String param = (String) listItem.getModelObject();
                 final String value = configMap.get(param);

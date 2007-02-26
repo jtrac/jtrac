@@ -29,10 +29,8 @@ import wicket.model.BoundCompoundPropertyModel;
  */
 public class ConfigFormPage extends BasePage {              
     
-    public ConfigFormPage(String param, String value) {
-        super("Edit Configuration Setting");
-        add(new HeaderPanel(null));
-        border.add(new ConfigForm("form", param, value));
+    public ConfigFormPage(String param, String value) {            
+        add(new ConfigForm("form", param, value));
     }
     
     private class ConfigForm extends Form {                

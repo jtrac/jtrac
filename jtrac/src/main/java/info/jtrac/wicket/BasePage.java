@@ -17,25 +17,23 @@
 package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
+import info.jtrac.Version;
 import info.jtrac.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.border.Border;
 import wicket.model.StringResourceModel;
 
 /**
  * base class for all wicket pages, this provides
  * a way to access the spring managed service layer
  * also takes care of the standard template for all
- * pages which is a wicket border
+ * pages which is using wicket markup inheritance
  */
 public abstract class BasePage extends WebPage {
     
-    protected final Log logger = LogFactory.getLog(getClass());
-    
-    protected Border border;        
+    protected final Log logger = LogFactory.getLog(getClass());        
     
     protected Jtrac getJtrac() {
         return ((JtracApplication) getApplication()).getJtrac();
@@ -61,10 +59,9 @@ public abstract class BasePage extends WebPage {
         ((JtracSession) getSession()).setUser((User) getJtrac().loadUserByUsername(temp.getLoginName()));        
     }    
     
-    public BasePage(String title) {
-        add(new Label("title", title));
-        border = new TemplateBorder();
-        add(border);    
+    public BasePage() {        
+        add(new HeaderPanel());
+        add(new Label("version", Version.VERSION));
     }
     
     /**

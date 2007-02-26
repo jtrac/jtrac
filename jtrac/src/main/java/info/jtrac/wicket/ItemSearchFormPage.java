@@ -65,16 +65,12 @@ public class ItemSearchFormPage extends BasePage {
         }        
     }
     
-    public ItemSearchFormPage(Space space) {        
-        super("Item Search");        
-        add(new HeaderPanel(space));                
-        border.add(new ItemSearchForm("form", space));        
+    public ItemSearchFormPage(Space space) {                              
+        add(new ItemSearchForm("form", space));        
     }
     
-    public ItemSearchFormPage(User user) {        
-        super("Item Search");        
-        add(new HeaderPanel(null));
-        border.add(new ItemSearchForm("form", user));        
+    public ItemSearchFormPage(User user) {               
+        add(new ItemSearchForm("form", user));        
     }    
     
     /**
@@ -82,10 +78,8 @@ public class ItemSearchFormPage extends BasePage {
      * the search results screen
      */
     public ItemSearchFormPage(ItemSearch itemSearch) {        
-        super("Item Search");
-        add(new HeaderPanel(itemSearch.getSpace()));
         itemSearch.setCurrentPage(0);        
-        border.add(new ItemSearchForm("form", itemSearch));      
+        add(new ItemSearchForm("form", itemSearch));      
     }    
 
     private class ItemSearchForm extends Form {

@@ -38,13 +38,8 @@ public class UserListPage extends BasePage {
         this.selectedUserId = selectedUserId;
     }
       
-    public UserListPage() {
-        
-        super("User List");      
-        
-        add(new HeaderPanel(null));
-        
-        border.add(new Link("create") {
+    public UserListPage() {              
+        add(new Link("create") {
             public void onClick() {
                 UserFormPage page = new UserFormPage();
                 page.setPrevious(UserListPage.this);
@@ -101,7 +96,7 @@ public class UserListPage extends BasePage {
             }            
         };
         
-        border.add(listView);
+        add(listView);
         
     }
     

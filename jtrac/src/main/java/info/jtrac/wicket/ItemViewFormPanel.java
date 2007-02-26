@@ -81,7 +81,7 @@ public class ItemViewFormPanel extends BasePanel {
             setModel(model);
             add(new TextArea("comment").setRequired(true).add(new ErrorHighlighter()));
             // custom fields ===================================================
-            User user = getPrincipal();
+            User user = ((JtracSession) getSession()).getUser();
             List<Field> fields = item.getEditableFieldList(user);                   
             add(new CustomFieldsFormPanel("fields", model, fields));
             // =================================================================
@@ -180,7 +180,7 @@ public class ItemViewFormPanel extends BasePanel {
                 attachment.setFileName(fileName);
             }
             History history = (History) getModelObject();                                  
-            User user = getPrincipal();
+            User user = ((JtracSession) getSession()).getUser();
             history.setLoggedBy(user);
             Item item = getJtrac().loadItem(itemId);
             getJtrac().storeHistoryForItem(item, history, attachment);

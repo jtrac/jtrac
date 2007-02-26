@@ -46,12 +46,10 @@ public class SpaceFieldListPage extends BasePage {
     private WebPage previous;
     
     private void addComponents(Space space, String selectedFieldName) {
-        add(new HeaderPanel(null)); 
-        border.add(new SpaceFieldsForm("form", space, selectedFieldName));
+        add(new SpaceFieldsForm("form", space, selectedFieldName));
     }     
     
     public SpaceFieldListPage(Space space, String selectedFieldName, WebPage previous) {
-        super("Edit Space Fields");
         this.previous = previous;
         this.space = space;
         addComponents(space, selectedFieldName);

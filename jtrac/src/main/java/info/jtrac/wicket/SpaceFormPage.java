@@ -20,7 +20,6 @@ import info.jtrac.domain.Space;
 import info.jtrac.util.ValidationUtils;
 import java.io.Serializable;
 import java.util.List;
-import wicket.Component;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Button;
@@ -34,7 +33,6 @@ import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.AbstractValidator;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
-import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
 
 /**
@@ -46,23 +44,16 @@ public class SpaceFormPage extends BasePage {
 
     public void setPrevious(WebPage previous) {
         this.previous = previous;
-    }   
-    
-    private void addComponents(Space space) {
-        add(new HeaderPanel(null)); 
-        border.add(new SpaceForm("form", space));
-    }
-    
-    public SpaceFormPage() {
-        super("Edit Space");   
-        Space space = new Space();    
-        space.getMetadata().initRoles();
-        addComponents(space);
     }    
     
-    public SpaceFormPage(Space space) {
-        super("Edit Space");        
-        addComponents(space);
+    public SpaceFormPage() {  
+        Space space = new Space();    
+        space.getMetadata().initRoles();
+        add(new SpaceForm("form", space));
+    }    
+    
+    public SpaceFormPage(Space space) {     
+        add(new SpaceForm("form", space));
     }
     
     private class SpaceForm extends Form {

@@ -41,11 +41,9 @@ public class SpaceRolePage extends BasePage {
     private Space space;        
     
     public SpaceRolePage(Space space, String roleKey, WebPage previous) {
-        super("Edit Role");
         this.space = space;
         this.previous = previous;
-        add(new HeaderPanel(null));
-        border.add(new SpaceRoleForm("form", roleKey));
+        add(new SpaceRoleForm("form", roleKey));
     }
     
     private class SpaceRoleForm extends Form {                

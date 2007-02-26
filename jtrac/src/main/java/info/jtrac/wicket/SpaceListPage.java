@@ -36,13 +36,9 @@ public class SpaceListPage extends BasePage {
         this.selectedSpaceId = selectedSpaceId;
     }
       
-    public SpaceListPage() {
+    public SpaceListPage() {            
         
-        super("Space List");      
-        
-        add(new HeaderPanel(null));
-        
-        border.add(new Link("create") {
+        add(new Link("create") {
             public void onClick() {
                 SpaceFormPage page = new SpaceFormPage();
                 page.setPrevious(SpaceListPage.this);
@@ -90,7 +86,7 @@ public class SpaceListPage extends BasePage {
             }            
         };
         
-        border.add(listView);
+        add(listView);
         
     }
     

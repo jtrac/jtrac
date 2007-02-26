@@ -1,20 +1,19 @@
 <html>
     <head>
-        <title wicket:id="title">title here</title>
-        <link rel="stylesheet" type="text/css" href="resources/jtrac.css"/>
-        <style>
-            .roles input { width: 2em; }
-            .workflow { border-collapse: collapse; }
-            .workflow table { width: 100%; height: 100%; }
-            .workflow td { border: 1px solid black; font-size: 80%; padding-left: 0.2em; padding-right: 0.2em; }
-            .state { background: #DEDEFF; }
-            .mirror { background: #CCCCCC; }
-            .transition { font-style: italic; }  
-        </style>        
+        <wicket:head>
+            <style>
+                .roles input { width: 2em; }
+                .workflow { border-collapse: collapse; }
+                .workflow table { width: 100%; height: 100%; }
+                .workflow td { border: 1px solid black; font-size: 80%; padding-left: 0.2em; padding-right: 0.2em; }
+                .state { background: #DEDEFF; }
+                .mirror { background: #CCCCCC; }
+                .transition { font-style: italic; }  
+            </style>
+        </wicket:head>
     </head>
     <body>
-        <span wicket:id="header"></span>
-        <span wicket:id="border">
+        <wicket:extend>
             <form wicket:id="form">
                 <div class="heading">
                     <wicket:message key="space_roles.spaceRoles"/>:
@@ -52,6 +51,6 @@
                 <p/>
                 <span wicket:id="workflow"></span>
             </form>
-        </span>
+        </wicket:extend>
     </body>
 </html>

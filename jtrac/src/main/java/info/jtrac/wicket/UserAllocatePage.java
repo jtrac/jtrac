@@ -47,11 +47,9 @@ public class UserAllocatePage extends BasePage {
     private User user;        
     
     public UserAllocatePage(User u, WebPage previous) {
-        super("Edit State");
         this.user = getJtrac().loadUser(u.getId());
-        this.previous = previous;
-        add(new HeaderPanel(null));
-        border.add(new UserAllocateForm("form"));
+        this.previous = previous;        
+        add(new UserAllocateForm("form"));
     }
     
     private class UserAllocateForm extends Form {                
