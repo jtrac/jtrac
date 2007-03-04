@@ -70,6 +70,7 @@ public class ItemFormPage extends BasePage {
         
         public ItemForm(String id, Item item) {
             super(id);
+            setVersioned(false);
             setMultiPart(true);
             FeedbackPanel feedback = new FeedbackPanel("feedback");
             filter = new JtracFeedbackMessageFilter();
