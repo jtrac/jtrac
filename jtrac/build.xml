@@ -70,13 +70,15 @@
     <!-- ========================= HIBERNATE =========================== -->
 
     <target name="hbm-export" depends="compile">
+        <input message="Hibernate Dialect:" addproperty="dialect"/>
         <java classname="org.hibernate.tool.hbm2ddl.SchemaExport" fork="true">
             <classpath>
                 <path path="${test.jars}"/>
                 <path path="target/classes"/>           
             </classpath>            
-            <jvmarg value="-Dhibernate.dialect=org.hibernate.dialect.SybaseDialect"/>
+            <jvmarg value="-Dhibernate.dialect=${dialect}"/>
             <arg value="--text"/>
+            <arg value="--delimiter=;"/>
             <arg value="--output=target/schema.sql"/>
             <arg value="src/main/resources/*.hbm.xml"/>
         </java>
