@@ -6,7 +6,7 @@
     <target if="netbeans.home" name="debug-nb">
         <nbjpdaconnect address="8000" host="localhost" name="jtrac-debug" transport="dt_socket">          
             <sourcepath>
-                <path path="src/main/webapp"/>                
+                <path path="src/main/java"/>                
             </sourcepath>
         </nbjpdaconnect>
         <antcall target="debug-display-browser"/>
