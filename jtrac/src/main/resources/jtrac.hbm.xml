@@ -20,10 +20,10 @@
             <key column="parent_id"/>
             <one-to-many class="Item"/>
         </set>         
-        <bag name="history" order-by="id" cascade="all" inverse="true">
+        <set name="history" order-by="id" cascade="all" inverse="true">
             <key column="item_id"/>
             <one-to-many class="History"/>
-        </bag>        
+        </set>        
         <set name="itemUsers" cascade="all" inverse="true">
             <key column="item_id"/>
             <one-to-many class="ItemUser"/>

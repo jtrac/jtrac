@@ -188,7 +188,22 @@ public class JtracImpl implements Jtrac {
         }
     }
     
-    public void storeHistoryForItem(Item item, History history, Attachment attachment) {
+    public void updateItem(Item item, User user) {
+        History history = new History(item);
+        history.setAssignedTo(null);
+        history.setStatus(null);
+        history.setLoggedBy(user);
+        history.setComment(item.getEditReason());
+        history.setTimeStamp(new Date());
+        item.add(history);
+        dao.storeItem(item);  // merge edits + history
+        if (item.isSendNotifications()) {
+            mailSender.send(item, messageSource);
+        }        
+    }
+    
+    public void storeHistoryForItem(long itemId, History history, Attachment attachment) {
+        Item item = dao.loadItem(itemId);
         // first apply edits onto item record before we change the item status
         // the item.getEditableFieldList routine depends on the current State of the item
         for(Field field : item.getEditableFieldList(history.getLoggedBy())) {

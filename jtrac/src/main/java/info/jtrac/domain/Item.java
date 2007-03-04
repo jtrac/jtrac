@@ -16,7 +16,6 @@
 
 package info.jtrac.domain;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +33,7 @@ public class Item extends AbstractItem {
     private Space space;
     private long sequenceNum;
     
-    private List<History> history;
+    private Set<History> history;
     private Set<Item> children;
     private Set<Attachment> attachments;
     
@@ -56,7 +55,7 @@ public class Item extends AbstractItem {
     
     public void add(History h) {
         if (this.history == null) {
-            this.history = new ArrayList<History>();
+            this.history = new LinkedHashSet<History>();
         }
         h.setParent(this);
         this.history.add(h);
@@ -96,7 +95,18 @@ public class Item extends AbstractItem {
         }
         d.add(org.apache.lucene.document.Field.UnStored("text", sb.toString()));
         return d;
-    }          
+    }    
+    
+    public History getLatestHistory() {
+        if (history == null) {
+            return null;
+        }
+        History out = null;
+        for(History h : history) {
+            out = h;
+        }
+        return out;
+    }       
     
     //===========================================================
     
@@ -125,11 +135,11 @@ public class Item extends AbstractItem {
         this.sequenceNum = sequenceNum;
     }     
     
-    public List<History> getHistory() {
+    public Set<History> getHistory() {
         return history;
     }
 
-    public void setHistory(List<History> history) {
+    public void setHistory(Set<History> history) {
         this.history = history;
     }
 

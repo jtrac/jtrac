@@ -181,9 +181,8 @@ public class ItemViewFormPanel extends BasePanel {
             }
             History history = (History) getModelObject();                                  
             User user = ((JtracSession) getSession()).getUser();
-            history.setLoggedBy(user);
-            Item item = getJtrac().loadItem(itemId);
-            getJtrac().storeHistoryForItem(item, history, attachment);
+            history.setLoggedBy(user);            
+            getJtrac().storeHistoryForItem(itemId, history, attachment);
             
             if (attachment != null) {
                 File file = AttachmentUtils.getFile(attachment);
@@ -193,7 +192,7 @@ public class ItemViewFormPanel extends BasePanel {
                     throw new RuntimeException(e);
                 }
             }            
-            setResponsePage(new ItemViewPage(item.getId(), ItemViewFormPanel.this.previous));
+            setResponsePage(new ItemViewPage(history.getParent(), ItemViewFormPanel.this.previous));
         }
         
     }

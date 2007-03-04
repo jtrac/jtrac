@@ -19,6 +19,7 @@ package info.jtrac.wicket;
 import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
+import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.util.DateUtils;
 import info.jtrac.util.ExcelUtils;

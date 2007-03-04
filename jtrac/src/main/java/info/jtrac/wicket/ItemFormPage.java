@@ -18,7 +18,6 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Field;
-import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Space;
@@ -44,6 +43,7 @@ import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
+import wicket.model.LoadableDetachableModel;
 
 /**
  * Create / Edit item form page
@@ -67,17 +67,35 @@ public class ItemFormPage extends BasePage {
         
         private JtracFeedbackMessageFilter filter;
         private FileUploadField fileUploadField = new FileUploadField("file");
+        private boolean editMode;
+        private int version;
         
-        public ItemForm(String id, Item item) {
+        public ItemForm(String id, final Item temp) {
             super(id);
-            setVersioned(false);
             setMultiPart(true);
             FeedbackPanel feedback = new FeedbackPanel("feedback");
             filter = new JtracFeedbackMessageFilter();
             feedback.setFilter(filter);
             add(feedback);
-            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(item);
+            // this ensures that the model object is re-loaded as part of the
+            // form submission workflow before form binding and avoids
+            // hibernate lazy loading issues during the whole update transaction
+            LoadableDetachableModel itemModel = new LoadableDetachableModel() {
+                protected Object load() {
+                    if(temp.getId() > 0) {
+                        return getJtrac().loadItem(temp.getId());
+                    } else {
+                        return temp;
+                    }
+                }
+            };            
+            BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(itemModel);
             setModel(model);
+            Item item = (Item) itemModel.getObject(null);
+            if(item.getId() > 0) {
+                editMode = true;
+                version = item.getVersion();
+            }
             // summary =========================================================
             final TextField summaryField = new TextField("summary");
             summaryField.setRequired(true);
@@ -150,9 +168,9 @@ public class ItemFormPage extends BasePage {
         
         @Override
         protected void validate() {
-            filter.reset();
+            filter.reset();            
             super.validate();
-        }
+        }        
         
         @Override
         protected void onSubmit() {
@@ -163,15 +181,25 @@ public class ItemFormPage extends BasePage {
                 attachment = new Attachment();
                 attachment.setFileName(fileName);
             }
-            Item item = (Item) getModelObject();
-            User user = getPrincipal();
+            Item item = (Item) getModelObject();                        
+            
+            if(!editMode && item.getId() > 0) {
+                // user must have used back button after creating new
+                error(localize("item_form.error.version"));
+                return;
+            }           
+            
+            if(editMode) {
+                if(item.getVersion() != version) {
+                    // user must have used back button after edit
+                    error(localize("item_form.error.version"));
+                    return;                    
+                }
+            }
+            
+            User user = getPrincipal();            
             if(item.getId() > 0) { // edit mode
-                History history = new History(item);
-                history.setAssignedTo(null);
-                history.setStatus(null);
-                history.setLoggedBy(user);
-                history.setComment(item.getEditReason());
-                getJtrac().storeHistoryForItem(item, history, attachment);                   
+                getJtrac().updateItem(item, user);                
             } else {
                 item.setLoggedBy(user);
                 item.setStatus(State.OPEN);
@@ -189,10 +217,8 @@ public class ItemFormPage extends BasePage {
             ItemListPage itemListPage = null;
             if(previous != null) {
                 itemListPage = previous.getPrevious();
-            }
-            // item view always loads fresh instance from database
-            setResponsePage(new ItemViewPage(item.getId(), itemListPage));
-
+            }            
+            setResponsePage(new ItemViewPage(item, itemListPage));
         }
         
     }

@@ -45,13 +45,20 @@ public class ItemViewPage extends BasePage {
             item = getJtrac().loadItem(Long.parseLong(itemId));
         }        
         addComponents(item);
-    }
+    }       
     
     public ItemViewPage(long itemId, final ItemListPage previous) { 
         this.previous = previous;
-        final Item item = getJtrac().loadItem(itemId);
+        Item item = getJtrac().loadItem(itemId);
         addComponents(item);
     }
+    
+    // specially for the item edit scenario, to avoid loading second instance
+    // into Hibernate session
+    public ItemViewPage(Item item, final ItemListPage previous) { 
+        this.previous = previous;        
+        addComponents(item);
+    }    
     
     private void addComponents(final Item item) {                            
         
@@ -71,7 +78,9 @@ public class ItemViewPage extends BasePage {
         
         add(new Link("edit") {
             public void onClick() {
-                setResponsePage(new ItemFormPage(item, ItemViewPage.this));
+                // reload from database, avoid OptimisticLockingFailure
+                Item temp = getJtrac().loadItem(item.getId());
+                setResponsePage(new ItemFormPage(temp, ItemViewPage.this));
             }
         }.setVisible(user.isAdminForAllSpaces()));        
         
