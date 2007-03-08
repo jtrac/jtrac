@@ -52,7 +52,9 @@ public class HeaderPanel extends BasePanel {
                     List<Space> spaces = new ArrayList(user.getSpaces());
                     // if only one space don't use generic search screen
                     if(spaces.size() == 1) {
-                        setResponsePage(new ItemSearchFormPage(spaces.get(0)));
+                        Space current = spaces.get(0);
+                        setCurrentSpace(current);
+                        setResponsePage(new ItemSearchFormPage(current));
                     } else {
                         setResponsePage(new ItemSearchFormPage(user));
                     }                                         

@@ -22,6 +22,7 @@ import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import java.util.Collections;
+import java.util.List;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
@@ -36,11 +37,17 @@ public class DashboardPage extends BasePage {
     
     public DashboardPage() {
         
-        setVersioned(false);        
-               
-        ((JtracSession) getSession()).setCurrentSpace(null);
+        setVersioned(false);                       
         
-        final User user = getPrincipal();
+        final User user = getPrincipal();        
+        List<UserSpaceRole> spaceRoles = user.getSpaceRoles();
+        
+        // if only one space, that would remain "selected" across all navigation.
+        if(spaceRoles.size() == 1) {
+            ((JtracSession) getSession()).setCurrentSpace(spaceRoles.get(0).getSpace());
+        } else {
+            ((JtracSession) getSession()).setCurrentSpace(null);
+        }
         
         final CountsHolder countsHolder = getJtrac().loadCountsForUser(user);        
         
@@ -53,7 +60,7 @@ public class DashboardPage extends BasePage {
         add(hideLogged);
         add(hideAssigned);
         
-        add(new ListView("dashboardRows", user.getSpaceRoles()) {
+        add(new ListView("dashboardRows", spaceRoles) {
             protected void populateItem(final ListItem listItem) {
                 UserSpaceRole usr = (UserSpaceRole) listItem.getModelObject();
                 Counts counts = countsHolder.getCounts().get(usr.getSpace().getId());
@@ -67,7 +74,7 @@ public class DashboardPage extends BasePage {
         
         WebMarkupContainer total = new WebMarkupContainer("total");
         
-        if(user.getSpaceRoles().size() > 1) {
+        if(spaceRoles.size() > 1) {
             
             total.add(new Link("search") {
                 public void onClick() {
