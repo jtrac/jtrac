@@ -17,9 +17,11 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Field;
+import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
+import info.jtrac.exception.InvalidRefIdException;
 import info.jtrac.util.UserUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +31,7 @@ import java.util.Map;
 import wicket.Component;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.Button;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
@@ -85,7 +88,7 @@ public class ItemSearchFormPage extends BasePage {
     private class ItemSearchForm extends Form {
         
         private ItemSearch itemSearch;        
-        private JtracFeedbackMessageFilter filter;
+        private JtracFeedbackMessageFilter filter;        
         
         public ItemSearchForm(String id, User user) {
             super(id);
@@ -116,11 +119,6 @@ public class ItemSearchFormPage extends BasePage {
             // summary / text search ===========================================
             final TextField summary = new TextField("summary");
             summary.setOutputMarkupId(true);
-            ItemSearchFormPage.this.getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                public Object getObject(Component c) {
-                    return "document.getElementById('" + summary.getMarkupId() + "').focus()";
-                }
-            }, summary);
             // validation: is Lucene search query ok?
             summary.add(new AbstractValidator() {
                 public void validate(FormComponent c) {
@@ -136,6 +134,57 @@ public class ItemSearchFormPage extends BasePage {
             });
             summary.add(new ErrorHighlighter());
             add(summary);
+            ItemSearchFormPage.this.getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
+                public Object getObject(Component c) {
+                    return "document.getElementById('" + summary.getMarkupId() + "').focus()";
+                }
+            }, summary);             
+            Button submitButton = new Button("submitButton") {
+                @Override
+                public void onSubmit() {                    
+                    ItemSearch itemSearch = (ItemSearch) ItemSearchForm.this.getModelObject();            
+                    setResponsePage(new ItemListPage(itemSearch));
+                }                
+            };
+            add(submitButton);            
+            // view by / refId =================================================
+            final TextField refIdTextField = new TextField("refId");
+            refIdTextField.add(new ErrorHighlighter());
+            refIdTextField.setOutputMarkupId(true);
+            add(refIdTextField);
+            Button viewButton = new Button("viewButton") {
+                private void setFocus() {
+                    ItemSearchFormPage.this.getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
+                        public Object getObject(Component c) {
+                            return "document.getElementById('" + refIdTextField.getMarkupId() + "').focus()";
+                        }
+                    }, refIdTextField);                     
+                }
+                @Override
+                public void onSubmit() {                    
+                    String refId = refIdTextField.getInput();
+                    if(refId == null) {
+                        this.error(localize("item_search_form.error.refId.invalid"));
+                        setFocus();
+                        return;
+                    }
+                    Item item = null;
+                    try {
+                        item = getJtrac().loadItemByRefId(refId);
+                    } catch (InvalidRefIdException e) {                        
+                        this.error(localize("item_search_form.error.refId.invalid"));
+                        setFocus();
+                        return;          
+                    }        
+                    if (item == null) {                        
+                        this.error(localize("item_search_form.error.refId.notFound"));
+                        setFocus();
+                        return;       
+                    } 
+                    setResponsePage(new ItemViewPage(item, null));
+                }                
+            };
+            add(viewButton);           
             // page size =======================================================
             List<Integer> sizes = Arrays.asList(new Integer[] { 5, 10, 15, 25, 50, 100, -1 });
             final String noLimit = getLocalizer().getString("item_search_form.noLimit", null);
@@ -317,11 +366,11 @@ public class ItemSearchFormPage extends BasePage {
             super.validate();          
         }         
         
-        @Override
-        protected void onSubmit() {
-            ItemSearch itemSearch = (ItemSearch) getModelObject();            
-            setResponsePage(new ItemListPage(itemSearch));
-        }        
+//        @Override
+//        protected void onSubmit() {
+//            ItemSearch itemSearch = (ItemSearch) getModelObject();            
+//            setResponsePage(new ItemListPage(itemSearch));
+//        }        
             
     }
     

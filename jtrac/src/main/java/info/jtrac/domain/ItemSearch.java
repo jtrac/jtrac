@@ -51,8 +51,9 @@ public class ItemSearch implements Serializable {
     private boolean sortDescending;
     private boolean showHistory;
     private boolean showDetail;
-    
+        
     private String summary;
+    private String refId;
     private Collection<Long> itemIds;
     
     private Date createdDateStart;
@@ -762,5 +763,13 @@ public class ItemSearch implements Serializable {
     public void setAssignedToList(List<User> assignedToList) {
         this.assignedToList = assignedToList;
     }
+
+    public String getRefId() {
+        return refId;
+    }
+    
+    public void setRefId(String refId) {
+        this.refId = refId;
+    }   
             
 }

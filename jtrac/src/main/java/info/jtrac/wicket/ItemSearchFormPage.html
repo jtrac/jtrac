@@ -3,12 +3,22 @@
         <wicket:extend>            
             <form wicket:id="form">
                 <span wicket:id="feedback"></span>
-                <table class="jtrac">
+                <table class="jtrac">                    
+                    <tr>
+                        <th class="bdr-bottom"><wicket:message key="item_search_form.viewItemById"/></th>
+                        <td>
+                            <input wicket:id="refId"/>
+                            <input type="submit" wicket:id="viewButton" wicket:message="value=view"/>
+                        </td>
+                    </tr>                    
+                    <tr><td colspan="2">&nbsp;</td></tr>
                     <tr>
                         <th><wicket:message key="item_search_form.textSearch"/></th>
-                        <td><input wicket:id="summary" size="30"/></td>
-                        <td><input type="submit" wicket:message="value=search"/></td>                       
-                    </tr>
+                        <td>
+                            <input wicket:id="summary" size="30"/>
+                            <input type="submit" wicket:id="submitButton" wicket:message="value=search"/>                            
+                        </td>
+                    </tr>                    
                 </table>                
                 <p/>                
                 <table class="jtrac">
