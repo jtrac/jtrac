@@ -49,5 +49,5 @@ About
  
 * Technology
 
-    JTrac is a lightweight Java EE application built using the {{{http://www.springframework.org/}Spring Framework}}
-    and {{{http://www.hibernate.org/}Hibernate}}.
+    JTrac is a lightweight Java EE application built using {{{http://wicket.sourceforge.net/}Wicket}},
+    {{{http://www.springframework.org/}Spring}} and {{{http://www.hibernate.org/}Hibernate}}.
