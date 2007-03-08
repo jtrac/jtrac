@@ -5,19 +5,16 @@
                 <span wicket:id="feedback"></span>
                 <table class="jtrac">                    
                     <tr>
-                        <th class="bdr-bottom"><wicket:message key="item_search_form.viewItemById"/></th>
-                        <td>
-                            <input wicket:id="refId"/>
-                            <input type="submit" wicket:id="viewButton" wicket:message="value=view"/>
-                        </td>
-                    </tr>                    
-                    <tr><td colspan="2">&nbsp;</td></tr>
-                    <tr>
                         <th><wicket:message key="item_search_form.textSearch"/></th>
                         <td>
                             <input wicket:id="summary" size="30"/>
-                            <input type="submit" wicket:id="submitButton" wicket:message="value=search"/>                            
-                        </td>
+                            <input type="submit" wicket:id="submitButton" wicket:message="value=search"/>&nbsp;
+                            <a href="#" wicket:id="viewLink"><wicket:message key="item_search_form.viewItemById"/></a>
+                        </td>                        
+                        <td wicket:id="hide">
+                            <input wicket:id="refId"/>
+                            <input type="submit" wicket:id="viewButton" wicket:message="value=view"/>                            
+                        </td>                        
                     </tr>                    
                 </table>                
                 <p/>                

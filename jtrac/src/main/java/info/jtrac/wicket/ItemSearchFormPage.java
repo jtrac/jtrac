@@ -29,6 +29,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import wicket.Component;
+import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.markup.html.AjaxLink;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Button;
@@ -108,6 +110,14 @@ public class ItemSearchFormPage extends BasePage {
             addComponents();
         }        
         
+        private void setFocus(final Component c) {
+            getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
+                public Object getObject(Component ignored) {
+                    return "document.getElementById('" + c.getMarkupId() + "').focus()";
+                }
+            }, c);                     
+        }        
+        
         private void addComponents() {
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(itemSearch);
             setModel(model);
@@ -134,11 +144,7 @@ public class ItemSearchFormPage extends BasePage {
             });
             summary.add(new ErrorHighlighter());
             add(summary);
-            ItemSearchFormPage.this.getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                public Object getObject(Component c) {
-                    return "document.getElementById('" + summary.getMarkupId() + "').focus()";
-                }
-            }, summary);             
+            setFocus(summary);
             Button submitButton = new Button("submitButton") {
                 @Override
                 public void onSubmit() {                    
@@ -148,43 +154,50 @@ public class ItemSearchFormPage extends BasePage {
             };
             add(submitButton);            
             // view by / refId =================================================
+            final WebMarkupContainer hide = new WebMarkupContainer("hide");
+            hide.setOutputMarkupId(true);           
             final TextField refIdTextField = new TextField("refId");
             refIdTextField.add(new ErrorHighlighter());
             refIdTextField.setOutputMarkupId(true);
-            add(refIdTextField);
-            Button viewButton = new Button("viewButton") {
-                private void setFocus() {
-                    ItemSearchFormPage.this.getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                        public Object getObject(Component c) {
-                            return "document.getElementById('" + refIdTextField.getMarkupId() + "').focus()";
-                        }
-                    }, refIdTextField);                     
-                }
+            refIdTextField.setVisible(false);
+            hide.add(refIdTextField);
+            final Button viewButton = new Button("viewButton") {
                 @Override
                 public void onSubmit() {                    
                     String refId = refIdTextField.getInput();
                     if(refId == null) {
-                        this.error(localize("item_search_form.error.refId.invalid"));
-                        setFocus();
+                        refIdTextField.error(localize("item_search_form.error.refId.invalid"));
+                        setFocus(refIdTextField);
                         return;
                     }
                     Item item = null;
                     try {
                         item = getJtrac().loadItemByRefId(refId);
                     } catch (InvalidRefIdException e) {                        
-                        this.error(localize("item_search_form.error.refId.invalid"));
-                        setFocus();
+                        refIdTextField.error(localize("item_search_form.error.refId.invalid"));
+                        setFocus(refIdTextField);
                         return;          
                     }        
                     if (item == null) {                        
-                        this.error(localize("item_search_form.error.refId.notFound"));
-                        setFocus();
+                        refIdTextField.error(localize("item_search_form.error.refId.notFound"));
+                        setFocus(refIdTextField);
                         return;       
                     } 
                     setResponsePage(new ItemViewPage(item, null));
                 }                
             };
-            add(viewButton);           
+            viewButton.setVisible(false);
+            hide.add(viewButton);
+            add(hide);
+            add(new AjaxLink("viewLink") {
+                public void onClick(AjaxRequestTarget target) {
+                    refIdTextField.setVisible(!refIdTextField.isVisible());
+                    viewButton.setVisible(!viewButton.isVisible());
+                    Component focus = refIdTextField.isVisible() ? refIdTextField : summary;                    
+                    target.appendJavascript("document.getElementById('" + focus.getMarkupId() + "').focus()");
+                    target.addComponent(hide);
+                }
+            });             
             // page size =======================================================
             List<Integer> sizes = Arrays.asList(new Integer[] { 5, 10, 15, 25, 50, 100, -1 });
             final String noLimit = getLocalizer().getString("item_search_form.noLimit", null);
