@@ -18,6 +18,7 @@ package info.jtrac.wicket;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.IChoiceRenderer;
@@ -56,12 +57,14 @@ public class JtracCheckBoxMultipleChoice extends ListMultipleChoice {
         
         boolean hasSelected = false;
         
+        Locale locale = getLocale();
+        
         for (int index = 0; index < choices.size(); index++) {
 
             final Object choice = choices.get(index);            
             
             // final String label = (String) getConverter().convert(getChoiceRenderer().getDisplayValue(choice), String.class);
-            final String label = getConverter(String.class).convertToString(getChoiceRenderer().getDisplayValue(choice), getLocale());
+            final String label = getConverter(String.class).convertToString(getChoiceRenderer().getDisplayValue(choice), locale);
             
             if (label != null) {                
                 
