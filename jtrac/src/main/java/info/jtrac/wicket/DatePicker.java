@@ -39,7 +39,7 @@ public class DatePicker extends Panel {
         super(id);
         final TextField dateField = new TextField("field", Date.class) {
             @Override
-            public IConverter getConverter() {
+            public IConverter getConverter(Class clazz) {
                 return new SimpleConverterAdapter() {
                     private DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                     public String toString(Object o) {

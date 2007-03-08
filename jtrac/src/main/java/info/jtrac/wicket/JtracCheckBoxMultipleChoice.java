@@ -60,7 +60,8 @@ public class JtracCheckBoxMultipleChoice extends ListMultipleChoice {
 
             final Object choice = choices.get(index);            
             
-            final String label = (String) getConverter().convert(getChoiceRenderer().getDisplayValue(choice), String.class);
+            // final String label = (String) getConverter().convert(getChoiceRenderer().getDisplayValue(choice), String.class);
+            final String label = getConverter(String.class).convertToString(getChoiceRenderer().getDisplayValue(choice), getLocale());
             
             if (label != null) {                
                 
