@@ -1203,7 +1203,9 @@ java -cp bsh-2.0b4.jar;hsqldb-1.8.0.1.jar bsh.Interpreter jtrac-hsqldb-2_0rc3-to
             <para>
                 Download the source code from 
                 <ulink url="http://sourceforge.net/project/showfiles.php?group_id=162983&amp;package_id=184104">SourceForge</ulink>
-                and extract it to a convenient location.  You will end up with two directories ("antprops" and "jtrac").
+                and extract it to a convenient location.  Note that the source code is a separate download from the main (binary)
+                and the file name will be of the form "jtrac-src-X.Y.Z.zip".  Once you extract this you will end up with two 
+                directories that will be created ("antprops" and "jtrac").
             </para>
             <para>
                 You could choose to check out the source code directly from the JTrac SourceForge Subversion repository.
