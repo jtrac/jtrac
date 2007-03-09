@@ -109,8 +109,8 @@ public class DashboardRowExpandedPanel extends BasePanel {
                     listItem.add(new Link("loggedByMe") {
                         public void onClick() {
                             ItemSearch itemSearch = new ItemSearch(space);
-                            itemSearch.setLoggedBySet(Collections.singleton(user.getId()));
-                            itemSearch.setStatusSet(Collections.singleton(i));
+                            itemSearch.setLoggedByList(Collections.singletonList(user));
+                            itemSearch.setStatusList(Collections.singletonList(i));
                             setResponsePage(new ItemListPage(itemSearch));
                         }
                     }.add(new Label("loggedByMe", counts.getLoggedByMeForState(i))));
@@ -118,8 +118,8 @@ public class DashboardRowExpandedPanel extends BasePanel {
                     listItem.add(new Link("assignedToMe") {
                         public void onClick() {
                             ItemSearch itemSearch = new ItemSearch(space);
-                            itemSearch.setAssignedToSet(Collections.singleton(user.getId()));
-                            itemSearch.setStatusSet(Collections.singleton(i));
+                            itemSearch.setAssignedToList(Collections.singletonList(user));
+                            itemSearch.setStatusList(Collections.singletonList(i));
                             setResponsePage(new ItemListPage(itemSearch));
                         }
                     }.add(new Label("assignedToMe", counts.getAssignedToMeForState(i))));
@@ -131,7 +131,7 @@ public class DashboardRowExpandedPanel extends BasePanel {
                 listItem.add(new Link("total") {
                     public void onClick() {
                         ItemSearch itemSearch = new ItemSearch(space);                        
-                        itemSearch.setStatusSet(Collections.singleton(i));
+                        itemSearch.setStatusList(Collections.singletonList(i));
                         setResponsePage(new ItemListPage(itemSearch));
                     }
                 }.add(new Label("total", counts.getTotalForState(i))));                
@@ -145,7 +145,7 @@ public class DashboardRowExpandedPanel extends BasePanel {
             add(new Link("loggedByMeTotal") {
                 public void onClick() {
                     ItemSearch itemSearch = new ItemSearch(space);
-                    itemSearch.setLoggedBySet(Collections.singleton(user.getId()));
+                    itemSearch.setLoggedByList(Collections.singletonList(user));
                     setResponsePage(new ItemListPage(itemSearch));
                 }
             }.add(new Label("loggedByMe", new PropertyModel(counts, "loggedByMe"))));
@@ -153,7 +153,7 @@ public class DashboardRowExpandedPanel extends BasePanel {
             add(new Link("assignedToMeTotal") {
                 public void onClick() {
                     ItemSearch itemSearch = new ItemSearch(space);
-                    itemSearch.setAssignedToSet(Collections.singleton(user.getId()));
+                    itemSearch.setAssignedToList(Collections.singletonList(user));
                     setResponsePage(new ItemListPage(itemSearch));
                 }
             }.add(new Label("assignedToMe", new PropertyModel(counts, "assignedToMe"))));

@@ -86,7 +86,7 @@ public class DashboardPage extends BasePage {
                 total.add(new Link("loggedByMe") {
                     public void onClick() {
                         ItemSearch itemSearch = new ItemSearch(user);
-                        itemSearch.setLoggedBySet(Collections.singleton(user.getId()));
+                        itemSearch.setLoggedByList(Collections.singletonList(user));
                         setResponsePage(new ItemListPage(itemSearch));
                     }
                 }.add(new Label("loggedByMe", new PropertyModel(countsHolder, "totalLoggedByMe"))));
@@ -94,7 +94,7 @@ public class DashboardPage extends BasePage {
                 total.add(new Link("assignedToMe") {
                     public void onClick() {
                         ItemSearch itemSearch = new ItemSearch(user);
-                        itemSearch.setAssignedToSet(Collections.singleton(user.getId()));
+                        itemSearch.setAssignedToList(Collections.singletonList(user));
                         setResponsePage(new ItemListPage(itemSearch));
                     }
                 }.add(new Label("assignedToMe", new PropertyModel(countsHolder, "totalAssignedToMe"))));

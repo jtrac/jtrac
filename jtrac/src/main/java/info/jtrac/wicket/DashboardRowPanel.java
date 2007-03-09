@@ -80,7 +80,7 @@ public class DashboardRowPanel extends BasePanel {
             add(new Link("loggedByMe") {
                 public void onClick() {
                     ItemSearch itemSearch = new ItemSearch(space);
-                    itemSearch.setLoggedBySet(Collections.singleton(user.getId()));
+                    itemSearch.setLoggedByList(Collections.singletonList(user));
                     setResponsePage(new ItemListPage(itemSearch));
                 }
             }.add(new Label("loggedByMe", new PropertyModel(counts, "loggedByMe"))));        
@@ -89,7 +89,7 @@ public class DashboardRowPanel extends BasePanel {
             add(new Link("assignedToMe") {
                 public void onClick() {
                     ItemSearch itemSearch = new ItemSearch(space);
-                    itemSearch.setAssignedToSet(Collections.singleton(user.getId()));
+                    itemSearch.setAssignedToList(Collections.singletonList(user));
                     setResponsePage(new ItemListPage(itemSearch));
                 }
             }.add(new Label("assignedToMe", new PropertyModel(counts, "assignedToMe"))));
