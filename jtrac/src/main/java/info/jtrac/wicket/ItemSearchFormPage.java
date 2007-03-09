@@ -42,9 +42,11 @@ import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.AbstractValidator;
+import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
+import wicket.markup.html.panel.Fragment;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
 
@@ -108,15 +110,7 @@ public class ItemSearchFormPage extends BasePage {
             super(id);
             this.itemSearch = itemSearch;
             addComponents();
-        }        
-        
-        private void setFocus(final Component c) {
-            getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                public Object getObject(Component ignored) {
-                    return "document.getElementById('" + c.getMarkupId() + "').focus()";
-                }
-            }, c);                     
-        }        
+        }                    
         
         private void addComponents() {
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(itemSearch);
@@ -126,7 +120,7 @@ public class ItemSearchFormPage extends BasePage {
             filter =  new JtracFeedbackMessageFilter();
             feedback.setFilter(filter);
             add(feedback);            
-            // summary / text search ===========================================
+            // summary / text search ===========================================            
             final TextField summary = new TextField("summary");
             summary.setOutputMarkupId(true);
             // validation: is Lucene search query ok?
@@ -144,60 +138,16 @@ public class ItemSearchFormPage extends BasePage {
             });
             summary.add(new ErrorHighlighter());
             add(summary);
-            setFocus(summary);
-            Button submitButton = new Button("submitButton") {
-                @Override
-                public void onSubmit() {                    
-                    ItemSearch itemSearch = (ItemSearch) ItemSearchForm.this.getModelObject();            
-                    setResponsePage(new ItemListPage(itemSearch));
-                }                
-            };
-            add(submitButton);            
-            // view by / refId =================================================
-            final WebMarkupContainer hide = new WebMarkupContainer("hide");
-            hide.setOutputMarkupId(true);           
-            final TextField refIdTextField = new TextField("refId");
-            refIdTextField.add(new ErrorHighlighter());
-            refIdTextField.setOutputMarkupId(true);
-            refIdTextField.setVisible(false);
-            hide.add(refIdTextField);
-            final Button viewButton = new Button("viewButton") {
-                @Override
-                public void onSubmit() {                    
-                    String refId = refIdTextField.getInput();
-                    if(refId == null) {
-                        refIdTextField.error(localize("item_search_form.error.refId.invalid"));
-                        setFocus(refIdTextField);
-                        return;
-                    }
-                    Item item = null;
-                    try {
-                        item = getJtrac().loadItemByRefId(refId);
-                    } catch (InvalidRefIdException e) {                        
-                        refIdTextField.error(localize("item_search_form.error.refId.invalid"));
-                        setFocus(refIdTextField);
-                        return;          
-                    }        
-                    if (item == null) {                        
-                        refIdTextField.error(localize("item_search_form.error.refId.notFound"));
-                        setFocus(refIdTextField);
-                        return;       
-                    } 
-                    setResponsePage(new ItemViewPage(item, null));
-                }                
-            };
-            viewButton.setVisible(false);
-            hide.add(viewButton);
-            add(hide);
-            add(new AjaxLink("viewLink") {
-                public void onClick(AjaxRequestTarget target) {
-                    refIdTextField.setVisible(!refIdTextField.isVisible());
-                    viewButton.setVisible(!viewButton.isVisible());
-                    Component focus = refIdTextField.isVisible() ? refIdTextField : summary;                    
-                    target.appendJavascript("document.getElementById('" + focus.getMarkupId() + "').focus()");
-                    target.addComponent(hide);
+            ItemSearchFormPage.this.getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
+                public Object getObject(Component ignored) {
+                    return "document.getElementById('" + summary.getMarkupId() + "').focus()";
                 }
-            });             
+            }, summary);
+            add(new Link("link") {
+                public void onClick() {
+                    setResponsePage(ItemRefIdFormPage.class);
+                }
+            });
             // page size =======================================================
             List<Integer> sizes = Arrays.asList(new Integer[] { 5, 10, 15, 25, 50, 100, -1 });
             final String noLimit = getLocalizer().getString("item_search_form.noLimit", null);
@@ -379,11 +329,11 @@ public class ItemSearchFormPage extends BasePage {
             super.validate();          
         }         
         
-//        @Override
-//        protected void onSubmit() {
-//            ItemSearch itemSearch = (ItemSearch) getModelObject();            
-//            setResponsePage(new ItemListPage(itemSearch));
-//        }        
+        @Override
+        protected void onSubmit() {
+            ItemSearch itemSearch = (ItemSearch) getModelObject();            
+            setResponsePage(new ItemListPage(itemSearch));
+        }        
             
     }
     

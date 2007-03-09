@@ -3,18 +3,14 @@
         <wicket:extend>            
             <form wicket:id="form">
                 <span wicket:id="feedback"></span>
-                <table class="jtrac">                    
+                <table class="jtrac">
                     <tr>
                         <th><wicket:message key="item_search_form.textSearch"/></th>
                         <td>
                             <input wicket:id="summary" size="30"/>
-                            <input type="submit" wicket:id="submitButton" wicket:message="value=search"/>&nbsp;
-                            <a href="#" wicket:id="viewLink"><wicket:message key="item_search_form.viewItemById"/></a>
-                        </td>                        
-                        <td wicket:id="hide">
-                            <input wicket:id="refId"/>
-                            <input type="submit" wicket:id="viewButton" wicket:message="value=view"/>                            
-                        </td>                        
+                            <input type="submit" wicket:message="value=search"/>&nbsp;
+                            <a href="#" wicket:id="link"><wicket:message key="item_search_form.viewItemById"/></a>
+                        </td>                          
                     </tr>                    
                 </table>                
                 <p/>                
@@ -170,9 +166,8 @@
                             </table>                            
                         </td>                        
                     </tr>
-                </table>                
-                
-            </form>
+                </table>                                
+            </form>         
         </wicket:extend>
     </body>
 </html>
