@@ -30,8 +30,8 @@ import wicket.model.PropertyModel;
  */
 public class ItemRefIdFormPanel extends BasePanel {
     
-    public ItemRefIdFormPanel() {
-        super("panel");
+    public ItemRefIdFormPanel(String id) {
+        super(id);
         setVersioned(false);        
         add(new ItemRefIdForm());        
     }

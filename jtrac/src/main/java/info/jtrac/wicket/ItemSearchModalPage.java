@@ -18,19 +18,22 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
+import info.jtrac.domain.User;
+import wicket.markup.html.WebPage;
 
 /**
- * dashboard page
+ * special variant of search page without header and footer
  */
-public class ItemSearchFormPage extends BasePage {        
+public class ItemSearchModalPage extends WebPage {        
         
-    public ItemSearchFormPage() {
+    public ItemSearchModalPage() {
         setVersioned(false);
         Space space = ((JtracSession) getSession()).getCurrentSpace();
         if (space != null) {
             add(new ItemSearchFormPanel("panel", space));
         } else {
-            add(new ItemSearchFormPanel("panel", getPrincipal()));
+            User user = ((JtracSession) getSession()).getUser();   
+            add(new ItemSearchFormPanel("panel", user));
         }
     }       
     
@@ -38,7 +41,7 @@ public class ItemSearchFormPage extends BasePage {
      * here we are returning to the filter criteria screen from
      * the search results screen
      */
-    public ItemSearchFormPage(ItemSearch itemSearch) {
+    public ItemSearchModalPage(ItemSearch itemSearch) {
         setVersioned(false);
         itemSearch.setCurrentPage(0);        
         add(new ItemSearchFormPanel("panel", itemSearch));      

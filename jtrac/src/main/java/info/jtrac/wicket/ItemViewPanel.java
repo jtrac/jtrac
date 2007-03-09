@@ -46,11 +46,11 @@ public class ItemViewPanel extends BasePanel {
         super(id);                                     
         
         final ModalWindow relateWin = new ModalWindow("relateWin");
-        add(relateWin);
+        add(relateWin);        
         
         relateWin.setPageCreator(new ModalWindow.PageCreator() {
             public Page createPage() {
-                return new ItemSearchFormPage();
+                return new ItemSearchModalPage();
             }
         });        
         

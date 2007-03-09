@@ -48,13 +48,13 @@ import wicket.model.BoundCompoundPropertyModel;
  */
 public class ItemSearchFormPanel extends BasePanel {        
         
-    public ItemSearchFormPanel(Space space) {
-        super("panel");
+    public ItemSearchFormPanel(String id, Space space) {
+        super(id);
         add(new ItemSearchForm("form", space));
     }       
     
-    public ItemSearchFormPanel(User user) {
-        super("panel");
+    public ItemSearchFormPanel(String id, User user) {
+        super(id);
         add(new ItemSearchForm("form", user));
     }      
     
@@ -62,8 +62,8 @@ public class ItemSearchFormPanel extends BasePanel {
      * here we are returning to the filter criteria screen from
      * the search results screen
      */
-    public ItemSearchFormPanel(ItemSearch itemSearch) {  
-        super("panel");
+    public ItemSearchFormPanel(String id, ItemSearch itemSearch) {  
+        super(id);
         itemSearch.setCurrentPage(0);        
         add(new ItemSearchForm("form", itemSearch));      
     }    
@@ -101,7 +101,7 @@ public class ItemSearchFormPanel extends BasePanel {
             add(feedback);            
             add(new Link("link") {
                 public void onClick() {
-                    ItemSearchFormPanel.this.replaceWith(new ItemRefIdFormPanel());
+                    ItemSearchFormPanel.this.replaceWith(new ItemRefIdFormPanel("panel"));
                 }
             });            
             // summary / text search ===========================================            
