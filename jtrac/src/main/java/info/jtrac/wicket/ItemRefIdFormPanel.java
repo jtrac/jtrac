@@ -28,9 +28,10 @@ import wicket.model.PropertyModel;
 /**
  * view by ref id form page
  */
-public class ItemRefIdFormPage extends BasePage {
+public class ItemRefIdFormPanel extends BasePanel {
     
-    public ItemRefIdFormPage() {        
+    public ItemRefIdFormPanel() {
+        super("panel");
         setVersioned(false);        
         add(new ItemRefIdForm());        
     }
@@ -51,15 +52,20 @@ public class ItemRefIdFormPage extends BasePage {
         public ItemRefIdForm() {
             super("form");
             add(new FeedbackPanel("feedback"));
-            refIdField = new TextField("refId", new PropertyModel(this, "refId"));
+            refIdField = new TextField("refId", new PropertyModel(this, "refId")) {
+                @Override
+                public void onAttach() {
+                    super.onAttach();
+                    getWebPage().getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
+                        public Object getObject(Component ignored) {
+                            return "document.getElementById('" + getMarkupId() + "').focus()";
+                        }
+                    }, this);
+                }                
+            };
             refIdField.setOutputMarkupId(true);
             refIdField.add(new ErrorHighlighter());
-            add(refIdField);
-            ItemRefIdFormPage.this.getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                public Object getObject(Component ignored) {
-                    return "document.getElementById('" + refIdField.getMarkupId() + "').focus()";
-                }
-            }, refIdField);            
+            add(refIdField);           
         }
         
         @Override

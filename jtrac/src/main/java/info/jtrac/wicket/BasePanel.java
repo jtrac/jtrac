@@ -18,6 +18,7 @@ package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
 import info.jtrac.domain.Space;
+import info.jtrac.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import wicket.markup.html.panel.Panel;
@@ -41,5 +42,16 @@ public class BasePanel extends Panel {
     public BasePanel(String id) {
         super(id);
     } 
+    
+    /**
+     * localization helper
+     */
+    protected String localize(String key) {
+        return getLocalizer().getString(key, null);
+    }    
+    
+    protected User getPrincipal() {
+        return ((JtracSession) getSession()).getUser();
+    }    
     
 }

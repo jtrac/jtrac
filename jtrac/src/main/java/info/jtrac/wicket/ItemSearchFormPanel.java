@@ -44,24 +44,26 @@ import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
 
 /**
- * dashboard page
+ * item search form panel
  */
-public class ItemSearchFormPage extends BasePage {        
+public class ItemSearchFormPanel extends BasePanel {        
+        
+    public ItemSearchFormPanel(Space space) {
+        super("panel");
+        add(new ItemSearchForm("form", space));
+    }       
     
-    
-    public ItemSearchFormPage(Space space) {                              
-        add(new ItemSearchForm("form", space));        
-    }
-    
-    public ItemSearchFormPage(User user) {               
-        add(new ItemSearchForm("form", user));        
-    }    
+    public ItemSearchFormPanel(User user) {
+        super("panel");
+        add(new ItemSearchForm("form", user));
+    }      
     
     /**
      * here we are returning to the filter criteria screen from
      * the search results screen
      */
-    public ItemSearchFormPage(ItemSearch itemSearch) {        
+    public ItemSearchFormPanel(ItemSearch itemSearch) {  
+        super("panel");
         itemSearch.setCurrentPage(0);        
         add(new ItemSearchForm("form", itemSearch));      
     }    
@@ -97,8 +99,23 @@ public class ItemSearchFormPage extends BasePage {
             filter =  new JtracFeedbackMessageFilter();
             feedback.setFilter(filter);
             add(feedback);            
+            add(new Link("link") {
+                public void onClick() {
+                    ItemSearchFormPanel.this.replaceWith(new ItemRefIdFormPanel());
+                }
+            });            
             // summary / text search ===========================================            
-            final TextField summary = new TextField("summary");
+            final TextField summary = new TextField("summary") {
+                @Override
+                public void onAttach() {
+                    super.onAttach();
+                    getWebPage().getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
+                        public Object getObject(Component ignored) {
+                            return "document.getElementById('" + getMarkupId() + "').focus()";
+                        }
+                    }, this);
+                }
+            };
             summary.setOutputMarkupId(true);
             // validation: is Lucene search query ok?
             summary.add(new AbstractValidator() {
@@ -115,16 +132,6 @@ public class ItemSearchFormPage extends BasePage {
             });
             summary.add(new ErrorHighlighter());
             add(summary);
-            ItemSearchFormPage.this.getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                public Object getObject(Component ignored) {
-                    return "document.getElementById('" + summary.getMarkupId() + "').focus()";
-                }
-            }, summary);
-            add(new Link("link") {
-                public void onClick() {
-                    setResponsePage(ItemRefIdFormPage.class);
-                }
-            });
             // page size =======================================================
             List<Integer> sizes = Arrays.asList(new Integer[] { 5, 10, 15, 25, 50, 100, -1 });
             final String noLimit = getLocalizer().getString("item_search_form.noLimit", null);

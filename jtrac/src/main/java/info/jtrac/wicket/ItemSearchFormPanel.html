@@ -1,0 +1,177 @@
+<html>
+    <body>        
+        <wicket:panel>            
+            <form wicket:id="form">
+                <span wicket:id="feedback"></span>
+                <table class="jtrac">
+                    <tr>
+                        <td>
+                            <a href="#" wicket:id="link"><wicket:message key="item_search_form.viewItemById"/></a>                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><wicket:message key="item_search_form.textSearch"/></th>
+                        <td>
+                            <input wicket:id="summary" size="30"/>
+                            <input type="submit" wicket:message="value=search"/>&nbsp;                            
+                        </td>                          
+                    </tr>                    
+                </table>                
+                <p/>                
+                <table class="jtrac">
+                    <tr>
+                        <th><wicket:message key="item_search_form.resultsPerPage"/></th>
+                        <td><select wicket:id="pageSize"/></td>
+                        <td/>
+                        <th>
+                            <wicket:message key="item_search_form.showDetail"/>
+                            <input type="checkbox" wicket:id="showDetail"/>
+                        </th>
+                        <th>
+                            <wicket:message key="item_search_form.showHistory"/>
+                            <input type="checkbox" wicket:id="showHistory"/>                            
+                        </th>                        
+                    </tr>
+                </table>
+                
+                <table class="bdr-collapse">
+                    <tr>
+                        <span wicket:id="severityPriority">
+                            <td>
+                                <table class="jtrac">
+                                    <tr>
+                                        <th><wicket:message key="item_search_form.severity"/></th>
+                                    </tr>
+                                    <tr>                        
+                                        <td><select wicket:id="severityList" size="8"/></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td>
+                                <table class="jtrac">
+                                    <tr>
+                                        <th><wicket:message key="item_search_form.priority"/></th>
+                                    </tr>
+                                    <tr>                        
+                                        <td><select wicket:id="priorityList" size="8"/></td>
+                                    </tr>
+                                </table>
+                            </td>                             
+                        </span>
+                        <td>
+                            <table class="jtrac">
+                                <tr>
+                                    <th><wicket:message key="item_search_form.status"/></th>
+                                </tr>
+                                <tr>
+                                    <td><select wicket:id="statusList" size="8"/></td>
+                                </tr>
+                            </table>                            
+                        </td>
+                        <td>
+                            <table class="jtrac">
+                                <tr>
+                                    <th><wicket:message key="item_search_form.loggedBy"/></th>
+                                </tr>
+                                <tr>
+                                    <td><select wicket:id="loggedByList" size="8"/></td>
+                                </tr>
+                            </table>                         
+                        </td>
+                        <td>
+                            <table class="jtrac">
+                                <tr>
+                                    <th><wicket:message key="item_search_form.assignedTo"/></th>
+                                </tr>
+                                <tr>
+                                    <td><select wicket:id="assignedToList" size="8"/></td>
+                                </tr>
+                            </table>                         
+                        </td>
+                        <td valign="top">
+                            <table class="jtrac">
+                                <tr>
+                                    <th colspan="2"><wicket:message key="item_search_form.createdDate"/></th>                                    
+                                </tr>
+                                <tr>
+                                    <td class="label"><wicket:message key="item_search_form.onOrAfter"/></td>
+                                    <td><span wicket:id="createdDateStart"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="label"><wicket:message key="item_search_form.onOrBefore"/></td>
+                                    <td><span wicket:id="createdDateEnd"></span></td>
+                                </tr>                                
+                                <tr>
+                                    <th colspan="2"><wicket:message key="item_search_form.historyUpdatedDate"/></th>                                    
+                                </tr>
+                                <tr>
+                                    <td class="label"><wicket:message key="item_search_form.onOrAfter"/></td>
+                                    <td><span wicket:id="modifiedDateStart"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="label"><wicket:message key="item_search_form.onOrBefore"/></td>
+                                    <td><span wicket:id="modifiedDateEnd"></span></td>
+                                </tr>                                  
+                            </table>
+                        </td>                       
+                    </tr>
+                </table>
+                
+                <table class="bdr-collapse">
+                    <tr>
+                        <td wicket:id="spaces">
+                            <table class="jtrac">
+                                <tr>
+                                    <th><wicket:message key="item_search_form.space"/></th>
+                                </tr>
+                                <tr>
+                                    <td><select wicket:id="spaceList" size="8"/></td>
+                                </tr>                                
+                            </table>
+                        </td>                        
+                        <td wicket:id="customDropDowns">
+                            <table class="jtrac">
+                                <tr>
+                                    <th wicket:id="label"></th>
+                                </tr>
+                                <tr>
+                                    <td><select wicket:id="field" size="8"/></td>
+                                </tr>                                
+                            </table>                            
+                        </td>
+                    </tr>
+                </table>
+                
+                <table class="bdr-collapse">
+                    <tr valign="top">
+                        <td>
+                            <table class="jtrac">
+                                <tbody wicket:id="customDates">
+                                    <tr>
+                                        <th colspan="2" wicket:id="label"></th>                                    
+                                    </tr>                                
+                                    <tr>
+                                        <td class="label"><wicket:message key="item_search_form.onOrAfter"/></td>
+                                        <td wicket:id="fieldStart"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="label"><wicket:message key="item_search_form.onOrBefore"/></td>
+                                        <td wicket:id="fieldEnd"></td>
+                                    </tr>
+                                </tbody>
+                            </table>                            
+                        </td>
+                        <td>
+                            <table class="jtrac">
+                                <tr wicket:id="customTexts">
+                                    <td wicket:id="label" class="label"></td>
+                                    <td><input wicket:id="field"/></td>
+                                </tr>
+                            </table>                            
+                        </td>                        
+                    </tr>
+                </table>                                
+            </form>         
+        </wicket:panel>
+    </body>
+</html>

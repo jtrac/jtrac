@@ -53,11 +53,9 @@ public class HeaderPanel extends BasePanel {
                     // if only one space don't use generic search screen
                     if(spaces.size() == 1) {
                         Space current = spaces.get(0);
-                        setCurrentSpace(current);
-                        setResponsePage(new ItemSearchFormPage(current));
-                    } else {
-                        setResponsePage(new ItemSearchFormPage(user));
-                    }                                         
+                        setCurrentSpace(current);                        
+                    }
+                    setResponsePage(ItemSearchFormPage.class);
                 }            
             });            
         } else {
@@ -74,7 +72,7 @@ public class HeaderPanel extends BasePanel {
             
             add(new Link("search") {
                 public void onClick() {
-                    setResponsePage(new ItemSearchFormPage(space));
+                    setResponsePage(ItemSearchFormPage.class);
                 }            
             });            
         }

@@ -59,7 +59,7 @@ public class DashboardRowPanel extends BasePanel {
         add(new Link("search") {
             public void onClick() {
                 setCurrentSpace(space);
-                setResponsePage(new ItemSearchFormPage(space));
+                setResponsePage(ItemSearchFormPage.class);
             }
         });        
         

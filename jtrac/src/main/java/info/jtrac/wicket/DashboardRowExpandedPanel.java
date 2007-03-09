@@ -83,7 +83,7 @@ public class DashboardRowExpandedPanel extends BasePanel {
                     listItem.add(new Link("search") {
                         public void onClick() {
                             setCurrentSpace(space);
-                            setResponsePage(new ItemSearchFormPage(space));
+                            setResponsePage(ItemSearchFormPage.class);
                         }
                     }.add(sam));
 

@@ -53,8 +53,7 @@ public class ItemViewPage extends BasePage {
         addComponents(item);
     }
     
-    // specially for the item edit scenario, to avoid loading second instance
-    // into Hibernate session
+    // specially for the item edit scenario, to avoid un-necessary re-load
     public ItemViewPage(Item item, final ItemListPage previous) { 
         this.previous = previous;        
         addComponents(item);

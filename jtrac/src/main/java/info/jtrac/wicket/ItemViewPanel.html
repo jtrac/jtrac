@@ -1,9 +1,12 @@
-<wicket:panel>
+<wicket:panel>    
     <table class="jtrac" width="100%">
         <tr class="alt">
             <td class="label"><wicket:message key="item_view.id"/></td>
             <td wicket:id="refId"></td>
-            <td class="label"><wicket:message key="item_view.relatedItems"/></td>
+            <td class="label">
+                <wicket:message key="item_view.relatedItems"/>
+                <a href="#" wicket:id="relateLink">(+)</a>
+            </td>
             <td colspan="3"></td>
         </tr>
         <tr>
@@ -28,6 +31,8 @@
         </tr>
     </table>
     
+    <span wicket:id="relateWin"></span>
+    
     <br/><div class="space-below">&nbsp;<b><wicket:message key="item_view.history"/></b></div>
     
     <table class="jtrac" width="100%">
@@ -47,5 +52,5 @@
             <td wicket:id="timeStamp"></td>
             <td wicket:id="fields"><span wicket:id="field"></span></td>
         </tr>
-    </table>    
+    </table>
 </wicket:panel>

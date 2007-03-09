@@ -78,7 +78,7 @@ public class DashboardPage extends BasePage {
             
             total.add(new Link("search") {
                 public void onClick() {
-                    setResponsePage(new ItemSearchFormPage(user));
+                    setResponsePage(ItemSearchFormPage.class);
                 }
             });
             
