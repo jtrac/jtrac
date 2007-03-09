@@ -17,23 +17,17 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Field;
-import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
-import info.jtrac.exception.InvalidRefIdException;
 import info.jtrac.util.UserUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import wicket.Component;
-import wicket.ajax.AjaxRequestTarget;
-import wicket.ajax.markup.html.AjaxLink;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.form.Button;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
@@ -46,7 +40,6 @@ import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
-import wicket.markup.html.panel.Fragment;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
 
@@ -55,22 +48,6 @@ import wicket.model.BoundCompoundPropertyModel;
  */
 public class ItemSearchFormPage extends BasePage {        
     
-    /**
-     * convert Wicket form binding collection default to Set
-     * used by existing domain object TODO wicketize
-     */
-    public class JtracListMultipleChoice extends ListMultipleChoice {
-        
-        public JtracListMultipleChoice(String id, List choices, IChoiceRenderer renderer) {
-            super(id, choices, renderer);
-        } 
-    
-        @Override
-        protected java.lang.Object convertValue(String[] ids) {            
-            List list = (List) super.convertValue(ids);
-            return new HashSet(list);
-        }        
-    }
     
     public ItemSearchFormPage(Space space) {                              
         add(new ItemSearchForm("form", space));        
@@ -172,7 +149,7 @@ public class ItemSearchFormPage extends BasePage {
                 for(String s : severityMap.keySet()) {
                     severityList.add(new Integer(s));
                 }
-                ListMultipleChoice severitySetChoice = new JtracListMultipleChoice("severitySet", severityList, new IChoiceRenderer() {
+                ListMultipleChoice severityListChoice = new ListMultipleChoice("severityList", severityList, new IChoiceRenderer() {
                     public Object getDisplayValue(Object o) {
                         return severityMap.get(o.toString());
                     }
@@ -180,13 +157,13 @@ public class ItemSearchFormPage extends BasePage {
                         return o.toString();
                     }                
                 });            
-                sp.add(severitySetChoice);
+                sp.add(severityListChoice);
                 final Map<String, String> priorityMap = itemSearch.getPriorityOptions();
                 List<Integer> priorityList = new ArrayList(priorityMap.size());
                 for(String s : priorityMap.keySet()) {
                     priorityList.add(new Integer(s));
                 }
-                ListMultipleChoice prioritySetChoice = new JtracListMultipleChoice("prioritySet", priorityList, new IChoiceRenderer() {
+                ListMultipleChoice priorityListChoice = new ListMultipleChoice("priorityList", priorityList, new IChoiceRenderer() {
                     public Object getDisplayValue(Object o) {
                         return priorityMap.get(o.toString());
                     }
@@ -194,7 +171,7 @@ public class ItemSearchFormPage extends BasePage {
                         return o.toString();
                     }                
                 });            
-                sp.add(prioritySetChoice);
+                sp.add(priorityListChoice);
             } else {
                 sp.setVisible(false);
             }
@@ -202,7 +179,7 @@ public class ItemSearchFormPage extends BasePage {
             // status ==========================================================           
             final Map<Integer, String> statusMap = itemSearch.getStatusOptions();
             List<Integer> statusList = new ArrayList(statusMap.keySet());
-            ListMultipleChoice statusSetChoice = new JtracListMultipleChoice("statusSet", statusList, new IChoiceRenderer() {
+            ListMultipleChoice statusListChoice = new ListMultipleChoice("statusList", statusList, new IChoiceRenderer() {
                 public Object getDisplayValue(Object o) {
                     return statusMap.get(o);
                 }
@@ -210,7 +187,7 @@ public class ItemSearchFormPage extends BasePage {
                     return o.toString();
                 }                
             });            
-            add(statusSetChoice);
+            add(statusListChoice);
             // =================================================================
             List<User> users = null;
             if (itemSearch.getSpace() == null) {
@@ -245,7 +222,7 @@ public class ItemSearchFormPage extends BasePage {
             if (itemSearch.getSpace() == null) {
                 final Map<Long, String> spaceOptions = UserUtils.getSpaceNamesMap(itemSearch.getUser());
                 List<Long> spaceIds = new ArrayList(spaceOptions.keySet());
-                ListMultipleChoice spaceChoice = new JtracListMultipleChoice("spaceSet", spaceIds, new IChoiceRenderer() {
+                ListMultipleChoice spaceChoice = new ListMultipleChoice("spaceList", spaceIds, new IChoiceRenderer() {
                     public Object getDisplayValue(Object o) {
                         return spaceOptions.get(o);
                     }
@@ -270,7 +247,7 @@ public class ItemSearchFormPage extends BasePage {
                         for(String s : options.keySet()) {
                             optionKeys.add(new Integer(s));
                         }
-                        ListMultipleChoice spaceChoice = new JtracListMultipleChoice("field", optionKeys, new IChoiceRenderer() {
+                        ListMultipleChoice spaceChoice = new ListMultipleChoice("field", optionKeys, new IChoiceRenderer() {
                             public Object getDisplayValue(Object o) {
                                 return options.get(o.toString());
                             }
@@ -278,7 +255,7 @@ public class ItemSearchFormPage extends BasePage {
                                 return o.toString();
                             }
                         });
-                        listItem.add(model.bind(spaceChoice, field.getName().getText() + "Set"));
+                        listItem.add(model.bind(spaceChoice, field.getName().getText() + "List"));
                     }                    
                 };
                 add(listView);

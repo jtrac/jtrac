@@ -24,10 +24,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -35,7 +33,7 @@ import org.hibernate.criterion.Restrictions;
 /**
  * Object that holds filter criteria when searching for Items
  * and also creates a Hibernate Criteria query to pass to the DAO
- * Spring MVC automagically binds most of the screen selections
+ * Wicket automagically binds most of the screen selections
  * on to the large bunch of instance variables of this class
  */
 public class ItemSearch implements Serializable {
@@ -52,8 +50,7 @@ public class ItemSearch implements Serializable {
     private boolean showHistory;
     private boolean showDetail;
         
-    private String summary;
-    private String refId;
+    private String summary;    
     private Collection<Long> itemIds;
     
     private Date createdDateStart;
@@ -61,27 +58,23 @@ public class ItemSearch implements Serializable {
     private Date modifiedDateStart;
     private Date modifiedDateEnd;
     
-    private Set<Long> spaceSet;
-    private Set<Integer> statusSet;
-    private Set<Integer> severitySet;
-    private Set<Integer> prioritySet;
-    private Set<Long> loggedBySet;
-    private Set<Long> assignedToSet;
-    
-    // added for wicket
+    private List<Long> spaceList;
+    private List<Integer> statusList;
+    private List<Integer> severityList;
+    private List<Integer> priorityList;
     private List<User> loggedByList;
-    private List<User> assignedToList;
+    private List<User> assignedToList;    
     
-    private Set<Integer> cusInt01Set;
-    private Set<Integer> cusInt02Set;
-    private Set<Integer> cusInt03Set;
-    private Set<Integer> cusInt04Set;
-    private Set<Integer> cusInt05Set;
-    private Set<Integer> cusInt06Set;
-    private Set<Integer> cusInt07Set;
-    private Set<Integer> cusInt08Set;
-    private Set<Integer> cusInt09Set;
-    private Set<Integer> cusInt10Set;
+    private List<Integer> cusInt01List;
+    private List<Integer> cusInt02List;
+    private List<Integer> cusInt03List;
+    private List<Integer> cusInt04List;
+    private List<Integer> cusInt05List;
+    private List<Integer> cusInt06List;
+    private List<Integer> cusInt07List;
+    private List<Integer> cusInt08List;
+    private List<Integer> cusInt09List;
+    private List<Integer> cusInt10List;
     
     private String cusStr01;
     private String cusStr02;
@@ -120,7 +113,7 @@ public class ItemSearch implements Serializable {
             criteria = DetachedCriteria.forClass(History.class);           
             // apply restrictions to parent, this is an inner join =============
             DetachedCriteria parent = criteria.createCriteria("parent");
-            parent.add(Restrictions.in("space.id", getSpaceIdSet()));            
+            parent.add(Restrictions.in("space.id", getSpaceIdList()));            
             if (createdDateStart != null) {
                 parent.add(Restrictions.ge("timeStamp", createdDateStart));
             }
@@ -136,7 +129,7 @@ public class ItemSearch implements Serializable {
             }            
         } else {
             criteria = DetachedCriteria.forClass(Item.class);
-            criteria.add(Restrictions.in("space.id", getSpaceIdSet()));              
+            criteria.add(Restrictions.in("space.id", getSpaceIdList()));              
             if (itemIds != null) {
                 criteria.add(Restrictions.in("id", itemIds));
             }            
@@ -151,20 +144,14 @@ public class ItemSearch implements Serializable {
             
         }         
         //======================================================================
-        if (statusSet != null && statusSet.size() > 0) {
-            criteria.add(Restrictions.in("status", statusSet));
+        if (statusList != null && statusList.size() > 0) {
+            criteria.add(Restrictions.in("status", statusList));
         }
-        if (severitySet != null && severitySet.size() > 0) {
-            criteria.add(Restrictions.in("severity", severitySet));
+        if (severityList != null && severityList.size() > 0) {
+            criteria.add(Restrictions.in("severity", severityList));
         }
-        if (prioritySet != null && prioritySet.size() > 0) {
-            criteria.add(Restrictions.in("priority", prioritySet));
-        }
-        if (loggedBySet != null && loggedBySet.size() > 0) {
-            criteria.add(Restrictions.in("loggedBy.id", loggedBySet));
-        }
-        if (assignedToSet != null && assignedToSet.size() > 0) {
-            criteria.add(Restrictions.in("assignedTo.id", assignedToSet));
+        if (priorityList != null && priorityList.size() > 0) {
+            criteria.add(Restrictions.in("priority", priorityList));
         }
         if (loggedByList != null && loggedByList.size() > 0) {
             criteria.add(Restrictions.in("loggedBy", loggedByList));
@@ -173,35 +160,35 @@ public class ItemSearch implements Serializable {
             criteria.add(Restrictions.in("assignedTo", assignedToList));
         }        
         //======================================================================
-        if (cusInt01Set != null && cusInt01Set.size() > 0) {
-            criteria.add(Restrictions.in("cusInt01", cusInt01Set));
+        if (cusInt01List != null && cusInt01List.size() > 0) {
+            criteria.add(Restrictions.in("cusInt01", cusInt01List));
         }
-        if (cusInt02Set != null && cusInt02Set.size() > 0) {
-            criteria.add(Restrictions.in("cusInt02", cusInt02Set));
+        if (cusInt02List != null && cusInt02List.size() > 0) {
+            criteria.add(Restrictions.in("cusInt02", cusInt02List));
         }
-        if (cusInt03Set != null && cusInt03Set.size() > 0) {
-            criteria.add(Restrictions.in("cusInt03", cusInt03Set));
+        if (cusInt03List != null && cusInt03List.size() > 0) {
+            criteria.add(Restrictions.in("cusInt03", cusInt03List));
         }
-        if (cusInt04Set != null && cusInt04Set.size() > 0) {
-            criteria.add(Restrictions.in("cusInt04", cusInt04Set));
+        if (cusInt04List != null && cusInt04List.size() > 0) {
+            criteria.add(Restrictions.in("cusInt04", cusInt04List));
         }
-        if (cusInt05Set != null && cusInt05Set.size() > 0) {
-            criteria.add(Restrictions.in("cusInt05", cusInt05Set));
+        if (cusInt05List != null && cusInt05List.size() > 0) {
+            criteria.add(Restrictions.in("cusInt05", cusInt05List));
         }
-        if (cusInt06Set != null && cusInt06Set.size() > 0) {
-            criteria.add(Restrictions.in("cusInt06", cusInt06Set));
+        if (cusInt06List != null && cusInt06List.size() > 0) {
+            criteria.add(Restrictions.in("cusInt06", cusInt06List));
         }
-        if (cusInt07Set != null && cusInt07Set.size() > 0) {
-            criteria.add(Restrictions.in("cusInt07", cusInt07Set));
+        if (cusInt07List != null && cusInt07List.size() > 0) {
+            criteria.add(Restrictions.in("cusInt07", cusInt07List));
         }
-        if (cusInt08Set != null && cusInt08Set.size() > 0) {
-            criteria.add(Restrictions.in("cusInt08", cusInt08Set));
+        if (cusInt08List != null && cusInt08List.size() > 0) {
+            criteria.add(Restrictions.in("cusInt08", cusInt08List));
         }
-        if (cusInt09Set != null && cusInt09Set.size() > 0) {
-            criteria.add(Restrictions.in("cusInt09", cusInt09Set));
+        if (cusInt09List != null && cusInt09List.size() > 0) {
+            criteria.add(Restrictions.in("cusInt09", cusInt09List));
         }
-        if (cusInt10Set != null && cusInt10Set.size() > 0) {
-            criteria.add(Restrictions.in("cusInt10", cusInt10Set));
+        if (cusInt10List != null && cusInt10List.size() > 0) {
+            criteria.add(Restrictions.in("cusInt10", cusInt10List));
         }
         //======================================================================
         if (cusStr01 != null) {
@@ -243,23 +230,23 @@ public class ItemSearch implements Serializable {
     }
     
     // private routine to help with the space "in" clause
-    private Collection<Long> getSpaceIdSet() {
+    private Collection<Long> getSpaceIdList() {
         if (space == null) {
-            if (spaceSet != null && spaceSet.size() > 0) {
-                return spaceSet;
+            if (spaceList != null && spaceList.size() > 0) {
+                return spaceList;
             }
-            Set<Long> spaceIdSet = new HashSet<Long>(user.getUserSpaceRoles().size());
+            List<Long> spaceIdList = new ArrayList<Long>(user.getUserSpaceRoles().size());
             for (UserSpaceRole usr : user.getUserSpaceRoles()) {
                 if (usr.getSpace() != null) {
-                    spaceIdSet.add(usr.getSpace().getId());
+                    spaceIdList.add(usr.getSpace().getId());
                 }
             }
-            if (spaceIdSet.size() == 0) {
+            if (spaceIdList.size() == 0) {
                 // no spaces allocated
                 // hack so that search screen does not bomb
                 return Collections.singleton(new Long(0)); 
             }            
-            return spaceIdSet;
+            return spaceIdList;
         } else {
             return Collections.singleton(space.getId());
         }
@@ -287,40 +274,7 @@ public class ItemSearch implements Serializable {
         this.fields = space.getMetadata().getFieldList();
         this.space = space;
         this.sortDescending = true;
-    }
-    
-    private Map setToMap(Set s) {
-        if (s == null) {
-            return null;
-        }
-        Map<String, Boolean> map = new HashMap<String, Boolean>(s.size());
-        for (Object o : s) {
-            // ugly toString hack to make JSTL / EL get map value by key easier
-            map.put(o.toString(), new Boolean(true));
-        }
-        return map;
-    }    
-    
-    public Map getSearchMap() {
-        Map<String, Map> map = new HashMap<String, Map>();
-        map.put("spaceSet", setToMap(spaceSet));
-        map.put("statusSet", setToMap(statusSet));
-        map.put("severitySet", setToMap(severitySet));
-        map.put("prioritySet", setToMap(prioritySet));
-        map.put("loggedBySet", setToMap(loggedBySet));
-        map.put("assignedToSet", setToMap(assignedToSet));
-        map.put("cusInt01Set", setToMap(cusInt01Set));
-        map.put("cusInt02Set", setToMap(cusInt02Set));
-        map.put("cusInt03Set", setToMap(cusInt03Set));
-        map.put("cusInt04Set", setToMap(cusInt04Set));
-        map.put("cusInt05Set", setToMap(cusInt04Set));
-        map.put("cusInt06Set", setToMap(cusInt06Set));
-        map.put("cusInt07Set", setToMap(cusInt07Set));
-        map.put("cusInt08Set", setToMap(cusInt08Set));
-        map.put("cusInt09Set", setToMap(cusInt09Set));
-        map.put("cusInt10Set", setToMap(cusInt10Set));
-        return map;
-    }
+    }     
     
     public Map<String, String> getSeverityOptions() {
         Field f = new Field(Field.Name.SEVERITY);
@@ -516,132 +470,132 @@ public class ItemSearch implements Serializable {
         this.itemIds = itemIds;
     }    
     
-    public Set<Long> getSpaceSet() {
-        return spaceSet;
+    public List<Long> getSpaceList() {
+        return spaceList;
     }
     
-    public void setSpaceSet(Set<Long> spaceSet) {
-        this.spaceSet = spaceSet;
+    public void setSpaceList(List<Long> spaceList) {
+        this.spaceList = spaceList;
     }
     
-    public Set<Integer> getStatusSet() {
-        return statusSet;
+    public List<Integer> getStatusList() {
+        return statusList;
     }
     
-    public void setStatusSet(Set<Integer> statusSet) {
-        this.statusSet = statusSet;
+    public void setStatusList(List<Integer> statusList) {
+        this.statusList = statusList;
     }
     
-    public Set<Integer> getSeveritySet() {
-        return severitySet;
+    public List<Integer> getSeverityList() {
+        return severityList;
     }
     
-    public void setSeveritySet(Set<Integer> severitySet) {
-        this.severitySet = severitySet;
+    public void setSeverityList(List<Integer> severityList) {
+        this.severityList = severityList;
     }
     
-    public Set<Integer> getPrioritySet() {
-        return prioritySet;
+    public List<Integer> getPriorityList() {
+        return priorityList;
     }
     
-    public void setPrioritySet(Set<Integer> prioritySet) {
-        this.prioritySet = prioritySet;
+    public void setPriorityList(List<Integer> priorityList) {
+        this.priorityList = priorityList;
     }
     
-    public Set<Long> getLoggedBySet() {
-        return loggedBySet;
+    public List<User> getLoggedByList() {
+        return loggedByList;
     }
     
-    public void setLoggedBySet(Set<Long> loggedBySet) {
-        this.loggedBySet = loggedBySet;
+    public void setLoggedByList(List<User> loggedByList) {
+        this.loggedByList = loggedByList;
     }
     
-    public Set<Long> getAssignedToSet() {
-        return assignedToSet;
+    public List<User> getAssignedToList() {
+        return assignedToList;
     }
     
-    public void setAssignedToSet(Set<Long> assignedToSet) {
-        this.assignedToSet = assignedToSet;
+    public void setAssignedToList(List<User> assignedToList) {
+        this.assignedToList = assignedToList;
     }
     
-    public Set<Integer> getCusInt01Set() {
-        return cusInt01Set;
+    public List<Integer> getCusInt01List() {
+        return cusInt01List;
     }
     
-    public void setCusInt01Set(Set<Integer> cusInt01Set) {
-        this.cusInt01Set = cusInt01Set;
+    public void setCusInt01List(List<Integer> cusInt01List) {
+        this.cusInt01List = cusInt01List;
     }
     
-    public Set<Integer> getCusInt02Set() {
-        return cusInt02Set;
+    public List<Integer> getCusInt02List() {
+        return cusInt02List;
     }
     
-    public void setCusInt02Set(Set<Integer> cusInt02Set) {
-        this.cusInt02Set = cusInt02Set;
+    public void setCusInt02List(List<Integer> cusInt02List) {
+        this.cusInt02List = cusInt02List;
     }
     
-    public Set<Integer> getCusInt03Set() {
-        return cusInt03Set;
+    public List<Integer> getCusInt03List() {
+        return cusInt03List;
     }
     
-    public void setCusInt03Set(Set<Integer> cusInt03Set) {
-        this.cusInt03Set = cusInt03Set;
+    public void setCusInt03List(List<Integer> cusInt03List) {
+        this.cusInt03List = cusInt03List;
     }
     
-    public Set<Integer> getCusInt04Set() {
-        return cusInt04Set;
+    public List<Integer> getCusInt04List() {
+        return cusInt04List;
     }
     
-    public void setCusInt04Set(Set<Integer> cusInt04Set) {
-        this.cusInt04Set = cusInt04Set;
+    public void setCusInt04List(List<Integer> cusInt04List) {
+        this.cusInt04List = cusInt04List;
     }
     
-    public Set<Integer> getCusInt05Set() {
-        return cusInt05Set;
+    public List<Integer> getCusInt05List() {
+        return cusInt05List;
     }
     
-    public void setCusInt05Set(Set<Integer> cusInt05Set) {
-        this.cusInt05Set = cusInt05Set;
+    public void setCusInt05List(List<Integer> cusInt05List) {
+        this.cusInt05List = cusInt05List;
     }
     
-    public Set<Integer> getCusInt06Set() {
-        return cusInt06Set;
+    public List<Integer> getCusInt06List() {
+        return cusInt06List;
     }
     
-    public void setCusInt06Set(Set<Integer> cusInt06Set) {
-        this.cusInt06Set = cusInt06Set;
+    public void setCusInt06List(List<Integer> cusInt06List) {
+        this.cusInt06List = cusInt06List;
     }
     
-    public Set<Integer> getCusInt07Set() {
-        return cusInt07Set;
+    public List<Integer> getCusInt07List() {
+        return cusInt07List;
     }
     
-    public void setCusInt07Set(Set<Integer> cusInt07Set) {
-        this.cusInt07Set = cusInt07Set;
+    public void setCusInt07List(List<Integer> cusInt07List) {
+        this.cusInt07List = cusInt07List;
     }
     
-    public Set<Integer> getCusInt08Set() {
-        return cusInt08Set;
+    public List<Integer> getCusInt08List() {
+        return cusInt08List;
     }
     
-    public void setCusInt08Set(Set<Integer> cusInt08Set) {
-        this.cusInt08Set = cusInt08Set;
+    public void setCusInt08List(List<Integer> cusInt08List) {
+        this.cusInt08List = cusInt08List;
     }
     
-    public Set<Integer> getCusInt09Set() {
-        return cusInt09Set;
+    public List<Integer> getCusInt09List() {
+        return cusInt09List;
     }
     
-    public void setCusInt09Set(Set<Integer> cusInt09Set) {
-        this.cusInt09Set = cusInt09Set;
+    public void setCusInt09List(List<Integer> cusInt09List) {
+        this.cusInt09List = cusInt09List;
     }
     
-    public Set<Integer> getCusInt10Set() {
-        return cusInt10Set;
+    public List<Integer> getCusInt10List() {
+        return cusInt10List;
     }
     
-    public void setCusInt10Set(Set<Integer> cusInt10Set) {
-        this.cusInt10Set = cusInt10Set;
+    public void setCusInt10List(List<Integer> cusInt10List) {
+        this.cusInt10List = cusInt10List;
     }
     
     public String getCusStr01() {
@@ -746,30 +700,6 @@ public class ItemSearch implements Serializable {
     
     public void setResultCount(long resultCount) {
         this.resultCount = resultCount;
-    }
-
-    public List<User> getLoggedByList() {
-        return loggedByList;
-    }
-
-    public void setLoggedByList(List<User> loggedByList) {
-        this.loggedByList = loggedByList;
-    }
-
-    public List<User> getAssignedToList() {
-        return assignedToList;
-    }
-
-    public void setAssignedToList(List<User> assignedToList) {
-        this.assignedToList = assignedToList;
-    }
-
-    public String getRefId() {
-        return refId;
-    }
-    
-    public void setRefId(String refId) {
-        this.refId = refId;
-    }   
+    }  
             
 }
