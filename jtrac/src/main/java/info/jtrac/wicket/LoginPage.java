@@ -83,7 +83,7 @@ public class LoginPage extends WebPage {
                     }
                     return "document.getElementById('" + markupId + "').focus()";
                 }
-            });            
+            }, password);            
             add(new CheckBox("rememberMe"));
 
         }
