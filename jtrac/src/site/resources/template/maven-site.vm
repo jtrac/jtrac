@@ -325,7 +325,7 @@
            <img src="template/hibernate-logo.png" style="margin:0px 0px 15px 16px; border: 1px solid grey;"/>
        </a> 
        <a href="http://www.mortbay.org/" title="Jetty">
-           <img src="template/jetty-logo.png" style="margin:0px 0px 15px 16px"/>
+           <img src="template/jetty-logo.png" style="margin:0px 0px 15px 16px; border: 1px solid grey;"/>
        </a>
        <a href="http://hsqldb.org/" title="HSQLDB">
            <img src="template/hsqldb-logo.png" style="margin:0px 0px 15px 16px"/>
