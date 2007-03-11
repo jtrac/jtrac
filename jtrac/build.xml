@@ -320,6 +320,14 @@
     
     <!-- ========================= JETTY ============================ -->    
     
+    <target name="confirm">
+        <input message="Are you sure?" validargs="y,n" addproperty="input"/>
+        <condition property="abort">
+            <equals arg1="n" arg2="${input}"/>
+        </condition>
+        <fail if="abort">User aborted.</fail>       
+    </target>
+    
     <target name="jetty-setup">
         <copy todir="target/jetty/lib" flatten="true">
             <fileset dir="${m2.repo}" includes="${jetty.jars}" casesensitive="false"/>
