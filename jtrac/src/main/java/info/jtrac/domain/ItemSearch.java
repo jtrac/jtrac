@@ -357,6 +357,21 @@ public class ItemSearch implements Serializable {
         sortDescending = !sortDescending;
     }      
     
+    public void setLoggedBy(User user) {
+        loggedByList = new ArrayList<User>();
+        loggedByList.add(user);
+    }
+    
+    public void setAssignedTo(User user) {
+        assignedToList = new ArrayList<User>();
+        assignedToList.add(user);        
+    }
+    
+    public void setStatus(int i) {
+        statusList = new ArrayList<Integer>();
+        statusList.add(i);
+    }
+    
     //=====================================================================
     
     public void setFields(List<Field> fields) {

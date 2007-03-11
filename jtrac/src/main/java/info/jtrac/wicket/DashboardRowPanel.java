@@ -21,7 +21,6 @@ import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
-import java.util.Collections;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.markup.html.WebMarkupContainer;
@@ -79,8 +78,9 @@ public class DashboardRowPanel extends BasePanel {
         if(user.getId() > 0) {        
             add(new Link("loggedByMe") {
                 public void onClick() {
+                    setCurrentSpace(space);
                     ItemSearch itemSearch = new ItemSearch(space);
-                    itemSearch.setLoggedByList(Collections.singletonList(user));
+                    itemSearch.setLoggedBy(user);
                     setResponsePage(new ItemListPage(itemSearch));
                 }
             }.add(new Label("loggedByMe", new PropertyModel(counts, "loggedByMe"))));        
@@ -88,8 +88,9 @@ public class DashboardRowPanel extends BasePanel {
 
             add(new Link("assignedToMe") {
                 public void onClick() {
+                    setCurrentSpace(space);
                     ItemSearch itemSearch = new ItemSearch(space);
-                    itemSearch.setAssignedToList(Collections.singletonList(user));
+                    itemSearch.setAssignedTo(user);
                     setResponsePage(new ItemListPage(itemSearch));
                 }
             }.add(new Label("assignedToMe", new PropertyModel(counts, "assignedToMe"))));
@@ -100,6 +101,7 @@ public class DashboardRowPanel extends BasePanel {
         
         add(new Link("total") {
             public void onClick() {
+                setCurrentSpace(space);
                 ItemSearch itemSearch = new ItemSearch(space);                
                 setResponsePage(new ItemListPage(itemSearch));
             }

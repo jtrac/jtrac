@@ -40,14 +40,7 @@ public class DashboardPage extends BasePage {
         setVersioned(false);                       
         
         final User user = getPrincipal();        
-        List<UserSpaceRole> spaceRoles = user.getSpaceRoles();
-        
-        // if only one space, that would remain "selected" across all navigation.
-        if(spaceRoles.size() == 1) {
-            ((JtracSession) getSession()).setCurrentSpace(spaceRoles.get(0).getSpace());
-        } else {
-            ((JtracSession) getSession()).setCurrentSpace(null);
-        }
+        List<UserSpaceRole> spaceRoles = user.getSpaceRoles();        
         
         final CountsHolder countsHolder = getJtrac().loadCountsForUser(user);        
         

@@ -51,18 +51,15 @@ import wicket.model.PropertyModel;
  * item search form panel
  */
 public class ItemSearchFormPanel extends BasePanel {        
-        
-    private String panelId;
+            
     
     public ItemSearchFormPanel(String id, Space space) {
-        super(id);
-        this.panelId = id;
+        super(id);        
         add(new ItemSearchForm("form", space));
     }       
     
     public ItemSearchFormPanel(String id, User user) {
-        super(id);
-        this.panelId = id;
+        super(id);        
         add(new ItemSearchForm("form", user));
     }      
     
@@ -71,9 +68,7 @@ public class ItemSearchFormPanel extends BasePanel {
      * the search results screen
      */
     public ItemSearchFormPanel(String id, ItemSearch itemSearch) {  
-        super(id);
-        this.panelId = id;
-        itemSearch.setCurrentPage(0);        
+        super(id);                
         add(new ItemSearchForm("form", itemSearch));      
     }    
     
@@ -454,7 +449,7 @@ public class ItemSearchFormPanel extends BasePanel {
         @Override
         protected void onSubmit() {
             ItemSearch itemSearch = (ItemSearch) getModelObject();
-            ItemSearchFormPanel.this.replaceWith(new ItemListPanel(panelId, itemSearch));            
+            setResponsePage(new ItemListPage(itemSearch));            
         }        
             
     }

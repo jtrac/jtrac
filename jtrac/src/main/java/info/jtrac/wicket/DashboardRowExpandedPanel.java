@@ -23,7 +23,6 @@ import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -108,18 +107,20 @@ public class DashboardRowExpandedPanel extends BasePanel {
                 if(user.getId() > 0) {                
                     listItem.add(new Link("loggedByMe") {
                         public void onClick() {
+                            setCurrentSpace(space);
                             ItemSearch itemSearch = new ItemSearch(space);
-                            itemSearch.setLoggedByList(Collections.singletonList(user));
-                            itemSearch.setStatusList(Collections.singletonList(i));
+                            itemSearch.setLoggedBy(user);
+                            itemSearch.setStatus(i);
                             setResponsePage(new ItemListPage(itemSearch));
                         }
                     }.add(new Label("loggedByMe", counts.getLoggedByMeForState(i))));
 
                     listItem.add(new Link("assignedToMe") {
                         public void onClick() {
+                            setCurrentSpace(space);
                             ItemSearch itemSearch = new ItemSearch(space);
-                            itemSearch.setAssignedToList(Collections.singletonList(user));
-                            itemSearch.setStatusList(Collections.singletonList(i));
+                            itemSearch.setAssignedTo(user);
+                            itemSearch.setStatus(i);
                             setResponsePage(new ItemListPage(itemSearch));
                         }
                     }.add(new Label("assignedToMe", counts.getAssignedToMeForState(i))));
@@ -130,8 +131,9 @@ public class DashboardRowExpandedPanel extends BasePanel {
                 
                 listItem.add(new Link("total") {
                     public void onClick() {
+                        setCurrentSpace(space);
                         ItemSearch itemSearch = new ItemSearch(space);                        
-                        itemSearch.setStatusList(Collections.singletonList(i));
+                        itemSearch.setStatus(i);
                         setResponsePage(new ItemListPage(itemSearch));
                     }
                 }.add(new Label("total", counts.getTotalForState(i))));                
@@ -144,16 +146,18 @@ public class DashboardRowExpandedPanel extends BasePanel {
         if(user.getId() > 0) {        
             add(new Link("loggedByMeTotal") {
                 public void onClick() {
+                    setCurrentSpace(space);
                     ItemSearch itemSearch = new ItemSearch(space);
-                    itemSearch.setLoggedByList(Collections.singletonList(user));
+                    itemSearch.setLoggedBy(user);
                     setResponsePage(new ItemListPage(itemSearch));
                 }
             }.add(new Label("loggedByMe", new PropertyModel(counts, "loggedByMe"))));
 
             add(new Link("assignedToMeTotal") {
                 public void onClick() {
+                    setCurrentSpace(space);
                     ItemSearch itemSearch = new ItemSearch(space);
-                    itemSearch.setAssignedToList(Collections.singletonList(user));
+                    itemSearch.setAssignedTo(user);
                     setResponsePage(new ItemListPage(itemSearch));
                 }
             }.add(new Label("assignedToMe", new PropertyModel(counts, "assignedToMe"))));
@@ -164,6 +168,7 @@ public class DashboardRowExpandedPanel extends BasePanel {
         
         add(new Link("totalTotal") {
             public void onClick() {
+                setCurrentSpace(space);
                 ItemSearch itemSearch = new ItemSearch(space);                
                 setResponsePage(new ItemListPage(itemSearch));
             }

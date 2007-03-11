@@ -37,9 +37,16 @@ public class HeaderPanel extends BasePanel {
         
         final User user = ((JtracSession) getSession()).getUser();
         final Space space = ((JtracSession) getSession()).getCurrentSpace();
+        final List<Space> spaces = new ArrayList(user.getSpaces());
         
         add(new Link("dashboard") {
             public void onClick() {
+                // if only one space, that would remain "selected" across all navigation.
+                if(spaces.size() == 1) {
+                    ((JtracSession) getSession()).setCurrentSpace(spaces.get(0));
+                } else {
+                    ((JtracSession) getSession()).setCurrentSpace(null);
+                }                
                 setResponsePage(DashboardPage.class);
             }            
         });
@@ -48,8 +55,7 @@ public class HeaderPanel extends BasePanel {
             add(new Label("space", "").setVisible(false));
             add(new Label("new", "").setVisible(false));
             add(new Link("search") {
-                public void onClick() {
-                    List<Space> spaces = new ArrayList(user.getSpaces());
+                public void onClick() {                    
                     // if only one space don't use generic search screen
                     if(spaces.size() == 1) {
                         Space current = spaces.get(0);
