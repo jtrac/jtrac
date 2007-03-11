@@ -22,6 +22,7 @@ import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemItem;
+import info.jtrac.domain.ItemSearch;
 import info.jtrac.util.DateUtils;
 import info.jtrac.util.ItemUtils;
 import java.util.ArrayList;
@@ -55,6 +56,15 @@ public class ItemViewPanel extends BasePanel {
         
         add(new Label("refId", new PropertyModel(item, "refId")));
         
+        add(new Link("relate") {
+            public void onClick() {
+                // TODO choose specific space for search
+                ItemSearch itemSearch = new ItemSearch(getPrincipal());
+                itemSearch.setRelatingItemRefId(item.getRefId());
+                setResponsePage(new ItemSearchFormPage(itemSearch));
+            }
+        });        
+        
         add(new ListView("relatedItems", new ArrayList(item.getRelatedItems())) {            
             protected void populateItem(ListItem listItem) {
                 final ItemItem itemItem = (ItemItem) listItem.getModelObject();
@@ -75,7 +85,7 @@ public class ItemViewPanel extends BasePanel {
                 }.add(new Label("refId", itemItem.getRelatedItem().getRefId())));
                 listItem.add(new Link("remove") {
                     public void onClick() {
-
+                        setResponsePage(new ItemRelateRemovePage(item.getId(), itemItem));
                     }
                 });
             }
@@ -101,7 +111,7 @@ public class ItemViewPanel extends BasePanel {
                 }.add(new Label("refId", itemItem.getItem().getRefId())));
                 listItem.add(new Link("remove") {
                     public void onClick() {
-
+                        setResponsePage(new ItemRelateRemovePage(item.getId(), itemItem));
                     }
                 });                
             }

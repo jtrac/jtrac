@@ -49,11 +49,11 @@ public class ItemRelatePanel extends BasePanel {
         refId = itemSearch == null ? null : itemSearch.getRelatingItemRefId();
         if (refId != null) {
             final ModalWindow relateWin = new ModalWindow("itemWindow");
-            add(relateWin);                    
-            Item item = getJtrac().loadItemByRefId(refId);            
-            relateWin.setContent(new ItemViewPanel(relateWin.getContentId(), item));
+            add(relateWin);                                                        
             AjaxLink link = new AjaxLink("link") {
                 public void onClick(AjaxRequestTarget target) {
+                    Item item = getJtrac().loadItemByRefId(refId);
+                    relateWin.setContent(new ItemViewPanel(relateWin.getContentId(), item));
                     relateWin.show(target);
                 }
             };
