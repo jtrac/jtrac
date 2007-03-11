@@ -348,7 +348,8 @@
       <hr/>
     </div>
     <div id="footer">
-      <div class="xleft">
+      <div class="xleft">&#169;#copyright()#publishDate( "bottom" $decoration.publishDate $decoration.version ) The JTrac Project</div>
+      <div class="xright">
         <!-- start eXTReMe tracking -->
         <div id="eXTReMe"><a href="http://extremetracking.com/open?login=jtrac">
         <img src="http://t1.extreme-dm.com/i.gif" style="border: 0;"
@@ -369,7 +370,6 @@
         </div></noscript></div>
         <!-- end eXTReMe tracking -->
       </div>
-      <div class="xright">&#169;#copyright()#publishDate( "bottom" $decoration.publishDate $decoration.version ) The JTrac Project</div>
       <div class="clear">
         <hr/>
       </div>

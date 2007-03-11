@@ -41,10 +41,17 @@ import wicket.model.PropertyModel;
  */
 public class ItemViewPanel extends BasePanel {    
     
-    public ItemViewPanel(String id, final Item item) {
-        
-        super(id);                                     
-        
+    public ItemViewPanel(String id, long itemId) {                
+        super(id);
+        addComponents(getJtrac().loadItem(itemId));
+    }    
+    
+    public ItemViewPanel(String id, final Item item) {                
+        super(id);
+        addComponents(item);
+    }
+    
+    private void addComponents(final Item item) {
         final ModalWindow relateWin = new ModalWindow("relateWin");
         add(relateWin);        
         

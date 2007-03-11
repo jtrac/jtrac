@@ -17,6 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.User;
 import wicket.PageParameters;
 import wicket.markup.html.WebMarkupContainer;
@@ -25,13 +26,9 @@ import wicket.markup.html.link.Link;
 /**
  * dashboard page
  */
-public class ItemViewPage extends BasePage {
-          
-    ItemListPage previous;
-
-    public ItemListPage getPrevious() {
-        return previous;
-    }    
+public class ItemViewPage extends BasePage {              
+    
+    ItemSearch itemSearch;   
     
     public ItemViewPage(PageParameters params) {        
         String itemId = params.getString("0");
@@ -47,15 +44,15 @@ public class ItemViewPage extends BasePage {
         addComponents(item);
     }       
     
-    public ItemViewPage(long itemId, final ItemListPage previous) { 
-        this.previous = previous;
+    public ItemViewPage(long itemId, ItemSearch itemSearch) { 
+        this.itemSearch = itemSearch;
         Item item = getJtrac().loadItem(itemId);
         addComponents(item);
     }
     
-    // specially for the item edit scenario, to avoid un-necessary re-load
-    public ItemViewPage(Item item, final ItemListPage previous) { 
-        this.previous = previous;        
+    // for e.g. the item edit scenario, to avoid un-necessary re-load
+    public ItemViewPage(Item item, ItemSearch itemSearch) { 
+        this.itemSearch = itemSearch;        
         addComponents(item);
     }    
     
@@ -63,11 +60,11 @@ public class ItemViewPage extends BasePage {
         
         Link link = new Link("back") {
             public void onClick() {
-                previous.setSelectedItemId(item.getId());
-                setResponsePage(previous);
+                itemSearch.setSelectedItemId(item.getId());
+                setResponsePage(new ItemListPage(itemSearch));
             }
         };
-        if(previous == null) {
+        if(itemSearch == null) {
             link.setVisible(false);
         }
         
@@ -86,7 +83,7 @@ public class ItemViewPage extends BasePage {
         add(new ItemViewPanel("itemViewPanel", item));
         
         if(user.getId() > 0) {        
-            add(new ItemViewFormPanel("itemViewFormPanel", item, previous));
+            add(new ItemViewFormPanel("itemViewFormPanel", item, itemSearch));
         } else {
             add(new WebMarkupContainer("itemViewFormPanel").setVisible(false));
         }        

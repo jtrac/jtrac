@@ -50,6 +50,7 @@ public class ItemSearch implements Serializable {
     private boolean showHistory;
     private boolean showDetail;
         
+    private long selectedItemId;
     private String summary;    
     private Collection<Long> itemIds;
     
@@ -701,5 +702,13 @@ public class ItemSearch implements Serializable {
     public void setResultCount(long resultCount) {
         this.resultCount = resultCount;
     }  
-            
+
+    public long getSelectedItemId() {
+        return selectedItemId;
+    }
+
+    public void setSelectedItemId(long selectedItemId) {
+        this.selectedItemId = selectedItemId;
+    }           
+    
 }

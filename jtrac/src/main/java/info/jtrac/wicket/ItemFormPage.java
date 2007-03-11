@@ -216,9 +216,9 @@ public class ItemFormPage extends BasePage {
             // allow user to navigate back to search results if applicable
             ItemListPage itemListPage = null;
             if(previous != null) {
-                itemListPage = previous.getPrevious();
+                // itemListPage = previous.getPrevious();
             }            
-            setResponsePage(new ItemViewPage(item, itemListPage));
+            // setResponsePage(new ItemViewPage(item, itemListPage));
         }
         
     }

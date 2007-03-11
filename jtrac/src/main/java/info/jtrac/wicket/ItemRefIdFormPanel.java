@@ -85,7 +85,7 @@ public class ItemRefIdFormPanel extends BasePanel {
                 refIdField.error(localize("item_search_form.error.refId.notFound"));                
                 return;       
             } 
-            setResponsePage(new ItemViewPage(item, null));                     
+            // setResponsePage(new ItemViewPage(item, null));                     
         }
         
     }

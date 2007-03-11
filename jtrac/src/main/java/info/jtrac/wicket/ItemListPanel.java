@@ -19,7 +19,6 @@ package info.jtrac.wicket;
 import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
-import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.util.DateUtils;
 import info.jtrac.util.ExcelUtils;
@@ -39,30 +38,25 @@ import wicket.model.PropertyModel;
 import wicket.protocol.http.WebResponse;
 
 /**
- * dashboard page
+ * item list panel
  */
-public class ItemListPage extends BasePage {      
+public class ItemListPanel extends BasePanel {      
+        
+    private ItemSearch itemSearch;     
     
-    private long selectedItemId;    
-    
-    public void setSelectedItemId(long selectedItemId) {
-        this.selectedItemId = selectedItemId;
-    }    
-    
-    private ItemListPage getItemListPage(ItemSearch itemSearch, String sortFieldName) {
+    private void doSort(String sortFieldName) {
         itemSearch.setCurrentPage(0);        
         if (itemSearch.getSortFieldName().equals(sortFieldName)) {  
             itemSearch.toggleSortDirection();
         } else {            
             itemSearch.setSortFieldName(sortFieldName);
             itemSearch.setSortDescending(false);
-        }      
-        ItemListPage page = new ItemListPage(itemSearch);
-        page.setSelectedItemId(selectedItemId);
-        return page;
+        }                              
     }
     
-    public ItemListPage(final ItemSearch itemSearch) {                
+    public ItemListPanel(final String id, ItemSearch temp) {
+        super(id);
+        this.itemSearch = temp;
         LoadableDetachableModel itemListModel = new LoadableDetachableModel() {
             protected Object load() {
                 logger.debug("loading item list from database");                
@@ -70,7 +64,7 @@ public class ItemListPage extends BasePage {
             }
         };        
         
-        // hack - ensure that wicket model "attach" happens NOW so that
+        // hack - ensure that wicket model "attach" happens NOW before pagination logic sp that
         // itemSearch is properly initialized in the LoadableDetachableModel#load() above
         itemListModel.getObject(null);
         
@@ -97,8 +91,7 @@ public class ItemListPage extends BasePage {
         if(pageCount > 1) {        
             Link prevOn = new Link("prevOn") {
                 public void onClick() {
-                    itemSearch.setCurrentPage(currentPage - 1);
-                    setResponsePage(new ItemListPage(itemSearch));
+                    itemSearch.setCurrentPage(currentPage - 1);                    
                 }            
             };
             prevOn.add(new Label("prevOn", "<<"));
@@ -122,8 +115,7 @@ public class ItemListPage extends BasePage {
                     String pageNumber = i + 1 + "";
                     Link pageOn = new Link("pageOn") {
                         public void onClick() {
-                            itemSearch.setCurrentPage(i);
-                            setResponsePage(new ItemListPage(itemSearch));
+                            itemSearch.setCurrentPage(i);                            
                         }                   
                     };
                     pageOn.add(new Label("pageOn", pageNumber));
@@ -141,8 +133,7 @@ public class ItemListPage extends BasePage {
 
             Link nextOn = new Link("nextOn") {
                 public void onClick() {
-                    itemSearch.setCurrentPage(currentPage + 1);
-                    setResponsePage(new ItemListPage(itemSearch));
+                    itemSearch.setCurrentPage(currentPage + 1);                    
                 }
             };
             nextOn.add(new Label("nextOn", ">>"));
@@ -208,7 +199,7 @@ public class ItemListPage extends BasePage {
         for(final String s : headings) {            
             Link headingLink = new Link(s) {
                 public void onClick() {                                    
-                    setResponsePage(getItemListPage(itemSearch, s));
+                    doSort(s);
                 }                
             };
             headingLink.add(new Label(s, getLocalizer().getString("item_view." + s, null)));
@@ -225,7 +216,7 @@ public class ItemListPage extends BasePage {
                 final Field field = (Field) listItem.getModelObject();                
                 Link headingLink = new Link("label") {
                     public void onClick() {                        
-                        setResponsePage(getItemListPage(itemSearch, field.getName().getText()));                       
+                        doSort(field.getName().getText());                       
                     }                
                 };
                 listItem.add(headingLink);
@@ -238,9 +229,9 @@ public class ItemListPage extends BasePage {
         
         add(labels);                     
         
-        //======================== ITEMS =======================================
+        //======================== ITEMS =======================================        
         
-
+        final long selectedItemId = itemSearch.getSelectedItemId();
         
         final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
         
@@ -267,7 +258,7 @@ public class ItemListPage extends BasePage {
                     refIdLink = new Link("refId") {
                         public void onClick() {
                             // this is a history record
-                            setResponsePage(new ItemViewPage(history.getParent().getId(), ItemListPage.this));
+                            ItemListPanel.this.replaceWith(new ItemViewPanel(id, history.getParent().getId()));                            
                         }
                     };
                     String refId = history.getRefId();
@@ -290,8 +281,8 @@ public class ItemListPage extends BasePage {
                 } else {                
                     refIdLink = new Link("refId") {
                         public void onClick() {
-                            // this is an item record
-                            setResponsePage(new ItemViewPage(item.getId(), ItemListPage.this));
+                            // this is an item record                            
+                            ItemListPanel.this.replaceWith(new ItemViewPanel(id, item.getId()));
                         }
                     };
                     refIdLink.add(new Label("refId", new PropertyModel(item, "refId")));

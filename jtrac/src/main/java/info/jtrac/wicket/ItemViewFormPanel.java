@@ -20,6 +20,7 @@ import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
@@ -52,11 +53,11 @@ import wicket.model.BoundCompoundPropertyModel;
 public class ItemViewFormPanel extends BasePanel {
     
     private JtracFeedbackMessageFilter filter;
-    private ItemListPage previous;      
+    private ItemSearch itemSearch;
     
-    public ItemViewFormPanel(String id, Item item, ItemListPage previous) {
+    public ItemViewFormPanel(String id, Item item, ItemSearch itemSearch) {
         super(id);
-        this.previous = previous;
+        this.itemSearch = itemSearch;
         FeedbackPanel feedback = new FeedbackPanel("feedback");
         filter = new JtracFeedbackMessageFilter();
         feedback.setFilter(filter);
@@ -192,7 +193,7 @@ public class ItemViewFormPanel extends BasePanel {
                     throw new RuntimeException(e);
                 }
             }            
-            setResponsePage(new ItemViewPage(history.getParent(), ItemViewFormPanel.this.previous));
+            setResponsePage(new ItemViewPage(history.getParent(), itemSearch));
         }
         
     }
