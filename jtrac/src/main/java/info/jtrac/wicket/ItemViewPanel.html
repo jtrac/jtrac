@@ -1,12 +1,25 @@
 <wicket:panel>    
     <table class="jtrac" width="100%">
-        <tr class="alt">
+        <tr class="alt" valign="top">
             <td class="label"><wicket:message key="item_view.id"/></td>
             <td wicket:id="refId"></td>
             <td class="label">
                 <wicket:message key="item_view.relatedItems"/>                
             </td>
-            <td colspan="3"></td>
+            <td colspan="3">
+                <span wicket:id="relatedItems">
+                    <span wicket:id="message"></span>
+                    <span wicket:id="link"><a href="#" wicket:id="refId"></a></span>
+                    <a href="#" wicket:id="remove" wicket:message="title=item_view.remove">(x)</a>
+                    <br/>
+                </span>                
+                <span wicket:id="relatingItems">                    
+                    <span wicket:id="link"><a href="#" wicket:id="refId"></a></span>
+                    <span wicket:id="message"></span>
+                    <a href="#" wicket:id="remove" wicket:message="title=item_view.remove">(x)</a>
+                    <br/>
+                </span>                
+            </td>
         </tr>
         <tr>
             <td class="label" width="18%"><wicket:message key="item_view.status"/></td>

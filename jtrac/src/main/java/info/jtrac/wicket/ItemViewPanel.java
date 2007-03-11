@@ -16,9 +16,12 @@
 
 package info.jtrac.wicket;
 
+import static info.jtrac.domain.ItemItem.*;
+
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemItem;
 import info.jtrac.util.DateUtils;
 import info.jtrac.util.ItemUtils;
 import java.util.ArrayList;
@@ -28,6 +31,7 @@ import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.basic.MultiLineLabel;
+import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.PropertyModel;
@@ -50,6 +54,59 @@ public class ItemViewPanel extends BasePanel {
     private void addComponents(final Item item) {      
         
         add(new Label("refId", new PropertyModel(item, "refId")));
+        
+        add(new ListView("relatedItems", new ArrayList(item.getRelatedItems())) {            
+            protected void populateItem(ListItem listItem) {
+                final ItemItem itemItem = (ItemItem) listItem.getModelObject();
+                String message = null;
+                if(itemItem.getType() == DUPLICATE_OF) {
+                    message = localize("item_view.duplicateOf");
+                } else if (itemItem.getType() == DEPENDS_ON) {
+                    message = localize("item_view.dependsOn");
+                } else if (itemItem.getType() == RELATED){
+                    message = localize("item_view.relatedTo");                  
+                }
+                listItem.add(new Label("message", message));
+                listItem.add(new Link("link") {
+                    public void onClick() {
+                        ItemViewPanel.this.replaceWith(
+                                new ItemViewPanel(ItemViewPanel.this.getId(), itemItem.getRelatedItem().getId()));
+                    }
+                }.add(new Label("refId", itemItem.getRelatedItem().getRefId())));
+                listItem.add(new Link("remove") {
+                    public void onClick() {
+
+                    }
+                });
+            }
+        }); 
+        
+        add(new ListView("relatingItems", new ArrayList(item.getRelatingItems())) {            
+            protected void populateItem(ListItem listItem) {
+                final ItemItem itemItem = (ItemItem) listItem.getModelObject();
+                String message = null;
+                if(itemItem.getType() == DUPLICATE_OF) {
+                    message = localize("item_view.duplicateOfThis");
+                } else if (itemItem.getType() == DEPENDS_ON) {
+                    message = localize("item_view.dependsOnThis");
+                } else if (itemItem.getType() == RELATED){
+                    message = localize("item_view.relatedToThis");                  
+                }
+                listItem.add(new Label("message", message));
+                listItem.add(new Link("link") {
+                    public void onClick() {
+                        ItemViewPanel.this.replaceWith(
+                                new ItemViewPanel(ItemViewPanel.this.getId(), itemItem.getItem().getId()));                        
+                    }
+                }.add(new Label("refId", itemItem.getItem().getRefId())));
+                listItem.add(new Link("remove") {
+                    public void onClick() {
+
+                    }
+                });                
+            }
+        });         
+        
         add(new Label("status", new PropertyModel(item, "statusValue")));
         add(new Label("loggedBy", new PropertyModel(item, "loggedBy.name")));
         add(new Label("assignedTo", new PropertyModel(item, "assignedTo.name")));

@@ -16,6 +16,8 @@
 
 package info.jtrac.wicket;
 
+import static info.jtrac.domain.ItemItem.*;
+
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemItem;
 import info.jtrac.domain.ItemSearch;
@@ -85,9 +87,9 @@ public class ItemRelatePanel extends BasePanel {
             super(id);            
             setModel(new BoundCompoundPropertyModel(this));
             final Map<Integer, String> options = new HashMap<Integer, String>(3);
-            options.put(0, localize("item_view_form.duplicateOf"));
-            options.put(1, localize("item_view_form.dependsOn"));
-            options.put(2, localize("item_view_form.relatedTo"));
+            options.put(DUPLICATE_OF, localize("item_view_form.duplicateOf"));
+            options.put(DEPENDS_ON, localize("item_view_form.dependsOn"));
+            options.put(RELATED, localize("item_view_form.relatedTo"));
             DropDownChoice choice = new DropDownChoice("type", new ArrayList(options.keySet()), new IChoiceRenderer() {
                 public Object getDisplayValue(Object o) {
                     return options.get(o);
