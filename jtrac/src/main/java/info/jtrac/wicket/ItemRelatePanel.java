@@ -30,7 +30,7 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.IChoiceRenderer;
-import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.TextArea;
 import wicket.markup.html.link.Link;
 import wicket.model.BoundCompoundPropertyModel;
 
@@ -46,22 +46,25 @@ public class ItemRelatePanel extends BasePanel {
         super(id);
         refId = itemSearch == null ? null : itemSearch.getRelatingItemRefId();
         if (refId != null) {
-            if(isItemViewPage) {
-                add(new Label("message", localize("item_view_form.relateTo")));
-                add(new RelateForm("form"));
-            } else {
-                add(new Label("message", localize("item_list.searchingForRelated")));
-                add(new WebMarkupContainer("form").setVisible(false));
-            }
             final ModalWindow relateWin = new ModalWindow("itemWindow");
             add(relateWin);                    
             Item item = getJtrac().loadItemByRefId(refId);            
             relateWin.setContent(new ItemViewPanel(relateWin.getContentId(), item));
-            add(new AjaxLink("link") {
+            AjaxLink link = new AjaxLink("link") {
                 public void onClick(AjaxRequestTarget target) {
                     relateWin.show(target);
                 }
-            }.add(new Label("refId", refId)));            
+            };
+            link.add(new Label("refId", refId));             
+            if(isItemViewPage) {
+                add(new WebMarkupContainer("link").setVisible(false));
+                add(new WebMarkupContainer("message").setVisible(false));
+                add(new RelateForm("form").add(link));
+            } else {
+                add(new Label("message", localize("item_list.searchingForRelated")));
+                add(link);
+                add(new WebMarkupContainer("form").setVisible(false));
+            }           
             add(new Link("cancel") {
                 public void onClick() {
                     Item item = getJtrac().loadItemByRefId(refId);
@@ -94,7 +97,7 @@ public class ItemRelatePanel extends BasePanel {
                 }
             });
             add(choice);
-            TextField comment = new TextField("comment");
+            TextArea comment = new TextArea("comment");
             comment.setRequired(true);
             comment.add(new ErrorHighlighter());
             add(comment);

@@ -17,6 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemSearch;
 import info.jtrac.exception.InvalidRefIdException;
 import wicket.Component;
 import wicket.markup.html.form.Form;
@@ -30,9 +31,11 @@ import wicket.model.PropertyModel;
  */
 public class ItemRefIdFormPanel extends BasePanel {
     
-    public ItemRefIdFormPanel(String id) {
+    private ItemSearch itemSearch;
+    
+    public ItemRefIdFormPanel(String id, ItemSearch itemSearch) {
         super(id);
-        setVersioned(false);        
+        this.itemSearch = itemSearch;
         add(new ItemRefIdForm());        
     }
     
@@ -85,7 +88,7 @@ public class ItemRefIdFormPanel extends BasePanel {
                 refIdField.error(localize("item_search_form.error.refId.notFound"));                
                 return;       
             } 
-            // setResponsePage(new ItemViewPage(item, null));                     
+            setResponsePage(new ItemViewPage(item, itemSearch));                     
         }
         
     }

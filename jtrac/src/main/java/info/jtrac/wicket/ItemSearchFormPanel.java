@@ -56,19 +56,16 @@ public class ItemSearchFormPanel extends BasePanel {
     public ItemSearchFormPanel(String id, Space space) {
         super(id);        
         add(new ItemSearchForm("form", space));
-        add(new WebMarkupContainer("relate").setVisible(false));
     }       
     
     public ItemSearchFormPanel(String id, User user) {
         super(id);        
-        add(new ItemSearchForm("form", user));
-        add(new WebMarkupContainer("relate").setVisible(false));
+        add(new ItemSearchForm("form", user));        
     }      
     
     public ItemSearchFormPanel(String id, ItemSearch itemSearch) {  
         super(id);                
-        add(new ItemSearchForm("form", itemSearch));
-        add(new ItemRelatePanel("relate", itemSearch, false));
+        add(new ItemSearchForm("form", itemSearch));        
     }    
     
     private class SelectedHighlighter extends AbstractBehavior {
@@ -130,7 +127,7 @@ public class ItemSearchFormPanel extends BasePanel {
             add(feedback);            
             add(new Link("link") {
                 public void onClick() {
-                    ItemSearchFormPanel.this.replaceWith(new ItemRefIdFormPanel("panel"));
+                    ItemSearchFormPanel.this.replaceWith(new ItemRefIdFormPanel("panel", itemSearch));
                 }
             });            
             // summary / text search ===========================================            
