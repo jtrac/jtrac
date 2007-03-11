@@ -93,6 +93,7 @@
                     <target>war-exploded</target>
                 </action>
                 <action name="rebuild">
+                    <target>confirm</target>
                     <target>clean</target>
                     <target>war-exploded</target>
                 </action>
@@ -100,6 +101,7 @@
                     <target>clean</target>
                 </action>
                 <action name="Clean-Database">
+                    <target>confirm</target>
                     <target>clean-db</target>
                 </action>                
                 <action name="javadoc">
