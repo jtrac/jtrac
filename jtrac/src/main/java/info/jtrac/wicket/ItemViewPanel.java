@@ -24,11 +24,7 @@ import info.jtrac.util.ItemUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import wicket.Page;
-import wicket.ajax.AjaxRequestTarget;
-import wicket.ajax.markup.html.AjaxLink;
 import wicket.behavior.SimpleAttributeModifier;
-import wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.basic.MultiLineLabel;
@@ -51,21 +47,7 @@ public class ItemViewPanel extends BasePanel {
         addComponents(item);
     }
     
-    private void addComponents(final Item item) {
-        final ModalWindow relateWin = new ModalWindow("relateWin");
-        add(relateWin);        
-        
-        relateWin.setPageCreator(new ModalWindow.PageCreator() {
-            public Page createPage() {
-                return new ItemSearchModalPage();
-            }
-        });        
-        
-        add(new AjaxLink("relateLink") {
-            public void onClick(AjaxRequestTarget target) {
-                relateWin.show(target);
-            }
-        });        
+    private void addComponents(final Item item) {      
         
         add(new Label("refId", new PropertyModel(item, "refId")));
         add(new Label("status", new PropertyModel(item, "statusValue")));

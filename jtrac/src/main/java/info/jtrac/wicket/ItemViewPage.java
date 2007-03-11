@@ -76,7 +76,7 @@ public class ItemViewPage extends BasePage {
             public void onClick() {
                 // reload from database, avoid OptimisticLockingFailure
                 Item temp = getJtrac().loadItem(item.getId());
-                setResponsePage(new ItemFormPage(temp, ItemViewPage.this));
+                setResponsePage(new ItemFormPage(temp, itemSearch));
             }
         }.setVisible(user.isAdminForAllSpaces()));        
         

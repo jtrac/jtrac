@@ -19,6 +19,7 @@ package info.jtrac.wicket;
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
@@ -50,7 +51,7 @@ import wicket.model.LoadableDetachableModel;
  */
 public class ItemFormPage extends BasePage {                           
     
-    ItemViewPage previous;
+    ItemSearch itemSearch;
             
     public ItemFormPage(Space space) {       
         Item item = new Item();
@@ -58,8 +59,8 @@ public class ItemFormPage extends BasePage {
         add(new ItemForm("form", item));
     }
     
-    public ItemFormPage(Item item, ItemViewPage previous) {
-        this.previous = previous;        
+    public ItemFormPage(Item item, ItemSearch itemSearch) {
+        this.itemSearch = itemSearch;        
         add(new ItemForm("form", item));        
     }   
     
@@ -91,7 +92,7 @@ public class ItemFormPage extends BasePage {
             };            
             BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(itemModel);
             setModel(model);
-            Item item = (Item) itemModel.getObject(null);
+            final Item item = (Item) itemModel.getObject(null);
             if(item.getId() > 0) {
                 editMode = true;
                 version = item.getVersion();
@@ -161,9 +162,9 @@ public class ItemFormPage extends BasePage {
             // cancel ==========================================================
             add(new Link("cancel") {
                 public void onClick() {
-                    setResponsePage(previous);
+                    setResponsePage(new ItemViewPage(temp.getId(), itemSearch));
                 }                
-            }.setVisible(previous != null));            
+            }.setVisible(itemSearch != null));            
         }
         
         @Override
@@ -214,11 +215,8 @@ public class ItemFormPage extends BasePage {
                 }
             }
             // allow user to navigate back to search results if applicable
-            ItemListPage itemListPage = null;
-            if(previous != null) {
-                // itemListPage = previous.getPrevious();
-            }            
-            // setResponsePage(new ItemViewPage(item, itemListPage));
+            ItemListPage itemListPage = null;          
+            setResponsePage(new ItemViewPage(item, itemSearch));
         }
         
     }

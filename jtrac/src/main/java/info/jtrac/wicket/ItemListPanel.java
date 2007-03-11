@@ -257,8 +257,8 @@ public class ItemListPanel extends BasePanel {
                     final History history = (History) item;
                     refIdLink = new Link("refId") {
                         public void onClick() {
-                            // this is a history record
-                            ItemListPanel.this.replaceWith(new ItemViewPanel(id, history.getParent().getId()));                            
+                            // this is a history record                            
+                            setResponsePage(new ItemViewPage(history.getParent().getId(), itemSearch));
                         }
                     };
                     String refId = history.getRefId();
@@ -281,8 +281,8 @@ public class ItemListPanel extends BasePanel {
                 } else {                
                     refIdLink = new Link("refId") {
                         public void onClick() {
-                            // this is an item record                            
-                            ItemListPanel.this.replaceWith(new ItemViewPanel(id, item.getId()));
+                            // this is an item record
+                            setResponsePage(new ItemViewPage(item.getId(), itemSearch));                            
                         }
                     };
                     refIdLink.add(new Label("refId", new PropertyModel(item, "refId")));
