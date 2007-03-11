@@ -51,6 +51,7 @@ public class ItemSearch implements Serializable {
     private boolean showDetail;
         
     private long selectedItemId;
+    private String relatingItemRefId;
     private String summary;    
     private Collection<Long> itemIds;
     
@@ -725,5 +726,13 @@ public class ItemSearch implements Serializable {
     public void setSelectedItemId(long selectedItemId) {
         this.selectedItemId = selectedItemId;
     }           
+
+    public String getRelatingItemRefId() {
+        return relatingItemRefId;
+    }
+
+    public void setRelatingItemRefId(String relatingItemRefId) {
+        this.relatingItemRefId = relatingItemRefId;
+    }    
     
 }

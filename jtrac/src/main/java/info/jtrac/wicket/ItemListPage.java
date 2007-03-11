@@ -25,6 +25,7 @@ public class ItemListPage extends BasePage {
         
     public ItemListPage(ItemSearch itemSearch) {
         add(new ItemListPanel("panel", itemSearch));
+        add(new ItemRelatePanel("relate", itemSearch, false));
     }       
     
     

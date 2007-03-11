@@ -44,6 +44,7 @@ import wicket.markup.html.form.TextArea;
 import wicket.markup.html.form.upload.FileUpload;
 import wicket.markup.html.form.upload.FileUploadField;
 import wicket.markup.html.form.validation.AbstractValidator;
+import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.BoundCompoundPropertyModel;
 
@@ -163,6 +164,15 @@ public class ItemViewFormPanel extends BasePanel {
             add(fileUploadField);
             // send notifications===============================================
             add(new CheckBox("sendNotifications"));
+            // relate ==========================================================
+            add(new Link("relate") {
+                public void onClick() {
+                    // TODO choose specific space for search
+                    ItemSearch itemSearch = new ItemSearch(getPrincipal());
+                    itemSearch.setRelatingItemRefId(item.getRefId());
+                    setResponsePage(new ItemSearchFormPage(itemSearch));
+                }
+            });
         }
         
         @Override

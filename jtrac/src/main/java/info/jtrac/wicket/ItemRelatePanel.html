@@ -1,0 +1,20 @@
+<wicket:panel>
+    <table class="jtrac" width="100%">
+        <tr class="selected" valign="top">
+            <td>
+                <span wicket:id="message"></span>
+                <span wicket:id="link"><a href="#" wicket:id="refId"></a></span>                               
+                <form wicket:id="form">                    
+                    <select wicket:id="type"/>
+                    <wicket:message key="item_view_form.comment"/>
+                    <input wicket:id="comment" size="30"/>
+                    <input type="submit" wicket:message="value=submit"/>
+                </form>
+            </td>
+            <td align="right">
+                <a href="#" wicket:id="cancel"><wicket:message key="cancel"/></a>
+            </td>
+        </tr>
+    </table>
+    <span wicket:id="itemWindow"></span> 
+</wicket:panel>

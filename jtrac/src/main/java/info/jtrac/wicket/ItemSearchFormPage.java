@@ -24,23 +24,16 @@ import info.jtrac.domain.Space;
  */
 public class ItemSearchFormPage extends BasePage {        
         
-    public ItemSearchFormPage() {
-        setVersioned(false);
+    public ItemSearchFormPage() {        
         Space space = ((JtracSession) getSession()).getCurrentSpace();
         if (space != null) {
             add(new ItemSearchFormPanel("panel", space));
         } else {
             add(new ItemSearchFormPanel("panel", getPrincipal()));
-        }
+        }        
     }       
     
-    /**
-     * here we are returning to the filter criteria screen from
-     * the search results screen
-     */
-    public ItemSearchFormPage(ItemSearch itemSearch) {
-        setVersioned(false);
-        itemSearch.setCurrentPage(0);        
+    public ItemSearchFormPage(ItemSearch itemSearch) {                        
         add(new ItemSearchFormPanel("panel", itemSearch));      
     }    
 

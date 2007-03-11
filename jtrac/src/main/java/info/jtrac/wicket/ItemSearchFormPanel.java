@@ -56,20 +56,19 @@ public class ItemSearchFormPanel extends BasePanel {
     public ItemSearchFormPanel(String id, Space space) {
         super(id);        
         add(new ItemSearchForm("form", space));
+        add(new WebMarkupContainer("relate").setVisible(false));
     }       
     
     public ItemSearchFormPanel(String id, User user) {
         super(id);        
         add(new ItemSearchForm("form", user));
+        add(new WebMarkupContainer("relate").setVisible(false));
     }      
     
-    /**
-     * here we are returning to the filter criteria screen from
-     * the search results screen
-     */
     public ItemSearchFormPanel(String id, ItemSearch itemSearch) {  
         super(id);                
-        add(new ItemSearchForm("form", itemSearch));      
+        add(new ItemSearchForm("form", itemSearch));
+        add(new ItemRelatePanel("relate", itemSearch, false));
     }    
     
     private class SelectedHighlighter extends AbstractBehavior {

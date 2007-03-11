@@ -79,7 +79,9 @@ public class ItemListPanel extends BasePanel {
         final int currentPage = itemSearch.getCurrentPage();
         
         Link link = new Link("count") {
-            public void onClick() {                
+            public void onClick() {
+                // return to item search form
+                itemSearch.setCurrentPage(0);
                 setResponsePage(new ItemSearchFormPage(itemSearch));
             }
         };        

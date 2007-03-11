@@ -28,7 +28,12 @@ import wicket.markup.html.link.Link;
  */
 public class ItemViewPage extends BasePage {              
     
-    ItemSearch itemSearch;   
+    ItemSearch itemSearch;
+    long itemId;
+
+    public long getItemId() {
+        return itemId;
+    }    
     
     public ItemViewPage(PageParameters params) {        
         String itemId = params.getString("0");
@@ -46,17 +51,21 @@ public class ItemViewPage extends BasePage {
     
     public ItemViewPage(long itemId, ItemSearch itemSearch) { 
         this.itemSearch = itemSearch;
+        this.itemId = itemId;
         Item item = getJtrac().loadItem(itemId);
         addComponents(item);
     }
     
     // for e.g. the item edit scenario, to avoid un-necessary re-load
     public ItemViewPage(Item item, ItemSearch itemSearch) { 
-        this.itemSearch = itemSearch;        
+        this.itemSearch = itemSearch;
+        this.itemId = item.getId();
         addComponents(item);
     }    
     
     private void addComponents(final Item item) {                            
+        
+        add(new ItemRelatePanel("relate", itemSearch, true));
         
         Link link = new Link("back") {
             public void onClick() {
@@ -69,7 +78,9 @@ public class ItemViewPage extends BasePage {
         }
         
         add(link);
-                        
+        
+        boolean isRelate = itemSearch != null && itemSearch.getRelatingItemRefId() != null;
+        
         User user = getPrincipal();
         
         add(new Link("edit") {
@@ -82,7 +93,7 @@ public class ItemViewPage extends BasePage {
         
         add(new ItemViewPanel("itemViewPanel", item));
         
-        if(user.getId() > 0) {        
+        if(user.getId() > 0 && !isRelate) {        
             add(new ItemViewFormPanel("itemViewFormPanel", item, itemSearch));
         } else {
             add(new WebMarkupContainer("itemViewFormPanel").setVisible(false));
