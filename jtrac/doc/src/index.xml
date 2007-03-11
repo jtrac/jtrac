@@ -791,9 +791,7 @@ wrapper.exe -r etc/wrapper.conf
                 version 2.4 compliant servlet engine is sufficient for deployment.
             </para>
             <para>
-                The presentation layer is JSP and JSTL based.  AJAX has been introduced only in a few screens where there 
-                is a very clear need for it.  The <ulink url="http://prototype.conio.net/">Prototype</ulink> framework has been 
-                used directly.
+                The presentation layer is using the <ulink url="http://www.hibernate.org/">Wicket</ulink> framework.
             </para>            
             <para>
                 <ulink url="http://www.hibernate.org/">Hibernate</ulink> is used for data persistence.  This allows for 
