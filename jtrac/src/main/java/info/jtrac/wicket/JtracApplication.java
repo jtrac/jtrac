@@ -82,7 +82,7 @@ public class JtracApplication extends WebApplication {
             }
         });                               
         
-        getPageSettings().setMaxPageVersions(3);
+        // getPageSettings().setMaxPageVersions(3);
         
         getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy() {
             public boolean isActionAuthorized(Component c, Action a) {
