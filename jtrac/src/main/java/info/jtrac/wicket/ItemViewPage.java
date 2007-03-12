@@ -89,9 +89,9 @@ public class ItemViewPage extends BasePage {
                 Item temp = getJtrac().loadItem(item.getId());
                 setResponsePage(new ItemFormPage(temp, itemSearch));
             }
-        }.setVisible(user.isAdminForAllSpaces()));        
+        }.setVisible(user.isAdminForAllSpaces()));                        
         
-        add(new ItemViewPanel("itemViewPanel", item));
+        add(new ItemViewPanel("itemViewPanel", item, isRelate || user.getId() == 0));
         
         if(user.getId() > 0 && !isRelate) {        
             add(new ItemViewFormPanel("itemViewFormPanel", item, itemSearch));

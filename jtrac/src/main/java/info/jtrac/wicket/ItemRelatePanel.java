@@ -53,7 +53,7 @@ public class ItemRelatePanel extends BasePanel {
             AjaxLink link = new AjaxLink("link") {
                 public void onClick(AjaxRequestTarget target) {
                     Item item = getJtrac().loadItemByRefId(refId);
-                    relateWin.setContent(new ItemViewPanel(relateWin.getContentId(), item));
+                    relateWin.setContent(new ItemViewPanel(relateWin.getContentId(), item, true));
                     relateWin.show(target);
                 }
             };

@@ -42,13 +42,16 @@ import wicket.model.PropertyModel;
  */
 public class ItemViewPanel extends BasePanel {    
     
+    private boolean hideLinks;
+    
     public ItemViewPanel(String id, long itemId) {                
         super(id);
         addComponents(getJtrac().loadItem(itemId));
     }    
     
-    public ItemViewPanel(String id, final Item item) {                
+    public ItemViewPanel(String id, final Item item, boolean hideLinks) {                
         super(id);
+        this.hideLinks = hideLinks;
         addComponents(item);
     }
     
@@ -63,59 +66,81 @@ public class ItemViewPanel extends BasePanel {
                 itemSearch.setRelatingItemRefId(item.getRefId());
                 setResponsePage(new ItemSearchFormPage(itemSearch));
             }
-        });        
+        }.setVisible(!hideLinks));        
         
-        add(new ListView("relatedItems", new ArrayList(item.getRelatedItems())) {            
-            protected void populateItem(ListItem listItem) {
-                final ItemItem itemItem = (ItemItem) listItem.getModelObject();
-                String message = null;
-                if(itemItem.getType() == DUPLICATE_OF) {
-                    message = localize("item_view.duplicateOf");
-                } else if (itemItem.getType() == DEPENDS_ON) {
-                    message = localize("item_view.dependsOn");
-                } else if (itemItem.getType() == RELATED){
-                    message = localize("item_view.relatedTo");                  
+        if(item.getRelatedItems() != null) {        
+            add(new ListView("relatedItems", new ArrayList(item.getRelatedItems())) {            
+                protected void populateItem(ListItem listItem) {
+                    final ItemItem itemItem = (ItemItem) listItem.getModelObject();
+                    String message = null;
+                    if(itemItem.getType() == DUPLICATE_OF) {
+                        message = localize("item_view.duplicateOf");
+                    } else if (itemItem.getType() == DEPENDS_ON) {
+                        message = localize("item_view.dependsOn");
+                    } else if (itemItem.getType() == RELATED){
+                        message = localize("item_view.relatedTo");                  
+                    }
+                    String refId = itemItem.getRelatedItem().getRefId();
+                    if(hideLinks) {
+                        message = message + " " + refId;
+                    }
+                    listItem.add(new Label("message", message));
+                    Link link = new Link("link") {
+                        public void onClick() {
+                            ItemViewPanel.this.replaceWith(
+                                    new ItemViewPanel(ItemViewPanel.this.getId(), itemItem.getRelatedItem().getId()));
+                        }
+                    };
+                    link.add(new Label("refId", refId));
+                    link.setVisible(!hideLinks);
+                    listItem.add(link);
+                    listItem.add(new Link("remove") {
+                        public void onClick() {
+                            setResponsePage(new ItemRelateRemovePage(item.getId(), itemItem));
+                        }
+                    }.setVisible(!hideLinks));
                 }
-                listItem.add(new Label("message", message));
-                listItem.add(new Link("link") {
-                    public void onClick() {
-                        ItemViewPanel.this.replaceWith(
-                                new ItemViewPanel(ItemViewPanel.this.getId(), itemItem.getRelatedItem().getId()));
-                    }
-                }.add(new Label("refId", itemItem.getRelatedItem().getRefId())));
-                listItem.add(new Link("remove") {
-                    public void onClick() {
-                        setResponsePage(new ItemRelateRemovePage(item.getId(), itemItem));
-                    }
-                });
-            }
-        }); 
+            });
+        } else {
+            add(new WebMarkupContainer("relatedItems").setVisible(false));
+        }
         
-        add(new ListView("relatingItems", new ArrayList(item.getRelatingItems())) {            
-            protected void populateItem(ListItem listItem) {
-                final ItemItem itemItem = (ItemItem) listItem.getModelObject();
-                String message = null;
-                if(itemItem.getType() == DUPLICATE_OF) {
-                    message = localize("item_view.duplicateOfThis");
-                } else if (itemItem.getType() == DEPENDS_ON) {
-                    message = localize("item_view.dependsOnThis");
-                } else if (itemItem.getType() == RELATED){
-                    message = localize("item_view.relatedToThis");                  
+        if(item.getRelatingItems() != null) {
+            add(new ListView("relatingItems", new ArrayList(item.getRelatingItems())) {            
+                protected void populateItem(ListItem listItem) {
+                    final ItemItem itemItem = (ItemItem) listItem.getModelObject();
+                    String message = null;
+                    if(itemItem.getType() == DUPLICATE_OF) {
+                        message = localize("item_view.duplicateOfThis");
+                    } else if (itemItem.getType() == DEPENDS_ON) {
+                        message = localize("item_view.dependsOnThis");
+                    } else if (itemItem.getType() == RELATED){
+                        message = localize("item_view.relatedToThis");                  
+                    }
+                    String refId = itemItem.getItem().getRefId();
+                    if(hideLinks) {
+                        message = refId + " " + message;
+                    }                    
+                    listItem.add(new Label("message", message));
+                    Link link = new Link("link") {
+                        public void onClick() {
+                            ItemViewPanel.this.replaceWith(
+                                    new ItemViewPanel(ItemViewPanel.this.getId(), itemItem.getItem().getId()));                        
+                        }
+                    };
+                    link.add(new Label("refId", refId));
+                    link.setVisible(!hideLinks);
+                    listItem.add(link);
+                    listItem.add(new Link("remove") {
+                        public void onClick() {
+                            setResponsePage(new ItemRelateRemovePage(item.getId(), itemItem));
+                        }
+                    }.setVisible(!hideLinks));                
                 }
-                listItem.add(new Label("message", message));
-                listItem.add(new Link("link") {
-                    public void onClick() {
-                        ItemViewPanel.this.replaceWith(
-                                new ItemViewPanel(ItemViewPanel.this.getId(), itemItem.getItem().getId()));                        
-                    }
-                }.add(new Label("refId", itemItem.getItem().getRefId())));
-                listItem.add(new Link("remove") {
-                    public void onClick() {
-                        setResponsePage(new ItemRelateRemovePage(item.getId(), itemItem));
-                    }
-                });                
-            }
-        });         
+            });
+        } else {
+            add(new WebMarkupContainer("relatingItems").setVisible(false));
+        }
         
         add(new Label("status", new PropertyModel(item, "statusValue")));
         add(new Label("loggedBy", new PropertyModel(item, "loggedBy.name")));

@@ -20,13 +20,11 @@ import static info.jtrac.domain.ItemItem.*;
 
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemItem;
-import info.jtrac.domain.ItemSearch;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import wicket.markup.html.form.DropDownChoice;
+import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.markup.html.AjaxLink;
+import wicket.extensions.ajax.markup.html.modal.ModalWindow;
+import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.form.TextArea;
 import wicket.model.BoundCompoundPropertyModel;
 
@@ -39,10 +37,43 @@ public class ItemRelateRemovePage extends BasePage {
     private long itemId;
     private ItemItem itemItem;
     
-    public ItemRelateRemovePage(long itemId, ItemItem itemItem) {                       
-       this.itemId = itemId;
-       this.itemItem = itemItem;
-       add(new ConfirmForm("form"));
+    public ItemRelateRemovePage(long itemId, final ItemItem itemItem) {
+        this.itemId = itemId;
+        this.itemItem = itemItem;
+        add(new ConfirmForm("form"));
+        final ModalWindow win = new ModalWindow("itemWindow");
+        add(win);
+        AjaxLink relating = new AjaxLink("relating") {
+            public void onClick(AjaxRequestTarget target) {
+                Item relating = getJtrac().loadItem(itemItem.getItem().getId());
+                win.setContent(new ItemViewPanel(win.getContentId(), relating, true));
+                win.show(target);
+            }
+        };
+        relating.add(new Label("refId", itemItem.getItem().getRefId()));
+        add(relating);
+        
+        // TODO refactor, duplicate code in ItemViewPanel
+        String message = null;
+        if(itemItem.getType() == DUPLICATE_OF) {
+            message = localize("item_view.duplicateOf");
+        } else if (itemItem.getType() == DEPENDS_ON) {
+            message = localize("item_view.dependsOn");
+        } else if (itemItem.getType() == RELATED){
+            message = localize("item_view.relatedTo");                  
+        }
+        add(new Label("message", message));
+        
+        AjaxLink related = new AjaxLink("related") {
+            public void onClick(AjaxRequestTarget target) {
+                Item related = getJtrac().loadItem(itemItem.getRelatedItem().getId());
+                win.setContent(new ItemViewPanel(win.getContentId(), related, true));
+                win.show(target);
+            }
+        };
+        related.add(new Label("refId", itemItem.getRelatedItem().getRefId()));
+        add(related);        
+        
     }
     
     private class ConfirmForm extends Form {
