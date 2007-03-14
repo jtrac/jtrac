@@ -95,27 +95,29 @@ public class JtracApplication extends WebApplication {
                     }
                     // attempt remember-me auto login ==========================
                     Cookie[] cookies =  ((WebRequest) RequestCycle.get().getRequest()).getCookies();
-                    for(Cookie c : cookies) {
-                        if(c.getName().equals("jtrac")) {
-                            String value = c.getValue();
-                            logger.debug("found jtrac cookie: " + value);                
-                            if (value != null) {
-                                int index = value.indexOf(':');
-                                if (index != -1) {
-                                    String loginName = value.substring(0, index);
-                                    String encodedPassword = value.substring(index + 1);
-                                    logger.debug("valid cookie, attempting authentication");
-                                    User user = (User) getJtrac().loadUserByUsername(loginName);                                              
-                                    if(encodedPassword.equals(user.getPassword())) {                                        
-                                        ((JtracSession) Session.get()).setUser(user);
-                                        logger.debug("remember me login success");
-                                        // and proceed
-                                        return true;
+                    if(cookies != null) {
+                        for(Cookie c : cookies) {
+                            if(c.getName().equals("jtrac")) {
+                                String value = c.getValue();
+                                logger.debug("found jtrac cookie: " + value);                
+                                if (value != null) {
+                                    int index = value.indexOf(':');
+                                    if (index != -1) {
+                                        String loginName = value.substring(0, index);
+                                        String encodedPassword = value.substring(index + 1);
+                                        logger.debug("valid cookie, attempting authentication");
+                                        User user = (User) getJtrac().loadUserByUsername(loginName);                                              
+                                        if(encodedPassword.equals(user.getPassword())) {                                        
+                                            ((JtracSession) Session.get()).setUser(user);
+                                            logger.debug("remember me login success");
+                                            // and proceed
+                                            return true;
+                                        }
                                     }
-                                }
-                            }                
+                                }                
+                            }
                         }
-                    }                    
+                    }
                     // attempt guest access if there are "public" spaces =======
                     List<Space> spaces = getJtrac().findSpacesWhereGuestAllowed();
                     if (spaces.size() > 0) {
