@@ -377,6 +377,10 @@ public class JtracImpl implements Jtrac {
         for (UserSpaceRole usr : user.getUserSpaceRoles()) {
             spaces.add(usr.getSpace());
         }
+        if(spaces.size() == 0) {
+            // this will happen when a user has no spaces allocated
+            return Collections.emptyList();
+        }
         // must be a better way to make this unique?
         List<User> users = dao.findUsersForSpaceSet(spaces);
         Set<User> userSet = new LinkedHashSet<User>(users);
