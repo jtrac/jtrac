@@ -1,8 +1,8 @@
 <html>
     <body>        
         <wicket:extend>            
-            <form wicket:id="form">
-                <span wicket:id="feedback"></span>
+            <form wicket:id="form">                
+                <span wicket:id="feedback"></span>                 
                 <table class="bdr-collapse">
                     <tr>
                         <td colspan="2">
@@ -13,7 +13,8 @@
                                         <font color="red">*</font>
                                     </td>    
                                     <td>
-                                        <input wicket:id="summary" style="width:49.7em"/>                                                            
+                                        <input wicket:id="summary" style="width:49.7em"/>
+                                        <input type="submit" wicket:id="delete" wicket:message="value=delete"/>
                                     </td>
                                 </tr>
                                 <tr>    

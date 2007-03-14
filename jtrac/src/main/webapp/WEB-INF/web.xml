@@ -142,6 +142,7 @@
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>    
   
+    <!-- backwards compatibility for e-mail links -->
     <servlet-mapping>
         <servlet-name>jtrac</servlet-name>
         <url-pattern>/flow/*</url-pattern>

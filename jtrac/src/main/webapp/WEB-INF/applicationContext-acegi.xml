@@ -15,7 +15,7 @@
         <property name="filterInvocationDefinitionSource">
             <value>
                 PATTERN_TYPE_APACHE_ANT
-                /**=httpSessionFilter,authenticationFilter,rememberMeFilter,jtracGuestFilter,exceptionTranslationFilter,authorizationFilter
+                /**=httpSessionFilter,authenticationFilter,exceptionTranslationFilter,authorizationFilter
             </value>
         </property>
     </bean>    
@@ -33,21 +33,6 @@
                 <bean class="info.jtrac.acegi.GuestAuthenticationProvider"/>
             </list>
         </property>
-    </bean>    
-    
-    <bean id="rememberMeFilter" class="org.acegisecurity.ui.rememberme.RememberMeProcessingFilter">
-        <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="rememberMeServices" ref="rememberMeServices"/>
-    </bean>
-   
-    <bean id="rememberMeServices" class="info.jtrac.acegi.JtracRememberMeServices">
-        <property name="userDetailsService" ref="jtrac"/>
-        <property name="key" value="jtrac-reme"/>
-    </bean>
-    
-    <!-- our custom "guest" processing filter used instead of an anonymous processing filter -->
-    <bean id="jtracGuestFilter" class="info.jtrac.acegi.GuestProcessingFilter">        
-        <property name="jtrac" ref="jtrac"/>
     </bean>
       
     <bean id="exceptionTranslationFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">

@@ -31,6 +31,7 @@ import java.io.File;
 import java.util.List;
 import wicket.Component;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.form.Button;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
@@ -108,6 +109,31 @@ public class ItemFormPage extends BasePage {
                     return "document.getElementById('" + summaryField.getMarkupId() + "').focus()";
                 }
             }, summaryField);
+            // delete button ===================================================
+            Button delete = new Button("delete") {
+                @Override
+                public void onSubmit() {
+                    String heading = localize("item_delete.confirm");
+                    String warning = localize("item_delete.line2");
+                    String line1 = localize("item_delete.line1");                    
+                    ConfirmPage confirm = new ConfirmPage(ItemFormPage.this, heading, warning, new String[] { line1 }) {
+                        public void onConfirm() {
+                            getJtrac().removeItem(item);
+                            if(itemSearch != null) {
+                                setResponsePage(new ItemListPage(itemSearch));
+                            } else {
+                                setResponsePage(DashboardPage.class);
+                            }
+                        }                        
+                    };
+                    setResponsePage(confirm);                    
+                }
+            };
+            delete.setDefaultFormProcessing(false);
+            add(delete);
+            if(!editMode) {
+                delete.setVisible(false);
+            }
             // detail ==========================================================
             add(new TextArea("detail").setRequired(true).add(new ErrorHighlighter()));
             // custom fields ===================================================

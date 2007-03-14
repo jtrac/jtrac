@@ -7,10 +7,9 @@
     
     <bean id="authenticationFilter" class="info.jtrac.acegi.JtracAuthenticationProcessingFilter">
         <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="authenticationFailureUrl" value="/auth/login.htm?error=true"/>
+        <property name="authenticationFailureUrl" value="/todo"/>
         <property name="defaultTargetUrl" value="/app"/>
-        <property name="filterProcessesUrl" value="/app/j_acegi_security_check"/>
-        <property name="rememberMeServices" ref="rememberMeServices"/>
+        <property name="filterProcessesUrl" value="/app/j_acegi_security_check"/>        
     </bean>    
     
     <bean id="authenticationProvider" class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
@@ -19,7 +18,7 @@
     </bean>          
     
     <bean id="authenticationEntryPoint" class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
-        <property name="loginFormUrl" value="/auth/login.htm"/>
+        <property name="loginFormUrl" value="/app/login"/>
     </bean>   
            
 </beans>
