@@ -2,7 +2,8 @@
     <body>
         <wicket:extend>
             <p/>
-            <table class="jtrac">
+            <span wicket:id="message"><wicket:message key="dashboard.noSpaces"/></span>
+            <table class="jtrac" wicket:id="table">
                 <tr>
                     <th><wicket:message key="dashboard.space"/></th>
                     <th colspan="2"><wicket:message key="dashboard.action"/></th>

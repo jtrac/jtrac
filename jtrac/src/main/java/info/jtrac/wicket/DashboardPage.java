@@ -42,72 +42,82 @@ public class DashboardPage extends BasePage {
         final User user = getPrincipal();        
         List<UserSpaceRole> spaceRoles = user.getSpaceRoles();        
         
-        final CountsHolder countsHolder = getJtrac().loadCountsForUser(user);        
+        WebMarkupContainer table = new WebMarkupContainer("table");
+        WebMarkupContainer message = new WebMarkupContainer("message");
         
-        WebMarkupContainer hideLogged = new WebMarkupContainer("hideLogged");
-        WebMarkupContainer hideAssigned = new WebMarkupContainer("hideAssigned");
-        if(user.getId() == 0) {
-            hideLogged.setVisible(false);
-            hideAssigned.setVisible(false);
-        }
-        add(hideLogged);
-        add(hideAssigned);
+        add(table);
+        add(message);
         
-        add(new ListView("dashboardRows", spaceRoles) {
-            protected void populateItem(final ListItem listItem) {
-                UserSpaceRole usr = (UserSpaceRole) listItem.getModelObject();
-                Counts counts = countsHolder.getCounts().get(usr.getSpace().getId());
-                if (counts == null) {
-                    counts = new Counts(false); // this can happen if fresh space
-                }
-                DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", usr, counts);
-                listItem.add(dashboardRow);
+        if(spaceRoles.size() > 0) {        
+            final CountsHolder countsHolder = getJtrac().loadCountsForUser(user);                
+
+            WebMarkupContainer hideLogged = new WebMarkupContainer("hideLogged");
+            WebMarkupContainer hideAssigned = new WebMarkupContainer("hideAssigned");
+            if(user.getId() == 0) {
+                hideLogged.setVisible(false);
+                hideAssigned.setVisible(false);
             }
-        });
-        
-        WebMarkupContainer total = new WebMarkupContainer("total");
-        
-        if(spaceRoles.size() > 1) {
-            
-            total.add(new Link("search") {
-                public void onClick() {
-                    setResponsePage(ItemSearchFormPage.class);
+            table.add(hideLogged);
+            table.add(hideAssigned);
+
+            table.add(new ListView("dashboardRows", spaceRoles) {
+                protected void populateItem(final ListItem listItem) {
+                    UserSpaceRole usr = (UserSpaceRole) listItem.getModelObject();
+                    Counts counts = countsHolder.getCounts().get(usr.getSpace().getId());
+                    if (counts == null) {
+                        counts = new Counts(false); // this can happen if fresh space
+                    }
+                    DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", usr, counts);
+                    listItem.add(dashboardRow);
                 }
             });
-            
-            if(user.getId() > 0) {            
-                total.add(new Link("loggedByMe") {
-                    public void onClick() {
-                        ItemSearch itemSearch = new ItemSearch(user);
-                        itemSearch.setLoggedByList(Collections.singletonList(user));
-                        setResponsePage(new ItemListPage(itemSearch));
-                    }
-                }.add(new Label("loggedByMe", new PropertyModel(countsHolder, "totalLoggedByMe"))));
 
-                total.add(new Link("assignedToMe") {
+            WebMarkupContainer total = new WebMarkupContainer("total");
+
+            if(spaceRoles.size() > 1) {
+
+                total.add(new Link("search") {
                     public void onClick() {
-                        ItemSearch itemSearch = new ItemSearch(user);
-                        itemSearch.setAssignedToList(Collections.singletonList(user));
+                        setResponsePage(ItemSearchFormPage.class);
+                    }
+                });
+
+                if(user.getId() > 0) {            
+                    total.add(new Link("loggedByMe") {
+                        public void onClick() {
+                            ItemSearch itemSearch = new ItemSearch(user);
+                            itemSearch.setLoggedByList(Collections.singletonList(user));
+                            setResponsePage(new ItemListPage(itemSearch));
+                        }
+                    }.add(new Label("loggedByMe", new PropertyModel(countsHolder, "totalLoggedByMe"))));
+
+                    total.add(new Link("assignedToMe") {
+                        public void onClick() {
+                            ItemSearch itemSearch = new ItemSearch(user);
+                            itemSearch.setAssignedToList(Collections.singletonList(user));
+                            setResponsePage(new ItemListPage(itemSearch));
+                        }
+                    }.add(new Label("assignedToMe", new PropertyModel(countsHolder, "totalAssignedToMe"))));
+                } else {
+                    total.add(new WebMarkupContainer("loggedByMe").setVisible(false));
+                    total.add(new WebMarkupContainer("assignedToMe").setVisible(false));
+                }
+
+                total.add(new Link("total") {
+                    public void onClick() {
+                        ItemSearch itemSearch = new ItemSearch(user);                    
                         setResponsePage(new ItemListPage(itemSearch));
                     }
-                }.add(new Label("assignedToMe", new PropertyModel(countsHolder, "totalAssignedToMe"))));
-            } else {
-                total.add(new WebMarkupContainer("loggedByMe").setVisible(false));
-                total.add(new WebMarkupContainer("assignedToMe").setVisible(false));
-            }
-            
-            total.add(new Link("total") {
-                public void onClick() {
-                    ItemSearch itemSearch = new ItemSearch(user);                    
-                    setResponsePage(new ItemListPage(itemSearch));
-                }
-            }.add(new Label("total", new PropertyModel(countsHolder, "totalTotal"))));
-                       
-        } else {             
-            total.setVisible(false);
-        }   
-        
-        add(total); 
+                }.add(new Label("total", new PropertyModel(countsHolder, "totalTotal"))));
+
+            } else {             
+                total.setVisible(false);
+            }   
+            table.add(total);
+            message.setVisible(false);
+        } else {
+            table.setVisible(false);            
+        }
         
     }
     
