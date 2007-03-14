@@ -150,7 +150,7 @@ public class MailSender {
     }
     
     private String getItemViewAnchor(Item item, Locale locale) {
-        return "<p><a href='" + url + "flow/item_view?itemId=" + item.getId() + "'>" 
+        return "<p><a href='" + url + "app/item/" + item.getRefId() + "'>" 
                 + fmt("clickHereToAccess", locale) + " " + item.getRefId() + "</a></p>";
     }
     
