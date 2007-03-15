@@ -31,7 +31,6 @@ import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.PasswordTextField;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
@@ -50,11 +49,6 @@ public class LoginPage extends WebPage {
     public LoginPage() {
         setVersioned(false);
         add(new Label("title", getLocalizer().getString("login.title", null)));
-        add(new Link("home") {
-            public void onClick() {
-                setResponsePage(DashboardPage.class);
-            }
-        });
         add(new LoginForm("form"));
         add(new Label("version", Version.VERSION));
     }

@@ -32,16 +32,6 @@ public class LogoutPage extends WebPage {
     
     public LogoutPage() {
         add(new Label("title", getLocalizer().getString("logout.title", null)));
-        add(new Link("home") {
-            public void onClick() {
-                setResponsePage(DashboardPage.class);
-            }
-        });
-        add(new Link("login") {
-            public void onClick() {
-                setResponsePage(LoginPage.class);
-            }
-        });
         add(new Label("version", Version.VERSION));               
     }    
     
