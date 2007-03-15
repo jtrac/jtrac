@@ -30,6 +30,8 @@
                 <property name="indexSearcher" ref="indexSearcher"/>
                 <property name="messageSource" ref="messageSource"/>
                 <property name="localeList" value="${jtrac.locales}"/>
+                <property name="releaseVersion" value="${jtrac.version}"/>
+                <property name="releaseTimestamp" value="${jtrac.timestamp}"/>
             </bean>
         </property>        
         <property name="transactionAttributes">

@@ -76,13 +76,7 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
         if (initPropsFile.exists()) {
             logger.info("found 'jtrac-init.properties' on classpath, processing...");            
             InputStream is = null;
-            Properties props = new Properties();
-            try {
-                is = new FileInputStream(initPropsFile);                
-                props.load(is);
-            } finally {
-                is.close();
-            }
+            Properties props = loadProps(initPropsFile);
             jtracHome = props.getProperty("jtrac.home");
             if (jtracHome != null) {
                 logger.info("'jtrac.home' property initialized from 'jtrac-init.properties' as '" + jtracHome + "'");
@@ -95,8 +89,7 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
             File[] messagePropsFiles = initPropsFile.getParentFile().listFiles(ff);
             String locales = "en";
             for(File f : messagePropsFiles) {
-                int endIndex = f.getName().indexOf('.');
-                logger.debug("found " + f.getName());
+                int endIndex = f.getName().indexOf('.');                
                 String localeCode = f.getName().substring(9, endIndex);
                 locales += "," + localeCode;
             }            
@@ -173,16 +166,9 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
             logger.info("'jtrac.properties' file exists: '" + propFile.getPath() + "'");            
         } 
         FileSystemResource fsr = new FileSystemResource(propFile);
-        logger.info("opening for processing: " + fsr);
-        InputStream is = null;
-        Properties props = new Properties();
-        try {
-            is = new FileInputStream(fsr.getFile());                
-            props.load(is);
-        } finally {
-            is.close();
-        }
-        String databaseUrl = props.getProperty("database.url");
+        logger.info("opening for processing: " + fsr);        
+        Properties jtracProps = loadProps(fsr.getFile());
+        String databaseUrl = jtracProps.getProperty("database.url");
         if (databaseUrl.trim().startsWith("jdbc:hsqldb:file")) {
             logger.info("embedded HSQLDB mode detected, switching on spring single connection data source");
             System.setProperty("jtrac.datasource", "dataSource");
@@ -190,7 +176,7 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
         } else {
             logger.info("Not using embedded HSQLDB, switching on Apache DBCP data source connection pooling");
             System.setProperty("jtrac.datasource", "dataSourceDbcp");
-            String validationQuery = props.getProperty("database.validationQuery");
+            String validationQuery = jtracProps.getProperty("database.validationQuery");
             if (validationQuery == null) {
                 logger.info("database.validationQuery property not found in 'jtrac.properties', using default 'SELECT 1'");
                 System.setProperty("database.validationQuery", "SELECT 1");
@@ -199,6 +185,34 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
             }             
         }
         setLocation(fsr);
+        String version = "0.0.0";
+        String timestamp = "0000";
+        ClassPathResource versionResource = new ClassPathResource("version.properties");
+        File versionFile = versionResource.getFile();
+        if (versionFile.exists()) {   
+            logger.info("found 'version.properties' on classpath, processing...");
+            Properties versionProps = loadProps(versionFile);
+            version = versionProps.getProperty("version");
+            timestamp = versionProps.getProperty("timestamp");            
+        } else {
+            logger.info("did not find 'version.properties' on classpath");
+        }
+        logger.info("jtrac.version = '" + version + "'");
+        logger.info("jtrac.timestamp = '" + timestamp + "'");
+        System.setProperty("jtrac.version", version);
+        System.setProperty("jtrac.timestamp", timestamp);
+    }
+    
+    private Properties loadProps(File file) throws Exception {
+            InputStream is = null;
+            Properties props = new Properties();
+            try {
+                is = new FileInputStream(file);                
+                props.load(is);
+            } finally {
+                is.close();
+            }        
+            return props;
     }
     
 }

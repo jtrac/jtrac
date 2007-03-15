@@ -17,7 +17,6 @@
 package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
-import info.jtrac.Version;
 import info.jtrac.domain.User;
 import java.io.Serializable;
 import javax.servlet.http.Cookie;
@@ -50,7 +49,7 @@ public class LoginPage extends WebPage {
         setVersioned(false);
         add(new Label("title", getLocalizer().getString("login.title", null)));
         add(new LoginForm("form"));
-        add(new Label("version", Version.VERSION));
+        add(new Label("version", System.getProperty("jtrac.version")));
     }
     
     private class LoginForm extends Form {                

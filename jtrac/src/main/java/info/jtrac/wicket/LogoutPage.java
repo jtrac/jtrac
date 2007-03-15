@@ -16,12 +16,10 @@
 
 package info.jtrac.wicket;
 
-import info.jtrac.Version;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.link.Link;
 
 /**
  * logout page.  the session invalidation code is in HeaderPanel
@@ -32,7 +30,7 @@ public class LogoutPage extends WebPage {
     
     public LogoutPage() {
         add(new Label("title", getLocalizer().getString("logout.title", null)));
-        add(new Label("version", Version.VERSION));               
+        add(new Label("version", System.getProperty("jtrac.version")));               
     }    
     
 }

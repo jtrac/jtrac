@@ -75,6 +75,8 @@ public class JtracImpl implements Jtrac {
     
     private Map<String, String> locales;
     private String defaultLocale;
+    private String releaseVersion;
+    private String releaseTimestamp;
     
     public void setLocaleList(String[] array) {
         locales = new LinkedHashMap<String, String>();
@@ -104,6 +106,14 @@ public class JtracImpl implements Jtrac {
     public void setMessageSource(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
+
+    public void setReleaseTimestamp(String releaseTimestamp) {
+        this.releaseTimestamp = releaseTimestamp;
+    }
+
+    public void setReleaseVersion(String releaseVersion) {
+        this.releaseVersion = releaseVersion;
+    }    
     
     private final Log logger = LogFactory.getLog(getClass());
     
@@ -537,11 +547,11 @@ public class JtracImpl implements Jtrac {
     //==========================================================================
     
     public String getReleaseVersion() {
-        return Version.VERSION;
+        return releaseVersion;
     }
     
     public String getReleaseTimestamp() {
-        return Version.TIMESTAMP;
+        return releaseTimestamp;
     }
     
 }

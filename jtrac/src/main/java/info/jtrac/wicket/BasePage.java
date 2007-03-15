@@ -17,7 +17,6 @@
 package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
-import info.jtrac.Version;
 import info.jtrac.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,7 +60,7 @@ public abstract class BasePage extends WebPage {
     
     public BasePage() {        
         add(new HeaderPanel());
-        add(new Label("version", Version.VERSION));
+        add(new Label("version", System.getProperty("jtrac.version")));
     }
     
     /**
