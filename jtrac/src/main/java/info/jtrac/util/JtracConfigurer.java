@@ -71,33 +71,30 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
 
     public void init() throws Exception {
         String jtracHome = null;
-        ClassPathResource cpr = new ClassPathResource("jtrac-init.properties");
-        File initPropsFile = cpr.getFile();
-        if (initPropsFile.exists()) {
-            logger.info("found 'jtrac-init.properties' on classpath, processing...");            
-            InputStream is = null;
-            Properties props = loadProps(initPropsFile);
-            jtracHome = props.getProperty("jtrac.home");
-            if (jtracHome != null) {
-                logger.info("'jtrac.home' property initialized from 'jtrac-init.properties' as '" + jtracHome + "'");
-            }            
-            FilenameFilter ff = new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    return name.startsWith("messages_") && name.endsWith(".properties");
-                }
-            };
-            File[] messagePropsFiles = initPropsFile.getParentFile().listFiles(ff);
-            String locales = "en";
-            for(File f : messagePropsFiles) {
-                int endIndex = f.getName().indexOf('.');                
-                String localeCode = f.getName().substring(9, endIndex);
-                locales += "," + localeCode;
-            }            
-            logger.info("locales available configured are '" + locales + "'");
-            System.setProperty("jtrac.locales", locales);            
-        } else {
-            System.setProperty("jtrac.locales", "en");
+        ClassPathResource jtracInitResource = new ClassPathResource("jtrac-init.properties");
+        // jtrac-init.properties assumed to exist
+        Properties props = loadProps(jtracInitResource.getFile());
+        logger.info("found 'jtrac-init.properties' on classpath, processing...");
+        jtracHome = props.getProperty("jtrac.home");
+        if (jtracHome != null) {
+            logger.info("'jtrac.home' property initialized from 'jtrac-init.properties' as '" + jtracHome + "'");
         }
+        //======================================================================
+        FilenameFilter ff = new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.startsWith("messages_") && name.endsWith(".properties");
+            }
+        };
+        File[] messagePropsFiles = jtracInitResource.getFile().getParentFile().listFiles(ff);
+        String locales = "en";
+        for(File f : messagePropsFiles) {
+            int endIndex = f.getName().indexOf('.');                
+            String localeCode = f.getName().substring(9, endIndex);
+            locales += "," + localeCode;
+        }            
+        logger.info("locales available configured are '" + locales + "'");
+        System.setProperty("jtrac.locales", locales);            
+        //======================================================================
         if (jtracHome == null) {
             logger.info("valid 'jtrac.home' property not available in 'jtrac-init.properties', trying system properties.");                
             jtracHome = System.getProperty("jtrac.home");
@@ -117,6 +114,7 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
             logger.warn("Servlet init paramter  'jtrac.home' does not exist.  Will use 'user.home' directory '" + jtracHome + "'");                
         }
         System.setProperty("jtrac.home", jtracHome);
+        //======================================================================
         File homeFile = new File(jtracHome);
         if (!homeFile.exists()) {
             homeFile.mkdir();
@@ -130,6 +128,7 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
             logger.info("directory already exists: '" + homeFile.getPath() + "'");
         }
         System.setProperty("jtrac.home", homeFile.getAbsolutePath());
+        //======================================================================
         File attachmentsFile = new File(jtracHome + "/attachments");
         if (!attachmentsFile.exists()) {
             attachmentsFile.mkdir();
@@ -144,6 +143,7 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
         } else {
             logger.info("directory already exists: '" + indexesFile.getPath() + "'");
         }
+        //======================================================================
         File propFile = new File(homeFile.getPath() + "/jtrac.properties");
         if (!propFile.exists()) {                
             propFile.createNewFile();
@@ -164,7 +164,8 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
             logger.info("HSQLDB will be used.  Finished creating '" + propFile.getPath() + "'");
         } else {
             logger.info("'jtrac.properties' file exists: '" + propFile.getPath() + "'");            
-        } 
+        }
+        //======================================================================
         FileSystemResource fsr = new FileSystemResource(propFile);
         logger.info("opening for processing: " + fsr);        
         Properties jtracProps = loadProps(fsr.getFile());
@@ -185,13 +186,13 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
             }             
         }
         setLocation(fsr);
+        //======================================================================
         String version = "0.0.0";
         String timestamp = "0000";
         ClassPathResource versionResource = new ClassPathResource("version.properties");
-        File versionFile = versionResource.getFile();
-        if (versionFile.exists()) {   
+        if(versionResource.exists()) {          
             logger.info("found 'version.properties' on classpath, processing...");
-            Properties versionProps = loadProps(versionFile);
+            Properties versionProps = loadProps(versionResource.getFile());
             version = versionProps.getProperty("version");
             timestamp = versionProps.getProperty("timestamp");            
         } else {
