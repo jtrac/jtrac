@@ -329,9 +329,6 @@
        </a>
        <a href="http://hsqldb.org/" title="HSQLDB">
            <img src="template/hsqldb-logo.png" style="margin:0px 0px 15px 16px"/>
-       </a>       
-       <a href="http://www.netbeans.org/downloads/index.html" title="Created with NetBeans!">
-           <img src="http://www.netbeans.org/images/created-with-nb-1.gif" style="margin:0px 0px 15px 16px; border: 1px solid grey;">
        </a>
        <a href="http://www.cenqua.com/fisheye" title="Perspective by Fisheye">
            <img src="http://www.cenqua.com/images/fisheyed2.gif" style="margin:0px 0px 15px 16px"/>
@@ -344,12 +341,10 @@
         $bodyContent
       </div>
     </div>
-    <div class="clear">
-      <hr/>
-    </div>
     <div id="footer">
-      <div class="xleft">&#169;#copyright()#publishDate( "bottom" $decoration.publishDate $decoration.version ) The JTrac Project</div>
-      <div class="xright">
+      <div class="xright">&#169;#copyright()#publishDate( "bottom" $decoration.publishDate $decoration.version ) The JTrac Project</div>
+      <div style="padding-top:1em"><br/></div>
+      <div class="xright">        
         <!-- start eXTReMe tracking -->
         <div id="eXTReMe"><a href="http://extremetracking.com/open?login=jtrac">
         <img src="http://t1.extreme-dm.com/i.gif" style="border: 0;"
@@ -369,10 +364,7 @@
         src="http://e1.extreme-dm.com/s10.g?login=jtrac&amp;j=n&amp;jv=n" />
         </div></noscript></div>
         <!-- end eXTReMe tracking -->
-      </div>
-      <div class="clear">
-        <hr/>
-      </div>
+      </div>      
     </div>
     <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
     </script>
