@@ -20,6 +20,7 @@ import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.User;
 import wicket.PageParameters;
+import wicket.RestartResponseAtInterceptPageException;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.Link;
 
@@ -82,6 +83,11 @@ public class ItemViewPage extends BasePage {
         boolean isRelate = itemSearch != null && itemSearch.getRelatingItemRefId() != null;
         
         User user = getPrincipal();
+        
+        if(!user.getSpaces().contains(item.getSpace())) {
+            logger.debug("user is not allocated to space");
+            throw new RestartResponseAtInterceptPageException(ErrorPage.class);
+        }
         
         add(new Link("edit") {
             public void onClick() {
