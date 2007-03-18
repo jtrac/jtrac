@@ -29,6 +29,7 @@ public class LogoutPage extends WebPage {
     protected final Log logger = LogFactory.getLog(getClass());
     
     public LogoutPage() {
+        setVersioned(false);
         add(new Label("title", getLocalizer().getString("logout.title", null)));
         add(new Label("version", System.getProperty("jtrac.version")));               
     }    

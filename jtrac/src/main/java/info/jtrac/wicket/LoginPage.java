@@ -20,6 +20,7 @@ import info.jtrac.Jtrac;
 import info.jtrac.domain.User;
 import java.io.Serializable;
 import javax.servlet.http.Cookie;
+import org.acegisecurity.AuthenticationManager;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -54,76 +55,6 @@ public class LoginPage extends WebPage {
     
     private class LoginForm extends Form {                
         
-        public LoginForm(String id) {            
-            super(id);          
-            add(new FeedbackPanel("feedback"));            
-            setModel(new BoundCompoundPropertyModel(new LoginFormModel()));
-            final TextField loginName = new TextField("loginName");
-            loginName.setOutputMarkupId(true);
-            add(loginName);
-            final PasswordTextField password = new PasswordTextField("password");
-            password.setRequired(false);
-            password.setOutputMarkupId(true);
-            add(password);
-            // intelligently set focus on the appropriate textbox
-            getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                public Object getObject(Component c) {
-                    String markupId;
-                    if(loginName.getConvertedInput() == null) {
-                        markupId = loginName.getMarkupId();
-                    } else {
-                        markupId = password.getMarkupId();
-                    }
-                    return "document.getElementById('" + markupId + "').focus()";
-                }
-            }, password);            
-            add(new CheckBox("rememberMe"));
-
-        }
-                
-        @Override
-        protected void onSubmit() {                    
-            LoginFormModel model = (LoginFormModel) getModelObject();
-            String loginName = model.getLoginName();
-            String password = model.getPassword();
-            if(loginName == null || password == null) {
-                logger.debug("login failed - login name or password is null");
-                error(getLocalizer().getString("login.error", null));                
-                return;
-            }            
-            User user = null;
-            try {
-                user = (User) getJtrac().loadUserByUsername(loginName);
-            } catch (UsernameNotFoundException e) {
-                logger.debug("login failed - user not found");
-                error(getLocalizer().getString("login.error", null));                
-                return;
-            }
-            String encodedPassword = getJtrac().encodeClearText(password);
-            if (user.getPassword().equals(encodedPassword)) { // login successful
-                // remember me cookie
-                if(model.isRememberMe()) {                    
-                    Cookie cookie = new Cookie("jtrac", loginName + ":" + encodedPassword);
-                    cookie.setMaxAge(30 * 24 * 60 * 60); // 30 days in seconds 
-                    getWebRequestCycle().getWebResponse().addCookie(cookie);
-                    logger.debug("remember me requested, cookie added: " + cookie.getValue());
-                }
-                // setup session with principal
-                ((JtracSession) getSession()).setUser(user);
-                // proceed to bookmarkable page or default dashboard
-                if (!continueToOriginalDestination()) {
-                    setResponsePage(DashboardPage.class);
-                } 
-            } else {
-                logger.debug("login failed - password does not match");
-                error(getLocalizer().getString("login.error", null));                
-            }                  
-        }     
-                        
-    }     
-    
-    private class LoginFormModel implements Serializable {
-        
         private String loginName;
         private String password;
         private boolean rememberMe;
@@ -150,10 +81,62 @@ public class LoginPage extends WebPage {
 
         public void setRememberMe(boolean rememberMe) {
             this.rememberMe = rememberMe;
-        }        
+        }         
         
-    }
-        
+        public LoginForm(String id) {            
+            super(id);          
+            add(new FeedbackPanel("feedback"));            
+            setModel(new BoundCompoundPropertyModel(this));
+            final TextField loginName = new TextField("loginName");
+            loginName.setOutputMarkupId(true);
+            add(loginName);
+            final PasswordTextField password = new PasswordTextField("password");
+            password.setRequired(false);
+            password.setOutputMarkupId(true);
+            add(password);
+            // intelligently set focus on the appropriate textbox
+            getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
+                public Object getObject(Component c) {
+                    String markupId;
+                    if(loginName.getConvertedInput() == null) {
+                        markupId = loginName.getMarkupId();
+                    } else {
+                        markupId = password.getMarkupId();
+                    }
+                    return "document.getElementById('" + markupId + "').focus()";
+                }
+            }, password);            
+            add(new CheckBox("rememberMe"));
 
+        }
+                
+        @Override
+        protected void onSubmit() {                    
+            if(loginName == null || password == null) {
+                logger.debug("login failed - login name or password is null");
+                error(getLocalizer().getString("login.error", null));                
+                return;
+            }            
+            User user = ((JtracApplication) getApplication()).authenticate(loginName, password);         
+            if (user == null) { // login failed                
+                error(getLocalizer().getString("login.error", null));                   
+            } else { // login success
+                // remember me cookie
+                if(rememberMe) {                    
+                    Cookie cookie = new Cookie("jtrac", loginName + ":" + getJtrac().encodeClearText(password));
+                    cookie.setMaxAge(30 * 24 * 60 * 60); // 30 days in seconds 
+                    getWebRequestCycle().getWebResponse().addCookie(cookie);
+                    logger.debug("remember me requested, cookie added: " + cookie.getValue());
+                }
+                // setup session with principal
+                ((JtracSession) getSession()).setUser(user);
+                // proceed to bookmarkable page or default dashboard
+                if (!continueToOriginalDestination()) {
+                    setResponsePage(DashboardPage.class);
+                } 
+            }                
+        }     
+                        
+    }         
     
 }

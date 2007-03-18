@@ -23,6 +23,10 @@ import java.util.List;
 import java.util.Locale;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
+import org.acegisecurity.Authentication;
+import org.acegisecurity.AuthenticationException;
+import org.acegisecurity.AuthenticationManager;
+import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
@@ -162,5 +166,17 @@ public class JtracApplication extends WebApplication {
     public Class getHomePage() {
         return DashboardPage.class;
     }    
+    
+    public User authenticate(String loginName, String password) {                    
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginName, password);
+        AuthenticationManager am = (AuthenticationManager) applicationContext.getBean("authenticationManager");
+        try {
+            Authentication authentication = am.authenticate(token);
+            return (User) authentication.getPrincipal();
+        } catch(AuthenticationException ae) {
+            logger.debug("acegi authentication failed: " + ae);
+            return null;
+        }
+    }
     
 }

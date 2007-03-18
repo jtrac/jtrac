@@ -26,11 +26,7 @@
     <bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
         <property name="providers">
             <list>
-                <ref bean="authenticationProvider"/>
-                <bean class="org.acegisecurity.providers.rememberme.RememberMeAuthenticationProvider">
-                    <property name="key" value="jtrac-reme"/>
-                </bean>
-                <bean class="info.jtrac.acegi.GuestAuthenticationProvider"/>
+                <ref bean="authenticationProvider"/>                
             </list>
         </property>
     </bean>
