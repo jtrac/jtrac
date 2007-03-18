@@ -202,27 +202,6 @@
         <fail unless="files">no files selected!</fail>      
         <test-macro includes="${files}" emmaEnabled="true" excludes="" haltonfailure="true"/>      
     </target>  
-  
-    <target name="debug-single" depends="compile-test" if="netbeans.home">
-        <!-- files property expected from netbeans -->
-        <fail unless="files">no files selected!</fail>        
-        <nbjpdastart name="junit.textui.TestRunner" addressproperty="jpda.address" transport="dt_socket">
-            <classpath>
-                <path path="${test.jars}"/>
-            </classpath>
-        </nbjpdastart>  
-        <java classname="junit.textui.TestRunner" fork="true">
-            <classpath>
-                <path path="target/test-classes"/>
-                <path path="${test.jars}"/>
-            </classpath>
-            <jvmarg value="-Xdebug"/>
-            <jvmarg value="-Xnoagent"/>
-            <jvmarg value="-Djava.compiler=none"/>
-            <jvmarg value="-Xrunjdwp:transport=dt_socket,address=${jpda.address}"/>            
-            <arg value="${files}"/>
-        </java>
-    </target>   
     
     <taskdef resource="emma_ant.properties" classpath="${emma.jars}"/>
     
@@ -238,7 +217,7 @@
                 outdir="target/instr-classes" 
                 metadatafile="target/metadata.emma" merge="true"/>
             </emma>
-            <copy file="etc/build.log4j.properties" tofile="target/test-classes/log4j.properties"/>
+            <copy file="etc/log4j.properties" todir="target/test-classes"/>
             <junit fork="true" dir="." tempdir="target" haltonfailure="@{haltonfailure}">
                 <classpath>
                     <path path="target/instr-classes"/>
@@ -331,7 +310,7 @@
         <copy todir="target/jetty" flatten="true">
             <fileset dir="${m2.repo}" includes="${jetty.start}" casesensitive="false"/>
             <mapper type="merge" to="start.jar"/>
-        </copy>
+        </copy>        
         <copy todir="target/jetty/etc">
             <fileset dir="etc">
                 <include name="jetty.xml"/>
@@ -340,7 +319,7 @@
             </fileset>
         </copy>        
         <mkdir dir="target/jetty/logs"/>
-        <mkdir dir="target/jetty/work"/>     
+        <mkdir dir="target/jetty/work"/>        
     </target>
    
     <target name="jetty-status">
@@ -349,7 +328,7 @@
         </condition>        
     </target>
     
-    <target name="jetty-start" depends="jetty-setup, war-exploded">        
+    <target name="jetty-start" depends="war-exploded, jetty-setup">        
         <jetty-start/>
     </target>    
    
