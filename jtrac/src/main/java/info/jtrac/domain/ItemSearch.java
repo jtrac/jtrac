@@ -373,6 +373,54 @@ public class ItemSearch implements Serializable {
         statusList.add(i);
     }
     
+    /**
+     * used to render columns in the search results table
+     */
+    public class ColumnHeading implements Serializable {                        
+        
+        private Field field;
+        private String name;
+        
+        public ColumnHeading(String name) {
+            this.name = name;
+        }
+        
+        public ColumnHeading(Field field) {
+            this.field = field;
+            this.name = field.getName().getText();
+        }
+
+        public Field getField() {
+            return field;
+        }                        
+
+        public String getName() {
+            return name;
+        }
+        
+        public boolean isField() {
+            return field != null;
+        }                
+        
+    }
+    
+    public List<ColumnHeading> getColumnHeadings() {
+        List<ColumnHeading> list = new ArrayList<ColumnHeading>();
+        list.add(new ColumnHeading("id"));
+        list.add(new ColumnHeading("summary"));
+        if(showDetail) {
+            list.add(new ColumnHeading("detail"));
+        }
+        list.add(new ColumnHeading("loggedBy"));
+        list.add(new ColumnHeading("status"));
+        list.add(new ColumnHeading("assignedTo"));
+        for(Field f : fields) {
+            list.add(new ColumnHeading(f));
+        }
+        list.add(new ColumnHeading("timeStamp"));
+        return list;
+    }
+    
     //=====================================================================
     
     public void setFields(List<Field> fields) {

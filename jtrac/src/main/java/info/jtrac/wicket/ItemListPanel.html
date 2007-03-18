@@ -19,26 +19,14 @@
             </table>
             <table class="jtrac" width="100%">
                 <tr class="sortable">
-                    <th wicket:id="id"><a href="#" wicket:id="id"></a></th>
-                    <th wicket:id="summary"><a href="#" wicket:id="summary"></a></th>
-                    <th wicket:id="detail"></th>
-                    <th wicket:id="loggedBy"><a href="#" wicket:id="loggedBy"></a></th>
-                    <th wicket:id="status"><a href="#" wicket:id="status"></a></th>
-                    <th wicket:id="assignedTo"><a href="#" wicket:id="assignedTo"></a></th>
-                    <th wicket:id="labels"><span wicket:id="label"><a href="#" wicket:id="label"></a></span></th>
-                    <th wicket:id="timeStamp"><a href="#" wicket:id="timeStamp"></a></th>
+                    <th wicket:id="headings"><span wicket:id="heading"><a href="#" wicket:id="heading"></a></span></th>                    
                 </tr>
                 <tr wicket:id="itemList">
-                    <td wicket:id="refId"><a href="#" wicket:id="refId"></a><span wicket:id="index"></span></td>
-                    <td wicket:id="summary"></td>
-                    <td wicket:id="detail"><span wicket:id="attachment" style="padding-right:0.5em"></span><span wicket:id="detail"></span></td>
-                    <td wicket:id="loggedBy"></td>
-                    <td wicket:id="status"></td>
-                    <td wicket:id="assignedTo"></td>
-                    <td wicket:id="fields"><span wicket:id="field"></span></td>
-                    <td wicket:id="timeStamp"></td>
+                    <td wicket:id="columns"><span wicket:id="column"></span></td>
                 </tr>
             </table>
         </wicket:panel>
+        <wicket:fragment wicket:id="refId"><a href="#" wicket:id="refId"><span wicket:id="refId"></span></a><span wicket:id="index"></span></wicket:fragment>
+        <wicket:fragment wicket:id="detail"><span wicket:id="attachment"></span><span wicket:id="detail"></span></wicket:fragment>
     </body>
 </html>

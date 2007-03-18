@@ -1,12 +1,12 @@
 /*
  * Copyright 2002-2005 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,14 +17,15 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.AbstractItem;
-import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.ItemSearch;
+import info.jtrac.domain.ItemSearch.ColumnHeading;
 import info.jtrac.util.DateUtils;
 import info.jtrac.util.ExcelUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import wicket.AttributeModifier;
 import wicket.IRequestTarget;
 import wicket.RequestCycle;
 import wicket.behavior.SimpleAttributeModifier;
@@ -33,25 +34,28 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
+import wicket.markup.html.panel.Fragment;
+import wicket.model.IModel;
 import wicket.model.LoadableDetachableModel;
+import wicket.model.Model;
 import wicket.model.PropertyModel;
 import wicket.protocol.http.WebResponse;
 
 /**
  * item list panel
  */
-public class ItemListPanel extends BasePanel {      
-        
-    private ItemSearch itemSearch;     
+public class ItemListPanel extends BasePanel {
+    
+    private ItemSearch itemSearch;
     
     private void doSort(String sortFieldName) {
-        itemSearch.setCurrentPage(0);        
-        if (itemSearch.getSortFieldName().equals(sortFieldName)) {  
+        itemSearch.setCurrentPage(0);
+        if (itemSearch.getSortFieldName().equals(sortFieldName)) {
             itemSearch.toggleSortDirection();
-        } else {            
+        } else {
             itemSearch.setSortFieldName(sortFieldName);
             itemSearch.setSortDescending(false);
-        }                              
+        }
     }
     
     public ItemListPanel(final String id, ItemSearch temp) {
@@ -59,23 +63,23 @@ public class ItemListPanel extends BasePanel {
         this.itemSearch = temp;
         LoadableDetachableModel itemListModel = new LoadableDetachableModel() {
             protected Object load() {
-                logger.debug("loading item list from database");                
+                logger.debug("loading item list from database");
                 return getJtrac().findItems(itemSearch);
             }
-        };        
+        };
         
         // hack - ensure that wicket model "attach" happens NOW before pagination logic sp that
         // itemSearch is properly initialized in the LoadableDetachableModel#load() above
         itemListModel.getObject(null);
         
-        //======================== PAGINATION ==================================                                                   
+        //======================== PAGINATION ==================================
         
         int pageCount = 1;
         final int pageSize = itemSearch.getPageSize();
         long resultCount = itemSearch.getResultCount();
         if (pageSize != -1) {
             pageCount = (int) Math.ceil((double) resultCount / pageSize);
-        }        
+        }
         final int currentPage = itemSearch.getCurrentPage();
         
         Link link = new Link("count") {
@@ -84,17 +88,17 @@ public class ItemListPanel extends BasePanel {
                 itemSearch.setCurrentPage(0);
                 setResponsePage(new ItemSearchFormPage(itemSearch));
             }
-        };        
-        link.add(new Label("count", resultCount + ""));        
-        add(link);          
+        };
+        link.add(new Label("count", resultCount + ""));
+        add(link);
         
-        WebMarkupContainer pagination = new WebMarkupContainer("pagination");                                                        
+        WebMarkupContainer pagination = new WebMarkupContainer("pagination");
         
-        if(pageCount > 1) {        
+        if(pageCount > 1) {
             Link prevOn = new Link("prevOn") {
                 public void onClick() {
-                    itemSearch.setCurrentPage(currentPage - 1);                    
-                }            
+                    itemSearch.setCurrentPage(currentPage - 1);
+                }
             };
             prevOn.add(new Label("prevOn", "<<"));
             Label prevOff = new Label("prevOff", "<<");
@@ -105,11 +109,11 @@ public class ItemListPanel extends BasePanel {
             }
             pagination.add(prevOn);
             pagination.add(prevOff);
-
-            List<Integer> pageNumbers = new ArrayList<Integer>(pageCount);        
+            
+            List<Integer> pageNumbers = new ArrayList<Integer>(pageCount);
             for(int i = 0; i < pageCount; i++) {
                 pageNumbers.add(new Integer(i));
-            }            
+            }
             
             ListView pages = new ListView("pages", pageNumbers) {
                 protected void populateItem(ListItem listItem) {
@@ -117,8 +121,8 @@ public class ItemListPanel extends BasePanel {
                     String pageNumber = i + 1 + "";
                     Link pageOn = new Link("pageOn") {
                         public void onClick() {
-                            itemSearch.setCurrentPage(i);                            
-                        }                   
+                            itemSearch.setCurrentPage(i);
+                        }
                     };
                     pageOn.add(new Label("pageOn", pageNumber));
                     Label pageOff = new Label("pageOff", pageNumber);
@@ -130,12 +134,12 @@ public class ItemListPanel extends BasePanel {
                     listItem.add(pageOn);
                     listItem.add(pageOff);
                 }
-            };                
-            pagination.add(pages);            
-
+            };
+            pagination.add(pages);
+            
             Link nextOn = new Link("nextOn") {
                 public void onClick() {
-                    itemSearch.setCurrentPage(currentPage + 1);                    
+                    itemSearch.setCurrentPage(currentPage + 1);
                 }
             };
             nextOn.add(new Label("nextOn", ">>"));
@@ -170,155 +174,139 @@ public class ItemListPanel extends BasePanel {
                         r.setAttachmentHeader("jtrac-export.xls");
                         try {
                             // TODO better localization
-                            eu.exportToExcel(((JtracApplication) getApplication()).getApplicationContext(), 
+                            eu.exportToExcel(((JtracApplication) getApplication()).getApplicationContext(),
                                     getLocale()).write(r.getOutputStream());
                         } catch (IOException e) {
                             throw new RuntimeException(e);
-                        }                        
+                        }
                     }
-                });                
-            }            
+                });
+            }
         });
         
-        //====================== HEADER ========================================
-                
-        if(itemSearch.isShowDetail()) {
-            add(new Label("detail", getLocalizer().getString("item_view.detail", null)));
-        } else {
-            add(new Label("detail", "").setVisible(false));
-        }
+        //====================== HEADER ========================================        
         
-        final SimpleAttributeModifier orderClass;
+        final List<ColumnHeading> columnHeadings = itemSearch.getColumnHeadings();
         
-        if (itemSearch.isSortDescending()) {
-             orderClass = new SimpleAttributeModifier("class", "order-down");
-        } else {
-             orderClass = new SimpleAttributeModifier("class", "order-up");
-        }
-        
-        String[] headings = new String[] { "id", "summary", "loggedBy", "status", "assignedTo", "timeStamp" };
-        
-        for(final String s : headings) {            
-            Link headingLink = new Link(s) {
-                public void onClick() {                                    
-                    doSort(s);
-                }                
-            };
-            headingLink.add(new Label(s, getLocalizer().getString("item_view." + s, null)));
-            if (s.equals(itemSearch.getSortFieldName())) {
-                headingLink.add(orderClass);
-            }
-            add(headingLink);
-        }        
-        
-        final List<Field> fields = itemSearch.getFields();
-        
-        ListView labels = new ListView("labels", fields) {
+        ListView headings = new ListView("headings", columnHeadings) {
             protected void populateItem(ListItem listItem) {
-                final Field field = (Field) listItem.getModelObject();                
-                Link headingLink = new Link("label") {
-                    public void onClick() {                        
-                        doSort(field.getName().getText());                       
-                    }                
+                final ColumnHeading ch = (ColumnHeading) listItem.getModelObject();
+                Link headingLink = new Link("heading") {
+                    public void onClick() {
+                        doSort(ch.getName());
+                    }
                 };
                 listItem.add(headingLink);
-                headingLink.add(new Label("label", field.getLabel()));
-                if (field.getName().getText().equals(itemSearch.getSortFieldName())) {
-                    headingLink.getParent().add(orderClass);
-                }                
-            }            
-        };        
+                if(ch.isField()) {
+                    headingLink.add(new Label("heading", ch.getField().getLabel()));
+                } else {
+                    headingLink.add(new Label("heading", localize("item_list." + ch.getName())));
+                }
+                if (ch.getName().equals(itemSearch.getSortFieldName())) {
+                    String order = itemSearch.isSortDescending() ? "order-down" : "order-up";
+                    listItem.add(new SimpleAttributeModifier("class", order));
+                }
+            }
+        };
         
-        add(labels);                     
+        add(headings);
         
-        //======================== ITEMS =======================================        
+        //======================== ITEMS =======================================
         
         final long selectedItemId = itemSearch.getSelectedItemId();
         
         final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
         
         ListView itemList = new ListView("itemList", itemListModel) {
-            protected void populateItem(ListItem listItem) { 
+            protected void populateItem(ListItem listItem) {
                 // cast to AbstactItem - show history may be == true
-                final AbstractItem item = (AbstractItem) listItem.getModelObject(); 
+                final AbstractItem item = (AbstractItem) listItem.getModelObject();
                 
                 if (selectedItemId == item.getId()) {
                     listItem.add(new SimpleAttributeModifier("class", "selected"));
                 } else if(listItem.getIndex() % 2 == 1) {
                     listItem.add(sam);
-                }                                 
+                }                
                 
-                // detail <--> refId link <--> showHistory logic ===============
-                
-                WebMarkupContainer detail = new WebMarkupContainer("detail");                
-                detail.setVisible(false);
-                
-                Link refIdLink = null;
-                
-                if (itemSearch.isShowHistory()) { 
-                    final History history = (History) item;
-                    refIdLink = new Link("refId") {
-                        public void onClick() {
-                            // this is a history record                            
-                            setResponsePage(new ItemViewPage(history.getParent().getId(), itemSearch));
-                        }
-                    };
-                    String refId = history.getRefId();
-                    int index = history.getIndex();                    
-                    if (index > 0) {
-                        refIdLink.add(new Label("index", " (" + index + ")"));
-                    } else {
-                        refIdLink.add(new Label("index", "").setVisible(false));
-                    }
-                    refIdLink.add(new Label("refId", history.getRefId()));
-                    if(itemSearch.isShowDetail()) {
-                        detail.setVisible(true);
-                        detail.add(new AttachmentLinkPanel("attachment", history.getAttachment()));
-                        if (index > 0) {
-                            detail.add(new Label("detail", new PropertyModel(history, "comment")));
-                        } else {
-                            detail.add(new Label("detail", new PropertyModel(history, "detail")));
-                        }
-                    }                   
-                } else {                
-                    refIdLink = new Link("refId") {
-                        public void onClick() {
-                            // this is an item record
-                            setResponsePage(new ItemViewPage(item.getId(), itemSearch));                            
-                        }
-                    };
-                    refIdLink.add(new Label("refId", new PropertyModel(item, "refId")));
-                    if(itemSearch.isShowDetail()) {
-                        detail.setVisible(true);
-                        detail.add(new Label("attachment", "").setVisible(false));
-                        detail.add(new Label("detail", new PropertyModel(item, "detail")));
-                    } 
-                    refIdLink.add(new Label("index", "").setVisible(false));
-                }                                
-                                               
-                listItem.add(refIdLink);    
-                
-                listItem.add(detail);
-                
-                // end detail <--> refId link <--> showHistory logic ===========
-                
-                listItem.add(new Label("summary", new PropertyModel(item, "summary")));                                
-                
-                listItem.add(new Label("loggedBy", new PropertyModel(item, "loggedBy.name")));
-                listItem.add(new Label("status", new PropertyModel(item, "statusValue")));
-                listItem.add(new Label("assignedTo", new PropertyModel(item, "assignedTo.name")));                               
-                ListView fieldValues = new ListView("fields", fields) {
+                ListView fieldValues = new ListView("columns", columnHeadings) {
                     protected void populateItem(ListItem listItem) {
-                        Field field = (Field) listItem.getModelObject();
-                        listItem.add(new Label("field", item.getCustomValue(field.getName())));
-                    }                    
-                };                
-                listItem.add(fieldValues);                
-                listItem.add(new Label("timeStamp", DateUtils.formatTimeStamp(item.getTimeStamp())));
-            }            
+                        ColumnHeading ch = (ColumnHeading) listItem.getModelObject();
+                        IModel value = null;
+                        if(ch.isField()) {
+                            value = new Model(item.getCustomValue(ch.getField().getName()));
+                        } else {
+                            // TODO optimize if-then for performance
+                            String name = ch.getName();
+                            if(name.equals("id")) {
+                                Fragment refIdFrag = new Fragment("column", "refId"); 
+                                Link refIdLink = null;
+                                if (itemSearch.isShowHistory()) {
+                                    final History history = (History) item;
+                                    refIdLink = new Link("refId") {
+                                        public void onClick() {
+                                            // this is a history record
+                                            setResponsePage(new ItemViewPage(history.getParent().getId(), itemSearch));
+                                        }
+                                    };                                    
+                                    refIdLink.add(new Label("refId", new PropertyModel(item, "refId")));                                    
+                                    int index = history.getIndex();
+                                    if (index > 0) {
+                                        refIdFrag.add(new Label("index", " (" + index + ")"));
+                                    } else {
+                                        refIdFrag.add(new Label("index", "").setVisible(false));
+                                    }
+                                } else {
+                                    refIdLink = new Link("refId") {
+                                        public void onClick() {
+                                            // this is an item record
+                                            setResponsePage(new ItemViewPage(item.getId(), itemSearch));
+                                        }
+                                    };
+                                    refIdLink.add(new Label("refId", new PropertyModel(item, "refId")));                                    
+                                    refIdFrag.add(new Label("index", "").setVisible(false));
+                                }
+                                refIdFrag.add(refIdLink);
+                                listItem.add(refIdFrag);
+                                return;
+                            } else if(name.equals("summary")) {
+                                value = new PropertyModel(item, "summary");
+                            } else if(name.equals("detail")) {                                
+                                if(itemSearch.isShowHistory()) {
+                                    Fragment detailFrag = new Fragment("column", "detail");
+                                    final History history = (History) item;
+                                    detailFrag.add(new AttachmentLinkPanel("attachment", history.getAttachment()));
+                                    if (history.getIndex() > 0) {
+                                        detailFrag.add(new Label("detail", new PropertyModel(history, "comment")));
+                                    } else {
+                                        detailFrag.add(new Label("detail", new PropertyModel(history, "detail")));
+                                    }
+                                    listItem.add(detailFrag);
+                                    return;
+                                } else {                                    
+                                    value = new PropertyModel(item, "detail");                                    
+                                }                               
+                            } else if(name.equals("loggedBy")) {
+                                value = new PropertyModel(item, "loggedBy.name");
+                            } else if(name.equals("status")) {
+                                value = new PropertyModel(item, "statusValue");
+                            } else if(name.equals("assignedTo")) {
+                                value = new PropertyModel(item, "assignedTo.name");
+                            } else if(name.equals("timeStamp")) {
+                                value = new Model(DateUtils.formatTimeStamp(item.getTimeStamp()));
+                            } else {
+                                throw new RuntimeException("Unexpected name: '" + name + "'");
+                            }
+                        }
+                        listItem.add(new Label("column", value));
+                    }
+                };
+                
+                listItem.add(fieldValues);
+                
+            }
         };
         
-        add(itemList);        
+        add(itemList);
         
     }
     
