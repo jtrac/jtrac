@@ -98,6 +98,8 @@ public class ItemListPanel extends BasePanel {
             Link prevOn = new Link("prevOn") {
                 public void onClick() {
                     itemSearch.setCurrentPage(currentPage - 1);
+                    // TODO avoid next line, refresh pagination only
+                    setResponsePage(new ItemListPage(itemSearch));                    
                 }
             };
             prevOn.add(new Label("prevOn", "<<"));
@@ -122,6 +124,8 @@ public class ItemListPanel extends BasePanel {
                     Link pageOn = new Link("pageOn") {
                         public void onClick() {
                             itemSearch.setCurrentPage(i);
+                            // TODO avoid next line, refresh pagination only
+                            setResponsePage(new ItemListPage(itemSearch));
                         }
                     };
                     pageOn.add(new Label("pageOn", pageNumber));
@@ -140,6 +144,8 @@ public class ItemListPanel extends BasePanel {
             Link nextOn = new Link("nextOn") {
                 public void onClick() {
                     itemSearch.setCurrentPage(currentPage + 1);
+                    // TODO avoid next line, refresh pagination only
+                    setResponsePage(new ItemListPage(itemSearch));                    
                 }
             };
             nextOn.add(new Label("nextOn", ">>"));
