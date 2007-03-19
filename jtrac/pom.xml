@@ -154,7 +154,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate</artifactId>
-            <version>3.1.2</version>
+            <version>3.2.2.ga</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.transaction</groupId>
@@ -176,12 +176,12 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring</artifactId>
-            <version>2.0</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-mock</artifactId>
-            <version>2.0</version>
+            <version>2.0.3</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -222,7 +222,11 @@
                 <exclusion>
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-beans</artifactId>
-                </exclusion>                
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-jca</artifactId>
+                </exclusion>                 
             </exclusions>      
         </dependency>
         <dependency>

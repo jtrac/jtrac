@@ -48,7 +48,7 @@ public class DashboardRowPanel extends BasePanel {
             add(new Link("new") {
                 public void onClick() {
                     setCurrentSpace(space);
-                    setResponsePage(new ItemFormPage(space));
+                    setResponsePage(ItemFormPage.class);
                 }
             });
         } else {

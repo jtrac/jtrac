@@ -47,7 +47,6 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.orm.hibernate3.HibernateJdbcException;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -65,8 +64,8 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         this.schemaHelper = schemaHelper;
     }
     
-    public void storeItem(Item item) {
-        getHibernateTemplate().merge(item);
+    public void storeItem(Item item) {        
+        getHibernateTemplate().saveOrUpdate(item);
     }
     
     public Item loadItem(long id) {
@@ -136,16 +135,19 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return (UserSpaceRole) getHibernateTemplate().get(UserSpaceRole.class, id);
     }    
     
-    public SpaceSequence loadSpaceSequence(long id) {
-        return (SpaceSequence) getHibernateTemplate().get(SpaceSequence.class, id);
-    }
-    
-    public void storeSpaceSequence(SpaceSequence spaceSequence) {
-        getHibernateTemplate().merge(spaceSequence);
-        // very important, needed to guarantee unique sequenceNum on item insert !
-        // see JtracImpl.storeItem() for complete picture
+    /**
+     * the synchronized here is very important, as well as the flush
+     * this was the only way to avoid duplicate sequence numbers when
+     * running load tests with concurrent usage / item creation
+     */
+    public synchronized long loadNextSequenceNum(Space space) {
+        long id = space.getSpaceSequence().getId();
+        SpaceSequence spaceSequence = (SpaceSequence) getHibernateTemplate().get(SpaceSequence.class, id);
+        long nextSequenceNum = spaceSequence.next();
+        getHibernateTemplate().saveOrUpdate(spaceSequence);
         getHibernateTemplate().flush();
-    }
+        return nextSequenceNum;
+    }    
     
     public List<Space> findSpacesByPrefixCode(String prefixCode) {
         return getHibernateTemplate().find("from Space space where space.prefixCode = ?", prefixCode);
@@ -238,13 +240,13 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         List<Object[]> statusList = ht.find("select item.space.id, count(item) from Item item" 
                 + " where item.space.id in " + sb.toString() + " group by item.space.id");
         for(Object[] oa : loggedByList) {
-            ch.add((Long) oa[0], Counts.LOGGED_BY_ME, (Integer) oa[1]);
+            ch.add((Long) oa[0], Counts.LOGGED_BY_ME, (Long) oa[1]);
         }
         for(Object[] oa : assignedToList) {
-            ch.add((Long) oa[0], Counts.ASSIGNED_TO_ME, (Integer) oa[1]);
+            ch.add((Long) oa[0], Counts.ASSIGNED_TO_ME, (Long) oa[1]);
         }
         for(Object[] oa : statusList) {
-            ch.add((Long) oa[0], Counts.TOTAL, (Integer) oa[1]);
+            ch.add((Long) oa[0], Counts.TOTAL, (Long) oa[1]);
         }
         return ch;
     }
@@ -259,13 +261,13 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
                 + " where item.space.id = ? group by item.status", space.getId());
         Counts c = new Counts(true);
         for(Object[] oa : loggedByList) {
-            c.add(Counts.LOGGED_BY_ME, (Integer) oa[0], (Integer) oa[1]);
+            c.add(Counts.LOGGED_BY_ME, (Integer) oa[0], (Long) oa[1]);
         }
         for(Object[] oa : assignedToList) {
-            c.add(Counts.ASSIGNED_TO_ME, (Integer) oa[0], (Integer) oa[1]);
+            c.add(Counts.ASSIGNED_TO_ME, (Integer) oa[0], (Long) oa[1]);
         }
         for(Object[] oa : statusList) {
-            c.add(Counts.TOTAL, (Integer) oa[0], (Integer) oa[1]);
+            c.add(Counts.TOTAL, (Integer) oa[0], (Long) oa[1]);
         }
         return c;
     }
@@ -413,8 +415,8 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     public void createSchema() {
         try {
             getHibernateTemplate().find("from Item item where item.id = 1");
-        } catch (HibernateJdbcException e) {
-            logger.warn("database schema not found, proceeding to create");
+        } catch (Exception e) {
+            logger.warn("database schema test failed, will create. Error is: " + e.getMessage());            
             schemaHelper.createSchema();
             User admin = new User();
             admin.setLoginName("admin");

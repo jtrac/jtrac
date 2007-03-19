@@ -162,16 +162,16 @@ public class JtracImpl implements Jtrac {
         defaultLocale = temp;
         
         // initialize mail sender
-        this.mailSender = new MailSender(config, messageSource, defaultLocale);
-        
+        this.mailSender = new MailSender(config, messageSource, defaultLocale);        
         
     }
     
-    //==========================================================================
+    //==========================================================================    
     
     public void storeItem(Item item, Attachment attachment) {
         History history = new History(item);
         if (attachment != null) {
+            logger.debug("attachment not null, calling dao store");
             dao.storeAttachment(attachment);
             attachment.setFilePrefix(attachment.getId());
             item.add(attachment);
@@ -180,25 +180,23 @@ public class JtracImpl implements Jtrac {
         Date now = new Date();
         item.setTimeStamp(now);
         history.setTimeStamp(now);
-        item.add(history);
-        // SpaceSequence spaceSequence = item.getSpace().getSpaceSequence();
-        // very important - have to do this to guarantee unique sequenceNum !
-        // see HibernateJtracDao.storeSpaceSequence() for complete picture
-        long ssId = item.getSpace().getSpaceSequence().getId();
-        SpaceSequence spaceSequence = dao.loadSpaceSequence(ssId);
-        item.setSequenceNum(spaceSequence.next());
-        dao.storeSpaceSequence(spaceSequence);
+        item.add(history);              
+        item.setSequenceNum(dao.loadNextSequenceNum(item.getSpace()));                                
         // this will at the moment execute unnecessary updates (bug in Hibernate handling of "version" property)
         // se http://opensource.atlassian.com/projects/hibernate/browse/HHH-1401
+        // TODO confirm if above does not happen anymore
+        logger.debug("storing item");
         dao.storeItem(item);
-        indexer.index(item);
-        indexer.index(history);
+        logger.debug("stored item");
+        // indexer.index(item);
+        // indexer.index(history);
         if (item.isSendNotifications()) {
             mailSender.send(item, messageSource);
         }
     }
-    
+        
     public void updateItem(Item item, User user) {
+        logger.debug("update item called");
         History history = new History(item);
         history.setAssignedTo(null);
         history.setStatus(null);
@@ -207,6 +205,7 @@ public class JtracImpl implements Jtrac {
         history.setTimeStamp(new Date());
         item.add(history);
         dao.storeItem(item);  // merge edits + history
+        // TODO index?
         if (item.isSendNotifications()) {
             mailSender.send(item, messageSource);
         }        
@@ -236,7 +235,7 @@ public class JtracImpl implements Jtrac {
         }
         item.add(history);
         dao.storeItem(item);
-        indexer.index(history);
+        // indexer.index(history);
         if (history.isSendNotifications()) {
             mailSender.send(item, messageSource);
         }

@@ -69,7 +69,7 @@ public class HeaderPanel extends BasePanel {
             if (user.getPermittedTransitions(space, State.NEW).size() > 0) {            
                 add(new Link("new") {
                     public void onClick() {
-                        setResponsePage(new ItemFormPage(space));
+                        setResponsePage(ItemFormPage.class);
                     }            
                 });
             } else {

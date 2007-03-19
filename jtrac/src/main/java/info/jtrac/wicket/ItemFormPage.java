@@ -54,10 +54,8 @@ public class ItemFormPage extends BasePage {
     
     ItemSearch itemSearch;
             
-    public ItemFormPage(Space space) {       
-        Item item = new Item();
-        item.setSpace(space);
-        add(new ItemForm("form", item));
+    public ItemFormPage() {       
+        add(new ItemForm("form", null));
     }
     
     public ItemFormPage(Item item, ItemSearch itemSearch) {
@@ -84,10 +82,15 @@ public class ItemFormPage extends BasePage {
             // hibernate lazy loading issues during the whole update transaction
             LoadableDetachableModel itemModel = new LoadableDetachableModel() {
                 protected Object load() {
-                    if(temp.getId() > 0) {
+                    if(temp != null && temp.getId() > 0) {
+                        logger.debug("form workflow loaded item " + temp.getId());
                         return getJtrac().loadItem(temp.getId());
                     } else {
-                        return temp;
+                        logger.debug("initializing new Item for form");
+                        Space space = ((JtracSession) getSession()).getCurrentSpace();
+                        Item item = new Item();
+                        item.setSpace(space);
+                        return item;
                     }
                 }
             };            
@@ -196,7 +199,7 @@ public class ItemFormPage extends BasePage {
         @Override
         protected void validate() {
             filter.reset();            
-            super.validate();
+            super.validate();            
         }        
         
         @Override
@@ -229,8 +232,8 @@ public class ItemFormPage extends BasePage {
                 getJtrac().updateItem(item, user);                
             } else {
                 item.setLoggedBy(user);
-                item.setStatus(State.OPEN);
-                getJtrac().storeItem(item, attachment);                 
+                item.setStatus(State.OPEN);                
+                getJtrac().storeItem(item, attachment);                
             }
             if (attachment != null) {
                 File file = AttachmentUtils.getFile(attachment);

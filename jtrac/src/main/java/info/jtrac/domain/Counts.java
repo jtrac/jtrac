@@ -31,7 +31,7 @@ public class Counts implements Serializable {
     public static final int LOGGED_BY_ME = 2;
     public static final int TOTAL = 3;
     
-    private Map<Integer, Map<Integer, Integer>> typeCounts = new HashMap<Integer, Map<Integer, Integer>>();     
+    private Map<Integer, Map<Integer, Long>> typeCounts = new HashMap<Integer, Map<Integer, Long>>();     
     
     private boolean detailed;  
     
@@ -42,13 +42,13 @@ public class Counts implements Serializable {
     public Counts(boolean detailed) {        
         this.detailed = detailed;
         for(int i = 1; i < 4; i++) {
-            typeCounts.put(i, new HashMap<Integer, Integer>());
+            typeCounts.put(i, new HashMap<Integer, Long>());
         }
     }
     
-    public void add(int type, int state, int count) {
-        Map<Integer, Integer> stateCounts = typeCounts.get(type);
-        Integer i = stateCounts.get(state);
+    public void add(int type, int state, long count) {
+        Map<Integer, Long> stateCounts = typeCounts.get(type);
+        Long i = stateCounts.get(state);
         if (i == null) {            
             stateCounts.put(state, count);
         } else {
@@ -57,12 +57,12 @@ public class Counts implements Serializable {
     }  
     
     protected int getTotalForType(int type) {
-        Map<Integer, Integer> stateCounts = typeCounts.get(type);
+        Map<Integer, Long> stateCounts = typeCounts.get(type);
         if (stateCounts == null) {
             return 0;
         }
         int total = 0;
-        for(Map.Entry<Integer, Integer> entry : stateCounts.entrySet()) {
+        for(Map.Entry<Integer, Long> entry : stateCounts.entrySet()) {
             total += entry.getValue();
         }
         return total;
@@ -80,31 +80,31 @@ public class Counts implements Serializable {
         return getTotalForType(TOTAL);
     }
  
-    public Map<Integer, Integer> getLoggedByMeMap() {
+    public Map<Integer, Long> getLoggedByMeMap() {
         return typeCounts.get(LOGGED_BY_ME);
     }
     
-    public Map<Integer, Integer> getAssignedToMeMap() {
+    public Map<Integer, Long> getAssignedToMeMap() {
         return typeCounts.get(ASSIGNED_TO_ME);
     } 
     
-    public Map<Integer, Integer> getTotalMap() {
+    public Map<Integer, Long> getTotalMap() {
         return typeCounts.get(TOTAL);
     }
     
     // return string for easier rendering on dashboard screen    
     public String getLoggedByMeForState(int stateKey) {
-        Integer i = typeCounts.get(LOGGED_BY_ME).get(stateKey);
+        Long i = typeCounts.get(LOGGED_BY_ME).get(stateKey);
         return i == null ? "" : i.toString();
     }
     
     public String getAssignedToMeForState(int stateKey) {
-        Integer i = typeCounts.get(ASSIGNED_TO_ME).get(stateKey);
+        Long i = typeCounts.get(ASSIGNED_TO_ME).get(stateKey);
         return i == null ? "" : i.toString();
     } 
     
     public String getTotalForState(int stateKey) {
-        Integer i = typeCounts.get(TOTAL).get(stateKey);
+        Long i = typeCounts.get(TOTAL).get(stateKey);
         return i == null ? "" : i.toString();
     }    
     

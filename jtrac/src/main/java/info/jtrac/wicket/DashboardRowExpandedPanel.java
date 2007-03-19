@@ -71,7 +71,7 @@ public class DashboardRowExpandedPanel extends BasePanel {
                         newColumn.add(new Link("new") {
                             public void onClick() {
                                 setCurrentSpace(space);
-                                setResponsePage(new ItemFormPage(space));
+                                setResponsePage(ItemFormPage.class);
                             }
                         });
 
