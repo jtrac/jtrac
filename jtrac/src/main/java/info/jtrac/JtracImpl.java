@@ -168,7 +168,7 @@ public class JtracImpl implements Jtrac {
     
     //==========================================================================    
     
-    public void storeItem(Item item, Attachment attachment) {
+    public synchronized void storeItem(Item item, Attachment attachment) {
         History history = new History(item);
         if (attachment != null) {
             logger.debug("attachment not null, calling dao store");
@@ -184,12 +184,11 @@ public class JtracImpl implements Jtrac {
         item.setSequenceNum(dao.loadNextSequenceNum(item.getSpace()));                                
         // this will at the moment execute unnecessary updates (bug in Hibernate handling of "version" property)
         // se http://opensource.atlassian.com/projects/hibernate/browse/HHH-1401
-        // TODO confirm if above does not happen anymore
-        logger.debug("storing item");
+        // TODO confirm if above does not happen anymore        
         dao.storeItem(item);
-        logger.debug("stored item");
-        // indexer.index(item);
-        // indexer.index(history);
+        dao.storeHistory(history);
+        indexer.index(item);
+        indexer.index(history);
         if (item.isSendNotifications()) {
             mailSender.send(item, messageSource);
         }
@@ -205,13 +204,14 @@ public class JtracImpl implements Jtrac {
         history.setTimeStamp(new Date());
         item.add(history);
         dao.storeItem(item);  // merge edits + history
+        dao.storeHistory(history);
         // TODO index?
         if (item.isSendNotifications()) {
             mailSender.send(item, messageSource);
         }        
     }
     
-    public void storeHistoryForItem(long itemId, History history, Attachment attachment) {
+    public synchronized void storeHistoryForItem(long itemId, History history, Attachment attachment) {
         Item item = dao.loadItem(itemId);
         // first apply edits onto item record before we change the item status
         // the item.getEditableFieldList routine depends on the current State of the item
@@ -233,9 +233,10 @@ public class JtracImpl implements Jtrac {
             item.add(attachment);
             history.setAttachment(attachment);
         }
-        item.add(history);
+        item.add(history);        
         dao.storeItem(item);
-        // indexer.index(history);
+        dao.storeHistory(history);
+        indexer.index(history);
         if (history.isSendNotifications()) {
             mailSender.send(item, messageSource);
         }

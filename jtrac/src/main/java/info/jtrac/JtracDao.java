@@ -44,6 +44,7 @@ public interface JtracDao {
     void storeItem(Item item);
     Item loadItem(long id);
     History loadHistory(long id);
+    void storeHistory(History history);
     List<Item> findItems(long sequenceNum, String prefixCode);
     List<Item> findItems(ItemSearch itemSearch);
     List<AbstractItem> findAllItems();

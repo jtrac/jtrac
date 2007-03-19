@@ -72,6 +72,10 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return (Item) getHibernateTemplate().get(Item.class, id);
     }
     
+    public void storeHistory(History history) {        
+        getHibernateTemplate().saveOrUpdate(history);
+    }    
+    
     public History loadHistory(long id) {
         return (History) getHibernateTemplate().get(History.class, id);
     }
