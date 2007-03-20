@@ -210,15 +210,14 @@ public class JtracImpl implements Jtrac {
         history.setTimeStamp(now);
         item.add(history);
         SpaceSequence spaceSequence = dao.loadSpaceSequence(item.getSpace().getSpaceSequence().getId());
-        item.setSequenceNum(spaceSequence.next());      
+        item.setSequenceNum(spaceSequence.next());
+        // the synchronize and the flush at the end guarantee that item sequence numbers will be unique     
+        dao.storeSpaceSequence(spaceSequence);        
         // this will at the moment execute unnecessary updates (bug in Hibernate handling of "version" property)
         // se http://opensource.atlassian.com/projects/hibernate/browse/HHH-1401
         // TODO confirm if above does not happen anymore        
-        dao.storeItem(item);  
-        // note that hibernate flush() is called in the next line which is essential to guarantee
-        // unique sequence numbers for item inserts within a space
-        // and note that the flush should be the last hibernate action for db consistency
-        dao.storeSpaceSequence(spaceSequence);           
+        dao.storeItem(item); 
+        dao.flush();
         writeToFile(fileUpload, attachment);
         indexer.index(item);
         indexer.index(history);
@@ -236,7 +235,8 @@ public class JtracImpl implements Jtrac {
         history.setComment(item.getEditReason());
         history.setTimeStamp(new Date());
         item.add(history);
-        dao.storeItem(item);  // merge edits + history        
+        dao.storeItem(item);  // merge edits + history
+        dao.flush();
         // TODO index?
         if (item.isSendNotifications()) {
             mailSender.send(item, messageSource);
@@ -265,7 +265,8 @@ public class JtracImpl implements Jtrac {
             history.setAttachment(attachment);              
         }
         item.add(history);        
-        dao.storeItem(item);        
+        dao.storeItem(item);
+        dao.flush();
         writeToFile(fileUpload, attachment);
         indexer.index(history);
         if (history.isSendNotifications()) {

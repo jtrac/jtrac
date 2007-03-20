@@ -62,6 +62,10 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     
     public void setSchemaHelper(SchemaHelper schemaHelper) {
         this.schemaHelper = schemaHelper;
+    }    
+    
+    public void flush() {
+        getHibernateTemplate().flush();
     }
     
     public void storeItem(Item item) {        
@@ -144,8 +148,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     }    
     
     public void storeSpaceSequence(SpaceSequence spaceSequence) {
-        getHibernateTemplate().saveOrUpdate(spaceSequence);
-        getHibernateTemplate().flush();        
+        getHibernateTemplate().merge(spaceSequence);                
     }
     
     public List<Space> findSpacesByPrefixCode(String prefixCode) {
@@ -428,7 +431,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
             logger.info("schema creation complete");
             return;
         }
-        logger.info("database schema exists, normal startup");
+        logger.info("database schema exists, normal startup");        
     }   
     
     /**
