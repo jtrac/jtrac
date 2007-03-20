@@ -205,12 +205,6 @@ public class ItemFormPage extends BasePage {
         @Override
         protected void onSubmit() {
             final FileUpload fileUpload = fileUploadField.getFileUpload();
-            Attachment attachment = null;
-            if (fileUpload != null) {
-                String fileName = AttachmentUtils.cleanFileName(fileUpload.getClientFileName());
-                attachment = new Attachment();
-                attachment.setFileName(fileName);
-            }
             Item item = (Item) getModelObject();                        
             
             if(!editMode && item.getId() > 0) {
@@ -233,15 +227,7 @@ public class ItemFormPage extends BasePage {
             } else {
                 item.setLoggedBy(user);
                 item.setStatus(State.OPEN);                
-                getJtrac().storeItem(item, attachment);                
-            }
-            if (attachment != null) {
-                File file = AttachmentUtils.getFile(attachment);
-                try {
-                    fileUpload.writeTo(file);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+                getJtrac().storeItem(item, fileUpload);                
             }
             // allow user to navigate back to search results if applicable
             ItemListPage itemListPage = null;          

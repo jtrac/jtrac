@@ -65,7 +65,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     }
     
     public void storeItem(Item item) {        
-        getHibernateTemplate().saveOrUpdate(item);
+        getHibernateTemplate().merge(item);
     }
     
     public Item loadItem(long id) {
@@ -73,7 +73,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     }
     
     public void storeHistory(History history) {        
-        getHibernateTemplate().saveOrUpdate(history);
+        getHibernateTemplate().merge(history);
     }    
     
     public History loadHistory(long id) {
@@ -139,19 +139,14 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return (UserSpaceRole) getHibernateTemplate().get(UserSpaceRole.class, id);
     }    
     
-    /**
-     * the synchronized here is very important, as well as the flush
-     * this was the only way to avoid duplicate sequence numbers when
-     * running load tests with concurrent usage / item creation
-     */
-    public synchronized long loadNextSequenceNum(Space space) {
-        long id = space.getSpaceSequence().getId();
-        SpaceSequence spaceSequence = (SpaceSequence) getHibernateTemplate().get(SpaceSequence.class, id);
-        long nextSequenceNum = spaceSequence.next();
-        getHibernateTemplate().saveOrUpdate(spaceSequence);
-        getHibernateTemplate().flush();
-        return nextSequenceNum;
+    public SpaceSequence loadSpaceSequence(long id) {        
+        return (SpaceSequence) getHibernateTemplate().get(SpaceSequence.class, id);               
     }    
+    
+    public void storeSpaceSequence(SpaceSequence spaceSequence) {
+        getHibernateTemplate().saveOrUpdate(spaceSequence);
+        getHibernateTemplate().flush();        
+    }
     
     public List<Space> findSpacesByPrefixCode(String prefixCode) {
         return getHibernateTemplate().find("from Space space where space.prefixCode = ?", prefixCode);

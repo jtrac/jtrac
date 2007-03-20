@@ -175,25 +175,10 @@ public class ItemViewFormPanel extends BasePanel {
         @Override
         protected void onSubmit() {
             final FileUpload fileUpload = fileUploadField.getFileUpload();
-            Attachment attachment = null;
-            if (fileUpload != null) {
-                String fileName = AttachmentUtils.cleanFileName(fileUpload.getClientFileName());
-                attachment = new Attachment();
-                attachment.setFileName(fileName);
-            }
             History history = (History) getModelObject();                                  
             User user = ((JtracSession) getSession()).getUser();
             history.setLoggedBy(user);            
-            getJtrac().storeHistoryForItem(itemId, history, attachment);
-            
-            if (attachment != null) {
-                File file = AttachmentUtils.getFile(attachment);
-                try {
-                    fileUpload.writeTo(file);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }            
+            getJtrac().storeHistoryForItem(itemId, history, fileUpload);            
             setResponsePage(new ItemViewPage(history.getParent(), itemSearch));
         }
         

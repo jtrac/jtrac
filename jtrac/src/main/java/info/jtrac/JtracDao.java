@@ -73,7 +73,8 @@ public interface JtracDao {
     List<Space> findSpacesWhereGuestAllowed();
     void removeSpace(Space space);
     //=========================================== 
-    long loadNextSequenceNum(Space space);    
+    SpaceSequence loadSpaceSequence(long id);
+    void storeSpaceSequence(SpaceSequence spaceSequence);
     //===========================================
     void storeUser(User user);
     User loadUser(long id);

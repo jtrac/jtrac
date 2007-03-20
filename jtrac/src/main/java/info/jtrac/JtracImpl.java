@@ -35,6 +35,8 @@ import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.lucene.IndexSearcher;
 import info.jtrac.lucene.Indexer;
 import info.jtrac.mail.MailSender;
+import info.jtrac.util.AttachmentUtils;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -58,6 +60,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.util.StringUtils;
+import wicket.markup.html.form.upload.FileUpload;
+
 
 /**
  * Jtrac Service Layer implementation
@@ -168,25 +172,54 @@ public class JtracImpl implements Jtrac {
     
     //==========================================================================    
     
-    public synchronized void storeItem(Item item, Attachment attachment) {
+    private Attachment getAttachment(FileUpload fileUpload) {
+        if(fileUpload == null) {
+            return null;
+        }
+        logger.debug("fileUpload not null");
+        String fileName = AttachmentUtils.cleanFileName(fileUpload.getClientFileName());
+        Attachment attachment = new Attachment();
+        attachment.setFileName(fileName);
+        dao.storeAttachment(attachment);
+        attachment.setFilePrefix(attachment.getId());
+        return attachment;
+    }
+    
+    private void writeToFile(FileUpload fileUpload, Attachment attachment) {
+        if(fileUpload == null) {
+            return;
+        }        
+        File file = AttachmentUtils.getFile(attachment);
+        try {
+            fileUpload.writeTo(file);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        
+    }
+    
+    public synchronized void storeItem(Item item, FileUpload fileUpload) {
         History history = new History(item);
-        if (attachment != null) {
-            logger.debug("attachment not null, calling dao store");
-            dao.storeAttachment(attachment);
-            attachment.setFilePrefix(attachment.getId());
+        Attachment attachment = getAttachment(fileUpload);
+        if(attachment != null) {
             item.add(attachment);
-            history.setAttachment(attachment);
+            history.setAttachment(attachment);            
         }
         Date now = new Date();
         item.setTimeStamp(now);
         history.setTimeStamp(now);
-        item.add(history);              
-        item.setSequenceNum(dao.loadNextSequenceNum(item.getSpace()));                                
+        item.add(history);
+        SpaceSequence spaceSequence = dao.loadSpaceSequence(item.getSpace().getSpaceSequence().getId());
+        item.setSequenceNum(spaceSequence.next());      
         // this will at the moment execute unnecessary updates (bug in Hibernate handling of "version" property)
         // se http://opensource.atlassian.com/projects/hibernate/browse/HHH-1401
         // TODO confirm if above does not happen anymore        
-        dao.storeItem(item);
-        dao.storeHistory(history);
+        dao.storeItem(item);  
+        // note that hibernate flush() is called in the next line which is essential to guarantee
+        // unique sequence numbers for item inserts within a space
+        // and note that the flush should be the last hibernate action for db consistency
+        dao.storeSpaceSequence(spaceSequence);           
+        writeToFile(fileUpload, attachment);
         indexer.index(item);
         indexer.index(history);
         if (item.isSendNotifications()) {
@@ -203,15 +236,14 @@ public class JtracImpl implements Jtrac {
         history.setComment(item.getEditReason());
         history.setTimeStamp(new Date());
         item.add(history);
-        dao.storeItem(item);  // merge edits + history
-        dao.storeHistory(history);
+        dao.storeItem(item);  // merge edits + history        
         // TODO index?
         if (item.isSendNotifications()) {
             mailSender.send(item, messageSource);
         }        
     }
     
-    public synchronized void storeHistoryForItem(long itemId, History history, Attachment attachment) {
+    public synchronized void storeHistoryForItem(long itemId, History history, FileUpload fileUpload) {
         Item item = dao.loadItem(itemId);
         // first apply edits onto item record before we change the item status
         // the item.getEditableFieldList routine depends on the current State of the item
@@ -227,15 +259,14 @@ public class JtracImpl implements Jtrac {
         }
         item.setItemUsers(history.getItemUsers());
         history.setTimeStamp(new Date());
-        if (attachment != null) {
-            dao.storeAttachment(attachment);
-            attachment.setFilePrefix(attachment.getId());
+        Attachment attachment = getAttachment(fileUpload);
+        if(attachment != null) {
             item.add(attachment);
-            history.setAttachment(attachment);
+            history.setAttachment(attachment);              
         }
         item.add(history);        
-        dao.storeItem(item);
-        dao.storeHistory(history);
+        dao.storeItem(item);        
+        writeToFile(fileUpload, attachment);
         indexer.index(history);
         if (history.isSendNotifications()) {
             mailSender.send(item, messageSource);
