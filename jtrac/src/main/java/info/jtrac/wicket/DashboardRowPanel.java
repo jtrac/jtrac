@@ -22,7 +22,7 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import wicket.ajax.AjaxRequestTarget;
-import wicket.ajax.markup.html.AjaxFallbackLink;
+import wicket.ajax.markup.html.AjaxLink;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
@@ -62,7 +62,7 @@ public class DashboardRowPanel extends BasePanel {
             }
         });        
         
-        add(new AjaxFallbackLink("link") {
+        add(new AjaxLink("link") {
             public void onClick(AjaxRequestTarget target) {
                 Counts tempCounts = counts;                
                 // avoid hitting the database again if re-expanding
