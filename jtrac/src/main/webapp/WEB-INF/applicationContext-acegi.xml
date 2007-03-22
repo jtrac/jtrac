@@ -6,7 +6,7 @@
 <beans>
     
     <!-- change this to "import-acegi.xml" or "import-acegi-cas.xml" as required -->
-    <import resource="import-acegi.xml"/> 
+    <import resource="import-acegi.xml"/>
     
     <!-- Automatically receives AuthenticationEvent messages -->
     <bean id="loggerListener" class="org.acegisecurity.event.authentication.LoggerListener"/>    
@@ -26,11 +26,19 @@
     <bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
         <property name="providers">
             <list>
+                <!-- <ref bean="ldapAuthenticationProvider"/> -->
                 <ref bean="authenticationProvider"/>                
             </list>
         </property>
     </bean>
       
+    <bean id="ldapAuthenticationProvider" class="info.jtrac.acegi.JtracLdapAuthenticationProvider" lazy-init="true">
+        <property name="jtrac" ref="jtrac"/>
+        <property name="ldapUrl" value="ldap://MY_LDAP_HOST"/>
+        <property name="domain" value="MY_WINDOWS_DOMAIN"/>
+        <property name="searchBase" value="DC=foo,DC=bar,DC=baz"/>        
+    </bean>    
+    
     <bean id="exceptionTranslationFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
         <property name="authenticationEntryPoint" ref="authenticationEntryPoint"/>
     </bean>   

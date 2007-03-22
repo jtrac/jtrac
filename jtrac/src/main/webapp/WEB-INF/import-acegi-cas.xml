@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
-<!-- Acegi security configuration as Spring context -->
+<!-- import this into applicationContext.xml instead of import-acegi.xml if using CAS -->
 
 <beans>  
     
