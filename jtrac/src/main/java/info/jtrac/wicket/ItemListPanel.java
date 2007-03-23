@@ -90,7 +90,9 @@ public class ItemListPanel extends BasePanel {
             }
         };
         link.add(new Label("count", resultCount + ""));
-        add(link);
+        String resultCountMessage = resultCount == 1 ? "item_list.recordFound" : "item_list.recordsFound";
+        link.add(new Label("recordsFound", localize(resultCountMessage)));        
+        add(link);        
         
         WebMarkupContainer pagination = new WebMarkupContainer("pagination");
         
