@@ -95,6 +95,7 @@ public class HeaderPanel extends BasePanel {
         } else {
             add(new Link("options") {
                 public void onClick() {
+                    ((JtracSession) getSession()).setCurrentSpace(null); 
                     setResponsePage(OptionsPage.class);
                 }            
             }); 

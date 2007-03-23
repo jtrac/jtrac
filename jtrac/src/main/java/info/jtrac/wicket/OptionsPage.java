@@ -26,9 +26,7 @@ public class OptionsPage extends BasePage {
       
     public OptionsPage() {                  
         
-        setVersioned(false);
-                    
-        ((JtracSession) getSession()).setCurrentSpace(null);    
+        setVersioned(false);                      
         
         final User user = getPrincipal();
         
