@@ -25,6 +25,7 @@ import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import wicket.Component;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.CheckBox;
@@ -53,7 +54,7 @@ public class LoginPage extends WebPage {
         add(new Label("version", System.getProperty("jtrac.version")));
     }
     
-    private class LoginForm extends Form {                
+    private class LoginForm extends Form {                               
         
         private String loginName;
         private String password;
@@ -84,7 +85,13 @@ public class LoginPage extends WebPage {
         }         
         
         public LoginForm(String id) {            
-            super(id);          
+            super(id);
+            add(new WebMarkupContainer("hide") {
+                @Override
+                public boolean isVisible() {
+                    return !LoginForm.this.hasError();
+                }
+            });
             add(new FeedbackPanel("feedback"));            
             setModel(new BoundCompoundPropertyModel(this));
             final TextField loginName = new TextField("loginName");
