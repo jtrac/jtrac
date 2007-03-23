@@ -16,7 +16,6 @@
 
 package info.jtrac.wicket;
 
-import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
@@ -26,14 +25,13 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
-import info.jtrac.util.AttachmentUtils;
 import info.jtrac.util.UserUtils;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import wicket.extensions.ajax.markup.html.WicketAjaxIndicatorAppender;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
@@ -44,7 +42,6 @@ import wicket.markup.html.form.TextArea;
 import wicket.markup.html.form.upload.FileUpload;
 import wicket.markup.html.form.upload.FileUploadField;
 import wicket.markup.html.form.validation.AbstractValidator;
-import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.BoundCompoundPropertyModel;
 
@@ -91,8 +88,8 @@ public class ItemViewFormPanel extends BasePanel {
             final List<UserSpaceRole> userSpaceRoles = getJtrac().findUserRolesForSpace(space.getId());
             // status ==========================================================
             final Map<Integer, String> statesMap = item.getPermittedTransitions(user);
-            List<Integer> states = new ArrayList(statesMap.keySet());            
-            statusChoice = new DropDownChoice("status", states, new IChoiceRenderer() {
+            List<Integer> states = new ArrayList(statesMap.keySet());                                                   
+            statusChoice = new IndicatingDropDownChoice("status", states, new IChoiceRenderer() {
                 public Object getDisplayValue(Object o) {
                     return statesMap.get(o);
                 }
@@ -114,7 +111,7 @@ public class ItemViewFormPanel extends BasePanel {
                     }
                     target.addComponent(assignedToChoice);
                 }
-            });
+            });            
             add(statusChoice);
             // assigned to =====================================================            
             List<User> empty = new ArrayList<User>(0);
@@ -183,5 +180,20 @@ public class ItemViewFormPanel extends BasePanel {
         }
         
     }
+    
+    private final class IndicatingDropDownChoice extends DropDownChoice implements wicket.ajax.IAjaxIndicatorAware {
+        
+        private final WicketAjaxIndicatorAppender indicatorAppender = new WicketAjaxIndicatorAppender();
+
+        public IndicatingDropDownChoice(String id, List list, IChoiceRenderer cr){
+            super(id, list, cr);
+            add(indicatorAppender);
+        }
+        
+        public java.lang.String getAjaxIndicatorMarkupId(){
+            return indicatorAppender.getMarkupId();
+        }
+
+    }    
     
 }
