@@ -16,13 +16,13 @@
         </links>
         <menu name="JTrac">
             <item name="Home" href="index.html"/>
-            <item name="Features" href="doc/html/features.html"/>            
+            <item name="Features" href="doc/html/features.html"/>
+	    <item name="Download" href="http://sourceforge.net/project/showfiles.php?group_id=162983&amp;package_id=184104"/>            
             <item name="Installation" href="doc/html/installation.html"/>
-            <item name="Upgrading" href="doc/html/upgrading.html"/>
-            <item name="F A Q" href="doc/html/faq.html"/>
+            <item name="Upgrading" href="doc/html/upgrading.html"/>            
             <item name="Roadmap" href="doc/html/roadmap.html"/>
             <item name="Developer Guide" href="doc/html/dev-guide.html"/>
-            <item name="Download" href="http://sourceforge.net/project/showfiles.php?group_id=162983&amp;package_id=184104"/>            
+	    <item name="F A Q" href="doc/html/faq.html"/>            
         </menu>
         <menu name="Documentation">
             <item name="HTML" href="doc/html/index.html"/>
