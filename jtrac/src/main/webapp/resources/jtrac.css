@@ -10,11 +10,11 @@ a:hover { color: black; }
 .error { color: red; font-weight: bold; margin-bottom: 1em; }
 .info { color: blue; font-weight: bold; }
 .heading { color: blue; font-weight: bold; margin-bottom: 1em; }
-.alt { background: #DEDEFF; } 
-.selected, table.jtrac .selected { background: #ADD8E6; }
+.alt { background: #e1ecfe; } 
+.selected, table.jtrac .selected { background: #c3d9ff; }
 .bdr-bottom, tr.bdr-bottom td { border-bottom: thin solid grey; }
 .nav-table-outer, .nav-table-outer tr { font-size: 80%; background-color: #CCCCCC; }
-.nav-table td { font-weight: bold; background-color: #DEDEFF; padding-left: 1em; padding-right: 1em; text-align: right; }
+.nav-table td { font-weight: bold; background-color: #e1ecfe; padding-left: 1em; padding-right: 1em; text-align: right; }
 .nav-table td.icon { padding: 0; text-align: center; width: 4em; }
 .nav-table td a { width: 100%; display: block; }
 .bdr-collapse { border-collapse: collapse; }
@@ -24,10 +24,10 @@ a:hover { color: black; }
 .space-below { padding-bottom: 0.5em; }
 tr.sortable th { background-position: right; background-repeat: no-repeat; }
 tr.sortable th.order-none { background-image: url("arrow_off.png"); }
-tr.sortable th.order-up { background-color: #ADD8E6; background-image: url("arrow_up.png"); }
-tr.sortable th.order-down { background-color: #ADD8E6; background-image: url("arrow_down.png"); }
+tr.sortable th.order-up { background-color: #c3d9ff; background-image: url("arrow_up.png"); }
+tr.sortable th.order-down { background-color: #c3d9ff; background-image: url("arrow_down.png"); }
 tr.sortable a { color: black; }
 tr.sortable a:hover { color: blue; }
 li.feedbackPanelERROR { list-style: none; background: url("dialog-error.png") no-repeat; padding-left: 2em; margin: 0.5em 0 0 -1em; }
-.menu-option div { font-weight: bold; background-color: #DEDEFF; padding-left: 1em; 
+.menu-option div { font-weight: bold; background-color: #e1ecfe; padding-left: 1em; 
     padding-right: 1em; margin-bottom: 1.5em; text-align: right; }
