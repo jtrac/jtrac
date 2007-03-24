@@ -133,7 +133,7 @@ public class SpacePermissionsPage extends BasePage {
                                     }                                    
                                 };
                                 editState.add(editStateButton);
-                                if(stateKeyRow == State.NEW || stateKeyRow == State.CLOSED) {
+                                if(stateKeyRow == State.NEW) { // user can customize state names, even for Closed
                                     editStateButton.setVisible(false);
                                 }
                                 listItem.add(editState);

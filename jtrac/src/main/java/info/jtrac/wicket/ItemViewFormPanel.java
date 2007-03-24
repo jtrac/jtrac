@@ -44,6 +44,7 @@ import wicket.markup.html.form.upload.FileUploadField;
 import wicket.markup.html.form.validation.AbstractValidator;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.BoundCompoundPropertyModel;
+import wicket.model.Model;
 
 /**
  * Form to update history for item
@@ -142,7 +143,8 @@ public class ItemViewFormPanel extends BasePanel {
                 protected String resourceKey(FormComponent c) {                    
                     return "item_view_form.assignedTo.error";
                 }
-            });            
+            });
+            assignedToChoice.setLabel(new Model(space.getMetadata().getStatusValue(State.CLOSED)));
             add(assignedToChoice);            
             // notify list =====================================================
             List<ItemUser> choices = UserUtils.convertToItemUserList(userSpaceRoles);
