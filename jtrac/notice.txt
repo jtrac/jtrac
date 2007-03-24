@@ -22,71 +22,54 @@
    ======================================================================
 
    This product includes software developed by the Jetty Project
-   (http://www.mortbay.org/jetty/).
+   http://www.mortbay.org/jetty
    
-   * jetty-util
-   * jsp-2.1
-   * jsp-api-2.1
-   * servlet-api-2.5
    * jetty
+   * jetty-util
+   * servlet-api-2.5
    * start
    
      [ http://www.mortbay.org/jetty/LICENSE.TXT ]
 
    ======================================================================
-   
-   This product includes software developed by the Eclipse Project
-   (http://www.eclipse.org/jdt/).
-   
-   * core
-   
-     [ http://www.eclipse.org/legal/epl-v10.html ]
 
-   ======================================================================
-
-   This product includes software developed by the Spring Framework
-   Project (http://www.springframework.org).
+   This product includes software developed by the Spring Framework Project 
+   http://www.springframework.org
    
    * spring
-   * spring-webflow
-   * spring-binding
    
      [ http://www.apache.org/licenses/LICENSE-2.0 ]
    
    ======================================================================
    
    This product includes software developed by the Acegi Security
-   System for Spring Project (http://acegisecurity.org).
+   System for Spring Project
+   http://acegisecurity.org
 
    * acegi-security [ http://www.apache.org/licenses/LICENSE-2.0 ]  
 
    ======================================================================
 
-   This product includes software developed by the Spring Modules
-   Project (https://springmodules.dev.java.net/).
+   This product includes software developed by the Spring Modules Project 
+   https://springmodules.dev.java.net
    
    * spring-modules-lucene [ http://www.apache.org/licenses/LICENSE-2.0 ]
    
    ======================================================================   
    
-   This product includes software developed by
-   The Apache Software Foundation (http://www.apache.org/).
+   This product includes software developed by the Apache Software Foundation
+   http://www.apache.org
    
    * geronimo-spec-jta
-   * jstl
-   * standard
    * oro
    * commons-codec
    * commons-collections   
-   * commons-dbcp
-   * commons-fileupload
-   * commons-io   
+   * commons-dbcp   
    * commons-lang
    * commons-logging
    * commons-pool
    * poi
-   * log4j
-   * ant
+   * log4j   
    * lucene
    
      [ http://www.apache.org/licenses/LICENSE-2.0 ]
@@ -94,77 +77,85 @@
    ======================================================================
       
    This product includes software developed by the Hibernate project
-   (http://www.hibernate.org/).   
+   http://www.hibernate.org
    
    * hibernate [ http://www.opensource.org/licenses/lgpl-license.php ]
    
    ======================================================================   
    
+   This product includes software developed by the Wicket project
+   http://wicket.sourceforge.net 
+   
+   * wicket [ http://wicket.sourceforge.net/license.html ]
+   
+   ====================================================================== 
+
+   This product includes software developed by the Wicket Extensions project
+   http://wicket.sourceforge.net/wicket-extensions 
+   
+   * wicket-extensions [ http://wicket.sourceforge.net/wicket-extensions/license.html ]
+
+   ======================================================================
+
    This product includes software developed by the Jaxen project
-   (http://jaxen.org/).
+   http://jaxen.org
    
    * jaxen [ http://jaxen.org/license.html ]
    
    ======================================================================
    
    This product includes software developed by the JA-SIG Collaborative
-   (http://www.ja-sig.org/).
+   http://www.ja-sig.org
    
    * casclient [ http://www.ja-sig.org/products/cas/overview/license/index.html ]
    
    ======================================================================
    
    This product includes software developed by the Code Generation Library
-   (CGLIB) project (http://cglib.sourceforge.net/).   
+   (CGLIB) project 
+   http://cglib.sourceforge.net
    
    * cglib [ http://cglib.sourceforge.net/license.html ]
    
    ======================================================================
       
    This product includes software developed by the EHCACHE project
-   (http://ehcache.sourceforge.net/).   
+   http://ehcache.sourceforge.net
    
    * ehcache [ http://ehcache.sourceforge.net/license.html ]
    
    ======================================================================
    
    This product includes software developed by the ASM project
-   (http://asm.objectweb.org/).    
+   http://asm.objectweb.org  
    
-   * asm [ http://asm.objectweb.org/license.html ]
-   
-   ======================================================================
-   
-   This product includes software developed by the OpenSymphony Group 
-   (http://www.opensymphony.com/).
-   
-   * ognl [ http://www.opensymphony.com/ognl/license.action ]
+   * asm [ http://asm.objectweb.org/license.html ]   
    
    ======================================================================
    
    This product includes software developed by the JavaSVN project 
-   (http://tmate.org/svn/).
+   http://tmate.org/svn
    
    * javasvn [ http://tmate.org/svn/license.html ]
    
    ======================================================================
    
    This product includes software developed by the ANTLR project 
-   (http://www.antlr.org/).
+   http://www.antlr.org
       
    * antlr [ http://www.antlr.org/license.html ]
    
    ======================================================================   
    
    This product includes software developed by the HSQLDB project 
-   (http://www.hsqldb.org/).
+   http://www.hsqldb.org
       
    * hsqldb [ http://www.hsqldb.org/web/hsqlLicense.html ]
    
    ======================================================================     
    
    This product includes software developed by the JFree project 
-   (http://www.jfree.org/).
+   http://www.jfree.org
       
    * jcommon
    * jfreechart [ http://www.opensource.org/licenses/lgpl-license.php ]
@@ -172,46 +163,15 @@
    ======================================================================      
    
    This product includes software developed by the dom4j project 
-   (http://www.dom4j.org/).
+   http://www.dom4j.org
       
-   * dom4j [ http://www.dom4j.org/license.html ]  
-   
-   ======================================================================
-   
-   This product includes software developed by the prototype project 
-   (http://prototype.conio.net/).
-      
-   * prototype.js 
-   
-   [ http://dev.rubyonrails.org/browser/spinoffs/prototype/LICENSE ]  
-   
-   ====================================================================== 
-   
-   This product includes software developed by the script.aculo.us project 
-   (http://script.aculo.us/).
-      
-   * scriptaculous.js 
-   * builder.js
-   * controls.js
-   * dragdrop.js
-   * effects.js
-   * slider.js
-   
-   [ http://wiki.script.aculo.us/scriptaculous/show/License ]  
-   
-   ======================================================================
-   
-   This product includes software developed by the overlibmws project 
-   (http://www.macridesweb.com/oltest/).
-      
-   * overlibmws.js 
-   
-   [ http://www.macridesweb.com/oltest/license.html ]  
+   * dom4j [ http://www.dom4j.org/license.html ]   
    
    ======================================================================    
    
    This product includes software developed by the jscalendar project / 
-   Mihai Bazon, <mihai_bazon@yahoo.com> (http://www.dynarch.com/projects/calendar).
+   Mihai Bazon, <mihai_bazon@yahoo.com> 
+   http://www.dynarch.com/projects/calendar
       
    * /resources/calendar 
    
@@ -220,7 +180,7 @@
    ======================================================================  
    
    This product includes images created by the Tango Desktop Project
-   (http://tango.freedesktop.org/)      
+   http://tango.freedesktop.org     
       
    * /resources/<some *.png files> 
    
