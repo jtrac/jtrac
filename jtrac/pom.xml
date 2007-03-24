@@ -256,7 +256,11 @@
                 <exclusion>
                     <groupId>jexcelapi</groupId>
                     <artifactId>jxl</artifactId>
-                </exclusion>                 
+                </exclusion>
+                <exclusion>
+                    <groupId>cglib</groupId>
+                    <artifactId>cglib-nodep</artifactId>
+                </exclusion>                  
             </exclusions>      
         </dependency>
         <dependency>
