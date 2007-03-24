@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.lucene.document.Document;
 
+import org.apache.lucene.document.Field.*;
+
 /**
  * This object represents a generic item which can be an issue, defect, task etc.
  * some logic for field accessors and conversion of keys to display values 
@@ -80,9 +82,9 @@ public class Item extends AbstractItem {
      * Lucene DocumentCreator implementation
      */
     public Document createDocument() {
-        Document d = new Document();
-        d.add(org.apache.lucene.document.Field.UnIndexed("id", getId() + ""));
-        d.add(org.apache.lucene.document.Field.UnIndexed("type", "item"));
+        Document d = new Document();        
+        d.add(new org.apache.lucene.document.Field("id", getId() + "", Store.YES, Index.NO));            
+        d.add(new org.apache.lucene.document.Field("type", "item", Store.YES, Index.NO));        
         StringBuffer sb = new StringBuffer();
         if (getSummary() != null) {
             sb.append(getSummary());
@@ -93,7 +95,7 @@ public class Item extends AbstractItem {
             }
             sb.append(getDetail());
         }
-        d.add(org.apache.lucene.document.Field.UnStored("text", sb.toString()));
+        d.add(new org.apache.lucene.document.Field("text", sb.toString(), Store.NO, Index.TOKENIZED));
         return d;
     }    
     

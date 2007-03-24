@@ -160,6 +160,10 @@
                     <groupId>javax.transaction</groupId>
                     <artifactId>jta</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>asm</groupId>
+                    <artifactId>asm-attrs</artifactId>
+                </exclusion>                
             </exclusions>           
         </dependency>
         <dependency>
@@ -177,6 +181,16 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring</artifactId>
             <version>2.0.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>avalon-framework</groupId>
+                    <artifactId>avalon-framework</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>logkit</groupId>
+                    <artifactId>logkit</artifactId>
+                </exclusion>             
+            </exclusions>            
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -193,7 +207,7 @@
          <dependency>
             <groupId>org.springmodules</groupId>
             <artifactId>spring-modules-lucene</artifactId>
-            <version>0.6</version>
+            <version>0.8</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>
@@ -226,6 +240,22 @@
                 <exclusion>
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-jca</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>concurrent</groupId>
+                    <artifactId>concurrent</artifactId>
+                </exclusion>
+                 <exclusion>
+                    <groupId>org.apache</groupId>
+                    <artifactId>poi</artifactId>
+                </exclusion>                 
+                 <exclusion>
+                    <groupId>org.apache</groupId>
+                    <artifactId>poi-scratchpad</artifactId>
+                </exclusion> 
+                <exclusion>
+                    <groupId>jexcelapi</groupId>
+                    <artifactId>jxl</artifactId>
                 </exclusion>                 
             </exclusions>      
         </dependency>

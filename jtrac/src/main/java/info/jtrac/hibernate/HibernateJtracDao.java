@@ -108,7 +108,14 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     }
     
     public List<AbstractItem> findAllItems() {
-        return getHibernateTemplate().loadAll(AbstractItem.class);
+        // return getHibernateTemplate().loadAll(AbstractItem.class);
+        return (List<AbstractItem>) getHibernateTemplate().execute(new HibernateCallback() {
+            public Object doInHibernate(Session session) {
+                Criteria criteria = session.createCriteria(AbstractItem.class);
+                criteria.setFetchMode("space", FetchMode.JOIN);                              
+                return criteria.list();
+            }
+        });        
     }
     
     public void removeItem(Item item) {

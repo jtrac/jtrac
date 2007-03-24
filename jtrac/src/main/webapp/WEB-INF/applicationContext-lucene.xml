@@ -12,6 +12,7 @@
     <bean id="indexFactory" class="org.springmodules.lucene.index.support.SimpleIndexFactoryBean">
         <property name="directory" ref="indexDirectory"/>
         <property name="analyzer" ref="analyzer"/>
+        <property name="create" value="true"/>
     </bean>
     
     <bean id="indexer" class="info.jtrac.lucene.Indexer">

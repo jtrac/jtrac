@@ -42,7 +42,7 @@ public class IndexSearcher extends LuceneSearchSupport {
     }
     
     public List<Long> findItemIdsContainingText(String text) {       
-        LuceneSearchTemplate template = getTemplate();
+        LuceneSearchTemplate template = getLuceneSearcherTemplate();
         QueryParser parser = new QueryParser("text", getAnalyzer());
         Query query;
         try {
