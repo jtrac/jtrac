@@ -65,7 +65,7 @@ public class HeaderPanel extends BasePanel {
                 }            
             });            
         } else {
-            add(new Label("space", space.getName()));            
+            add(new WebMarkupContainer("space").add(new Label("space", space.getName())));            
             if (user.getPermittedTransitions(space, State.NEW).size() > 0) {            
                 add(new Link("new") {
                     public void onClick() {
@@ -110,7 +110,7 @@ public class HeaderPanel extends BasePanel {
                 }            
             });
             add(new WebMarkupContainer("login").setVisible(false));
-            add(new Label("user", user.getName()));
+            add(new WebMarkupContainer("user").add(new Label("user", user.getName())));
         }             
         
     }

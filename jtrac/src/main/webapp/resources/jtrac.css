@@ -1,26 +1,30 @@
 body { font-size: 80%; font-family: Arial; background: #FFF; }
 table.jtrac tr { font-size: 80%; }
+table.jtrac-list tr { font-size: 75%; }
 table.jtrac th, table.jtrac td.label { background: #CCCCCC; padding-left: 0.2em; padding-right: 0.2em; }
 tr.center td { text-align: center; }
 .label { font-weight: bold; text-align: right; }
-a { color: blue; }
+a { color: #0000D9; }
 a:hover { color: black; }
+img { border: none; vertical-align: middle; }
 .multiselect { height: 10em; overflow: auto; background: #FFF; text-align: left; border: thin groove; }
 .error-input { border: 1px solid red; }
+select.error-input { background: #FFA6A6; }
 .error { color: red; font-weight: bold; margin-bottom: 1em; }
-.info { color: blue; font-weight: bold; }
-.heading { color: blue; font-weight: bold; margin-bottom: 1em; }
+.info { color: #0000D9; font-weight: bold; }
+.heading { color: #0000D9; font-weight: bold; margin-bottom: 1em; }
 .alt { background: #e1ecfe; } 
 .selected, table.jtrac .selected { background: #c3d9ff; }
 .bdr-bottom, tr.bdr-bottom td { border-bottom: thin solid grey; }
-.nav-table-outer, .nav-table-outer tr { font-size: 80%; background-color: #CCCCCC; }
+.nav-table-outer, .nav-table-outer tr { font-size: 75%; background-color: #CCCCCC; }
 .nav-table td { font-weight: bold; background-color: #e1ecfe; padding-left: 1em; padding-right: 1em; text-align: right; }
 .nav-table td.icon { padding: 0; text-align: center; width: 4em; }
 .nav-table td a { width: 100%; display: block; }
 .bdr-collapse { border-collapse: collapse; }
 .bdr-collapse td { padding: 0; }
 .page-links { font-weight: bold; }
-.nav-table img { border: none; }
+.nav-header td { padding-left: 0.7em; }
+.nav-header img, img.nav-link { margin-right: 0.3em; }
 .space-below { padding-bottom: 0.5em; }
 tr.sortable th { background-position: right; background-repeat: no-repeat; }
 tr.sortable th.order-none { background-image: url("arrow_off.png"); }

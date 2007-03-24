@@ -20,6 +20,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import wicket.Component;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.panel.Panel;
@@ -62,7 +63,7 @@ public class DatePicker extends Panel {
         dateField.setLabel(new Model(label));
         dateField.add(new ErrorHighlighter());
         add(model.bind(dateField, path));
-        final Label button = new Label("button", "...");
+        final WebMarkupContainer button = new WebMarkupContainer("button");
         button.setOutputMarkupId(true);
         add(button);
         Label script = new Label("script", new AbstractReadOnlyModel() {
