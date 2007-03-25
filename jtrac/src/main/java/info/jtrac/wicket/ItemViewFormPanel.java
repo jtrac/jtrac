@@ -32,6 +32,7 @@ import java.util.Map;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import wicket.extensions.ajax.markup.html.WicketAjaxIndicatorAppender;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
@@ -124,8 +125,7 @@ public class ItemViewFormPanel extends BasePanel {
                     return ((User) o).getId() + "";
                 }                
             });
-            assignedToChoice.setNullValid(true);            
-            assignedToChoice.add(new ErrorHighlighter());
+            assignedToChoice.setNullValid(true);                        
             assignedToChoice.setOutputMarkupId(true);
             assignedToChoice.setEnabled(false);
             assignedToChoice.add(new AbstractValidator() {
@@ -145,7 +145,10 @@ public class ItemViewFormPanel extends BasePanel {
                 }
             });
             assignedToChoice.setLabel(new Model(space.getMetadata().getStatusValue(State.CLOSED)));
-            add(assignedToChoice);            
+            WebMarkupContainer border = new WebMarkupContainer("border");
+            border.add(new ErrorHighlighter(assignedToChoice));
+            border.add(assignedToChoice);
+            add(border);            
             // notify list =====================================================
             List<ItemUser> choices = UserUtils.convertToItemUserList(userSpaceRoles);
             ListMultipleChoice itemUsers = new JtracCheckBoxMultipleChoice("itemUsers", choices, new IChoiceRenderer() {

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import wicket.Component;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.IChoiceRenderer;
@@ -43,7 +44,7 @@ public class CustomFieldsFormPanel extends BasePanel {
                 final Field field = (Field) listItem.getModelObject();
                 listItem.add(new Label("label", field.getLabel()));
                 listItem.add(new Label("star", field.isOptional() ? "&nbsp;" : "*").setEscapeModelStrings(false));
-                if (field.getName().getType() < 4) { // drop down list
+                if (field.getName().getType() < 4) { // drop down list                    
                     Fragment f = new Fragment("field", "dropDown");
                     final Map<String, String> options = field.getOptions();                                
                     List<String> keys = new ArrayList(options.keySet());  // bound value
@@ -56,7 +57,7 @@ public class CustomFieldsFormPanel extends BasePanel {
                         };
                     });
                     choice.setNullValid(true);
-                    choice.add(new ErrorHighlighter());
+                    // choice.add(new ErrorHighlighter());                    
                     choice.setLabel(new AbstractReadOnlyModel() {
                         public Object getObject(Component c) {
                             return field.getLabel();
@@ -65,7 +66,10 @@ public class CustomFieldsFormPanel extends BasePanel {
                     if (!field.isOptional()) {
                         choice.setRequired(true);
                     }
-                    f.add(model.bind(choice, field.getName().getText()));
+                    WebMarkupContainer border = new WebMarkupContainer("border");
+                    f.add(border);
+                    border.add(new ErrorHighlighter(choice));
+                    border.add(model.bind(choice, field.getName().getText()));                    
                     listItem.add(f);
                 } else if (field.getName().getType() == 6){ // date picker                        
                     listItem.add(new DatePicker("field", model, field.getName().getText(), !field.isOptional(), field.getLabel()));

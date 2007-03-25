@@ -28,6 +28,14 @@ public class ErrorHighlighter extends AbstractBehavior {
     
     private FormComponent fc;
     
+    public ErrorHighlighter() {
+        // zero arg constructor
+    }
+    
+    public ErrorHighlighter(FormComponent fc) {
+        this.fc = fc;
+    }
+    
     @Override
     public void bind(Component c) {
         if (c instanceof FormComponent) {

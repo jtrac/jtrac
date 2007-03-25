@@ -9,7 +9,7 @@ a:hover { color: black; }
 img { border: none; vertical-align: middle; }
 .multiselect { height: 10em; overflow: auto; background: #FFF; text-align: left; border: thin groove; }
 .error-input { border: 1px solid red; }
-select.error-input { background: #FFC1C1; }
+div.error-input { float: left; }
 .error { color: red; font-weight: bold; margin-bottom: 1em; }
 .info { color: #0000D9; font-weight: bold; }
 .heading { color: #0000D9; font-weight: bold; margin-bottom: 1em; }

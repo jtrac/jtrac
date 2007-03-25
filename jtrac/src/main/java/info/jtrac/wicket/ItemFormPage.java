@@ -169,8 +169,10 @@ public class ItemFormPage extends BasePage {
                 });
                 choice.setNullValid(true);
                 choice.setRequired(true);
-                choice.add(new ErrorHighlighter());            
-                hideAssignedTo.add(choice);
+                WebMarkupContainer border = new WebMarkupContainer("border");
+                border.add(choice);
+                border.add(new ErrorHighlighter(choice));
+                hideAssignedTo.add(border);
                 // notify list =================================================
                 List<ItemUser> choices = UserUtils.convertToItemUserList(userSpaceRoles);
                 ListMultipleChoice itemUsers = new JtracCheckBoxMultipleChoice("itemUsers", choices, new IChoiceRenderer() {
