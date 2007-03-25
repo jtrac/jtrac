@@ -5,7 +5,9 @@ import java.lang.reflect.Method;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import watij.elements.HtmlElement;
 import watij.runtime.ie.IE;
+import static watij.finders.SymbolFactory.*;
 
 public abstract class WatijTestCase extends TestCase {
     
@@ -42,5 +44,9 @@ public abstract class WatijTestCase extends TestCase {
     public final void setUp() {
         ie = (IE) threadLocalIE.get();
     }    
+    
+    protected void click(String id) throws Exception {
+        ie.htmlElement(xpath, "//*[@id='" + id + "']").click();
+    }
     
 }

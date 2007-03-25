@@ -14,30 +14,30 @@ public class AllTest extends WatijTestCase {
     }        
     
     public void testGetLoginPage() throws Exception {
-        ie.start("http://localhost:8080/jtrac/auth/login.htm");
+        ie.start("http://localhost:8080/jtrac");
         assertTrue(ie.containsText("JTrac"));
     }
     
     public void testSuccessfulLogin() throws Exception {        
-        ie.textField(name, "j_username").set("admin");
-        ie.textField(name, "j_password").set("admin");
+        ie.textField(name, "loginName").set("admin");
+        ie.textField(name, "password").set("admin");
         ie.button("Submit").click();
         assertTrue(ie.containsText("DASHBOARD"));
     }     
     
     public void testCreateNewSpaceAndAllocateAdmin() throws Exception {
         
-        ie.link(text, "OPTIONS").click();
+        click("options");
         assertTrue(ie.containsText("Options Menu"));        
         
-        ie.link(text, "Manage Spaces").click();
-        assertTrue(ie.containsText("Space List"));
+        click("spaces");
+        assertTrue(ie.containsText("Space List"));        
         
-        ie.link(text, "[ Create New Space ]").click();
-        assertTrue(ie.containsText("Space Details"));
-        
-        ie.textField(name, "prefixCode").set("TEST");
-        ie.textField(name, "name").set("Test Space");
+        click("create");
+        assertTrue(ie.containsText("Space Details"));        
+                
+        ie.textField(name, "space.name").set("Test Space");
+        ie.textField(name, "space.prefixCode").set("TEST");
         ie.button("Next").click();
         assertTrue(ie.containsText("Custom Fields for Space:"));
         
@@ -45,19 +45,24 @@ public class AllTest extends WatijTestCase {
         assertTrue(ie.containsText("Space Roles"));
         
         ie.button("Save").click();
+        assertTrue(ie.containsText("Space List"));
+        
+        click("allocate");
         assertTrue(ie.containsText("Users Allocated To Space"));
         
-        ie.button("Allocate").click();
+        ie.selectList(name, "user").option(text, "Admin").select();
+        ie.selectList(name, "roleKey").option(text, "DEFAULT").select();        
+        ie.button("Allocate").click();        
         assertTrue(ie.containsText("Admin"));  
            
     }
     
     public void testCreateNewItem() throws Exception {
         
-        ie.link(text, "DASHBOARD").click();
+        click("dashboard");
         assertTrue(ie.containsText("Test Space"));
         
-        ie.link(url, "/jtrac/flow/item?spaceId=1").click();
+        click("new");
         assertTrue(ie.containsText("Summary"));
         
         ie.textField(name, "summary").set("Test Summary");
@@ -69,20 +74,20 @@ public class AllTest extends WatijTestCase {
 
     public void testSearchAllContainsItem() throws Exception {
         
-        ie.link(text, "SEARCH").click();
-        assertTrue(ie.containsText("View Item by ID"));
+        click("search");
+        assertTrue(ie.containsText("Text Search"));
         
         ie.button("Search").click();
         assertTrue(ie.containsText("1 Record Found"));
         
-        ie.link(text, "TEST-1").click();
+        click("refId");
         assertTrue(ie.containsText("History"));
     }
      
     public void testUpdateHistoryForItem() throws Exception {
         
-        ie.selectList(name, "history.status").option(text, "Closed").select();
-        ie.textField(name, "history.comment").set("Test Comment");
+        ie.selectList(name, "status").option(text, "Closed").select();
+        ie.textField(name, "comment").set("Test Comment");
         ie.button("Submit").click();
         assertTrue(ie.containsText("Test Comment"));
         
@@ -90,26 +95,23 @@ public class AllTest extends WatijTestCase {
 
     public void testCreateNewUser() throws Exception {
         
-        ie.link(text, "OPTIONS").click();                
-        ie.link(text, "Manage Users").click();
+        click("options");                
+        click("users");
         assertTrue(ie.containsText("Users and allocated Spaces"));
         
-        ie.link(text, "[ Create New User ]").click();
+        click("create");
         assertTrue(ie.containsText("User Details"));
         
         ie.textField(name, "user.loginName").set("testuser");
         ie.textField(name, "user.name").set("Test User");
         ie.textField(name, "user.email").set("foo@bar.com");
-        ie.button("Submit").click();
-        assertTrue(ie.containsText("Spaces Allocated to User"));
-        
-        ie.button("Cancel").click();        
+        ie.button("Submit").click();       
         assertTrue(ie.containsText("Test User"));    
     }
         
     public void testLogout() throws Exception {
         
-        ie.link(text, "LOGOUT").click();
+        click("logout");
         assertTrue(ie.containsText("Logout Successful"));
         ie.close();
         
