@@ -21,6 +21,7 @@ import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
+import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 
@@ -55,14 +56,11 @@ public abstract class ConfirmPage extends BasePage {
             };
             add(listView);
             add(new Label("warning", warning));
-            Button cancel = new Button("cancel") {
-                @Override
-                public void onSubmit() {
+            add(new Link("cancel") {
+                public void onClick() {
                     setResponsePage(back);
-                }                
-            };
-            cancel.setDefaultFormProcessing(false); 
-            add(cancel);            
+                }
+            });
         }
         
         @Override

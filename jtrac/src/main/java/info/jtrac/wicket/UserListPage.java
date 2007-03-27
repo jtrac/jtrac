@@ -20,6 +20,7 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import java.util.ArrayList;
 import wicket.behavior.SimpleAttributeModifier;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
@@ -65,17 +66,15 @@ public class UserListPage extends BasePage {
                     listItem.add(sam);
                 }                                 
                 listItem.add(new Label("name", new PropertyModel(user, "name")));
-                Link loginName = new Link("loginName") {
+                listItem.add(new Label("loginName", new PropertyModel(user, "loginName")));                                               
+                listItem.add(new WebMarkupContainer("locked").setVisible(user.isLocked()));
+                listItem.add(new Link("edit") {
                     public void onClick() {
                         UserFormPage page = new UserFormPage(user);
                         page.setPrevious(UserListPage.this);
                         setResponsePage(page);
                     }                    
-                };
-                loginName.add(new Label("loginName", new PropertyModel(user, "loginName")));
-                listItem.add(loginName);
-                String locked = user.isLocked() ? "Y" : "";
-                listItem.add(new Label("locked", locked));
+                });                 
                 ListView spaceRoles = new ListView("spaceRoles", new ArrayList(user.getUserSpaceRoles())) {
                     protected void populateItem(ListItem item) {
                         final UserSpaceRole usr = (UserSpaceRole) item.getModelObject();

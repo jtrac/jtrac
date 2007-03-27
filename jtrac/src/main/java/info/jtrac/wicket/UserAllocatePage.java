@@ -87,7 +87,7 @@ public class UserAllocatePage extends BasePage {
                         }                   
                     };
                     if(usr.getUser().getId() == 1 && "ROLE_ADMIN".equals(usr.getRoleKey())) {
-                        deallocate.setEnabled(false);
+                        deallocate.setVisible(false);
                     }
                     listItem.add(deallocate);
                 }
