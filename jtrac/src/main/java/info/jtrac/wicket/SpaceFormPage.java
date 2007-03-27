@@ -20,6 +20,7 @@ import info.jtrac.domain.Space;
 import info.jtrac.util.ValidationUtils;
 import java.io.Serializable;
 import java.util.List;
+import wicket.Component;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Button;
@@ -33,6 +34,7 @@ import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.AbstractValidator;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
+import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
 
 /**
@@ -100,7 +102,13 @@ public class SpaceFormPage extends BasePage {
             final TextField name = new TextField("space.name");
             name.setRequired(true);
             name.add(new ErrorHighlighter());
+            name.setOutputMarkupId(true);
             add(name);
+            SpaceFormPage.this.getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
+                public Object getObject(Component c) {
+                    return "document.getElementById('" + name.getMarkupId() + "').focus()";
+                }
+            }, name);            
             // prefix Code =====================================================
             TextField prefixCode = new TextField("space.prefixCode");
             prefixCode.setRequired(true);
