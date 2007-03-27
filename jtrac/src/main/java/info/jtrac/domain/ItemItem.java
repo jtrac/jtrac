@@ -119,15 +119,12 @@ public class ItemItem implements Serializable {
             return false;
         }
         final ItemItem ii = (ItemItem) o;
-        return (item.equals(ii.getItem()) && type == ii.getType());
+        return (id == ii.getId());
     }
     
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = hash * 31 + item.hashCode();
-        hash = hash * 31 + type;
-        return hash;
+        return (int) id;
     }
     
 }
