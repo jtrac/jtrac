@@ -14,7 +14,7 @@ public class AllTest extends WatijTestCase {
     }        
     
     public void testGetLoginPage() throws Exception {
-        ie.start("http://localhost:8080/jtrac");
+        ie.start("http://localhost:8080/jtrac/app/login");
         assertTrue(ie.containsText("JTrac"));
     }
     
@@ -31,9 +31,9 @@ public class AllTest extends WatijTestCase {
         assertTrue(ie.containsText("Options Menu"));        
         
         click("spaces");
-        assertTrue(ie.containsText("Space List"));        
+        assertTrue(ie.containsText("Space List"));                
         
-        click("create");
+        clickLink("create");
         assertTrue(ie.containsText("Space Details"));        
                 
         ie.textField(name, "space.name").set("Test Space");
@@ -67,7 +67,7 @@ public class AllTest extends WatijTestCase {
         
         ie.textField(name, "summary").set("Test Summary");
         ie.textField(name, "detail").set("Test Detail");
-        ie.selectList(name, "assignedTo").option(text, "Admin").select();
+        ie.selectList(name, "hideAssignedTo:border:assignedTo").option(text, "Admin").select();
         ie.button("Submit").click();
         assertTrue(ie.containsText("TEST-1"));
     }
@@ -80,7 +80,7 @@ public class AllTest extends WatijTestCase {
         ie.button("Search").click();
         assertTrue(ie.containsText("1 Record Found"));
         
-        click("refId");
+        clickLink("refId");
         assertTrue(ie.containsText("History"));
     }
      
@@ -99,7 +99,7 @@ public class AllTest extends WatijTestCase {
         click("users");
         assertTrue(ie.containsText("Users and allocated Spaces"));
         
-        click("create");
+        clickLink("create");
         assertTrue(ie.containsText("User Details"));
         
         ie.textField(name, "user.loginName").set("testuser");

@@ -6,6 +6,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import watij.elements.HtmlElement;
+import watij.elements.HtmlElements;
 import watij.runtime.ie.IE;
 import static watij.finders.SymbolFactory.*;
 
@@ -47,6 +48,17 @@ public abstract class WatijTestCase extends TestCase {
     
     protected void click(String id) throws Exception {
         ie.htmlElement(xpath, "//*[@id='" + id + "']").click();
+    }
+    
+    protected void clickLink(String id) throws Exception {
+        HtmlElements elements =  ie.htmlElements(xpath, "//A");
+        for(int i = 0; i < elements.length(); i++) {
+            HtmlElement element = elements.get(i);
+            if(element.html().contains("wicket:id=\"" + id + "\"")) {   
+                element.click();
+                break;
+            }
+        }
     }
     
 }
