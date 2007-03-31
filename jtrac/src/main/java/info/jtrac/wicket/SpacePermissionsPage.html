@@ -20,8 +20,14 @@
                 </div>                
                 <table class="jtrac" style="empty-cells:show">
                     <tr class="center">
-                        <td colspan="2"><input type="submit" wicket:id="addState" wicket:message="value=space_roles.addState"/></td>
-                        <td colspan="2"><input type="submit" wicket:id="addRole" wicket:message="value=space_roles.addRole"/></td>
+                        <td colspan="2">
+                            <!-- <input type="submit" wicket:id="addState" wicket:message="value=space_roles.addState"/> -->
+                            <input type="submit" wicket:id="addState" value="Add State"/>
+                        </td>
+                        <td colspan="2">
+                            <!-- <input type="submit" wicket:id="addRole" wicket:message="value=space_roles.addRole"/> -->
+                            <input type="submit" wicket:id="addRole" value="Add Role"/>
+                        </td>
                         <th wicket:id="statesColspan"><wicket:message key="space_roles.nextAllowedState"/></th>
                         <th wicket:id="fieldsColspan"><wicket:message key="space_roles.fieldLevelPermissions"/><br/><wicket:message key="space_roles.flpLegend"/></th>       
                     </tr>
@@ -43,8 +49,10 @@
                     </tbody>
                 </table>
                 <p/>
-                <input type="submit" wicket:id="back" wicket:message="value=back"/>
-                <input type="submit" wicket:id="save" wicket:message="value=save"/>
+                <!-- <input type="submit" wicket:id="back" wicket:message="value=back"/> -->
+                <input type="submit" wicket:id="back" value="Back"/>
+                <!-- <input type="submit" wicket:id="save" wicket:message="value=save"/> -->
+                <input type="submit" wicket:id="save" value="Save"/>
                 <p/>
                 <a href="#" wicket:id="cancel"><img src="resources/edit-undo.png" class="nav-link"/><wicket:message key="cancel"/></a>
                 <p/>

@@ -18,24 +18,22 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.User;
 import info.jtrac.util.ValidationUtils;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import wicket.Component;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.AbstractValidator;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
+import wicket.validation.IValidatable;
+import wicket.validation.validator.AbstractValidator;
 
 /**
  * user edit form
@@ -120,34 +118,34 @@ public class UserFormPage extends BasePage {
             loginName.add(new ErrorHighlighter());
             loginName.setOutputMarkupId(true);
             UserFormPage.this.getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                public Object getObject(Component c) {
+                public Object getObject() {
                     return "document.getElementById('" + loginName.getMarkupId() + "').focus()";
                 }
             }, loginName);
             // validation: does user already exist with same loginName?
             loginName.add(new AbstractValidator() {
-                public void validate(FormComponent c) {
-                    String s = (String) c.getConvertedInput();
+                protected void onValidate(IValidatable v) {
+                    String s = (String) v.getValue();
                     User temp = getJtrac().loadUser(s);
                     if(temp != null && temp.getId() != user.getId()) {
-                        error(c);
+                        error(v);
                     }
                 }
                 @Override
-                protected String resourceKey(FormComponent c) {                    
+                protected String resourceKey() {                    
                     return "user_form.loginId.error.exists";
                 }                
             });
             // validation no strange characters
             loginName.add(new AbstractValidator() {
-                public void validate(FormComponent c) {
-                    String s = (String) c.getConvertedInput();                    
+                protected void onValidate(IValidatable v) {
+                    String s = (String) v.getValue();                   
                     if(!ValidationUtils.isValidLoginName(s)) {
-                        error(c);
+                        error(v);
                     }
                 }
                 @Override
-                protected String resourceKey(FormComponent c) {                    
+                protected String resourceKey() {                    
                     return "user_form.loginId.error.invalid";
                 }                
             });            
@@ -182,15 +180,15 @@ public class UserFormPage extends BasePage {
             confirmPasswordField.add(new ErrorHighlighter());
             // validation: do the passwords match?
             confirmPasswordField.add(new AbstractValidator() {
-                public void validate(FormComponent c) {
-                    String b = (String) c.getConvertedInput();
+                protected void onValidate(IValidatable v) {
+                    String b = (String) v.getValue();                    
                     String a = (String) passwordField.getConvertedInput();
                     if((a != null && !a.equals(b)) || (b!= null && !b.equals(a))) {
-                        error(c);
+                        error(v);
                     }
                 }
                 @Override
-                protected String resourceKey(FormComponent c) {                    
+                protected String resourceKey() {                    
                     return "user_form.passwordConfirm.error";
                 }                
             });

@@ -20,22 +20,21 @@ import info.jtrac.domain.Space;
 import info.jtrac.util.ValidationUtils;
 import java.io.Serializable;
 import java.util.List;
-import wicket.Component;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.form.TextArea;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.AbstractValidator;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
+import wicket.validation.IValidatable;
+import wicket.validation.validator.AbstractValidator;
 
 /**
  * space edit form
@@ -105,7 +104,7 @@ public class SpaceFormPage extends BasePage {
             name.setOutputMarkupId(true);
             add(name);
             SpaceFormPage.this.getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                public Object getObject(Component c) {
+                public Object getObject() {
                     return "document.getElementById('" + name.getMarkupId() + "').focus()";
                 }
             }, name);            
@@ -115,53 +114,53 @@ public class SpaceFormPage extends BasePage {
             prefixCode.add(new ErrorHighlighter());
             // validation: greater than 3 chars?
             prefixCode.add(new AbstractValidator() {
-                public void validate(FormComponent c) {
-                    String s = (String) c.getConvertedInput();
+                protected void onValidate(IValidatable v) {
+                    String s = (String) v.getValue();
                     if(s.length() < 3) {
-                        error(c);
+                        error(v);
                     }
                 }
                 @Override
-                protected String resourceKey(FormComponent c) {                    
+                protected String resourceKey() {                    
                     return "space_form.error.prefixCode.tooShort";
                 }                
             });
             prefixCode.add(new AbstractValidator() {
-                public void validate(FormComponent c) {
-                    String s = (String) c.getConvertedInput();
+                protected void onValidate(IValidatable v) {
+                    String s = (String) v.getValue();
                     if(s.length() > 10) {
-                        error(c);
+                        error(v);
                     }
                 }
                 @Override
-                protected String resourceKey(FormComponent c) {                    
+                protected String resourceKey() {                    
                     return "space_form.error.prefixCode.tooLong";
                 }                
             });             
             // validation: format ok?
             prefixCode.add(new AbstractValidator() {
-                public void validate(FormComponent c) {
-                    String s = (String) c.getConvertedInput();
+                protected void onValidate(IValidatable v) {
+                    String s = (String) v.getValue();
                     if(!ValidationUtils.isAllUpperCase(s)) {
-                        error(c);
+                        error(v);
                     }
                 }
                 @Override
-                protected String resourceKey(FormComponent c) {                    
+                protected String resourceKey() {                    
                     return "space_form.error.prefixCode.invalid";
                 }                
             });            
             // validation: does space already exist with same prefixCode ?
             prefixCode.add(new AbstractValidator() {
-                public void validate(FormComponent c) {
-                    String s = (String) c.getConvertedInput();
+                protected void onValidate(IValidatable v) {
+                    String s = (String) v.getValue();
                     Space temp = getJtrac().loadSpace(s);
                     if(temp != null && temp.getId() != space.getId()) {
-                        error(c);
+                        error(v);
                     }
                 }
                 @Override
-                protected String resourceKey(FormComponent c) {                    
+                protected String resourceKey() {                    
                     return "space_form.error.prefixCode.exists";
                 }                
             });            

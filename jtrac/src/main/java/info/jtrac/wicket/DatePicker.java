@@ -19,7 +19,6 @@ package info.jtrac.wicket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import wicket.Component;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.TextField;
@@ -67,7 +66,7 @@ public class DatePicker extends Panel {
         button.setOutputMarkupId(true);
         add(button);
         Label script = new Label("script", new AbstractReadOnlyModel() {
-            public Object getObject(Component component) {
+            public Object getObject() {
                 return "Calendar.setup({"
                     + " inputField : '" + dateField.getMarkupId() + "',"
                     + " ifFormat : '%Y-%m-%d',"

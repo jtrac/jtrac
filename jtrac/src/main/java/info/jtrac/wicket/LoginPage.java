@@ -103,7 +103,7 @@ public class LoginPage extends WebPage {
             add(password);
             // intelligently set focus on the appropriate textbox
             getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                public Object getObject(Component c) {
+                public Object getObject() {
                     String markupId;
                     if(loginName.getConvertedInput() == null) {
                         markupId = loginName.getMarkupId();

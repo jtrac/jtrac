@@ -39,14 +39,16 @@
                         <th><wicket:message key="user_allocate_space.role"/></th>
                         <td>
                             <select wicket:id="roleKey"/>
-                            <input type="submit" wicket:id="allocate" wicket:message="value=space_allocate.allocate"/>
+                            <!-- <input type="submit" wicket:id="allocate" wicket:message="value=space_allocate.allocate"/> -->
+                            <input type="submit" wicket:id="allocate" value="Allocate"/>
                         </td>        
                     </tr>
                 </table>
                 <span class="info" wicket:id="makeAdmin">
                     <p/>
                     <wicket:message key="user_allocate_space.makeUserAdmin"/>
-                    <input type="submit" wicket:id="makeAdmin" wicket:message="value=user_allocate_space.makeAdmin"/>
+                    <!-- <input type="submit" wicket:id="makeAdmin" wicket:message="value=user_allocate_space.makeAdmin"/> -->
+                    <input type="submit" wicket:id="makeAdmin" value="Make Admin"/>
                 </span>
                 <p/>
                 <a href="#" wicket:id="cancel"><img src="resources/edit-undo.png" class="nav-link"/><wicket:message key="cancel"/></a>

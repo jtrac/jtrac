@@ -18,23 +18,19 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Space;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import wicket.Component;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.AbstractValidator;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -42,6 +38,8 @@ import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.PropertyModel;
+import wicket.validation.IValidatable;
+import wicket.validation.validator.AbstractValidator;
 
 /**
  * space field edit form
@@ -144,7 +142,7 @@ public class SpaceFieldFormPage extends BasePage {
             add(label);
             // intelligently set focus on right input field
             getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                public Object getObject(Component c) {                    
+                public Object getObject() {                    
                     if(field.getLabel() == null) {
                         return "document.getElementById('" + label.getMarkupId() + "').focus()";
                     }
@@ -226,14 +224,14 @@ public class SpaceFieldFormPage extends BasePage {
                 optionField = new TextField("option");
                 // validation, does option already exist?
                 optionField.add(new AbstractValidator() {
-                    public void validate(FormComponent c) {
-                        String s = (String) c.getConvertedInput();
+                    protected void onValidate(IValidatable v) {
+                        String s = (String) v.getValue();
                         if(field.hasOption(s)) {
-                            error(c);
+                            error(v);
                         }
                     }
                     @Override
-                    protected String resourceKey(FormComponent c) {                    
+                    protected String resourceKey() {                    
                         return "space_field_form.error.optionExists";
                     }                
                 });

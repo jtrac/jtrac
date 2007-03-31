@@ -16,7 +16,6 @@
 
 package info.jtrac.wicket;
 
-import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
@@ -25,11 +24,8 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
-import info.jtrac.util.AttachmentUtils;
 import info.jtrac.util.UserUtils;
-import java.io.File;
 import java.util.List;
-import wicket.Component;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.CheckBox;
@@ -96,7 +92,7 @@ public class ItemFormPage extends BasePage {
             };            
             BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(itemModel);
             setModel(model);
-            final Item item = (Item) itemModel.getObject(null);
+            final Item item = (Item) itemModel.getObject();
             if(item.getId() > 0) {
                 editMode = true;
                 version = item.getVersion();
@@ -108,7 +104,7 @@ public class ItemFormPage extends BasePage {
             summaryField.setOutputMarkupId(true);
             add(summaryField);
             ItemFormPage.this.getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                public Object getObject(Component c) {
+                public Object getObject() {
                     return "document.getElementById('" + summaryField.getMarkupId() + "').focus()";
                 }
             }, summaryField);

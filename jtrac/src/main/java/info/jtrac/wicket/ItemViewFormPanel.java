@@ -42,10 +42,11 @@ import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.TextArea;
 import wicket.markup.html.form.upload.FileUpload;
 import wicket.markup.html.form.upload.FileUploadField;
-import wicket.markup.html.form.validation.AbstractValidator;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.Model;
+import wicket.validation.IValidatable;
+import wicket.validation.validator.AbstractValidator;
 
 /**
  * Form to update history for item
@@ -129,18 +130,18 @@ public class ItemViewFormPanel extends BasePanel {
             assignedToChoice.setOutputMarkupId(true);
             assignedToChoice.setEnabled(false);
             assignedToChoice.add(new AbstractValidator() {
-                public void validate(FormComponent c) {
+                protected void onValidate(IValidatable v) {                                 
                     // validation: assignedTo cannot be null if status is not null
                     // unless the status is CLOSED
-                    if(c.getConvertedInput() == null) {
+                    if(v.getValue() == null) {
                         Integer i = (Integer) statusChoice.getConvertedInput();
                         if (i != null && i != State.CLOSED) {
-                            error(c);
+                            error(v);
                         }
                     }
                 }
                 @Override
-                protected String resourceKey(FormComponent c) {                    
+                protected String resourceKey() {                    
                     return "item_view_form.assignedTo.error";
                 }
             });

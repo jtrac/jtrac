@@ -4,7 +4,8 @@
             <form wicket:id="form">                
                 <div class="heading">
                     <wicket:message key="space_form.spaceDetails"/>
-                    <input type="submit" wicket:message="value=delete" wicket:id="delete"/>
+                    <!-- <input type="submit" wicket:id="delete" wicket:message="value=delete"/> -->
+                    <input type="submit" wicket:id="delete" value="Delete"/>
                 </div>
                 <div wicket:id="feedback"></div>
                 <table class="jtrac">
@@ -53,7 +54,8 @@
                     <tr>
                         <td/>
                         <td>
-                            <input type="submit" wicket:message="value=next"/>                                                              
+                            <!-- <input type="submit" wicket:message="value=next"/> -->
+                            <input type="submit" value="Next"/>                                                              
                         </td>
                     </tr>                    
                 </table>

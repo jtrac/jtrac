@@ -20,7 +20,6 @@ import info.jtrac.domain.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import wicket.Component;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.DropDownChoice;
@@ -59,7 +58,7 @@ public class CustomFieldsFormPanel extends BasePanel {
                     choice.setNullValid(true);
                     // choice.add(new ErrorHighlighter());                    
                     choice.setLabel(new AbstractReadOnlyModel() {
-                        public Object getObject(Component c) {
+                        public Object getObject() {
                             return field.getLabel();
                         }
                     });                        
@@ -84,7 +83,7 @@ public class CustomFieldsFormPanel extends BasePanel {
                         textField.setRequired(true);
                     }
                     textField.setLabel(new AbstractReadOnlyModel() {
-                        public Object getObject(Component c) {
+                        public Object getObject() {
                             return field.getLabel();
                         }
                     });                         

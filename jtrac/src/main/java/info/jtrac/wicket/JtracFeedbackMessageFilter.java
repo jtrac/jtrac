@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 import wicket.feedback.FeedbackMessage;
 import wicket.feedback.IFeedbackMessageFilter;
+import wicket.markup.html.form.ValidationErrorFeedback;
 
 /**
  * custom feedback message filter, removes duplicates and works in conjunction
@@ -34,8 +35,9 @@ public class JtracFeedbackMessageFilter implements IFeedbackMessageFilter {
     }
     
     public boolean accept(FeedbackMessage fm) {
-        if(!previous.contains(fm.getMessage())) {
-            previous.add(fm.getMessage());
+        ValidationErrorFeedback message = (ValidationErrorFeedback) fm.getMessage();
+        if(!previous.contains(message.getMessage())) {
+            previous.add(message.getMessage());
             return true;
         }
         return false;

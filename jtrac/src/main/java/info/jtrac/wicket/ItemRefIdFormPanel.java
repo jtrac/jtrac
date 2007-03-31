@@ -60,7 +60,7 @@ public class ItemRefIdFormPanel extends BasePanel {
                 public void onAttach() {
                     super.onAttach();
                     getWebPage().getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                        public Object getObject(Component ignored) {
+                        public Object getObject() {
                             return "document.getElementById('" + getMarkupId() + "').focus()";
                         }
                     }, this);

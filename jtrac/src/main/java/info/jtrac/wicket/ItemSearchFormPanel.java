@@ -38,7 +38,6 @@ import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.AbstractValidator;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -46,6 +45,8 @@ import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.PropertyModel;
+import wicket.validation.IValidatable;
+import wicket.validation.validator.AbstractValidator;
 
 /**
  * item search form panel
@@ -136,7 +137,7 @@ public class ItemSearchFormPanel extends BasePanel {
                 public void onAttach() {
                     super.onAttach();
                     getWebPage().getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                        public Object getObject(Component ignored) {
+                        public Object getObject() {
                             return "document.getElementById('" + getMarkupId() + "').focus()";
                         }
                     }, this);
@@ -145,14 +146,14 @@ public class ItemSearchFormPanel extends BasePanel {
             summary.setOutputMarkupId(true);
             // validation: is Lucene search query ok?
             summary.add(new AbstractValidator() {
-                public void validate(FormComponent c) {
-                    String s = (String) c.getConvertedInput();                    
+                protected void onValidate(IValidatable v) {
+                    String s = (String) v.getValue();                    
                     if(s != null && !getJtrac().validateTextSearchQuery(s)) {
-                        error(c);
+                        error(v);
                     }
                 }
                 @Override
-                protected String resourceKey(FormComponent c) {                    
+                protected String resourceKey() {                    
                     return "item_search_form.error.summary.invalid";
                 } 
             });
@@ -383,7 +384,7 @@ public class ItemSearchFormPanel extends BasePanel {
                             @Override
                             public void onComponentTag(Component c, ComponentTag tag) {
                                 PropertyModel modelStart = new PropertyModel(itemSearch, field.getName().getText() + "Start");                                
-                                if(modelStart.getObject(null) != null) {
+                                if(modelStart.getObject() != null) {
                                     tag.put("class", "selected");
                                 }
                             }                
@@ -392,7 +393,7 @@ public class ItemSearchFormPanel extends BasePanel {
                             @Override
                             public void onComponentTag(Component c, ComponentTag tag) {
                                 PropertyModel modelEnd = new PropertyModel(itemSearch, field.getName().getText() + "End");                                
-                                if(modelEnd.getObject(null) != null) {                                    
+                                if(modelEnd.getObject() != null) {                                    
                                     tag.put("class", "selected");
                                 }
                             }                

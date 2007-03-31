@@ -19,7 +19,6 @@ package info.jtrac.wicket;
 import info.jtrac.Jtrac;
 import info.jtrac.domain.AbstractItem;
 import java.util.List;
-import wicket.Component;
 import wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
@@ -80,7 +79,7 @@ public class IndexRebuildPage extends BasePage {
                     // poll and update the progress every 5 seconds
                     progress.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(5)));
                     IModel model = new AbstractReadOnlyModel() {
-                        public Object getObject(Component c) {
+                        public Object getObject() {
                             if(finished) {
                                 // reshow the page, with success message
                                 setResponsePage(new IndexRebuildPage(true));

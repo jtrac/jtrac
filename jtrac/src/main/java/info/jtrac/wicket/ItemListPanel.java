@@ -70,7 +70,7 @@ public class ItemListPanel extends BasePanel {
         
         // hack - ensure that wicket model "attach" happens NOW before pagination logic sp that
         // itemSearch is properly initialized in the LoadableDetachableModel#load() above
-        itemListModel.getObject(null);
+        itemListModel.getObject();
         
         //======================== PAGINATION ==================================
         

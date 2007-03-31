@@ -84,6 +84,9 @@ public class JtracApplication extends WebApplication {
                     return null;
                 }
             }
+            public String loadStringResource(Component component, String key) {                
+                return loadStringResource(null, key, Session.get().getLocale(), null);
+            }            
         });                               
         
         // getPageSettings().setMaxPageVersions(3);

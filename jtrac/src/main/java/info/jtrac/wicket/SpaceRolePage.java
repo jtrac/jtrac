@@ -25,12 +25,12 @@ import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.AbstractValidator;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.BoundCompoundPropertyModel;
+import wicket.validation.IValidatable;
+import wicket.validation.validator.AbstractValidator;
 
 /**
  * space role add / edit form
@@ -105,27 +105,27 @@ public class SpaceRolePage extends BasePage {
             field.add(new ErrorHighlighter());
             // validation: format ok?
             field.add(new AbstractValidator() {
-                public void validate(FormComponent c) {
-                    String s = (String) c.getConvertedInput();
+                protected void onValidate(IValidatable v) {
+                    String s = (String) v.getValue();
                     if(!ValidationUtils.isAllUpperCase(s)) {
-                        error(c);
+                        error(v);
                     }
                 }
                 @Override
-                protected String resourceKey(FormComponent c) {                    
+                protected String resourceKey() {                    
                     return "space_role_form.error.role.invalid";
                 }                
             });
             // validation: already exists?
             field.add(new AbstractValidator() {
-                public void validate(FormComponent c) {
-                    String s = (String) c.getConvertedInput();
+                protected void onValidate(IValidatable v) {
+                    String s = (String) v.getValue();
                     if(space.getMetadata().getRoles().containsKey(s)) {
-                        error(c);
+                        error(v);
                     }
                 }
                 @Override
-                protected String resourceKey(FormComponent c) {                    
+                protected String resourceKey() {                    
                     return "space_role_form.error.role.exists";
                 }                
             });            

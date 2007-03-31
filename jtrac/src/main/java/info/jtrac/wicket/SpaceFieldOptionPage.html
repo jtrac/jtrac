@@ -5,11 +5,13 @@
                 <div class="heading">
                     <wicket:message key="space_field_option_edit.editOption"/>:
                     <span wicket:id="label"></span>
-                    <input type="submit" wicket:id="delete" wicket:message="value=delete"/>
+                    <!-- <input type="submit" wicket:id="delete" wicket:message="value=delete"/> -->
+                    <input type="submit" wicket:id="delete" value="Delete"/>
                 </div>
                 <div wicket:id="feedback"></div>
                 <input wicket:id="option"/>
-                <input type="submit" wicket:message="value=submit"/>
+                <!-- <input type="submit" wicket:message="value=submit"/> -->
+                <input type="submit" value="Submit"/>
                 <p/>
                 <a href="#" wicket:id="cancel"><img src="resources/edit-undo.png" class="nav-link"/><wicket:message key="cancel"/></a>
             </form>
