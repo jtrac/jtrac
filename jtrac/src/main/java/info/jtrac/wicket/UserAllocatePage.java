@@ -66,12 +66,47 @@ public class UserAllocatePage extends BasePage {
     
     private class UserAllocateForm extends Form {                
         
+        private Space space;
+        private String roleKey;
+
+        public Space getSpace() {
+            return space;
+        }
+
+        public void setSpace(Space space) {
+            this.space = space;
+        }
+
+        public String getRoleKey() {
+            return roleKey;
+        }
+
+        public void setRoleKey(String roleKey) {
+            this.roleKey = roleKey;
+        }        
+                        
+        private DropDownChoice roleKeyChoice;        
+        private Button allocateButton;
+                
+        /**
+         * function that attempts to pre-select roleKey for convenience
+         * used on form init and also on Ajax onChange event for Space choice
+         */
+        private void initRoleChoice(Space space) {
+            List<String> roleKeys = new ArrayList(space.getMetadata().getRoles().keySet());
+            if(roleKeys.size() == 1) {
+                // pre select role for convenience
+                roleKey = roleKeys.get(0);
+            }
+            roleKeyChoice.setChoices(roleKeys);                    
+            roleKeyChoice.setEnabled(true);
+            allocateButton.setEnabled(true);            
+        }
+        
         public UserAllocateForm(String id) {
             
-            super(id);                            
-            
-            UserSpaceRole usr = new UserSpaceRole();            
-            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(usr);
+            super(id);                                                         
+            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(this);
             setModel(model);
             
             add(new FeedbackPanel("feedback"));
@@ -116,6 +151,7 @@ public class UserAllocatePage extends BasePage {
                             setResponsePage(new UserAllocatePage(userId, previous));
                         }                   
                     };
+                    // make it impossible to remove the first user ensuring there is always an admin
                     if(usr.getUser().getId() == 1 && "ROLE_ADMIN".equals(usr.getRoleKey())) {
                         deallocate.setVisible(false);
                     }
@@ -123,7 +159,7 @@ public class UserAllocatePage extends BasePage {
                 }
             });                       
             
-            List<Space> spaces = getJtrac().findUnallocatedSpacesForUser(user.getId());
+            List<Space> spaces = getJtrac().findUnallocatedSpacesForUser(user.getId());            
             
             DropDownChoice spaceChoice = new DropDownChoice("space", spaces, new IChoiceRenderer() {
                 public Object getDisplayValue(Object o) {
@@ -135,7 +171,7 @@ public class UserAllocatePage extends BasePage {
             });            
             spaceChoice.setNullValid(true);
             
-            final DropDownChoice roleKeyChoice = new DropDownChoice("roleKey");            
+            roleKeyChoice = new DropDownChoice("roleKey");            
             roleKeyChoice.setOutputMarkupId(true);
             roleKeyChoice.setEnabled(false);
             roleKeyChoice.setRequired(true);
@@ -143,21 +179,27 @@ public class UserAllocatePage extends BasePage {
             roleKeyChoice.add(new ErrorHighlighter());
             add(roleKeyChoice);
             
-            final Button allocateButton = new Button("allocate") {
+            allocateButton = new Button("allocate") {
                 @Override
-                public void onSubmit() {     
-                    UserSpaceRole usr = (UserSpaceRole) UserAllocateForm.this.getModelObject();
-                    if(usr.getSpace() == null || usr.getRoleKey() == null) {
+                public void onSubmit() {                    
+                    if(space == null || roleKey == null) {
                         return;
                     }
-                    getJtrac().storeUserSpaceRole(user, usr.getSpace(), usr.getRoleKey());
+                    getJtrac().storeUserSpaceRole(user, space, roleKey);
                     refreshPrincipal(user);
-                    setResponsePage(new UserAllocatePage(userId, previous, usr.getSpace().getId()));
+                    setResponsePage(new UserAllocatePage(userId, previous, space.getId()));
                 }                   
             };
             allocateButton.setOutputMarkupId(true);
             allocateButton.setEnabled(false);
             add(allocateButton);           
+            
+            if(spaces.size() == 1) {
+                // pre select space for convenience
+                space = spaces.get(0);
+                // see if the role can be pre selected also at least populate choice, enable button etc
+                initRoleChoice(space);
+            }            
             
             spaceChoice.add(new AjaxFormComponentUpdatingBehavior("onChange") {
                 protected void onUpdate(AjaxRequestTarget target) {
@@ -167,10 +209,8 @@ public class UserAllocatePage extends BasePage {
                         allocateButton.setEnabled(false);
                     } else {
                         Space temp = getJtrac().loadSpace(space.getId());
-                        List<String> roleKeys = new ArrayList(temp.getMetadata().getRoles().keySet());
-                        roleKeyChoice.setChoices(roleKeys);                    
-                        roleKeyChoice.setEnabled(true);
-                        allocateButton.setEnabled(true);
+                        // populate choice, enable button etc
+                        initRoleChoice(temp);
                     }
                     target.addComponent(roleKeyChoice);
                     target.addComponent(allocateButton);
