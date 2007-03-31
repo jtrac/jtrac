@@ -328,14 +328,17 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>                    
-                    <include>**/*.*</include>
+                    <include>**</include>
                 </includes>
             </resource>            
             <resource>
                 <directory>src/main/java</directory>
                 <includes>                    
-                    <include>**/*.html</include>
+                    <include>**</include>
                 </includes>
+                <excludes>                    
+                    <exclude>**/*.java</exclude>
+                </excludes>                
             </resource>
         </resources>
         <plugins>
