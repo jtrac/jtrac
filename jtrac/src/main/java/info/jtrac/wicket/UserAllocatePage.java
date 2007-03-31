@@ -87,7 +87,7 @@ public class UserAllocatePage extends BasePage {
             add(new ListView("usrs", usrs) {
                 protected void populateItem(ListItem listItem) {
                     final UserSpaceRole usr = (UserSpaceRole) listItem.getModelObject();
-                    if(selectedSpaceId == usr.getSpace().getId()) {
+                    if(usr.getSpace() != null && usr.getSpace().getId() == selectedSpaceId) {
                         listItem.add(new SimpleAttributeModifier("class", "selected"));
                     } else if(listItem.getIndex() % 2 == 1) {
                         listItem.add(sam);
