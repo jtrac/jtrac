@@ -69,12 +69,48 @@ public class UserFormPage extends BasePage {
     
     private class UserForm extends Form {
         
+        private transient User user;
+        private String password;
+        private String passwordConfirm;
+        private boolean sendNotifications;
+        
+        public User getUser() {
+            return user;
+        }
+        
+        public void setUser(User user) {
+            this.user = user;
+        }
+        
+        public String getPassword() {
+            return password;
+        }
+        
+        public void setPassword(String password) {
+            this.password = password;
+        }        
+        
+        public String getPasswordConfirm() {
+            return passwordConfirm;
+        }
+        
+        public void setPasswordConfirm(String passwordConfirm) {
+            this.passwordConfirm = passwordConfirm;
+        }
+
+        public boolean isSendNotifications() {
+            return sendNotifications;
+        }
+        
+        public void setSendNotifications(boolean sendNotifications) {
+            this.sendNotifications = sendNotifications;
+        }         
+        
         public UserForm(String id, final User user) {
             
             super(id);
-            UserFormModel modelObject = new UserFormModel();
-            modelObject.setUser(user);
-            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(modelObject);
+            this.user = user;
+            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(this);
             setModel(model);
             
             // login name ======================================================
@@ -169,11 +205,9 @@ public class UserFormPage extends BasePage {
         }        
         
         @Override
-        protected void onSubmit() {
-            UserFormModel model = (UserFormModel) getModelObject();
-            User user = model.getUser();
-            if(model.getPassword() != null) {
-                getJtrac().storeUser(user, model.getPassword(), model.isSendNotifications());
+        protected void onSubmit() {                        
+            if(password != null) {
+                getJtrac().storeUser(user, password, sendNotifications);
             } else {
                 getJtrac().storeUser(user);
             }
@@ -196,53 +230,5 @@ public class UserFormPage extends BasePage {
             }
         }        
     }        
-        
-    /**
-     * custom form backing object that wraps User and adds some fields
-     * required for the create / edit use case
-     */
-    private class UserFormModel implements Serializable {
-        
-        private transient User user;
-        private String password;
-        private String passwordConfirm;
-        private boolean sendNotifications;
-        
-        public User getUser() {
-            if (user == null) {
-                user = new User();
-            }
-            return user;
-        }
-        
-        public void setUser(User user) {
-            this.user = user;
-        }
-        
-        public String getPassword() {
-            return password;
-        }
-        
-        public void setPassword(String password) {
-            this.password = password;
-        }        
-        
-        public String getPasswordConfirm() {
-            return passwordConfirm;
-        }
-        
-        public void setPasswordConfirm(String passwordConfirm) {
-            this.passwordConfirm = passwordConfirm;
-        }
-
-        public boolean isSendNotifications() {
-            return sendNotifications;
-        }
-        
-        public void setSendNotifications(boolean sendNotifications) {
-            this.sendNotifications = sendNotifications;
-        }  
-               
-    }
     
 }
