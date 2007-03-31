@@ -39,14 +39,14 @@ public class ValidationUtils {
             return false;
         }
         return input.matches("[A-Z0-9]+");
-    }
+    }    
     
-    public static boolean isAllLowerCase(String input) {
+    public static boolean isValidLoginName(String input) {
         if (input == null) {
             return false;
-        }        
-        return input.matches("[a-z0-9]+");
-    }
+        }
+        return input.matches("[A-Za-z0-9._\\-]+");
+    }     
     
     /**
      * Only letters are allowed, not even numbers

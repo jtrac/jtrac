@@ -11,11 +11,16 @@ public class ValidationUtilsTest extends TestCase {
         assertFalse(ValidationUtils.isAllUpperCase("AB CD"));        
     }
     
-    public void testLowerCase() {
-        assertTrue(ValidationUtils.isAllLowerCase("abcd"));
-        assertTrue(ValidationUtils.isAllLowerCase("abcd123"));
-        assertFalse(ValidationUtils.isAllLowerCase("ab-cd"));
-        assertFalse(ValidationUtils.isAllLowerCase("ab cd"));
+    public void testValidLoginName() {
+        assertTrue(ValidationUtils.isValidLoginName("abcd"));
+        assertTrue(ValidationUtils.isValidLoginName("abcd123"));
+        assertTrue(ValidationUtils.isValidLoginName("ab-cd"));
+        assertTrue(ValidationUtils.isValidLoginName("ab.cd"));
+        assertTrue(ValidationUtils.isValidLoginName("ab_cd"));
+        assertTrue(ValidationUtils.isValidLoginName("Ab-Cd"));
+        assertFalse(ValidationUtils.isValidLoginName("ab%cd"));
+        assertFalse(ValidationUtils.isValidLoginName("ab:cd"));
+        assertFalse(ValidationUtils.isValidLoginName("ab cd"));
     }
     
     public void testCamelDashCase() {

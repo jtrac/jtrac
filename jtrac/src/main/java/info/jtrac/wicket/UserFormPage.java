@@ -17,6 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.User;
+import info.jtrac.util.ValidationUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -137,6 +138,19 @@ public class UserFormPage extends BasePage {
                     return "user_form.loginId.error.exists";
                 }                
             });
+            // validation no strange characters
+            loginName.add(new AbstractValidator() {
+                public void validate(FormComponent c) {
+                    String s = (String) c.getConvertedInput();                    
+                    if(!ValidationUtils.isValidLoginName(s)) {
+                        error(c);
+                    }
+                }
+                @Override
+                protected String resourceKey(FormComponent c) {                    
+                    return "user_form.loginId.error.invalid";
+                }                
+            });            
             add(loginName);
             // name ============================================================
             add(new TextField("user.name").setRequired(true).add(new ErrorHighlighter()));
