@@ -208,12 +208,15 @@ public class SpacePermissionsPage extends BasePage {
             add(new Button("save") {
                 @Override
                 public void onSubmit() {
+                    boolean isNewSpace = space.getId() == 0;
                     getJtrac().storeSpace(space);
                     // current user may be allocated to this space, and e.g. name could have changed
                     refreshPrincipal();
-                    if(previous == null) {
+                    if(isNewSpace) {
+                        setResponsePage(new SpaceAllocatePage(space.getId(), previous));
+                    } else if(previous == null) {
                         setResponsePage(new OptionsPage());
-                    } else {
+                    } else {                        
                         if (previous instanceof SpaceListPage) {
                             ((SpaceListPage) previous).setSelectedSpaceId(space.getId());
                         }                      

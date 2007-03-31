@@ -10,8 +10,7 @@
                     <th><wicket:message key="user_list.userName"/></th>
                     <th><wicket:message key="user_list.loginName"/></th>
                     <th><wicket:message key="user_list.locked"/></th>
-                    <th><wicket:message key="user_list.editProfile"/></th>                    
-                    <th><wicket:message key="user_list.spaceRole"/></th>
+                    <th><wicket:message key="user_list.editProfile"/></th>                                        
                     <th><wicket:message key="user_list.allocateSpaceRole"/></th>
                 </tr>            
                 <tr wicket:id="users">
@@ -19,12 +18,6 @@
                     <td wicket:id="loginName"></td>
                     <td><img src="resources/dialog-warning.png" wicket:id="locked"/></td>
                     <td wicket:id="edit" align="center"><a href="#"><img src="resources/accessories-text-editor.png"/></a></td>
-                    <td>
-                        <span wicket:id="spaceRoles">
-                            <span wicket:id="space"><a href="#" wicket:id="space"></a></span>
-                            (<i wicket:id="role"></i>)
-                        </span>
-                    </td>
                     <td wicket:id="allocate" align="center"><a href="#"><img src="resources/internet-web-browser.png"/></a></td>
                 </tr>                
             </table>

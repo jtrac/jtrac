@@ -186,6 +186,12 @@ public class UserFormPage extends BasePage {
                 if (previous instanceof UserListPage) {
                     ((UserListPage) previous).setSelectedUserId(user.getId());
                 }
+                if (previous instanceof SpaceAllocatePage) {
+                    SpaceAllocatePage sap = (SpaceAllocatePage) previous;
+                    // TODO refactor this better, but for now this is so that the newly created user 
+                    // appears in the drop down for allocation and is preselected
+                    previous = new SpaceAllocatePage(sap.getSpaceId(), sap.getPrevious(), user.getId());
+                }
                 setResponsePage(previous);
             }
         }        

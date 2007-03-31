@@ -13,7 +13,12 @@
                         <th><wicket:message key="user_allocate_space.remove"/></th>
                     </tr>
                     <tr wicket:id="usrs">
-                        <td wicket:id="space.name"></td>
+                        <td>
+                            <span wicket:id="space">
+                                <span wicket:id="name"></span>
+                                [<a href="#" wicket:id="prefixCode"><span wicket:id="prefixCode"></span></a>]
+                            </span>
+                        </td>
                         <td wicket:id="roleKey"></td>                        
                         <td align="center"><input type="image" wicket:id="deallocate" src="../resources/remove.png"/></td>
                     </tr>

@@ -75,21 +75,9 @@ public class UserListPage extends BasePage {
                         setResponsePage(page);
                     }                    
                 });                 
-                ListView spaceRoles = new ListView("spaceRoles", new ArrayList(user.getUserSpaceRoles())) {
-                    protected void populateItem(ListItem item) {
-                        final UserSpaceRole usr = (UserSpaceRole) item.getModelObject();
-                        item.add(new Link("space") {
-                            public void onClick() {
-                                setResponsePage(new SpaceAllocatePage(usr.getSpace(), UserListPage.this));
-                            }                            
-                        }.add(new Label("space", new PropertyModel(usr, "space.prefixCode"))));
-                        item.add(new Label("role", new PropertyModel(usr, "roleKey")));
-                    }                    
-                };
-                listItem.add(spaceRoles);
                 listItem.add(new Link("allocate") {
                     public void onClick() {
-                        setResponsePage(new UserAllocatePage(user, UserListPage.this));
+                        setResponsePage(new UserAllocatePage(user.getId(), UserListPage.this));
                     }                    
                 });
             }            

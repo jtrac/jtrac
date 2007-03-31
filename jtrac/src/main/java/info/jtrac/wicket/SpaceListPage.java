@@ -77,10 +77,8 @@ public class SpaceListPage extends BasePage {
                 listItem.add(edit);
                 listItem.add(new Label("description", new PropertyModel(space, "description")));
                 listItem.add(new Link("allocate") {
-                    public void onClick() {
-                        Space temp = getJtrac().loadSpace(space.getId());
-                        temp.getMetadata().getXmlString();  // hack to override lazy loading                        
-                        setResponsePage(new SpaceAllocatePage(temp, SpaceListPage.this));
+                    public void onClick() {                                                                     
+                        setResponsePage(new SpaceAllocatePage(space.getId(), SpaceListPage.this));
                     }                    
                 });
             }            

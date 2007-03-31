@@ -32,6 +32,7 @@ import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.BoundCompoundPropertyModel;
+import wicket.model.LoadableDetachableModel;
 import wicket.model.PropertyModel;
 
 /**
@@ -40,37 +41,96 @@ import wicket.model.PropertyModel;
 public class SpaceAllocatePage extends BasePage {
     
     private WebPage previous;
-    private Space space;
+    private long spaceId;
+    private long selectedUserId;
+
+    public void setSelectedUserId(long selectedUserId) {
+        this.selectedUserId = selectedUserId;
+    }
     
-    public SpaceAllocatePage(Space s, WebPage previous) {
-        this.space = getJtrac().loadSpace(s.getId());
-        this.previous = previous;
+    public long getSpaceId() {
+        return spaceId;
+    }
+
+    public WebPage getPrevious() {
+        return previous;
+    }    
+    
+    public SpaceAllocatePage(long spaceId, WebPage previous) {        
+        this.spaceId = spaceId;
+        this.previous = previous;        
         add(new SpaceAllocateForm("form"));
     }
     
+    public SpaceAllocatePage(long spaceId, WebPage previous, long selectedUserId) {
+        this.spaceId = spaceId;
+        this.previous = previous;
+        this.selectedUserId = selectedUserId;
+        add(new SpaceAllocateForm("form"));        
+    }    
+    
     private class SpaceAllocateForm extends Form {
         
+        private User user;
+        private String roleKey;
+
+        public String getRoleKey() {
+            return roleKey;
+        }
+
+        public void setRoleKey(String roleKey) {
+            this.roleKey = roleKey;
+        }
+
+        public User getUser() {
+            return user;
+        }
+
+        public void setUser(User user) {
+            this.user = user;
+        }        
+                
         public SpaceAllocateForm(String id) {
             
             super(id);
+                                    
+            if(selectedUserId > 0) {
+                // pre-select newly created user for convenience
+                user = getJtrac().loadUser(selectedUserId);
+            }
             
-            UserSpaceRole usr = new UserSpaceRole();
-            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(usr);
+            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(this);
             setModel(model);
+            
+            final Space space = getJtrac().loadSpace(spaceId);
             
             add(new Label("label", space.getName() + " (" + space.getPrefixCode() + ")"));
             
-            List<UserSpaceRole> usrs = getJtrac().findUserRolesForSpace(space.getId());
+            LoadableDetachableModel usrsModel = new LoadableDetachableModel() {
+                protected Object load() {
+                    logger.debug("loading user space roles list from database");
+                    return getJtrac().findUserRolesForSpace(spaceId);
+                }
+            };                                    
             
             final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
             
-            add(new ListView("usrs", usrs) {
+            add(new ListView("usrs", usrsModel) {
                 protected void populateItem(ListItem listItem) {
-                    if(listItem.getIndex() % 2 == 1) {
-                        listItem.add(sam);
-                    }
                     final UserSpaceRole usr = (UserSpaceRole) listItem.getModelObject();
-                    listItem.add(new Label("loginName", new PropertyModel(usr, "user.loginName")));
+                    if(selectedUserId == usr.getUser().getId()) {
+                        listItem.add(new SimpleAttributeModifier("class", "selected"));
+                    } else if(listItem.getIndex() % 2 == 1) {
+                        listItem.add(sam);
+                    }                                         
+                    listItem.add(new Link("loginName") {
+                        public void onClick() {                            
+                            if(previous instanceof UserAllocatePage) { // prevent recursive stack buildup
+                                previous = null;
+                            }                               
+                            setResponsePage(new UserAllocatePage(usr.getUser().getId(), SpaceAllocatePage.this));
+                        }
+                    }.add(new Label("loginName", new PropertyModel(usr, "user.loginName"))));
                     listItem.add(new Label("name", new PropertyModel(usr, "user.name")));
                     listItem.add(new Label("roleKey", new PropertyModel(usr, "roleKey")));
                     listItem.add(new Button("deallocate") {
@@ -80,15 +140,15 @@ public class SpaceAllocatePage extends BasePage {
                             UserSpaceRole temp = getJtrac().loadUserSpaceRole(usr.getId());
                             getJtrac().removeUserSpaceRole(temp);
                             refreshPrincipal(temp.getUser());
-                            setResponsePage(new SpaceAllocatePage(space, previous));
+                            setResponsePage(new SpaceAllocatePage(spaceId, previous));
                         }
                     });
                 }
             });
             
-            add(new Button("createNewUser") {
+            add(new Link("createNewUser") {
                 @Override
-                public void onSubmit() {
+                public void onClick() {
                     UserFormPage page = new UserFormPage();
                     page.setPrevious(SpaceAllocatePage.this);
                     setResponsePage(page);
@@ -97,18 +157,30 @@ public class SpaceAllocatePage extends BasePage {
             
             List<User> users = getJtrac().findUnallocatedUsersForSpace(space.getId());
             
+            if(user == null && users.size() == 1) {
+                // pre select the user for convenience
+                user = users.get(0);
+            }            
+            
             DropDownChoice userChoice = new DropDownChoice("user", users, new IChoiceRenderer() {
                 public Object getDisplayValue(Object o) {
-                    return ((User) o).getName();
+                    User u = (User) o;
+                    return u.getName() + " (" + u.getLoginName() + ")";
                 }
                 public String getIdValue(Object o, int i) {
                     return ((User) o).getId() + "";
                 }
             });
             userChoice.setNullValid(true);
+
             add(userChoice);
             
             List<String> roleKeys = new ArrayList(space.getMetadata().getRoles().keySet());
+            
+            if(roleKeys.size() == 1) {
+                // pre select the role for convenience
+                roleKey = roleKeys.get(0);
+            }
             
             DropDownChoice roleKeyChoice = new DropDownChoice("roleKey", roleKeys);
             roleKeyChoice.setNullValid(true);
@@ -116,22 +188,31 @@ public class SpaceAllocatePage extends BasePage {
             
             add(new Button("allocate") {
                 @Override
-                public void onSubmit() {
-                    UserSpaceRole usr = (UserSpaceRole) SpaceAllocateForm.this.getModelObject();
-                    if(usr.getUser() == null || usr.getRoleKey() == null) {
+                public void onSubmit() {                    
+                    if(user == null || roleKey == null) {
                         return;
                     }
                     // avoid lazy init problem
-                    User temp = getJtrac().loadUser(usr.getUser().getId());
-                    getJtrac().storeUserSpaceRole(temp, space, usr.getRoleKey());
+                    User temp = getJtrac().loadUser(user.getId());
+                    getJtrac().storeUserSpaceRole(temp, space, roleKey);
                     refreshPrincipal(temp);
-                    setResponsePage(new SpaceAllocatePage(space, previous));
+                    setResponsePage(new SpaceAllocatePage(spaceId, previous, user.getId()));
                 }
             });
             
             // cancel ==========================================================
             add(new Link("cancel") {
                 public void onClick() {
+                    if(previous == null) {
+                        setResponsePage(SpaceListPage.class);
+                        return;
+                    }
+                    if(previous instanceof SpaceListPage) {
+                        ((SpaceListPage) previous).setSelectedSpaceId(space.getId());
+                    }
+                    if(previous instanceof UserAllocatePage) {
+                        ((UserAllocatePage) previous).setSelectedSpaceId(space.getId());
+                    }                    
                     setResponsePage(previous);
                 }
             });
