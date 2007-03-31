@@ -103,7 +103,7 @@ public class UserAllocatePage extends BasePage {
                                 if(previous instanceof SpaceAllocatePage) { // prevent recursive stack buildup
                                     previous = null;
                                 }                                
-                                setResponsePage(new SpaceAllocatePage(usr.getSpace().getId(), UserAllocatePage.this));
+                                setResponsePage(new SpaceAllocatePage(usr.getSpace().getId(), UserAllocatePage.this, userId));
                             }
                         }.add(new Label("prefixCode", usr.getSpace().getPrefixCode())));
                     } 

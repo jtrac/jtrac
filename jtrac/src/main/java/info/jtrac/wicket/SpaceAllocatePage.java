@@ -128,7 +128,7 @@ public class SpaceAllocatePage extends BasePage {
                             if(previous instanceof UserAllocatePage) { // prevent recursive stack buildup
                                 previous = null;
                             }                               
-                            setResponsePage(new UserAllocatePage(usr.getUser().getId(), SpaceAllocatePage.this));
+                            setResponsePage(new UserAllocatePage(usr.getUser().getId(), SpaceAllocatePage.this, spaceId));
                         }
                     }.add(new Label("loginName", new PropertyModel(usr, "user.loginName"))));
                     listItem.add(new Label("name", new PropertyModel(usr, "user.name")));
