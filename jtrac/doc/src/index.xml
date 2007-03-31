@@ -1181,6 +1181,12 @@ java -cp bsh-2.0b4.jar;hsqldb-1.8.0.1.jar bsh.Interpreter jtrac-hsqldb-2_0rc3-to
                 <ulink url="http://ptrthomas.wordpress.com/2006/04/18/another-way-to-integrate-maven-2-with-ant-and-netbeans/">this blog post.</ulink>
             </para>
             <para>
+                But if you are comfortable using Maven, the pom.xml is Maven 2 compliant which means that you can 
+                <ulink url="http://maven.apache.org/plugins/maven-war-plugin/">directly build the war file</ulink> without Ant.
+                You can also choose to use the <ulink url="http://mortbay.org/maven-plugin/">maven-jetty-plugin</ulink> by
+                uncommenting the section in pom.xml that declares this.
+            </para>            
+            <para>
                 Although NetBeans is preferred by the JTrac developers, depending on an "IDE Neutral" Ant script
                 ensures that you would easily be able to use Eclipse (or any other IDE of your choice) without any problems.
             </para>
