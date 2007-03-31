@@ -35,4 +35,4 @@ tr.sortable a { color: black; }
 tr.sortable a:hover { color: #0000D9; }
 li.feedbackPanelERROR { list-style: none; background: url("dialog-error.png") no-repeat; padding-left: 2em; margin: 0.5em 0 0 -1em; }
 .menu-option div { font-weight: bold; background-color: #e1ecfe; padding-left: 1em; 
-    padding-right: 1em; margin-bottom: 1.5em; text-align: right; }
+    padding-right: 1em; margin-bottom: 1.5em; }

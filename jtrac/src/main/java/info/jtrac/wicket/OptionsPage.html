@@ -5,12 +5,36 @@
             <table class="jtrac">
                 <tr>
                     <td class="menu-option">
-                        <div wicket:id="profile"><a href="#"><wicket:message key="options.editYourProfile"/></a></div>
-                        <div wicket:id="users"><a href="#"><wicket:message key="options.manageUsers"/></a></div>
-                        <div wicket:id="spaces"><a href="#"><wicket:message key="options.manageSpaces"/></a></div>
-                        <div wicket:id="settings"><a href="#"><wicket:message key="options.manageSettings"/></a></div>
-                        <div wicket:id="indexes"><a href="#"><wicket:message key="options.rebuildIndexes"/></a></div>
-                        <div wicket:id="import"><a href="#"><wicket:message key="options.importFromExcel"/></a></div>
+                        <div wicket:id="profile">
+                            <a href="#">
+                                <img src="resources/system-user.png" class="nav-link"/><wicket:message key="options.editYourProfile"/>
+                            </a>
+                        </div>
+                        <div wicket:id="users">
+                            <a href="#">
+                                <img src="resources/system-users.png" class="nav-link"/><wicket:message key="options.manageUsers"/>                                
+                            </a>
+                        </div>
+                        <div wicket:id="spaces">
+                            <a href="#">
+                                <img src="resources/internet-web-browser.png" class="nav-link"/><wicket:message key="options.manageSpaces"/>
+                            </a>
+                        </div>
+                        <div wicket:id="settings">
+                            <a href="#">
+                                <img src="resources/preferences-system.png" class="nav-link"/><wicket:message key="options.manageSettings"/>
+                            </a>
+                        </div>
+                        <div wicket:id="indexes">
+                            <a href="#">
+                                <img src="resources/view-refresh.png" class="nav-link"/><wicket:message key="options.rebuildIndexes"/>
+                            </a>
+                        </div>
+                        <div wicket:id="import">
+                            <a href="#">
+                                <wicket:message key="options.importFromExcel"/>
+                            </a>
+                        </div>
                     </td>
                 </tr>
             </table>
