@@ -35,9 +35,9 @@
                                     <tr wicket:id="options">
                                         <td wicket:id="key"></td>
                                         <td wicket:id="value" class="alt"></td>
-                                        <td><input type="submit" value="/\" wicket:id="up"/></td>
-                                        <td><input type="submit" value="\/" wicket:id="down"/></td>
-                                        <td><input type="submit" wicket:id="edit" wicket:message="value=edit"/></td>
+                                        <td><input type="image" wicket:id="up" src="../resources/go-up.png"/></td>
+                                        <td><input type="image" wicket:id="down" src="../resources/go-down.png"/></td>
+                                        <td><input type="image" wicket:id="edit" src="../resources/accessories-text-editor.png"/></td>
                                     </tr>                                
                                 </table>
                             </td>                        
@@ -55,7 +55,7 @@
                         <td><input type="submit" wicket:id="done" wicket:message="value=space_field_form.done"/></td>
                     </tr>
                 </table>                
-                <a href="#" wicket:id="cancel"><wicket:message key="cancel"/></a>
+                <a href="#" wicket:id="cancel"><img src="resources/edit-undo.png" class="nav-link"/><wicket:message key="cancel"/></a>
             </form>
         </wicket:extend>
     </body>

@@ -103,9 +103,8 @@ public class SpacePermissionsPage extends BasePage {
             List<Integer> stateKeys = new ArrayList(statesMap.keySet());
             final List<Role> roles = new ArrayList(space.getMetadata().getRoleList());
             final SimpleAttributeModifier rowspan = new SimpleAttributeModifier("rowspan", roles.size() + "");
-            final SimpleAttributeModifier yes = new SimpleAttributeModifier("value", "Y");
-            final SimpleAttributeModifier no = new SimpleAttributeModifier("value", " ");
-            final SimpleAttributeModifier selected = new SimpleAttributeModifier("class", "selected");
+            final SimpleAttributeModifier yes = new SimpleAttributeModifier("src", "../resources/status-green.png");
+            final SimpleAttributeModifier no = new SimpleAttributeModifier("src", "../resources/status-grey.png");            
             final SimpleAttributeModifier view = new SimpleAttributeModifier("value", "V");
             final SimpleAttributeModifier edit = new SimpleAttributeModifier("value", "E");
             final SimpleAttributeModifier hide = new SimpleAttributeModifier("value", "H");
@@ -167,8 +166,7 @@ public class SpacePermissionsPage extends BasePage {
                                     }
                                     State state = role.getStates().get(stateKeyRow);
                                     if(state != null && state.getTransitions().contains(stateKeyCol)) {
-                                        stateButton.add(yes);
-                                        stateButton.add(selected);
+                                        stateButton.add(yes);                                        
                                     } else {
                                         stateButton.add(no);
                                     }

@@ -1,14 +1,13 @@
 <html>
     <head>
         <wicket:head>
-            <style>
-                .roles input { width: 2em; }
+            <style>                
                 .workflow { border-collapse: collapse; }
                 .workflow table { width: 100%; height: 100%; }
                 .workflow td { border: 1px solid black; font-size: 80%; padding-left: 0.2em; padding-right: 0.2em; }
                 .state { background: #e1ecfe; }
                 .mirror { background: #CCCCCC; }
-                .transition { font-style: italic; }  
+                .transition { font-style: italic; }                                  
             </style>
         </wicket:head>
     </head>
@@ -35,10 +34,10 @@
                     <tbody wicket:id="states" class="roles">
                         <tr wicket:id="roles">
                             <td wicket:id="state"></td>
-                            <td wicket:id="editState"><input type="submit" wicket:id="editState" value=".."/></td>
+                            <td wicket:id="editState"><input type="image" wicket:id="editState" src="../resources/accessories-text-editor.png"/></td>
                             <td wicket:id="role" class="transition"></td>
-                            <td><input type="submit" wicket:id="editRole" value=".."/></td>
-                            <td wicket:id="stateHeads"><input type="submit" wicket:id="state"/></td>
+                            <td><input type="image" wicket:id="editRole" src="../resources/accessories-text-editor.png"/></td>
+                            <td wicket:id="stateHeads"><input type="image" wicket:id="state"/></td>
                             <td wicket:id="fieldHeads" class="info"><input type="submit" wicket:id="field"/></td>
                         </tr>
                     </tbody>
@@ -47,7 +46,7 @@
                 <input type="submit" wicket:id="back" wicket:message="value=back"/>
                 <input type="submit" wicket:id="save" wicket:message="value=save"/>
                 <p/>
-                <a href="#" wicket:id="cancel"><wicket:message key="cancel"/></a>
+                <a href="#" wicket:id="cancel"><img src="resources/edit-undo.png" class="nav-link"/><wicket:message key="cancel"/></a>
                 <p/>
                 <span wicket:id="workflow"></span>
             </form>
