@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import wicket.Component;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
@@ -38,6 +39,7 @@ import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
+import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.PropertyModel;
 
@@ -61,20 +63,39 @@ public class SpaceFieldFormPage extends BasePage {
     
     private class SpaceFieldForm extends Form {
         
-       private JtracFeedbackMessageFilter filter;
+        private JtracFeedbackMessageFilter filter;
+        private TextField optionField;
         
+        private transient Field field;
+        private String option;
+
+        public Field getField() {
+            return field;
+        }
+
+        public void setField(Field field) {
+            this.field = field;
+        }
+
+        public String getOption() {
+            return option;
+        }
+
+        public void setOption(String option) {
+            this.option = option;
+        }       
+       
         public SpaceFieldForm(String id, final Field field) {
             
             super(id);
+            this.field = field;
             
             FeedbackPanel feedback = new FeedbackPanel("feedback");
             filter = new JtracFeedbackMessageFilter();
             feedback.setFilter(filter);            
             add(feedback);
             
-            SpaceFieldFormModel modelObject = new SpaceFieldFormModel();
-            modelObject.setField(field);
-            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(modelObject);
+            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(this);
             setModel(model);
             
             // delete button only if edit ======================================
@@ -118,8 +139,22 @@ public class SpaceFieldFormPage extends BasePage {
             // label ===========================================================
             final TextField label = new TextField("field.label");
             label.setRequired(true);
+            label.setOutputMarkupId(true);
             label.add(new ErrorHighlighter());            
             add(label);
+            // intelligently set focus on right input field
+            getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
+                public Object getObject(Component c) {                    
+                    if(field.getLabel() == null) {
+                        return "document.getElementById('" + label.getMarkupId() + "').focus()";
+                    }
+                    if(optionField != null) {
+                        return "document.getElementById('" + optionField.getMarkupId() + "').focus()";
+                    }
+                    return null;
+                }
+            }, label);             
+            
             // optional ========================================================
             add(new CheckBox("field.optional"));            
             // options =========================================================
@@ -137,9 +172,9 @@ public class SpaceFieldFormPage extends BasePage {
                         final String key = (String) listItem.getModelObject();
                         listItem.add(new Label("key", key));
                         listItem.add(new Label("value", optionsMap.get(key)));
-                        listItem.add(new Button("up") {
+                        listItem.add(new Link("up") {
                             @Override
-                            public void onSubmit() {                                
+                            public void onClick() {                                
                                 int index = options.indexOf(key);
                                 int swapIndex = index - 1;
                                 if (swapIndex < 0) {
@@ -160,9 +195,9 @@ public class SpaceFieldFormPage extends BasePage {
                                 setResponsePage(new SpaceFieldFormPage(space, field, previous));
                             }                            
                         });
-                        listItem.add(new Button("down") {
+                        listItem.add(new Link("down") {
                             @Override
-                            public void onSubmit() {
+                            public void onClick() {
                                 int index = options.indexOf(key);
                                 int swapIndex = index + 1;
                                 if (swapIndex == options.size() ) {
@@ -179,18 +214,18 @@ public class SpaceFieldFormPage extends BasePage {
                                 setResponsePage(new SpaceFieldFormPage(space, field, previous));
                             }                            
                         });
-                        listItem.add(new Button("edit") {
+                        listItem.add(new Link("edit") {
                             @Override
-                            public void onSubmit() {    
+                            public void onClick() {    
                                 setResponsePage(new SpaceFieldOptionPage(space, field, key, previous));
                             }                       
                         });
                     }                    
                 };                
                 hide.add(listView);
-                TextField option = new TextField("option");
+                optionField = new TextField("option");
                 // validation, does option already exist?
-                option.add(new AbstractValidator() {
+                optionField.add(new AbstractValidator() {
                     public void validate(FormComponent c) {
                         String s = (String) c.getConvertedInput();
                         if(field.hasOption(s)) {
@@ -202,13 +237,16 @@ public class SpaceFieldFormPage extends BasePage {
                         return "space_field_form.error.optionExists";
                     }                
                 });
-                option.add(new ErrorHighlighter());
-                hide.add(option);
+                optionField.add(new ErrorHighlighter());
+                optionField.setOutputMarkupId(true);
+                hide.add(optionField);                                   
                 hide.add(new Button("add") {
                     @Override
                     public void onSubmit() {
-                        Field f = onSubmitBefore();
-                        setResponsePage(new SpaceFieldFormPage(space, f, previous));
+                        if(option != null) {
+                            field.addOption(option);
+                        }                          
+                        setResponsePage(new SpaceFieldFormPage(space, field, previous));
                     }                     
                 });
             } else {
@@ -219,7 +257,9 @@ public class SpaceFieldFormPage extends BasePage {
             add(new Button("done") {
                 @Override
                 public void onSubmit() {
-                    Field field = onSubmitBefore();
+                    if(option != null) {
+                        field.addOption(option);
+                    }  
                     // may be clone, overwrite anyway
                     space.getMetadata().add(field);                    
                     setResponsePage(new SpaceFieldListPage(space, field.getName().getText(), previous));
@@ -237,48 +277,8 @@ public class SpaceFieldFormPage extends BasePage {
         protected void validate() {
             filter.reset();
             super.validate();          
-        }        
-        
-        private Field onSubmitBefore() {
-            SpaceFieldFormModel model = (SpaceFieldFormModel) getModelObject();
-            Field field = model.getField();
-            String option = model.getOption();
-            if(option != null) {
-                field.addOption(option);
-            }
-            return field;
-        }      
+        }                     
                 
-    }        
-        
-    /**
-     * custom form backing object that wraps Field
-     * required for the create / edit use case
-     */
-    private class SpaceFieldFormModel implements Serializable {
-        
-        private transient Field field;
-        private String option;
-
-        public Field getField() {
-            if(field == null) {
-                field = new Field();
-            }
-            return field;
-        }
-
-        public void setField(Field field) {
-            this.field = field;
-        }
-
-        public String getOption() {
-            return option;
-        }
-
-        public void setOption(String option) {
-            this.option = option;
-        }
-               
     }
     
 }
