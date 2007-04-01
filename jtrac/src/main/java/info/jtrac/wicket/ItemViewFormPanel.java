@@ -82,10 +82,9 @@ public class ItemViewFormPanel extends BasePanel {
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(history);
             setModel(model);
             add(new TextArea("comment").setRequired(true).add(new ErrorHighlighter()));
-            // custom fields ===================================================
-            User user = ((JtracSession) getSession()).getUser();
-            List<Field> fields = item.getEditableFieldList(user);                   
-            add(new CustomFieldsFormPanel("fields", model, fields));
+            // custom fields ===================================================      
+            User user = getPrincipal();
+            add(new CustomFieldsFormPanel("fields", model, item, user));
             // =================================================================
             final Space space = item.getSpace();
             final List<UserSpaceRole> userSpaceRoles = getJtrac().findUserRolesForSpace(space.getId());

@@ -50,7 +50,7 @@ import org.dom4j.Element;
  * 
  * 1) custom Fields for an Item (within a Space)
  * - Label
- * - whether mandatory or not
+ * - whether mandatory or not [ DEPRECATED ]
  * - the option values (drop down list options)
  * - the option "key" values are stored in the database (WITHOUT any relationships)
  * - the values corresponding to "key"s are resolved in memory from the Metadata
@@ -409,32 +409,40 @@ public class Metadata implements Serializable {
         Field.Name name = Field.convertToName(fieldName);        
         Integer mask = state.getFields().get(name);
         switch(mask) {
-            // case State.MASK_HIDE: state.getFields().put(name, State.MASK_VIEW); return; HIDE SUPPORT IN FUTURE
-            case State.MASK_VIEW: state.getFields().put(name, State.MASK_EDIT); return;
-            case State.MASK_EDIT: state.getFields().put(name, State.MASK_VIEW); return;
+            // case State.MASK_HIDDEN: state.getFields().put(name, State.MASK_READONLY); return; HIDDEN SUPPORT IN FUTURE
+            case State.MASK_READONLY: state.getFields().put(name, State.MASK_OPTIONAL); return;
+            case State.MASK_OPTIONAL: state.getFields().put(name, State.MASK_MANDATORY); return;            
+            case State.MASK_MANDATORY: state.getFields().put(name, State.MASK_READONLY); return;
         }
     }
     
     public List<Field> getEditableFields(Collection<String> roleKeys, Collection<Integer> ss) {
-        Set<Field> fs = new HashSet<Field>();     
+        Map<Field.Name, Field> fs = new HashMap<Field.Name, Field>(getFieldCount());     
         for(String roleKey : roleKeys) {
             if (roleKey.startsWith("ROLE_")) {
                 continue;
             }
             for(Integer status : ss) {
-                if (status == State.NEW) {
-                    continue; // we are looking only for editable after the NEW
-                }
                 State state = getRoleState(roleKey, status);
                 for(Map.Entry<Field.Name, Integer> entry : state.getFields().entrySet()) {
-                    if (entry.getValue() == State.MASK_EDIT) {
-                        fs.add(fields.get(entry.getKey()));
+                    if (entry.getValue() == State.MASK_OPTIONAL || entry.getValue() == State.MASK_MANDATORY) {
+                        Field f = fields.get(entry.getKey());
+                        // set if optional or not, this changes depending on the user / role and status
+                        f.setOptional(entry.getValue() == State.MASK_OPTIONAL);
+                        fs.put(f.getName(), f);
                     }
                 }
             }
         }
-        List<Field> result = getFieldList();
-        result.retainAll(fs); // just to retain the order of the fields
+        // just to fix the order of the fields
+        List<Field> result = new ArrayList<Field>(getFieldCount());
+        for(Field.Name fieldName : fieldOrder) {
+            Field f = fs.get(fieldName);
+            // and not all fields may be editable
+            if(f != null) {
+                result.add(f);
+            }
+        }
         return result;
     }
     

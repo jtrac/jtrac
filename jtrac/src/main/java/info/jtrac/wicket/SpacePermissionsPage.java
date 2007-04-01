@@ -105,9 +105,10 @@ public class SpacePermissionsPage extends BasePage {
             final SimpleAttributeModifier rowspan = new SimpleAttributeModifier("rowspan", roles.size() + "");
             final SimpleAttributeModifier yes = new SimpleAttributeModifier("src", "../resources/status-green.png");
             final SimpleAttributeModifier no = new SimpleAttributeModifier("src", "../resources/status-grey.png");            
-            final SimpleAttributeModifier view = new SimpleAttributeModifier("value", "V");
-            final SimpleAttributeModifier edit = new SimpleAttributeModifier("value", "E");
-            final SimpleAttributeModifier hide = new SimpleAttributeModifier("value", "H");
+            final SimpleAttributeModifier readonly = new SimpleAttributeModifier("src", "../resources/field-readonly.png");
+            final SimpleAttributeModifier mandatory = new SimpleAttributeModifier("src", "../resources/field-mandatory.png");            
+            final SimpleAttributeModifier optional = new SimpleAttributeModifier("src", "../resources/field-optional.png");
+            final SimpleAttributeModifier hidden = new SimpleAttributeModifier("src", "../resources/field-hidden.png");
             //==================================================================
             add(new ListView("states", stateKeys) {               
                 protected void populateItem(ListItem listItem) {
@@ -186,9 +187,10 @@ public class SpacePermissionsPage extends BasePage {
                                     State state = role.getStates().get(stateKeyRow);                                    
                                     int mask = state.getFields().get(field.getName());
                                     switch(mask) {
-                                        case State.MASK_EDIT : fieldButton.add(edit); break;
-                                        case State.MASK_VIEW : fieldButton.add(view); break;
-                                        case State.MASK_HIDE : fieldButton.add(hide); break;
+                                        case State.MASK_MANDATORY : fieldButton.add(mandatory); break;
+                                        case State.MASK_OPTIONAL : fieldButton.add(optional); break;
+                                        case State.MASK_READONLY : fieldButton.add(readonly); break;
+                                        case State.MASK_HIDDEN : fieldButton.add(hidden); break;
                                     }
                                     listItem.add(fieldButton);                                   
                                 }                                

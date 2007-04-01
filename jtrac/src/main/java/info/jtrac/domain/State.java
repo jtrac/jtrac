@@ -39,7 +39,7 @@ import org.dom4j.Element;
  * For example, consider a state FOO and a role BAR.  
  * When a user with role BAR views an item that is having the status FOO:
  * ie. when item.status == FOO.status, the fields that can be viewed on screen
- * will be the entries in FOO.fields where the value == MASK_VIEW (or 1)
+ * will be the entries in FOO.fields where the value == MASK_READONLY (or 1)
  */
 public class State implements Serializable {
     
@@ -51,9 +51,10 @@ public class State implements Serializable {
     public static final int OPEN = 1;
     public static final int CLOSED = 99;
     
-    public static final int MASK_HIDE = 0;
-    public static final int MASK_VIEW = 1;
-    public static final int MASK_EDIT = 2;
+    public static final int MASK_HIDDEN = 0;
+    public static final int MASK_READONLY = 1;
+    public static final int MASK_OPTIONAL = 2;
+    public static final int MASK_MANDATORY = 3;
     
     public State() {
         // zero arg constructor
@@ -113,10 +114,10 @@ public class State implements Serializable {
     }    
     
     public void add(Field.Name fieldName) {
-        int mask = MASK_VIEW;
+        int mask = MASK_READONLY;
         // for NEW states, normally all Fields on the Item are editable
         if (status == NEW) {
-            mask = MASK_EDIT;
+            mask = MASK_MANDATORY;
         }
         fields.put(fieldName, mask);
     }

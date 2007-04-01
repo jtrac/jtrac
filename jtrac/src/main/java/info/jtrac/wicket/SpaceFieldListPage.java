@@ -115,8 +115,7 @@ public class SpaceFieldListPage extends BasePage {
                     });
                     
                     listItem.add(new Label("name", new PropertyModel(field, "name.text")));
-                    listItem.add(new Label("type", new PropertyModel(field, "name.description")));
-                    listItem.add(new Label("optional", field.isOptional() ? "Y" : ""));
+                    listItem.add(new Label("type", new PropertyModel(field, "name.description")));                    
                     listItem.add(new Label("label", new PropertyModel(field, "label")));
                     List<String> optionsList;
                     if(field.getOptions() != null) {

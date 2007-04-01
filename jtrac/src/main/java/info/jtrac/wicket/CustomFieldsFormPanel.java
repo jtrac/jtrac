@@ -17,6 +17,8 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Field;
+import info.jtrac.domain.Item;
+import info.jtrac.domain.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,8 +38,9 @@ import wicket.model.BoundCompoundPropertyModel;
  */
 public class CustomFieldsFormPanel extends BasePanel {        
     
-    public CustomFieldsFormPanel(String id, final BoundCompoundPropertyModel model, List<Field> fields) {
+    public CustomFieldsFormPanel(String id, final BoundCompoundPropertyModel model, Item item, User user) {
         super(id);
+        List<Field> fields = item.getEditableFieldList(user);
         ListView listView = new ListView("fields", fields) {
             protected void populateItem(ListItem listItem) {
                 final Field field = (Field) listItem.getModelObject();

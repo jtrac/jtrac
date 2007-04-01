@@ -86,6 +86,7 @@ public class ItemFormPage extends BasePage {
                         Space space = getCurrentSpace();
                         Item item = new Item();
                         item.setSpace(space);
+                        item.setStatus(State.NEW);
                         return item;
                     }
                 }
@@ -135,9 +136,8 @@ public class ItemFormPage extends BasePage {
             }
             // detail ==========================================================
             add(new TextArea("detail").setRequired(true).add(new ErrorHighlighter()));
-            // custom fields ===================================================
-            List<Field> fields = item.getSpace().getMetadata().getFieldList();            
-            add(new CustomFieldsFormPanel("fields", model, fields));
+            // custom fields ===================================================                      
+            add(new CustomFieldsFormPanel("fields", model, item, getPrincipal()));
             // hide some components if editing item
             WebMarkupContainer hideAssignedTo = new WebMarkupContainer("hideAssignedTo");
             WebMarkupContainer hideNotifyList = new WebMarkupContainer("hideNotifyList");

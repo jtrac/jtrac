@@ -151,10 +151,7 @@ public class SpaceFieldFormPage extends BasePage {
                     }
                     return null;
                 }
-            }, label);             
-            
-            // optional ========================================================
-            add(new CheckBox("field.optional"));            
+            }, label);                      
             // options =========================================================
             WebMarkupContainer hide = new WebMarkupContainer("hide");
             if(field.getName().getType() < 4) { // drop down type
