@@ -20,25 +20,22 @@
                 </div>                
                 <table class="jtrac" style="empty-cells:show">
                     <tr class="center">
-                        <td colspan="2">
-                            <!-- <input type="submit" wicket:id="addState" wicket:message="value=space_roles.addState"/> -->
-                            <input type="submit" wicket:id="addState" value="Add State"/>
-                        </td>
-                        <td colspan="2">
-                            <!-- <input type="submit" wicket:id="addRole" wicket:message="value=space_roles.addRole"/> -->
-                            <input type="submit" wicket:id="addRole" value="Add Role"/>
-                        </td>
+                        <td colspan="4"/>
                         <th wicket:id="statesColspan"><wicket:message key="space_roles.nextAllowedState"/></th>
                         <th wicket:id="fieldsColspan">   
                             <wicket:message key="space_roles.fieldLevelPermissions"/><br/>
-                            <img src="resources/field-mandatory.png"/><wicket:message key="space_roles.mandatory"/>
-                            <img src="resources/field-optional.png"/><wicket:message key="space_roles.optional"/>
-                            <img src="resources/field-readonly.png"/><wicket:message key="space_roles.readonly"/>
+                            <span style="font-weight:normal">
+                                <img src="resources/field-mandatory.png"/><wicket:message key="space_roles.mandatory"/>
+                                <img src="resources/field-optional.png"/><wicket:message key="space_roles.optional"/>
+                                <img src="resources/field-readonly.png"/><wicket:message key="space_roles.readonly"/>
+                            </span>
                         </th>       
                     </tr>
                     <tr class="center alt">
-                        <th colspan="2"><wicket:message key="space_roles.state"/></th>
-                        <th colspan="2"><wicket:message key="space_roles.role"/></th>
+                        <th><wicket:message key="space_roles.state"/></th>
+                        <th><input type="image" wicket:id="addState" src="../resources/list-add.png"/></th>
+                        <th><wicket:message key="space_roles.role"/></th>
+                        <th><input type="image" wicket:id="addRole" src="../resources/list-add.png"/></th>
                         <td wicket:id="stateHeads"><span wicket:id="state"></span></td>
                         <td wicket:id="fieldHeads" class="info"><span wicket:id="field"></span></td>                        
                     </tr>
