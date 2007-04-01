@@ -52,7 +52,7 @@ public class ItemFormPage extends BasePage {
             
     public ItemFormPage() {       
         add(new ItemForm("form", null));
-    }
+    }    
     
     public ItemFormPage(Item item, ItemSearch itemSearch) {
         this.itemSearch = itemSearch;        
@@ -83,7 +83,7 @@ public class ItemFormPage extends BasePage {
                         return getJtrac().loadItem(temp.getId());
                     } else {
                         logger.debug("initializing new Item for form");
-                        Space space = ((JtracSession) getSession()).getCurrentSpace();
+                        Space space = getCurrentSpace();
                         Item item = new Item();
                         item.setSpace(space);
                         return item;

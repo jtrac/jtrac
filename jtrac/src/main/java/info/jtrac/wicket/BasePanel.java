@@ -39,6 +39,10 @@ public class BasePanel extends Panel {
         ((JtracSession) getSession()).setCurrentSpace(space);
     }    
     
+    protected Space getCurrentSpace() {
+        return ((JtracSession) getSession()).getCurrentSpace();
+    }      
+    
     public BasePanel(String id) {
         super(id);
     } 

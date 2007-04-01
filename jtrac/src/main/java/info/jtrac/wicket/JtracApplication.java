@@ -42,6 +42,7 @@ import wicket.authorization.IAuthorizationStrategy;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebRequest;
 import wicket.request.target.coding.IndexedParamUrlCodingStrategy;
+import wicket.request.target.coding.QueryStringUrlCodingStrategy;
 import wicket.resource.loader.IStringResourceLoader;
 
 /**
@@ -84,8 +85,9 @@ public class JtracApplication extends WebApplication {
                     return null;
                 }
             }
-            public String loadStringResource(Component component, String key) {                
-                return loadStringResource(null, key, Session.get().getLocale(), null);
+            public String loadStringResource(Component component, String key) {
+                Class clazz = component == null ? null : component.getClass();
+                return loadStringResource(clazz, key, Session.get().getLocale(), null);
             }            
         });                               
         
@@ -153,7 +155,7 @@ public class JtracApplication extends WebApplication {
         mountBookmarkablePage("/logout", LogoutPage.class);
         mountBookmarkablePage("/svn", SvnStatsPage.class);
         // bookmarkable url for viewing items
-        mount("/item", new IndexedParamUrlCodingStrategy("/item", ItemViewPage.class));        
+        mount("/item", new IndexedParamUrlCodingStrategy("/item", ItemViewPage.class));
         
     }   
     

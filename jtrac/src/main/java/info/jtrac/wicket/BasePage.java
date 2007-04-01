@@ -17,6 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
+import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,6 +42,14 @@ public abstract class BasePage extends WebPage {
     protected User getPrincipal() {
         return ((JtracSession) getSession()).getUser();
     }
+    
+    protected void setCurrentSpace(Space space) {
+        ((JtracSession) getSession()).setCurrentSpace(space);
+    }      
+    
+    protected Space getCurrentSpace() {
+        return ((JtracSession) getSession()).getCurrentSpace();
+    }     
     
     /**
      * conditional flip of session if same user id

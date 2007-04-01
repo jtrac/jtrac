@@ -115,6 +115,22 @@ public class User implements UserDetails, Serializable {
         return list;
     }        
     
+    /**
+     * convenience class to load completely eager loaded space out of session
+     * instead of hitting the database, useful when we need a space for
+     * currently logged in user
+     */
+    public Space getSpaceById(long id) {
+        Space space = null;
+        for (UserSpaceRole usr : userSpaceRoles) {
+            if (usr.getSpace() != null && usr.getSpace().getId() == id) {
+                space = usr.getSpace();
+                break;
+            }
+        }
+        return space;
+    }     
+    
     //============ ACEGI UserDetails implementation ===============
     
     public boolean isAccountNonExpired() {

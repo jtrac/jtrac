@@ -21,12 +21,12 @@ import info.jtrac.domain.Space;
 import wicket.markup.html.WebMarkupContainer;
 
 /**
- * dashboard page
+ * item search form page
  */
 public class ItemSearchFormPage extends BasePage {        
         
     public ItemSearchFormPage() {        
-        Space space = ((JtracSession) getSession()).getCurrentSpace();
+        Space space = getCurrentSpace();
         if (space != null) {
             add(new ItemSearchFormPanel("panel", space));
         } else {
@@ -39,6 +39,5 @@ public class ItemSearchFormPage extends BasePage {
         add(new ItemSearchFormPanel("panel", itemSearch));
         add(new ItemRelatePanel("relate", itemSearch, false));
     }    
-
     
 }

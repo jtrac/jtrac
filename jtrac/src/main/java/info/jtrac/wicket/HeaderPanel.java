@@ -35,8 +35,8 @@ public class HeaderPanel extends BasePanel {
     public HeaderPanel() {
         super("header");
         
-        final User user = ((JtracSession) getSession()).getUser();
-        final Space space = ((JtracSession) getSession()).getCurrentSpace();
+        final User user = getPrincipal();
+        final Space space = getCurrentSpace();
         final List<Space> spaces = new ArrayList(user.getSpaces());
         
         add(new Link("dashboard") {
