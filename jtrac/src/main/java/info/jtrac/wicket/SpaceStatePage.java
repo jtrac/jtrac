@@ -93,9 +93,9 @@ public class SpaceStatePage extends BasePage {
                 }                
             };
             delete.setDefaultFormProcessing(false);
-            if(stateKey == State.OPEN) {
+            if(stateKey == State.OPEN || stateKey == -1) {
                 delete.setEnabled(false);
-            }
+            }            
             add(delete);
             // option ===========================================================
             final TextField field = new TextField("stateName");
