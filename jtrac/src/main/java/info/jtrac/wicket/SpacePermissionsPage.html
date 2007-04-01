@@ -29,7 +29,12 @@
                             <input type="submit" wicket:id="addRole" value="Add Role"/>
                         </td>
                         <th wicket:id="statesColspan"><wicket:message key="space_roles.nextAllowedState"/></th>
-                        <th wicket:id="fieldsColspan"><wicket:message key="space_roles.fieldLevelPermissions"/><br/><wicket:message key="space_roles.flpLegend"/></th>       
+                        <th wicket:id="fieldsColspan">   
+                            <wicket:message key="space_roles.fieldLevelPermissions"/><br/>
+                            <img src="resources/field-mandatory.png"/><wicket:message key="space_roles.mandatory"/>
+                            <img src="resources/field-optional.png"/><wicket:message key="space_roles.optional"/>
+                            <img src="resources/field-readonly.png"/><wicket:message key="space_roles.readonly"/>
+                        </th>       
                     </tr>
                     <tr class="center alt">
                         <th colspan="2"><wicket:message key="space_roles.state"/></th>
