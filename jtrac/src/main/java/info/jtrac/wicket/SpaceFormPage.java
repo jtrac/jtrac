@@ -86,6 +86,8 @@ public class SpaceFormPage extends BasePage {
                     ConfirmPage confirm = new ConfirmPage(SpaceFormPage.this, heading, warning, new String[] {line1, line2}) {
                         public void onConfirm() {
                             getJtrac().removeSpace(space);
+                            // logged in user may have been allocated to this space
+                            SpaceFormPage.this.refreshPrincipal();
                             setResponsePage(new SpaceListPage());
                         }                        
                     };
