@@ -410,7 +410,7 @@
                                 <dependency>
                                     <groupId>org.mortbay.jetty</groupId>
                                     <artifactId>jetty</artifactId>
-                                    <version>6.0.2</version>                        
+                                    <version>6.1.1</version>                        
                                 </dependency>
                             </dependencies>                            
                         </extraPath>
@@ -421,7 +421,7 @@
                                 <dependency>
                                     <groupId>org.mortbay.jetty</groupId>
                                     <artifactId>start</artifactId>
-                                    <version>6.0.2</version>                        
+                                    <version>6.1.1</version>                        
                                 </dependency>
                             </dependencies>                            
                         </extraPath>
