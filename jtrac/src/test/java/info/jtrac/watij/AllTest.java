@@ -45,13 +45,8 @@ public class AllTest extends WatijTestCase {
         assertTrue(ie.containsText("Space Roles"));
         
         ie.button("Save").click();
-        assertTrue(ie.containsText("Space List"));
-        
-        click("allocate");
         assertTrue(ie.containsText("Users Allocated To Space"));
-        
-        ie.selectList(name, "user").option(text, "Admin").select();
-        ie.selectList(name, "roleKey").option(text, "DEFAULT").select();        
+                
         ie.button("Allocate").click();        
         assertTrue(ie.containsText("Admin"));  
            
