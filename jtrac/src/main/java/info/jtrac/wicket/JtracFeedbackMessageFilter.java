@@ -35,9 +35,17 @@ public class JtracFeedbackMessageFilter implements IFeedbackMessageFilter {
     }
     
     public boolean accept(FeedbackMessage fm) {
-        ValidationErrorFeedback message = (ValidationErrorFeedback) fm.getMessage();
-        if(!previous.contains(message.getMessage())) {
-            previous.add(message.getMessage());
+        String message = null;
+        // wicket bit too flexible, wicket internally created errors are not just Strings
+        // but if you added an error using the error(String) signature - will be just String
+        if(fm.getMessage() instanceof String) {
+            message = (String) fm.getMessage();
+        } else {
+            ValidationErrorFeedback error = (ValidationErrorFeedback) fm.getMessage();
+            message = error.getMessage();
+        }        
+        if(!previous.contains(message)) {
+            previous.add(message);
             return true;
         }
         return false;

@@ -44,8 +44,6 @@ import wicket.markup.html.form.upload.FileUploadField;
 import wicket.markup.html.form.validation.AbstractFormValidator;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.BoundCompoundPropertyModel;
-import wicket.validation.IErrorMessageSource;
-import wicket.validation.IValidationError;
 
 /**
  * Form to update history for item
@@ -158,12 +156,10 @@ public class ItemViewFormPanel extends BasePanel {
                     if(assignedToChoice.getConvertedInput() == null) {
                         Integer i = (Integer) statusChoice.getConvertedInput();
                         if (i != null && i != State.CLOSED) {
-                            assignedToChoice.error(new IValidationError() {
-                                public String getErrorMessage(IErrorMessageSource ignored) {
-                                    return localize("item_view_form.assignedTo.error", 
-                                            space.getMetadata().getStatusValue(State.CLOSED));
-                                }
-                            });
+                            // user may have customized the name of the CLOSED State e.g. for i18n
+                            // so when reporting the error, use the display name
+                            String closedDisplayName = space.getMetadata().getStatusValue(State.CLOSED);
+                            assignedToChoice.error(localize("item_view_form.assignedTo.error", closedDisplayName));
                         }                        
                     }
                 }

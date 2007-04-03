@@ -16,7 +16,6 @@
 
 package info.jtrac.wicket;
 
-import info.jtrac.domain.Field;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.ItemUser;
@@ -48,10 +47,13 @@ import wicket.model.LoadableDetachableModel;
  */
 public class ItemFormPage extends BasePage {                           
     
-    ItemSearch itemSearch;
+    ItemSearch itemSearch;    
             
-    public ItemFormPage() {       
-        add(new ItemForm("form", null));
+    public ItemFormPage() {        
+        Item item = new Item();
+        item.setSpace(getCurrentSpace());
+        item.setStatus(State.NEW);        
+        add(new ItemForm("form", item));
     }    
     
     public ItemFormPage(Item item, ItemSearch itemSearch) {
@@ -64,40 +66,35 @@ public class ItemFormPage extends BasePage {
         private JtracFeedbackMessageFilter filter;
         private FileUploadField fileUploadField = new FileUploadField("file");
         private boolean editMode;
-        private int version;
+        private int version;        
         
-        public ItemForm(String id, final Item temp) {
+        public ItemForm(String id, final Item item) {
             super(id);
             setMultiPart(true);
             FeedbackPanel feedback = new FeedbackPanel("feedback");
             filter = new JtracFeedbackMessageFilter();
             feedback.setFilter(filter);
-            add(feedback);
-            // this ensures that the model object is re-loaded as part of the
-            // form submission workflow before form binding and avoids
-            // hibernate lazy loading issues during the whole update transaction
-            LoadableDetachableModel itemModel = new LoadableDetachableModel() {
-                protected Object load() {
-                    if(temp != null && temp.getId() > 0) {
-                        logger.debug("form workflow loaded item " + temp.getId());
-                        return getJtrac().loadItem(temp.getId());
-                    } else {
-                        logger.debug("initializing new Item for form");
-                        Space space = getCurrentSpace();
-                        Item item = new Item();
-                        item.setSpace(space);
-                        item.setStatus(State.NEW);
-                        return item;
-                    }
-                }
-            };            
-            BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(itemModel);
-            setModel(model);
-            final Item item = (Item) itemModel.getObject();
+            add(feedback);   
+            version = item.getVersion();
             if(item.getId() > 0) {
-                editMode = true;
-                version = item.getVersion();
+                editMode = true;                
             }
+            BoundCompoundPropertyModel model = null;
+            if(item.getId() > 0) {
+                // this ensures that the model object is re-loaded as part of the
+                // form submission workflow before form binding and avoids
+                // hibernate lazy loading issues during the whole update transaction
+                LoadableDetachableModel itemModel = new LoadableDetachableModel() {
+                    protected Object load() {                                        
+                        logger.debug("attaching existing item " + item.getId());
+                        return getJtrac().loadItem(item.getId());
+                    }
+                };
+                model = new BoundCompoundPropertyModel(itemModel);
+            } else {
+                model = new BoundCompoundPropertyModel(item);
+            }
+            setModel(model);                        
             // summary =========================================================
             final TextField summaryField = new TextField("summary");
             summaryField.setRequired(true);
@@ -189,36 +186,26 @@ public class ItemFormPage extends BasePage {
             // cancel ==========================================================
             add(new Link("cancel") {
                 public void onClick() {
-                    setResponsePage(new ItemViewPage(temp.getId(), itemSearch));
+                    setResponsePage(new ItemViewPage(item.getId(), itemSearch));
                 }                
             }.setVisible(itemSearch != null));            
         }
         
         @Override
         protected void validate() {
-            filter.reset();            
-            super.validate();            
+            filter.reset();     
+            Item item = (Item) getModelObject();                      
+            if(editMode && item.getVersion() != version) {                                
+                // user must have used back button after edit
+                error(localize("item_form.error.version"));                                                    
+            } 
+            super.validate();    
         }        
         
         @Override
         protected void onSubmit() {
             final FileUpload fileUpload = fileUploadField.getFileUpload();
-            Item item = (Item) getModelObject();                        
-            
-            if(!editMode && item.getId() > 0) {
-                // user must have used back button after creating new
-                error(localize("item_form.error.version"));
-                return;
-            }           
-            
-            if(editMode) {
-                if(item.getVersion() != version) {
-                    // user must have used back button after edit
-                    error(localize("item_form.error.version"));
-                    return;                    
-                }
-            }
-            
+            Item item = (Item) getModelObject();                                                
             User user = getPrincipal();            
             if(item.getId() > 0) { // edit mode
                 getJtrac().updateItem(item, user);                
@@ -226,9 +213,7 @@ public class ItemFormPage extends BasePage {
                 item.setLoggedBy(user);
                 item.setStatus(State.OPEN);                
                 getJtrac().storeItem(item, fileUpload);                
-            }
-            // allow user to navigate back to search results if applicable
-            ItemListPage itemListPage = null;          
+            }                         
             setResponsePage(new ItemViewPage(item, itemSearch));
         }
         
