@@ -29,6 +29,7 @@
           <stringProp name="HTTPSampler.path">/jtrac/app/</stringProp>
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.port">8080</stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
@@ -39,7 +40,6 @@
               </elementProp>
             </collectionProp>
           </elementProp>
-          <stringProp name="HTTPSampler.port">8080</stringProp>
         </ConfigTestElement>
         <hashTree/>
         <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
@@ -69,8 +69,8 @@
             <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
             <stringProp name="RegexExtractor.regex">&quot;([^&quot;]+:form:[^&quot;]+)&quot;</stringProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-            <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.match_number">1</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.refname">nextUrl</stringProp>
           </RegexExtractor>
           <hashTree/>
@@ -112,8 +112,8 @@
             <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
             <stringProp name="RegexExtractor.regex">&apos;([^&apos;]+:options:[^&apos;]+)&apos;</stringProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-            <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.match_number">1</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.refname">nextUrl</stringProp>
           </RegexExtractor>
           <hashTree/>
@@ -140,8 +140,8 @@
             <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
             <stringProp name="RegexExtractor.regex">&apos;([^&apos;]+:spaces:[^&apos;]+)&apos;</stringProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-            <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.match_number">1</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.refname">nextUrl</stringProp>
           </RegexExtractor>
           <hashTree/>
@@ -168,8 +168,8 @@
             <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
             <stringProp name="RegexExtractor.regex">&quot;([^&quot;]+:create:[^&quot;]+)&quot;</stringProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-            <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.match_number">1</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.refname">nextUrl</stringProp>
           </RegexExtractor>
           <hashTree/>
@@ -196,8 +196,8 @@
             <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
             <stringProp name="RegexExtractor.regex">&quot;([^&quot;]+:form:[^&quot;]+)&quot;</stringProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-            <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.match_number">1</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.refname">nextUrl</stringProp>
           </RegexExtractor>
           <hashTree/>
@@ -239,8 +239,8 @@
             <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
             <stringProp name="RegexExtractor.regex">&quot;([^&quot;]+:form:[^&quot;]+)&quot;</stringProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-            <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.match_number">1</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.refname">nextUrl</stringProp>
           </RegexExtractor>
           <hashTree/>
@@ -275,8 +275,8 @@
             <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
             <stringProp name="RegexExtractor.regex">&quot;([^&quot;]+:form:[^&quot;]+)&quot;</stringProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-            <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.match_number">1</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.refname">nextUrl</stringProp>
           </RegexExtractor>
           <hashTree/>
@@ -309,38 +309,10 @@
         <hashTree>
           <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="regex" enabled="true">
             <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
-            <stringProp name="RegexExtractor.regex">&apos;([^&apos;]+:allocate:[^&apos;]+)&apos;</stringProp>
-            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-            <stringProp name="RegexExtractor.template">$1$</stringProp>
-            <stringProp name="RegexExtractor.match_number">1</stringProp>
-            <stringProp name="RegexExtractor.refname">nextUrl</stringProp>
-          </RegexExtractor>
-          <hashTree/>
-        </hashTree>
-        <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="space allocate get" enabled="true">
-          <stringProp name="HTTPSampler.path">/jtrac/app/${nextUrl}</stringProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <stringProp name="HTTPSampler.protocol"></stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <stringProp name="HTTPSampler.port"></stringProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-            <collectionProp name="Arguments.arguments"/>
-          </elementProp>
-          <stringProp name="HTTPSampler.mimetype"></stringProp>
-          <stringProp name="HTTPSampler.FILE_FIELD"></stringProp>
-          <stringProp name="HTTPSampler.monitor">false</stringProp>
-          <stringProp name="HTTPSampler.domain"></stringProp>
-          <stringProp name="HTTPSampler.FILE_NAME"></stringProp>
-          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-        </HTTPSampler>
-        <hashTree>
-          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="regex" enabled="true">
-            <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
             <stringProp name="RegexExtractor.regex">&quot;([^&quot;]+:form:[^&quot;]+)&quot;</stringProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-            <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.match_number">1</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.refname">nextUrl</stringProp>
           </RegexExtractor>
           <hashTree/>
@@ -407,8 +379,8 @@
             <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
             <stringProp name="RegexExtractor.regex">&apos;([^&apos;]+:logout:[^&apos;]+)&apos;</stringProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-            <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.match_number">1</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.refname">nextUrl</stringProp>
           </RegexExtractor>
           <hashTree/>
@@ -436,7 +408,7 @@
         <longProp name="ThreadGroup.start_time">1174238169000</longProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
-        <stringProp name="ThreadGroup.num_threads">5</stringProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <stringProp name="LoopController.loops">1</stringProp>
@@ -451,6 +423,7 @@
           <stringProp name="HTTPSampler.path">/jtrac/app/</stringProp>
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.port">8080</stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
@@ -461,7 +434,6 @@
               </elementProp>
             </collectionProp>
           </elementProp>
-          <stringProp name="HTTPSampler.port">8080</stringProp>
         </ConfigTestElement>
         <hashTree/>
         <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
@@ -503,8 +475,8 @@
               <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
               <stringProp name="RegexExtractor.regex">&quot;([^&quot;]+:form:[^&quot;]+)&quot;</stringProp>
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-              <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.match_number">1</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.refname">nextUrl</stringProp>
             </RegexExtractor>
             <hashTree/>
@@ -579,8 +551,8 @@
               <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
               <stringProp name="RegexExtractor.regex">&quot;([^&quot;]+:dashboardRow:new:[^&quot;]+)&quot;</stringProp>
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-              <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.match_number">1</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.refname">nextUrl</stringProp>
             </RegexExtractor>
             <hashTree/>
@@ -607,8 +579,8 @@
               <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
               <stringProp name="RegexExtractor.regex">&quot;([^&quot;]+:form:[^&quot;]+)&quot;</stringProp>
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-              <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.match_number">1</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.refname">nextUrl</stringProp>
             </RegexExtractor>
             <hashTree/>
@@ -640,7 +612,7 @@
                   <stringProp name="Argument.metadata">=</stringProp>
                   <stringProp name="Argument.value">1</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">hideAssignedTo:assignedTo</stringProp>
+                  <stringProp name="Argument.name">hideAssignedTo:border:assignedTo</stringProp>
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 </elementProp>
               </collectionProp>
@@ -657,8 +629,8 @@
               <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
               <stringProp name="RegexExtractor.regex">&quot;([^&quot;]+:form:[^&quot;]+)&quot;</stringProp>
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-              <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.match_number">1</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.refname">nextUrl</stringProp>
             </RegexExtractor>
             <hashTree/>
@@ -693,8 +665,8 @@
               <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
               <stringProp name="RegexExtractor.regex">&quot;([^&quot;]+:form:[^&quot;]+)&quot;</stringProp>
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-              <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.match_number">1</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.refname">nextUrl</stringProp>
             </RegexExtractor>
             <hashTree/>
@@ -743,8 +715,8 @@
               <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
               <stringProp name="RegexExtractor.regex">&quot;([^&quot;]+:form:[^&quot;]+)&quot;</stringProp>
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-              <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.match_number">1</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.refname">nextUrl</stringProp>
             </RegexExtractor>
             <hashTree/>
@@ -819,8 +791,8 @@
               <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
               <stringProp name="RegexExtractor.regex">&quot;([^&quot;]+:dashboardRow:search:[^&quot;]+)&quot;</stringProp>
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-              <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.match_number">1</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.refname">nextUrl</stringProp>
             </RegexExtractor>
             <hashTree/>
@@ -847,8 +819,8 @@
               <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
               <stringProp name="RegexExtractor.regex">&quot;([^&quot;]+:form:[^&quot;]+)&quot;</stringProp>
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-              <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.match_number">1</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.refname">nextUrl</stringProp>
             </RegexExtractor>
             <hashTree/>
