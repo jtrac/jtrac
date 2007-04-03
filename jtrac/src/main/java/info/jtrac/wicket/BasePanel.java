@@ -32,30 +32,39 @@ public class BasePanel extends Panel {
     protected final Log logger = LogFactory.getLog(getClass());
     
     protected Jtrac getJtrac() {
-        return ((JtracApplication) getApplication()).getJtrac();
-    }      
+        return ComponentUtils.getJtrac(this);
+    }          
+    
+    protected User getPrincipal() {
+        return ComponentUtils.getPrincipal(this);
+    }
     
     protected void setCurrentSpace(Space space) {
-        ((JtracSession) getSession()).setCurrentSpace(space);
-    }    
+        ComponentUtils.setCurrentSpace(this, space);
+    }      
     
     protected Space getCurrentSpace() {
-        return ((JtracSession) getSession()).getCurrentSpace();
+        return ComponentUtils.getCurrentSpace(this);
     }      
+    
+    protected String localize(String key) {
+        return ComponentUtils.localize(this, key);
+    }
+    
+    protected String localize(String key, Object... params) {
+        return ComponentUtils.localize(this, key, params);
+    }      
+    
+    protected void refreshPrincipal(User user) {
+        ComponentUtils.refreshPrincipal(this, user);
+    }
+    
+    protected void refreshPrincipal() {
+        ComponentUtils.refreshPrincipal(this);
+    }    
     
     public BasePanel(String id) {
         super(id);
-    } 
-    
-    /**
-     * localization helper
-     */
-    protected String localize(String key) {
-        return getLocalizer().getString(key, null);
-    }    
-    
-    protected User getPrincipal() {
-        return ((JtracSession) getSession()).getUser();
-    }    
+    }       
     
 }

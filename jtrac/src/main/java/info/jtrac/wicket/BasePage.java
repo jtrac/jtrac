@@ -23,7 +23,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
-import wicket.model.StringResourceModel;
 
 /**
  * base class for all wicket pages, this provides
@@ -36,54 +35,40 @@ public abstract class BasePage extends WebPage {
     protected final Log logger = LogFactory.getLog(getClass());        
     
     protected Jtrac getJtrac() {
-        return ((JtracApplication) getApplication()).getJtrac();
+        return ComponentUtils.getJtrac(this);
     }          
     
     protected User getPrincipal() {
-        return ((JtracSession) getSession()).getUser();
+        return ComponentUtils.getPrincipal(this);
     }
     
     protected void setCurrentSpace(Space space) {
-        ((JtracSession) getSession()).setCurrentSpace(space);
+        ComponentUtils.setCurrentSpace(this, space);
     }      
     
     protected Space getCurrentSpace() {
-        return ((JtracSession) getSession()).getCurrentSpace();
-    }     
+        return ComponentUtils.getCurrentSpace(this);
+    }      
     
-    /**
-     * conditional flip of session if same user id
-     */
+    protected String localize(String key) {
+        return ComponentUtils.localize(this, key);
+    }
+    
+    protected String localize(String key, Object... params) {
+        return ComponentUtils.localize(this, key, params);
+    }      
+    
     protected void refreshPrincipal(User user) {
-        if(user.getId() == getPrincipal().getId()) {
-            refreshPrincipal();
-        }
+        ComponentUtils.refreshPrincipal(this, user);
     }
     
     protected void refreshPrincipal() {
-        logger.debug("refreshing principal");
-        User temp = getJtrac().loadUser(getPrincipal().getId());
-        // loadUserByUsername forces hibernate eager load
-        ((JtracSession) getSession()).setUser((User) getJtrac().loadUserByUsername(temp.getLoginName()));        
-    }    
-    
+        ComponentUtils.refreshPrincipal(this);
+    }
+            
     public BasePage() {        
         add(new HeaderPanel());
         add(new Label("version", System.getProperty("jtrac.version")));
     }
-    
-    /**
-     * localization helper
-     */
-    protected String localize(String key) {
-        return getLocalizer().getString(key, null);
-    }
-    
-    protected String localize(String key, Object... params) {
-        // integer params cause problems, go with String only
-        StringResourceModel m = new StringResourceModel(key, null, null, params);
-        m.setLocalizer(getLocalizer());
-        return m.getString();
-    }    
-    
+
 }
