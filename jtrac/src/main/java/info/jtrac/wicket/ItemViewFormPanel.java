@@ -16,7 +16,6 @@
 
 package info.jtrac.wicket;
 
-import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
@@ -42,11 +41,11 @@ import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.TextArea;
 import wicket.markup.html.form.upload.FileUpload;
 import wicket.markup.html.form.upload.FileUploadField;
+import wicket.markup.html.form.validation.AbstractFormValidator;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.BoundCompoundPropertyModel;
-import wicket.model.Model;
-import wicket.validation.IValidatable;
-import wicket.validation.validator.AbstractValidator;
+import wicket.validation.IErrorMessageSource;
+import wicket.validation.IValidationError;
 
 /**
  * Form to update history for item
@@ -77,7 +76,7 @@ public class ItemViewFormPanel extends BasePanel {
             super(id);
             setMultiPart(true);
             this.itemId = item.getId();
-            History history = new History();
+            final History history = new History();
             history.setItemUsers(item.getItemUsers());
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(history);
             setModel(model);
@@ -106,17 +105,17 @@ public class ItemViewFormPanel extends BasePanel {
                     Integer selectedStatus = (Integer) getFormComponent().getConvertedInput();
                     if (selectedStatus == null) {
                         assignedToChoice.setEnabled(false);
-                    } else {
+                    } else {                        
                         List<User> assignable = UserUtils.filterUsersAbleToTransitionFrom(userSpaceRoles, space, selectedStatus);
                         assignedToChoice.setChoices(assignable);                    
-                        assignedToChoice.setEnabled(true);
+                        assignedToChoice.setEnabled(true);                        
                     }
                     target.addComponent(assignedToChoice);
                 }
             });            
             add(statusChoice);
             // assigned to =====================================================            
-            List<User> empty = new ArrayList<User>(0);
+            List<User> empty = new ArrayList<User>(0);  // will be populated over Ajax
             assignedToChoice = new DropDownChoice("assignedTo", empty, new IChoiceRenderer() {
                 public Object getDisplayValue(Object o) {
                     return ((User) o).getName();
@@ -124,27 +123,10 @@ public class ItemViewFormPanel extends BasePanel {
                 public String getIdValue(Object o, int i) {
                     return ((User) o).getId() + "";
                 }                
-            });
-            assignedToChoice.setNullValid(true);                        
+            });                                
             assignedToChoice.setOutputMarkupId(true);
             assignedToChoice.setEnabled(false);
-            assignedToChoice.add(new AbstractValidator() {
-                protected void onValidate(IValidatable v) {                                 
-                    // validation: assignedTo cannot be null if status is not null
-                    // unless the status is CLOSED
-                    if(v.getValue() == null) {
-                        Integer i = (Integer) statusChoice.getConvertedInput();
-                        if (i != null && i != State.CLOSED) {
-                            error(v);
-                        }
-                    }
-                }
-                @Override
-                protected String resourceKey() {                    
-                    return "item_view_form.assignedTo.error";
-                }
-            });
-            assignedToChoice.setLabel(new Model(space.getMetadata().getStatusValue(State.CLOSED)));
+            assignedToChoice.setNullValid(true);
             WebMarkupContainer border = new WebMarkupContainer("border");
             border.add(new ErrorHighlighter(assignedToChoice));
             border.add(assignedToChoice);
@@ -166,6 +148,26 @@ public class ItemViewFormPanel extends BasePanel {
             add(fileUploadField);
             // send notifications===============================================
             add(new CheckBox("sendNotifications"));
+            // validation that assignedTo is not null if status is not null and not CLOSED
+            // have to use FormValidator because this is conditional validation across two FormComponents
+            add(new AbstractFormValidator() {
+                public FormComponent[] getDependentFormComponents() {
+                    return new FormComponent[] { statusChoice, assignedToChoice };
+                }
+                public void validate(Form form) {
+                    if(assignedToChoice.getConvertedInput() == null) {
+                        Integer i = (Integer) statusChoice.getConvertedInput();
+                        if (i != null && i != State.CLOSED) {
+                            assignedToChoice.error(new IValidationError() {
+                                public String getErrorMessage(IErrorMessageSource ignored) {
+                                    return localize("item_view_form.assignedTo.error", 
+                                            space.getMetadata().getStatusValue(State.CLOSED));
+                                }
+                            });
+                        }                        
+                    }
+                }
+            });
         }
         
         @Override
@@ -185,7 +187,9 @@ public class ItemViewFormPanel extends BasePanel {
         }
         
     }
-    
+    /**
+     * wraps the ajax drop down so that the ajax "spinner" image shows
+     */
     private final class IndicatingDropDownChoice extends DropDownChoice implements wicket.ajax.IAjaxIndicatorAware {
         
         private final WicketAjaxIndicatorAppender indicatorAppender = new WicketAjaxIndicatorAppender();
