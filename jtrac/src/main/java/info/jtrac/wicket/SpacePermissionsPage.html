@@ -25,26 +25,26 @@
                         <th wicket:id="fieldsColspan">   
                             <wicket:message key="space_roles.fieldLevelPermissions"/><br/>
                             <span style="font-weight:normal">
-                                <img src="resources/field-mandatory.png"/><wicket:message key="space_roles.mandatory"/>
-                                <img src="resources/field-optional.png"/><wicket:message key="space_roles.optional"/>
-                                <img src="resources/field-readonly.png"/><wicket:message key="space_roles.readonly"/>
+                                <img src="resources/field-mandatory.gif"/><wicket:message key="space_roles.mandatory"/>
+                                <img src="resources/field-optional.gif"/><wicket:message key="space_roles.optional"/>
+                                <img src="resources/field-readonly.gif"/><wicket:message key="space_roles.readonly"/>
                             </span>
                         </th>       
                     </tr>
                     <tr class="center alt">
                         <th><wicket:message key="space_roles.state"/></th>
-                        <th><input type="image" wicket:id="addState" src="../resources/list-add.png"/></th>
+                        <th><input type="image" wicket:id="addState" src="../resources/add.gif"/></th>
                         <th><wicket:message key="space_roles.role"/></th>
-                        <th><input type="image" wicket:id="addRole" src="../resources/list-add.png"/></th>
+                        <th><input type="image" wicket:id="addRole" src="../resources/add.gif"/></th>
                         <td wicket:id="stateHeads"><span wicket:id="state"></span></td>
                         <td wicket:id="fieldHeads" class="info"><span wicket:id="field"></span></td>                        
                     </tr>
                     <tbody wicket:id="states" class="roles">
                         <tr wicket:id="roles">
                             <td wicket:id="state"></td>
-                            <td wicket:id="editState"><input type="image" wicket:id="editState" src="../resources/accessories-text-editor.png"/></td>
+                            <td wicket:id="editState"><input type="image" wicket:id="editState" src="../resources/edit.gif"/></td>
                             <td wicket:id="role" class="transition"></td>
-                            <td><input type="image" wicket:id="editRole" src="../resources/accessories-text-editor.png"/></td>
+                            <td><input type="image" wicket:id="editRole" src="../resources/edit.gif"/></td>
                             <td wicket:id="stateHeads"><input type="image" wicket:id="state"/></td>
                             <td wicket:id="fieldHeads" class="info"><input type="image" wicket:id="field"/></td>
                         </tr>
@@ -54,7 +54,7 @@
                 <input type="submit" wicket:id="back" wicket:message="value:back"/>                
                 <input type="submit" wicket:id="save" wicket:message="value:save"/>                
                 <p/>
-                <a href="#" wicket:id="cancel"><img src="resources/edit-undo.png" class="nav-link"/><wicket:message key="cancel"/></a>
+                <a href="#" wicket:id="cancel"><img src="resources/cancel.gif" class="nav-link"/><wicket:message key="cancel"/></a>
                 <p/>
                 <span wicket:id="workflow"></span>
             </form>

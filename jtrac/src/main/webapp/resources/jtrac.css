@@ -1,5 +1,5 @@
 body { font-family: Arial; background: #FFF; }
-.content, table.jtrac tr { font-size: 75%; }
+.content, table.jtrac tr { font-size: 80%; }
 table.jtrac th, table.jtrac td.label { background: #CCCCCC; padding-left: 0.2em; padding-right: 0.2em; }
 tr.center td { text-align: center; }
 .label { font-weight: bold; text-align: right; }
@@ -17,7 +17,7 @@ div.error-input select { border: none; }
 .selected, table.jtrac .selected { background: #c3d9ff; }
 .bdr-bottom, tr.bdr-bottom td { border-bottom: 1px solid #CCCCCC; }
 .nav-header { background: #CCCCCC; padding: 0.1em; }
-.nav-header table { font-size: 75%; }
+.nav-header table, jtrac-list { font-size: 75%; }
 .nav-header img { vertical-align: top; margin-top: 1px; }
 .nav-header td, .nav-table td { font-weight: bold; text-align: right; padding: 0 1em 0 1em; background-color: #e1ecfe; }
 .nav-table td.icon { padding: 0; text-align: center; width: 4em; }
@@ -29,11 +29,11 @@ div.error-input select { border: none; }
 .nav-header img, img.nav-link { margin-right: 0.3em; }
 .space-below { padding-bottom: 0.5em; }
 tr.sortable th { background-position: right; background-repeat: no-repeat; }
-tr.sortable th.order-none { background-image: url("arrow_off.png"); }
-tr.sortable th.order-up { background-color: #c3d9ff; background-image: url("arrow_up.png"); }
-tr.sortable th.order-down { background-color: #c3d9ff; background-image: url("arrow_down.png"); }
+tr.sortable th.order-none { background-image: url("arrow_off.gif"); }
+tr.sortable th.order-up { background-color: #c3d9ff; background-image: url("arrow_up.gif"); }
+tr.sortable th.order-down { background-color: #c3d9ff; background-image: url("arrow_down.gif"); }
 tr.sortable a { color: black; }
 tr.sortable a:hover { color: #0000D9; }
-li.feedbackPanelERROR { list-style: none; background: url("dialog-error.png") no-repeat; padding-left: 2em; margin: 0.5em 0 0 -1em; }
+li.feedbackPanelERROR { list-style: none; background: url("error.gif") no-repeat; padding-left: 2em; margin: 0.5em 0 0 -1em; }
 .menu-option div { font-weight: bold; background-color: #e1ecfe; padding-left: 1em; 
     padding-right: 1em; margin-bottom: 1.5em; }

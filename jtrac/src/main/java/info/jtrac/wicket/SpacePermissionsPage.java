@@ -103,12 +103,12 @@ public class SpacePermissionsPage extends BasePage {
             List<Integer> stateKeys = new ArrayList(statesMap.keySet());
             final List<Role> roles = new ArrayList(space.getMetadata().getRoleList());
             final SimpleAttributeModifier rowspan = new SimpleAttributeModifier("rowspan", roles.size() + "");
-            final SimpleAttributeModifier yes = new SimpleAttributeModifier("src", "../resources/status-green.png");
-            final SimpleAttributeModifier no = new SimpleAttributeModifier("src", "../resources/status-grey.png");            
-            final SimpleAttributeModifier readonly = new SimpleAttributeModifier("src", "../resources/field-readonly.png");
-            final SimpleAttributeModifier mandatory = new SimpleAttributeModifier("src", "../resources/field-mandatory.png");            
-            final SimpleAttributeModifier optional = new SimpleAttributeModifier("src", "../resources/field-optional.png");
-            final SimpleAttributeModifier hidden = new SimpleAttributeModifier("src", "../resources/field-hidden.png");
+            final SimpleAttributeModifier yes = new SimpleAttributeModifier("src", "../resources/status-green.gif");
+            final SimpleAttributeModifier no = new SimpleAttributeModifier("src", "../resources/status-grey.gif");            
+            final SimpleAttributeModifier readonly = new SimpleAttributeModifier("src", "../resources/field-readonly.gif");
+            final SimpleAttributeModifier mandatory = new SimpleAttributeModifier("src", "../resources/field-mandatory.gif");            
+            final SimpleAttributeModifier optional = new SimpleAttributeModifier("src", "../resources/field-optional.gif");
+            final SimpleAttributeModifier hidden = new SimpleAttributeModifier("src", "../resources/field-hidden.gif");
             //==================================================================
             add(new ListView("states", stateKeys) {               
                 protected void populateItem(ListItem listItem) {
