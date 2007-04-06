@@ -1,26 +1,20 @@
 <wicket:panel>
-    <table width="100%" class="nav-table-outer">
-        <tr>
-            <td>
-                <table class="nav-table">
-                    <tr class="nav-header">
-                        <td wicket:id="dashboard"><a href="#"><img src="resources/utilities-system-monitor.png"/><wicket:message key="header.dashboard"/></a></td>
-                        <td wicket:id="space"><img src="resources/internet-web-browser.png"/><span wicket:id="space"></span></td>
-                        <td wicket:id="new"><a href="#"><img src="resources/document-new.png"/><wicket:message key="header.new"/></a></td>
-                        <td wicket:id="search"><a href="#"><img src="resources/system-search.png"/><wicket:message key="header.search"/></a></td>
-                    </tr>
-                </table>
-            </td>
-            <td align="right">
-                <table class="nav-table">
-                    <tr class="nav-header">                                
-                        <td wicket:id="options"><a href="#"><img src="resources/applications-system.png"/><wicket:message key="header.options"/></a></td>
-                        <td wicket:id="logout"><a href="#"><img src="resources/system-log-out.png"/><wicket:message key="header.logout"/></a></td>
-                        <td wicket:id="login"><a href="#"><wicket:message key="header.login"/></a></td>
-                        <td wicket:id="user"><img src="resources/system-user.png"/><span wicket:id="user"></span></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
+    <div class="nav-header" style="float:left">        
+        <table style="float:left">
+            <tr>
+                <td wicket:id="dashboard"><a href="#"><img src="resources/utilities-system-monitor.png"/><wicket:message key="header.dashboard"/></a></td>
+                <td wicket:id="space"><img src="resources/internet-web-browser.png"/><span wicket:id="space"></span></td>
+                <td wicket:id="new"><a href="#"><img src="resources/document-new.png"/><wicket:message key="header.new"/></a></td>
+                <td wicket:id="search"><a href="#"><img src="resources/system-search.png"/><wicket:message key="header.search"/></a></td>
+            </tr>
+        </table>        
+        <table style="float:right">
+            <tr>                                
+                <td wicket:id="options"><a href="#"><img src="resources/applications-system.png"/><wicket:message key="header.options"/></a></td>
+                <td wicket:id="logout"><a href="#"><img src="resources/system-log-out.png"/><wicket:message key="header.logout"/></a></td>
+                <td wicket:id="login"><a href="#"><wicket:message key="header.login"/></a></td>
+                <td wicket:id="user"><img src="resources/system-user.png"/><span wicket:id="user"></span></td>
+            </tr>
+        </table>        
+    </div>
 </wicket:panel>       

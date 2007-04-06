@@ -1,13 +1,12 @@
-body { font-size: 80%; font-family: Arial; background: #FFF; }
-table.jtrac tr { font-size: 80%; }
-table.jtrac-list tr { font-size: 75%; }
+body { font-family: Arial; background: #FFF; }
+.content, table.jtrac tr { font-size: 80%; }
 table.jtrac th, table.jtrac td.label { background: #CCCCCC; padding-left: 0.2em; padding-right: 0.2em; }
 tr.center td { text-align: center; }
 .label { font-weight: bold; text-align: right; }
 a { color: #0000D9; }
 a:hover { color: black; }
 img { border: none; vertical-align: middle; }
-.multiselect { height: 10em; overflow: auto; background: #FFF; text-align: left; border: thin groove; }
+.multiselect { height: 10em; overflow: auto; background: #FFF; text-align: left; border: 1px solid #CCCCCC; }
 .error-input { border: 1px solid #CC2200; }
 div.error-input { float: left; }
 div.error-input select { border: none; }
@@ -16,9 +15,10 @@ div.error-input select { border: none; }
 .heading { color: #0000D9; font-weight: bold; margin-bottom: 1em; }
 .alt { background: #e1ecfe; } 
 .selected, table.jtrac .selected { background: #c3d9ff; }
-.bdr-bottom, tr.bdr-bottom td { border-bottom: thin solid grey; }
-.nav-table-outer, .nav-table-outer tr { font-size: 75%; background-color: #CCCCCC; }
-.nav-table td { font-weight: bold; background-color: #e1ecfe; padding-left: 1em; padding-right: 1em; text-align: right; }
+.bdr-bottom, tr.bdr-bottom td { border-bottom: 1px solid #CCCCCC; }
+.nav-header { background: #CCCCCC; padding: 0.1em; }
+.nav-header table td { font-size: 75%; }
+.nav-header td, .nav-table td { font-weight: bold; text-align: right; padding: 0 1em 0 1em; background-color: #e1ecfe; }
 .nav-table td.icon { padding: 0; text-align: center; width: 4em; }
 .nav-table td a { width: 100%; display: block; }
 .bdr-collapse { border-collapse: collapse; }
