@@ -18,7 +18,6 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Space;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +34,6 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.PropertyModel;
-import wicket.model.StringResourceModel;
 
 /**
  * space fields add / re-order page
@@ -57,10 +55,20 @@ public class SpaceFieldListPage extends BasePage {
     
     private class SpaceFieldsForm extends Form {        
         
+        private String type;
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }          
+        
         public SpaceFieldsForm(String id, final Space space, final String selectedFieldName) {
             super(id);
             
-            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(new SpaceFieldListFormModel());
+            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(this);
             setModel(model);
             
             add(new Label("name", new PropertyModel(space, "name")));
@@ -141,7 +149,12 @@ public class SpaceFieldListPage extends BasePage {
             add(listView);
             
             final Map<String, String> types = space.getMetadata().getAvailableFieldTypes();
-            List<String> typesList = new ArrayList(types.keySet());
+            List<String> typesList = new ArrayList(types.keySet());    
+            // pre-select the drop down for convenience
+            if(typesList.size() > 0) {
+                type = typesList.get(0);
+            }             
+            
             DropDownChoice choice = new DropDownChoice("type", typesList, new IChoiceRenderer() {
                 public Object getDisplayValue(Object o) {
                     return localize("space_fields.type_" + o) + " - " + localize("space_fields.typeRemaining", types.get(o));
@@ -149,22 +162,21 @@ public class SpaceFieldListPage extends BasePage {
                 public String getIdValue(Object o, int i) {
                     return o.toString();
                 }
-            });            
+            });         
+            
             add(choice);                      
             
             add(new Button("add") {
                 @Override
-                public void onSubmit() {
-                    SpaceFieldListFormModel model = (SpaceFieldListFormModel) SpaceFieldsForm.this.getModelObject();
-                    if(model.getType() == null) {
+                public void onSubmit() {                    
+                    if(type == null) {
                         return;
-                    }
-                    int type = Integer.parseInt(model.getType());            
-                    Field field = space.getMetadata().getNextAvailableField(type);
+                    }                    
+                    Field field = space.getMetadata().getNextAvailableField(Integer.parseInt(type));
                     field.initOptions();
                     setResponsePage(new SpaceFieldFormPage(space, field, previous));          
                 }                 
-            });
+            });                      
             
             add(new Button("back") {
                 @Override
@@ -195,23 +207,7 @@ public class SpaceFieldListPage extends BasePage {
                 }                
             });            
             
-        }                      
-        
-        /**
-         * trivial form backing object
-         */
-        private class SpaceFieldListFormModel implements Serializable {
-            private String type;
-
-            public String getType() {
-                return type;
-            }
-
-            public void setType(String type) {
-                this.type = type;
-            }            
-            
-        }
+        }                              
         
     }        
         
