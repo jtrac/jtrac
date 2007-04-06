@@ -134,7 +134,7 @@ public class ItemFormPage extends BasePage {
             // detail ==========================================================
             add(new TextArea("detail").setRequired(true).add(new ErrorHighlighter()));
             // custom fields ===================================================                      
-            add(new CustomFieldsFormPanel("fields", model, item, getPrincipal()));
+            add(new CustomFieldsFormPanel("fields", model, item, getPrincipal()).setRenderBodyOnly(true));
             // hide some components if editing item
             WebMarkupContainer hideAssignedTo = new WebMarkupContainer("hideAssignedTo");
             WebMarkupContainer hideNotifyList = new WebMarkupContainer("hideNotifyList");
