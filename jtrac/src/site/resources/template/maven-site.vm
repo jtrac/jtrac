@@ -1,5 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 #macro ( banner $banner $id )
   #if ( $banner )
     #if( $banner.href )
@@ -295,7 +293,7 @@
       #end
     #end
   </head>
-  <body class="composite">
+  <body class="composite" onload="javascript:urchinTracker(document.referrer);">
     <div id="banner">
       #banner( $decoration.bannerLeft "bannerLeft" )
       #banner( $decoration.bannerRight "bannerRight" )
