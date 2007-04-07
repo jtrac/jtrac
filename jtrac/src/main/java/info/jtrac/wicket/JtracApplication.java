@@ -87,7 +87,8 @@ public class JtracApplication extends WebApplication {
             }
             public String loadStringResource(Component component, String key) {
                 Class clazz = component == null ? null : component.getClass();
-                return loadStringResource(clazz, key, Session.get().getLocale(), null);
+                Locale locale = component == null ? Session.get().getLocale() : component.getLocale();
+                return loadStringResource(clazz, key, locale, null);
             }            
         });                               
         
