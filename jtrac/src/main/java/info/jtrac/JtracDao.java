@@ -78,6 +78,7 @@ public interface JtracDao {
     //===========================================
     void storeUser(User user);
     User loadUser(long id);
+    void removeUser(User user);
     List<User> findAllUsers();
     List<User> findUsersByLoginName(String loginName);
     List<User> findUsersByEmail(String email);
@@ -85,6 +86,7 @@ public interface JtracDao {
     List<UserSpaceRole> findUserRolesForSpace(long spaceId);
     List<User> findUsersWithRoleForSpace(long spaceId, String roleKey);
     List<User> findUsersForSpaceSet(Collection<Space> spaces);
+    int loadCountOfHistoryInvolvingUser(User user);
     //===========================================
     UserSpaceRole loadUserSpaceRole(long id);
     void removeUserSpaceRole(UserSpaceRole userSpaceRole);

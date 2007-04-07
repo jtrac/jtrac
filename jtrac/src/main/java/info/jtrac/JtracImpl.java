@@ -407,6 +407,10 @@ public class JtracImpl implements Jtrac {
             mailSender.sendUserPassword(user, password);
         }
     }
+
+    public void removeUser(User user) {
+        dao.removeUser(user);
+    }   
     
     public List<User> findAllUsers() {
         return dao.findAllUsers();
@@ -446,6 +450,10 @@ public class JtracImpl implements Jtrac {
             users.remove(userSpaceRole.getUser());
         }
         return users;
+    }
+    
+    public int loadCountOfHistoryInvolvingUser(User user) {
+        return dao.loadCountOfHistoryInvolvingUser(user);
     }
     
     //==========================================================================

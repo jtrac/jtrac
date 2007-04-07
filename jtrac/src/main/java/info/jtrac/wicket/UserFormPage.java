@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
+import wicket.markup.html.form.Button;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
@@ -112,6 +113,37 @@ public class UserFormPage extends BasePage {
             
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(this);
             setModel(model);                       
+            
+            // delete button only if edit ======================================
+            Button delete = new Button("delete") {
+                @Override
+                public void onSubmit() {
+                    int count = getJtrac().loadCountOfHistoryInvolvingUser(user);
+                    if(count > 0) {
+                        UserForm.this.error(localize("user_delete.notPossible"));
+                        return;
+                    }
+                    String heading = localize("user_delete.confirm");                    
+                    String line1 = localize("user_delete.line1");
+                    String warning = localize("user_delete.line2");
+                    ConfirmPage confirm = new ConfirmPage(UserFormPage.this, heading, warning, new String[] { line1 }) {
+                        public void onConfirm() {
+                            getJtrac().removeUser(user);
+                            // logged in user may have been allocated to space with this user assigned
+                            UserFormPage.this.refreshPrincipal();
+                            setResponsePage(new UserListPage());
+                        }                        
+                    };
+                    setResponsePage(confirm);
+                }                
+            };
+            delete.setDefaultFormProcessing(false);
+            // only way you can delete someone else is if you are an admin
+            // and of course, don't allow deleting self            
+            if(!getPrincipal().isAdminForAllSpaces() || user.getId() == getPrincipal().getId()) {
+                delete.setVisible(false);
+            } 
+            add(delete);
             
             // login name ======================================================
             final TextField loginName = new TextField("user.loginName");

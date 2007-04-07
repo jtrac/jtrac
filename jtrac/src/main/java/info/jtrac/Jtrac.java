@@ -64,6 +64,7 @@ public interface Jtrac extends UserDetailsService {
     //========================================================
     void storeUser(User user);
     void storeUser(User user, String password, boolean sendNotifications);
+    void removeUser(User user);
     List<User> findAllUsers();
     User loadUser(long id);
     User loadUser(String loginName);
@@ -72,6 +73,7 @@ public interface Jtrac extends UserDetailsService {
     List<User> findUsersWithRoleForSpace(long spaceId, String roleKey);
     List<User> findUsersForUser(User user);
     List<User> findUnallocatedUsersForSpace(long spaceId);
+    int loadCountOfHistoryInvolvingUser(User user);
     //========================================================
     CountsHolder loadCountsForUser(User user);
     Counts loadCountsForUserSpace(User user, Space space);

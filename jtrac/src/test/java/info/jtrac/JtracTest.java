@@ -294,7 +294,8 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         i2.setLoggedBy(u);
         i2.setStatus(State.CLOSED);
         i2.addRelated(i1, ItemItem.DUPLICATE_OF);
-        jtrac.storeItem(i2, null);        
+        jtrac.storeItem(i2, null);  
+        assertEquals(3, jtrac.loadCountOfHistoryInvolvingUser(u));
         // can we remove i1?
         Item temp = jtrac.loadItem(i1.getId());
         jtrac.removeItem(temp);        

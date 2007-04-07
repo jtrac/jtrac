@@ -43,6 +43,7 @@ import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -191,6 +192,10 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return (User) getHibernateTemplate().get(User.class, id);
     }
     
+    public void removeUser(User user) {
+        getHibernateTemplate().delete(user);
+    }
+    
     public List<User> findAllUsers() {
         return getHibernateTemplate().find("from User user order by user.name");
     }
@@ -225,6 +230,12 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
                 + " join user.userSpaceRoles as usr where usr.space.id = ?"
                 + " and usr.roleKey = ? order by user.name", new Object[] { spaceId, roleKey });        
     }    
+    
+    public int loadCountOfHistoryInvolvingUser(User user) {
+        Long count = (Long) getHibernateTemplate().find("select count(history) from History history where "
+                + " history.loggedBy = ? or history.assignedTo = ?", new Object[] { user, user }).get(0);
+        return count.intValue();        
+    }
     
     //==========================================================================    
     
