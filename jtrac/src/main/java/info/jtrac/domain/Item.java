@@ -70,11 +70,11 @@ public class Item extends AbstractItem {
         attachments.add(attachment);
     }
     
-    public void add(ItemItem itemItem) {
+    public void addRelated(Item relatedItem, int type) {
         if (getRelatedItems() == null) {
             setRelatedItems(new LinkedHashSet<ItemItem>());
         }
-        itemItem.setItem(this);
+        ItemItem itemItem = new ItemItem(this, relatedItem, type);        
         getRelatedItems().add(itemItem);
     }    
     

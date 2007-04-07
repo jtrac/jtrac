@@ -57,7 +57,8 @@ public class ItemItem implements Serializable {
         // zero arg constructor
     }
     
-    public ItemItem(Item relatedItem, int type) {        
+    public ItemItem(Item item, Item relatedItem, int type) { 
+        this.item = item;
         this.relatedItem = relatedItem;
         this.type = type;
     }    

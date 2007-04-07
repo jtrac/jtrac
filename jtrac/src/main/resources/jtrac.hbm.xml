@@ -32,7 +32,7 @@
             <key column="item_id"/>
             <one-to-many class="ItemItem"/>
         </set>
-        <set name="relatingItems">
+        <set name="relatingItems" inverse="true">
             <key column="related_item_id"/>
             <one-to-many class="ItemItem"/>
         </set>        

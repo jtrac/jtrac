@@ -304,7 +304,17 @@ public class JtracImpl implements Jtrac {
         return dao.findItems(itemSearch);
     }
     
-    public void removeItem(Item item) {
+    public void removeItem(Item item) {        
+        if(item.getRelatingItems() != null) {
+            for(ItemItem itemItem : item.getRelatingItems()) {
+                removeItemItem(itemItem);
+            }
+        }
+        if(item.getRelatedItems() != null) {
+            for(ItemItem itemItem : item.getRelatedItems()) {
+                removeItemItem(itemItem);
+            }
+        }        
         dao.removeItem(item);
     }
     

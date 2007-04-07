@@ -5,6 +5,7 @@ import info.jtrac.domain.Counts;
 import info.jtrac.domain.CountsHolder;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemItem;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
@@ -261,6 +262,42 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         // next step will internally try to render item as Html for sending e-mail
         jtrac.storeItem(i, null);
         System.out.println(ItemUtils.getAsXml(i).asXML());
+    }
+    
+    public void testDeleteItemThatHasRelatedItems() {
+        Space s = getSpace();
+        jtrac.storeSpace(s);
+        User u = new User();
+        u.setLoginName("test");
+        u.setEmail("dummy");
+        u.addSpaceWithRole(s, "DEFAULT");
+        jtrac.storeUser(u);
+        //========================
+        Item i0 = new Item();
+        i0.setSpace(s);
+        i0.setAssignedTo(u);
+        i0.setLoggedBy(u);
+        i0.setStatus(State.CLOSED);
+        jtrac.storeItem(i0, null);
+        //=======================
+        Item i1 = new Item();
+        i1.setSpace(s);
+        i1.setAssignedTo(u);
+        i1.setLoggedBy(u);
+        i1.setStatus(State.CLOSED);
+        i1.addRelated(i0, ItemItem.DEPENDS_ON);
+        jtrac.storeItem(i1, null); 
+        //========================        
+        Item i2 = new Item();
+        i2.setSpace(s);
+        i2.setAssignedTo(u);
+        i2.setLoggedBy(u);
+        i2.setStatus(State.CLOSED);
+        i2.addRelated(i1, ItemItem.DUPLICATE_OF);
+        jtrac.storeItem(i2, null);        
+        // can we remove i1?
+        Item temp = jtrac.loadItem(i1.getId());
+        jtrac.removeItem(temp);        
     }
     
 }

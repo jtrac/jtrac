@@ -126,7 +126,7 @@ public class ItemRelatePanel extends BasePanel {
             Item item = getJtrac().loadItemByRefId(refId);
             long itemId = ((ItemViewPage) getPage()).getItemId();
             Item relatedItem = getJtrac().loadItem(itemId);
-            item.add(new ItemItem(relatedItem, type));
+            item.addRelated(relatedItem, type);
             item.setEditReason(comment);
             getJtrac().updateItem(item, getPrincipal());
             setResponsePage(new ItemViewPage(item, null));

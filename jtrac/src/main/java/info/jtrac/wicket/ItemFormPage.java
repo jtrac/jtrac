@@ -115,7 +115,8 @@ public class ItemFormPage extends BasePage {
                     String line1 = localize("item_delete.line1");                    
                     ConfirmPage confirm = new ConfirmPage(ItemFormPage.this, heading, warning, new String[] { line1 }) {
                         public void onConfirm() {
-                            getJtrac().removeItem(item);
+                            // avoid lazy init problem
+                            getJtrac().removeItem(getJtrac().loadItem(item.getId()));
                             if(itemSearch != null) {
                                 setResponsePage(new ItemListPage(itemSearch));
                             } else {
