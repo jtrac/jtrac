@@ -40,16 +40,12 @@ import wicket.markup.html.list.ListView;
 public class SpacePermissionsPage extends BasePage {
       
     private WebPage previous;
-    private Space space;
-    
-    private void addComponents() {        
-        add(new SpacePermissionsForm("form"));
-    }     
+    private Space space;     
     
     public SpacePermissionsPage(Space space, WebPage previous) {
         this.space = space;
         this.previous = previous;
-        addComponents();
+        add(new SpacePermissionsForm("form"));
     }
     
     private class SpacePermissionsForm extends Form {

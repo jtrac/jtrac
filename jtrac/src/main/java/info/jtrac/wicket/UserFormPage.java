@@ -26,8 +26,11 @@ import wicket.markup.html.WebPage;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
+import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.IChoiceRenderer;
+import wicket.markup.html.form.PasswordTextField;
 import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.validation.AbstractFormValidator;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.AbstractReadOnlyModel;
@@ -40,30 +43,20 @@ import wicket.validation.validator.AbstractValidator;
  */
 public class UserFormPage extends BasePage {
       
-    private WebPage previous;        
-    
-    private JtracFeedbackMessageFilter filter;
+    private WebPage previous;                
 
     public void setPrevious(WebPage previous) {
         this.previous = previous;
-    }   
-    
-    private void addComponents(User user) {
-        FeedbackPanel feedback = new FeedbackPanel("feedback");
-        filter = new JtracFeedbackMessageFilter();
-        feedback.setFilter(filter);
-        add(feedback);  
-        add(new UserForm("form", user));
-    }
+    }    
     
     public UserFormPage() {  
         User user = new User();
         user.setLocale(getJtrac().getDefaultLocale());
-        addComponents(user);
+        add(new UserForm("form", user));
     }    
     
     public UserFormPage(User user) {
-        addComponents(user);
+        add(new UserForm("form", user));
     }
     
     private class UserForm extends Form {
@@ -72,6 +65,8 @@ public class UserFormPage extends BasePage {
         private String password;
         private String passwordConfirm;
         private boolean sendNotifications;
+        
+        private JtracFeedbackMessageFilter filter;
         
         public User getUser() {
             return user;
@@ -109,8 +104,14 @@ public class UserFormPage extends BasePage {
             
             super(id);
             this.user = user;
+            
+            FeedbackPanel feedback = new FeedbackPanel("feedback");
+            filter = new JtracFeedbackMessageFilter();
+            feedback.setFilter(filter);
+            add(feedback);             
+            
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(this);
-            setModel(model);
+            setModel(model);                       
             
             // login name ======================================================
             final TextField loginName = new TextField("user.loginName");
@@ -150,6 +151,16 @@ public class UserFormPage extends BasePage {
                 }                
             });            
             add(loginName);
+            // locked ==========================================================
+            WebMarkupContainer locked = new WebMarkupContainer("locked");
+            // only way you can edit someone else is if you are an admin
+            // and of course, don't allow locking self
+            if(user.getId() != getPrincipal().getId()) {
+                locked.add(new CheckBox("user.locked"));
+            } else {
+                locked.setVisible(false);
+            }
+            add(locked);
             // name ============================================================
             add(new TextField("user.name").setRequired(true).add(new ErrorHighlighter()));
             // email ===========================================================
@@ -173,26 +184,27 @@ public class UserFormPage extends BasePage {
             }
             add(hide);
             // password ========================================================
-            final TextField passwordField = new TextField("password");            
+            final PasswordTextField passwordField = new PasswordTextField("password");            
             add(passwordField);
+            passwordField.setRequired(false);
             // confirm password ================================================
-            TextField confirmPasswordField = new TextField("passwordConfirm");
+            final PasswordTextField confirmPasswordField = new PasswordTextField("passwordConfirm");
+            confirmPasswordField.setRequired(false);
             confirmPasswordField.add(new ErrorHighlighter());
-            // validation: do the passwords match?
-            confirmPasswordField.add(new AbstractValidator() {
-                protected void onValidate(IValidatable v) {
-                    String b = (String) v.getValue();                    
-                    String a = (String) passwordField.getConvertedInput();
-                    if((a != null && !a.equals(b)) || (b!= null && !b.equals(a))) {
-                        error(v);
-                    }
+            add(confirmPasswordField);
+            // validation, do the passwords match
+            add(new AbstractFormValidator() {
+                public FormComponent[] getDependentFormComponents() {
+                    return new FormComponent[] { passwordField, confirmPasswordField };
                 }
-                @Override
-                protected String resourceKey() {                    
-                    return "user_form.passwordConfirm.error";
-                }                
-            });
-            add(confirmPasswordField);            
+                public void validate(Form form) {
+                    String a = (String) passwordField.getConvertedInput();
+                    String b = (String) confirmPasswordField.getConvertedInput();
+                    if((a != null && !a.equals(b)) || (b!= null && !b.equals(a))) {
+                        confirmPasswordField.error(localize("user_form.passwordConfirm.error"));
+                    }                    
+                }
+            });            
             // send notifications ==============================================
             add(new CheckBox("sendNotifications"));
             // cancel link

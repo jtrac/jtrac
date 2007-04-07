@@ -1,9 +1,11 @@
 <html>
     <body>
-        <wicket:extend>
-            <div class="heading"><wicket:message key="user_form.userDetails"/></div>
-            <span wicket:id="feedback"></span>
+        <wicket:extend>           
             <form wicket:id="form">
+                <div class="heading">
+                    <wicket:message key="user_form.userDetails"/>                    
+                </div>                 
+                <span wicket:id="feedback"></span>
                 <table class="jtrac">
                     <tr>
                         <td class="label">
@@ -11,7 +13,11 @@
                             <font color="red">*</font>
                         </td>    
                         <td>
-                            <input wicket:id="user.loginName" size="15"/>                                                            
+                            <input wicket:id="user.loginName" size="15"/>
+                            <span wicket:id="locked">
+                                <input type="checkbox" wicket:id="user.locked"/>
+                                <wicket:message key="user_form.locked"/>
+                            </span>
                         </td>                        
                     </tr>
                     <tr>
@@ -51,7 +57,7 @@
                             <wicket:message key="user_form.password"/>                            
                         </td>    
                         <td>
-                            <input wicket:id="password" size="15"/>                                                            
+                            <input type="password" wicket:id="password" size="15"/>                                                            
                         </td>                        
                     </tr>
                     <tr>
@@ -59,7 +65,7 @@
                             <wicket:message key="user_form.confirmPassword"/>                            
                         </td>    
                         <td>
-                            <input wicket:id="passwordConfirm" size="15"/>                                                            
+                            <input type="password" wicket:id="passwordConfirm" size="15"/>                                                            
                         </td>                        
                     </tr>
                     <tr>

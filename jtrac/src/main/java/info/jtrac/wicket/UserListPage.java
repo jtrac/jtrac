@@ -67,6 +67,8 @@ public class UserListPage extends BasePage {
                 }                                 
                 listItem.add(new Label("name", new PropertyModel(user, "name")));
                 listItem.add(new Label("loginName", new PropertyModel(user, "loginName")));                                               
+                listItem.add(new Label("email", new PropertyModel(user, "email")));
+                listItem.add(new Label("locale", new PropertyModel(user, "locale")));
                 listItem.add(new WebMarkupContainer("locked").setVisible(user.isLocked()));
                 listItem.add(new Link("edit") {
                     public void onClick() {
