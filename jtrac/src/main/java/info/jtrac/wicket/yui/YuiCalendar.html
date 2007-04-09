@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <wicket:head>
+            <script type="text/javascript" src="resources/yui/yahoo/yahoo.js"></script>
+            <script type="text/javascript" src="resources/yui/event/event.js"></script>
+            <script type="text/javascript" src="resources/yui/dom/dom.js"></script>            
+            <script type="text/javascript" src="resources/yui/calendar/calendar.js"></script>            
+            <link rel="stylesheet" type="text/css" href="resources/yui/calendar/assets/calendar.css"/>
+            <script type="text/javascript" wicket:id="handle"></script>
+        </wicket:head>
+    </head>
+    <body>
+        <wicket:panel>
+            <input wicket:id="field" size="8"/>
+            <a wicket:id="button" href="#"><img src="resources/calendar.gif"/></a>
+            <span wicket:id="container" style="display:none"></span>            
+        </wicket:panel>
+    </body>
+</html>

@@ -14,7 +14,8 @@ public class TestPage extends WebPage {
                 TestPanel panel = new TestPanel(YuiDialog.CONTENT_ID);
                 dialog.show(target, panel);
             }
-        }.setOutputMarkupId(true));
+        });
+        add(new YuiCalendar("cal"));
     }
     
 }
