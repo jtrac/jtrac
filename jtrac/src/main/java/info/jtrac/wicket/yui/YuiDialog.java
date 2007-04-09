@@ -30,38 +30,36 @@ import wicket.markup.html.panel.Panel;
  */
 public class YuiDialog extends Panel {                
         
-    public static String CONTENT_ID = "content";
+    public static String CONTENT_ID = "content";        
+    private WebMarkupContainer dialog;        
     
-    private WebMarkupContainer dialog;
-    private boolean shown;
-    
-    public YuiDialog(String id, String heading, Component body) {
-        super(id);
-        setOutputMarkupId(true);        
-        dialog = new WebMarkupContainer("dialog");
-        dialog.setRenderBodyOnly(true);
+    public YuiDialog(String id, String heading) {
+        super(id);        
+        setOutputMarkupId(true);  // for Wicket Ajax
+        dialog = new WebMarkupContainer("dialog"); 
+        dialog.setOutputMarkupId(true); // for Yahoo Dialog 
         dialog.setVisible(false);
-        add(dialog);
+        add(dialog);                        
         dialog.add(new Label("heading", heading));        
-        dialog.add(body);
+        dialog.add(new WebMarkupContainer(CONTENT_ID));      
+    }         
+    
+    public void show(AjaxRequestTarget target, Component content) {                             
+        target.addComponent(this); 
+        dialog.setVisible(true);        
+        dialog.replace(content);        
+        final String markupId = dialog.getMarkupId();
+        // using the contributor and the onDomReady Wicket helper handles the rare case that
+        // the dialog is visible and the user refreshes the backing page (possible as dialog is not modal!)
+        // so in that special case, this javascript is called at page load
+        // but in the usual Ajax request case, this behaves just like AjaxRequestTarget.appendJavascript()
         HeaderContributor contributor = new HeaderContributor(new IHeaderContributor() {
             public void renderHead(IHeaderResponse response) {
-                String markupId = YuiDialog.this.getMarkupId();
-                response.renderJavascript("var " + markupId + ";", null);
+                response.renderOnDomReadyJavascript("var " + markupId + " = new YAHOO.widget.Dialog('" + markupId + "'); " 
+                + markupId + ".render(); " + markupId + ".show();");
             }
-        });        
-        add(contributor);        
-    }         
-
-    public void show(AjaxRequestTarget target) {        
-        String markupId = getMarkupId();        
-        if(!shown) {
-            target.addComponent(this);
-            target.appendJavascript(markupId + " = new YAHOO.widget.Dialog('" + markupId + "'); " + markupId + ".render();");
-            dialog.setVisible(true);
-            shown = true;
-        }
-        target.appendJavascript(markupId + ".show();");
+        });
+        add(contributor);
     }
     
 }

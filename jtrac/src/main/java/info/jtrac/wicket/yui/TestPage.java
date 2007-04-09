@@ -6,13 +6,13 @@ import wicket.markup.html.WebPage;
 
 public class TestPage extends WebPage {
     
-    public TestPage() {
-        TestPanel panel = new TestPanel(YuiDialog.CONTENT_ID);
-        final YuiDialog dialog = new YuiDialog("dialog", "Test Heading", panel);
+    public TestPage() {        
+        final YuiDialog dialog = new YuiDialog("dialog", "Test Heading");
         add(dialog);
         add(new AjaxLink("link") {
             public void onClick(AjaxRequestTarget target) {
-                dialog.show(target);
+                TestPanel panel = new TestPanel(YuiDialog.CONTENT_ID);
+                dialog.show(target, panel);
             }
         }.setOutputMarkupId(true));
     }

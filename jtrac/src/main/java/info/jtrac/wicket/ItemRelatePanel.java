@@ -19,14 +19,13 @@ package info.jtrac.wicket;
 import static info.jtrac.domain.ItemItem.*;
 
 import info.jtrac.domain.Item;
-import info.jtrac.domain.ItemItem;
 import info.jtrac.domain.ItemSearch;
+import info.jtrac.wicket.yui.YuiDialog;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxLink;
-import wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.DropDownChoice;
@@ -48,13 +47,12 @@ public class ItemRelatePanel extends BasePanel {
         super(id);
         refId = itemSearch == null ? null : itemSearch.getRelatingItemRefId();
         if (refId != null) {
-            final ModalWindow relateWin = new ModalWindow("itemWindow");
-            add(relateWin);                                                        
+            final YuiDialog dialog = new YuiDialog("itemWindow", refId);
+            add(dialog);                                                        
             AjaxLink link = new AjaxLink("link") {
                 public void onClick(AjaxRequestTarget target) {
-                    Item item = getJtrac().loadItemByRefId(refId);
-                    relateWin.setContent(new ItemViewPanel(relateWin.getContentId(), item, true));
-                    relateWin.show(target);
+                    Item item = getJtrac().loadItemByRefId(refId);                    
+                    dialog.show(target, new ItemViewPanel(YuiDialog.CONTENT_ID, item, true));
                 }
             };
             link.add(new Label("refId", refId));             
