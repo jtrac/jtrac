@@ -139,8 +139,8 @@ public class UserFormPage extends BasePage {
             };
             delete.setDefaultFormProcessing(false);
             // only way you can delete someone else is if you are an admin
-            // and of course, don't allow deleting self            
-            if(!getPrincipal().isAdminForAllSpaces() || user.getId() == getPrincipal().getId()) {
+            // and of course, don't allow deleting self or the slightly special default admin user
+            if(!getPrincipal().isAdminForAllSpaces() || user.getId() == getPrincipal().getId() || user.getId() == 1) {
                 delete.setVisible(false);
             } 
             add(delete);
@@ -185,9 +185,10 @@ public class UserFormPage extends BasePage {
             add(loginName);
             // locked ==========================================================
             WebMarkupContainer locked = new WebMarkupContainer("locked");
+            // don't show the locked checkbox when creating new user
             // only way you can edit someone else is if you are an admin
-            // and of course, don't allow locking self
-            if(user.getId() != getPrincipal().getId()) {
+            // and of course, don't allow locking self            
+            if(user.getId() != 0 && user.getId() != getPrincipal().getId()) {
                 locked.add(new CheckBox("user.locked"));
             } else {
                 locked.setVisible(false);
