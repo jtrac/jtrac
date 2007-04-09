@@ -20,6 +20,7 @@ import static info.jtrac.domain.ItemItem.*;
 
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemItem;
+import info.jtrac.wicket.yui.YuiDialog;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.extensions.ajax.markup.html.modal.ModalWindow;
@@ -41,16 +42,19 @@ public class ItemRelateRemovePage extends BasePage {
         this.itemId = itemId;
         this.itemItem = itemItem;
         add(new ConfirmForm("form"));
-        final ModalWindow win = new ModalWindow("itemWindow");
-        add(win);
+        String relatingRefId = itemItem.getItem().getRefId();
+        String relatedRefId = itemItem.getRelatedItem().getRefId();
+        final YuiDialog relatingDialog = new YuiDialog("relatingDialog", relatingRefId);
+        final YuiDialog relatedDialog = new YuiDialog("relatedDialog", relatedRefId);
+        add(relatingDialog);
+        add(relatedDialog);
         AjaxLink relating = new AjaxLink("relating") {
             public void onClick(AjaxRequestTarget target) {
                 Item relating = getJtrac().loadItem(itemItem.getItem().getId());
-                win.setContent(new ItemViewPanel(win.getContentId(), relating, true));
-                win.show(target);
+                relatingDialog.show(target, new ItemViewPanel(YuiDialog.CONTENT_ID, relating, true));                
             }
         };
-        relating.add(new Label("refId", itemItem.getItem().getRefId()));
+        relating.add(new Label("refId", relatingRefId));
         add(relating);
         
         // TODO refactor, duplicate code in ItemViewPanel
@@ -67,8 +71,7 @@ public class ItemRelateRemovePage extends BasePage {
         AjaxLink related = new AjaxLink("related") {
             public void onClick(AjaxRequestTarget target) {
                 Item related = getJtrac().loadItem(itemItem.getRelatedItem().getId());
-                win.setContent(new ItemViewPanel(win.getContentId(), related, true));
-                win.show(target);
+                relatedDialog.show(target, new ItemViewPanel(YuiDialog.CONTENT_ID, related, true));
             }
         };
         related.add(new Label("refId", itemItem.getRelatedItem().getRefId()));
