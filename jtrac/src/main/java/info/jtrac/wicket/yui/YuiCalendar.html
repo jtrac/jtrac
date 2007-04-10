@@ -7,18 +7,29 @@
             <script type="text/javascript" src="resources/yui/calendar/calendar.js"></script>            
             <link rel="stylesheet" type="text/css" href="resources/yui/calendar/assets/calendar.css"/> 
             <script type="text/javascript">
-                function handleSelect(type, args, txtField) {
+                var calShowing = false;
+                function handleSelect(type, args, calTxt) {
                     var dates = args[0]; var date = dates[0];
                     var year = date[0], month = date[1], day = date[2];
+                    txtField = document.getElementById(calTxt[1]);
                     txtField.value = year + '-' + month + '-' + day;
+                    calShowing = false;
+                    calTxt[0].hide();
                 }
-                function showCalendar(cal, txtField) {
+                function showCalendar(cal, txtId) {
+                    if(calShowing) {
+                        calShowing = false;
+                        cal.hide();
+                        return;
+                    }
+                    txtField = document.getElementById(txtId);
                     if(txtField.value) {                        
                         a = txtField.value.split('-');
                         cal.select(a[1] + '/' + a[2] + '/' + a[0]);
                         cal.cfg.setProperty('pagedate', a[1] + '/' + a[0]);
                     }
                     cal.render();
+                    calShowing = true;
                     cal.show();
                 }
             </script>
