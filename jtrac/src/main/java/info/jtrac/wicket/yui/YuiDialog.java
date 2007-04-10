@@ -34,13 +34,15 @@ public class YuiDialog extends Panel {
     private WebMarkupContainer dialog;        
     
     public YuiDialog(String id, String heading) {
-        super(id);
+        super(id);         
+        
         add(HeaderContributor.forJavaScript("resources/yui/yahoo/yahoo.js"));
         add(HeaderContributor.forJavaScript("resources/yui/event/event.js"));
-        add(HeaderContributor.forJavaScript("resources/yui/dom/dom.js"));
+        add(HeaderContributor.forJavaScript("resources/yui/dom/dom.js"));  
         add(HeaderContributor.forJavaScript("resources/yui/dragdrop/dragdrop.js"));
         add(HeaderContributor.forJavaScript("resources/yui/container/container.js"));
-        add(HeaderContributor.forCss("resources/yui/container/assets/container.css"));         
+        add(HeaderContributor.forCss("resources/yui/container/assets/container.css")); 
+        
         setOutputMarkupId(true);  // for Wicket Ajax
         dialog = new WebMarkupContainer("dialog"); 
         dialog.setOutputMarkupId(true); // for Yahoo Dialog 
@@ -59,13 +61,12 @@ public class YuiDialog extends Panel {
         // the dialog is visible and the user refreshes the backing page (possible as dialog is not modal!)
         // so in that special case, this javascript is called at page load
         // but in the usual Ajax request case, this behaves just like AjaxRequestTarget.appendJavascript()
-        HeaderContributor contributor = new HeaderContributor(new IHeaderContributor() {
+        add(new HeaderContributor(new IHeaderContributor() {
             public void renderHead(IHeaderResponse response) {
                 response.renderOnDomReadyJavascript("var " + markupId + " = new YAHOO.widget.Dialog('" + markupId + "'); " 
                 + markupId + ".render(); " + markupId + ".show();");
             }
-        });
-        add(contributor);
-    }
+        }));
+    }    
     
 }

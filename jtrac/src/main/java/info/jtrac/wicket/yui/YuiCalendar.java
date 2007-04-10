@@ -39,13 +39,21 @@ import wicket.util.convert.converters.AbstractConverter;
  * yui date picker panel
  * TODO see if can be made FormComponentPanel for cleaner client code
  */
-public class YuiCalendar extends Panel {
+public class YuiCalendar extends Panel implements IHeaderContributor {
     
     private TextField dateField;
     private WebMarkupContainer container;
             
     public YuiCalendar(String id, BoundCompoundPropertyModel model, String path, boolean required, String label) {
-        super(id);
+        
+        super(id);        
+                
+        add(HeaderContributor.forJavaScript("resources/yui/yahoo/yahoo.js"));
+        add(HeaderContributor.forJavaScript("resources/yui/event/event.js"));
+        add(HeaderContributor.forJavaScript("resources/yui/dom/dom.js"));        
+        add(HeaderContributor.forJavaScript("resources/yui/calendar/calendar.js"));
+        add(HeaderContributor.forCss("resources/yui/calendar/assets/calendar.css"));         
+        
         dateField = new TextField("field", Date.class) {
             @Override
             public IConverter getConverter(Class clazz) {
@@ -81,6 +89,7 @@ public class YuiCalendar extends Panel {
         } else {
             add(dateField);
         }
+        
         final WebMarkupContainer button = new WebMarkupContainer("button");
         button.setOutputMarkupId(true);
         button.add(new AttributeModifier("onclick", true, new AbstractReadOnlyModel() {
@@ -89,20 +98,10 @@ public class YuiCalendar extends Panel {
             }
         }));
         add(button);
+        
         container = new WebMarkupContainer("container");
         container.setOutputMarkupId(true);
         add(container);
-        HeaderContributor contributor = new HeaderContributor(new IHeaderContributor() {
-            public void renderHead(IHeaderResponse response) {
-                String calendarId = getCalendarId();
-                response.renderOnDomReadyJavascript("init" + calendarId + "()");
-                response.renderJavascript(
-                          "function init" + calendarId + "() { "
-                        + calendarId + " = new YAHOO.widget.Calendar('" + calendarId + "', '" + getContainerId() + "'); "
-                        + calendarId + ".selectEvent.subscribe(handleSelect, [ " + calendarId + ", '" + getInputId() + "' ], true); }", null);
-            }
-        });
-        add(contributor);
     }
     
     private String getCalendarId() {
@@ -116,4 +115,13 @@ public class YuiCalendar extends Panel {
     private String getContainerId() {
         return container.getMarkupId();
     }
+
+    public void renderHead(IHeaderResponse response) {       
+        String calendarId = getCalendarId();
+        response.renderOnDomReadyJavascript("init" + calendarId + "()");
+        response.renderJavascript(
+                  "function init" + calendarId + "() { "
+                + calendarId + " = new YAHOO.widget.Calendar('" + calendarId + "', '" + getContainerId() + "'); "
+                + calendarId + ".selectEvent.subscribe(handleSelect, [ " + calendarId + ", '" + getInputId() + "' ], true); }", null);
+    }        
 }
