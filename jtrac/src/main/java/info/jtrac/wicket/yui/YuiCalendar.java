@@ -26,8 +26,8 @@ import wicket.behavior.HeaderContributor;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.form.FormComponentPanel;
 import wicket.markup.html.form.TextField;
+import wicket.markup.html.panel.Panel;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.Model;
@@ -36,9 +36,10 @@ import wicket.util.convert.IConverter;
 import wicket.util.convert.converters.AbstractConverter;
 
 /**
- * date picker panel
+ * yui date picker panel
+ * TODO see if can be made FormComponentPanel for cleaner client code
  */
-public class YuiCalendar extends FormComponentPanel {
+public class YuiCalendar extends Panel {
     
     public YuiCalendar(String id, BoundCompoundPropertyModel model, String path, boolean required, String label) {
         super(id);

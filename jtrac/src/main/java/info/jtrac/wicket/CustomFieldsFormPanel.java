@@ -31,8 +31,8 @@ import wicket.markup.html.form.TextField;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Fragment;
-import wicket.model.AbstractReadOnlyModel;
 import wicket.model.BoundCompoundPropertyModel;
+import wicket.model.Model;
 
 /**
  * panel for custom fields that can be reused in the ite-create / item-view forms
@@ -59,13 +59,8 @@ public class CustomFieldsFormPanel extends BasePanel {
                             return o.toString();
                         };
                     });
-                    choice.setNullValid(true);
-                    // choice.add(new ErrorHighlighter());                    
-                    choice.setLabel(new AbstractReadOnlyModel() {
-                        public Object getObject() {
-                            return field.getLabel();
-                        }
-                    });                        
+                    choice.setNullValid(true);                                      
+                    choice.setLabel(new Model(field.getLabel()));                        
                     if (!field.isOptional()) {
                         choice.setRequired(true);
                     }
@@ -86,11 +81,7 @@ public class CustomFieldsFormPanel extends BasePanel {
                     if (!field.isOptional()) {
                         textField.setRequired(true);
                     }
-                    textField.setLabel(new AbstractReadOnlyModel() {
-                        public Object getObject() {
-                            return field.getLabel();
-                        }
-                    });                         
+                    textField.setLabel(new Model(field.getLabel()));                        
                     f.add(model.bind(textField, field.getName().getText()));
                     listItem.add(f);
                 }
