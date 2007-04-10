@@ -12,6 +12,15 @@
                     var year = date[0], month = date[1], day = date[2];
                     txtField.value = year + '-' + month + '-' + day;
                 }
+                function showCalendar(cal, txtField) {
+                    if(txtField.value) {                        
+                        a = txtField.value.split('-');
+                        cal.select(a[1] + '/' + a[2] + '/' + a[0]);
+                        cal.cfg.setProperty('pagedate', a[1] + '/' + a[0]);
+                    }
+                    cal.render();
+                    cal.show();
+                }
             </script>
         </wicket:head>
     </head>

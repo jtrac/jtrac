@@ -81,9 +81,8 @@ public class YuiCalendar extends Panel {
         final WebMarkupContainer button = new WebMarkupContainer("button");
         button.setOutputMarkupId(true);
         button.add(new AttributeModifier("onclick", true, new AbstractReadOnlyModel() {
-            public Object getObject() {
-                String markupId = YuiCalendar.this.getMarkupId();
-                return markupId + ".render(); " + markupId + ".show()";
+            public Object getObject() {                
+                return "showCalendar(" + YuiCalendar.this.getMarkupId() + ", document.getElementById('" + dateField.getMarkupId() + "'));";
             }
         }));
         add(button);
