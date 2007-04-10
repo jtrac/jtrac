@@ -15,7 +15,8 @@ public class TestPage extends WebPage {
                 dialog.show(target, panel);
             }
         });
-        add(new YuiCalendar("cal"));
+        add(new YuiCalendar("cal", null, null, false, null));
+        add(new YuiCalendar("cal2", null, null, false, null));
     }
     
 }

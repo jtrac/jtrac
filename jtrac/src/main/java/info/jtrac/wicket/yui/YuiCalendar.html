@@ -5,15 +5,21 @@
             <script type="text/javascript" src="resources/yui/event/event.js"></script>
             <script type="text/javascript" src="resources/yui/dom/dom.js"></script>            
             <script type="text/javascript" src="resources/yui/calendar/calendar.js"></script>            
-            <link rel="stylesheet" type="text/css" href="resources/yui/calendar/assets/calendar.css"/>
-            <script type="text/javascript" wicket:id="handle"></script>
+            <link rel="stylesheet" type="text/css" href="resources/yui/calendar/assets/calendar.css"/> 
+            <script type="text/javascript">
+                function handleSelect(type, args, txtField) {
+                    var dates = args[0]; var date = dates[0];
+                    var year = date[0], month = date[1], day = date[2];
+                    txtField.value = year + '-' + month + '-' + day;
+                }
+            </script>
         </wicket:head>
     </head>
     <body>
         <wicket:panel>
             <input wicket:id="field" size="8"/>
             <a wicket:id="button" href="#"><img src="resources/calendar.gif"/></a>
-            <span wicket:id="container" style="display:none"></span>            
+            <span>&nbsp;<div wicket:id="container" style="display:none;position:absolute;"></div></span>            
         </wicket:panel>
     </body>
 </html>

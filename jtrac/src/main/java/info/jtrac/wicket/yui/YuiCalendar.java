@@ -29,6 +29,8 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.FormComponentPanel;
 import wicket.markup.html.form.TextField;
 import wicket.model.AbstractReadOnlyModel;
+import wicket.model.BoundCompoundPropertyModel;
+import wicket.model.Model;
 import wicket.util.convert.ConversionException;
 import wicket.util.convert.IConverter;
 import wicket.util.convert.SimpleConverterAdapter;
@@ -38,7 +40,7 @@ import wicket.util.convert.SimpleConverterAdapter;
  */
 public class YuiCalendar extends FormComponentPanel {
     
-    public YuiCalendar(String id) {
+    public YuiCalendar(String id, BoundCompoundPropertyModel model, String path, boolean required, String label) {
         super(id);
         final TextField dateField = new TextField("field", Date.class) {
             @Override
@@ -60,17 +62,23 @@ public class YuiCalendar extends FormComponentPanel {
             }
         };
         dateField.setOutputMarkupId(true);
-        // dateField.setRequired(required);
+        dateField.setRequired(required);
         // this is only used for substituting ${label} when resolving error message
-        // dateField.setLabel(new Model(label));
+        if(label != null) {
+            dateField.setLabel(new Model(label));
+        }
         dateField.add(new ErrorHighlighter());
-        // add(model.bind(dateField, path));
-        add(dateField);
+        if(model != null) {
+            add(model.bind(dateField, path));
+        } else {
+            add(dateField);
+        }
         final WebMarkupContainer button = new WebMarkupContainer("button");
         button.setOutputMarkupId(true);
         button.add(new AttributeModifier("onclick", true, new AbstractReadOnlyModel() {
             public Object getObject() {
-                return YuiCalendar.this.getMarkupId() + ".show()";
+                String markupId = YuiCalendar.this.getMarkupId();
+                return markupId + ".render(); " + markupId + ".show()";
             }
         }));
         add(button);
@@ -80,24 +88,15 @@ public class YuiCalendar extends FormComponentPanel {
         HeaderContributor contributor = new HeaderContributor(new IHeaderContributor() {
             public void renderHead(IHeaderResponse response) {
                 String markupId = YuiCalendar.this.getMarkupId();
-                response.renderOnDomReadyJavascript(
-                        markupId + " = new YAHOO.widget.Calendar('" + markupId + "', '" + container.getMarkupId() + "', { close: true }); "
-                        + markupId + ".selectEvent.subscribe(handle" + markupId + ", '" + markupId + "', true); "
-                        + markupId + ".render();");
+                response.renderOnDomReadyJavascript("init" + markupId + "()");
+                response.renderJavascript(
+                          "function init" + markupId + "() { "
+                        + markupId + " = new YAHOO.widget.Calendar('" + markupId + "', '" + container.getMarkupId() + "', { close: true }); "
+                        + markupId + ".selectEvent.subscribe(handleSelect, document.getElementById('" + dateField.getMarkupId() + "'), true); }", null
+                );
             }
         });
         add(contributor);
-        Label script = new Label("handle", new AbstractReadOnlyModel() {
-            public Object getObject() {
-                String markupId = YuiCalendar.this.getMarkupId();
-                return "function handle" + markupId + "(type, args, obj) { "
-                        + "var dates = args[0]; var date = dates[0]; "
-                        + "var year = date[0], month = date[1], day = date[2]; "
-                        + "document.getElementById('" + dateField.getMarkupId() + "').value = year + '-' + month + '-' + day; }";
-            }
-        });
-        script.setEscapeModelStrings(false);
-        add(script);
     }
     
 }
