@@ -17,7 +17,6 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Config;
-import java.io.Serializable;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
@@ -37,14 +36,24 @@ public class ConfigFormPage extends BasePage {
         
         private String param;
         
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }         
+        
         public ConfigForm(String id, final String param, final String value) {
             
             super(id);                             
-            this.param = param;
             
-            ConfigModel modelObject = new ConfigModel();          
-            modelObject.setValue(value);
-            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(modelObject);
+            this.param = param;
+            this.value = value;
+            
+            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(this);
             setModel(model);
             
             add(new Label("heading", localize("config." + param)));
@@ -61,30 +70,11 @@ public class ConfigFormPage extends BasePage {
         }
                 
         @Override
-        protected void onSubmit() {                    
-            ConfigModel model = (ConfigModel) getModelObject();
-            getJtrac().storeConfig(new Config(param, model.getValue()));
+        protected void onSubmit() {            
+            getJtrac().storeConfig(new Config(param, value));
             setResponsePage(new ConfigListPage(param));
         }     
                         
     }        
-        
-    /**
-     * custom form backing object that wraps config value
-     * required for editing
-     */
-    private class ConfigModel implements Serializable {
-                
-        private String value;
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }       
-               
-    }
     
 }

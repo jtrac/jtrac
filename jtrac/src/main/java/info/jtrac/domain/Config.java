@@ -66,11 +66,7 @@ public class Config implements Serializable {
         this.param = param;
     }
 
-    /* custom accessor */
     public String getValue() {
-        if(value != null && value.trim().length() == 0) {
-            return null;
-        }
         return value;
     }
 
