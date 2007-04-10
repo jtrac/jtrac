@@ -19,6 +19,7 @@ package info.jtrac.wicket;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.User;
+import info.jtrac.wicket.yui.YuiCalendar;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +75,7 @@ public class CustomFieldsFormPanel extends BasePanel {
                     border.add(model.bind(choice, field.getName().getText()));                    
                     listItem.add(f);
                 } else if (field.getName().getType() == 6){ // date picker                        
-                    listItem.add(new DatePicker("field", model, field.getName().getText(), !field.isOptional(), field.getLabel()));
+                    listItem.add(new YuiCalendar("field", model, field.getName().getText(), !field.isOptional(), field.getLabel()));
                 } else {
                     Fragment f = new Fragment("field", "textField");
                     TextField textField = new TextField("field");

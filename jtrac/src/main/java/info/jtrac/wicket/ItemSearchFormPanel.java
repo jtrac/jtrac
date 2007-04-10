@@ -21,6 +21,7 @@ import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.util.UserUtils;
+import info.jtrac.wicket.yui.YuiCalendar;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -277,7 +278,7 @@ public class ItemSearchFormPanel extends BasePanel {
             // dates ===========================================================
             String createdDateLabel = getLocalizer().getString("item_search_form.createdDate", null);
             String modifiedDateLabel = getLocalizer().getString("item_search_form.historyUpdatedDate", null);            
-            add(new DatePicker("createdDateStart", model, "createdDateStart", false, createdDateLabel));
+            add(new YuiCalendar("createdDateStart", model, "createdDateStart", false, createdDateLabel));
             // TODO refactor this better when date picker component improves
             add(new WebMarkupContainer("createdDateStartLabel").add(new AbstractBehavior() {
                 @Override
@@ -287,7 +288,7 @@ public class ItemSearchFormPanel extends BasePanel {
                     }
                 }                
             }));
-            add(new DatePicker("createdDateEnd", model, "createdDateEnd", false, createdDateLabel));
+            add(new YuiCalendar("createdDateEnd", model, "createdDateEnd", false, createdDateLabel));
             add(new WebMarkupContainer("createdDateEndLabel").add(new AbstractBehavior() {
                 @Override
                 public void onComponentTag(Component c, ComponentTag tag) {
@@ -296,7 +297,7 @@ public class ItemSearchFormPanel extends BasePanel {
                     }
                 }                
             }));
-            add(new DatePicker("modifiedDateStart", model, "modifiedDateStart", false, modifiedDateLabel));
+            add(new YuiCalendar("modifiedDateStart", model, "modifiedDateStart", false, modifiedDateLabel));
             add(new WebMarkupContainer("modifiedDateStartLabel").add(new AbstractBehavior() {
                 @Override
                 public void onComponentTag(Component c, ComponentTag tag) {
@@ -305,7 +306,7 @@ public class ItemSearchFormPanel extends BasePanel {
                     }
                 }                
             }));
-            add(new DatePicker("modifiedDateEnd", model, "modifiedDateEnd", false, modifiedDateLabel));
+            add(new YuiCalendar("modifiedDateEnd", model, "modifiedDateEnd", false, modifiedDateLabel));
             add(new WebMarkupContainer("modifiedDateEndLabel").add(new AbstractBehavior() {
                 @Override
                 public void onComponentTag(Component c, ComponentTag tag) {
@@ -398,8 +399,8 @@ public class ItemSearchFormPanel extends BasePanel {
                                 }
                             }                
                         }));                        
-                        listItem.add(new DatePicker("fieldStart", model, field.getName().getText() + "Start", false, field.getLabel()));
-                        listItem.add(new DatePicker("fieldEnd", model, field.getName().getText() + "End", false, field.getLabel()));
+                        listItem.add(new YuiCalendar("fieldStart", model, field.getName().getText() + "Start", false, field.getLabel()));
+                        listItem.add(new YuiCalendar("fieldEnd", model, field.getName().getText() + "End", false, field.getLabel()));
                     }                    
                 };
                 listView.setReuseItems(true);

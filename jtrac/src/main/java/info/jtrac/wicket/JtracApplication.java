@@ -36,6 +36,7 @@ import wicket.Component;
 import wicket.ISessionFactory;
 import wicket.Request;
 import wicket.RequestCycle;
+import wicket.Response;
 import wicket.RestartResponseAtInterceptPageException;
 import wicket.Session;
 import wicket.authorization.Action;
@@ -43,7 +44,6 @@ import wicket.authorization.IAuthorizationStrategy;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebRequest;
 import wicket.request.target.coding.IndexedParamUrlCodingStrategy;
-import wicket.request.target.coding.QueryStringUrlCodingStrategy;
 import wicket.resource.loader.IStringResourceLoader;
 
 /**
@@ -165,7 +165,7 @@ public class JtracApplication extends WebApplication {
     @Override
     public ISessionFactory getSessionFactory() {
         return new ISessionFactory() {
-            public Session newSession(Request request) {
+            public Session newSession(Request request, Response response) {
                 return new JtracSession(JtracApplication.this, request);
             }
         };      

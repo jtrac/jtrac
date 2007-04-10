@@ -20,12 +20,12 @@ import info.jtrac.wicket.ErrorHighlighter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import wicket.AttributeModifier;
 import wicket.behavior.HeaderContributor;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.FormComponentPanel;
 import wicket.markup.html.form.TextField;
 import wicket.model.AbstractReadOnlyModel;
@@ -33,7 +33,7 @@ import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.Model;
 import wicket.util.convert.ConversionException;
 import wicket.util.convert.IConverter;
-import wicket.util.convert.SimpleConverterAdapter;
+import wicket.util.convert.converters.AbstractConverter;
 
 /**
  * date picker panel
@@ -45,18 +45,22 @@ public class YuiCalendar extends FormComponentPanel {
         final TextField dateField = new TextField("field", Date.class) {
             @Override
             public IConverter getConverter(Class clazz) {
-                return new SimpleConverterAdapter() {
+                return new AbstractConverter() {
                     private DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                    public String toString(Object o) {
-                        Date d = (Date) o;                        
-                        return df.format(d);
-                    }
-                    public Object toObject(String s) {
+                    public Object convertToObject(String s, Locale locale) {
                         try {
                             return df.parse(s);
                         } catch (Exception e) {
                             throw new ConversionException(e);
-                        }
+                        }                                                
+                    }
+                    protected Class getTargetType() {
+                        return Date.class;
+                    } 
+                    @Override
+                    public String convertToString(Object o, Locale locale) {
+                        Date d = (Date) o;                        
+                        return df.format(d);
                     }                    
                 };
             }
