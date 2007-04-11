@@ -12,20 +12,24 @@
                     calTxt[0].hide();
                 }
                 function showCalendar(cal, txtId) {
-                    if(calShowing) {
-                        calShowing = false;
+                    if(calShowing) {                        
                         cal.hide();
+                        calShowing = false;
                         return;
                     }
-                    txtField = document.getElementById(txtId);
+                    txtField = document.getElementById(txtId);                    
                     if(txtField.value) {                        
-                        a = txtField.value.split('-');
-                        cal.select(a[1] + '/' + a[2] + '/' + a[0]);
+                        var a = txtField.value.split('-'); 
+                        var date = new Date(a[0], a[1] - 1, a[2]);                        
+                        if(date.valueOf() + '' == 'NaN') {
+                            return;
+                        }
+                        cal.select(date);
                         cal.cfg.setProperty('pagedate', a[1] + '/' + a[0]);
                     }
-                    cal.render();
-                    calShowing = true;
+                    cal.render();                    
                     cal.show();
+                    calShowing = true;
                 }
             </script>
         </wicket:head>
@@ -34,7 +38,7 @@
         <wicket:panel>
             <input wicket:id="field" size="8"/>
             <a wicket:id="button" href="#"><img src="resources/calendar.gif"/></a>
-            <span>&nbsp;<div wicket:id="container" style="display:none;position:absolute;"></div></span>            
+            <div wicket:id="container" style="display:none;position:absolute"></div>          
         </wicket:panel>
     </body>
 </html>
