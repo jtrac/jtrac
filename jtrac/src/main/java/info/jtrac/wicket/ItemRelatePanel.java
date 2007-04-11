@@ -47,12 +47,12 @@ public class ItemRelatePanel extends BasePanel {
         super(id);
         refId = itemSearch == null ? null : itemSearch.getRelatingItemRefId();
         if (refId != null) {
-            final YuiDialog dialog = new YuiDialog("itemWindow", refId);
+            final YuiDialog dialog = new YuiDialog("itemWindow");
             add(dialog);                                                        
             AjaxLink link = new AjaxLink("link") {
                 public void onClick(AjaxRequestTarget target) {
                     Item item = getJtrac().loadItemByRefId(refId);                    
-                    dialog.show(target, new ItemViewPanel(YuiDialog.CONTENT_ID, item, true));
+                    dialog.show(target, refId, new ItemViewPanel(YuiDialog.CONTENT_ID, item, true));
                 }
             };
             link.add(new Label("refId", refId));             

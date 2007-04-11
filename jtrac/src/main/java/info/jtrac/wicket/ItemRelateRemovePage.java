@@ -42,16 +42,16 @@ public class ItemRelateRemovePage extends BasePage {
         this.itemId = itemId;
         this.itemItem = itemItem;
         add(new ConfirmForm("form"));
-        String relatingRefId = itemItem.getItem().getRefId();
-        String relatedRefId = itemItem.getRelatedItem().getRefId();
-        final YuiDialog relatingDialog = new YuiDialog("relatingDialog", relatingRefId);
-        final YuiDialog relatedDialog = new YuiDialog("relatedDialog", relatedRefId);
+        final String relatingRefId = itemItem.getItem().getRefId();
+        final String relatedRefId = itemItem.getRelatedItem().getRefId();
+        final YuiDialog relatingDialog = new YuiDialog("relatingDialog");
+        final YuiDialog relatedDialog = new YuiDialog("relatedDialog");
         add(relatingDialog);
         add(relatedDialog);
         AjaxLink relating = new AjaxLink("relating") {
             public void onClick(AjaxRequestTarget target) {
                 Item relating = getJtrac().loadItem(itemItem.getItem().getId());
-                relatingDialog.show(target, new ItemViewPanel(YuiDialog.CONTENT_ID, relating, true));                
+                relatingDialog.show(target, relatingRefId, new ItemViewPanel(YuiDialog.CONTENT_ID, relating, true));                
             }
         };
         relating.add(new Label("refId", relatingRefId));
@@ -71,7 +71,7 @@ public class ItemRelateRemovePage extends BasePage {
         AjaxLink related = new AjaxLink("related") {
             public void onClick(AjaxRequestTarget target) {
                 Item related = getJtrac().loadItem(itemItem.getRelatedItem().getId());
-                relatedDialog.show(target, new ItemViewPanel(YuiDialog.CONTENT_ID, related, true));
+                relatedDialog.show(target, relatedRefId, new ItemViewPanel(YuiDialog.CONTENT_ID, related, true));
             }
         };
         related.add(new Label("refId", itemItem.getRelatedItem().getRefId()));

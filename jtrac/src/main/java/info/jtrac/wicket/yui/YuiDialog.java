@@ -24,6 +24,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.PropertyModel;
 
 /**
  * custom wicketized yahoo ui dialog widget
@@ -31,9 +32,18 @@ import org.apache.wicket.markup.html.panel.Panel;
 public class YuiDialog extends Panel {                
         
     public static String CONTENT_ID = "content";        
-    private WebMarkupContainer dialog;        
+    private WebMarkupContainer dialog;
+    private String heading;    
+
+    public String getHeading() {
+        return heading;
+    }
     
-    public YuiDialog(String id, String heading) {
+    public void setHeading(String heading) {
+        this.heading = heading;
+    }
+    
+    public YuiDialog(String id) {
         super(id);         
         
         add(HeaderContributor.forJavaScript("resources/yui/yahoo/yahoo-min.js"));
@@ -41,6 +51,7 @@ public class YuiDialog extends Panel {
         add(HeaderContributor.forJavaScript("resources/yui/dom/dom-min.js"));  
         add(HeaderContributor.forJavaScript("resources/yui/dragdrop/dragdrop-min.js"));
         add(HeaderContributor.forJavaScript("resources/yui/container/container-min.js"));
+        add(HeaderContributor.forJavaScript("resources/yui/container/resize-dialog.js"));
         add(HeaderContributor.forCss("resources/yui/container/assets/container.css")); 
         
         setOutputMarkupId(true);  // for Wicket Ajax
@@ -48,11 +59,12 @@ public class YuiDialog extends Panel {
         dialog.setOutputMarkupId(true); // for Yahoo Dialog 
         dialog.setVisible(false);
         add(dialog);                        
-        dialog.add(new Label("heading", heading));        
+        dialog.add(new Label("heading", new PropertyModel(this, "heading")));        
         dialog.add(new WebMarkupContainer(CONTENT_ID));      
     }         
     
-    public void show(AjaxRequestTarget target, Component content) {                             
+    public void show(AjaxRequestTarget target, String heading, Component content) {
+        this.heading = heading;
         target.addComponent(this); 
         dialog.setVisible(true);        
         dialog.replace(content);        
@@ -63,7 +75,8 @@ public class YuiDialog extends Panel {
         // but in the usual Ajax request case, this behaves just like AjaxRequestTarget.appendJavascript()
         add(new HeaderContributor(new IHeaderContributor() {
             public void renderHead(IHeaderResponse response) {
-                response.renderOnDomReadyJavascript("var " + markupId + " = new YAHOO.widget.Dialog('" + markupId + "'); " 
+                response.renderOnDomReadyJavascript("var " + markupId + " = new YAHOO.widget.ResizeDialog('" + markupId + "', " 
+                + " { constraintoviewport : true }); " 
                 + markupId + ".render(); " + markupId + ".show();");
             }
         }));
