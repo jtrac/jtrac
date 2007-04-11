@@ -36,11 +36,11 @@ public class YuiDialog extends Panel {
     public YuiDialog(String id, String heading) {
         super(id);         
         
-        add(HeaderContributor.forJavaScript("resources/yui/yahoo/yahoo.js"));
-        add(HeaderContributor.forJavaScript("resources/yui/event/event.js"));
-        add(HeaderContributor.forJavaScript("resources/yui/dom/dom.js"));  
-        add(HeaderContributor.forJavaScript("resources/yui/dragdrop/dragdrop.js"));
-        add(HeaderContributor.forJavaScript("resources/yui/container/container.js"));
+        add(HeaderContributor.forJavaScript("resources/yui/yahoo/yahoo-min.js"));
+        add(HeaderContributor.forJavaScript("resources/yui/event/event-min.js"));
+        add(HeaderContributor.forJavaScript("resources/yui/dom/dom-min.js"));  
+        add(HeaderContributor.forJavaScript("resources/yui/dragdrop/dragdrop-min.js"));
+        add(HeaderContributor.forJavaScript("resources/yui/container/container-min.js"));
         add(HeaderContributor.forCss("resources/yui/container/assets/container.css")); 
         
         setOutputMarkupId(true);  // for Wicket Ajax

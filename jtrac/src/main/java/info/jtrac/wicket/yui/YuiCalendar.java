@@ -48,10 +48,10 @@ public class YuiCalendar extends Panel implements IHeaderContributor {
         
         super(id);        
                 
-        add(HeaderContributor.forJavaScript("resources/yui/yahoo/yahoo.js"));
-        add(HeaderContributor.forJavaScript("resources/yui/event/event.js"));
-        add(HeaderContributor.forJavaScript("resources/yui/dom/dom.js"));        
-        add(HeaderContributor.forJavaScript("resources/yui/calendar/calendar.js"));
+        add(HeaderContributor.forJavaScript("resources/yui/yahoo/yahoo-min.js"));
+        add(HeaderContributor.forJavaScript("resources/yui/event/event-min.js"));
+        add(HeaderContributor.forJavaScript("resources/yui/dom/dom-min.js"));        
+        add(HeaderContributor.forJavaScript("resources/yui/calendar/calendar-min.js"));
         add(HeaderContributor.forCss("resources/yui/calendar/assets/calendar.css"));         
         
         dateField = new TextField("field", Date.class) {
