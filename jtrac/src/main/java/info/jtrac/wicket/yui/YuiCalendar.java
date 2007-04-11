@@ -52,6 +52,7 @@ public class YuiCalendar extends Panel implements IHeaderContributor {
         add(HeaderContributor.forJavaScript("resources/yui/event/event-min.js"));
         add(HeaderContributor.forJavaScript("resources/yui/dom/dom-min.js"));        
         add(HeaderContributor.forJavaScript("resources/yui/calendar/calendar-min.js"));
+        add(HeaderContributor.forJavaScript("resources/yui/calendar/calendar-utils.js"));
         add(HeaderContributor.forCss("resources/yui/calendar/assets/calendar.css"));         
         
         dateField = new TextField("field", Date.class) {
@@ -122,6 +123,6 @@ public class YuiCalendar extends Panel implements IHeaderContributor {
         response.renderJavascript(
                   "function init" + calendarId + "() { "
                 + calendarId + " = new YAHOO.widget.Calendar('" + calendarId + "', '" + getContainerId() + "'); "
-                + calendarId + ".selectEvent.subscribe(handleSelect, [ " + calendarId + ", '" + getInputId() + "' ], true); }", null);
+                + calendarId + ".selectEvent.subscribe(handleSelect, [ " + calendarId + ", '" + getInputId() + "' ], true); }", null);        
     }        
 }

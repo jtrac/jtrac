@@ -7,12 +7,12 @@ import org.apache.wicket.markup.html.WebPage;
 public class TestPage extends WebPage {
     
     public TestPage() {        
-        final YuiDialog dialog = new YuiDialog("dialog", "Test Heading");
+        final YuiDialog dialog = new YuiDialog("dialog");
         add(dialog);
         add(new AjaxLink("link") {
             public void onClick(AjaxRequestTarget target) {
                 TestPanel panel = new TestPanel(YuiDialog.CONTENT_ID);
-                dialog.show(target, panel);
+                dialog.show(target, "Test Heading", panel);
             }
         });
         add(new YuiCalendar("cal", null, null, false, null));
