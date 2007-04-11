@@ -16,10 +16,10 @@
 
 package info.jtrac.wicket;
 
-import wicket.Component;
-import wicket.behavior.AbstractBehavior;
-import wicket.markup.ComponentTag;
-import wicket.markup.html.form.FormComponent;
+import org.apache.wicket.Component;
+import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.form.FormComponent;
 
 /**
  * switches on css styling to highlight invalid form input

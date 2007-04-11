@@ -21,13 +21,13 @@ import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
-import wicket.ajax.AjaxRequestTarget;
-import wicket.ajax.markup.html.AjaxLink;
-import wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
-import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.basic.Label;
-import wicket.markup.html.link.Link;
-import wicket.model.PropertyModel;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.model.PropertyModel;
 
 /**
  * panel for showing the total (un-expanded) statistics for

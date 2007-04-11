@@ -20,16 +20,16 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.util.ValidationUtils;
 import java.io.Serializable;
-import wicket.markup.html.WebPage;
-import wicket.markup.html.basic.Label;
-import wicket.markup.html.form.Button;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.form.TextField;
-import wicket.markup.html.link.Link;
-import wicket.markup.html.panel.FeedbackPanel;
-import wicket.model.BoundCompoundPropertyModel;
-import wicket.validation.IValidatable;
-import wicket.validation.validator.AbstractValidator;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.BoundCompoundPropertyModel;
+import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.validator.AbstractValidator;
 
 /**
  * space state add / edit form

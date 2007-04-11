@@ -32,19 +32,19 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import wicket.Component;
-import wicket.ISessionFactory;
-import wicket.Request;
-import wicket.RequestCycle;
-import wicket.Response;
-import wicket.RestartResponseAtInterceptPageException;
-import wicket.Session;
-import wicket.authorization.Action;
-import wicket.authorization.IAuthorizationStrategy;
-import wicket.protocol.http.WebApplication;
-import wicket.protocol.http.WebRequest;
-import wicket.request.target.coding.IndexedParamUrlCodingStrategy;
-import wicket.resource.loader.IStringResourceLoader;
+import org.apache.wicket.Component;
+import org.apache.wicket.ISessionFactory;
+import org.apache.wicket.Request;
+import org.apache.wicket.RequestCycle;
+import org.apache.wicket.Response;
+import org.apache.wicket.RestartResponseAtInterceptPageException;
+import org.apache.wicket.Session;
+import org.apache.wicket.authorization.Action;
+import org.apache.wicket.authorization.IAuthorizationStrategy;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.WebRequest;
+import org.apache.wicket.request.target.coding.IndexedParamUrlCodingStrategy;
+import org.apache.wicket.resource.loader.IStringResourceLoader;
 
 /**
  * main wicket application for jtrac
@@ -166,7 +166,7 @@ public class JtracApplication extends WebApplication {
     public ISessionFactory getSessionFactory() {
         return new ISessionFactory() {
             public Session newSession(Request request, Response response) {
-                return new JtracSession(JtracApplication.this, request);
+                return new JtracSession(JtracApplication.this, request, response);
             }
         };      
     }

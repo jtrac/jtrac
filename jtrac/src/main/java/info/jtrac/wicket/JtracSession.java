@@ -19,9 +19,10 @@ package info.jtrac.wicket;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import org.springframework.util.StringUtils;
-import wicket.Request;
-import wicket.protocol.http.WebApplication;
-import wicket.protocol.http.WebSession;
+import org.apache.wicket.Request;
+import org.apache.wicket.Response;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.WebSession;
 
 /**
  * custom wicket session for JTrac
@@ -31,8 +32,8 @@ public class JtracSession extends WebSession {
     private User user;
     private Space currentSpace;
     
-    public JtracSession(final WebApplication application, Request request) {
-        super(application, request);
+    public JtracSession(final WebApplication application, Request request, Response response) {
+        super(application, request, response);
     }
 
     public void setUser(User user) {

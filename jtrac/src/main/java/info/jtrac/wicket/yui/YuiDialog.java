@@ -16,14 +16,14 @@
 
 package info.jtrac.wicket.yui;
 
-import wicket.Component;
-import wicket.ajax.AjaxRequestTarget;
-import wicket.behavior.HeaderContributor;
-import wicket.markup.html.IHeaderContributor;
-import wicket.markup.html.IHeaderResponse;
-import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.basic.Label;
-import wicket.markup.html.panel.Panel;
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  * custom wicketized yahoo ui dialog widget

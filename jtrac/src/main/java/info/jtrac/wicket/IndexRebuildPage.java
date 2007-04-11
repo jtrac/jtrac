@@ -19,14 +19,14 @@ package info.jtrac.wicket;
 import info.jtrac.Jtrac;
 import info.jtrac.domain.AbstractItem;
 import java.util.List;
-import wicket.ajax.AjaxSelfUpdatingTimerBehavior;
-import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.basic.Label;
-import wicket.markup.html.form.Button;
-import wicket.markup.html.form.Form;
-import wicket.model.AbstractReadOnlyModel;
-import wicket.model.IModel;
-import wicket.util.time.Duration;
+import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.time.Duration;
 
 /**
  * rebuild indexes admin option

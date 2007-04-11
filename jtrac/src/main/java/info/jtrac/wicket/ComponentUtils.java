@@ -21,9 +21,9 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import wicket.Component;
-import wicket.markup.html.basic.Label;
-import wicket.model.StringResourceModel;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.StringResourceModel;
 
 /**
  * this common class helps to make things easier for the sub-classes

@@ -1,8 +1,8 @@
 package info.jtrac.wicket.yui;
 
-import wicket.ajax.AjaxRequestTarget;
-import wicket.ajax.markup.html.AjaxLink;
-import wicket.markup.html.WebPage;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.html.WebPage;
 
 public class TestPage extends WebPage {
     

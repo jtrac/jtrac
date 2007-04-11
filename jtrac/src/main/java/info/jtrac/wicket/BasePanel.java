@@ -21,7 +21,7 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  * base class for all wicket panels, this provides

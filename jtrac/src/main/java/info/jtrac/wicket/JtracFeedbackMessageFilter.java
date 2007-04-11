@@ -18,9 +18,9 @@ package info.jtrac.wicket;
 
 import java.util.HashSet;
 import java.util.Set;
-import wicket.feedback.FeedbackMessage;
-import wicket.feedback.IFeedbackMessageFilter;
-import wicket.markup.html.form.ValidationErrorFeedback;
+import org.apache.wicket.feedback.FeedbackMessage;
+import org.apache.wicket.feedback.IFeedbackMessageFilter;
+import org.apache.wicket.markup.html.form.ValidationErrorFeedback;
 
 /**
  * custom feedback message filter, removes duplicates and works in conjunction

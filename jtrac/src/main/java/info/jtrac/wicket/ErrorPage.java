@@ -16,7 +16,7 @@
 
 package info.jtrac.wicket;
 
-import wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.basic.Label;
 
 /**
  * error page

@@ -17,11 +17,11 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Config;
-import wicket.markup.html.basic.Label;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.form.TextField;
-import wicket.markup.html.link.Link;
-import wicket.model.BoundCompoundPropertyModel;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.model.BoundCompoundPropertyModel;
 
 /**
  * config value edit form

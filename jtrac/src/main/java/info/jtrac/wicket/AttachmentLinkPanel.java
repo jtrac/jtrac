@@ -23,12 +23,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import wicket.IRequestTarget;
-import wicket.RequestCycle;
-import wicket.markup.html.basic.Label;
-import wicket.markup.html.link.Link;
-import wicket.protocol.http.WebResponse;
-import wicket.util.io.Streams;
+import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.RequestCycle;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.util.io.Streams;
 
 /**
  * link for downloading an attachment

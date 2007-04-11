@@ -19,10 +19,10 @@ package info.jtrac.wicket;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.User;
-import wicket.PageParameters;
-import wicket.RestartResponseAtInterceptPageException;
-import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.link.Link;
+import org.apache.wicket.PageParameters;
+import org.apache.wicket.RestartResponseAtInterceptPageException;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.link.Link;
 
 /**
  * dashboard page

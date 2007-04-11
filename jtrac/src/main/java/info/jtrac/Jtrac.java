@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.acegisecurity.userdetails.UserDetailsService;
-import wicket.markup.html.form.upload.FileUpload;
+import org.apache.wicket.markup.html.form.upload.FileUpload;
 
 /**
  * Jtrac main business interface (Service Layer)

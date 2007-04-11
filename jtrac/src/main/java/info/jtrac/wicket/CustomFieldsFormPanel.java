@@ -23,16 +23,16 @@ import info.jtrac.wicket.yui.YuiCalendar;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.basic.Label;
-import wicket.markup.html.form.DropDownChoice;
-import wicket.markup.html.form.IChoiceRenderer;
-import wicket.markup.html.form.TextField;
-import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.ListView;
-import wicket.markup.html.panel.Fragment;
-import wicket.model.BoundCompoundPropertyModel;
-import wicket.model.Model;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.model.BoundCompoundPropertyModel;
+import org.apache.wicket.model.Model;
 
 /**
  * panel for custom fields that can be reused in the ite-create / item-view forms

@@ -18,8 +18,8 @@ package info.jtrac.wicket;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import wicket.markup.html.WebPage;
-import wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 
 /**
  * logout page.  the session invalidation code is in HeaderPanel

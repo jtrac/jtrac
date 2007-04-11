@@ -17,13 +17,13 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Space;
-import wicket.behavior.SimpleAttributeModifier;
-import wicket.markup.html.basic.Label;
-import wicket.markup.html.link.Link;
-import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.ListView;
-import wicket.model.LoadableDetachableModel;
-import wicket.model.PropertyModel;
+import org.apache.wicket.behavior.SimpleAttributeModifier;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.PropertyModel;
 
 /**
  * space management page

@@ -17,7 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.User;
-import wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.Link;
 
 /**
  * options menu page

@@ -60,7 +60,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.util.StringUtils;
-import wicket.markup.html.form.upload.FileUpload;
+import org.apache.wicket.markup.html.form.upload.FileUpload;
 
 
 /**
@@ -69,19 +69,19 @@ import wicket.markup.html.form.upload.FileUpload;
  * For data persistence this delegates to JtracDao
  */
 public class JtracImpl implements Jtrac {
-    
+
     private JtracDao dao;
     private PasswordEncoder passwordEncoder;
     private MailSender mailSender;
     private Indexer indexer;
     private IndexSearcher indexSearcher;
     private MessageSource messageSource;
-    
+
     private Map<String, String> locales;
     private String defaultLocale;
     private String releaseVersion;
     private String releaseTimestamp;
-    
+
     public void setLocaleList(String[] array) {
         locales = new LinkedHashMap<String, String>();
         for(String localeString : array) {
@@ -90,23 +90,23 @@ public class JtracImpl implements Jtrac {
         }
         logger.info("available locales configured " + locales);
     }
-    
+
     public void setDao(JtracDao dao) {
         this.dao = dao;
     }
-    
+
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
-    
+
     public void setIndexSearcher(IndexSearcher indexSearcher) {
         this.indexSearcher = indexSearcher;
     }
-    
+
     public void setIndexer(Indexer indexer) {
         this.indexer = indexer;
     }
-    
+
     public void setMessageSource(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
@@ -117,10 +117,10 @@ public class JtracImpl implements Jtrac {
 
     public void setReleaseVersion(String releaseVersion) {
         this.releaseVersion = releaseVersion;
-    }    
-    
+    }
+
     private final Log logger = LogFactory.getLog(getClass());
-    
+
     /**
      * this has not been factored into the util package or a helper class
      * because it depends on the PasswordEncoder configured
@@ -131,7 +131,7 @@ public class JtracImpl implements Jtrac {
         r.nextBytes(ab);
         return passwordEncoder.encodePassword(new String(ab), null).substring(24);
     }
-    
+
     /**
      * this has not been factored into the util package or a helper class
      * because it depends on the PasswordEncoder configured
@@ -139,23 +139,23 @@ public class JtracImpl implements Jtrac {
     public String encodeClearText(String clearText) {
         return passwordEncoder.encodePassword(clearText, null);
     }
-    
+
     public Map<String, String> getLocales() {
         return locales;
     }
-    
+
     public String getDefaultLocale() {
         return defaultLocale;
     }
-    
+
     /**
      * this is automatically called by spring init-method hook on
      * startup, also called whenever config is edited to refresh
      */
     public void init() {
-        
+
         Map<String, String> config = loadAllConfig();
-        
+
         // initialize default locale
         String temp = config.get("locale.default");
         if (temp == null || !locales.containsKey(temp)) {
@@ -164,14 +164,14 @@ public class JtracImpl implements Jtrac {
         }
         logger.info("default locale set to '" + temp + "'");
         defaultLocale = temp;
-        
+
         // initialize mail sender
-        this.mailSender = new MailSender(config, messageSource, defaultLocale);        
-        
+        this.mailSender = new MailSender(config, messageSource, defaultLocale);
+
     }
-    
-    //==========================================================================    
-    
+
+    //==========================================================================
+
     private Attachment getAttachment(FileUpload fileUpload) {
         if(fileUpload == null) {
             return null;
@@ -184,26 +184,26 @@ public class JtracImpl implements Jtrac {
         attachment.setFilePrefix(attachment.getId());
         return attachment;
     }
-    
+
     private void writeToFile(FileUpload fileUpload, Attachment attachment) {
         if(fileUpload == null) {
             return;
-        }        
+        }
         File file = AttachmentUtils.getFile(attachment);
         try {
             fileUpload.writeTo(file);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        
+
     }
-    
+
     public synchronized void storeItem(Item item, FileUpload fileUpload) {
         History history = new History(item);
         Attachment attachment = getAttachment(fileUpload);
         if(attachment != null) {
             item.add(attachment);
-            history.setAttachment(attachment);            
+            history.setAttachment(attachment);
         }
         Date now = new Date();
         item.setTimeStamp(now);
@@ -211,12 +211,12 @@ public class JtracImpl implements Jtrac {
         item.add(history);
         SpaceSequence spaceSequence = dao.loadSpaceSequence(item.getSpace().getSpaceSequence().getId());
         item.setSequenceNum(spaceSequence.next());
-        // the synchronize and the flush at the end guarantee that item sequence numbers will be unique     
-        dao.storeSpaceSequence(spaceSequence);        
+        // the synchronize and the flush at the end guarantee that item sequence numbers will be unique
+        dao.storeSpaceSequence(spaceSequence);
         // this will at the moment execute unnecessary updates (bug in Hibernate handling of "version" property)
         // se http://opensource.atlassian.com/projects/hibernate/browse/HHH-1401
-        // TODO confirm if above does not happen anymore        
-        dao.storeItem(item); 
+        // TODO confirm if above does not happen anymore
+        dao.storeItem(item);
         dao.flush();
         writeToFile(fileUpload, attachment);
         indexer.index(item);
@@ -225,7 +225,7 @@ public class JtracImpl implements Jtrac {
             mailSender.send(item, messageSource);
         }
     }
-        
+
     public void updateItem(Item item, User user) {
         logger.debug("update item called");
         History history = new History(item);
@@ -240,9 +240,9 @@ public class JtracImpl implements Jtrac {
         // TODO index?
         if (item.isSendNotifications()) {
             mailSender.send(item, messageSource);
-        }        
+        }
     }
-    
+
     public synchronized void storeHistoryForItem(long itemId, History history, FileUpload fileUpload) {
         Item item = dao.loadItem(itemId);
         // first apply edits onto item record before we change the item status
@@ -262,9 +262,9 @@ public class JtracImpl implements Jtrac {
         Attachment attachment = getAttachment(fileUpload);
         if(attachment != null) {
             item.add(attachment);
-            history.setAttachment(attachment);              
+            history.setAttachment(attachment);
         }
-        item.add(history);        
+        item.add(history);
         dao.storeItem(item);
         dao.flush();
         writeToFile(fileUpload, attachment);
@@ -273,11 +273,11 @@ public class JtracImpl implements Jtrac {
             mailSender.send(item, messageSource);
         }
     }
-    
+
     public Item loadItem(long id) {
         return dao.loadItem(id);
     }
-    
+
     public Item loadItemByRefId(String refId) {
         ItemRefId itemRefId = new ItemRefId(refId); // throws runtime exception if invalid id
         List<Item> items = dao.findItems(itemRefId.getSequenceNum(), itemRefId.getPrefixCode());
@@ -286,11 +286,11 @@ public class JtracImpl implements Jtrac {
         }
         return items.get(0);
     }
-    
+
     public History loadHistory(long id) {
         return dao.loadHistory(id);
     }
-    
+
     public List<Item> findItems(ItemSearch itemSearch) {
         String summary = itemSearch.getSummary();
         if (summary != null) {
@@ -303,8 +303,8 @@ public class JtracImpl implements Jtrac {
         }
         return dao.findItems(itemSearch);
     }
-    
-    public void removeItem(Item item) {        
+
+    public void removeItem(Item item) {
         if(item.getRelatingItems() != null) {
             for(ItemItem itemItem : item.getRelatingItems()) {
                 removeItemItem(itemItem);
@@ -314,46 +314,46 @@ public class JtracImpl implements Jtrac {
             for(ItemItem itemItem : item.getRelatedItems()) {
                 removeItemItem(itemItem);
             }
-        }        
+        }
         dao.removeItem(item);
     }
-    
+
     public void removeItemItem(ItemItem itemItem) {
         dao.removeItemItem(itemItem);
     }
-    
+
     public int loadCountOfRecordsHavingFieldNotNull(Space space, Field field) {
         return dao.loadCountOfRecordsHavingFieldNotNull(space, field);
     }
-    
+
     public int bulkUpdateFieldToNull(Space space, Field field) {
         return dao.bulkUpdateFieldToNull(space, field);
     }
-    
+
     public int loadCountOfRecordsHavingFieldWithValue(Space space, Field field, int optionKey) {
         return dao.loadCountOfRecordsHavingFieldWithValue(space, field, optionKey);
     }
-    
+
     public int bulkUpdateFieldToNullForValue(Space space, Field field, int optionKey) {
         return dao.bulkUpdateFieldToNullForValue(space, field, optionKey);
     }
-    
+
     public int loadCountOfRecordsHavingStatus(Space space, int status) {
         return dao.loadCountOfRecordsHavingStatus(space, status);
     }
-    
+
     public int bulkUpdateStatusToOpen(Space space, int status) {
         return dao.bulkUpdateStatusToOpen(space, status);
     }
-    
+
     public int bulkUpdateRenameSpaceRole(Space space, String oldRoleKey, String newRoleKey) {
         return dao.bulkUpdateRenameSpaceRole(space, oldRoleKey, newRoleKey);
     }
-    
+
     public int bulkUpdateDeleteSpaceRole(Space space, String roleKey) {
         return dao.bulkUpdateDeleteSpaceRole(space, roleKey);
-    }    
-    
+    }
+
     // =========  Acegi UserDetailsService implementation ==========
     public UserDetails loadUserByUsername(String loginName) {
         List<User> users = null;
@@ -369,7 +369,7 @@ public class JtracImpl implements Jtrac {
         User user = users.get(0);
         Map<Long, Boolean> map = new HashMap<Long, Boolean>();
         for(UserSpaceRole usr : user.getSpaceRoles()) {
-            logger.debug("UserSpaceRole: " + usr);            
+            logger.debug("UserSpaceRole: " + usr);
             // this is a hack, the effect of the next line would be to
             // override hibernate lazy loading and get the space and associated metadata.
             // since this only happens only once on authentication and simplifies a lot of
@@ -377,14 +377,14 @@ public class JtracImpl implements Jtrac {
             // this is hopefully pardonable.  The downside is that there may be as many extra db hits
             // as there are spaces allocated for the user.  Hibernate caching should alleviate this
             usr.isAbleToCreateNewItem();
-        }               
+        }
         return user;
     }
-    
+
     public User loadUser(long id) {
         return dao.loadUser(id);
     }
-    
+
     public User loadUser(String loginName) {
         List<User> users = dao.findUsersByLoginName(loginName);
         if (users.size() == 0) {
@@ -392,11 +392,11 @@ public class JtracImpl implements Jtrac {
         }
         return users.get(0);
     }
-    
+
     public void storeUser(User user) {
         dao.storeUser(user);
     }
-    
+
     public void storeUser(User user, String password, boolean sendNotifications) {
         if (password == null) {
             password = generatePassword();
@@ -410,24 +410,24 @@ public class JtracImpl implements Jtrac {
 
     public void removeUser(User user) {
         dao.removeUser(user);
-    }   
-    
+    }
+
     public List<User> findAllUsers() {
         return dao.findAllUsers();
     }
-    
+
     public List<User> findUsersForSpace(long spaceId) {
         return dao.findUsersForSpace(spaceId);
     }
-    
+
     public List<UserSpaceRole> findUserRolesForSpace(long spaceId) {
         return dao.findUserRolesForSpace(spaceId);
     }
-    
+
     public List<User> findUsersWithRoleForSpace(long spaceId, String roleKey) {
         return dao.findUsersWithRoleForSpace(spaceId, roleKey);
     }
-    
+
     public List<User> findUsersForUser(User user) {
         Collection<Space> spaces = new HashSet<Space>(user.getUserSpaceRoles().size());
         for (UserSpaceRole usr : user.getUserSpaceRoles()) {
@@ -442,7 +442,7 @@ public class JtracImpl implements Jtrac {
         Set<User> userSet = new LinkedHashSet<User>(users);
         return new ArrayList<User>(userSet);
     }
-    
+
     public List<User> findUnallocatedUsersForSpace(long spaceId) {
         List<User> users = findAllUsers();
         List<UserSpaceRole> userSpaceRoles = findUserRolesForSpace(spaceId);
@@ -451,45 +451,45 @@ public class JtracImpl implements Jtrac {
         }
         return users;
     }
-    
+
     public int loadCountOfHistoryInvolvingUser(User user) {
         return dao.loadCountOfHistoryInvolvingUser(user);
     }
-    
+
     //==========================================================================
-    
+
     public CountsHolder loadCountsForUser(User user) {
         return dao.loadCountsForUser(user);
     }
-    
+
     public Counts loadCountsForUserSpace(User user, Space space) {
         return dao.loadCountsForUserSpace(user, space);
     }
-    
+
     //==========================================================================
-    
+
     public void storeUserSpaceRole(User user, Space space, String roleKey) {
         user.addSpaceWithRole(space, roleKey);
         dao.storeUser(user);
     }
-    
+
     public void removeUserSpaceRole(UserSpaceRole userSpaceRole) {
         User user = userSpaceRole.getUser();
         user.removeSpaceWithRole(userSpaceRole.getSpace(), userSpaceRole.getRoleKey());
         // dao.storeUser(user);
         dao.removeUserSpaceRole(userSpaceRole);
     }
-    
+
     public UserSpaceRole loadUserSpaceRole(long id) {
         return dao.loadUserSpaceRole(id);
     }
-    
+
     //==========================================================================
-    
+
     public Space loadSpace(long id) {
         return dao.loadSpace(id);
     }
-    
+
     public Space loadSpace(String prefixCode) {
         List<Space> spaces = dao.findSpacesByPrefixCode(prefixCode);
         if (spaces.size() == 0) {
@@ -497,19 +497,19 @@ public class JtracImpl implements Jtrac {
         }
         return spaces.get(0);
     }
-    
+
     public void storeSpace(Space space) {
         dao.storeSpace(space);
     }
-    
+
     public List<Space> findAllSpaces() {
         return dao.findAllSpaces();
     }
-    
+
     public List<Space> findSpacesWhereGuestAllowed() {
         return dao.findSpacesWhereGuestAllowed();
     }
-    
+
     public List<Space> findUnallocatedSpacesForUser(long userId) {
         List<Space> spaces = findAllSpaces();
         User user = loadUser(userId);
@@ -518,7 +518,7 @@ public class JtracImpl implements Jtrac {
         }
         return spaces;
     }
-    
+
     public void removeSpace(Space space) {
         logger.info("proceeding to delete space: " + space);
         dao.bulkUpdateDeleteSpaceRole(space, null);
@@ -526,19 +526,19 @@ public class JtracImpl implements Jtrac {
         dao.removeSpace(space);
         logger.info("successfully deleted space");
     }
-    
+
     //==========================================================================
-    
+
     public void storeMetadata(Metadata metadata) {
         dao.storeMetadata(metadata);
     }
-    
+
     public Metadata loadMetadata(long id) {
         return dao.loadMetadata(id);
     }
-    
+
     //==========================================================================
-    
+
     public Map<String, String> loadAllConfig() {
         List<Config> list = dao.findAllConfig();
         Map<String, String> allConfig = new HashMap<String, String>(list.size());
@@ -547,14 +547,14 @@ public class JtracImpl implements Jtrac {
         }
         return allConfig;
     }
-    
+
     public void storeConfig(Config config) {
         dao.storeConfig(config);
         // ugly hack, TODO make smarter in future
         // init stuff that could have changed
         init();
     }
-    
+
     public String loadConfig(String param) {
         Config config = dao.loadConfig(param);
         if (config == null) {
@@ -566,9 +566,9 @@ public class JtracImpl implements Jtrac {
         }
         return value;
     }
-    
+
     //========================================================
-    
+
     public void rebuildIndexes() {
         indexer.clearIndexes();
         List<AbstractItem> items = dao.findAllItems();
@@ -576,32 +576,32 @@ public class JtracImpl implements Jtrac {
             indexer.index(item);
         }
     }
-    
+
     public List<AbstractItem> findAllItems() {
         // this returns all Item and all History records for indexing
         return dao.findAllItems();
     }
-    
+
     public void clearIndexes() {
         indexer.clearIndexes();
     }
-    
+
     public void index(AbstractItem item) {
         indexer.index(item);
     }
-    
+
     public boolean validateTextSearchQuery(String text) {
         return indexSearcher.validateQuery(text);
     }
-    
+
     //==========================================================================
-    
+
     public String getReleaseVersion() {
         return releaseVersion;
     }
-    
+
     public String getReleaseTimestamp() {
         return releaseTimestamp;
     }
-    
+
 }

@@ -18,7 +18,7 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
-import wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 
 /**
  * item search form page

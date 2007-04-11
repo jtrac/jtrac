@@ -24,16 +24,16 @@ import info.jtrac.wicket.yui.YuiDialog;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import wicket.ajax.AjaxRequestTarget;
-import wicket.ajax.markup.html.AjaxLink;
-import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.basic.Label;
-import wicket.markup.html.form.DropDownChoice;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.form.IChoiceRenderer;
-import wicket.markup.html.form.TextArea;
-import wicket.markup.html.link.Link;
-import wicket.model.BoundCompoundPropertyModel;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.model.BoundCompoundPropertyModel;
 
 /**
  * header that appears only witin relate items use case
