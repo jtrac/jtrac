@@ -595,6 +595,17 @@ public class JtracImpl implements Jtrac {
     }
 
     //==========================================================================
+    
+    public void executeHourlyTask() {
+        logger.debug("hourly task called");
+    }
+    
+    /* configured to be called every five minutes */
+    public void executePollingTask() {
+        logger.debug("polling task called");
+    }
+    
+    //==========================================================================
 
     public String getReleaseVersion() {
         return releaseVersion;

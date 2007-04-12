@@ -107,6 +107,9 @@ public interface Jtrac extends UserDetailsService {
     void clearIndexes();
     boolean validateTextSearchQuery(String text);
     //========================================================
+    void executeHourlyTask();
+    void executePollingTask();
+    //========================================================
     String getReleaseVersion();
     String getReleaseTimestamp();
     

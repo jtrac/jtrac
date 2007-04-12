@@ -21,6 +21,7 @@
             /WEB-INF/applicationContext.xml
             /WEB-INF/applicationContext-acegi.xml
             /WEB-INF/applicationContext-lucene.xml
+            /WEB-INF/applicationContext-scheduler.xml
         </param-value>
     </context-param>  
     
