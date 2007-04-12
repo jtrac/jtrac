@@ -20,7 +20,6 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import org.springframework.util.StringUtils;
 import org.apache.wicket.Request;
-import org.apache.wicket.Response;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebSession;
 
@@ -32,8 +31,8 @@ public class JtracSession extends WebSession {
     private User user;
     private Space currentSpace;
     
-    public JtracSession(final WebApplication application, Request request, Response response) {
-        super(application, request, response);
+    public JtracSession(final WebApplication application, Request request) {
+        super(application, request);
     }
 
     public void setUser(User user) {

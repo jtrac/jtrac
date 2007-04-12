@@ -166,7 +166,7 @@ public class JtracApplication extends WebApplication {
     public ISessionFactory getSessionFactory() {
         return new ISessionFactory() {
             public Session newSession(Request request, Response response) {
-                return new JtracSession(JtracApplication.this, request, response);
+                return new JtracSession(JtracApplication.this, request);
             }
         };      
     }
