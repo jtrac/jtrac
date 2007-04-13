@@ -30,7 +30,7 @@ import org.springframework.jdbc.datasource.SingleConnectionDataSource;
  * spring factory bean to conditionally create the right data source
  * either embedded or apache dbcp
  */
-public class DataSourceBeanFactory implements FactoryBean, DisposableBean {
+public class DataSourceFactoryBean implements FactoryBean, DisposableBean {
     
     private String driverClassName;
     private String url;

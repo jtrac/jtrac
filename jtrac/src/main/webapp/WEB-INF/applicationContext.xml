@@ -49,9 +49,9 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
      
-    <!-- custom bean factory that uses spring single connection data source if embedded
+    <!-- custom factory bean that uses spring single connection data source if embedded
          HSQLDB is being used, else Apache DBCP with connection pooling -->
-    <bean id="dataSource" class="info.jtrac.config.DataSourceBeanFactory">
+    <bean id="dataSource" class="info.jtrac.config.DataSourceFactoryBean">
         <property name="driverClassName" value="${database.driver}"/>
         <property name="url" value="${database.url}"/>
         <property name="username" value="${database.username}"/>
