@@ -5,15 +5,6 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
     version="2.4">
 
-    <!--
-      - Key of the system property that should specify the root directory of this
-      - web app. Applied by WebAppRootListener or Log4jConfigListener.
-      -->
-    <context-param>
-        <param-name>webAppRootKey</param-name>
-        <param-value>jtrac.root</param-value>
-    </context-param> 
-
     <!-- Spring context config location(s) -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
@@ -25,35 +16,16 @@
         </param-value>
     </context-param>  
     
-    <!-- used by Spring Log4jConfigListener -->
+    <!-- used by Log4jConfigListener -->
+    <context-param>
+        <param-name>webAppRootKey</param-name>
+        <param-value>jtrac.root</param-value>
+    </context-param>     
+        
     <context-param>
         <param-name>log4jConfigLocation</param-name>
         <param-value>/WEB-INF/log4j.properties</param-value>
-    </context-param>
-   
-    <!--
-    <filter>
-        <filter-name>acegiSecurityFilter</filter-name>
-        <filter-class>org.acegisecurity.util.FilterToBeanProxy</filter-class>
-        <init-param>
-            <param-name>targetClass</param-name>
-            <param-value>org.acegisecurity.util.FilterChainProxy</param-value>
-        </init-param>
-    </filter>
-    
-    <filter>
-        <filter-name>encodingFilter</filter-name>   
-        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class> 
-        <init-param>    
-            <param-name>encoding</param-name>   
-            <param-value>UTF-8</param-value>    
-        </init-param>   
-        <init-param>    
-            <param-name>forceEncoding</param-name>  
-            <param-value>true</param-value> 
-        </init-param>
-    </filter>    
-    -->
+    </context-param>   
     
     <filter>
         <filter-name>openSessionInView</filter-name>
@@ -73,7 +45,7 @@
         </init-param>
     </filter>        
     
-    <!-- this should be above the wicket filter -->
+    <!-- open session should be above the wicket filter -->
     <filter-mapping>
         <filter-name>openSessionInView</filter-name>
         <url-pattern>/app/*</url-pattern>
@@ -82,70 +54,40 @@
     <filter-mapping>
         <filter-name>jtrac-app</filter-name>
         <url-pattern>/app/*</url-pattern>
-    </filter-mapping>    
-           
-    <!--
-    <filter-mapping>
-        <filter-name>encodingFilter</filter-name>
-        <servlet-name>jtrac</servlet-name>
-    </filter-mapping>       
-    
-    <filter-mapping>
-        <filter-name>acegiSecurityFilter</filter-name>
-        <url-pattern>/app/*</url-pattern>
-    </filter-mapping>
- 
-    <filter-mapping>
-        <filter-name>acegiSecurityFilter</filter-name>
-        <url-pattern>/flow/*</url-pattern>
-    </filter-mapping>      
-    -->
-    
-    <!-- Leave the listener commented-out if using JBoss -->
+    </filter-mapping>           
+        
     <listener>
         <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
     </listener>
-    
-    <!-- Spring IoC container / root (web) application context bootstrap -->
+        
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
     
-    <!-- publish HttpSessionCreatedEvent and HttpSessionDestroyedEvent 
-    to the Spring WebApplicationContext -->
-    <listener>
-        <listener-class>org.acegisecurity.ui.session.HttpSessionEventPublisher</listener-class>
-    </listener>      
-    
-    <!-- spring MVC DispatcherServlet (front controller)
-    Spring looks for /WEB-INF/<servlet-name>-servlet.xml by default 
-    and loads a web application context from it -->
     <servlet>
-        <servlet-name>jtrac</servlet-name>
+        <servlet-name>jtrac-api</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <load-on-startup>2</load-on-startup>
     </servlet>
     
     <servlet>
-        <servlet-name>casproxy</servlet-name>
+        <servlet-name>casProxy</servlet-name>
         <servlet-class>edu.yale.its.tp.cas.proxy.ProxyTicketReceptor</servlet-class>
-    </servlet>    
-    
-    <!-- JSPC_TOKEN -->
+    </servlet>        
     
     <servlet-mapping>
-        <servlet-name>casproxy</servlet-name>
+        <servlet-name>casProxy</servlet-name>
         <url-pattern>/casProxy/*</url-pattern>
-    </servlet-mapping>       
+    </servlet-mapping>
     
     <servlet-mapping>
-        <servlet-name>jtrac</servlet-name>
+        <servlet-name>jtrac-api</servlet-name>
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>    
   
     <!-- backwards compatibility for e-mail links -->
     <servlet-mapping>
-        <servlet-name>jtrac</servlet-name>
+        <servlet-name>jtrac-api</servlet-name>
         <url-pattern>/flow/*</url-pattern>
     </servlet-mapping>
         
