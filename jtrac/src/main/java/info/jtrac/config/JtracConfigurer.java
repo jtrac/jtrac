@@ -1,12 +1,12 @@
 /*
  * Copyright 2002-2005 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package info.jtrac.util;
+package info.jtrac.config;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,26 +42,26 @@ import org.springframework.web.context.ServletContextAware;
  * a default jtrac.properties file for HSQLDB - useful for those who want
  * to quickly evaluate JTrac.  Just dropping the war into a servlet container
  * would work without the need to even configure a datasource.
- * 
+ *
  * This class would effectively do nothing if a "jtrac.properties" file exists in jtrac.home
  *
  * 1) a "jtrac.home" property is looked for in /WEB-INF/classes/jtrac-init.properties
  * 2) if not found, then a "jtrac.home" system property is checked for
- * 3) then a servlet context init-parameter called "jtrac.home" is looked for 
+ * 3) then a servlet context init-parameter called "jtrac.home" is looked for
  * 4) last resort, a ".jtrac" folder is created in the "user.home" and used as "jtrac.home"
  *
  * Other tasks
  * - initialize the "test" query for checking idle database connections
  * - initialize list of available locales based on the properties files available
  *
- * Note that later on during startup, the HibernateJtracDao would check if 
+ * Note that later on during startup, the HibernateJtracDao would check if
  * database tables exist, and if they dont, would proceed to create them
  */
 
 public class JtracConfigurer extends PropertyPlaceholderConfigurer implements ServletContextAware {
-    
+
     private final Log logger = LogFactory.getLog(getClass());
- 
+
     private ServletContext servletContext;
 
     public JtracConfigurer() {
@@ -73,8 +73,8 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
     }
 
     @Override
-    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {        
-        // do our custom configuration before spring gets a chance to        
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        // do our custom configuration before spring gets a chance to
         try {
             configureJtrac();
         } catch(Exception e) {
@@ -82,9 +82,9 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
         }
         super.postProcessBeanFactory(beanFactory);
     }
-    
+
     public void configureJtrac() throws Exception {
-        
+
         String jtracHome = null;
         ClassPathResource jtracInitResource = new ClassPathResource("jtrac-init.properties");
         // jtrac-init.properties assumed to exist
@@ -103,31 +103,31 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
         File[] messagePropsFiles = jtracInitResource.getFile().getParentFile().listFiles(ff);
         String locales = "en";
         for(File f : messagePropsFiles) {
-            int endIndex = f.getName().indexOf('.');                
+            int endIndex = f.getName().indexOf('.');
             String localeCode = f.getName().substring(9, endIndex);
             locales += "," + localeCode;
-        }            
-        logger.info("locales available configured are '" + locales + "'");        
+        }
+        logger.info("locales available configured are '" + locales + "'");
         props.setProperty("jtrac.locales", locales);
         //======================================================================
         if (jtracHome == null) {
-            logger.info("valid 'jtrac.home' property not available in 'jtrac-init.properties', trying system properties.");                
+            logger.info("valid 'jtrac.home' property not available in 'jtrac-init.properties', trying system properties.");
             jtracHome = System.getProperty("jtrac.home");
             if (jtracHome != null) {
                 logger.info("'jtrac.home' property initialized from system properties as '" + jtracHome + "'");
             }
         }
         if (jtracHome == null) {
-            logger.info("valid 'jtrac.home' property not available in system properties, trying servlet init paramters.");                
+            logger.info("valid 'jtrac.home' property not available in system properties, trying servlet init paramters.");
             jtracHome = servletContext.getInitParameter("jtrac.home");
-            if (jtracHome != null) {                        
+            if (jtracHome != null) {
                 logger.info("Servlet init parameter 'jtrac.home' exists: '" + jtracHome + "'");
             }
         }
-        if (jtracHome == null) {                        
+        if (jtracHome == null) {
             jtracHome = System.getProperty("user.home") + "/.jtrac";
-            logger.warn("Servlet init paramter  'jtrac.home' does not exist.  Will use 'user.home' directory '" + jtracHome + "'");                
-        }        
+            logger.warn("Servlet init paramter  'jtrac.home' does not exist.  Will use 'user.home' directory '" + jtracHome + "'");
+        }
         //======================================================================
         File homeFile = new File(jtracHome);
         if (!homeFile.exists()) {
@@ -159,7 +159,7 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
         }
         //======================================================================
         File propsFile = new File(homeFile.getPath() + "/jtrac.properties");
-        if (!propsFile.exists()) {                
+        if (!propsFile.exists()) {
             propsFile.createNewFile();
             logger.info("properties file does not exist, created '" + propsFile.getPath() + "'");
             OutputStream os = new FileOutputStream(propsFile);
@@ -177,24 +177,24 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
             }
             logger.info("HSQLDB will be used.  Finished creating '" + propsFile.getPath() + "'");
         } else {
-            logger.info("'jtrac.properties' file exists: '" + propsFile.getPath() + "'");            
+            logger.info("'jtrac.properties' file exists: '" + propsFile.getPath() + "'");
         }
-        //======================================================================                                   
+        //======================================================================
         String version = "0.0.0";
         String timestamp = "0000";
         ClassPathResource versionResource = new ClassPathResource("version.properties");
-        if(versionResource.exists()) {          
+        if(versionResource.exists()) {
             logger.info("found 'version.properties' on classpath, processing...");
             Properties versionProps = loadProps(versionResource.getFile());
             version = versionProps.getProperty("version");
-            timestamp = versionProps.getProperty("timestamp");            
+            timestamp = versionProps.getProperty("timestamp");
         } else {
             logger.info("did not find 'version.properties' on classpath");
         }
         logger.info("jtrac.version = '" + version + "'");
         logger.info("jtrac.timestamp = '" + timestamp + "'");
         props.setProperty("jtrac.version", version);
-        props.setProperty("jtrac.timestamp", timestamp);        
+        props.setProperty("jtrac.timestamp", timestamp);
         props.setProperty("database.validationQuery", "SELECT 1");
         props.setProperty("ldap.url", "");
         props.setProperty("ldap.activeDirectoryDomain", "");
@@ -203,19 +203,19 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
         setProperties(props);
         // finally set the property that spring is expecting, manually
         FileSystemResource fsr = new FileSystemResource(propsFile);
-        setLocation(fsr);        
+        setLocation(fsr);
     }
-    
+
     private Properties loadProps(File file) throws Exception {
             InputStream is = null;
             Properties props = new Properties();
             try {
-                is = new FileInputStream(file);                
+                is = new FileInputStream(file);
                 props.load(is);
             } finally {
                 is.close();
-            }        
+            }
             return props;
     }
-    
+
 }

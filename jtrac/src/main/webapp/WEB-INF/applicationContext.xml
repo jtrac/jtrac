@@ -6,7 +6,7 @@
 <beans>
 
     <!-- custom Configurer that extends the spring PropertyPlaceholderConfigurer -->
-    <bean class="info.jtrac.util.JtracConfigurer"/>        
+    <bean class="info.jtrac.config.JtracConfigurer"/>        
 
     <!-- this Acegi helper finds its way into our root Spring context 
          because JtracImpl depends on it -->
