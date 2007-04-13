@@ -81,6 +81,7 @@ public class JtracImpl implements Jtrac {
     private String defaultLocale;
     private String releaseVersion;
     private String releaseTimestamp;
+    private String jtracHome;
 
     public void setLocaleList(String[] array) {
         locales = new LinkedHashMap<String, String>();
@@ -119,6 +120,14 @@ public class JtracImpl implements Jtrac {
         this.releaseVersion = releaseVersion;
     }
 
+    public void setJtracHome(String jtracHome) {
+        this.jtracHome = jtracHome;
+    }
+
+    public String getJtracHome() {
+        return jtracHome;
+    }    
+    
     private final Log logger = LogFactory.getLog(getClass());
 
     /**
@@ -189,7 +198,7 @@ public class JtracImpl implements Jtrac {
         if(fileUpload == null) {
             return;
         }
-        File file = AttachmentUtils.getFile(attachment);
+        File file = AttachmentUtils.getFile(attachment, jtracHome);
         try {
             fileUpload.writeTo(file);
         } catch (Exception e) {
@@ -570,7 +579,7 @@ public class JtracImpl implements Jtrac {
     //========================================================
 
     public void rebuildIndexes() {
-        indexer.clearIndexes();
+        clearIndexes();
         List<AbstractItem> items = dao.findAllItems();
         for (AbstractItem item : items) {
             indexer.index(item);
@@ -582,8 +591,11 @@ public class JtracImpl implements Jtrac {
         return dao.findAllItems();
     }
 
-    public void clearIndexes() {
-        indexer.clearIndexes();
+    public void clearIndexes() {        
+        File file = new File(jtracHome + "/indexes");
+        for (File f : file.listFiles()) {
+            f.delete();
+        }        
     }
 
     public void index(AbstractItem item) {

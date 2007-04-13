@@ -74,7 +74,7 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {        
-        // do our custom configuration before spring gets a chance to
+        // do our custom configuration before spring gets a chance to        
         try {
             configureJtrac();
         } catch(Exception e) {
@@ -84,6 +84,7 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
     }
     
     public void configureJtrac() throws Exception {
+        
         String jtracHome = null;
         ClassPathResource jtracInitResource = new ClassPathResource("jtrac-init.properties");
         // jtrac-init.properties assumed to exist
@@ -106,8 +107,8 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
             String localeCode = f.getName().substring(9, endIndex);
             locales += "," + localeCode;
         }            
-        logger.info("locales available configured are '" + locales + "'");
-        System.setProperty("jtrac.locales", locales);            
+        logger.info("locales available configured are '" + locales + "'");        
+        props.setProperty("jtrac.locales", locales);
         //======================================================================
         if (jtracHome == null) {
             logger.info("valid 'jtrac.home' property not available in 'jtrac-init.properties', trying system properties.");                
@@ -126,8 +127,7 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
         if (jtracHome == null) {                        
             jtracHome = System.getProperty("user.home") + "/.jtrac";
             logger.warn("Servlet init paramter  'jtrac.home' does not exist.  Will use 'user.home' directory '" + jtracHome + "'");                
-        }
-        System.setProperty("jtrac.home", jtracHome);
+        }        
         //======================================================================
         File homeFile = new File(jtracHome);
         if (!homeFile.exists()) {
@@ -136,12 +136,12 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
             if (!homeFile.exists()) {
                 String message = "invalid path '" + homeFile.getAbsolutePath() + "', try creating this directory first.  Aborting.";
                 logger.fatal(message);
-                throw new RuntimeException(message);
+                throw new Exception(message);
             }
         } else {
             logger.info("directory already exists: '" + homeFile.getPath() + "'");
         }
-        System.setProperty("jtrac.home", homeFile.getAbsolutePath());
+        props.setProperty("jtrac.home", homeFile.getAbsolutePath());
         //======================================================================
         File attachmentsFile = new File(jtracHome + "/attachments");
         if (!attachmentsFile.exists()) {
@@ -158,11 +158,11 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
             logger.info("directory already exists: '" + indexesFile.getPath() + "'");
         }
         //======================================================================
-        File propFile = new File(homeFile.getPath() + "/jtrac.properties");
-        if (!propFile.exists()) {                
-            propFile.createNewFile();
-            logger.info("properties file does not exist, created '" + propFile.getPath() + "'");
-            OutputStream os = new FileOutputStream(propFile);
+        File propsFile = new File(homeFile.getPath() + "/jtrac.properties");
+        if (!propsFile.exists()) {                
+            propsFile.createNewFile();
+            logger.info("properties file does not exist, created '" + propsFile.getPath() + "'");
+            OutputStream os = new FileOutputStream(propsFile);
             Writer out = new PrintWriter(os);
             try {
                 out.write("database.driver=org.hsqldb.jdbcDriver\n");
@@ -175,47 +175,11 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
                 out.close();
                 os.close();
             }
-            logger.info("HSQLDB will be used.  Finished creating '" + propFile.getPath() + "'");
+            logger.info("HSQLDB will be used.  Finished creating '" + propsFile.getPath() + "'");
         } else {
-            logger.info("'jtrac.properties' file exists: '" + propFile.getPath() + "'");            
+            logger.info("'jtrac.properties' file exists: '" + propsFile.getPath() + "'");            
         }
-        //======================================================================
-        FileSystemResource fsr = new FileSystemResource(propFile);
-        logger.info("opening for processing: " + fsr);        
-        Properties jtracProps = loadProps(fsr.getFile());
-        String databaseUrl = jtracProps.getProperty("database.url");
-        if (databaseUrl.trim().startsWith("jdbc:hsqldb:file")) {
-            logger.info("embedded HSQLDB mode detected, switching on spring single connection data source");
-            System.setProperty("jtrac.datasource", "dataSource");
-            System.setProperty("database.validationQuery", "");
-        } else {
-            logger.info("Not using embedded HSQLDB, switching on Apache DBCP data source connection pooling");
-            System.setProperty("jtrac.datasource", "dataSourceDbcp");
-            String validationQuery = jtracProps.getProperty("database.validationQuery");
-            if (validationQuery == null) {
-                logger.info("database.validationQuery property not found in 'jtrac.properties', using default 'SELECT 1'");
-                System.setProperty("database.validationQuery", "SELECT 1");
-            } else {
-                logger.info("database.validationQuery property found in 'jtrac.properties': '" + validationQuery + "'");
-            }             
-        }
-        //======================================================================
-        String ldapUrl = jtracProps.getProperty("ldap.url");
-        if(ldapUrl != null && ldapUrl.trim().length() > 0) {
-            logger.info("ldap.url found in 'jtrac.properties', switching on ldap authentication provider");
-            System.setProperty("jtrac.authenticationManager", "ldapAuthenticationManager");
-            if (jtracProps.getProperty("ldap.activeDirectoryDomain") == null) {
-                // yes this is getting out of hand, need better approach to spring foo
-                System.setProperty("ldap.activeDirectoryDomain", "");
-            }
-        } else {
-            logger.info("ldap.url not found in 'jtrac.properties' normal db authentication will be used");
-            System.setProperty("jtrac.authenticationManager", "authenticationManager");
-        }
-        //======================================================================
-        // finally set the property that spring is expecting, manually
-        setLocation(fsr);
-        //======================================================================
+        //======================================================================                                   
         String version = "0.0.0";
         String timestamp = "0000";
         ClassPathResource versionResource = new ClassPathResource("version.properties");
@@ -229,8 +193,17 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
         }
         logger.info("jtrac.version = '" + version + "'");
         logger.info("jtrac.timestamp = '" + timestamp + "'");
-        System.setProperty("jtrac.version", version);
-        System.setProperty("jtrac.timestamp", timestamp);
+        props.setProperty("jtrac.version", version);
+        props.setProperty("jtrac.timestamp", timestamp);        
+        props.setProperty("database.validationQuery", "SELECT 1");
+        props.setProperty("ldap.url", "");
+        props.setProperty("ldap.activeDirectoryDomain", "");
+        props.setProperty("ldap.searchBase", "");
+        // set default properties that can be overridden by user if required
+        setProperties(props);
+        // finally set the property that spring is expecting, manually
+        FileSystemResource fsr = new FileSystemResource(propsFile);
+        setLocation(fsr);        
     }
     
     private Properties loadProps(File file) throws Exception {

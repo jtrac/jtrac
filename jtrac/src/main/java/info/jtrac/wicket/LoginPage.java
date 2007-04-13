@@ -18,13 +18,9 @@ package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
 import info.jtrac.domain.User;
-import java.io.Serializable;
 import javax.servlet.http.Cookie;
-import org.acegisecurity.AuthenticationManager;
-import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -51,7 +47,8 @@ public class LoginPage extends WebPage {
         setVersioned(false);
         add(new Label("title", getLocalizer().getString("login.title", null)));
         add(new LoginForm("form"));
-        add(new Label("version", System.getProperty("jtrac.version")));
+        String jtracVersion = ComponentUtils.getJtrac(this).getReleaseVersion();
+        add(new Label("version", jtracVersion));                
     }
     
     private class LoginForm extends Form {                               

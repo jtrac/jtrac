@@ -60,7 +60,7 @@ public class AttachmentLinkPanel extends BasePanel {
                         WebResponse r = (WebResponse) requestCycle.getResponse();
                         r.setAttachmentHeader(fileName);
                         try {
-                            File file = AttachmentUtils.getFile(attachment);
+                            File file = AttachmentUtils.getFile(attachment, getJtrac().getJtracHome());
                             InputStream is = new FileInputStream(file);
                             try {
                                 Streams.copy(is, r.getOutputStream());

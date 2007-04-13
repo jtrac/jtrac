@@ -36,15 +36,9 @@ public class SchemaHelper {
     private String username;
     private String password;
     private String hibernateDialect;
-    private String[] mappingResources;
-    
-    private DataSource dataSource;
+    private String[] mappingResources;        
 
     private final Log logger = LogFactory.getLog(SchemaHelper.class);    
-    
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
 
     public void setDriverClassName(String driverClassName) {
         this.driverClassName = driverClassName;
@@ -84,21 +78,6 @@ public class SchemaHelper {
             cfg.addResource(resource);
         }        
         new SchemaUpdate(cfg).execute(true, true);
-    }  
-    
-    /**
-     * This is not mandatory, but makes the re-start cycle faster during development
-     */
-    public void stopEmbeddedDb() throws Exception {
-        if (url.startsWith("jdbc:hsqldb:file")) {
-            logger.info("attempting to shutdown embedded HSQLDB database");
-            Connection con = dataSource.getConnection();
-            Statement stmt = con.createStatement();
-            stmt.executeUpdate("SHUTDOWN");
-            stmt.close();
-            con.close();
-            logger.info("embedded HSQLDB database stopped successfully");
-        }
     }
     
 }

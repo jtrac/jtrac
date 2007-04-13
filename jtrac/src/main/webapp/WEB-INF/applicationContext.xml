@@ -18,7 +18,7 @@
     </bean>    
     
     <!-- the business service tier / facade is behind an AOP interceptor (see "target" property)
-         only the store* operations require transactions across multiple dao update operations -->
+         only the update operations require transactions across multiple dao update operations -->
     <bean id="jtrac" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager"/>        
         <property name="target">            
@@ -31,6 +31,7 @@
                 <property name="localeList" value="${jtrac.locales}"/>
                 <property name="releaseVersion" value="${jtrac.version}"/>
                 <property name="releaseTimestamp" value="${jtrac.timestamp}"/>
+                <property name="jtracHome" value="${jtrac.home}"/>
             </bean>
         </property>        
         <property name="transactionAttributes">
@@ -46,32 +47,21 @@
     
     <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>        
-    
-    <!-- this is used only when the embedded database is used -->
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.SingleConnectionDataSource" lazy-init="true">
-        <property name="driverClassName" value="${database.driver}"/>
-        <property name="url" value="${database.url}"/>
-        <property name="username" value="${database.username}"/>
-        <property name="password" value="${database.password}"/>
-        <property name="suppressClose" value="true"/>
     </bean>
      
-    <!-- Apache commons DBCP data source, does connection pooling -->
-    <bean id="dataSourceDbcp" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" lazy-init="true">
+    <!-- custom bean factory that uses spring single connection data source if embedded
+         HSQLDB is being used, else Apache DBCP with connection pooling -->
+    <bean id="dataSource" class="info.jtrac.config.DataSourceBeanFactory">
         <property name="driverClassName" value="${database.driver}"/>
         <property name="url" value="${database.url}"/>
         <property name="username" value="${database.username}"/>
         <property name="password" value="${database.password}"/>
         <property name="validationQuery" value="${database.validationQuery}"/>
-        <property name="testOnBorrow" value="false"/>
-        <property name="testWhileIdle" value="true"/>
-        <property name="timeBetweenEvictionRunsMillis" value="600000"/>
     </bean>	    
 
     <!-- Hibernate SessionFactory -->
     <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
-        <property name="dataSource" ref="${jtrac.datasource}"/>
+        <property name="dataSource" ref="dataSource"/>
         <property name="mappingResources" value="jtrac.hbm.xml"/>
         <property name="hibernateProperties">
             <props>
@@ -89,11 +79,10 @@
     </bean>
     
     <!-- Hibernate DAO implementation.  Transactions (AOP) have been applied at the service layer not here -->
-    <bean id="dao" class="info.jtrac.hibernate.HibernateJtracDao" init-method="createSchema" destroy-method="stopEmbeddedDb">
+    <bean id="dao" class="info.jtrac.hibernate.HibernateJtracDao" init-method="createSchema">
         <property name="sessionFactory" ref="sessionFactory"/>
         <property name="schemaHelper">
-            <bean class="info.jtrac.hibernate.SchemaHelper">
-                <property name="dataSource" ref="${jtrac.datasource}"/>
+            <bean class="info.jtrac.hibernate.SchemaHelper">                
                 <property name="mappingResources" value="jtrac.hbm.xml"/>
                 <property name="driverClassName" value="${database.driver}"/>
                 <property name="url" value="${database.url}"/>

@@ -43,7 +43,6 @@ import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -450,14 +449,6 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
             return;
         }
         logger.info("database schema exists, normal startup");        
-    }   
-    
-    /**
-     * note that this is automatically configured to run on context shutdown 
-     * as a spring bean "destroy-method"
-     */
-    public void stopEmbeddedDb() throws Exception {
-        schemaHelper.stopEmbeddedDb();
-    }
+    }    
     
 }

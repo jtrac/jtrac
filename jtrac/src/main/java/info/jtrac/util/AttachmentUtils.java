@@ -17,28 +17,13 @@
 package info.jtrac.util;
 
 import info.jtrac.domain.Attachment;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Utils that deal with Attachments, upload / download and
  * file name String manipulation
  */
-public class AttachmentUtils {
-    
-    private static String getJtracHome() {
-        return System.getProperty("jtrac.home");
-    }
+public class AttachmentUtils {    
     
     public static String cleanFileName(String path) {
         // the client browser could be on Unix or Windows, we don't know
@@ -47,49 +32,10 @@ public class AttachmentUtils {
             index = path.lastIndexOf('\\');
         }
         return (index != -1 ? path.substring(index + 1) : path);
-    }
+    }   
     
-    public static File getFile(Attachment attachment) {
-        return new File(getJtracHome() + "/attachments/" + attachment.getFilePrefix() + "_" + attachment.getFileName());
-    }        
-    
-    public static void download(ServletContext servletContext, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        
-        String fileName = URLDecoder.decode(cleanFileName(request.getRequestURI()), "UTF-8");
-        String filePrefix = request.getParameter("filePrefix");
-        File file = new File(getJtracHome() + "/attachments/" + filePrefix + "_" + fileName);        
-        if (file.canRead()) {
-            InputStream in = null;
-            OutputStream out = null;
-            try {
-                in = new FileInputStream(file);
-                if (in != null) {
-                    out = new BufferedOutputStream(response.getOutputStream());
-                    in = new BufferedInputStream(in);
-                    // first try to identify content type for better browser experience
-                    String contentType = servletContext.getMimeType(fileName);
-                    if (contentType == null) {
-                        contentType = "application/octet-stream";
-                    }
-                    response.setContentType(contentType);
-                    // Otherwise Firefox will offer only the first word as the default filename
-                    String name = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
-                    // disposition as attachment should force a download, instead of using content type
-                    // attempt to encode non-ascii characters to UTF-8 and force Firefox to 
-                    // acknowledge the encoding (with the filename*=... trick)
-                    response.setHeader("Content-Disposition", "attachment; filename*=" + name);
-                    int c;
-                    while ((c = in.read()) != -1) {
-                        out.write(c);
-                    }
-                    return;
-                }
-            } finally {
-                in.close();
-                out.close();
-            }
-        }
-        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+    public static File getFile(Attachment attachment, String jtracHome) {
+        return new File(jtracHome + "/attachments/" + attachment.getFilePrefix() + "_" + attachment.getFileName());
     }
     
 }
