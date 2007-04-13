@@ -17,8 +17,12 @@
 package info.jtrac.acegi;
 
 import info.jtrac.Jtrac;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.directory.Attribute;
@@ -36,27 +40,45 @@ import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
 import org.acegisecurity.userdetails.UserDetails;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.InitializingBean;
 
 /**
  * custom simple LDAP integration approach, where only authentication
- * is expected from LDAP, Space allocations have to be within JTrac only
+ * is expected from LDAP, Space allocations have to be performed within JTrac only
  *
  * we are not using Acegi LDAP support because
- * a) it does not appear to support binding AS the user signing in
- * b) easier to configure and customize
+ * a) it does not appear to support binding _as_ the user signing in 
+ *    as opposed to a "hardcoded" user and password which is not very nice
+ * b) easier to configure, customize and extend in the future
  */
-public class JtracLdapAuthenticationProvider implements AuthenticationProvider {
+public class JtracLdapAuthenticationProvider implements AuthenticationProvider, InitializingBean {
 
     private Jtrac jtrac;
     private String ldapUrl;
-    private String domain;
+    private String activeDirectoryDomain;
     private String searchBase;
-    private String searchKey = "sAMAccountName";
+    private String searchKey;
     private String displayNameKey = "cn";
     private String mailKey = "mail";
-    
+    private String[] otherReturningAttributes;
+    private String[] returningAttributes;        
+            
     private final Log logger = LogFactory.getLog(getClass());
 
+    // please refer http://forum.java.sun.com/thread.jspa?threadID=726601&tstart=0
+    // for the Active Directory LDAP Fast Bind Control approach used here
+    private Control control = new Control() {
+        public byte[] getEncodedValue() {
+            return null;
+        }
+        public String getID() {
+            return "1.2.840.113556.1.4.1781";
+        }
+        public boolean isCritical() {
+            return true;
+        }            
+    };    
+    
     public void setJtrac(Jtrac jtrac) {
         this.jtrac = jtrac;
     }    
@@ -65,8 +87,8 @@ public class JtracLdapAuthenticationProvider implements AuthenticationProvider {
         this.ldapUrl = ldapUrl;
     }
 
-    public void setDomain(String domain) {
-        this.domain = domain;
+    public void setActiveDirectoryDomain(String activeDirectoryDomain) {
+        this.activeDirectoryDomain = activeDirectoryDomain;
     }
 
     public void setSearchBase(String searchBase) {
@@ -84,6 +106,10 @@ public class JtracLdapAuthenticationProvider implements AuthenticationProvider {
     public void setMailKey(String mailKey) {
         this.mailKey = mailKey;
     }    
+
+    public void setOtherReturningAttributes(String[] otherReturningAttributes) {
+        this.otherReturningAttributes = otherReturningAttributes;
+    }
     
     public boolean supports(Class clazz) {
         return UsernamePasswordAuthenticationToken.class.isAssignableFrom(clazz);
@@ -93,77 +119,96 @@ public class JtracLdapAuthenticationProvider implements AuthenticationProvider {
         if (!supports(authentication.getClass())) {
             return null;
         }
-        String displayName = null;
-        String mail = null;
-        logger.debug("attempting authentication via LDAP");       
-        if(bind(authentication.getName(), authentication.getCredentials().toString(), displayName, mail)) {
-            logger.debug("user details retrieved from LDAP, now checking local database");
-            UserDetails userDetails = null;
-            try {
-                 userDetails = jtrac.loadUserByUsername(authentication.getName());
-            } catch(AuthenticationException ae) { // catch just to log, then throw
-                logger.debug("ldap user not allocated to any Spaces within JTrac");
-                throw ae;
-            }
-            return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-        } else {
+        logger.debug("attempting authentication via LDAP");
+        Map<String,String> attributes = null;
+        try {
+            attributes = bind(authentication.getName(), authentication.getCredentials().toString());
+        } catch(Exception e) {
+            logger.debug("bind failed: " + e);
             logger.debug("returning null from ldap authentication provider");
-            return null;
-        }        
+            return null;            
+        }
+        logger.debug("user details retrieved from LDAP, now checking local database");
+        UserDetails userDetails = null;
+        try {
+             userDetails = jtrac.loadUserByUsername(authentication.getName());
+        } catch(AuthenticationException ae) { // catch just to log, then re-throw as-is
+            logger.debug("ldap user not allocated to any Spaces within JTrac");
+            throw ae;
+        }
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());     
     }
 
     /**
-     * displayName and mail are returned for convenience
+     * displayName and mail are returned always, the map allows us to support
+     * getting arbitrary properties in the future, hopefully
      */
-    public boolean bind(String loginName, String password, String displayName, String mail) {        
+    public Map<String, String> bind(String loginName, String password) throws Exception {        
         Hashtable env = new Hashtable();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");        
-        env.put(Context.PROVIDER_URL, ldapUrl);
-        env.put(Context.SECURITY_AUTHENTICATION, "simple");
-        // please refer http://forum.java.sun.com/thread.jspa?threadID=726601&tstart=0
-        // for the Active Directory LDAP Fast Bind Control approach used here
-        Control control = new Control() {
-            public byte[] getEncodedValue() {
-                return null;
-            }
-            public String getID() {
-                return "1.2.840.113556.1.4.1781";
-            }
-            public boolean isCritical() {
-                return true;
-            }            
-        };
-        Control[] controls = new Control[] { control };
-        try {
-            LdapContext ctx = new InitialLdapContext(env, controls);
-            logger.debug("Active Directory LDAP context initialized");
-            String prefix = domain == null ? "" : domain + "\\";
-            ctx.addToEnvironment(Context.SECURITY_PRINCIPAL, prefix + loginName);
+        env.put(Context.PROVIDER_URL, ldapUrl);               
+        LdapContext ctx = null;
+        if(activeDirectoryDomain != null) { // we are using Active Directory
+            env.put(Context.SECURITY_AUTHENTICATION, "simple");
+            Control[] controls = new Control[] { control };
+            ctx = new InitialLdapContext(env, controls);
+            logger.debug("Active Directory LDAP context initialized");            
+            ctx.addToEnvironment(Context.SECURITY_PRINCIPAL, activeDirectoryDomain + "\\" + loginName);
             ctx.addToEnvironment(Context.SECURITY_CREDENTIALS, password);
             // javax.naming.AuthenticationException
             ctx.reconnect(controls);
-            logger.debug(loginName + ": LDAP bind successful");        
-            SearchControls sc = new SearchControls();
-            sc.setSearchScope(SearchControls.SUBTREE_SCOPE);
-            sc.setReturningAttributes(new String[] { mailKey, displayNameKey });
-            NamingEnumeration results = ctx.search(searchBase, searchKey + "=" + loginName, sc);
-            while(results.hasMoreElements()) {
-                SearchResult sr = (SearchResult) results.next();
-                Attributes attrs = sr.getAttributes();
-                logger.debug("attributes: " + attrs);
-                Attribute aMail = attrs.get(mailKey);
-                mail = (String) aMail.get();
-                logger.debug("mail: " + mail);
-                Attribute aDisp = attrs.get(displayNameKey);
-                displayName = (String) aDisp.get();
-                logger.debug("displayName: " + displayName);
-                break; // there should be only one anyway
+            logger.debug("Active Directory LDAP bind successful");            
+        } else { // standard LDAP            
+            env.put(Context.SECURITY_PRINCIPAL, loginName);
+            env.put(Context.SECURITY_CREDENTIALS, password);
+            ctx = new InitialLdapContext(env, null);
+            logger.debug("Standard LDAP bind successful");
+        }              
+        SearchControls sc = new SearchControls();
+        sc.setSearchScope(SearchControls.SUBTREE_SCOPE);        
+        sc.setReturningAttributes(returningAttributes);        
+        NamingEnumeration results = ctx.search(searchBase, searchKey + "=" + loginName, sc);
+        while(results.hasMoreElements()) {
+            SearchResult sr = (SearchResult) results.next();
+            Attributes attrs = sr.getAttributes();
+            logger.debug("attributes: " + attrs);
+            Map<String, String> map = new HashMap<String, String>(returningAttributes.length);
+            for(String key : returningAttributes) {
+                Attribute attr = attrs.get(key);
+                if (attr != null) {
+                    map.put(key, (String) attr.get());
+                }
             }
-            return true;
-        } catch(Exception e) {
-            logger.error("LDAP authentication failed: " + e);
-            return false;
+            return map; // there should be only one anyway            
         }
+        // if we reached here, there was no search result
+        throw new Exception("no results returned from ldap");
     }    
+    
+    // one-time init routine managed by spring
+    public void afterPropertiesSet() {
+        if(otherReturningAttributes != null) {
+            List<String> keys = new ArrayList<String>();
+            keys.add(mailKey);
+            keys.add(displayNameKey);
+            for(String s : otherReturningAttributes) {
+                keys.add(s);
+            }
+            returningAttributes = keys.toArray(new String[keys.size()]);
+        } else {
+            returningAttributes = new String[] { mailKey, displayNameKey };
+        }
+        if(searchKey == null) {
+            if(activeDirectoryDomain != null && activeDirectoryDomain.trim().length() > 0) {
+                searchKey = "sAMAccountName";
+            } else {
+                activeDirectoryDomain = null;
+                searchKey = "uid";
+            }
+        }
+        logger.info("ldap authenthication provider initialized searchKey = '" + searchKey + "'"
+                + ", searchBase = '" + searchBase + "', activeDirectoryDomain = '" + activeDirectoryDomain + "'"
+                + ", ldapUrl = '" + ldapUrl + "'");
+    }
     
 }

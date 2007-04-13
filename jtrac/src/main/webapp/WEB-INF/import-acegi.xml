@@ -6,7 +6,7 @@
 <beans> 
     
     <bean id="authenticationFilter" class="info.jtrac.acegi.JtracAuthenticationProcessingFilter">
-        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="authenticationManager" ref="${jtrac.authenticationManager}"/>
         <property name="authenticationFailureUrl" value="/todo"/>
         <property name="defaultTargetUrl" value="/app"/>
         <property name="filterProcessesUrl" value="/app/j_acegi_security_check"/>        

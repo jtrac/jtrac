@@ -28,6 +28,9 @@ import java.util.Properties;
 import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
@@ -69,7 +72,18 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
         this.servletContext = servletContext;
     }
 
-    public void init() throws Exception {
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {        
+        // do our custom configuration before spring gets a chance to
+        try {
+            configureJtrac();
+        } catch(Exception e) {
+            throw new BeanCreationException("JtracConfigurer failed", e);
+        }
+        super.postProcessBeanFactory(beanFactory);
+    }
+    
+    public void configureJtrac() throws Exception {
         String jtracHome = null;
         ClassPathResource jtracInitResource = new ClassPathResource("jtrac-init.properties");
         // jtrac-init.properties assumed to exist
@@ -185,6 +199,21 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
                 logger.info("database.validationQuery property found in 'jtrac.properties': '" + validationQuery + "'");
             }             
         }
+        //======================================================================
+        String ldapUrl = jtracProps.getProperty("ldap.url");
+        if(ldapUrl != null && ldapUrl.trim().length() > 0) {
+            logger.info("ldap.url found in 'jtrac.properties', switching on ldap authentication provider");
+            System.setProperty("jtrac.authenticationManager", "ldapAuthenticationManager");
+            if (jtracProps.getProperty("ldap.activeDirectoryDomain") == null) {
+                // yes this is getting out of hand, need better approach to spring foo
+                System.setProperty("ldap.activeDirectoryDomain", "");
+            }
+        } else {
+            logger.info("ldap.url not found in 'jtrac.properties' normal db authentication will be used");
+            System.setProperty("jtrac.authenticationManager", "authenticationManager");
+        }
+        //======================================================================
+        // finally set the property that spring is expecting, manually
         setLocation(fsr);
         //======================================================================
         String version = "0.0.0";

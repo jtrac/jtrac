@@ -23,28 +23,37 @@
     <!-- has to be first in the filter chain, this injects the security / session context for all the rest -->
     <bean id="httpSessionFilter" class="org.acegisecurity.context.HttpSessionContextIntegrationFilter"/>    
     
-    <bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
+    <!-- this is used by default, in case of ldap the next one is used, note the lazy-int setting -->
+    <bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager" lazy-init="true">
         <property name="providers">
-            <list>
-                <!-- <ref bean="ldapAuthenticationProvider"/> -->
+            <list>                
                 <ref bean="authenticationProvider"/>                
             </list>
         </property>
-    </bean>
+    </bean>    
       
+    <bean id="ldapAuthenticationManager" class="org.acegisecurity.providers.ProviderManager" lazy-init="true">
+        <property name="providers">
+            <list>
+                <ref bean="ldapAuthenticationProvider"/>
+                <ref bean="authenticationProvider"/>                
+            </list>
+        </property>
+    </bean>    
+    
     <bean id="ldapAuthenticationProvider" class="info.jtrac.acegi.JtracLdapAuthenticationProvider" lazy-init="true">
         <property name="jtrac" ref="jtrac"/>
-        <property name="ldapUrl" value="ldap://MY_LDAP_HOST"/>
-        <property name="domain" value="MY_WINDOWS_DOMAIN"/>
-        <property name="searchBase" value="DC=foo,DC=bar,DC=baz"/>        
-    </bean>    
+        <property name="ldapUrl" value="${ldap.url}"/>
+        <property name="activeDirectoryDomain" value="${ldap.activeDirectoryDomain}"/>
+        <property name="searchBase" value="${ldap.searchBase}"/>        
+    </bean>
     
     <bean id="exceptionTranslationFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
         <property name="authenticationEntryPoint" ref="authenticationEntryPoint"/>
     </bean>   
         
     <bean name="authorizationFilter" class="org.acegisecurity.intercept.web.FilterSecurityInterceptor">
-        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="authenticationManager" ref="${jtrac.authenticationManager}"/>
         <property name="accessDecisionManager">
             <bean class="org.acegisecurity.vote.AffirmativeBased">
                 <property name="allowIfAllAbstainDecisions" value="false"/>

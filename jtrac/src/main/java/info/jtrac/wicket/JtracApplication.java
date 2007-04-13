@@ -177,7 +177,10 @@ public class JtracApplication extends WebApplication {
     
     public User authenticate(String loginName, String password) {                    
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginName, password);
-        AuthenticationManager am = (AuthenticationManager) applicationContext.getBean("authenticationManager");
+        // TODO conditional config getting out of hand, to do programmatic post processing of Spring context
+        String authenticationManagerBeanName = System.getProperty("jtrac.authenticationManager");
+        logger.debug("using " + authenticationManagerBeanName + " bean to authenticate");
+        AuthenticationManager am = (AuthenticationManager) applicationContext.getBean(authenticationManagerBeanName);
         try {
             Authentication authentication = am.authenticate(token);
             return (User) authentication.getPrincipal();
