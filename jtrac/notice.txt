@@ -168,21 +168,21 @@
    * dom4j [ http://www.dom4j.org/license.html ]   
    
    ======================================================================    
-   
-   This product includes software developed by the jscalendar project / 
-   Mihai Bazon, <mihai_bazon@yahoo.com> 
-   http://www.dynarch.com/projects/calendar
       
-   * /resources/calendar 
-   
-   [ http://www.opensource.org/licenses/lgpl-license.php ]   
-   
-   ======================================================================  
-   
-   This product includes images created by the Tango Desktop Project
+   This product includes software developed by the Yahoo! UI Library project.
+   http://developer.yahoo.com/yui/
+
+   * /resources/yui/<most **/*.js files>
+
+   [ http://developer.yahoo.com/yui/license.html ]
+
+   ======================================================================
+
+   This product includes icons and images derived from those created 
+   by the Tango Desktop Project
    http://tango.freedesktop.org     
       
-   * /resources/<some *.png files> 
+   * /resources/<some *.gif files> 
    
    [ http://creativecommons.org/licenses/by-sa/2.5/ ]   
    
