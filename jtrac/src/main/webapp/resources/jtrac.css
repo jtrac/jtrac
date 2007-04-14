@@ -16,7 +16,7 @@ div.error-input select { border: none; }
 .selected, table.jtrac .selected { background: #c3d9ff; }
 .bdr-bottom, tr.bdr-bottom td { border-bottom: 1px solid #CCCCCC; }
 .nav-header { background: #CCCCCC; padding: 0.1em; }
-.nav-header table, .jtrac-list { font-size: 95%; }
+.nav-header table, .jtrac-list, .jtrac-view { font-size: 95%; }
 .nav-header img, img.nav-link { margin-top: 1px; margin-right: 0.3em; }
 .nav-header img, a img.nav-link { vertical-align: top; display: block; float: left; }
 .nav-header td, .nav-table td { font-weight: bold; text-align: right; padding: 0 10px 0 10px; background-color: #e1ecfe; }
