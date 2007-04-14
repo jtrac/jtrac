@@ -16,24 +16,13 @@
 
 package info.jtrac.util;
 
-import org.springframework.validation.Errors;
-
 /**
  * Helper class that improves on the Spring ValidationUtils
  * for inserting error messages for form object fields
  * into the view "errors" object
  */
 public class ValidationUtils {
-    
-    public static final String ERROR_EMPTY_CODE = "error.empty";
-    public static final String ERROR_EMPTY_MSG = "Value Required";
-    
-    public static void rejectIfEmpty(Errors errors, String... names) {
-        for (String name : names) {
-            org.springframework.validation.ValidationUtils.rejectIfEmpty(errors, name, ERROR_EMPTY_CODE);
-        }
-    }    
-    
+        
     public static boolean isAllUpperCase(String input) {
         if (input == null) {
             return false;

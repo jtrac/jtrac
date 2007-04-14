@@ -4,24 +4,9 @@
 <!-- Acegi security configuration as Spring context -->
 
 <beans>
-    
-    <!-- change this to "import-acegi.xml" or "import-acegi-cas.xml" as required -->
-    <import resource="import-acegi.xml"/>
-    
+       
     <!-- Automatically receives AuthenticationEvent messages -->
-    <bean id="loggerListener" class="org.acegisecurity.event.authentication.LoggerListener"/>    
-    
-    <bean id="filterChainProxy" class="org.acegisecurity.util.FilterChainProxy">
-        <property name="filterInvocationDefinitionSource">
-            <value>
-                PATTERN_TYPE_APACHE_ANT
-                /**=httpSessionFilter,authenticationFilter,exceptionTranslationFilter,authorizationFilter
-            </value>
-        </property>
-    </bean>    
-    
-    <!-- has to be first in the filter chain, this injects the security / session context for all the rest -->
-    <bean id="httpSessionFilter" class="org.acegisecurity.context.HttpSessionContextIntegrationFilter"/>           
+    <bean id="loggerListener" class="org.acegisecurity.event.authentication.LoggerListener"/>              
     
     <!-- custom factory that switches on ldap / cas authentication if required -->
     <bean id="authenticationManager" class="info.jtrac.config.ProviderManagerFactoryBean">
@@ -32,33 +17,10 @@
         <property name="authenticationProvider" ref="authenticationProvider"/>
     </bean>
     
-    <bean id="exceptionTranslationFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
-        <property name="authenticationEntryPoint" ref="authenticationEntryPoint"/>
-    </bean>   
-        
-    <bean name="authorizationFilter" class="org.acegisecurity.intercept.web.FilterSecurityInterceptor">
-        <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="accessDecisionManager">
-            <bean class="org.acegisecurity.vote.AffirmativeBased">
-                <property name="allowIfAllAbstainDecisions" value="false"/>
-                <property name="decisionVoters">
-                    <list>
-                        <bean class="org.acegisecurity.vote.RoleVoter"/>
-                    </list>
-                </property>
-            </bean>           
-        </property>     
-        <property name="objectDefinitionSource">            
-            <value>
-                PATTERN_TYPE_APACHE_ANT
-                /flow/item_search*=ROLE_USER,ROLE_GUEST
-                /flow/user_profile*=ROLE_USER
-                /flow/item*=ROLE_USER
-                /flow/*=ROLE_ADMIN
-                /**=ROLE_USER,ROLE_GUEST
-            </value>
-        </property>
-    </bean>   
+    <bean id="authenticationProvider" class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
+        <property name="userDetailsService" ref="jtrac"/>
+        <property name="passwordEncoder" ref="passwordEncoder"/>
+    </bean>        
     
 </beans>
 

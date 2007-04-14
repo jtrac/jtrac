@@ -2,6 +2,7 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <!-- import this into applicationContext.xml instead of import-acegi.xml if using CAS -->
+<!-- TODO integrate into wicket -->
 
 <beans>  
     
