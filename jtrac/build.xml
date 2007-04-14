@@ -8,7 +8,7 @@
     
     <property file="build.properties"/>
     <property file="build-deps.properties"/>    
-    <property name="war.name" value="jtrac"/>   
+    <property name="war.name" value="jtrac"/>    
     
     <target name="clean">
         <delete includeemptydirs="true" failonerror="false">
@@ -26,9 +26,12 @@
     
     <target name="compile" depends="dist-version-set">
         <mkdir dir="target/classes"/>
+        <property name="debug" value="true"/>
+        <!-- 
         <condition property="debug" value="false" else="true">            
             <isset property="production"/>
         </condition>
+        -->
         <javac srcdir="src/main/java" destdir="target/classes" debug="${debug}" classpath="${test.jars}">
             <!-- <compilerarg value="-Xlint:unchecked"/> -->
         </javac>
@@ -42,11 +45,18 @@
     
     <target name="war-exploded" depends="compile">
         <war-exploded/>
+        <antcall target="war-exploded-dev"/>
     </target> 
     
     <target name="war-exploded-tomcat" depends="compile">
         <war-exploded deployDir="${tomcat.home}/webapps/${war.name}"/>
-    </target>     
+    </target>             
+    
+    <target name="war-exploded-dev" unless="production">
+        <replace file="target/jtrac/WEB-INF/web.xml" 
+            token="org.apache.wicket.protocol.http.WicketFilter" 
+            value="info.jtrac.wicket.JtracReloadingWicketFilter"/>
+    </target>
     
     <macrodef name="war-exploded">
         <attribute name="deployDir" default="target/${war.name}"/>
@@ -61,11 +71,7 @@
                 <fileset dir="${m2.repo}" includes="${runtime.jars}" casesensitive="false"/>         
             </copy>
         </sequential>
-    </macrodef>  
-    
-    <target name="set-production-flag">        
-        <property name="production" value="true"/>
-    </target>    
+    </macrodef>     
     
     <!-- ========================= HIBERNATE =========================== -->
 
@@ -86,9 +92,9 @@
     
     <!-- ========================== DIST ============================ -->
     
-    <target name="dist-version-clean">
-        <delete file="src/main/resources/version.properties"/>
-    </target>
+    <target name="dist-production-set" depends="clean">        
+        <property name="production" value="true" />
+    </target>    
     
     <target name="dist-version-check">
         <condition property="version.missing">
@@ -105,12 +111,11 @@
         </concat>           
     </target>        
     
-    <target name="war" depends="dist-version-clean, dist-version-set, war-exploded">
+    <target name="war" depends="dist-production-set, dist-version-set, war-exploded">
         <copy todir="target/${war.name}/WEB-INF" file="etc/log4j.properties" overwrite="true"/>
         <zip destfile="target/${war.name}.war" basedir="target/${war.name}"/>
     </target>
-    
-    <!-- TODO call "set-production-flag" after clean for version 2.0 final onwards -->
+        
     <target name="dist-jtrac" depends="war, jetty-setup">
         <copy todir="target/jetty/logs" file="etc/dummy.txt"/>
         <copy todir="target/jetty/work" file="etc/dummy.txt"/>
@@ -125,7 +130,7 @@
         </zip>         
     </target>
     
-    <target name="dist-war-scp" depends="clean, war">
+    <target name="dist-war-scp" depends="war">
         <input message="Please enter password:" addproperty="password"/>
         <scp file="target/jtrac.war" 
             todir="ptrthomas@shell.sourceforge.net:/home/groups/j/j-/j-trac/htdocs/files"
@@ -136,7 +141,7 @@
         <ant antfile="doc/build.xml"/>
     </target>
         
-    <target name="dist" depends="clean, dist-doc, dist-jtrac, dist-jtrac-src"/>
+    <target name="dist" depends="dist-jtrac, dist-jtrac-src, dist-doc"/>
     
     <target name="dist-site-clean">
         <delete includeemptydirs="true">
@@ -310,14 +315,18 @@
         <copy todir="target/jetty" flatten="true">
             <fileset dir="${m2.repo}" includes="${jetty.start}" casesensitive="false"/>
             <mapper type="merge" to="start.jar"/>
-        </copy>        
+        </copy>
         <copy todir="target/jetty/etc">
             <fileset dir="etc">
-                <include name="jetty.xml"/>
-                <include name="webdefault.xml"/>
+                <include name="jetty.xml"/>                
                 <include name="wrapper.conf"/>
+                <include name="webdefault.xml"/>
             </fileset>
-        </copy>        
+        </copy>
+        <condition property="useFileMappedBuffer" value="true" else="false">            
+            <isset property="production"/>
+        </condition>        
+        <replace file="target/jetty/etc/webdefault.xml" token="@@useFileMappedBuffer@@" value="${useFileMappedBuffer}"/>      
         <mkdir dir="target/jetty/logs"/>
         <mkdir dir="target/jetty/work"/>        
     </target>
