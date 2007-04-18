@@ -424,5 +424,11 @@
             <arg value="stop"/>
         </java>
     </target>
+    
+    <target name="mvn-export">
+        <copy todir="lib">
+            <fileset dir="${m2.repo}" includes="${all.jars}" casesensitive="false"/>
+        </copy>        
+    </target>
               
 </project>
