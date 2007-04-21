@@ -59,6 +59,9 @@ public class SpaceFormPage extends BasePage {
         add(new SpaceForm("form", space));
     }
     
+    /**
+     * wicket form
+     */     
     private class SpaceForm extends Form {
         
        private JtracFeedbackMessageFilter filter;

@@ -169,6 +169,12 @@
         </zip>         
     </target>    
     
+    <target name="mvn-export">
+        <copy todir="lib">
+            <fileset dir="${m2.repo}" includes="${all.jars}" casesensitive="false"/>
+        </copy>        
+    </target>
+    
     <!-- ========================== TEST ============================ -->
     
     <target name="all" depends="clean, compile-test">
@@ -273,14 +279,18 @@
     </target>    
     
     <macrodef name="checkstyle-macro">
-        <attribute name="files" default="**/*.java"/>
+        <attribute name="files" default="**/*.java,**/*.properties"/>
         <sequential>
             <mkdir dir="target/reports"/>
             <checkstyle config="etc/checkstyle.xml" failOnViolation="false">
                 <property key="checkstyle.cache.file" file="target/checkstyle-cache"/>
                 <property key="checkstyle.header.file" file="etc/header.txt"/>
                 <fileset dir="src/main/java" includes="@{files}"/>
-                <classpath location="target/classes"/>
+                <!-- <fileset dir="src/main/resources" includes="@{files}"/> -->
+                <classpath>
+                    <path path="target/classes"/>
+                    <path path="${test.jars}"/>
+                </classpath>
                 <formatter type="xml" toFile="target/reports/checkstyle.xml"/>
                 <formatter type="plain" toFile="target/reports/checkstyle.txt"/>
             </checkstyle>            
@@ -423,12 +433,6 @@
             <jvmarg value="-Dcatalina.home=${tomcat.home}"/>
             <arg value="stop"/>
         </java>
-    </target>
-    
-    <target name="mvn-export">
-        <copy todir="lib">
-            <fileset dir="${m2.repo}" includes="${all.jars}" casesensitive="false"/>
-        </copy>        
-    </target>
+    </target>    
               
 </project>

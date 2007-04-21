@@ -38,6 +38,9 @@ public class ExcelFile implements Serializable {
     
     protected final Log logger = LogFactory.getLog(getClass());    
     
+    /**
+     * represents a column heading and data type
+     */
     public class Column {        
         
         private String label;
@@ -57,6 +60,9 @@ public class ExcelFile implements Serializable {
         
     }
     
+    /**
+     * represents a cell value, acts as object holder
+     */    
     public class Cell {
         
         private Object value;
@@ -273,6 +279,7 @@ public class ExcelFile implements Serializable {
                         value = c.getNumericCellValue(); 
                         break;
                     case(HSSFCell.CELL_TYPE_BLANK) : break;
+                    default: // do nothing
                 }
                 if (value != null && value.toString().length() > 0) {
                     isEmptyRow = false;

@@ -41,13 +41,13 @@ public class Field implements Serializable {
     private boolean optional;
     private Map<String, String> options;    
     
-    private static final Map<String, Name> nameMap;
+    private static final Map<String, Name> NAMES_MAP;
     
     // set up a static Map to resolve a String to our Field.Name enum value
     static {
-        nameMap = new HashMap<String, Name>();
+        NAMES_MAP = new HashMap<String, Name>();
         for (Name n : Name.values()) {
-            nameMap.put(n.text, n);
+            NAMES_MAP.put(n.text, n);
         }
     }
     
@@ -55,7 +55,7 @@ public class Field implements Serializable {
      * Resolve a String to a valid enum value for Field.Name
      */
     public static Name convertToName(String text) {
-        Name n = nameMap.get(text);
+        Name n = NAMES_MAP.get(text);
         if (n == null) {
             throw new RuntimeException("Bad name " + text);
         }

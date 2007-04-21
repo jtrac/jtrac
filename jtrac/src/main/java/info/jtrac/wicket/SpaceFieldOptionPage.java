@@ -49,6 +49,9 @@ public class SpaceFieldOptionPage extends BasePage {
         addComponents(field, key);
     }
     
+    /**
+     * wicket form
+     */     
     private class SpaceFieldOptionForm extends Form {               
         
         private Field field;

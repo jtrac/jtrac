@@ -17,8 +17,8 @@
 package info.jtrac.domain;
 
 import org.apache.lucene.document.Document;
-
-import org.apache.lucene.document.Field.*;
+import org.apache.lucene.document.Field.Index;
+import org.apache.lucene.document.Field.Store;
 
 /**
  * Any updates to an Item (even a new insert) causes a snapshot of

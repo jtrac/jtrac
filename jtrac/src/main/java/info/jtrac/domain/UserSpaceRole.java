@@ -17,9 +17,6 @@
 package info.jtrac.domain;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 import org.acegisecurity.GrantedAuthority;
 
 /**

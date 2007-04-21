@@ -156,7 +156,7 @@ public class ExcelUtils {
             
             setText(row, col++, item.getLoggedBy().getName());
             setText(row, col++, item.getStatusValue());
-            setText(row, col++, ( item.getAssignedTo() == null ? "" : item.getAssignedTo().getName() ));
+            setText(row, col++, (item.getAssignedTo() == null ? "" : item.getAssignedTo().getName()));
             
             for(Field field : fields) {                
                 if (field.getName().getType() == 4) { // double

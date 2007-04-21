@@ -111,7 +111,7 @@ public class ItemSearch implements Serializable {
             showHistory = true;
         }        
         DetachedCriteria criteria = null;        
-        if (showHistory == true) {
+        if (showHistory) {
             criteria = DetachedCriteria.forClass(History.class);           
             // apply restrictions to parent, this is an inner join =============
             DetachedCriteria parent = criteria.createCriteria("parent");
@@ -358,14 +358,14 @@ public class ItemSearch implements Serializable {
         sortDescending = !sortDescending;
     }      
     
-    public void setLoggedBy(User user) {
+    public void setLoggedBy(User loggedBy) {
         loggedByList = new ArrayList<User>();
-        loggedByList.add(user);
+        loggedByList.add(loggedBy);
     }
     
-    public void setAssignedTo(User user) {
+    public void setAssignedTo(User assignedTo) {
         assignedToList = new ArrayList<User>();
-        assignedToList.add(user);        
+        assignedToList.add(assignedTo);        
     }
     
     public void setStatus(int i) {

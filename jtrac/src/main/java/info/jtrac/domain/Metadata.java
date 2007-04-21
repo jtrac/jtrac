@@ -167,13 +167,13 @@ public class Metadata implements Serializable {
         states.put(State.CLOSED, "Closed");
         addRole("DEFAULT");
         toggleTransition("DEFAULT", State.NEW, State.OPEN);
-        toggleTransition("DEFAULT",State.OPEN, State.OPEN);
+        toggleTransition("DEFAULT", State.OPEN, State.OPEN);
         toggleTransition("DEFAULT", State.OPEN, State.CLOSED);
         toggleTransition("DEFAULT", State.CLOSED, State.OPEN);
     }
     
-    public Field getField(String name) {
-        return fields.get(Field.convertToName(name));
+    public Field getField(String fieldName) {
+        return fields.get(Field.convertToName(fieldName));
     }        
     
     public void add(Field field) {
@@ -189,17 +189,17 @@ public class Metadata implements Serializable {
     }
     
     public void removeField(String fieldName) {
-        Field.Name name = Field.convertToName(fieldName);
-        fields.remove(name);
-        fieldOrder.remove(name);
+        Field.Name tempName = Field.convertToName(fieldName);
+        fields.remove(tempName);
+        fieldOrder.remove(tempName);
         for (Role role : roles.values()) {
             for (State state : role.getStates().values()) {
-                state.remove(name);
+                state.remove(tempName);
             }
         }        
     }
     
-    public void addState(String name) {
+    public void addState(String stateName) {
         // first get the max of existing state keys
         int maxStatus = 0;
         for (int status : states.keySet()) {
@@ -208,7 +208,7 @@ public class Metadata implements Serializable {
             }
         }
         int newStatus = maxStatus + 1;
-        states.put(newStatus, name);
+        states.put(newStatus, stateName);
         // by default each role will have permissions for this state, for all fields
         for (Role role : roles.values()) {
             State state = new State(newStatus);
@@ -225,8 +225,8 @@ public class Metadata implements Serializable {
         
     }
     
-    public void addRole(String name) {
-        Role role = new Role(name);
+    public void addRole(String roleName) {
+        Role role = new Role(roleName);
         for (Map.Entry<Integer, String> entry : states.entrySet()) {
             State state = new State(entry.getKey());
             state.add(fields.keySet());
@@ -246,9 +246,9 @@ public class Metadata implements Serializable {
         roles.put(newRole, role);
     }
     
-    public void removeRole(String name) {
+    public void removeRole(String roleName) {
         // important! this has to be combined with a database update
-        roles.remove(name);
+        roles.remove(roleName);
     }
     
     public Set<Field.Name> getUnusedFieldNames() {
@@ -262,11 +262,11 @@ public class Metadata implements Serializable {
     public Map<String, String> getAvailableFieldTypes() {
         Map<String, String> fieldTypes = new LinkedHashMap<String, String>();
         for (Field.Name fieldName : getUnusedFieldNames()) {
-            String type = fieldTypes.get(fieldName.getType() + "");
-            if (type == null) {
+            String fieldType = fieldTypes.get(fieldName.getType() + "");
+            if (fieldType == null) {
                 fieldTypes.put(fieldName.getType() + "", "1");
             } else {
-                int count = Integer.parseInt(type);
+                int count = Integer.parseInt(fieldType);
                 count++;
                 fieldTypes.put(fieldName.getType() + "", count + "");
             }
@@ -274,13 +274,13 @@ public class Metadata implements Serializable {
         return fieldTypes;        
     }
     
-    public Field getNextAvailableField(int type) {
+    public Field getNextAvailableField(int fieldType) {
         for (Field.Name fieldName : getUnusedFieldNames()) {
-            if (fieldName.getType() == type) {
+            if (fieldName.getType() == fieldType) {
                 return new Field(fieldName + "");
             }
         }
-        throw new RuntimeException("No field available of type " + type);
+        throw new RuntimeException("No field available of type " + fieldType);
     }
     
     // customized accessor
@@ -406,13 +406,14 @@ public class Metadata implements Serializable {
     
     public void switchMask(int stateKey, String roleKey, String fieldName) {
         State state = getRoleState(roleKey, stateKey);
-        Field.Name name = Field.convertToName(fieldName);        
-        Integer mask = state.getFields().get(name);
+        Field.Name tempName = Field.convertToName(fieldName);        
+        Integer mask = state.getFields().get(tempName);
         switch(mask) {
             // case State.MASK_HIDDEN: state.getFields().put(name, State.MASK_READONLY); return; HIDDEN SUPPORT IN FUTURE
-            case State.MASK_READONLY: state.getFields().put(name, State.MASK_OPTIONAL); return;
-            case State.MASK_OPTIONAL: state.getFields().put(name, State.MASK_MANDATORY); return;            
-            case State.MASK_MANDATORY: state.getFields().put(name, State.MASK_READONLY); return;
+            case State.MASK_READONLY: state.getFields().put(tempName, State.MASK_OPTIONAL); return;
+            case State.MASK_OPTIONAL: state.getFields().put(tempName, State.MASK_MANDATORY); return;            
+            case State.MASK_MANDATORY: state.getFields().put(tempName, State.MASK_READONLY); return;
+            default: // should never happen
         }
     }
     

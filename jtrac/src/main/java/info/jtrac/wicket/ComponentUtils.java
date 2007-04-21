@@ -19,10 +19,7 @@ package info.jtrac.wicket;
 import info.jtrac.Jtrac;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.StringResourceModel;
 
 /**

@@ -19,9 +19,6 @@ package info.jtrac.domain;
 import java.io.Serializable;
 
 import static info.jtrac.domain.Field.Name.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * A JTrac installation can be divided into different project

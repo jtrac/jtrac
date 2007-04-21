@@ -60,6 +60,9 @@ public class SpaceFieldFormPage extends BasePage {
         addComponents(field);
     }
     
+    /**
+     * wicket form
+     */     
     private class SpaceFieldForm extends Form {
         
         private JtracFeedbackMessageFilter filter;
@@ -195,7 +198,7 @@ public class SpaceFieldFormPage extends BasePage {
                             public void onClick() {
                                 int index = options.indexOf(key);
                                 int swapIndex = index + 1;
-                                if (swapIndex == options.size() ) {
+                                if (swapIndex == options.size()) {
                                     swapIndex = 0;
                                 }
                                 if (index != swapIndex) {

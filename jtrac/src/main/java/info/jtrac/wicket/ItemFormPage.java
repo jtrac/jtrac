@@ -1,4 +1,4 @@
-  /*
+/*
  * Copyright 2002-2005 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -49,7 +49,7 @@ import org.apache.wicket.model.LoadableDetachableModel;
  */
 public class ItemFormPage extends BasePage {                           
     
-    ItemSearch itemSearch;    
+    private ItemSearch itemSearch;    
             
     public ItemFormPage() {        
         Item item = new Item();
@@ -63,6 +63,9 @@ public class ItemFormPage extends BasePage {
         add(new ItemForm("form", item));        
     }   
     
+    /**
+     * wicket form
+     */    
     private class ItemForm extends Form {
         
         private JtracFeedbackMessageFilter filter;
@@ -115,7 +118,7 @@ public class ItemFormPage extends BasePage {
                     String heading = localize("item_delete.confirm");
                     String warning = localize("item_delete.line2");
                     String line1 = localize("item_delete.line1");                    
-                    ConfirmPage confirm = new ConfirmPage(ItemFormPage.this, heading, warning, new String[] { line1 }) {
+                    ConfirmPage confirm = new ConfirmPage(ItemFormPage.this, heading, warning, new String[] {line1}) {
                         public void onConfirm() {
                             // avoid lazy init problem
                             getJtrac().removeItem(getJtrac().loadItem(item.getId()));

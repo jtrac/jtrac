@@ -27,7 +27,7 @@ public class ItemRefId implements Serializable {
     private long sequenceNum;
     private String prefixCode;
     
-    public ItemRefId(String refId) throws InvalidRefIdException {
+    public ItemRefId(String refId) {
         int pos = refId.indexOf('-');
         if (pos == -1) {
             throw new InvalidRefIdException("invalid ref id");

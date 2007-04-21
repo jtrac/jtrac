@@ -19,7 +19,6 @@ package info.jtrac.wicket;
 import java.util.Arrays;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -44,6 +43,9 @@ public abstract class ConfirmPage extends BasePage {
     
     public abstract void onConfirm();
     
+    /**
+     * wicket form
+     */
     private class ConfirmForm extends Form {              
         
         public ConfirmForm(String id) {

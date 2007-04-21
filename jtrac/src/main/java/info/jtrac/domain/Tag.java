@@ -18,12 +18,7 @@ package info.jtrac.domain;
 
 import static info.jtrac.Constants.*;
 
-import info.jtrac.util.XmlUtils;
-
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import org.dom4j.Element;
 
 /**
  * Represents a Tag as in an Item can be assigned multiple Tags

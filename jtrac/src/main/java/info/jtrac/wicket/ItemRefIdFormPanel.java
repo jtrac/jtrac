@@ -40,6 +40,9 @@ public class ItemRefIdFormPanel extends BasePanel {
         add(new ItemRefIdForm());        
     }
     
+    /**
+     * wicket form
+     */    
     private class ItemRefIdForm extends Form {
         
         private String refId;

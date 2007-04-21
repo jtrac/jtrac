@@ -32,6 +32,9 @@ public class ConfigFormPage extends BasePage {
         add(new ConfigForm("form", param, value));
     }
     
+    /**
+     * wicket form
+     */
     private class ConfigForm extends Form {                
         
         private String param;

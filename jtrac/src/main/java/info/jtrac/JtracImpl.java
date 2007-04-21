@@ -231,7 +231,7 @@ public class JtracImpl implements Jtrac {
         indexer.index(item);
         indexer.index(history);
         if (item.isSendNotifications()) {
-            mailSender.send(item, messageSource);
+            mailSender.send(item);
         }
     }
 
@@ -248,7 +248,7 @@ public class JtracImpl implements Jtrac {
         dao.flush();
         // TODO index?
         if (item.isSendNotifications()) {
-            mailSender.send(item, messageSource);
+            mailSender.send(item);
         }
     }
 
@@ -279,7 +279,7 @@ public class JtracImpl implements Jtrac {
         writeToFile(fileUpload, attachment);
         indexer.index(history);
         if (history.isSendNotifications()) {
-            mailSender.send(item, messageSource);
+            mailSender.send(item);
         }
     }
 

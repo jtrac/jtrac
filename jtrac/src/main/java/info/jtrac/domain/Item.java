@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.lucene.document.Document;
-
-import org.apache.lucene.document.Field.*;
+import org.apache.lucene.document.Field.Index;
+import org.apache.lucene.document.Field.Store;
 
 /**
  * This object represents a generic item which can be an issue, defect, task etc.
@@ -70,11 +70,11 @@ public class Item extends AbstractItem {
         attachments.add(attachment);
     }
     
-    public void addRelated(Item relatedItem, int type) {
+    public void addRelated(Item relatedItem, int relationType) {
         if (getRelatedItems() == null) {
             setRelatedItems(new LinkedHashSet<ItemItem>());
         }
-        ItemItem itemItem = new ItemItem(this, relatedItem, type);        
+        ItemItem itemItem = new ItemItem(this, relatedItem, relationType);        
         getRelatedItems().add(itemItem);
     }    
     

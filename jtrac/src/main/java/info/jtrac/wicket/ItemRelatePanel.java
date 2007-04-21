@@ -76,6 +76,9 @@ public class ItemRelatePanel extends BasePanel {
         }        
     }
     
+    /**
+     * wicket form
+     */
     private class RelateForm extends Form {
         
         private int type;
@@ -97,10 +100,10 @@ public class ItemRelatePanel extends BasePanel {
                 }
             });
             add(choice);
-            TextArea comment = new TextArea("comment");
-            comment.setRequired(true);
-            comment.add(new ErrorHighlighter());
-            add(comment);
+            TextArea commentArea = new TextArea("comment");
+            commentArea.setRequired(true);
+            commentArea.add(new ErrorHighlighter());
+            add(commentArea);
         }
 
         public int getType() {

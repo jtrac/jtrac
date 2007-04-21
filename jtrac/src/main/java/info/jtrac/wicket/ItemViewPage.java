@@ -29,23 +29,23 @@ import org.apache.wicket.markup.html.link.Link;
  */
 public class ItemViewPage extends BasePage {              
     
-    ItemSearch itemSearch;
-    long itemId;
+    private ItemSearch itemSearch;
+    private long itemId;
 
     public long getItemId() {
         return itemId;
     }    
     
     public ItemViewPage(PageParameters params) {        
-        String itemId = params.getString("0");
-        logger.debug("item id parsed from url = '" + itemId + "'");
+        String refId = params.getString("0");
+        logger.debug("item id parsed from url = '" + refId + "'");
         Item item;
-        if(itemId.indexOf('-') != -1) { 
+        if(refId.indexOf('-') != -1) { 
             // this in the form SPACE-123
-            item = getJtrac().loadItemByRefId(itemId);
+            item = getJtrac().loadItemByRefId(refId);
         } else {
             // internal id of type long
-            item = getJtrac().loadItem(Long.parseLong(itemId));
+            item = getJtrac().loadItem(Long.parseLong(refId));
         }        
         addComponents(item);
     }       

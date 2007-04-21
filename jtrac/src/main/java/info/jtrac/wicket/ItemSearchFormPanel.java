@@ -72,9 +72,13 @@ public class ItemSearchFormPanel extends BasePanel {
         add(new ItemSearchForm("form", itemSearch));        
     }    
     
+    /**
+     * custom behavior that highlights the search form fields
+     * that user has filled / modifiedf
+     */
     private class SelectedHighlighter extends AbstractBehavior {
     
-        FormComponent fc;        
+        private FormComponent fc;        
         
         public SelectedHighlighter(FormComponent fc) {            
             this.fc = fc;
@@ -93,7 +97,10 @@ public class ItemSearchFormPanel extends BasePanel {
         }
         
     }
-
+    
+    /**
+     * wicket form
+     */
     private class ItemSearchForm extends Form {
         
         private ItemSearch itemSearch;        
@@ -164,7 +171,7 @@ public class ItemSearchFormPanel extends BasePanel {
             add(getSelecter(summary));
             add(summary);
             // page size =======================================================
-            List<Integer> sizes = Arrays.asList(new Integer[] { 5, 10, 15, 25, 50, 100, -1 });
+            List<Integer> sizes = Arrays.asList(new Integer[] {5, 10, 15, 25, 50, 100, -1});
             final String noLimit = getLocalizer().getString("item_search_form.noLimit", null);
             DropDownChoice pageSizeChoice = new DropDownChoice("pageSize", sizes, new IChoiceRenderer() {
                 public Object getDisplayValue(Object o) {
@@ -447,8 +454,7 @@ public class ItemSearchFormPanel extends BasePanel {
         }         
         
         @Override
-        protected void onSubmit() {
-            ItemSearch itemSearch = (ItemSearch) getModelObject();
+        protected void onSubmit() {            
             setResponsePage(new ItemListPage(itemSearch));            
         }        
             

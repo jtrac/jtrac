@@ -142,7 +142,7 @@ public final class ItemUtils {
         sb.append("  <td" + labelStyle + ">" + fmt("loggedBy", ms, loc) + "</td>");
         sb.append("  <td" + tdStyle + ">" + item.getLoggedBy().getName() + "</td>");
         sb.append("  <td" + labelStyle + ">" + fmt("assignedTo", ms, loc) + "</td>");
-        sb.append("  <td width='15%'" + tdStyle + ">" + ( item.getAssignedTo() == null ? "" : item.getAssignedTo().getName() ) + "</td>");
+        sb.append("  <td width='15%'" + tdStyle + ">" + (item.getAssignedTo() == null ? "" : item.getAssignedTo().getName()) + "</td>");
         sb.append("</tr>");
         sb.append("<tr" + altStyle + ">");
         sb.append("  <td" + labelStyle + ">" + fmt("summary", ms, loc) + "</td>");
@@ -157,11 +157,11 @@ public final class ItemUtils {
         Map<Field.Name, Field> fields = item.getSpace().getMetadata().getFields();
         for(Field.Name fieldName : item.getSpace().getMetadata().getFieldOrder()) {
             Field field = fields.get(fieldName);
-            sb.append("<tr" + ( row % 2 == 0 ? altStyle : "" ) + ">");
+            sb.append("<tr" + (row % 2 == 0 ? altStyle : "") + ">");
             sb.append("  <td" + labelStyle + ">" + field.getLabel() + "</td>");
             sb.append("  <td colspan='5'" + tdStyle + ">" + item.getCustomValue(fieldName) + "</td>");
             sb.append("</tr>");
-            row ++;
+            row++;
         }
         sb.append("</table>");
         
@@ -180,10 +180,10 @@ public final class ItemUtils {
         if (item.getHistory() != null) {
             row = 1;
             for(History history : item.getHistory()) {
-                sb.append("<tr valign='top'" + ( row % 2 == 0 ? altStyle : "" ) + ">");
+                sb.append("<tr valign='top'" + (row % 2 == 0 ? altStyle : "") + ">");
                 sb.append("  <td" + tdStyle + ">" + history.getLoggedBy().getName() + "</td>");
                 sb.append("  <td" + tdStyle + ">" + history.getStatusValue() +"</td>");
-                sb.append("  <td" + tdStyle + ">" + ( history.getAssignedTo() == null ? "" : history.getAssignedTo().getName() ) + "</td>");
+                sb.append("  <td" + tdStyle + ">" + (history.getAssignedTo() == null ? "" : history.getAssignedTo().getName()) + "</td>");
                 sb.append("  <td" + tdStyle + ">");
                 Attachment attachment = history.getAttachment();
                 if (attachment != null) {

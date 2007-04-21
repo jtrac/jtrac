@@ -46,6 +46,9 @@ public class SpaceRolePage extends BasePage {
         add(new SpaceRoleForm("form", roleKey));
     }
     
+    /**
+     * wicket form
+     */     
     private class SpaceRoleForm extends Form {                
         
         private String roleKey;

@@ -68,7 +68,7 @@ public class User implements UserDetails, Serializable {
         List<String> roleKeys = new ArrayList<String>();
         for(UserSpaceRole usr : userSpaceRoles) {
             Space s = usr.getSpace();
-            if (s == space || ( s != null && s.equals(space))) {
+            if (s == space || (s != null && s.equals(space))) {
                 roleKeys.add(usr.getRoleKey());
             }
         }
@@ -120,10 +120,10 @@ public class User implements UserDetails, Serializable {
      * instead of hitting the database, useful when we need a space for
      * currently logged in user
      */
-    public Space getSpaceById(long id) {
+    public Space getSpaceById(long spaceId) {
         Space space = null;
         for (UserSpaceRole usr : userSpaceRoles) {
-            if (usr.getSpace() != null && usr.getSpace().getId() == id) {
+            if (usr.getSpace() != null && usr.getSpace().getId() == spaceId) {
                 space = usr.getSpace();
                 break;
             }

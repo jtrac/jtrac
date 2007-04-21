@@ -20,6 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 
+/**
+ * spring multiactioncontroller, for backwards compatibility with old email links
+ */
 public class DefaultMultiActionController extends AbstractMultiActionController {     
     
     public ModelAndView itemViewHandler(HttpServletRequest request, HttpServletResponse response) {

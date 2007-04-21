@@ -57,17 +57,17 @@ public class MailSender {
             return;
         }        
         String port = config.get("mail.server.port");       
-        String url = config.get("jtrac.url.base");
+        String tempUrl = config.get("jtrac.url.base");
         from = config.get("mail.from");
         prefix = config.get("mail.subject.prefix");
         String userName = config.get("mail.server.username");
         String password = config.get("mail.server.password");
         String startTls = config.get("mail.server.starttls.enable");
-        logger.debug("initializing email adapter: host = '" + host + "', port = '" + 
-                port + "', url = '" + url + "', from = '" + from + "', prefix = '" + prefix + "'");        
+        logger.debug("initializing email adapter: host = '" + host + "', port = '"
+                + port + "', url = '" + url + "', from = '" + from + "', prefix = '" + prefix + "'");        
         this.prefix = prefix == null ? "[jtrac]" : prefix;
         this.from = from == null ? "jtrac" : from;
-        this.url = url == null ?  "http://localhost/jtrac/" : url;
+        this.url = tempUrl == null ?  "http://localhost/jtrac/" : tempUrl;
         if (!this.url.endsWith("/")) {
             this.url = url + "/";
         }          
@@ -166,7 +166,7 @@ public class MailSender {
         return prefix + " #" + item.getRefId() + " " + summary;
     }
     
-    public void send(Item item, MessageSource messageSource) {
+    public void send(Item item) {
         if (sender == null) {
             logger.debug("mail sender is null, not sending notifications");
             return;

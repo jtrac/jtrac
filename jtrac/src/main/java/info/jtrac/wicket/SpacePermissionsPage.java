@@ -48,6 +48,9 @@ public class SpacePermissionsPage extends BasePage {
         add(new SpacePermissionsForm("form"));
     }
     
+    /**
+     * wicket form
+     */     
     private class SpacePermissionsForm extends Form {
         
        private JtracFeedbackMessageFilter filter;
@@ -187,6 +190,7 @@ public class SpacePermissionsPage extends BasePage {
                                         case State.MASK_OPTIONAL : fieldButton.add(optional); break;
                                         case State.MASK_READONLY : fieldButton.add(readonly); break;
                                         case State.MASK_HIDDEN : fieldButton.add(hidden); break;
+                                        default: // should never happen
                                     }
                                     listItem.add(fieldButton);                                   
                                 }                                

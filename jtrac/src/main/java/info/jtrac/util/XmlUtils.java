@@ -91,7 +91,7 @@ public final class XmlUtils {
         try {
             Transformer transformer = factory.newTransformer(new DocumentSource(stylesheet));
             DocumentResult result = new DocumentResult();
-            transformer.transform(new DocumentSource(source), result );
+            transformer.transform(new DocumentSource(source), result);
             return result.getDocument();
         } catch (Exception e) {
             throw new RuntimeException(e);

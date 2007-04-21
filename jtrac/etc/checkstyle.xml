@@ -25,7 +25,8 @@
         <property name="tabWidth" value="4"/>
         
         <module name="Header">
-            <property name="headerFile" value="${checkstyle.header.file}"/>            
+            <property name="headerFile" value="${checkstyle.header.file}"/>
+            <property name="ignoreLines" value="3, 7, 9"/>
         </module>   
         
         <!-- Checks for Javadoc comments.                     -->
@@ -35,6 +36,7 @@
             <!-- <property name=" allowMissingPropertyJavadoc" value="true"/> -->
             <property name="allowMissingParamTags" value="true"/>
             <property name="allowMissingReturnTag" value="true"/>
+            <property name="allowMissingThrowsTags" value="true"/>
         </module>
         <module name="JavadocType"/>
         <!-- <module name="JavadocVariable"/> -->        
@@ -96,12 +98,13 @@
         
         <!-- Checks for common coding problems               -->
         <!-- See http://checkstyle.sf.net/config_coding.html -->
-        <module name="AvoidInlineConditionals"/>
+        <!-- <module name="AvoidInlineConditionals"/> -->
         <module name="DoubleCheckedLocking"/>
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
         <module name="HiddenField">
             <property name="ignoreSetter" value="true"/>
+            <property name="ignoreConstructorParameter" value="true"/>
         </module>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
@@ -115,9 +118,11 @@
         <!-- See http://checkstyle.sf.net/config_design.html -->
         <!-- <module name="DesignForExtension"/> -->
         <module name="FinalClass"/>
-        <module name="HideUtilityClassConstructor"/>
+        <!-- <module name="HideUtilityClassConstructor"/> -->
         <module name="InterfaceIsType"/>
-        <module name="VisibilityModifier"/>        
+        <module name="VisibilityModifier">
+            <property name="protectedAllowed" value="true"/>
+        </module>
 
         <!-- Miscellaneous other checks.                   -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->

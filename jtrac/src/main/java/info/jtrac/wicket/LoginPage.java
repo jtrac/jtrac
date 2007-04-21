@@ -53,6 +53,9 @@ public class LoginPage extends WebPage {
         add(new Label("version", jtracVersion));                
     }
     
+    /**
+     * wicket form
+     */     
     private class LoginForm extends Form {                               
         
         private String loginName;
@@ -93,21 +96,21 @@ public class LoginPage extends WebPage {
             });
             add(new FeedbackPanel("feedback"));            
             setModel(new BoundCompoundPropertyModel(this));
-            final TextField loginName = new TextField("loginName");
-            loginName.setOutputMarkupId(true);
-            add(loginName);
-            final PasswordTextField password = new PasswordTextField("password");
-            password.setRequired(false);
-            password.setOutputMarkupId(true);
-            add(password);
+            final TextField loginNameField = new TextField("loginName");
+            loginNameField.setOutputMarkupId(true);
+            add(loginNameField);
+            final PasswordTextField passwordField = new PasswordTextField("password");
+            passwordField.setRequired(false);
+            passwordField.setOutputMarkupId(true);
+            add(passwordField);
             // intelligently set focus on the appropriate textbox
             add(new HeaderContributor(new IHeaderContributor() {
                 public void renderHead(IHeaderResponse response) {
                     String markupId;
-                    if(loginName.getConvertedInput() == null) {
-                        markupId = loginName.getMarkupId();
+                    if(loginNameField.getConvertedInput() == null) {
+                        markupId = loginNameField.getMarkupId();
                     } else {
-                        markupId = password.getMarkupId();
+                        markupId = passwordField.getMarkupId();
                     }                    
                     response.renderOnLoadJavascript("document.getElementById('" + markupId + "').focus()");
                 }

@@ -29,24 +29,24 @@ public class Config implements Serializable {
     private String param;  // someone reported that "key" is a reserved word in MySQL
     private String value;
 
-    private static final Set<String> params;
+    private static final Set<String> PARAMS;
     
     // set up a static set of valid config key names
     static {
-        params = new LinkedHashSet<String>();
-        params.add("mail.server.host");
-        params.add("mail.server.port");
-        params.add("mail.server.username");
-        params.add("mail.server.password");
-        params.add("mail.server.starttls.enable");
-        params.add("mail.subject.prefix");
-        params.add("mail.from");
-        params.add("jtrac.url.base");
-        params.add("locale.default");
+        PARAMS = new LinkedHashSet<String>();
+        PARAMS.add("mail.server.host");
+        PARAMS.add("mail.server.port");
+        PARAMS.add("mail.server.username");
+        PARAMS.add("mail.server.password");
+        PARAMS.add("mail.server.starttls.enable");
+        PARAMS.add("mail.subject.prefix");
+        PARAMS.add("mail.from");
+        PARAMS.add("jtrac.url.base");
+        PARAMS.add("locale.default");
     }
     
     public static Set<String> getParams() {
-        return params;
+        return PARAMS;
     }
     
     public Config() {

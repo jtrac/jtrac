@@ -45,6 +45,9 @@ public class SpaceStatePage extends BasePage {
         add(new SpaceStateForm("form", stateKey));
     }
     
+    /**
+     * wicket form
+     */     
     private class SpaceStateForm extends Form {                
         
         private int stateKey;

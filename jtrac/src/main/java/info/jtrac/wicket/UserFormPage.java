@@ -62,6 +62,9 @@ public class UserFormPage extends BasePage {
         add(new UserForm("form", user));
     }
     
+    /**
+     * wicket form
+     */    
     private class UserForm extends Form {
         
         private transient User user;
@@ -128,7 +131,7 @@ public class UserFormPage extends BasePage {
                     String heading = localize("user_delete.confirm");                    
                     String line1 = localize("user_delete.line1");
                     String warning = localize("user_delete.line2");
-                    ConfirmPage confirm = new ConfirmPage(UserFormPage.this, heading, warning, new String[] { line1 }) {
+                    ConfirmPage confirm = new ConfirmPage(UserFormPage.this, heading, warning, new String[] {line1}) {
                         public void onConfirm() {
                             getJtrac().removeUser(user);
                             // logged in user may have been allocated to space with this user assigned
@@ -230,7 +233,7 @@ public class UserFormPage extends BasePage {
             // validation, do the passwords match
             add(new AbstractFormValidator() {
                 public FormComponent[] getDependentFormComponents() {
-                    return new FormComponent[] { passwordField, confirmPasswordField };
+                    return new FormComponent[] {passwordField, confirmPasswordField};
                 }
                 public void validate(Form form) {
                     String a = (String) passwordField.getConvertedInput();

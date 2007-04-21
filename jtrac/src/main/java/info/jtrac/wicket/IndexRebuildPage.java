@@ -43,6 +43,9 @@ public class IndexRebuildPage extends BasePage {
         }
     }
     
+    /**
+     * wicket form
+     */    
     private class RebuildIndexesForm extends Form {
         
         private int current;
@@ -64,7 +67,7 @@ public class IndexRebuildPage extends BasePage {
                     // long running process, use thread
                     new Thread() {
                         // don't serialize this!
-                        transient Jtrac jtrac = getJtrac();
+                        private transient Jtrac jtrac = getJtrac();
                         public void run() {
                             jtrac.clearIndexes();
                             List<AbstractItem> items = jtrac.findAllItems();

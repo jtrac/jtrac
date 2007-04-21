@@ -17,8 +17,6 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.User;
-import info.jtrac.domain.UserSpaceRole;
-import java.util.ArrayList;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;

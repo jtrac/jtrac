@@ -31,7 +31,7 @@ import org.apache.wicket.model.PropertyModel;
  */
 public class YuiDialog extends Panel {                
         
-    public static String CONTENT_ID = "content";        
+    public static final String CONTENT_ID = "content";        
     private WebMarkupContainer dialog;
     private String heading;    
 

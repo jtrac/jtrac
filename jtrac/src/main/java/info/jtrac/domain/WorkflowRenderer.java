@@ -33,11 +33,11 @@ import org.dom4j.Element;
  */
 public class WorkflowRenderer implements Serializable {
     
-    Map<String, Role> rolesMap;
-    Map<String, Set<String>> transitionRoles;
-    Map<Integer, Set<Integer>> stateTransitions;
+    private Map<String, Role> rolesMap;
+    private Map<String, Set<String>> transitionRoles;
+    private Map<Integer, Set<Integer>> stateTransitions;
     private Map<Integer, String> stateNames;
-    Document document;
+    private Document document;
     
     public WorkflowRenderer(Map<String, Role> rolesMap, Map<Integer, String> stateNames) {
         this.rolesMap = rolesMap;

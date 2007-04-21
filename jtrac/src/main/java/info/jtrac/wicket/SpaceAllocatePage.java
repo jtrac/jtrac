@@ -69,6 +69,9 @@ public class SpaceAllocatePage extends BasePage {
         add(new SpaceAllocateForm("form"));        
     }    
     
+    /**
+     * wicket form
+     */     
     private class SpaceAllocateForm extends Form {
         
         private User user;

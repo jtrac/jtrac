@@ -23,7 +23,6 @@ import info.jtrac.domain.ItemItem;
 import info.jtrac.wicket.yui.YuiDialog;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -79,6 +78,9 @@ public class ItemRelateRemovePage extends BasePage {
         
     }
     
+    /**
+     * wicket form
+     */    
     private class ConfirmForm extends Form {
                 
         private String comment;                
@@ -86,10 +88,10 @@ public class ItemRelateRemovePage extends BasePage {
         public ConfirmForm(String id) {
             super(id);            
             setModel(new BoundCompoundPropertyModel(this));
-            TextArea comment = new TextArea("comment");
-            comment.setRequired(true);
-            comment.add(new ErrorHighlighter());
-            add(comment);
+            TextArea commentArea = new TextArea("comment");
+            commentArea.setRequired(true);
+            commentArea.add(new ErrorHighlighter());
+            add(commentArea);
         }
 
         public String getComment() {

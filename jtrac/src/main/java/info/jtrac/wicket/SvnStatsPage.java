@@ -17,7 +17,6 @@
 package info.jtrac.wicket;
 
 import info.jtrac.util.SvnUtils;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,53 +52,10 @@ public class SvnStatsPage extends BasePage {
         hide.setVisible(false);
     }
     
+    /**
+     * wicket form
+     */     
     private class SvnForm extends Form {
-        
-        public SvnForm(String id) {
-            super(id);
-            SvnFormModel modelObject = new SvnFormModel();
-            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(modelObject);
-            setModel(model);
-            add(new TextField("url").setRequired(true));
-            add(new TextField("loginName"));
-            add(new PasswordTextField("password").setRequired(false));
-        }
-        
-        @Override
-        protected void onSubmit() {
-            final SvnFormModel model = (SvnFormModel) getModelObject();
-            final Map<String, Integer> commitsPerCommitter = 
-                    SvnUtils.getCommitsPerCommitter(SvnUtils.getRepository(model.getUrl(), model.getLoginName(), model.getPassword()));
-            DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-            for (Map.Entry<String, Integer> entry : commitsPerCommitter.entrySet()) {
-                dataset.addValue(entry.getValue(), "Commits", entry.getKey());
-            }             
-            List<String> users = new ArrayList(commitsPerCommitter.keySet());
-            final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
-            hide.add(new ListView("users", users) {
-                protected void populateItem(ListItem listItem) {
-                    if(listItem.getIndex() % 2 == 1) {
-                        listItem.add(sam);
-                    }                      
-                    String user = (String) listItem.getModelObject();
-                    listItem.add(new Label("user", user));
-                    listItem.add(new Label("commits", commitsPerCommitter.get(user) + ""));
-                    
-                }
-            });
-            JFreeChart chart = ChartFactory.createBarChart(null, null, null, dataset, PlotOrientation.VERTICAL, false, false, false);
-            BufferedDynamicImageResource resource = new BufferedDynamicImageResource();
-            resource.setImage(chart.createBufferedImage(600, 300));
-            hide.add(new Image("chart", resource));
-            hide.setVisible(true);
-            form.setVisible(false);
-        }        
-        
-    }
-    
-    
-    
-    private class SvnFormModel implements Serializable {
         
         private String url;
         private String loginName;
@@ -127,9 +83,46 @@ public class SvnStatsPage extends BasePage {
 
         public void setPassword(String password) {
             this.password = password;
+        }        
+        
+        public SvnForm(String id) {
+            super(id);            
+            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(this);
+            setModel(model);
+            add(new TextField("url").setRequired(true));
+            add(new TextField("loginName"));
+            add(new PasswordTextField("password").setRequired(false));
         }
         
+        @Override
+        protected void onSubmit() {            
+            final Map<String, Integer> commitsPerCommitter = 
+                    SvnUtils.getCommitsPerCommitter(SvnUtils.getRepository(url, loginName, password));
+            DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+            for (Map.Entry<String, Integer> entry : commitsPerCommitter.entrySet()) {
+                dataset.addValue(entry.getValue(), "Commits", entry.getKey());
+            }             
+            List<String> users = new ArrayList(commitsPerCommitter.keySet());
+            final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
+            hide.add(new ListView("users", users) {
+                protected void populateItem(ListItem listItem) {
+                    if(listItem.getIndex() % 2 == 1) {
+                        listItem.add(sam);
+                    }                      
+                    String user = (String) listItem.getModelObject();
+                    listItem.add(new Label("user", user));
+                    listItem.add(new Label("commits", commitsPerCommitter.get(user) + ""));
+                    
+                }
+            });
+            JFreeChart chart = ChartFactory.createBarChart(null, null, null, dataset, PlotOrientation.VERTICAL, false, false, false);
+            BufferedDynamicImageResource resource = new BufferedDynamicImageResource();
+            resource.setImage(chart.createBufferedImage(600, 300));
+            hide.add(new Image("chart", resource));
+            hide.setVisible(true);
+            form.setVisible(false);
+        }        
         
-    }
+    }            
     
 }

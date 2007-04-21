@@ -41,18 +41,17 @@ import org.apache.wicket.model.PropertyModel;
 public class SpaceFieldListPage extends BasePage {              
     
     private Space space;
-    private WebPage previous;
-    
-    private void addComponents(Space space, String selectedFieldName) {
-        add(new SpaceFieldsForm("form", space, selectedFieldName));
-    }     
+    private WebPage previous;        
     
     public SpaceFieldListPage(Space space, String selectedFieldName, WebPage previous) {
         this.previous = previous;
         this.space = space;
-        addComponents(space, selectedFieldName);
+        add(new SpaceFieldsForm("form", space, selectedFieldName));        
     }
     
+    /**
+     * wicket form
+     */     
     private class SpaceFieldsForm extends Form {        
         
         private String type;
@@ -112,7 +111,7 @@ public class SpaceFieldListPage extends BasePage {
                             List<Field.Name> fieldOrder = space.getMetadata().getFieldOrder();
                             int index = fieldOrder.indexOf(field.getName());
                             int swapIndex = index + 1;
-                            if (swapIndex == fieldOrder.size() ) {
+                            if (swapIndex == fieldOrder.size()) {
                                 swapIndex = 0;
                             }
                             if (index != swapIndex) {

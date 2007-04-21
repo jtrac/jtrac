@@ -36,9 +36,9 @@ public class ItemItem implements Serializable {
     private Item relatedItem;
     private int type;
 
-    public static int RELATED = 0;
-    public static int DUPLICATE_OF = 1;
-    public static int DEPENDS_ON = 2;
+    public static final int RELATED = 0;
+    public static final int DUPLICATE_OF = 1;
+    public static final int DEPENDS_ON = 2;
     
     // this returns i18n keys
     public static String getRelationText(int type) {

@@ -85,7 +85,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     }
     
     public List<Item> findItems(long sequenceNum, String prefixCode) {
-        Object[] params = new Object[] { sequenceNum, prefixCode };
+        Object[] params = new Object[] {sequenceNum, prefixCode};
         return getHibernateTemplate().find("from Item item where item.sequenceNum = ? and item.space.prefixCode = ?", params);
     }
     
@@ -227,12 +227,12 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     public List<User> findUsersWithRoleForSpace(long spaceId, String roleKey) {
         return getHibernateTemplate().find("from User user"
                 + " join user.userSpaceRoles as usr where usr.space.id = ?"
-                + " and usr.roleKey = ? order by user.name", new Object[] { spaceId, roleKey });        
+                + " and usr.roleKey = ? order by user.name", new Object[] {spaceId, roleKey});        
     }    
     
     public int loadCountOfHistoryInvolvingUser(User user) {
         Long count = (Long) getHibernateTemplate().find("select count(history) from History history where "
-                + " history.loggedBy = ? or history.assignedTo = ?", new Object[] { user, user }).get(0);
+                + " history.loggedBy = ? or history.assignedTo = ?", new Object[] {user, user}).get(0);
         return count.intValue();        
     }
     
@@ -273,9 +273,9 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     public Counts loadCountsForUserSpace(User user, Space space) {
         HibernateTemplate ht = getHibernateTemplate();        
         List<Object[]> loggedByList = ht.find("select status, count(item) from Item item" 
-                + " where item.loggedBy.id = ? and item.space.id = ? group by item.status", new Object[] { user.getId(), space.getId() });
+                + " where item.loggedBy.id = ? and item.space.id = ? group by item.status", new Object[] {user.getId(), space.getId()});
         List<Object[]> assignedToList = ht.find("select status, count(item) from Item item" 
-                + " where item.assignedTo.id = ? and item.space.id = ? group by item.status", new Object[] { user.getId(), space.getId() });
+                + " where item.assignedTo.id = ? and item.space.id = ? group by item.status", new Object[] {user.getId(), space.getId()});
         List<Object[]> statusList = ht.find("select status, count(item) from Item item" 
                 + " where item.space.id = ? group by item.status", space.getId());
         Counts c = new Counts(true);
@@ -364,11 +364,11 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     public int bulkUpdateFieldToNullForValue(Space space, Field field, int optionKey) {
         int itemCount = getHibernateTemplate().bulkUpdate("update Item item set item." + field.getName() + " = null" 
                 + " where item.space.id = ?"
-                + " and item." + field.getName() + " = ?", new Object[] { space.getId(), optionKey });
+                + " and item." + field.getName() + " = ?", new Object[] {space.getId(), optionKey});
         logger.info("no of Item rows where " + field.getName() + " value '" + optionKey + "' replaced with null = " + itemCount);
         int historyCount = getHibernateTemplate().bulkUpdate("update History history set history." + field.getName() + " = null"
                 + " where history." + field.getName() + " = ?"
-                + " and history.parent in ( from Item item where item.space.id = ? )", new Object[] { optionKey, space.getId(), });
+                + " and history.parent in ( from Item item where item.space.id = ? )", new Object[] {optionKey, space.getId()});
         logger.info("no of History rows where " + field.getName() + " value '" + optionKey + "' replaced with null = " + historyCount);
         return itemCount;        
     }
@@ -390,18 +390,18 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     
     public int bulkUpdateStatusToOpen(Space space, int status) {
         int itemCount = getHibernateTemplate().bulkUpdate("update Item item set item.status = " + State.OPEN 
-                + " where item.status = ? and item.space.id = ?", new Object[] { status, space.getId() });
+                + " where item.status = ? and item.space.id = ?", new Object[] {status, space.getId()});
         logger.info("no of Item rows where status changed from " + status + " to " + State.OPEN + " = " + itemCount);
         int historyCount = getHibernateTemplate().bulkUpdate("update History history set history.status = " + State.OPEN 
                 + " where history.status = ?"
-                + " and history.parent in ( from Item item where item.space.id = ? )", new Object[] { status, space.getId() });
+                + " and history.parent in ( from Item item where item.space.id = ? )", new Object[] {status, space.getId()});
         logger.info("no of History rows where status changed from " + status + " to " + State.OPEN + " = " + historyCount);
         return itemCount;
     }    
     
     public int bulkUpdateRenameSpaceRole(Space space, String oldRoleKey, String newRoleKey) {
         return getHibernateTemplate().bulkUpdate("update UserSpaceRole usr set usr.roleKey = ?"
-                + " where usr.roleKey = ? and usr.space.id = ?", new Object[] { newRoleKey, oldRoleKey, space.getId() });
+                + " where usr.roleKey = ? and usr.space.id = ?", new Object[] {newRoleKey, oldRoleKey, space.getId()});
     }
     
     public int bulkUpdateDeleteSpaceRole(Space space, String roleKey) {
@@ -409,7 +409,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
             return getHibernateTemplate().bulkUpdate("delete UserSpaceRole usr where usr.space.id = ?", space.getId());            
         } else {
             return getHibernateTemplate().bulkUpdate("delete UserSpaceRole usr"
-                    + " where usr.space.id = ? and usr.roleKey = ?", new Object[] { space.getId(), roleKey });
+                    + " where usr.space.id = ? and usr.roleKey = ?", new Object[] {space.getId(), roleKey});
         }
     }
     

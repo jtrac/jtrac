@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class CountsHolder implements Serializable {
 
-    Map<Long, Counts> counts = new HashMap<Long, Counts>();
+    private Map<Long, Counts> counts = new HashMap<Long, Counts>();
     
     public void add(long spaceId, int type, long count) {
         Counts c = counts.get(spaceId);

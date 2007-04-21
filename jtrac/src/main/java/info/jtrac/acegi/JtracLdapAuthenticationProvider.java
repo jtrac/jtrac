@@ -115,12 +115,12 @@ public class JtracLdapAuthenticationProvider implements AuthenticationProvider, 
         return UsernamePasswordAuthenticationToken.class.isAssignableFrom(clazz);
     }    
     
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication) {
         if (!supports(authentication.getClass())) {
             return null;
         }
         logger.debug("attempting authentication via LDAP");
-        Map<String,String> attributes = null;
+        Map<String, String> attributes = null;
         try {
             attributes = bind(authentication.getName(), authentication.getCredentials().toString());
         } catch(Exception e) {
@@ -150,7 +150,7 @@ public class JtracLdapAuthenticationProvider implements AuthenticationProvider, 
         LdapContext ctx = null;
         if(activeDirectoryDomain != null) { // we are using Active Directory
             env.put(Context.SECURITY_AUTHENTICATION, "simple");
-            Control[] controls = new Control[] { control };
+            Control[] controls = new Control[] {control};
             ctx = new InitialLdapContext(env, controls);
             logger.debug("Active Directory LDAP context initialized");            
             ctx.addToEnvironment(Context.SECURITY_PRINCIPAL, activeDirectoryDomain + "\\" + loginName);
@@ -196,7 +196,7 @@ public class JtracLdapAuthenticationProvider implements AuthenticationProvider, 
             }
             returningAttributes = keys.toArray(new String[keys.size()]);
         } else {
-            returningAttributes = new String[] { mailKey, displayNameKey };
+            returningAttributes = new String[] {mailKey, displayNameKey};
         }
         if(searchKey == null) {
             if(activeDirectoryDomain != null && activeDirectoryDomain.trim().length() > 0) {

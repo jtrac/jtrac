@@ -64,6 +64,9 @@ public class UserAllocatePage extends BasePage {
         add(new UserAllocateForm("form"));
     }    
     
+    /**
+     * wicket form
+     */
     private class UserAllocateForm extends Form {                
         
         private Space space;
@@ -92,8 +95,8 @@ public class UserAllocatePage extends BasePage {
          * function that attempts to pre-select roleKey for convenience
          * used on form init and also on Ajax onChange event for Space choice
          */
-        private void initRoleChoice(Space space) {
-            List<String> roleKeys = new ArrayList(space.getMetadata().getRoles().keySet());
+        private void initRoleChoice(Space s) {
+            List<String> roleKeys = new ArrayList(s.getMetadata().getRoles().keySet());
             if(roleKeys.size() == 1) {
                 // pre select role for convenience
                 roleKey = roleKeys.get(0);
@@ -203,12 +206,12 @@ public class UserAllocatePage extends BasePage {
             
             spaceChoice.add(new AjaxFormComponentUpdatingBehavior("onChange") {
                 protected void onUpdate(AjaxRequestTarget target) {
-                    Space space = (Space) getFormComponent().getConvertedInput();
-                    if (space == null) {
+                    Space s = (Space) getFormComponent().getConvertedInput();
+                    if (s == null) {
                         roleKeyChoice.setEnabled(false);
                         allocateButton.setEnabled(false);
                     } else {
-                        Space temp = getJtrac().loadSpace(space.getId());
+                        Space temp = getJtrac().loadSpace(s.getId());
                         // populate choice, enable button etc
                         initRoleChoice(temp);
                     }

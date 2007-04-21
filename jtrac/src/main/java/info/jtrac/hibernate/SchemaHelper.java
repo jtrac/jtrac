@@ -16,9 +16,6 @@
 
 package info.jtrac.hibernate;
 
-import java.sql.Connection;
-import java.sql.Statement;
-import javax.sql.DataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.cfg.Configuration;

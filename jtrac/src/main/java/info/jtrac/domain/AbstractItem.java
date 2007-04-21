@@ -21,7 +21,6 @@ import java.util.Date;
 
 import static info.jtrac.domain.Field.Name.*;
 import info.jtrac.util.DateUtils;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import org.springmodules.lucene.index.core.DocumentCreator;
 
@@ -101,9 +100,8 @@ public abstract class AbstractItem implements Serializable, DocumentCreator {
             case CUS_TIM_01: return cusTim01;
             case CUS_TIM_02: return cusTim02;
             case CUS_TIM_03: return cusTim03;
+            default: return null; // this should never happen
         }
-        // should never reach here
-        return null;
     }
     
     // we could have used reflection or a Map but doing this way for performance
@@ -129,9 +127,10 @@ public abstract class AbstractItem implements Serializable, DocumentCreator {
             case CUS_STR_03: cusStr03 = (String) value; break;
             case CUS_STR_04: cusStr04 = (String) value; break;
             case CUS_STR_05: cusStr05 = (String) value; break;
-            case CUS_TIM_01: cusTim01 = (Date) value ; break;
+            case CUS_TIM_01: cusTim01 = (Date) value; break;
             case CUS_TIM_02: cusTim02 = (Date) value; break;
             case CUS_TIM_03: cusTim03 = (Date) value;
+            default: // this should never happen
         }
     }    
     
