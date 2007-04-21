@@ -29,7 +29,10 @@ import java.util.List;
 import java.util.Map;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -43,7 +46,6 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.BoundCompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.validation.IValidatable;
@@ -137,11 +139,11 @@ public class ItemSearchFormPanel extends BasePanel {
                 @Override
                 public void onAttach() {
                     super.onAttach();
-                    getWebPage().getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                        public Object getObject() {
-                            return "document.getElementById('" + getMarkupId() + "').focus()";
+                    add(new HeaderContributor(new IHeaderContributor() {
+                        public void renderHead(IHeaderResponse response) {
+                            response.renderOnLoadJavascript("document.getElementById('" + getMarkupId() + "').focus()");
                         }
-                    }, this);
+                    }));
                 }
             };
             summary.setOutputMarkupId(true);

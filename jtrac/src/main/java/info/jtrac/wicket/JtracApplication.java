@@ -158,7 +158,7 @@ public class JtracApplication extends WebApplication {
         mountBookmarkablePage("/svn", SvnStatsPage.class);
         mountBookmarkablePage("/test", TestPage.class);
         // bookmarkable url for viewing items
-        mount("/item", new IndexedParamUrlCodingStrategy("/item", ItemViewPage.class));
+        mount(new IndexedParamUrlCodingStrategy("/item", ItemViewPage.class));
         
     }   
     

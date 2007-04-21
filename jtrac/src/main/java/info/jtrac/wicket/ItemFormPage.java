@@ -25,6 +25,9 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.UserUtils;
 import java.util.List;
+import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -38,7 +41,6 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.BoundCompoundPropertyModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 
@@ -101,11 +103,11 @@ public class ItemFormPage extends BasePage {
             summaryField.add(new ErrorHighlighter());
             summaryField.setOutputMarkupId(true);
             add(summaryField);
-            ItemFormPage.this.getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                public Object getObject() {
-                    return "document.getElementById('" + summaryField.getMarkupId() + "').focus()";
+            add(new HeaderContributor(new IHeaderContributor() {
+                public void renderHead(IHeaderResponse response) {
+                    response.renderOnLoadJavascript("document.getElementById('" + summaryField.getMarkupId() + "').focus()");
                 }
-            }, summaryField);
+            }));
             // delete button ===================================================
             Button delete = new Button("delete") {
                 @Override

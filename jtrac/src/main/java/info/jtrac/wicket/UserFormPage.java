@@ -21,6 +21,9 @@ import info.jtrac.util.ValidationUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Button;
@@ -34,7 +37,6 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.validation.AbstractFormValidator;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.BoundCompoundPropertyModel;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.validator.AbstractValidator;
@@ -150,11 +152,11 @@ public class UserFormPage extends BasePage {
             loginName.setRequired(true);
             loginName.add(new ErrorHighlighter());
             loginName.setOutputMarkupId(true);
-            UserFormPage.this.getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                public Object getObject() {
-                    return "document.getElementById('" + loginName.getMarkupId() + "').focus()";
+            add(new HeaderContributor(new IHeaderContributor() {
+                public void renderHead(IHeaderResponse response) {
+                    response.renderOnLoadJavascript("document.getElementById('" + loginName.getMarkupId() + "').focus()");
                 }
-            }, loginName);
+            }));
             // validation: does user already exist with same loginName?
             loginName.add(new AbstractValidator() {
                 protected void onValidate(IValidatable v) {

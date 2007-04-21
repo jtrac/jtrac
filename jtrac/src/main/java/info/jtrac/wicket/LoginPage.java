@@ -21,6 +21,9 @@ import info.jtrac.domain.User;
 import javax.servlet.http.Cookie;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -29,7 +32,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.BoundCompoundPropertyModel;
 
 /**
@@ -99,17 +101,17 @@ public class LoginPage extends WebPage {
             password.setOutputMarkupId(true);
             add(password);
             // intelligently set focus on the appropriate textbox
-            getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                public Object getObject() {
+            add(new HeaderContributor(new IHeaderContributor() {
+                public void renderHead(IHeaderResponse response) {
                     String markupId;
                     if(loginName.getConvertedInput() == null) {
                         markupId = loginName.getMarkupId();
                     } else {
                         markupId = password.getMarkupId();
-                    }
-                    return "document.getElementById('" + markupId + "').focus()";
+                    }                    
+                    response.renderOnLoadJavascript("document.getElementById('" + markupId + "').focus()");
                 }
-            }, password);            
+            }));           
             add(new CheckBox("rememberMe"));
 
         }

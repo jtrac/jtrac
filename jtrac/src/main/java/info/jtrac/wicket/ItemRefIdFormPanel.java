@@ -19,11 +19,12 @@ package info.jtrac.wicket;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.exception.InvalidRefIdException;
-import org.apache.wicket.Component;
+import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.PropertyModel;
 
 /**
@@ -59,11 +60,11 @@ public class ItemRefIdFormPanel extends BasePanel {
                 @Override
                 public void onAttach() {
                     super.onAttach();
-                    getWebPage().getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                        public Object getObject() {
-                            return "document.getElementById('" + getMarkupId() + "').focus()";
+                    add(new HeaderContributor(new IHeaderContributor() {
+                        public void renderHead(IHeaderResponse response) {
+                            response.renderOnLoadJavascript("document.getElementById('" + getMarkupId() + "').focus()");
                         }
-                    }, this);
+                    }));                    
                 }                
             };
             refIdField.setOutputMarkupId(true);

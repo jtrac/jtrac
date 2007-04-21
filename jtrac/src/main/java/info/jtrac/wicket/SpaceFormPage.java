@@ -20,6 +20,9 @@ import info.jtrac.domain.Space;
 import info.jtrac.util.ValidationUtils;
 import java.io.Serializable;
 import java.util.List;
+import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Button;
@@ -31,7 +34,6 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.BoundCompoundPropertyModel;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.validator.AbstractValidator;
@@ -105,11 +107,11 @@ public class SpaceFormPage extends BasePage {
             name.add(new ErrorHighlighter());
             name.setOutputMarkupId(true);
             add(name);
-            SpaceFormPage.this.getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                public Object getObject() {
-                    return "document.getElementById('" + name.getMarkupId() + "').focus()";
+            add(new HeaderContributor(new IHeaderContributor() {
+                public void renderHead(IHeaderResponse response) {
+                    response.renderOnLoadJavascript("document.getElementById('" + name.getMarkupId() + "').focus()");
                 }
-            }, name);            
+            }));            
             // prefix Code =====================================================
             TextField prefixCode = new TextField("space.prefixCode");
             prefixCode.setRequired(true);

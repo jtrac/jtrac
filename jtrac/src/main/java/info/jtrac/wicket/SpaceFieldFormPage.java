@@ -24,18 +24,19 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.BoundCompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.validation.IValidatable;
@@ -141,17 +142,16 @@ public class SpaceFieldFormPage extends BasePage {
             label.add(new ErrorHighlighter());            
             add(label);
             // intelligently set focus on right input field
-            getBodyContainer().addOnLoadModifier(new AbstractReadOnlyModel() {
-                public Object getObject() {                    
+            add(new HeaderContributor(new IHeaderContributor() {
+                public void renderHead(IHeaderResponse response) {
                     if(field.getLabel() == null) {
-                        return "document.getElementById('" + label.getMarkupId() + "').focus()";
+                        response.renderOnLoadJavascript("document.getElementById('" + label.getMarkupId() + "').focus()");
                     }
                     if(optionField != null) {
-                        return "document.getElementById('" + optionField.getMarkupId() + "').focus()";
-                    }
-                    return null;
+                        response.renderOnLoadJavascript("document.getElementById('" + optionField.getMarkupId() + "').focus()");
+                    }                                        
                 }
-            }, label);                      
+            }));                    
             // options =========================================================
             WebMarkupContainer hide = new WebMarkupContainer("hide");
             if(field.getName().getType() < 4) { // drop down type
