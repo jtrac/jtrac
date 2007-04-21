@@ -749,8 +749,7 @@ wrapper.exe -r etc/wrapper.conf
             </para>
             <para>
                 When running as a service under the Java Service Wrapper, you can look at the
-                "wrapper.log" file in the "jtrac/logs" folder for troubleshooting.  Note that the 
-                [jtrac.home] folder would contain the application log called "jtrac.log" as well.
+                "wrapper.log" file in the "jtrac/logs" folder for troubleshooting.
             </para>
         </sect1>        
         <sect1 id="installation-upgrading">
