@@ -146,7 +146,7 @@ public class ItemViewPanel extends BasePanel {
         add(new Label("loggedBy", new PropertyModel(item, "loggedBy.name")));
         add(new Label("assignedTo", new PropertyModel(item, "assignedTo.name")));
         add(new Label("summary", new PropertyModel(item, "summary")));
-        add(new MultiLineLabel("detail", new PropertyModel(item, "detail")));
+        add(new Label("detail", ItemUtils.fixWhiteSpace(item.getDetail())).setEscapeModelStrings(false));        
         
         final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
         final Map<Field.Name, Field> fields = item.getSpace().getMetadata().getFields();
