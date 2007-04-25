@@ -16,6 +16,8 @@
 
 package info.jtrac.wicket;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.application.ReloadingClassLoader;
 import org.apache.wicket.protocol.http.ReloadingWicketFilter;
 
@@ -25,11 +27,18 @@ import org.apache.wicket.protocol.http.ReloadingWicketFilter;
  */
 public class JtracReloadingWicketFilter extends ReloadingWicketFilter {
     
+    private final Log logger = LogFactory.getLog(getClass());
+    
     static {
         ReloadingClassLoader.includePattern("info.jtrac.wicket.*");
         ReloadingClassLoader.excludePattern("info.jtrac.wicket.JtracApplication");
         ReloadingClassLoader.excludePattern("info.jtrac.wicket.JtracSession");
-        // ReloadingClassLoader.excludePattern("org.springframework.*");
+        // ReloadingClassLoader.excludePattern("org.springframework.*");        
+    }
+    
+    public JtracReloadingWicketFilter() {
+        super();
+        logger.warn("reloading wicket filter being used - this is wrong if production mode");
     }
     
 }
