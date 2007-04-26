@@ -145,7 +145,7 @@ public class UserFormPage extends BasePage {
             delete.setDefaultFormProcessing(false);
             // only way you can delete someone else is if you are an admin
             // and of course, don't allow deleting self or the slightly special default admin user
-            if(!getPrincipal().isAdminForAllSpaces() || user.getId() == getPrincipal().getId() || user.getId() == 1) {
+            if(!getPrincipal().isAdminForAllSpaces() || user.getId() == getPrincipal().getId() || user.getId() <= 1) {
                 delete.setVisible(false);
             } 
             add(delete);
