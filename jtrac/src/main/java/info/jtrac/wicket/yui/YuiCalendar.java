@@ -61,6 +61,9 @@ public class YuiCalendar extends Panel implements IHeaderContributor {
                 return new AbstractConverter() {
                     private DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                     public Object convertToObject(String s, Locale locale) {
+                        if(s == null || s.trim().length() == 0) {
+                            return null;
+                        }
                         try {
                             return df.parse(s);
                         } catch (Exception e) {
