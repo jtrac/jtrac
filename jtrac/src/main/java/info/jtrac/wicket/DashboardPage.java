@@ -35,9 +35,7 @@ import org.apache.wicket.model.PropertyModel;
  */
 public class DashboardPage extends BasePage {
     
-    public DashboardPage() {
-        
-        setVersioned(false);                       
+    public DashboardPage() {                
         
         final User user = getPrincipal();        
         List<UserSpaceRole> spaceRoles = user.getSpaceRoles();        
