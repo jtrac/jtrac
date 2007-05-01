@@ -92,9 +92,13 @@
     
     <!-- ========================== DIST ============================ -->
     
-    <target name="dist-production-set" depends="clean">        
+    <target name="dist-production-set" depends="dist-version-clean, clean">        
         <property name="production" value="true" />
     </target>    
+    
+    <target name="dist-version-clean">
+        <delete file="src/main/resources/version.properties"/>
+    </target>
     
     <target name="dist-version-check">
         <condition property="version.missing">
