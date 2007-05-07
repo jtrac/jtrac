@@ -29,12 +29,13 @@ import org.dom4j.Element;
 
 /**
  * Class that is used to render a workflow to the GUI
- * currently designed to work with an HTML table in a JSP
+ * currently designed to render static HTML that is a crude representation of the workflow
+ * TODO move this logic into the Role classes having better OO
  */
 public class WorkflowRenderer implements Serializable {
     
     private Map<String, Role> rolesMap;
-    private Map<String, Set<String>> transitionRoles;
+    private Map<String, Set<String>> transitionRoles;    
     private Map<Integer, Set<Integer>> stateTransitions;
     private Map<Integer, String> stateNames;
     private Document document;
@@ -125,7 +126,16 @@ public class WorkflowRenderer implements Serializable {
             String toState = child.attributeValue("key");
             sb.append("<td class='transition'>");
             for(String roleKey : transitionRoles.get(fromState + "_" + toState)) {
-                sb.append(roleKey).append("<br/>");
+                // tough validation: look forward, can this role actually transition from the "toState"?
+                // if not indicate as error (red font)
+                Role role = rolesMap.get(roleKey);
+                int toStateKey = Integer.parseInt(toState);                
+                if(toStateKey != State.CLOSED && !role.hasTransitionsFromState(toStateKey)) {
+                    sb.append("<span class='error'>").append(roleKey).append("</span>");
+                } else {
+                    sb.append(roleKey);
+                }
+                sb.append("<br/>");
             }
             sb.append("</td><td>");
             sb.append(getAsHtml(child));

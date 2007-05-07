@@ -85,6 +85,10 @@ public class Role implements Serializable {
         }
     }
     
+    public boolean hasTransitionsFromState(int stateKey) {        
+        return states.get(stateKey).getTransitions().size() > 0;
+    }
+    
     //=======================================================================
     
     public Map<Integer, State> getStates() {
