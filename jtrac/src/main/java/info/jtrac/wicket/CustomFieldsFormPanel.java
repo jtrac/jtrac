@@ -18,6 +18,7 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Item;
+import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.wicket.yui.YuiCalendar;
 import java.util.ArrayList;
@@ -39,9 +40,19 @@ import org.apache.wicket.model.Model;
  */
 public class CustomFieldsFormPanel extends BasePanel {        
     
-    public CustomFieldsFormPanel(String id, final BoundCompoundPropertyModel model, Item item, User user) {
+    public CustomFieldsFormPanel(String id, BoundCompoundPropertyModel model, Space space) {
+        super(id);
+        List<Field> fields = space.getMetadata().getFieldList();
+        addComponents(model, fields);
+    }    
+    
+    public CustomFieldsFormPanel(String id, BoundCompoundPropertyModel model, Item item, User user) {
         super(id);
         List<Field> fields = item.getEditableFieldList(user);
+        addComponents(model, fields);
+    }
+    
+    private void addComponents(final BoundCompoundPropertyModel model, List<Field> fields) {
         ListView listView = new ListView("fields", fields) {
             protected void populateItem(ListItem listItem) {
                 final Field field = (Field) listItem.getModelObject();
@@ -88,7 +99,7 @@ public class CustomFieldsFormPanel extends BasePanel {
             }
         };
         listView.setReuseItems(true);
-        add(listView);            
+        add(listView);        
     }
     
 }

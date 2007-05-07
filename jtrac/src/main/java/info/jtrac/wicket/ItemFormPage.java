@@ -85,7 +85,7 @@ public class ItemFormPage extends BasePage {
                 editMode = true;                
             }
             BoundCompoundPropertyModel model = null;
-            if(item.getId() > 0) {
+            if(editMode) {
                 // this ensures that the model object is re-loaded as part of the
                 // form submission workflow before form binding and avoids
                 // hibernate lazy loading issues during the whole update transaction
@@ -139,8 +139,12 @@ public class ItemFormPage extends BasePage {
             }
             // detail ==========================================================
             add(new TextArea("detail").setRequired(true).add(new ErrorHighlighter()));
-            // custom fields ===================================================                      
-            add(new CustomFieldsFormPanel("fields", model, item, getPrincipal()).setRenderBodyOnly(true));
+            // custom fields ===================================================
+            if(editMode) {
+                add(new CustomFieldsFormPanel("fields", model, item.getSpace()).setRenderBodyOnly(true));
+            } else {
+                add(new CustomFieldsFormPanel("fields", model, item, getPrincipal()).setRenderBodyOnly(true));
+            }
             // hide some components if editing item
             WebMarkupContainer hideAssignedTo = new WebMarkupContainer("hideAssignedTo");
             WebMarkupContainer hideNotifyList = new WebMarkupContainer("hideNotifyList");
@@ -213,7 +217,7 @@ public class ItemFormPage extends BasePage {
             final FileUpload fileUpload = fileUploadField.getFileUpload();
             Item item = (Item) getModelObject();                                                
             User user = getPrincipal();            
-            if(item.getId() > 0) { // edit mode
+            if(editMode) {
                 getJtrac().updateItem(item, user);                
             } else {
                 item.setLoggedBy(user);
