@@ -90,6 +90,14 @@
         </java>
     </target>       
     
+    <!-- cannot be used when jtrac application is connected -->
+    <target name="hsqldb-manager">
+        <java classname="org.hsqldb.util.DatabaseManagerSwing" fork="true">
+            <classpath path="${test.jars}"/>
+            <arg line="-url jdbc:hsqldb:file:home/db/jtrac"/>
+        </java>                            
+    </target>    
+    
     <!-- ========================== DIST ============================ -->
     
     <target name="dist-production-set" depends="dist-version-clean, clean">        
