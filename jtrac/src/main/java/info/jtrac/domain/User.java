@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.userdetails.UserDetails;
@@ -51,8 +52,7 @@ public class User implements UserDetails, Serializable {
     private Metadata metadata;
     private String locale;
     private boolean locked;    
-    private Set<UserSpaceRole> userSpaceRoles = new HashSet<UserSpaceRole>();
-    private Map<Long, Boolean> spacesWhereAbleToCreateNewItem;
+    private Set<UserSpaceRole> userSpaceRoles = new HashSet<UserSpaceRole>();    
     
     //=============================================================
    
@@ -103,16 +103,17 @@ public class User implements UserDetails, Serializable {
     
     /** 
      * this returns 'valid' spaceRoles, where space not null and role not ROLE_ADMIN
-     * TODO multiple roles per space ? 
+     * also sort by Space name for showing on the dashboard
+     * TODO multiple roles per space
      */
-    public List<UserSpaceRole> getSpaceRoles() {
-        List<UserSpaceRole> list = new ArrayList<UserSpaceRole>(userSpaceRoles.size());
+    public Collection<UserSpaceRole> getSpaceRoles() {
+        Map<String, UserSpaceRole> map = new TreeMap<String, UserSpaceRole>();        
         for(UserSpaceRole usr : userSpaceRoles) {
             if(usr.getSpace() != null && usr.getRoleKey() != "ROLE_ADMIN") {
-                list.add(usr);
+                map.put(usr.getSpace().getName(), usr);
             }
         }
-        return list;
+        return map.values();
     }        
     
     /**
@@ -169,15 +170,7 @@ public class User implements UserDetails, Serializable {
         return password;
     } 
     
-    //=============================================================
-    
-    public Map<Long, Boolean> getSpacesWhereAbleToCreateNewItem() {
-        return spacesWhereAbleToCreateNewItem;
-    }
-
-    public void setSpacesWhereAbleToCreateNewItem(Map<Long, Boolean> spacesWhereAbleToCreateNewItem) {
-        this.spacesWhereAbleToCreateNewItem = spacesWhereAbleToCreateNewItem;
-    }
+    //=============================================================    
     
     public Set<UserSpaceRole> getUserSpaceRoles() {
         return userSpaceRoles;

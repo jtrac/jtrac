@@ -21,6 +21,7 @@ import info.jtrac.domain.CountsHolder;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -38,7 +39,7 @@ public class DashboardPage extends BasePage {
     public DashboardPage() {                
         
         final User user = getPrincipal();        
-        List<UserSpaceRole> spaceRoles = user.getSpaceRoles();        
+        List<UserSpaceRole> spaceRoles = new ArrayList(user.getSpaceRoles());        
         
         WebMarkupContainer table = new WebMarkupContainer("table");
         WebMarkupContainer message = new WebMarkupContainer("message");
