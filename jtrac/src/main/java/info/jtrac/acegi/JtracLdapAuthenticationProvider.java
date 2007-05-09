@@ -146,10 +146,10 @@ public class JtracLdapAuthenticationProvider implements AuthenticationProvider, 
     public Map<String, String> bind(String loginName, String password) throws Exception {        
         Hashtable env = new Hashtable();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");        
-        env.put(Context.PROVIDER_URL, ldapUrl);               
+        env.put(Context.PROVIDER_URL, ldapUrl);
+        env.put(Context.SECURITY_AUTHENTICATION, "simple");
         LdapContext ctx = null;
-        if(activeDirectoryDomain != null) { // we are using Active Directory
-            env.put(Context.SECURITY_AUTHENTICATION, "simple");
+        if(activeDirectoryDomain != null) { // we are using Active Directory            
             Control[] controls = new Control[] {control};
             ctx = new InitialLdapContext(env, controls);
             logger.debug("Active Directory LDAP context initialized");            
@@ -159,7 +159,7 @@ public class JtracLdapAuthenticationProvider implements AuthenticationProvider, 
             ctx.reconnect(controls);
             logger.debug("Active Directory LDAP bind successful");            
         } else { // standard LDAP            
-            env.put(Context.SECURITY_PRINCIPAL, loginName);
+            env.put(Context.SECURITY_PRINCIPAL, searchKey + "=" + loginName + "," + searchBase);
             env.put(Context.SECURITY_CREDENTIALS, password);
             ctx = new InitialLdapContext(env, null);
             logger.debug("Standard LDAP bind successful");
@@ -185,7 +185,8 @@ public class JtracLdapAuthenticationProvider implements AuthenticationProvider, 
         throw new Exception("no results returned from ldap");
     }    
     
-    // one-time init routine managed by spring
+    // one-time init routine normally called by Spring as InitializingBean
+    // but when we use a custom FactoryBean, we have to call this manually
     public void afterPropertiesSet() {
         if(otherReturningAttributes != null) {
             List<String> keys = new ArrayList<String>();

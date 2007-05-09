@@ -65,14 +65,19 @@ public class ProviderManagerFactoryBean implements FactoryBean {
         if(ldapUrl.length() > 0) {
             logger.info("switching on ldap authentication provider");
             JtracLdapAuthenticationProvider ldapProvider = new JtracLdapAuthenticationProvider();
-            ldapProvider.setLdapUrl(ldapUrl);
-            ldapProvider.setActiveDirectoryDomain(activeDirectoryDomain);
+            ldapProvider.setLdapUrl(ldapUrl);            
+            ldapProvider.setActiveDirectoryDomain(activeDirectoryDomain);        
             ldapProvider.setSearchBase(searchBase);
             ldapProvider.setJtrac(jtrac);
+            // **IMPORTANT!** we have to call this one time init ourselves 
+            // as we are manually doing the factory stuff not Spring
+            ldapProvider.afterPropertiesSet();
+            // this is added at the top of the list or providers, and will fall back to local database
             providers.add(ldapProvider);
         } else {
             logger.info("not using ldap authentication");
-        }       
+        }
+        // add dependency injected local database based authentication
         providers.add(authenticationProvider);
         ProviderManager mgr = new ProviderManager();
         mgr.setProviders(providers);
