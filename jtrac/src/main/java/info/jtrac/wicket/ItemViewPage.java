@@ -99,10 +99,10 @@ public class ItemViewPage extends BasePage {
         
         add(new ItemViewPanel("itemViewPanel", item, isRelate || user.getId() == 0));
         
-        if(!user.isGuestForSpace(item.getSpace()) && !isRelate) {        
-            add(new ItemViewFormPanel("itemViewFormPanel", item, itemSearch));
-        } else {
+        if(user.isGuestForSpace(item.getSpace()) || isRelate) {        
             add(new WebMarkupContainer("itemViewFormPanel").setVisible(false));
+        } else {            
+            add(new ItemViewFormPanel("itemViewFormPanel", item, itemSearch));
         }        
     }
     
