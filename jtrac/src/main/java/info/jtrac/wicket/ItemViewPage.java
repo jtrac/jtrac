@@ -99,7 +99,7 @@ public class ItemViewPage extends BasePage {
         
         add(new ItemViewPanel("itemViewPanel", item, isRelate || user.getId() == 0));
         
-        if(user.getId() > 0 && !isRelate) {        
+        if(!user.isGuestForSpace(item.getSpace()) && !isRelate) {        
             add(new ItemViewFormPanel("itemViewFormPanel", item, itemSearch));
         } else {
             add(new WebMarkupContainer("itemViewFormPanel").setVisible(false));

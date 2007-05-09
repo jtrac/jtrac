@@ -376,7 +376,14 @@ public class JtracImpl implements Jtrac {
         }
         logger.debug("loadUserByUserName success for '" + loginName + "'");
         User user = users.get(0);
-        Map<Long, Boolean> map = new HashMap<Long, Boolean>();
+        // if some spaces have guest access enabled, allocate these spaces as well
+        Set<Space> userSpaces = user.getSpaces();
+        for(Space s : findSpacesWhereGuestAllowed()) {
+            if(!userSpaces.contains(s)) {
+                user.addSpaceWithRole(s, "ROLE_GUEST");
+                
+            }
+        }
         for(UserSpaceRole usr : user.getSpaceRoles()) {
             logger.debug("UserSpaceRole: " + usr);
             // this is a hack, the effect of the next line would be to
@@ -386,7 +393,7 @@ public class JtracImpl implements Jtrac {
             // this is hopefully pardonable.  The downside is that there may be as many extra db hits
             // as there are spaces allocated for the user.  Hibernate caching should alleviate this
             usr.isAbleToCreateNewItem();
-        }
+        }        
         return user;
     }
 

@@ -122,15 +122,27 @@ public class User implements UserDetails, Serializable {
      * currently logged in user
      */
     public Space getSpaceById(long spaceId) {
-        Space space = null;
+        UserSpaceRole usr = getUserSpaceRoleBySpaceId(spaceId);
+        return usr == null ? null : usr.getSpace();
+    }     
+    
+    public boolean isGuestForSpace(Space space) {
+        if (id == 0) {
+            return true;
+        }
+        UserSpaceRole usr = getUserSpaceRoleBySpaceId(space.getId());
+        return usr.getRoleKey().equals("ROLE_GUEST");
+    }
+    
+    
+    private UserSpaceRole getUserSpaceRoleBySpaceId(long spaceId) {        
         for (UserSpaceRole usr : userSpaceRoles) {
             if (usr.getSpace() != null && usr.getSpace().getId() == spaceId) {
-                space = usr.getSpace();
-                break;
+                return usr;
             }
         }
-        return space;
-    }     
+        return null;
+    }    
     
     //============ ACEGI UserDetails implementation ===============
     
