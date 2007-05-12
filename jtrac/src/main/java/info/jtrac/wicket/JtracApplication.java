@@ -83,6 +83,9 @@ public class JtracApplication extends WebApplication {
                 } catch(Exception e) {
                     // have to return null so that wicket can try to resolve again
                     // e.g. without prefixing component id etc.
+                    if(logger.isDebugEnabled()) {
+                        logger.debug("i18n failed for key: '" + key + "'");
+                    }
                     return null;
                 }
             }
