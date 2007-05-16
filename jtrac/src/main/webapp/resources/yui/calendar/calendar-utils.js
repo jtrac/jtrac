@@ -1,4 +1,4 @@
-var calShowing = false;
+var singletonCal;
 
 function handleSelect(type, args, calTxt) {
     var dates = args[0]; var date = dates[0];
@@ -10,10 +10,12 @@ function handleSelect(type, args, calTxt) {
 }
 
 function showCalendar(cal, txtId) {
-    if(calShowing) {                        
-        cal.hide();
-        calShowing = false;
-        return;
+    if(singletonCal) {                        
+        singletonCal.hide();
+        if(singletonCal == cal) {
+            singletonCal = null;
+            return;
+        }
     }
     txtField = document.getElementById(txtId);                    
     if(txtField.value) {                        
@@ -27,5 +29,5 @@ function showCalendar(cal, txtId) {
     }
     cal.render();                    
     cal.show();
-    calShowing = true;
+    singletonCal = cal;
 }
