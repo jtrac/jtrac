@@ -72,9 +72,11 @@
                     <tr>
                         <td/>
                         <td>
-                            <input type="submit" wicket:message="value:submit"/>                            
-                            <input type="checkbox" wicket:id="sendNotifications"/>
-                            <wicket:message key="user_form.mailPassword"/>                                        
+                            <input type="submit" wicket:message="value:submit"/>
+                            <span wicket:id="hideSendNotifications">
+                                <input type="checkbox" wicket:id="sendNotifications"/>
+                                <wicket:message key="user_form.mailPassword"/>
+                            </span>
                         </td>
                     </tr>                    
                 </table>

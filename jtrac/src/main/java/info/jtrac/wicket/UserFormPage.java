@@ -110,7 +110,9 @@ public class UserFormPage extends BasePage {
             
             super(id);
             this.user = user;
-            
+            if(user.getId() == 0) {
+                sendNotifications = true;
+            }
             FeedbackPanel feedback = new FeedbackPanel("feedback");
             filter = new JtracFeedbackMessageFilter();
             feedback.setFilter(filter);
@@ -244,7 +246,13 @@ public class UserFormPage extends BasePage {
                 }
             });            
             // send notifications ==============================================
-            add(new CheckBox("sendNotifications"));
+            WebMarkupContainer hideSendNotifications = new WebMarkupContainer("hideSendNotifications");
+            add(hideSendNotifications);
+            if(getPrincipal().getId() != user.getId()) {
+                hideSendNotifications.add(new CheckBox("sendNotifications"));
+            } else {
+                hideSendNotifications.setVisible(false);
+            }
             // cancel link
             add(new Link("cancel") {
                 public void onClick() {
@@ -270,6 +278,9 @@ public class UserFormPage extends BasePage {
         protected void onSubmit() {                        
             if(password != null) {
                 getJtrac().storeUser(user, password, sendNotifications);
+            } else if(user.getId() == 0) {
+                // new user, generate password and send mail
+                getJtrac().storeUser(user, null, true);
             } else {
                 getJtrac().storeUser(user);
             }
