@@ -149,8 +149,7 @@ public class SpaceFieldFormPage extends BasePage {
                 public void renderHead(IHeaderResponse response) {
                     if(field.getLabel() == null) {
                         response.renderOnLoadJavascript("document.getElementById('" + label.getMarkupId() + "').focus()");
-                    }
-                    if(optionField != null) {
+                    } else if(optionField != null) {
                         response.renderOnLoadJavascript("document.getElementById('" + optionField.getMarkupId() + "').focus()");
                     }                                        
                 }
