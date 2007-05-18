@@ -80,7 +80,7 @@ public class User implements UserDetails, Serializable {
     }
     
     public List<Field> getEditableFieldList(Space space, int status) {
-        return space.getMetadata().getEditableFields(getRoleKeys(space), Collections.singletonList(status));
+        return space.getMetadata().getEditableFields(getRoleKeys(space), status);
     }
     
     public Set<Space> getSpaces() {

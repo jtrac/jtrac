@@ -23,6 +23,7 @@ import info.jtrac.util.XmlUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -409,7 +410,7 @@ public class Metadata implements Serializable {
         Field.Name tempName = Field.convertToName(fieldName);        
         Integer mask = state.getFields().get(tempName);
         switch(mask) {
-            // case State.MASK_HIDDEN: state.getFields().put(name, State.MASK_READONLY); return; HIDDEN SUPPORT IN FUTURE
+            // case State.MASK_HIDDEN: state.getFields().put(name, State.MASK_READONLY); return; HIDDEN support in future
             case State.MASK_READONLY: state.getFields().put(tempName, State.MASK_OPTIONAL); return;
             case State.MASK_OPTIONAL: state.getFields().put(tempName, State.MASK_MANDATORY); return;            
             case State.MASK_MANDATORY: state.getFields().put(tempName, State.MASK_READONLY); return;
@@ -417,22 +418,27 @@ public class Metadata implements Serializable {
         }
     }
     
-    public List<Field> getEditableFields(Collection<String> roleKeys, Collection<Integer> ss) {
+    public List<Field> getEditableFields(String roleKey, int status) {
+        return getEditableFields(Collections.singletonList(roleKey), status);
+    }
+    
+    public List<Field> getEditableFields(Collection<String> roleKeys, int status) {
         Map<Field.Name, Field> fs = new HashMap<Field.Name, Field>(getFieldCount());     
         for(String roleKey : roleKeys) {
             if (roleKey.startsWith("ROLE_")) {
                 continue;
             }
-            for(Integer status : ss) {
+            if(status > -1) {
                 State state = getRoleState(roleKey, status);
-                for(Map.Entry<Field.Name, Integer> entry : state.getFields().entrySet()) {
-                    if (entry.getValue() == State.MASK_OPTIONAL || entry.getValue() == State.MASK_MANDATORY) {
-                        Field f = fields.get(entry.getKey());
-                        // set if optional or not, this changes depending on the user / role and status
-                        f.setOptional(entry.getValue() == State.MASK_OPTIONAL);
-                        fs.put(f.getName(), f);
+                fs.putAll(getEditableFields(state));  
+            } else { // we are trying to find all editable fields
+                Role role = roles.get(roleKey);                
+                for(State state : role.getStates().values()) {
+                    if(state.getStatus() == State.NEW) {
+                        continue;
                     }
-                }
+                    fs.putAll(getEditableFields(state));
+                }                
             }
         }
         // just to fix the order of the fields
@@ -448,9 +454,21 @@ public class Metadata implements Serializable {
     }
     
     public List<Field> getEditableFields() {
-        return getEditableFields(roles.keySet(), states.keySet());
+       return getEditableFields(roles.keySet(), -1);        
     }        
     
+    private Map<Field.Name, Field> getEditableFields(State state) {
+        Map<Field.Name, Field> fs = new HashMap<Field.Name, Field>(getFieldCount());
+        for(Map.Entry<Field.Name, Integer> entry : state.getFields().entrySet()) {
+            if (entry.getValue() == State.MASK_OPTIONAL || entry.getValue() == State.MASK_MANDATORY) {
+                Field f = fields.get(entry.getKey());
+                // set if optional or not, this changes depending on the user / role and status
+                f.setOptional(entry.getValue() == State.MASK_OPTIONAL);
+                fs.put(f.getName(), f);
+            }
+        }
+        return fs;
+    }
     //==================================================================
     
     public int getVersion() {

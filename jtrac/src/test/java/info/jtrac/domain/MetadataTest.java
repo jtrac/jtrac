@@ -72,10 +72,19 @@ public class MetadataTest extends TestCase {
         m.initRoles();
         Field f = new Field(Field.Name.CUS_STR_01);
         m.add(f);
-        m.switchMask(State.OPEN, "DEFAULT", "cusStr01"); // should now be editable when status is open
+        // query for editable fields across all roles
+        List<Field> fields = m.getEditableFields();
+        assertEquals(0, fields.size());
         // query for editable fields for DEFAULT role and when status is OPEN
-        List<Field> fields = m.getEditableFields(Collections.singletonList("DEFAULT"), Collections.singletonList(State.OPEN));
+        fields = m.getEditableFields("DEFAULT", State.OPEN);
+        assertEquals(0, fields.size());
+        // now make the field editable for given state and role
+        m.switchMask(State.OPEN, "DEFAULT", "cusStr01"); // should now be editable when status is open  
+        fields = m.getEditableFields();
+        assertEquals(1, fields.size());        
+        fields = m.getEditableFields("DEFAULT", State.OPEN);
         assertEquals(1, fields.size());
+        
     }
     
 }
