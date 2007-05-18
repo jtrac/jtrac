@@ -7,6 +7,7 @@ function handleSelect(type, args, calTxt) {
     txtField.value = year + '-' + month + '-' + day;
     calShowing = false;
     calTxt[0].hide();
+    singletonCal = null;
 }
 
 function showCalendar(cal, txtId) {
