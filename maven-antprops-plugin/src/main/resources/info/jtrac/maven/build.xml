@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="@@project.name@@" basedir=".">    
+    
+    <property file="build.properties"/>
+    <property file="build-deps.properties"/>    
+    <property name="war.name" value="@@project.name@@"/>    
+    
+    <target name="clean">
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="target"/>
+        </delete>      
+    </target>      
+    
+    <target name="compile">
+        <mkdir dir="target/classes"/>
+        <property name="debug" value="true"/>
+        <!-- 
+        <condition property="debug" value="false" else="true">            
+            <isset property="production"/>
+        </condition>
+        -->
+        <javac srcdir="src/main/java" destdir="target/classes" debug="${debug}" classpath="${test.jars}">
+            <!-- <compilerarg value="-Xlint:unchecked"/> -->
+        </javac>
+        <copy todir="target/classes">
+            <fileset dir="src/main/java" excludes="**/*.java"/>
+        </copy>         
+        <copy todir="target/classes" failonerror="false">
+            <fileset dir="src/main/resources"/>
+        </copy>              
+    </target>           
+    
+    <!-- ========================= TEST ============================ -->      
+    
+    <target name="compile-test" depends="compile">
+        <mkdir dir="target/test-classes"/>
+        <javac srcdir="src/test/java" destdir="target/test-classes" debug="true">
+            <classpath>
+                <path path="target/classes"/>
+                <path path="${test.jars}"/>
+            </classpath>
+        </javac>
+        <copy todir="target/test-classes">
+            <fileset dir="src/test/java" excludes="**/*.java"/>
+        </copy>          
+        <copy todir="target/test-classes" failonerror="false">
+            <fileset dir="src/test/resources"/>
+        </copy>        
+    </target>    
+    
+    <target name="test" depends="compile-test">
+        <test-macro/>     
+    </target>
+    
+    <target name="test-single" depends="compile-test" if="netbeans.home">
+        <!-- files property expected from netbeans -->
+        <fail unless="files">no files selected!</fail>      
+        <test-macro includes="${files}" haltonfailure="true"/>      
+    </target>    
+              
+    <macrodef name="test-macro">
+        <attribute name="includes" default="**/*Test.java"/>  
+        <attribute name="haltonfailure" default="false"/>
+        <sequential>
+            <mkdir dir="target/reports"/>            
+            <junit fork="true" dir="." tempdir="target" haltonfailure="@{haltonfailure}">
+                <classpath>                    
+                    <path path="target/classes"/>
+                    <path path="target/test-classes"/>
+                    <path path="${test.jars}"/>                    
+                </classpath>
+                <formatter type="brief" usefile="false"/>
+                <formatter type="xml"/>            
+                <batchtest todir="target/reports">
+                    <fileset dir="src/test/java" includes="@{includes}"/>
+                </batchtest>
+            </junit>         
+        </sequential>
+    </macrodef>                               
+              
+    <!-- ========================= WAR ============================ -->              
+              
+    <target name="war-exploded" depends="compile">
+        <war-exploded/>        
+    </target>    
+    
+    <macrodef name="war-exploded">
+        <attribute name="deployDir" default="target/${war.name}"/>
+        <sequential>
+            <copy todir="@{deployDir}">
+                <fileset dir="src/main/webapp"/>
+            </copy>
+            <copy todir="@{deployDir}/WEB-INF/classes">
+                <fileset dir="target/classes"/>
+            </copy>
+            <copy todir="@{deployDir}/WEB-INF/lib" flatten="true">
+                <fileset dir="${m2.repo}" includes="${runtime.jars}" casesensitive="false"/>         
+            </copy>
+        </sequential>
+    </macrodef>          
+    
+    <target name="war" depends="war-exploded">       
+        <zip destfile="target/${war.name}.war" basedir="target/${war.name}"/>
+    </target>                
+              
+    <!-- ========================= JETTY ============================ -->        
+    
+    <target name="jetty-setup">
+        <copy todir="target/jetty/lib" flatten="true">
+            <fileset dir="${m2.repo}" includes="${jetty.jars}" casesensitive="false"/>
+        </copy>
+        <copy todir="target/jetty" flatten="true">
+            <fileset dir="${m2.repo}" includes="${jetty.start}" casesensitive="false"/>
+            <mapper type="merge" to="start.jar"/>
+        </copy>
+        <copy todir="target/jetty/etc">
+            <fileset dir="etc">
+                <include name="jetty.xml"/>                
+                <include name="webdefault.xml"/>
+            </fileset>
+        </copy>              
+        <mkdir dir="target/jetty/logs"/>
+        <mkdir dir="target/jetty/work"/>        
+    </target>
+   
+    <target name="jetty-status">
+        <condition property="jetty.running">
+            <socket server="localhost" port="8080"/>
+        </condition>        
+    </target>
+    
+    <target name="jetty-start" depends="war-exploded, jetty-setup">        
+        <jetty-start arg1="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n" arg2="-Xdebug"/>
+    </target>    
+   
+    <target name="jetty-stop" depends="jetty-status" if="jetty.running">
+        <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
+            <jvmarg value="-DSTOP.PORT=8079"/>
+            <jvmarg value="-DSTOP.KEY=secret"/>
+            <arg value="--stop"/>
+        </java>
+        <sleep seconds="2"/>
+    </target>             
+    
+    <macrodef name="jetty-start">
+        <attribute name="webappPath" default="${war.name}"/>
+        <attribute name="arg1" default=""/>
+        <attribute name="arg2" default=""/>
+        <sequential>
+            <antcall target="jetty-stop"/>
+            <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
+                <jvmarg value="-Dfile.encoding=UTF-8"/>                
+                <jvmarg value="-Dwebapp.path=@{webappPath}"/>                
+                <jvmarg value="-DSTOP.PORT=8079"/>
+                <jvmarg value="-DSTOP.KEY=secret"/>
+                <jvmarg value="@{arg1}"/>
+                <jvmarg value="@{arg2}"/>
+            </java>            
+        </sequential>        
+    </macrodef>               
+              
+    <!-- ========================= MISC ============================ -->              
+              
+    <target name="confirm">
+        <input message="Are you sure?" validargs="y,n" addproperty="input"/>
+        <condition property="abort">
+            <equals arg1="n" arg2="${input}"/>
+        </condition>
+        <fail if="abort">User aborted.</fail>       
+    </target>        
+    
+    <!-- target for netbeans debug -->   
+    <target name="debug-nb" if="netbeans.home" >
+        <nbjpdaconnect address="8000" host="localhost" name="debug-webapp" transport="dt_socket">          
+            <sourcepath>
+                <path path="src/main/java"/>                
+            </sourcepath>
+        </nbjpdaconnect>
+        <!-- <nbbrowse url="http://localhost:8080/${war.name}"/> -->
+    </target>
+    
+    <!-- target for NetBeans Profiler on Windows -->
+    <target name="jetty-start-profile" depends="war-exploded" if="netbeans.home">
+        <property name="nbprof.home" value="${netbeans.home}/../profiler1/lib"/>
+        <property name="agent.path" value="${nbprof.home}/deployed/jdk15/windows/profilerinterface.dll=${nbprof.home},5140"/>
+        <jetty-start arg1="-agentpath:${agent.path}" arg2="-Xmx512m"/>
+    </target>    
+              
+</project>
