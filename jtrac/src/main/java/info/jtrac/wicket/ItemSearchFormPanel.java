@@ -142,17 +142,7 @@ public class ItemSearchFormPanel extends BasePanel {
                 }
             });            
             // summary / text search ===========================================            
-            final TextField summary = new TextField("summary") {
-                @Override
-                public void onAttach() {
-                    super.onAttach();
-                    add(new HeaderContributor(new IHeaderContributor() {
-                        public void renderHead(IHeaderResponse response) {
-                            response.renderOnLoadJavascript("document.getElementById('" + getMarkupId() + "').focus()");
-                        }
-                    }));
-                }
-            };
+            final TextField summary = new TextField("summary");
             summary.setOutputMarkupId(true);
             // validation: is Lucene search query ok?
             summary.add(new AbstractValidator() {
@@ -169,7 +159,12 @@ public class ItemSearchFormPanel extends BasePanel {
             });
             summary.add(new ErrorHighlighter());
             add(getSelecter(summary));
-            add(summary);
+            add(summary);            
+            add(new HeaderContributor(new IHeaderContributor() {
+                public void renderHead(IHeaderResponse response) {
+                    response.renderOnLoadJavascript("document.getElementById('" + summary.getMarkupId() + "').focus()");
+                }
+            }));                        
             // page size =======================================================
             List<Integer> sizes = Arrays.asList(new Integer[] {5, 10, 15, 25, 50, 100, -1});
             final String noLimit = getLocalizer().getString("item_search_form.noLimit", null);
