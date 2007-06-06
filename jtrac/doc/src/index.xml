@@ -748,6 +748,8 @@ wrapper.exe -r etc/wrapper.conf
                 </programlisting>
             </para>
             <para>
+                The "wrapper.conf" file in the "etc" folder can be modified in case you need JTrac to run
+                on a different port from the default (80).  Look for the "-Djetty.port=80" entry.
                 When running as a service under the Java Service Wrapper, you can look at the
                 "wrapper.log" file in the "jtrac/logs" folder for troubleshooting.
             </para>
