@@ -63,8 +63,27 @@ public class SpaceFormPage extends BasePage {
      * wicket form
      */     
     private class SpaceForm extends Form {
+              
+        private transient Space space;
+        private Space copyFrom;  
         
-       private JtracFeedbackMessageFilter filter;
+        private JtracFeedbackMessageFilter filter;          
+        
+        public Space getSpace() {
+            return space;
+        }
+
+        public void setSpace(Space space) {
+            this.space = space;
+        }
+
+        public Space getCopyFrom() {
+            return copyFrom;
+        }
+
+        public void setCopyFrom(Space copyFrom) {
+            this.copyFrom = copyFrom;
+        }                 
         
         public SpaceForm(String id, final Space space) {
             
@@ -74,10 +93,9 @@ public class SpaceFormPage extends BasePage {
             filter = new JtracFeedbackMessageFilter();
             feedback.setFilter(filter);            
             add(feedback);
-            
-            SpaceFormModel modelObject = new SpaceFormModel();
-            modelObject.setSpace(space);
-            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(modelObject);
+                        
+            this.space = space;
+            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(this);
             setModel(model);
             
             // delete button only if edit ======================================
@@ -217,39 +235,12 @@ public class SpaceFormPage extends BasePage {
         
         @Override
         protected void onSubmit() {
-            SpaceFormModel model = (SpaceFormModel) getModelObject();
-            setResponsePage(new SpaceFieldListPage(model.getSpace(), null, previous));
-        }        
-    }        
-        
-    /**
-     * custom form backing object that wraps Space and adds some fields
-     * required for the create / edit use case
-     */
-    private class SpaceFormModel implements Serializable {
-        
-        private transient Space space;
-        private Space copyFrom;
-
-        public Space getSpace() {
-            if(space == null) {
-                space = new Space();
+            if(copyFrom != null) {
+                Space temp = getJtrac().loadSpace(copyFrom.getId());
+                space.getMetadata().setXmlString(temp.getMetadata().getXmlString());
             }
-            return space;
-        }
-
-        public void setSpace(Space space) {
-            this.space = space;
-        }
-
-        public Space getCopyFrom() {
-            return copyFrom;
-        }
-
-        public void setCopyFrom(Space copyFrom) {
-            this.copyFrom = copyFrom;
-        }                           
-               
-    }
+            setResponsePage(new SpaceFieldListPage(space, null, previous));
+        }        
+    }                
     
 }
