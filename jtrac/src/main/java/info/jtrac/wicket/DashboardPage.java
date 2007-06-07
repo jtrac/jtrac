@@ -22,7 +22,6 @@ import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -66,7 +65,7 @@ public class DashboardPage extends BasePage {
                     if (counts == null) {
                         counts = new Counts(false); // this can happen if fresh space
                     }
-                    DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", usr, counts);
+                    DashboardRowPanel dashboardRow = new DashboardRowPanel("dashboardRow", usr, counts);                    
                     listItem.add(dashboardRow);
                 }
             });
@@ -85,7 +84,7 @@ public class DashboardPage extends BasePage {
                     total.add(new Link("loggedByMe") {
                         public void onClick() {
                             ItemSearch itemSearch = new ItemSearch(user);
-                            itemSearch.setLoggedByList(Collections.singletonList(user));
+                            itemSearch.setLoggedBy(user);
                             setResponsePage(new ItemListPage(itemSearch));
                         }
                     }.add(new Label("loggedByMe", new PropertyModel(countsHolder, "totalLoggedByMe"))));
@@ -93,7 +92,7 @@ public class DashboardPage extends BasePage {
                     total.add(new Link("assignedToMe") {
                         public void onClick() {
                             ItemSearch itemSearch = new ItemSearch(user);
-                            itemSearch.setAssignedToList(Collections.singletonList(user));
+                            itemSearch.setAssignedTo(user);
                             setResponsePage(new ItemListPage(itemSearch));
                         }
                     }.add(new Label("assignedToMe", new PropertyModel(countsHolder, "totalAssignedToMe"))));
