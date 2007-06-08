@@ -59,20 +59,15 @@ public class ItemRefIdFormPanel extends BasePanel {
         public ItemRefIdForm() {
             super("form");
             add(new FeedbackPanel("feedback"));
-            refIdField = new TextField("refId", new PropertyModel(this, "refId")) {
-                @Override
-                public void onAttach() {
-                    super.onAttach();
-                    add(new HeaderContributor(new IHeaderContributor() {
-                        public void renderHead(IHeaderResponse response) {
-                            response.renderOnLoadJavascript("document.getElementById('" + getMarkupId() + "').focus()");
-                        }
-                    }));                    
-                }                
-            };
+            refIdField = new TextField("refId", new PropertyModel(this, "refId"));
             refIdField.setOutputMarkupId(true);
             refIdField.add(new ErrorHighlighter());
-            add(refIdField);           
+            add(refIdField);
+            add(new HeaderContributor(new IHeaderContributor() {
+                public void renderHead(IHeaderResponse response) {
+                    response.renderOnLoadJavascript("document.getElementById('" + refIdField.getMarkupId() + "').focus()");
+                }
+            }));              
         }
         
         @Override
