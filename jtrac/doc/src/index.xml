@@ -50,7 +50,7 @@
             <para>
                 JTrac development used to be hosted at <ulink url="https://jtrac.dev.java.net"/> but moved to SourceForge 
                 in early 2006. The older working version was based on Spring MVC, Spring JDBC and MS Access and is not being 
-                maintained any more.  JTrac 2.0 uses Java 5.0 and was completely re-written to use 
+                maintained any more.  JTrac 2.0 uses Java 5.0 features and was completely re-written to use 
                 <ulink url="http://www.hibernate.org/">Hibernate</ulink> for persistence and the 
                 <ulink url="http://www.acegisecurity.org/">Acegi Security</ulink> framework for Spring.  The presentation 
                 layer for version 2.0 was mainly using 
@@ -59,7 +59,7 @@
                 <ulink url="http://wicket.sourceforge.net/"/>Wicket</ulink> framework.
             </para>
             <para>
-                JTrac is extremely easy to install and the only pre-requisite is a Java 5 Runtime Environment.
+                JTrac is extremely easy to install and the only pre-requisite is a Java 5 (or higher) Runtime Environment.
                 You can be up and running in seconds because JTrac comes bundled with a small-footprint web-application 
                 server called <ulink url="http://jetty.mortbay.org/">Jetty</ulink> and an embedded database called 
                 <ulink url="http://www.hsqldb.org/">HSQLDB</ulink>.  Please refer the 
@@ -471,7 +471,7 @@
         <sect1 id="installation-prerequisites">
             <title>Prerequisites</title>
             <para>    
-                All you require in order to start using JTrac is Java 5.  Only a JRE (Java Runtime Environment)
+                All you require in order to start using JTrac is Java 5 (or higher).  Only a JRE (Java Runtime Environment)
                 is required and not the full-blown JDK (Java Development Kit).
             </para>
             <para>    
@@ -801,8 +801,7 @@ wrapper.exe -r etc/wrapper.conf
             <para>
                 There was an earlier version of JTrac which used to be hosted at <ulink url="https://jtrac.dev.java.net"/>
                 That project was called "jTrac" (with a lowercase 'j') and it was based on Spring JDBC and MS Access.                
-                JTrac has now been completely re-written to use Hibernate, Spring WebFlow and Acegi - and the 2.0 version
-                number reflects this.
+                JTrac was completely re-written to use Spring and Hibernate - and the 2.0 version number reflects this.
             </para>
         </sect1>     
     </chapter>    
@@ -850,7 +849,8 @@ wrapper.exe -r etc/wrapper.conf
                 Again using Beanshell, users should be able to define routines to execute periodically, say at a pre-determined
                 time every day.  This would allow triggers for events such as slippage of a "due-date" field.
                 This can be combined with e-mail notifications.  Also a daily dashboard summary could be mailed out once
-                the scheduler is in place.
+                the scheduler is in place. [note that as of version 2.1.0 - the scheduler is already in place for those 
+                who are working on extending JTrac]
             </para>
         </sect1>
         <sect1 id="roadmap-email">
@@ -931,7 +931,8 @@ wrapper.exe -r etc/wrapper.conf
                 framework, it would be easy to configure it to use an existing 
                 <ulink url="http://www.ja-sig.org/products/cas/">Central Authentication Service</ulink> (CAS) installation
                 or LDAP server (even Windows Active Directory) for implementing Single Sign On. 
-                In fact most of the configuration is in place and only needs to be documented.
+                In fact most of the configuration is in place and only needs to be documented.  Note that as of version
+                2.1.0 JTrac supports LDAP authentication out of the box.
             </para>
         </sect1>
         <sect1 id="roadmap-xmlapi">            
@@ -942,11 +943,11 @@ wrapper.exe -r etc/wrapper.conf
             </para>
         </sect1>
         <sect1 id="roadmap-mylar">            
-            <title>Eclipse Mylar integration</title>            
+            <title>Eclipse Mylyn integration</title>            
             <para>
-                <ulink url="http://www.eclipse.org/mylar/">Mylar</ulink> integration in the form of a connector
-                (Eclipse plugin) is currently being implemented.  The remote API mentioned above is also being 
-                developed (REST).
+                <ulink url="http://www.eclipse.org/mylyn/">Mylyn</ulink> (previously known as Mylar) integration in the 
+                form of a connector (Eclipse plugin) is currently being implemented.  The remote API mentioned above is 
+                also being developed (REST).
             </para>
         </sect1>        
         <sect1 id="roadmap-timetracking">            
@@ -1155,10 +1156,10 @@ java -cp bsh-2.0b4.jar;hsqldb-1.8.0.1.jar bsh.Interpreter jtrac-hsqldb-2_0rc3-to
             <para>
                 <itemizedlist>
                     <listitem>
-                        <para>JDK 5.0</para>
+                        <para>JDK 5.0 (or higher)</para>
                     </listitem>
                     <listitem>
-                        <para><ulink url="http://maven.apache.org/">Maven 2.0</ulink></para>
+                        <para><ulink url="http://maven.apache.org/">Maven 2.X</ulink></para>
                     </listitem>
                     <listitem>
                         <para>Your Favourite IDE (e.g. NetBeans)</para>
@@ -1181,7 +1182,7 @@ java -cp bsh-2.0b4.jar;hsqldb-1.8.0.1.jar bsh.Interpreter jtrac-hsqldb-2_0rc3-to
             <para>
                 But if you are comfortable using Maven, the pom.xml is Maven 2 compliant which means that you can 
                 <ulink url="http://maven.apache.org/plugins/maven-war-plugin/">directly build the war file</ulink> without Ant.
-                You can also choose to use the <ulink url="http://mortbay.org/maven-plugin/">maven-jetty-plugin</ulink> by
+                You can even choose to use the <ulink url="http://mortbay.org/maven-plugin/">maven-jetty-plugin</ulink> by
                 uncommenting the section in pom.xml that declares this.
             </para>            
             <para>
