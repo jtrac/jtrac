@@ -23,6 +23,7 @@ import java.util.Set;
 /**
  * Simple name value pair to hold configuration parameters
  * in the database for JTrac, e.g. SMTP e-mail server, etc.
+ * TODO better validation, type-safety, masking of mail server password
  */
 public class Config implements Serializable {
     
@@ -43,6 +44,8 @@ public class Config implements Serializable {
         PARAMS.add("mail.from");
         PARAMS.add("jtrac.url.base");
         PARAMS.add("locale.default");
+        PARAMS.add("session.timeout");
+        PARAMS.add("attachment.maxsize");
     }
     
     public static Set<String> getParams() {
@@ -57,6 +60,24 @@ public class Config implements Serializable {
         this.param = param;
         this.value = value;
     }
+    
+    public boolean isMailConfig() {
+        return param.startsWith("mail.") || param.startsWith("jtrac.url.");
+    }
+    
+    public boolean isAttachmentConfig() {
+        return param.startsWith("attachment.");
+    }
+    
+    public boolean isSessionTimeoutConfig() {
+        return param.startsWith("session.");
+    }
+    
+    public boolean isLocaleConfig() {
+        return param.startsWith("locale.");
+    }
+    
+    //==========================================================================
     
     public String getParam() {
         return param;

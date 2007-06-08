@@ -43,6 +43,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.BoundCompoundPropertyModel;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.util.lang.Bytes;
 
 /**
  * Create / Edit item form page
@@ -69,7 +70,7 @@ public class ItemFormPage extends BasePage {
     private class ItemForm extends Form {
         
         private JtracFeedbackMessageFilter filter;
-        private FileUploadField fileUploadField = new FileUploadField("file");
+        private FileUploadField fileUploadField;
         private boolean editMode;
         private int version;        
         
@@ -188,8 +189,9 @@ public class ItemFormPage extends BasePage {
                 });
                 hideNotifyList.add(itemUsers);
                 // attachment ==================================================                
-                // TODO file size limit
-                hideNotifyList.add(fileUploadField);                
+                fileUploadField = new FileUploadField("file");                
+                hideNotifyList.add(fileUploadField);
+                setMaxSize(Bytes.megabytes(getJtrac().getAttachmentMaxSizeInMb()));
             }
             // send notifications ==========================================
             add(new CheckBox("sendNotifications"));

@@ -45,6 +45,7 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.validation.AbstractFormValidator;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.BoundCompoundPropertyModel;
+import org.apache.wicket.util.lang.Bytes;
 
 /**
  * Form to update history for item
@@ -146,8 +147,8 @@ public class ItemViewFormPanel extends BasePanel {
             add(itemUsers);
             // attachment ======================================================
             fileUploadField = new FileUploadField("file");
-            // TODO file size limit
             add(fileUploadField);
+            setMaxSize(Bytes.megabytes(getJtrac().getAttachmentMaxSizeInMb()));
             // send notifications===============================================
             add(new CheckBox("sendNotifications"));
             // validation that assignedTo is not null if status is not null and not CLOSED

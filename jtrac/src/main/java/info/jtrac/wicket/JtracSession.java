@@ -18,6 +18,8 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
+import javax.servlet.http.HttpSession;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.springframework.util.StringUtils;
 import org.apache.wicket.Request;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -33,6 +35,8 @@ public class JtracSession extends WebSession {
     
     public JtracSession(final WebApplication application, Request request) {
         super(application, request);
+        int timeOut = ((JtracApplication) application).getJtrac().getSessionTimeoutInMinutes();
+        ((ServletWebRequest) request).getHttpServletRequest().getSession().setMaxInactiveInterval(timeOut * 60);        
     }
 
     public void setUser(User user) {

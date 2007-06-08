@@ -16,6 +16,7 @@
 
 package info.jtrac;
 
+import bsh.This;
 import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Config;
@@ -78,10 +79,12 @@ public class JtracImpl implements Jtrac {
     private MessageSource messageSource;
 
     private Map<String, String> locales;
-    private String defaultLocale;
+    private String defaultLocale = "en";
     private String releaseVersion;
     private String releaseTimestamp;
     private String jtracHome;
+    private int attachmentMaxSizeInMb = 5;
+    private int sessionTimeoutInMinutes = 30;
 
     public void setLocaleList(String[] array) {
         locales = new LinkedHashMap<String, String>();
@@ -127,7 +130,15 @@ public class JtracImpl implements Jtrac {
     public String getJtracHome() {
         return jtracHome;
     }    
-    
+
+    public int getAttachmentMaxSizeInMb() {
+        return attachmentMaxSizeInMb;
+    }    
+
+    public int getSessionTimeoutInMinutes() {
+        return sessionTimeoutInMinutes;
+    }
+      
     private final Log logger = LogFactory.getLog(getClass());
 
     /**
@@ -160,25 +171,47 @@ public class JtracImpl implements Jtrac {
     /**
      * this is automatically called by spring init-method hook on
      * startup, also called whenever config is edited to refresh
+     * TODO move config into a settings class to reduce service clutter     
      */
     public void init() {
-
         Map<String, String> config = loadAllConfig();
-
-        // initialize default locale
-        String temp = config.get("locale.default");
-        if (temp == null || !locales.containsKey(temp)) {
-            logger.warn("invalid default locale configured = '" + temp + "', defaulting to 'en'");
-            temp = "en";
-        }
-        logger.info("default locale set to '" + temp + "'");
-        defaultLocale = temp;
-
-        // initialize mail sender
-        this.mailSender = new MailSender(config, messageSource, defaultLocale);
-
+        initMailSender(config);
+        initDefaultLocale(config.get("locale.default"));
+        initAttachmentMaxSize(config.get("attachment.maxsize"));
+        initSessionTimeout(config.get("session.timeout"));
     }
+    
+    private void initMailSender(Map<String, String> config) {
+        this.mailSender = new MailSender(config, messageSource, defaultLocale);
+    }    
+    
+    private void initDefaultLocale(String localeString) {
+        if (localeString == null || !locales.containsKey(localeString)) {
+            logger.warn("invalid default locale configured = '" + localeString + "', using " + this.defaultLocale);            
+        } else {
+            this.defaultLocale = localeString;
+        }
+        logger.info("default locale set to '" + this.defaultLocale + "'");       
+    }    
 
+    private void initAttachmentMaxSize(String s) {
+        try {
+            this.attachmentMaxSizeInMb = Integer.parseInt(s);
+        } catch(Exception e) {
+            logger.warn("invalid attachment max size '" + s + "', using " + attachmentMaxSizeInMb);
+        }
+        logger.info("attachment max size set to " + this.attachmentMaxSizeInMb + " MB");
+    }
+    
+    private void initSessionTimeout(String s) {
+        try {
+            this.sessionTimeoutInMinutes = Integer.parseInt(s);
+        } catch(Exception e) {
+            logger.warn("invalid session timeout '" + s + "', using " + this.sessionTimeoutInMinutes);
+        }
+        logger.info("session timeout set to " + this.sessionTimeoutInMinutes + " minutes");
+    }
+    
     //==========================================================================
 
     private Attachment getAttachment(FileUpload fileUpload) {
@@ -564,11 +597,18 @@ public class JtracImpl implements Jtrac {
         return allConfig;
     }
 
-    public void storeConfig(Config config) {
+    // TODO must be some nice generic way to do this
+    public void storeConfig(Config config) {        
         dao.storeConfig(config);
-        // ugly hack, TODO make smarter in future
-        // init stuff that could have changed
-        init();
+        if(config.isMailConfig()) {
+            initMailSender(loadAllConfig());
+        } else if(config.isLocaleConfig()) {
+            initDefaultLocale(config.getValue());
+        } else if(config.isAttachmentConfig()) {
+            initAttachmentMaxSize(config.getValue());
+        } else if(config.isSessionTimeoutConfig()) {
+            initSessionTimeout(config.getValue());
+        }
     }
 
     public String loadConfig(String param) {

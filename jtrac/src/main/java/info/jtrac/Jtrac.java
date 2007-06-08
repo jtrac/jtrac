@@ -98,6 +98,8 @@ public interface Jtrac extends UserDetailsService {
     Map<String, String> getLocales();
     String getDefaultLocale();
     String getJtracHome();
+    int getAttachmentMaxSizeInMb();
+    int getSessionTimeoutInMinutes();
     //========================================================
     Map<String, String> loadAllConfig();
     void storeConfig(Config config);
