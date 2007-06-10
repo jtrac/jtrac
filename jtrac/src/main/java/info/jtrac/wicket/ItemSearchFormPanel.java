@@ -22,11 +22,13 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.util.UserUtils;
 import info.jtrac.wicket.yui.YuiCalendar;
+import info.jtrac.wicket.yui.YuiPanel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.behavior.HeaderContributor;
@@ -42,10 +44,10 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.BoundCompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.validation.IValidatable;
@@ -135,12 +137,17 @@ public class ItemSearchFormPanel extends BasePanel {
             FeedbackPanel feedback = new FeedbackPanel("feedback");
             filter =  new JtracFeedbackMessageFilter();
             feedback.setFilter(filter);
-            add(feedback);            
-            add(new Link("link") {
-                public void onClick() {
-                    ItemSearchFormPanel.this.replaceWith(new ItemRefIdFormPanel("panel", itemSearch));
+            add(feedback);
+            final ItemRefIdFormPanel panel = new ItemRefIdFormPanel(YuiPanel.CONTENT_ID, itemSearch);
+            final YuiPanel popup = new YuiPanel("dialog", "Test Dialog", panel);
+            add(popup);
+            WebMarkupContainer link = new WebMarkupContainer("link");
+            add(link);
+            link.add(new AttributeModifier("onClick", true, new AbstractReadOnlyModel() {
+                public Object getObject() {
+                    return popup.getShowScript() + panel.getFocusScript();
                 }
-            });            
+            }));          
             // summary / text search ===========================================            
             final TextField summary = new TextField("summary");
             summary.setOutputMarkupId(true);

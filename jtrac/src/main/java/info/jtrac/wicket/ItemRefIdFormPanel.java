@@ -19,9 +19,9 @@ package info.jtrac.wicket;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.exception.InvalidRefIdException;
-import org.apache.wicket.behavior.HeaderContributor;
-import org.apache.wicket.markup.html.IHeaderContributor;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import info.jtrac.wicket.yui.TestPage2;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitButton;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -33,6 +33,11 @@ import org.apache.wicket.model.PropertyModel;
 public class ItemRefIdFormPanel extends BasePanel {
     
     private ItemSearch itemSearch;
+    private TextField refIdField;    
+    
+    public String getFocusScript() {
+        return "document.getElementById('" + refIdField.getMarkupId() + "').focus();";
+    }
     
     public ItemRefIdFormPanel(String id, ItemSearch itemSearch) {
         super(id);
@@ -46,7 +51,6 @@ public class ItemRefIdFormPanel extends BasePanel {
     private class ItemRefIdForm extends Form {
         
         private String refId;
-        private TextField refIdField;
 
         public String getRefId() {
             return refId;
@@ -58,37 +62,40 @@ public class ItemRefIdFormPanel extends BasePanel {
         
         public ItemRefIdForm() {
             super("form");
-            add(new FeedbackPanel("feedback"));
+            final FeedbackPanel feedback;
+            add(feedback = new FeedbackPanel("feedback"));
+            feedback.setOutputMarkupId(true);
             refIdField = new TextField("refId", new PropertyModel(this, "refId"));
             refIdField.setOutputMarkupId(true);
             refIdField.add(new ErrorHighlighter());
             add(refIdField);
-            add(new HeaderContributor(new IHeaderContributor() {
-                public void renderHead(IHeaderResponse response) {
-                    response.renderOnLoadJavascript("document.getElementById('" + refIdField.getMarkupId() + "').focus()");
+            add(new AjaxSubmitButton("submit", this) {
+                @Override
+                protected void onError(AjaxRequestTarget target, Form form) {
+                    target.addComponent(feedback);
+                    target.appendJavascript(getFocusScript());
                 }
-            }));              
-        }
-        
-        @Override
-        public void onSubmit() {                                                       
-            if(refId == null) {
-                refIdField.error(localize("item_search_form.error.refId.invalid"));                
-                return;
-            }
-            Item item = null;
-            try {
-                item = getJtrac().loadItemByRefId(refId);
-            } catch (InvalidRefIdException e) {                        
-                refIdField.error(localize("item_search_form.error.refId.invalid"));                
-                return;          
-            }        
-            if (item == null) {                        
-                refIdField.error(localize("item_search_form.error.refId.notFound"));                
-                return;       
-            } 
-            setResponsePage(new ItemViewPage(item, itemSearch));                     
-        }
+                protected void onSubmit(AjaxRequestTarget target, Form form) {
+                    target.addComponent(feedback);
+                    if(refId == null) {
+                        refIdField.error(localize("item_search_form.error.refId.invalid"));                
+                        return;
+                    }
+                    Item item = null;
+                    try {
+                        item = getJtrac().loadItemByRefId(refId);
+                    } catch (InvalidRefIdException e) {                        
+                        refIdField.error(localize("item_search_form.error.refId.invalid"));                
+                        return;          
+                    }        
+                    if (item == null) {                        
+                        refIdField.error(localize("item_search_form.error.refId.notFound"));                
+                        return;       
+                    } 
+                    setResponsePage(new ItemViewPage(item, itemSearch));  
+                }
+            });              
+        }        
         
     }
     

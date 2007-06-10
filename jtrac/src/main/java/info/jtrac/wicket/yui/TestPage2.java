@@ -16,22 +16,17 @@
 
 package info.jtrac.wicket.yui;
 
-import org.apache.wicket.behavior.SimpleAttributeModifier;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 
 /**
  * test page
  */
-public class TestPage extends WebPage {
+public class TestPage2 extends WebPage {
     
-    public TestPage() {
-        TestPanel testPanel = new TestPanel(YuiPanel.CONTENT_ID);
-        YuiPanel panel = new YuiPanel("dialog", "Test Dialog", testPanel);
-        add(panel);
-        WebMarkupContainer link = new WebMarkupContainer("link");
-        link.add(new SimpleAttributeModifier("onClick", panel.getShowScript() + testPanel.getFocusScript()));
-        add(link);
+    public TestPage2(String name, String description) {
+        add(new Label("name", name));
+        add(new Label("description", description));
     }
     
 }
