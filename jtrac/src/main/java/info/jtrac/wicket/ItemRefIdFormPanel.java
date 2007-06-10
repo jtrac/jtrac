@@ -28,7 +28,9 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.PropertyModel;
 
 /**
- * view by ref id form page
+ * view by ref id form panel
+ * the submit is done over ajax and validation errors also
+ * are shown using ajax
  */
 public class ItemRefIdFormPanel extends BasePanel {
     
@@ -91,7 +93,10 @@ public class ItemRefIdFormPanel extends BasePanel {
                     if (item == null) {                        
                         refIdField.error(localize("item_search_form.error.refId.notFound"));                
                         return;       
-                    } 
+                    }
+                    if(itemSearch.getRelatingItemRefId() == null) {
+                        itemSearch = null; // disable back link for item view
+                    }
                     setResponsePage(new ItemViewPage(item, itemSearch));  
                 }
             });              

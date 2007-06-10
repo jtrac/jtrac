@@ -139,7 +139,7 @@ public class ItemSearchFormPanel extends BasePanel {
             feedback.setFilter(filter);
             add(feedback);
             final ItemRefIdFormPanel panel = new ItemRefIdFormPanel(YuiPanel.CONTENT_ID, itemSearch);
-            final YuiPanel popup = new YuiPanel("dialog", "Test Dialog", panel);
+            final YuiPanel popup = new YuiPanel("dialog", localize("item_search_form.viewItemById"), panel);
             add(popup);
             WebMarkupContainer link = new WebMarkupContainer("link");
             add(link);
