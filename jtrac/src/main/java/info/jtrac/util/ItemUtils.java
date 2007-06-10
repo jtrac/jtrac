@@ -21,6 +21,8 @@ import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemItem;
+import java.io.BufferedReader;
+import java.io.StringReader;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -40,13 +42,44 @@ import org.springframework.web.util.HtmlUtils;
  */
 public final class ItemUtils {    
     
+    /** 
+     * does HTML escaping, converts tabs to spaces and converts leading 
+     * spaces (for each multi-line) to as many '&nbsp;' sequences as required
+     */
     public static String fixWhiteSpace(String text) {
-        if (text == null) {
+        if(text == null) {
             return "";
         }
-        String temp = HtmlUtils.htmlEscape(text);  
-        return temp.replaceAll("\n", "<br/>").replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-    }
+        String temp = HtmlUtils.htmlEscape(text);
+        BufferedReader reader = new BufferedReader(new StringReader(temp));
+        StringBuilder sb = new StringBuilder();
+        String s;
+        boolean first = true;
+        try {
+            while((s = reader.readLine()) != null) {                          
+                if(first) {
+                    first = false;
+                } else {
+                    sb.append("<br/>");
+                }
+                if(s.startsWith(" ")) {
+                    int i;
+                    for(i = 0; i < s.length(); i++) {                    
+                        if(s.charAt(i) == ' ') {
+                            sb.append("&nbsp;");
+                        } else {
+                            break;
+                        }                        
+                    }
+                    s = s.substring(i);
+                }                
+                sb.append(s);
+            }
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+        return sb.toString().replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+    }    
     
     private static String fmt(String key, MessageSource messageSource, Locale locale) {
         try {
