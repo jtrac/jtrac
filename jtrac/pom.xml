@@ -68,6 +68,16 @@
                 <checksumPolicy>warn</checksumPolicy>
             </snapshots>            
         </repository>
+        <repository>
+            <id>openqa.org</id>
+            <name>selenium snapshot</name>
+            <url>http://maven.openqa.org</url>           
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </snapshots>            
+        </repository>        
     </repositories>
   
     <dependencies>
@@ -313,6 +323,18 @@
                 </exclusion>
             </exclusions>             
         </dependency>
+        <dependency>
+            <groupId>org.openqa.selenium.client-drivers</groupId>
+            <artifactId>selenium-java-client-driver</artifactId>
+            <version>0.9.0</version>   
+            <scope>test</scope>
+        </dependency>         
+        <dependency>
+            <groupId>org.openqa.selenium.server</groupId>
+            <artifactId>selenium-server</artifactId>
+            <version>0.9.0</version>   
+            <scope>test</scope>
+        </dependency>        
     </dependencies>
     
     <build>

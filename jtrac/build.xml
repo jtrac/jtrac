@@ -446,5 +446,15 @@
             <arg value="stop"/>
         </java>
     </target>    
+    
+    <!-- ========================= SELENIUM ============================ -->
+    
+    <target name="selenium-start">
+        <java classname="org.openqa.selenium.server.SeleniumServer" fork="true" classpath="${test.jars}"/>        
+    </target>
+    
+    <target name="selenium-stop">
+        <get src="http://localhost:4444/selenium-server/driver/?cmd=shutDown" dest="target/selenium.txt"/>
+    </target>    
               
 </project>
