@@ -50,7 +50,7 @@ public class YuiPanel extends Panel {
         add(new HeaderContributor(new IHeaderContributor() {
             public void renderHead(IHeaderResponse response) {
                 String markupId = dialog.getMarkupId();
-                response.renderJavascriptReference("var " + markupId + ";");
+                response.renderJavascript("var " + markupId + ";", null);
                 response.renderOnDomReadyJavascript(markupId + " = new YAHOO.widget.Panel('" + markupId + "', " 
                 + " { constraintoviewport : true, visible : false }); " + markupId + ".render()");                
             }
