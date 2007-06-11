@@ -137,10 +137,11 @@ public class ItemSearchFormPanel extends BasePanel {
             FeedbackPanel feedback = new FeedbackPanel("feedback");
             filter =  new JtracFeedbackMessageFilter();
             feedback.setFilter(filter);
-            add(feedback);
+            add(feedback);            
             final ItemRefIdFormPanel panel = new ItemRefIdFormPanel(YuiPanel.CONTENT_ID, itemSearch);
             final YuiPanel popup = new YuiPanel("dialog", localize("item_search_form.viewItemById"), panel);
             add(popup);
+            panel.setYuiPanel(popup);
             WebMarkupContainer link = new WebMarkupContainer("link");
             add(link);
             link.add(new AttributeModifier("onClick", true, new AbstractReadOnlyModel() {

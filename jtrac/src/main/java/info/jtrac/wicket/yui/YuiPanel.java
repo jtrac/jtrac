@@ -59,6 +59,10 @@ public class YuiPanel extends Panel {
     
     public String getShowScript() {                
         return dialog.getMarkupId() + ".show();";
-    }        
+    }      
+    
+    public String getHideScript() {
+        return dialog.getMarkupId() + ".hide();";
+    }
     
 }

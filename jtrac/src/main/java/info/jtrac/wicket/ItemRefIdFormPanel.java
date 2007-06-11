@@ -19,7 +19,7 @@ package info.jtrac.wicket;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.exception.InvalidRefIdException;
-import info.jtrac.wicket.yui.TestPage2;
+import info.jtrac.wicket.yui.YuiPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitButton;
 import org.apache.wicket.markup.html.form.Form;
@@ -35,11 +35,17 @@ import org.apache.wicket.model.PropertyModel;
 public class ItemRefIdFormPanel extends BasePanel {
     
     private ItemSearch itemSearch;
-    private TextField refIdField;    
+    private TextField refIdField;   
+    private YuiPanel yuiPanel;
+
+    // TODO nice frameworky way to do this
+    public void setYuiPanel(YuiPanel yuiPanel) {
+        this.yuiPanel = yuiPanel;
+    }
     
     public String getFocusScript() {
         return "document.getElementById('" + refIdField.getMarkupId() + "').focus();";
-    }
+    }    
     
     public ItemRefIdFormPanel(String id, ItemSearch itemSearch) {
         super(id);
@@ -63,7 +69,7 @@ public class ItemRefIdFormPanel extends BasePanel {
         }        
         
         public ItemRefIdForm() {
-            super("form");
+            super("form");            
             final FeedbackPanel feedback;
             add(feedback = new FeedbackPanel("feedback"));
             feedback.setOutputMarkupId(true);
@@ -75,7 +81,8 @@ public class ItemRefIdFormPanel extends BasePanel {
                 @Override
                 protected void onError(AjaxRequestTarget target, Form form) {
                     target.addComponent(feedback);
-                    target.appendJavascript(getFocusScript());
+                    // hack for IE, flip visibility will re-size panel to accomodate area size change
+                    target.appendJavascript(yuiPanel.getHideScript() + yuiPanel.getShowScript() + getFocusScript());
                 }
                 protected void onSubmit(AjaxRequestTarget target, Form form) {
                     target.addComponent(feedback);
