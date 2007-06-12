@@ -223,7 +223,7 @@
     <target name="test-single" depends="compile-test" if="netbeans.home">
         <!-- files property expected from netbeans -->
         <fail unless="files">no files selected!</fail>      
-        <test-macro includes="${files}" emmaEnabled="true" excludes="" haltonfailure="true"/>      
+        <test-macro includes="${files}" emmaEnabled="false" excludes="" haltonfailure="true"/>      
     </target>  
     
     <taskdef resource="emma_ant.properties" classpath="${emma.jars}"/>
