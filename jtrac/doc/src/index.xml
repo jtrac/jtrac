@@ -1269,12 +1269,11 @@ mvn install -Dhttp.proxyHost=172.19.56.56
             <title>Customize Ant Build Properties File</title>
             <para>
                 The downloaded source code should contain a sample "build.properties" file or you can look at the XML comment
-                provided at the top of "build.xml" for the structure.  Actually both entries are optional and you will require 
-                them only if you want to use Tomcat (instead of Jetty) and also try the <ulink url="http://watij.com/">Watij</ulink>
-                automated functional test script.
+                provided at the top of "build.xml" for the structure.  Actually the solitary entry is optional and you will require 
+                this only if you want to use Tomcat (instead of Jetty).
             </para>
             <para>
-                If you are in a hurry and can't wait to start working on JTrac you can skip setting up Tomcat or Watij.  
+                If you are in a hurry and can't wait to start working on JTrac you can skip setting up Tomcat.  
                 But then, ensure that you remove the build.properties file if one already exists - before the next step.
             </para>            
         </sect1>        
@@ -1341,12 +1340,7 @@ mvn eclipse:eclipse -DdownloadSources=true
             </para>            
         </sect1>
         <sect1 id="dev-building">
-            <title>Building And Running JTrac</title>
-            <para>
-                If you decided to not use Watij, your IDE may report compilation errors for one of the JUnit test cases
-                under the "src/test" directory.  You can choose to remove the entire "src/test" folder or the 
-                particular couple of files depending on Watij.  But the Ant targets to build and run JTrac should work anyway.
-            </para>            
+            <title>Building And Running JTrac</title>         
             <para>
                 You can explore all the Ant targets that are available. You can also try the "jetty-start" 
                 Ant target straight away that will compile, create and deploy the exploded war as well as boot a Jetty server.
