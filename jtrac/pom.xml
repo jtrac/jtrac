@@ -384,15 +384,6 @@
                 <groupId>info.jtrac</groupId>
                 <artifactId>maven-antprops-plugin</artifactId>              
                 <configuration>
-                    <testPaths>
-                        <testPath>
-                            <baseDirProperty>watij.home</baseDirProperty>
-                            <paths>
-                                <path>watij.jar</path>
-                                <path>lib</path>
-                            </paths>
-                        </testPath>                        
-                    </testPaths>
                     <extraPaths>
                         <extraPath>
                             <name>checkstyle.jars</name>
