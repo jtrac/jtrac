@@ -16,7 +16,6 @@
 
 package info.jtrac;
 
-import bsh.This;
 import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Config;

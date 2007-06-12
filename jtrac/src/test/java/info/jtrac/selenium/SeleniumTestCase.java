@@ -1,14 +1,12 @@
 package info.jtrac.selenium;
 
 import com.thoughtworks.selenium.DefaultSelenium;
-import com.thoughtworks.selenium.Selenium;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.openqa.selenium.server.SeleniumServer;
-import static watij.finders.SymbolFactory.*;
 
 /** 
  * base class for Selenium test scripts that hack JUnit so as to be
