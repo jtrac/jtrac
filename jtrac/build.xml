@@ -231,7 +231,7 @@
     <macrodef name="test-macro">
         <attribute name="includes" default="**/*Test.java"/>
         <attribute name="emmaEnabled" default="false"/>
-        <attribute name="excludes" default="**/watij/**/*"/>
+        <attribute name="excludes" default="**/selenium/**/*"/>
         <attribute name="haltonfailure" default="false"/>
         <sequential>
             <mkdir dir="target/reports"/>
