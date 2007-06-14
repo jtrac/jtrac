@@ -100,7 +100,7 @@
     <!-- ========================== DIST ============================ -->
     
     <target name="dist-production-set" depends="dist-version-clean, clean">        
-        <property name="production" value="true" />
+        <property name="production" value="true"/>
     </target>    
     
     <target name="dist-version-clean">
@@ -209,7 +209,7 @@
         <test-macro emmaEnabled="true"/>
         <junitreport todir="target/reports">
             <fileset dir="target/reports">
-                <include name="TEST-*.xml" />
+                <include name="TEST-*.xml"/>
             </fileset>
             <report format="frames" todir="target/reports"/>
         </junitreport>        
@@ -375,24 +375,29 @@
         <jetty-start arg1="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n" arg2="-Xdebug"/>
     </target> 
        
+    <target name="jetty-profile-set">        
+        <property name="production" value="true"/>
+    </target>     
+    
     <!-- target for NetBeans Profiler on Windows -->
-    <target name="jetty-start-profile" depends="war-exploded" if="netbeans.home">
+    <target name="jetty-start-profile" depends="jetty-profile-set, jetty-setup, war-exploded" if="netbeans.home">
         <property name="nbprof.home" value="${netbeans.home}/../profiler1/lib"/>
-        <property name="agent.path" value="${nbprof.home}/deployed/jdk15/windows/profilerinterface.dll=${nbprof.home},5140"/>
-        <jetty-start arg1="-agentpath:${agent.path}" arg2="-Xmx512m"/>
+        <property name="agent.path" value="${nbprof.home}/deployed/jdk15/windows/profilerinterface.dll=${nbprof.home},5140"/>        
+        <jetty-start arg1="-agentpath:${agent.path}" arg2="-Xmx512m" wicketConfig=""/>
     </target>
     
     <macrodef name="jetty-start">
         <attribute name="webapp" default="../${war.name}"/>
         <attribute name="arg1" default=""/>
         <attribute name="arg2" default=""/>
+        <attribute name="wicketConfig" default="-Dwicket.configuration=DEVELOPMENT"/>
         <sequential>
             <antcall target="jetty-stop"/>
             <java jar="target/jetty/start.jar" fork="true" dir="target/jetty">
                 <jvmarg value="-Dfile.encoding=UTF-8"/>
                 <jvmarg value="-Djtrac.home=${basedir}/home"/>
                 <jvmarg value="-Djtrac.webapp=@{webapp}"/>
-                <jvmarg value="-Dwicket.configuration=DEVELOPMENT"/>
+                <jvmarg value="@{wicketConfig}"/>
                 <jvmarg value="-DSTOP.PORT=8079"/>
                 <jvmarg value="-DSTOP.KEY=jtrac"/>
                 <jvmarg value="@{arg1}"/>
