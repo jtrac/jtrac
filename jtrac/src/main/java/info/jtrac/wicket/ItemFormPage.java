@@ -70,7 +70,7 @@ public class ItemFormPage extends BasePage {
     private class ItemForm extends Form {
         
         private JtracFeedbackMessageFilter filter;
-        private FileUploadField fileUploadField;
+        private FileUploadField fileUploadField = new FileUploadField("file");
         private boolean editMode;
         private int version;        
         
@@ -188,8 +188,7 @@ public class ItemFormPage extends BasePage {
                     }               
                 });
                 hideNotifyList.add(itemUsers);
-                // attachment ==================================================                
-                fileUploadField = new FileUploadField("file");                
+                // attachment ==================================================                                                
                 hideNotifyList.add(fileUploadField);
                 setMaxSize(Bytes.megabytes(getJtrac().getAttachmentMaxSizeInMb()));
             }
