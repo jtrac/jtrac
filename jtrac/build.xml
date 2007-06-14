@@ -3,6 +3,7 @@
     
     <!-- example build.properties    
     tomcat.home=C:/apache-tomcat-5.5.16 [optional, jetty used by default]
+    jmeter.home=C:/jakarta-jmeter-2.2 [optional, for load testing]
     -->
     
     <property file="build.properties"/>
@@ -386,6 +387,10 @@
         <jetty-start arg1="-agentpath:${agent.path}" arg2="-Xmx512m" wicketConfig=""/>
     </target>
     
+    <target name="jetty-start-deploymode" depends="jetty-profile-set, jetty-setup, war-exploded">
+        <jetty-start arg1="-Xmx512m" wicketConfig=""/>
+    </target>
+    
     <macrodef name="jetty-start">
         <attribute name="webapp" default="../${war.name}"/>
         <attribute name="arg1" default=""/>
@@ -459,6 +464,23 @@
     
     <target name="selenium-stop">
         <get src="http://localhost:4444/selenium-server/driver/?cmd=shutDown" dest="target/selenium.txt"/>
+    </target>
+    
+    <!-- =========================== JMETER ============================= -->
+    
+    <taskdef name="jmeter" classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask" 
+        classpath="${jmeter.home}/extras/ant-jmeter.jar"/>    
+    
+    <target name="jmeter-test">
+        <delete failonerror="false">
+            <fileset dir="target/reports" includes="*.jtl"/>
+        </delete>
+        <jmeter jmeterhome="${jmeter.home}" testplan="src/test/jmeter/jtrac-items.jmx" resultlog="target/reports/jtrac-items.jtl">
+            <property name="jmeter.save.saveservice.assertion_results" value="all"/>
+            <property name="jmeter.save.saveservice.output_format" value="xml"/>
+        </jmeter>
+        <xslt in="target/reports/jtrac-items.jtl" out="target/reports/jtrac-items.html"
+            style="${jmeter.home}/extras/jmeter-results-report_21.xsl"/>        
     </target>    
               
 </project>
