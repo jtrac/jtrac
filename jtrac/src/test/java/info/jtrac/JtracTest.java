@@ -19,7 +19,6 @@ import java.util.Set;
 
 import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.userdetails.UserDetails;
-import org.springframework.test.AbstractTransactionalDataSourceSpringContextTests;
 
 /**
  * JUnit test cases for the business implementation as well as the DAO
