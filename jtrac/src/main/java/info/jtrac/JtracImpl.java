@@ -38,11 +38,9 @@ import info.jtrac.mail.MailSender;
 import info.jtrac.util.AttachmentUtils;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
@@ -477,10 +475,7 @@ public class JtracImpl implements Jtrac {
     }
 
     public List<User> findUsersForUser(User user) {
-        Collection<Space> spaces = new HashSet<Space>(user.getUserSpaceRoles().size());
-        for (UserSpaceRole usr : user.getUserSpaceRoles()) {
-            spaces.add(usr.getSpace());
-        }
+        Set<Space> spaces = user.getSpaces();
         if(spaces.size() == 0) {
             // this will happen when a user has no spaces allocated
             return Collections.emptyList();
