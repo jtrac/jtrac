@@ -166,17 +166,8 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return getHibernateTemplate().find("from Space space order by space.prefixCode");
     }
     
-    public List<Space> findSpacesWhereGuestAllowed() {
-        // forcing eager load of metadata, this is used for populating guest user security principal
-        // return getHibernateTemplate().find("from Space space where space.guestAllowed = true");
-        return (List<Space>) getHibernateTemplate().execute(new HibernateCallback() {
-            public Object doInHibernate(Session session) {
-                Criteria criteria = session.createCriteria(Space.class);
-                criteria.setFetchMode("metadata", FetchMode.JOIN);
-                criteria.add(Restrictions.eq("guestAllowed", true));                
-                return criteria.list();
-            }
-        });        
+    public List<Space> findSpacesWhereGuestAllowed() {        
+        return getHibernateTemplate().find("from Space space join fetch space.metadata where space.guestAllowed = true");       
     }
     
     public void removeSpace(Space space) {        
@@ -207,21 +198,10 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return getHibernateTemplate().find("from User user where user.email = ?", email);
     }
     
-    public List<UserSpaceRole> findUserRolesForSpace(final long spaceId) {        
-        // return getHibernateTemplate().find("select usr from User user" +
-        //      " join user.userSpaceRoles as usr where usr.space.id = ? order by user.name", spaceId);
-        // same as above commented, but forcing eager load of user object
-        // done this way to avoid n + 1 selects on item / item_view
-        // screens when rendering users to notify, drop down etc.
-        return (List<UserSpaceRole>) getHibernateTemplate().execute(new HibernateCallback() {
-            public Object doInHibernate(Session session) {
-                Criteria criteria = session.createCriteria(UserSpaceRole.class);
-                criteria.setFetchMode("user", FetchMode.JOIN);
-                criteria.add(Restrictions.eq("space.id", spaceId));
-                criteria.createCriteria("user").addOrder(Order.asc("name"));
-                return criteria.list();
-            }
-        });        
+    public List<UserSpaceRole> findUserRolesForSpace(long spaceId) {
+        // join fetch for user object
+         return getHibernateTemplate().find("select usr from UserSpaceRole usr join fetch usr.user"
+                 + " where usr.space.id = ? order by usr.user.name", spaceId);
     }
     
     public List<User> findUsersWithRoleForSpace(long spaceId, String roleKey) {
@@ -243,21 +223,14 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         if (spaces.size() == 0) {
             return null;
         }
-        StringBuffer sb = new StringBuffer();
-        sb.append('(');
-        for (Space s : spaces) {
-            sb.append(s.getId());
-            sb.append(',');
-        }
-        sb.setCharAt(sb.length() - 1, ')');
         CountsHolder ch = new CountsHolder();
         HibernateTemplate ht = getHibernateTemplate();        
         List<Object[]> loggedByList = ht.find("select item.space.id, count(item) from Item item" 
                 + " where item.loggedBy.id = ? group by item.space.id", user.getId());
         List<Object[]> assignedToList = ht.find("select item.space.id, count(item) from Item item" 
                 + " where item.assignedTo.id = ? group by item.space.id", user.getId());
-        List<Object[]> statusList = ht.find("select item.space.id, count(item) from Item item" 
-                + " where item.space.id in " + sb.toString() + " group by item.space.id");
+        List<Object[]> statusList = ht.findByNamedParam("select item.space.id, count(item) from Item item" 
+                + " where item.space in (:spaces) group by item.space.id", "spaces", spaces);
         for(Object[] oa : loggedByList) {
             ch.add((Long) oa[0], Counts.LOGGED_BY_ME, (Long) oa[1]);
         }
@@ -294,15 +267,13 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     //==========================================================================
     
     public List<User> findUsersForSpace(long spaceId) {
-        return getHibernateTemplate().find("select distinct user from User user join user.userSpaceRoles as usr" 
-                + " where usr.space.id = ? order by user.name", spaceId);
+        return getHibernateTemplate().find("select distinct u from User u join u.userSpaceRoles usr" 
+                + " where usr.space.id = ? order by u.name", spaceId);
     }
     
     public List<User> findUsersForSpaceSet(Collection<Space> spaces) {
-        Criteria criteria = getSession().createCriteria(User.class);
-        criteria.createCriteria("userSpaceRoles").add(Restrictions.in("space", spaces));
-        criteria.addOrder(Order.asc("name"));
-        return criteria.list();
+        return getHibernateTemplate().findByNamedParam("select u from User u join u.userSpaceRoles usr" +
+                " where usr.space in (:spaces) order by u.name", "spaces", spaces);
     }
     
     public void removeUserSpaceRole(UserSpaceRole userSpaceRole) {        
