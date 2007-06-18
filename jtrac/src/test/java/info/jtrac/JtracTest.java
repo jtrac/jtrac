@@ -22,41 +22,11 @@ import org.acegisecurity.userdetails.UserDetails;
 import org.springframework.test.AbstractTransactionalDataSourceSpringContextTests;
 
 /**
- * JUnit test cases for the business implementation as well as the DAO, combined into
- * one class so that the Spring application context needs to be loaded only once
- * which is taken care of by the Spring JUnit helper / extensions
+ * JUnit test cases for the business implementation as well as the DAO
  * Tests assume that a database is available, and with HSQLDB around this is not
  * an issue.
  */
-public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests {
-    
-    private Jtrac jtrac;
-    private JtracDao dao;
-    
-    public JtracTest() {
-        // have to do this because we have two beans of type DataSource (lazy-init)
-        setAutowireMode(AUTOWIRE_BY_NAME);
-        System.setProperty("jtrac.home", "target/home");
-    }
-    
-    // magically autowired by Spring JUnit helper / extension
-    public void setDao(JtracDao dao) {
-        this.dao = dao;
-    }
-    
-    //  magically autowired by Spring JUnit helper / extension
-    public void setJtrac(Jtrac jtrac) {
-        this.jtrac = jtrac;
-    }
-    
-    protected String[] getConfigLocations() {
-        return new String[] {
-            "file:src/main/webapp/WEB-INF/applicationContext.xml",
-            "file:src/main/webapp/WEB-INF/applicationContext-lucene.xml"
-        };
-    }
-    
-    //==========================================================================
+public class JtracTest extends JtracTestBase {
     
     private Space getSpace() {
         Space space = new Space();
@@ -73,7 +43,7 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
                 + "</fields></metadata>";
         metadata.setXmlString(xmlString);
         return metadata;
-    }    
+    }
     
     //==========================================================================
     
@@ -86,7 +56,7 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
     public void testEncodeClearTextPassword() {
         assertEquals("21232f297a57a5a743894a0e4a801fc3", jtrac.encodeClearText("admin"));
     }
-        
+    
     public void testMetadataInsertAndLoad() {
         Metadata m1 = getMetadata();
         jtrac.storeMetadata(m1);
@@ -199,9 +169,9 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         assertEquals(1, ch.getTotalLoggedByMe());
         assertEquals(1, ch.getTotalTotal());
         
-        Counts c = ch.getCounts().get(s.getId());        
+        Counts c = ch.getCounts().get(s.getId());
         assertEquals(1, c.getLoggedByMe());
-        assertEquals(1, c.getAssignedToMe());              
+        assertEquals(1, c.getAssignedToMe());
         assertEquals(1, c.getTotal());
     }
     
@@ -215,10 +185,10 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         jtrac.storeUser(user);
         long id = jdbcTemplate.queryForLong("select id from user_space_roles where space_id = " + spaceId);
         UserSpaceRole usr = jtrac.loadUserSpaceRole(id);
-        assertEquals(spaceId, usr.getSpace().getId());                
+        assertEquals(spaceId, usr.getSpace().getId());
         jtrac.removeUserSpaceRole(usr);
         endTransaction();
-        assertEquals(0, jdbcTemplate.queryForInt("select count(0) from user_space_roles where space_id = " + spaceId));        
+        assertEquals(0, jdbcTemplate.queryForInt("select count(0) from user_space_roles where space_id = " + spaceId));
     }
     
     public void testFindSpacesWhereGuestAllowed() {
@@ -239,10 +209,9 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         jtrac.bulkUpdateRenameSpaceRole(space, "DEFAULT", "NEWDEFAULT");
         assertEquals(0, jdbcTemplate.queryForInt("select count(0) from user_space_roles where role_key = 'DEFAULT'"));
         assertEquals(1, jdbcTemplate.queryForInt("select count(0) from user_space_roles where role_key = 'NEWDEFAULT'"));
-        
     }
     
-    public void testGetItemAsHtmlDoesNotThrowException() {        
+    public void testGetItemAsHtmlDoesNotThrowException() {
         Config config = new Config("mail.server.host", "dummyhost");
         jtrac.storeConfig(config);
         // now email sending is switched on
@@ -286,19 +255,19 @@ public class JtracTest extends AbstractTransactionalDataSourceSpringContextTests
         i1.setLoggedBy(u);
         i1.setStatus(State.CLOSED);
         i1.addRelated(i0, ItemItem.DEPENDS_ON);
-        jtrac.storeItem(i1, null); 
-        //========================        
+        jtrac.storeItem(i1, null);
+        //========================
         Item i2 = new Item();
         i2.setSpace(s);
         i2.setAssignedTo(u);
         i2.setLoggedBy(u);
         i2.setStatus(State.CLOSED);
         i2.addRelated(i1, ItemItem.DUPLICATE_OF);
-        jtrac.storeItem(i2, null);  
+        jtrac.storeItem(i2, null);
         assertEquals(3, jtrac.loadCountOfHistoryInvolvingUser(u));
         // can we remove i1?
         Item temp = jtrac.loadItem(i1.getId());
-        jtrac.removeItem(temp);        
+        jtrac.removeItem(temp);
     }
     
 }
