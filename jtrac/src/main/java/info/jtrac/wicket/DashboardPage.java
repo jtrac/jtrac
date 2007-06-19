@@ -76,6 +76,7 @@ public class DashboardPage extends BasePage {
 
                 total.add(new Link("search") {
                     public void onClick() {
+                        setCurrentSpace(null);
                         setResponsePage(ItemSearchFormPage.class);
                     }
                 });
@@ -83,6 +84,7 @@ public class DashboardPage extends BasePage {
                 if(user.getId() > 0) {            
                     total.add(new Link("loggedByMe") {
                         public void onClick() {
+                            setCurrentSpace(null);
                             ItemSearch itemSearch = new ItemSearch(user);
                             itemSearch.setLoggedBy(user);
                             setResponsePage(new ItemListPage(itemSearch));
@@ -91,6 +93,7 @@ public class DashboardPage extends BasePage {
 
                     total.add(new Link("assignedToMe") {
                         public void onClick() {
+                            setCurrentSpace(null);
                             ItemSearch itemSearch = new ItemSearch(user);
                             itemSearch.setAssignedTo(user);
                             setResponsePage(new ItemListPage(itemSearch));
@@ -103,6 +106,7 @@ public class DashboardPage extends BasePage {
 
                 total.add(new Link("total") {
                     public void onClick() {
+                        setCurrentSpace(null);
                         ItemSearch itemSearch = new ItemSearch(user);                    
                         setResponsePage(new ItemListPage(itemSearch));
                     }
