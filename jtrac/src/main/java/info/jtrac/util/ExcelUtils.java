@@ -83,14 +83,16 @@ public class ExcelUtils {
     
     private void setHeader(int row, int col, String text) {
         HSSFCell cell = getCell(row, col);
-        cell.setCellStyle(csBold);
+        cell.setCellStyle(csBold);        
         cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+        cell.setEncoding(HSSFCell.ENCODING_UTF_16);
         cell.setCellValue(text);      
     }
     
     private void setText(int row, int col, String text) {
         HSSFCell cell = getCell(row, col);        
         cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+        cell.setEncoding(HSSFCell.ENCODING_UTF_16);
         cell.setCellValue(text);      
     }    
     
@@ -148,7 +150,11 @@ public class ExcelUtils {
             if (showDetail) {
                 if (showHistory) {
                     History h = (History) item;
-                    setText(row, col++, h.getComment());
+                    if(h.getIndex() > 0) {
+                        setText(row, col++, h.getComment());
+                    } else {
+                        setText(row, col++, h.getDetail());
+                    }
                 } else {
                     setText(row, col++, item.getDetail());
                 }
