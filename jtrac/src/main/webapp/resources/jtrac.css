@@ -34,6 +34,6 @@ tr.sortable th.order-up { background-color: #c3d9ff; background-image: url("arro
 tr.sortable th.order-down { background-color: #c3d9ff; background-image: url("arrow_down.gif"); }
 tr.sortable a { color: black; }
 tr.sortable a:hover { color: #0000D9; }
-li.feedbackPanelERROR { list-style: none; background: url("error.gif") no-repeat; padding-left: 2em; margin: 0.5em 0 0 -1em; }
-.menu-option div { font-weight: bold; background-color: #e1ecfe; padding-left: 1em; 
-    padding-right: 1em; margin-bottom: 1.5em; }
+ul { list-style-image: url("error.gif"); }
+li.feedbackPanelERROR { padding-left: 0.4em; }
+.menu-option div { font-weight: bold; background-color: #e1ecfe; padding-left: 1em; padding-right: 1em; margin-bottom: 1.5em; }
