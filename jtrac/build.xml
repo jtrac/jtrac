@@ -240,7 +240,7 @@
                 outdir="target/instr-classes" 
                 metadatafile="target/metadata.emma" merge="true"/>
             </emma>
-            <copy file="etc/log4j.properties" todir="target/test-classes"/>
+            <copy file="etc/test.log4j.properties" tofile="target/test-classes/log4j.properties"/>
             <junit fork="true" dir="." tempdir="target" haltonfailure="@{haltonfailure}">
                 <classpath>
                     <path path="target/instr-classes"/>
