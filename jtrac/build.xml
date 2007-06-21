@@ -466,12 +466,11 @@
         <get src="http://localhost:4444/selenium-server/driver/?cmd=shutDown" dest="target/selenium.txt"/>
     </target>
     
-    <!-- =========================== JMETER ============================= -->
-    
-    <taskdef name="jmeter" classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask" 
-        classpath="${jmeter.home}/extras/ant-jmeter.jar"/>    
+    <!-- =========================== JMETER ============================= -->       
     
     <target name="jmeter-test">
+        <taskdef name="jmeter" classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask" 
+            classpath="${jmeter.home}/extras/ant-jmeter.jar"/>         
         <delete failonerror="false">
             <fileset dir="target/reports" includes="*.jtl"/>
         </delete>
