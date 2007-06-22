@@ -170,7 +170,7 @@ public final class ItemUtils {
         sb.append("  </td>");
         sb.append("</tr>");
         sb.append("<tr>");
-        sb.append("  <td width='20%'" + labelStyle + ">" + fmt("status", ms, loc) + "</td>");
+        sb.append("  <td width='15%'" + labelStyle + ">" + fmt("status", ms, loc) + "</td>");
         sb.append("  <td" + tdStyle + ">" + item.getStatusValue() + "</td>");
         sb.append("  <td" + labelStyle + ">" + fmt("loggedBy", ms, loc) + "</td>");
         sb.append("  <td" + tdStyle + ">" + item.getLoggedBy().getName() + "</td>");
