@@ -44,51 +44,48 @@ public class NbprojectMojo extends AbstractMojo {
 		writeFile(buildTarget, "build.xml", false);
 		String projectSource = readFile("project.xml").toString();
 		String projectTarget = projectSource.replace("@@project.name@@", projectName);
-		File file = new File("nbproject");
-		file.mkdir();		
+		File nbproject = new File("nbproject");
+		nbproject.mkdir();		
 		writeFile(projectTarget, "nbproject/project.xml", false);
+		File etc = new File("etc");
+		etc.mkdir();
+		String jettyXml = readFile("jetty.xml").toString();
+		writeFile(jettyXml, "etc/jetty.xml", false);
+		String webdefaultXml = readFile("webdefault.xml").toString();
+		writeFile(webdefaultXml, "etc/webdefault.xml", false);
 	}
-
+	
 	private StringBuffer readFile(String fileName) {
 		InputStream is = getClass().getResourceAsStream(fileName);
 		BufferedReader buffer = null;
 		StringBuffer sb = new StringBuffer();
 		String s = null;
 		try {
-			buffer = new BufferedReader(new InputStreamReader(is));
-			while ((s = buffer.readLine()) != null) {
-				sb.append(s).append('\n');
+			try {
+				buffer = new BufferedReader(new InputStreamReader(is));
+				while ((s = buffer.readLine()) != null) {
+					sb.append(s).append('\n');
+				}
+			} finally {
+				is.close();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		} finally {
-			if(is != null) {
-				try {
-					is.close();
-				} catch (Exception e) {
-					// :(
-				}
-			}
+			throw new RuntimeException(e);
 		}
 		return sb;
-	}
-
-	public void writeFile(String content, String fileName, boolean append) {
+	}	
+	
+	private void writeFile(String content, String fileName, boolean append) {
 		FileWriter writer = null;
 		try {
-			writer = new FileWriter(fileName, append);
-			writer.write(content);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (writer != null) {
-				try {
-					writer.close();
-				} catch (Exception e) {
-					// :(
-				}
+			try {
+				writer = new FileWriter(fileName, append);
+				writer.write(content);
+			} finally {
+				writer.close();
 			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 }
