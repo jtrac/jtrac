@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="wicket-qs" basedir="." default="main">
+    
+    <target name="main">
+        <javac srcdir="etc" includes="TitleCaser.java"/>        
+        <input message="Enter Project Name: (lowercase, no spaces)" addproperty="project.name"/>
+        <mkdir dir="target"/>
+        <java classpath="etc" classname="TitleCaser">
+            <arg value="${project.name}"/>
+        </java>
+        <loadfile property="project.name.titleCase" srcFile="target/temp.txt"/>        
+        <property name="webapp.dir" value="target/${project.name}/src/main/webapp"/>        
+        <copy todir="${webapp.dir}/WEB-INF" file="etc/web.xml"/>
+        <replace file="${webapp.dir}/WEB-INF/web.xml" 
+            token="@@applicationClassName@@" 
+            value="${project.name}.${project.name.titleCase}Application"/>          
+        <copy todir="${webapp.dir}" file="etc/index.html"/>
+        <property name="src.pkg.dir" value="target/${project.name}/src/main/java/${project.name}"/>
+        <copy todir="${src.pkg.dir}" file="etc/HomePage.html"/>
+        <copy todir="${src.pkg.dir}" file="etc/HomePage.java"/>
+        <replace file="${src.pkg.dir}/HomePage.java" token="@@project.name@@" value="${project.name}"/>
+        <property name="app.java" value="${src.pkg.dir}/${project.name.titleCase}Application.java"/>
+        <copy tofile="${app.java}" file="etc/Application.java"/>
+        <replace file="${app.java}" token="@@project.name@@" value="${project.name}"/>        
+        <replace file="${app.java}" token="@@applicationClassName@@" value="${project.name.titleCase}Application"/>
+        <copy todir="target/${project.name}" file="etc/pom.xml"/>
+        <replace file="target/${project.name}/pom.xml" token="@@project.name@@" value="${project.name}"/>
+    </target>
+    
+    <target name="clean">
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="target"/>
+        </delete>      
+    </target>    
+    
+</project>
