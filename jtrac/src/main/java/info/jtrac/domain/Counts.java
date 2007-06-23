@@ -46,7 +46,19 @@ public class Counts implements Serializable {
         }
     }
     
-    public void add(int type, int state, long count) {
+    public void addLoggedByMe(int state, long count) {
+        add(LOGGED_BY_ME, state, count);
+    }
+    
+    public void addAssignedToMe(int state, long count) {
+        add(ASSIGNED_TO_ME, state, count);
+    }    
+    
+    public void addTotal(int state, long count) {
+        add(TOTAL, state, count);
+    }    
+    
+    protected void add(int type, int state, long count) {
         Map<Integer, Long> stateCounts = typeCounts.get(type);
         Long i = stateCounts.get(state);
         if (i == null) {            

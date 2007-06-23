@@ -232,13 +232,13 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         List<Object[]> statusList = ht.findByNamedParam("select item.space.id, count(item) from Item item" 
                 + " where item.space in (:spaces) group by item.space.id", "spaces", spaces);
         for(Object[] oa : loggedByList) {
-            ch.add((Long) oa[0], Counts.LOGGED_BY_ME, (Long) oa[1]);
+            ch.addLoggedByMe((Long) oa[0], (Long) oa[1]);
         }
         for(Object[] oa : assignedToList) {
-            ch.add((Long) oa[0], Counts.ASSIGNED_TO_ME, (Long) oa[1]);
+            ch.addAssignedToMe((Long) oa[0], (Long) oa[1]);
         }
         for(Object[] oa : statusList) {
-            ch.add((Long) oa[0], Counts.TOTAL, (Long) oa[1]);
+            ch.addTotal((Long) oa[0], (Long) oa[1]);
         }
         return ch;
     }
@@ -253,13 +253,13 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
                 + " where item.space.id = ? group by item.status", space.getId());
         Counts c = new Counts(true);
         for(Object[] oa : loggedByList) {
-            c.add(Counts.LOGGED_BY_ME, (Integer) oa[0], (Long) oa[1]);
+            c.addLoggedByMe((Integer) oa[0], (Long) oa[1]);
         }
         for(Object[] oa : assignedToList) {
-            c.add(Counts.ASSIGNED_TO_ME, (Integer) oa[0], (Long) oa[1]);
+            c.addAssignedToMe((Integer) oa[0], (Long) oa[1]);
         }
         for(Object[] oa : statusList) {
-            c.add(Counts.TOTAL, (Integer) oa[0], (Long) oa[1]);
+            c.addTotal((Integer) oa[0], (Long) oa[1]);
         }
         return c;
     }

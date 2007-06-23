@@ -28,7 +28,19 @@ public class CountsHolder implements Serializable {
 
     private Map<Long, Counts> counts = new HashMap<Long, Counts>();
     
-    public void add(long spaceId, int type, long count) {
+    public void addLoggedByMe(long spaceId, long count) {
+        add(Counts.LOGGED_BY_ME, spaceId, count);
+    }
+    
+    public void addAssignedToMe(long spaceId, long count) {
+        add(Counts.ASSIGNED_TO_ME, spaceId, count);
+    }    
+    
+    public void addTotal(long spaceId, long count) {
+        add(Counts.TOTAL, spaceId, count);
+    }     
+    
+    private void add(int type, long spaceId, long count) {
         Counts c = counts.get(spaceId);
         if (c == null) {
             c = new Counts(false);
