@@ -15,6 +15,9 @@
             token="@@applicationClassName@@" 
             value="${project.name}.${project.name.titleCase}Application"/>          
         <copy todir="${webapp.dir}" file="etc/index.html"/>
+        <property name="src.dir" value="target/${project.name}/src/main/java"/> 
+        <copy todir="${src.dir}" file="etc/log4j.properties"/>
+        <replace file="${src.dir}/log4j.properties" token="@@project.name@@" value="${project.name}"/>
         <property name="src.pkg.dir" value="target/${project.name}/src/main/java/${project.name}"/>
         <copy todir="${src.pkg.dir}" file="etc/HomePage.html"/>
         <copy todir="${src.pkg.dir}" file="etc/HomePage.java"/>
