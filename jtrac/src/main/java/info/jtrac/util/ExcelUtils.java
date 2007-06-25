@@ -59,15 +59,7 @@ public class ExcelUtils {
         
         this.items = items;
         this.itemSearch = itemSearch;
-    }
-    
-    private static String fmt(String key, MessageSource messageSource, Locale locale) {
-        try {
-            return messageSource.getMessage("item_list." + key, null, locale);
-        } catch (Exception e) {
-            return "???item_list." + key + "???";
-        }
-    }    
+    }       
     
     private HSSFCell getCell(int row, int col) {
         HSSFRow sheetRow = sheet.getRow(row);
@@ -80,14 +72,6 @@ public class ExcelUtils {
         }
         return cell;
     }         
-    
-    private void setHeader(int row, int col, String text) {
-        HSSFCell cell = getCell(row, col);
-        cell.setCellStyle(csBold);        
-        cell.setCellType(HSSFCell.CELL_TYPE_STRING);
-        cell.setEncoding(HSSFCell.ENCODING_UTF_16);
-        cell.setCellValue(text);      
-    }
     
     private void setText(int row, int col, String text) {
         HSSFCell cell = getCell(row, col);        
@@ -111,10 +95,40 @@ public class ExcelUtils {
         }        
         HSSFCell cell = getCell(row, col);
         cell.setCellValue(value);          
+    }  
+    
+    private void setHistoryIndex(int row, int col, int value) {
+        if(value == 0) {
+            return;
+        }
+        HSSFCell cell = getCell(row, col);
+        cell.setCellValue(value);          
     }    
+    
+    private void setHeader(int row, int col, String text) {
+        HSSFCell cell = getCell(row, col);
+        cell.setCellStyle(csBold);        
+        cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+        cell.setEncoding(HSSFCell.ENCODING_UTF_16);
+        cell.setCellValue(text);      
+    }    
+    
+    private String localize(String key) {
+        try {
+            return messageSource.getMessage("item_list." + key, null, locale);
+        } catch (Exception e) {
+            return "???item_list." + key + "???";
+        }
+    }     
+    
+    private MessageSource messageSource;
+    private Locale locale;
     
     public HSSFWorkbook exportToExcel(MessageSource ms, Locale loc) {
                 
+        this.messageSource = ms;
+        this.locale = loc;
+        
         boolean showDetail = itemSearch.isShowDetail();
         boolean showHistory = itemSearch.isShowHistory();
         List<Field> fields = itemSearch.getFields();
@@ -123,28 +137,36 @@ public class ExcelUtils {
         int col = 0;
         
         // begin header row
-        setHeader(row, col++, fmt("id", ms, loc));
-        setHeader(row, col++, fmt("summary", ms, loc));
+        setHeader(row, col++, localize("id"));
+        if(showHistory) {
+            setHeader(row, col++, localize("history"));
+        }
+        setHeader(row, col++, localize("summary"));
                 
         if (showDetail) {
-            setHeader(row, col++, fmt("detail", ms, loc));
+            setHeader(row, col++, localize("detail"));
         }
         
-        setHeader(row, col++, fmt("loggedBy", ms, loc));
-        setHeader(row, col++, fmt("status", ms, loc));
-        setHeader(row, col++, fmt("assignedTo", ms, loc));
+        setHeader(row, col++, localize("loggedBy"));
+        setHeader(row, col++, localize("status"));
+        setHeader(row, col++, localize("assignedTo"));
         
         for(Field field : fields) {
             setHeader(row, col++, field.getLabel());            
         }
         
-        setHeader(row, col++, fmt("timeStamp", ms, loc));        
+        setHeader(row, col++, localize("timeStamp"));        
         
         // iterate over list
         for(AbstractItem item : items) {
             row++; col = 0; 
             // begin data row
             setText(row, col++, item.getRefId());
+            
+            if(showHistory) {
+                setHistoryIndex(row, col++, ((History) item).getIndex());
+            }
+            
             setText(row, col++, item.getSummary());
             
             if (showDetail) {
