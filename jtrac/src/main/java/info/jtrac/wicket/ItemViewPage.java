@@ -28,8 +28,7 @@ import org.apache.wicket.markup.html.link.Link;
  * dashboard page
  */
 public class ItemViewPage extends BasePage {              
-    
-    private ItemSearch itemSearch;
+        
     private long itemId;
 
     public long getItemId() {
@@ -46,32 +45,18 @@ public class ItemViewPage extends BasePage {
         } else {
             // internal id of type long
             item = getJtrac().loadItem(Long.parseLong(refId));
-        }        
+        }
+        itemId = item.getId(); // required for itemRelatePanel
         addComponents(item);
-    }       
+    }  
     
-    public ItemViewPage(long itemId, ItemSearch itemSearch) { 
-        this.itemSearch = itemSearch;
-        this.itemId = itemId;
-        Item item = getJtrac().loadItem(itemId);
-        addComponents(item);
-    }
-    
-    // for e.g. the item edit scenario, to avoid un-necessary re-load
-    public ItemViewPage(Item item, ItemSearch itemSearch) { 
-        this.itemSearch = itemSearch;
-        this.itemId = item.getId();
-        addComponents(item);
-    }    
-    
-    private void addComponents(final Item item) {                            
-        
-        add(new ItemRelatePanel("relate", itemSearch, true));
-        
+    private void addComponents(final Item item) {  
+        final ItemSearch itemSearch = getCurrentItemSearch();
+        add(new ItemRelatePanel("relate", true));        
         Link link = new Link("back") {
             public void onClick() {
                 itemSearch.setSelectedItemId(item.getId());
-                setResponsePage(new ItemListPage(itemSearch));
+                setResponsePage(ItemListPage.class);
             }
         };
         if(itemSearch == null) {
@@ -91,9 +76,7 @@ public class ItemViewPage extends BasePage {
         
         add(new Link("edit") {
             public void onClick() {
-                // reload from database, avoid OptimisticLockingFailure
-                Item temp = getJtrac().loadItem(item.getId());
-                setResponsePage(new ItemFormPage(temp, itemSearch));
+                setResponsePage(new ItemFormPage(item.getId()));
             }
         }.setVisible(user.isAdminForAllSpaces()));                        
         

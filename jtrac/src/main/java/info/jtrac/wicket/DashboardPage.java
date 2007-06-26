@@ -70,6 +70,7 @@ public class DashboardPage extends BasePage {
                 }
             });
 
+            // TODO panelize totals row and reduce redundant code
             WebMarkupContainer total = new WebMarkupContainer("total");
 
             if(spaceRoles.size() > 1) {
@@ -87,7 +88,8 @@ public class DashboardPage extends BasePage {
                             setCurrentSpace(null);
                             ItemSearch itemSearch = new ItemSearch(user);
                             itemSearch.setLoggedBy(user);
-                            setResponsePage(new ItemListPage(itemSearch));
+                            setCurrentItemSearch(itemSearch);
+                            setResponsePage(ItemListPage.class);
                         }
                     }.add(new Label("loggedByMe", new PropertyModel(countsHolder, "totalLoggedByMe"))));
 
@@ -96,7 +98,8 @@ public class DashboardPage extends BasePage {
                             setCurrentSpace(null);
                             ItemSearch itemSearch = new ItemSearch(user);
                             itemSearch.setAssignedTo(user);
-                            setResponsePage(new ItemListPage(itemSearch));
+                            setCurrentItemSearch(itemSearch);
+                            setResponsePage(ItemListPage.class);
                         }
                     }.add(new Label("assignedToMe", new PropertyModel(countsHolder, "totalAssignedToMe"))));
                 } else {
@@ -107,8 +110,9 @@ public class DashboardPage extends BasePage {
                 total.add(new Link("total") {
                     public void onClick() {
                         setCurrentSpace(null);
-                        ItemSearch itemSearch = new ItemSearch(user);                    
-                        setResponsePage(new ItemListPage(itemSearch));
+                        ItemSearch itemSearch = new ItemSearch(user);   
+                        setCurrentItemSearch(itemSearch);
+                        setResponsePage(ItemListPage.class);
                     }
                 }.add(new Label("total", new PropertyModel(countsHolder, "totalTotal"))));
 

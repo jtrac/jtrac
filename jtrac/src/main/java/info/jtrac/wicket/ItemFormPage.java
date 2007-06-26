@@ -17,7 +17,6 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Item;
-import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
@@ -25,6 +24,7 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.util.UserUtils;
 import java.util.List;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -48,21 +48,19 @@ import org.apache.wicket.util.lang.Bytes;
 /**
  * Create / Edit item form page
  */
-public class ItemFormPage extends BasePage {                           
-    
-    private ItemSearch itemSearch;    
+public class ItemFormPage extends BasePage {    
             
     public ItemFormPage() {        
         Item item = new Item();
         item.setSpace(getCurrentSpace());
         item.setStatus(State.NEW);        
         add(new ItemForm("form", item));
-    }    
+    }
     
-    public ItemFormPage(Item item, ItemSearch itemSearch) {
-        this.itemSearch = itemSearch;        
-        add(new ItemForm("form", item));        
-    }   
+    public ItemFormPage(long itemId) {        
+        Item item = getJtrac().loadItem(itemId);      
+        add(new ItemForm("form", item));
+    }    
     
     /**
      * wicket form
@@ -123,8 +121,8 @@ public class ItemFormPage extends BasePage {
                         public void onConfirm() {
                             // avoid lazy init problem
                             getJtrac().removeItem(getJtrac().loadItem(item.getId()));
-                            if(itemSearch != null) {
-                                setResponsePage(new ItemListPage(itemSearch));
+                            if(getCurrentItemSearch() != null) {
+                                setResponsePage(ItemListPage.class);
                             } else {
                                 setResponsePage(DashboardPage.class);
                             }
@@ -197,9 +195,9 @@ public class ItemFormPage extends BasePage {
             // cancel ==========================================================
             add(new Link("cancel") {
                 public void onClick() {
-                    setResponsePage(new ItemViewPage(item.getId(), itemSearch));
+                    setResponsePage(ItemViewPage.class, new PageParameters("0=" + item.getRefId()));
                 }                
-            }.setVisible(itemSearch != null));            
+            }.setVisible(getCurrentItemSearch() != null));            
         }
         
         @Override
@@ -225,7 +223,7 @@ public class ItemFormPage extends BasePage {
                 item.setStatus(State.OPEN);                
                 getJtrac().storeItem(item, fileUpload);                
             }                         
-            setResponsePage(new ItemViewPage(item, itemSearch));
+            setResponsePage(ItemViewPage.class, new PageParameters("0=" + item.getRefId()));
         }
         
     }

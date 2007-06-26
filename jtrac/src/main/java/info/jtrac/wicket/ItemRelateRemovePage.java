@@ -21,6 +21,7 @@ import static info.jtrac.domain.ItemItem.*;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemItem;
 import info.jtrac.wicket.yui.YuiDialog;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
@@ -108,7 +109,7 @@ public class ItemRelateRemovePage extends BasePage {
             Item item = getJtrac().loadItem(itemId);                                    
             item.setEditReason(comment);
             getJtrac().updateItem(item, getPrincipal());
-            setResponsePage(new ItemViewPage(item, null));
+            setResponsePage(ItemViewPage.class, new PageParameters("0=" + item.getRefId()));
         }          
         
         

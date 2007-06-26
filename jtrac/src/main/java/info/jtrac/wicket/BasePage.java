@@ -17,6 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
+import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import org.apache.commons.logging.Log;
@@ -49,6 +50,14 @@ public abstract class BasePage extends WebPage {
     protected Space getCurrentSpace() {
         return ComponentUtils.getCurrentSpace(this);
     }      
+    
+    protected void setCurrentItemSearch(ItemSearch itemSearch) {
+        ComponentUtils.setCurrentItemSearch(this, itemSearch);
+    }      
+    
+    protected ItemSearch getCurrentItemSearch() {
+        return ComponentUtils.getCurrentItemSearch(this);
+    }       
     
     protected String localize(String key) {
         return ComponentUtils.localize(this, key);

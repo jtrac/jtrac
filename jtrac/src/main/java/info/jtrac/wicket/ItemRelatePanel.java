@@ -24,6 +24,7 @@ import info.jtrac.wicket.yui.YuiDialog;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -43,8 +44,9 @@ public class ItemRelatePanel extends BasePanel {
     
     private String refId;    
     
-    public ItemRelatePanel(String id, ItemSearch itemSearch, boolean isItemViewPage) {        
+    public ItemRelatePanel(String id, boolean isItemViewPage) {                
         super(id);
+        ItemSearch itemSearch = getCurrentItemSearch();
         refId = itemSearch == null ? null : itemSearch.getRelatingItemRefId();
         if (refId != null) {
             final YuiDialog dialog = new YuiDialog("itemWindow");
@@ -68,7 +70,7 @@ public class ItemRelatePanel extends BasePanel {
             add(new Link("cancel") {
                 public void onClick() {
                     Item item = getJtrac().loadItemByRefId(refId);
-                    setResponsePage(new ItemViewPage(item, null));
+                    setResponsePage(ItemViewPage.class, new PageParameters("0=" + item.getRefId()));
                 }
             });
         } else {
@@ -130,7 +132,8 @@ public class ItemRelatePanel extends BasePanel {
             item.addRelated(relatedItem, type);
             item.setEditReason(comment);
             getJtrac().updateItem(item, getPrincipal());
-            setResponsePage(new ItemViewPage(item, null));
+            setCurrentItemSearch(null);
+            setResponsePage(ItemViewPage.class, new PageParameters("0=" + item.getRefId()));
         }          
         
         

@@ -16,9 +16,9 @@
 
 package info.jtrac.wicket;
 
+import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
-import javax.servlet.http.HttpSession;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.springframework.util.StringUtils;
 import org.apache.wicket.Request;
@@ -32,6 +32,7 @@ public class JtracSession extends WebSession {
     
     private User user;
     private Space currentSpace;
+    private ItemSearch itemSearch;
     
     public JtracSession(final WebApplication application, Request request) {
         super(application, request);
@@ -66,5 +67,13 @@ public class JtracSession extends WebSession {
     public void setCurrentSpace(Space currentSpace) {
         this.currentSpace = currentSpace;
     }    
+
+    public ItemSearch getItemSearch() {
+        return itemSearch;
+    }
+
+    public void setItemSearch(ItemSearch itemSearch) {
+        this.itemSearch = itemSearch;
+    }
     
 }

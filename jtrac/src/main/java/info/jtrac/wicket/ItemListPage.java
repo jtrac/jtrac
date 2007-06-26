@@ -16,16 +16,14 @@
 
 package info.jtrac.wicket;
 
-import info.jtrac.domain.ItemSearch;
-
 /**
  * item list page
  */
 public class ItemListPage extends BasePage {        
         
-    public ItemListPage(ItemSearch itemSearch) {
-        add(new ItemListPanel("panel", itemSearch));
-        add(new ItemRelatePanel("relate", itemSearch, false));
+    public ItemListPage() {
+        add(new ItemListPanel("panel"));
+        add(new ItemRelatePanel("relate", false));
     }       
     
     

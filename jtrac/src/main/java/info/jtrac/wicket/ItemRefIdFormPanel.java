@@ -20,6 +20,7 @@ import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.exception.InvalidRefIdException;
 import info.jtrac.wicket.yui.YuiPanel;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitButton;
 import org.apache.wicket.markup.html.form.Form;
@@ -103,8 +104,10 @@ public class ItemRefIdFormPanel extends BasePanel {
                     }
                     if(itemSearch.getRelatingItemRefId() == null) {
                         itemSearch = null; // disable back link for item view
+                    } else {
+                        setCurrentItemSearch(itemSearch);
                     }
-                    setResponsePage(new ItemViewPage(item, itemSearch));  
+                    setResponsePage(ItemViewPage.class, new PageParameters("0=" + refId));  
                 }
             });              
         }        

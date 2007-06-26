@@ -457,8 +457,9 @@ public class ItemSearchFormPanel extends BasePanel {
         }         
         
         @Override
-        protected void onSubmit() {            
-            setResponsePage(new ItemListPage(itemSearch));            
+        protected void onSubmit() {
+            setCurrentItemSearch(itemSearch);
+            setResponsePage(ItemListPage.class);            
         }        
             
     }

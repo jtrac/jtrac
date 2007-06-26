@@ -28,6 +28,7 @@ import info.jtrac.util.UserUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -184,7 +185,7 @@ public class ItemViewFormPanel extends BasePanel {
             User user = ((JtracSession) getSession()).getUser();
             history.setLoggedBy(user);
             getJtrac().storeHistoryForItem(itemId, history, fileUpload);
-            setResponsePage(new ItemViewPage(history.getParent(), itemSearch));
+            setResponsePage(ItemViewPage.class, new PageParameters("0=" + history.getRefId()));
         }
         
     }

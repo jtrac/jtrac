@@ -37,7 +37,8 @@ public class ItemSearchFormPage extends BasePage {
     
     public ItemSearchFormPage(ItemSearch itemSearch) {                        
         add(new ItemSearchFormPanel("panel", itemSearch));
-        add(new ItemRelatePanel("relate", itemSearch, false));
+        setCurrentItemSearch(itemSearch);
+        add(new ItemRelatePanel("relate", false));
     }    
     
 }

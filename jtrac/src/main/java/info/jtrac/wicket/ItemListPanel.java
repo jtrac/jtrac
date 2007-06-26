@@ -26,10 +26,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -57,9 +59,9 @@ public class ItemListPanel extends BasePanel {
         }
     }
     
-    public ItemListPanel(final String id, ItemSearch temp) {
+    public ItemListPanel(final String id) {
         super(id);
-        this.itemSearch = temp;
+        this.itemSearch = getCurrentItemSearch();
         LoadableDetachableModel itemListModel = new LoadableDetachableModel() {
             protected Object load() {
                 logger.debug("loading item list from database");
@@ -99,8 +101,9 @@ public class ItemListPanel extends BasePanel {
             Link prevOn = new Link("prevOn") {
                 public void onClick() {
                     itemSearch.setCurrentPage(currentPage - 1);
+                    setCurrentItemSearch(itemSearch);
                     // TODO avoid next line, refresh pagination only
-                    setResponsePage(new ItemListPage(itemSearch));                    
+                    setResponsePage(ItemListPage.class);                    
                 }
             };
             prevOn.add(new Label("prevOn", "<<"));
@@ -125,8 +128,9 @@ public class ItemListPanel extends BasePanel {
                     Link pageOn = new Link("pageOn") {
                         public void onClick() {
                             itemSearch.setCurrentPage(i);
+                            setCurrentItemSearch(itemSearch);
                             // TODO avoid next line, refresh pagination only
-                            setResponsePage(new ItemListPage(itemSearch));
+                            setResponsePage(ItemListPage.class);
                         }
                     };
                     pageOn.add(new Label("pageOn", pageNumber));
@@ -145,8 +149,9 @@ public class ItemListPanel extends BasePanel {
             Link nextOn = new Link("nextOn") {
                 public void onClick() {
                     itemSearch.setCurrentPage(currentPage + 1);
+                    setCurrentItemSearch(itemSearch);
                     // TODO avoid next line, refresh pagination only
-                    setResponsePage(new ItemListPage(itemSearch));                    
+                    setResponsePage(ItemListPage.class);                    
                 }
             };
             nextOn.add(new Label("nextOn", ">>"));
@@ -245,35 +250,22 @@ public class ItemListPanel extends BasePanel {
                             // TODO optimize if-then for performance
                             String name = ch.getName();
                             if(name.equals("id")) {
-                                Fragment refIdFrag = new Fragment("column", "refId"); 
-                                Link refIdLink = null;
-                                if (itemSearch.isShowHistory()) {
-                                    final History history = (History) item;
-                                    refIdLink = new Link("refId") {
-                                        public void onClick() {
-                                            // this is a history record
-                                            setResponsePage(new ItemViewPage(history.getParent().getId(), itemSearch));
-                                        }
-                                    };                                    
-                                    refIdLink.add(new Label("refId", new PropertyModel(item, "refId")));                                    
-                                    int index = history.getIndex();
+                                String refId = item.getRefId();
+                                Fragment refIdFrag = new Fragment("column", "refId");
+                                listItem.add(refIdFrag);
+                                Link refIdLink = new BookmarkablePageLink("refId", ItemViewPage.class, new PageParameters("0=" + refId));                                
+                                refIdFrag.add(refIdLink);
+                                refIdLink.add(new Label("refId", refId));
+                                if (itemSearch.isShowHistory()) {                                                                                                            
+                                    int index = ((History) item).getIndex();
                                     if (index > 0) {
                                         refIdFrag.add(new Label("index", " (" + index + ")"));
                                     } else {
-                                        refIdFrag.add(new Label("index", "").setVisible(false));
+                                        refIdFrag.add(new WebMarkupContainer("index").setVisible(false));
                                     }
-                                } else {
-                                    refIdLink = new Link("refId") {
-                                        public void onClick() {
-                                            // this is an item record
-                                            setResponsePage(new ItemViewPage(item.getId(), itemSearch));
-                                        }
-                                    };
-                                    refIdLink.add(new Label("refId", new PropertyModel(item, "refId")));                                    
-                                    refIdFrag.add(new Label("index", "").setVisible(false));
-                                }
-                                refIdFrag.add(refIdLink);
-                                listItem.add(refIdFrag);
+                                } else {                                                                           
+                                    refIdFrag.add(new WebMarkupContainer("index").setVisible(false));
+                                }                                                                
                                 return;
                             } else if(name.equals("summary")) {
                                 value = new PropertyModel(item, "summary");

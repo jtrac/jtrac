@@ -111,7 +111,8 @@ public class DashboardRowExpandedPanel extends BasePanel {
                             ItemSearch itemSearch = new ItemSearch(space);
                             itemSearch.setLoggedBy(user);
                             itemSearch.setStatus(i);
-                            setResponsePage(new ItemListPage(itemSearch));
+                            setCurrentItemSearch(itemSearch);
+                            setResponsePage(ItemListPage.class);
                         }
                     }.add(new Label("loggedByMe", counts.getLoggedByMeForState(i))));
 
@@ -121,7 +122,8 @@ public class DashboardRowExpandedPanel extends BasePanel {
                             ItemSearch itemSearch = new ItemSearch(space);
                             itemSearch.setAssignedTo(user);
                             itemSearch.setStatus(i);
-                            setResponsePage(new ItemListPage(itemSearch));
+                            setCurrentItemSearch(itemSearch);
+                            setResponsePage(ItemListPage.class);
                         }
                     }.add(new Label("assignedToMe", counts.getAssignedToMeForState(i))));
                 } else {
@@ -134,7 +136,8 @@ public class DashboardRowExpandedPanel extends BasePanel {
                         setCurrentSpace(space);
                         ItemSearch itemSearch = new ItemSearch(space);                        
                         itemSearch.setStatus(i);
-                        setResponsePage(new ItemListPage(itemSearch));
+                        setCurrentItemSearch(itemSearch);
+                        setResponsePage(ItemListPage.class);
                     }
                 }.add(new Label("total", counts.getTotalForState(i))));                
             }
@@ -149,7 +152,8 @@ public class DashboardRowExpandedPanel extends BasePanel {
                     setCurrentSpace(space);
                     ItemSearch itemSearch = new ItemSearch(space);
                     itemSearch.setLoggedBy(user);
-                    setResponsePage(new ItemListPage(itemSearch));
+                    setCurrentItemSearch(itemSearch);
+                    setResponsePage(ItemListPage.class);                                        
                 }
             }.add(new Label("loggedByMe", new PropertyModel(counts, "loggedByMe"))));
 
@@ -158,7 +162,8 @@ public class DashboardRowExpandedPanel extends BasePanel {
                     setCurrentSpace(space);
                     ItemSearch itemSearch = new ItemSearch(space);
                     itemSearch.setAssignedTo(user);
-                    setResponsePage(new ItemListPage(itemSearch));
+                    setCurrentItemSearch(itemSearch);
+                    setResponsePage(ItemListPage.class);
                 }
             }.add(new Label("assignedToMe", new PropertyModel(counts, "assignedToMe"))));
         } else {
@@ -169,8 +174,9 @@ public class DashboardRowExpandedPanel extends BasePanel {
         add(new Link("totalTotal") {
             public void onClick() {
                 setCurrentSpace(space);
-                ItemSearch itemSearch = new ItemSearch(space);                
-                setResponsePage(new ItemListPage(itemSearch));
+                ItemSearch itemSearch = new ItemSearch(space);
+                setCurrentItemSearch(itemSearch);
+                setResponsePage(ItemListPage.class);                
             }
         }.add(new Label("total", new PropertyModel(counts, "total"))));
         

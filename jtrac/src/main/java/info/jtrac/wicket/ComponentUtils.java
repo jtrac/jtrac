@@ -17,6 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
+import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import org.apache.wicket.Component;
@@ -44,6 +45,14 @@ public class ComponentUtils {
     public static Space getCurrentSpace(Component c) {
         return ((JtracSession) c.getSession()).getCurrentSpace();
     }     
+    
+    public static void setCurrentItemSearch(Component c, ItemSearch itemSearch) {
+        ((JtracSession) c.getSession()).setItemSearch(itemSearch);
+    }      
+    
+    public static ItemSearch getCurrentItemSearch(Component c) {
+        return ((JtracSession) c.getSession()).getItemSearch();
+    }    
     
     /**
      * conditional flip of session if same user id
