@@ -64,10 +64,11 @@ public interface Jtrac extends UserDetailsService {
     //========================================================
     void storeUser(User user);
     void storeUser(User user, String password, boolean sendNotifications);
-    void removeUser(User user);
-    List<User> findAllUsers();
+    void removeUser(User user);    
     User loadUser(long id);
     User loadUser(String loginName);
+    List<User> findAllUsers();
+    List<User> findUsersMatching(String searchText, String searchOn);
     List<User> findUsersForSpace(long spaceId);
     List<UserSpaceRole> findUserRolesForSpace(long spaceId);
     List<User> findUsersWithRoleForSpace(long spaceId, String roleKey);

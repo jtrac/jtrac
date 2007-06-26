@@ -462,6 +462,10 @@ public class JtracImpl implements Jtrac {
         return dao.findAllUsers();
     }
 
+    public List<User> findUsersMatching(String searchText, String searchOn) {
+        return dao.findUsersMatching(searchText, searchOn);
+    }
+    
     public List<User> findUsersForSpace(long spaceId) {
         return dao.findUsersForSpace(spaceId);
     }

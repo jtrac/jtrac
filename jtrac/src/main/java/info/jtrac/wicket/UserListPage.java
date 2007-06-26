@@ -17,12 +17,22 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.User;
+import java.util.Arrays;
+import java.util.List;
+import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
+import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
 
@@ -32,6 +42,9 @@ import org.apache.wicket.model.PropertyModel;
 public class UserListPage extends BasePage {
     
     private long selectedUserId;
+    
+    private String searchText = "";
+    private String searchOn = "name";
     
     public void setSelectedUserId(long selectedUserId) {
         this.selectedUserId = selectedUserId;
@@ -46,10 +59,18 @@ public class UserListPage extends BasePage {
             }            
         });
         
+        add(new SearchForm("form"));
+        
         LoadableDetachableModel userListModel = new LoadableDetachableModel() {
-            protected Object load() {
-                logger.debug("loading user list from database");
-                return getJtrac().findAllUsers();
+            protected Object load() {                
+                if(searchText == null) {
+                    return getJtrac().findAllUsers();
+                } else if(searchText.equals("")) {
+                    // first time page loaded, don't query
+                    return null;
+                } else {
+                    return getJtrac().findUsersMatching(searchText, searchOn);
+                }
             }
         };        
         
@@ -84,6 +105,58 @@ public class UserListPage extends BasePage {
         };
         
         add(listView);
+        
+    }
+    
+    private class SearchForm extends Form {        
+
+        public String getSearchText() {
+            return searchText;
+        }
+
+        public void setSearchText(String searchText) {
+            UserListPage.this.searchText = searchText;
+        }
+        
+        public String getSearchOn() {
+            return searchOn;
+        }
+
+        public void setSearchOn(String searchOn) {
+            UserListPage.this.searchOn = searchOn;
+        }        
+        
+        public SearchForm(String id) {
+            super(id);
+            setModel(new CompoundPropertyModel(this));
+            List<String> searchOnOptions = Arrays.asList(new String[] {"name", "loginName", "email"});
+            DropDownChoice searchOnChoice = new DropDownChoice("searchOn", searchOnOptions, new IChoiceRenderer() {
+                public Object getDisplayValue(Object o) {
+                    String s = (String) o;
+                    if(s.equals("name")) {
+                        s = "userName"; // to match i18 key
+                    }
+                    return localize("user_list." + s);
+                }
+                public String getIdValue(Object o, int i) {
+                    return o.toString();
+                }                
+            });
+            add(searchOnChoice);
+            final TextField searchTextField = new TextField("searchText");
+            searchTextField.setOutputMarkupId(true);
+            add(searchTextField);
+            add(new HeaderContributor(new IHeaderContributor() {
+                public void renderHead(IHeaderResponse response) {
+                    response.renderOnLoadJavascript("document.getElementById('" + searchTextField.getMarkupId() + "').focus()");
+                }
+            }));            
+        }
+        
+        @Override
+        protected void onSubmit() {
+            // setResponsePage(UserListPage.this);
+        }
         
     }
     

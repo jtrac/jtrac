@@ -42,6 +42,10 @@ import org.acegisecurity.userdetails.UserDetails;
  */
 public class User implements UserDetails, Serializable {
     
+    public static final int SEARCH_NAME = 0;
+    public static final int SEARCH_LOGIN_NAME = 1;
+    public static final int SEARCH_EMAIL = 2;
+    
     private long id;
     private Integer type;
     private User parent;

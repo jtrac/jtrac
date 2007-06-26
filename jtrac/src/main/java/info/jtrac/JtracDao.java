@@ -80,6 +80,7 @@ public interface JtracDao {
     User loadUser(long id);
     void removeUser(User user);
     List<User> findAllUsers();
+    List<User> findUsersMatching(String searchText, String searchOn);
     List<User> findUsersByLoginName(String loginName);
     List<User> findUsersByEmail(String email);
     List<User> findUsersForSpace(long spaceId);

@@ -43,6 +43,7 @@ import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -188,6 +189,17 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     
     public List<User> findAllUsers() {
         return getHibernateTemplate().find("from User user order by user.name");
+    }
+    
+    public List<User> findUsersMatching(final String searchText, final String searchOn) {   
+        return (List<User>) getHibernateTemplate().execute(new HibernateCallback() {
+            public Object doInHibernate(Session session) {
+                Criteria criteria = session.createCriteria(User.class);
+                criteria.add(Restrictions.ilike(searchOn, searchText, MatchMode.ANYWHERE));
+                criteria.addOrder(Order.asc("name"));
+                return criteria.list();
+            }
+        });
     }
     
     public List<User> findUsersByLoginName(String loginName) {
