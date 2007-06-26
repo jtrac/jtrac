@@ -32,8 +32,8 @@ public class JtracReloadingWicketFilter extends ReloadingWicketFilter {
     static {
         ReloadingClassLoader.includePattern("info.jtrac.wicket.*");
         ReloadingClassLoader.includePattern("info.jtrac.wicket.yui.*");
-        ReloadingClassLoader.excludePattern("info.jtrac.wicket.JtracApplication");
-        ReloadingClassLoader.excludePattern("info.jtrac.wicket.JtracSession");
+        // ReloadingClassLoader.excludePattern("info.jtrac.wicket.JtracApplication");
+        // ReloadingClassLoader.excludePattern("info.jtrac.wicket.JtracSession");
         ReloadingClassLoader.excludePattern("org.springframework.*");        
     }
     
