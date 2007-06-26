@@ -16,6 +16,8 @@
 
 package info.jtrac.wicket.yui;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.html.IHeaderContributor;
@@ -33,8 +35,19 @@ public class YuiPanel extends Panel {
     
     private WebMarkupContainer dialog;
     
-    public YuiPanel(String id, String heading, Component content) {
-        super(id);        
+    private Map<String, Object> getDefaultConfig() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("constraintoviewport", true);
+        map.put("visible", false);
+        return map;
+    }
+    
+    public YuiPanel(String id, String heading, Component content, Map<String, Object> customConfig) {
+        super(id);
+        final Map<String, Object> config = getDefaultConfig();
+        if(customConfig != null) {
+            config.putAll(customConfig);
+        }
         add(HeaderContributor.forJavaScript("resources/yui/yahoo/yahoo-min.js"));
         add(HeaderContributor.forJavaScript("resources/yui/event/event-min.js"));
         add(HeaderContributor.forJavaScript("resources/yui/dom/dom-min.js"));  
@@ -51,8 +64,8 @@ public class YuiPanel extends Panel {
             public void renderHead(IHeaderResponse response) {
                 String markupId = dialog.getMarkupId();
                 response.renderJavascript("var " + markupId + ";", null);
-                response.renderOnDomReadyJavascript(markupId + " = new YAHOO.widget.Panel('" + markupId + "', " 
-                + " { constraintoviewport : true, visible : false }); " + markupId + ".render()");                
+                response.renderOnDomReadyJavascript(markupId + " = new YAHOO.widget.Panel('" + markupId + "'," 
+                + " " + YuiUtils.getJson(config) + "); " + markupId + ".render()");                
             }
         }));        
     }         

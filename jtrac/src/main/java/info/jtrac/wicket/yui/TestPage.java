@@ -27,7 +27,7 @@ public class TestPage extends WebPage {
     
     public TestPage() {
         TestPanel testPanel = new TestPanel(YuiPanel.CONTENT_ID);
-        YuiPanel panel = new YuiPanel("dialog", "Test Dialog", testPanel);
+        YuiPanel panel = new YuiPanel("dialog", "Test Dialog", testPanel, null);
         add(panel);
         WebMarkupContainer link = new WebMarkupContainer("link");
         link.add(new SimpleAttributeModifier("onClick", panel.getShowScript() + testPanel.getFocusScript()));
