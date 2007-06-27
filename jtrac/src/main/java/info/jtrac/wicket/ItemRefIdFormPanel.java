@@ -34,8 +34,7 @@ import org.apache.wicket.model.PropertyModel;
  * are shown using ajax
  */
 public class ItemRefIdFormPanel extends BasePanel {
-    
-    private ItemSearch itemSearch;
+        
     private TextField refIdField;   
     private YuiPanel yuiPanel;
 
@@ -48,9 +47,8 @@ public class ItemRefIdFormPanel extends BasePanel {
         return "document.getElementById('" + refIdField.getMarkupId() + "').focus();";
     }    
     
-    public ItemRefIdFormPanel(String id, ItemSearch itemSearch) {
-        super(id);
-        this.itemSearch = itemSearch;
+    public ItemRefIdFormPanel(String id) {
+        super(id);        
         add(new ItemRefIdForm());        
     }
     
@@ -102,10 +100,9 @@ public class ItemRefIdFormPanel extends BasePanel {
                         refIdField.error(localize("item_search_form.error.refId.notFound"));                
                         return;       
                     }
-                    if(itemSearch.getRelatingItemRefId() == null) {
-                        itemSearch = null; // disable back link for item view
-                    } else {
-                        setCurrentItemSearch(itemSearch);
+                    ItemSearch itemSearch = getCurrentItemSearch();
+                    if(itemSearch == null || itemSearch.getRelatingItemRefId() == null) {
+                        setCurrentItemSearch(null); // disable back link for item view
                     }
                     setResponsePage(ItemViewPage.class, new PageParameters("0=" + refId));  
                 }
