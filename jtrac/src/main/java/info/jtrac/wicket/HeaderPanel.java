@@ -19,6 +19,7 @@ package info.jtrac.wicket;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
+import info.jtrac.wicket.search.FilterPage;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.Cookie;
@@ -78,7 +79,7 @@ public class HeaderPanel extends BasePanel {
             
             add(new Link("search") {
                 public void onClick() {
-                    setResponsePage(ItemSearchFormPage.class);
+                    setResponsePage(FilterPage.class);
                 }            
             });            
         }

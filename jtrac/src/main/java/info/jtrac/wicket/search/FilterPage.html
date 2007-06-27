@@ -1,0 +1,22 @@
+<html>
+    <body>        
+        <wicket:extend>
+            <form wicket:id="form">
+                <select wicket:id="columnHeading"/>
+                <input type="button" value="+" wicket:id="add"/>
+                <table class="jtrac">
+                    <tr>
+                        <th>Column</th>                    
+                        <th></th>
+                    </tr>
+                    <tbody id="container">
+                        <tr wicket:id="filters">
+                            <td wicket:id="columnHeading"></td>
+                            <td><input type="button" value="X" wicket:id="remove"/></td>                        
+                        </tr>
+                    </tbody>
+                </table>
+            </form>     
+        </wicket:extend>
+    </body>
+</html>

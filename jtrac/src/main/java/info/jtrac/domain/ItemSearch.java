@@ -17,6 +17,7 @@
 package info.jtrac.domain;
 
 import static info.jtrac.Constants.*;
+import info.jtrac.domain.ColumnHeading;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -382,37 +383,6 @@ public class ItemSearch implements Serializable {
     public void setStatus(int i) {
         statusList = new ArrayList<Integer>();
         statusList.add(i);
-    }
-    
-    /**
-     * used to render columns in the search results table
-     */
-    public class ColumnHeading implements Serializable {                        
-        
-        private Field field;
-        private String name;
-        
-        public ColumnHeading(String name) {
-            this.name = name;
-        }
-        
-        public ColumnHeading(Field field) {
-            this.field = field;
-            this.name = field.getName().getText();
-        }
-
-        public Field getField() {
-            return field;
-        }                        
-
-        public String getName() {
-            return name;
-        }
-        
-        public boolean isField() {
-            return field != null;
-        }                
-        
     }
     
     public List<ColumnHeading> getColumnHeadings() {

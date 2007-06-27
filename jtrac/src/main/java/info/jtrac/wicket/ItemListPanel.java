@@ -17,9 +17,9 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.AbstractItem;
+import info.jtrac.domain.ColumnHeading;
 import info.jtrac.domain.History;
 import info.jtrac.domain.ItemSearch;
-import info.jtrac.domain.ItemSearch.ColumnHeading;
 import info.jtrac.util.DateUtils;
 import info.jtrac.util.ExcelUtils;
 import java.io.IOException;
