@@ -17,7 +17,6 @@
 package info.jtrac.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FilterCriteria implements Serializable {
@@ -44,51 +43,12 @@ public class FilterCriteria implements Serializable {
     
     private ColumnHeading columnHeading;
     private Expression expression;
+    private List values;
+    private Object value;    
     
     public FilterCriteria(ColumnHeading columnHeading) {
         this.columnHeading = columnHeading;
     }
-    
-    public List<Expression> getExpressionList() {
-        List<Expression> list = new ArrayList<Expression>();
-        if(columnHeading.isField()) {
-            switch(columnHeading.getField().getName().getType()) {
-                case 1:
-                case 2:
-                case 3:
-                    list.add(Expression.IN);
-                    list.add(Expression.NOT_IN);
-                    break; // drop down list
-                case 4: // decimal number
-                    list.add(Expression.EQ);
-                    list.add(Expression.NOT_EQ);
-                case 6: // date
-                    list.add(Expression.GE);
-                    list.add(Expression.LE);
-                    break;
-                case 5: // free text
-                    list.add(Expression.CONTAINS);
-                    break;
-                default: 
-                    throw new RuntimeException("Unknown Column Heading " + columnHeading.getName());
-            }
-        } else {
-            if(columnHeading.getName().equals(ColumnHeading.ASSIGNED_TO)
-                || columnHeading.getName().equals(ColumnHeading.LOGGED_BY)
-                || columnHeading.getName().equals(ColumnHeading.STATUS)) {
-                list.add(Expression.IN);
-                list.add(Expression.NOT_IN);                
-            } else if(columnHeading.getName().equals(ColumnHeading.TIME_STAMP)) {
-                list.add(Expression.GE);
-                list.add(Expression.LE);                
-            } else {
-                throw new RuntimeException("Unknown Column Heading " + columnHeading.getName());
-            }                        
-        }
-        setExpression(list.get(0));
-        return list;
-    }
-    
     
     public ColumnHeading getColumnHeading() {
         return columnHeading;
@@ -104,6 +64,22 @@ public class FilterCriteria implements Serializable {
 
     public void setExpression(FilterCriteria.Expression expression) {
         this.expression = expression;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
+    }
+
+    public List getValues() {
+        return values;
+    }
+
+    public void setValues(List values) {
+        this.values = values;
     }
     
 }

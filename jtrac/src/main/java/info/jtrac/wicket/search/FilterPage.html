@@ -2,9 +2,14 @@
     <body>        
         <wicket:extend>
             <form wicket:id="form">
-                <select wicket:id="columnHeading"/>
-                <select wicket:id="expression"/>
-                <input type="button" value="+" wicket:id="add"/>
+                <table>
+                    <tr valign="top">
+                        <td><select wicket:id="columnHeading"/></td>
+                        <td><select wicket:id="expression"/></td>
+                        <td><span wicket:id="fragParent"></span></td>
+                        <td><input type="button" value="+" wicket:id="add"/></td>
+                    </tr>
+                </table>                
                 <table class="jtrac">
                     <tr>
                         <th>Column</th>                    
@@ -17,7 +22,9 @@
                         </tr>
                     </tbody>
                 </table>
-            </form>     
-        </wicket:extend>
+            </form>
+            <wicket:fragment wicket:id="multiSelect"><span wicket:id="values"></span></wicket:fragment>
+            <wicket:fragment wicket:id="textField"><input wicket:id="value"/></wicket:fragment>             
+        </wicket:extend>        
     </body>
 </html>
