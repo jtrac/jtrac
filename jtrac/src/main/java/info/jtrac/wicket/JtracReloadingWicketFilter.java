@@ -30,11 +30,11 @@ public class JtracReloadingWicketFilter extends ReloadingWicketFilter {
     private final Log logger = LogFactory.getLog(getClass());
     
     static {
-        ReloadingClassLoader.includePattern("info.jtrac.wicket.*");
-        ReloadingClassLoader.includePattern("info.jtrac.wicket.yui.*");
-        ReloadingClassLoader.excludePattern("info.jtrac.wicket.JtracApplication");
-        ReloadingClassLoader.excludePattern("info.jtrac.wicket.JtracSession");
-        ReloadingClassLoader.excludePattern("org.springframework.*");        
+        ReloadingClassLoader.includePattern("info.jtrac.wicket.*");        
+        // ReloadingClassLoader.excludePattern("info.jtrac.wicket.JtracApplication");
+        // ReloadingClassLoader.excludePattern("info.jtrac.wicket.JtracSession");
+        ReloadingClassLoader.excludePattern("org.springframework.*");
+        ReloadingClassLoader.excludePattern("org.acegisecurity.*");
     }
     
     public JtracReloadingWicketFilter() {
