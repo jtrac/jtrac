@@ -17,8 +17,6 @@
 package info.jtrac.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FilterCriteria implements Serializable {        
     
@@ -26,23 +24,7 @@ public class FilterCriteria implements Serializable {
     
     public FilterCriteria(ColumnHeading columnHeading) {
         this.columnHeading = columnHeading;
-    }
-        
-    public static List<ColumnHeading> getColumnHeadings(Space s) {
-        List<ColumnHeading> list = new ArrayList<ColumnHeading>();
-        list.add(new ColumnHeading("id"));
-        list.add(new ColumnHeading("summary"));        
-        list.add(new ColumnHeading("detail"));        
-        list.add(new ColumnHeading("loggedBy"));
-        list.add(new ColumnHeading("status"));
-        list.add(new ColumnHeading("assignedTo"));
-        for(Field f : s.getMetadata().getFieldList()) {
-            list.add(new ColumnHeading(f));
-        }
-        list.add(new ColumnHeading("timeStamp"));
-        return list;        
-    }            
-    
+    }          
 
     public ColumnHeading getColumnHeading() {
         return columnHeading;

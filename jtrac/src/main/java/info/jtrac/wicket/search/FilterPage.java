@@ -17,7 +17,6 @@
 package info.jtrac.wicket.search;
 
 import info.jtrac.domain.ColumnHeading;
-import info.jtrac.domain.Field;
 import info.jtrac.domain.FilterCriteria;
 import info.jtrac.wicket.*;
 import java.util.ArrayList;
@@ -47,10 +46,10 @@ public class FilterPage extends BasePage {
         final Form form = new Form("form");        
         add(form);
         form.setModel(new CompoundPropertyModel(filterCriteria));
-        List<ColumnHeading> columnHeadings = filterCriteria.getColumnHeadings(getCurrentSpace());        
+        List<ColumnHeading> columnHeadings = ColumnHeading.getColumnHeadings(getCurrentSpace(), this);        
         DropDownChoice columnChoice = new DropDownChoice("columnHeading", columnHeadings, new IChoiceRenderer() {
             public Object getDisplayValue(Object o) {
-                return ((ColumnHeading) o).getName();
+                return ((ColumnHeading) o).getLabel();
             }
             public String getIdValue(Object o, int i) {
                 return ((ColumnHeading) o).getName();
@@ -102,7 +101,7 @@ public class FilterPage extends BasePage {
         
         protected void populateItem(final Item item) {
             FilterCriteria filterCriteria = map.get(item.getModelObject());
-            item.add(new Label("columnHeading", filterCriteria.getColumnHeading().getName()));
+            item.add(new Label("columnHeading", filterCriteria.getColumnHeading().getLabel()));
             item.add((new AjaxButton("remove") {
                 protected void onSubmit(AjaxRequestTarget target, Form form) {
                     AjaxListView.this.removeItem(item);                
