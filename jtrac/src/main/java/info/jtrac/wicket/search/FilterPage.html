@@ -13,11 +13,18 @@
                 <table class="jtrac">
                     <tr>
                         <th>Column</th>                    
-                        <th></th>
+                        <th>Expression</th>
+                        <th>Values</th>
+                        <th>Remove</th>
                     </tr>
                     <tbody id="container">
                         <tr wicket:id="filters">
                             <td wicket:id="columnHeading"></td>
+                            <td wicket:id="expression"></td>
+                            <td>
+                                <span wicket:id="values"><span wicket:id="value"></span><br/></span>
+                                <span wicket:id="value"></span>
+                            </td>
                             <td><input type="button" value="X" wicket:id="remove"/></td>                        
                         </tr>
                     </tbody>

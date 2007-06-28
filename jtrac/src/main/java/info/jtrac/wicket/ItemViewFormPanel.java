@@ -144,7 +144,7 @@ public class ItemViewFormPanel extends BasePanel {
                 public String getIdValue(Object o, int i) {
                     return ((ItemUser) o).getUser().getId() + "";
                 }
-            });
+            }, true);
             add(itemUsers);
             // attachment ======================================================
             fileUploadField = new FileUploadField("file");

@@ -31,14 +31,25 @@ import org.apache.wicket.util.string.Strings;
  */
 public class JtracCheckBoxMultipleChoice extends ListMultipleChoice {
     
+    private boolean isForSet;
+    
     public JtracCheckBoxMultipleChoice(String id, List choices, IChoiceRenderer renderer) {
         super(id, choices, renderer);
+    }     
+    
+    public JtracCheckBoxMultipleChoice(String id, List choices, IChoiceRenderer renderer, boolean isForSet) {
+        super(id, choices, renderer);
+        this.isForSet = isForSet;
     }     
     
     @Override
     protected java.lang.Object convertValue(String[] ids) {
         List list = (List) super.convertValue(ids);
-        return new HashSet(list);
+        if(isForSet) {
+            return new HashSet(list);
+        } else {
+            return list;
+        }
     }
     
     /**

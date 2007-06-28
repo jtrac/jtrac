@@ -184,7 +184,7 @@ public class ItemFormPage extends BasePage {
                     public String getIdValue(Object o, int i) {
                         return ((ItemUser) o).getUser().getId() + "";
                     }               
-                });
+                }, true);
                 hideNotifyList.add(itemUsers);
                 // attachment ==================================================                                                
                 hideNotifyList.add(fileUploadField);

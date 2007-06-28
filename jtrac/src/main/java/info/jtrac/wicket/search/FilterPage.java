@@ -29,18 +29,20 @@ import java.util.Map;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 
 public class FilterPage extends BasePage {
     
@@ -97,9 +99,6 @@ public class FilterPage extends BasePage {
         final AjaxListView listView = new AjaxListView("filters");
         form.add(new AjaxButton("add") {
             protected void onSubmit(AjaxRequestTarget target, Form unused) {
-                if(filterCriteria.getColumnHeading() == null) {
-                    return;
-                }
                 Item newItem = listView.addItem();                
                 target.prependJavascript("var myTr = document.createElement('tr');"                        
                         + " myTr.id = '" + newItem.getMarkupId() + "';"
@@ -190,7 +189,9 @@ public class FilterPage extends BasePage {
                 throw new RuntimeException("Unknown Column Heading " + ch.getName());
             }                        
         }
-        filterCriteria.setExpression(expressionChoices.get(0)); 
+        filterCriteria.setExpression(expressionChoices.get(0));
+        filterCriteria.setValue(null);
+        filterCriteria.setValues(null);
         fragment.setOutputMarkupId(true);
         return fragment;
     }
@@ -203,8 +204,8 @@ public class FilterPage extends BasePage {
         
         public Item addItem() {
             String uniqueId = newChildId();
-            Item item = newItem(uniqueId, map.size(), new Model(uniqueId));
-            map.put(uniqueId, new FilterCriteria(filterCriteria.getColumnHeading()));
+            Item item = newItem(uniqueId, map.size(), new Model(uniqueId));            
+            map.put(uniqueId, filterCriteria);
             populateItem(item);
             add(item);
             return item;
@@ -223,8 +224,24 @@ public class FilterPage extends BasePage {
         }
         
         protected void populateItem(final Item item) {
-            FilterCriteria filterCriteria = map.get(item.getModelObject());
-            item.add(new Label("columnHeading", filterCriteria.getColumnHeading().getLabel()));
+            FilterCriteria fc = map.get(item.getModelObject());
+            final ColumnHeading ch = fc.getColumnHeading();
+            item.add(new Label("columnHeading", ch.getLabel()));
+            item.add(new Label("expression", localize("item_filter." + fc.getExpression().getKey())));
+            item.add(new ListView("values", fc.getValues()) {
+                protected void populateItem(ListItem item) {
+                    Object o = item.getModelObject();
+                    if(o instanceof User) {
+                        item.add(new Label("value", new PropertyModel(o, "name")));
+                    } else if(ch.getName().equals(ColumnHeading.STATUS)) {
+                        String label = getCurrentSpace().getMetadata().getStatusValue((Integer) o);
+                        item.add(new Label("value", label));
+                    } else {
+                        item.add(new Label("value", ch.getField().getOptions().get(o)));
+                    }                    
+                }
+            });
+            item.add(new Label("value", (String) fc.getValue()));
             item.add((new AjaxButton("remove") {
                 protected void onSubmit(AjaxRequestTarget target, Form form) {
                     AjaxListView.this.removeItem(item);                

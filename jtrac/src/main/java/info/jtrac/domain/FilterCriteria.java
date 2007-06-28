@@ -44,7 +44,7 @@ public class FilterCriteria implements Serializable {
     private ColumnHeading columnHeading;
     private Expression expression;
     private List values;
-    private Object value;    
+    private Object value;
     
     public FilterCriteria(ColumnHeading columnHeading) {
         this.columnHeading = columnHeading;
