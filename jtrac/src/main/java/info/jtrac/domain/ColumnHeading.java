@@ -61,12 +61,12 @@ public class ColumnHeading implements Serializable {
     
     public static List<ColumnHeading> getColumnHeadings(Space s, Component c) {
         List<ColumnHeading> list = new ArrayList<ColumnHeading>();
-        list.add(new ColumnHeading(ID, c));
-        list.add(new ColumnHeading(SUMMARY, c));        
-        list.add(new ColumnHeading(DETAIL, c));        
-        list.add(new ColumnHeading(LOGGED_BY, c));
+        // list.add(new ColumnHeading(ID, c));
+        // list.add(new ColumnHeading(SUMMARY, c));        
+        // list.add(new ColumnHeading(DETAIL, c));                
         list.add(new ColumnHeading(STATUS, c));
         list.add(new ColumnHeading(ASSIGNED_TO, c));
+        list.add(new ColumnHeading(LOGGED_BY, c));
         for(Field f : s.getMetadata().getFieldList()) {
             list.add(new ColumnHeading(f));
         }

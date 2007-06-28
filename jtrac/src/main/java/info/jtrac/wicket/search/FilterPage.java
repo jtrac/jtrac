@@ -18,6 +18,7 @@ package info.jtrac.wicket.search;
 
 import info.jtrac.domain.ColumnHeading;
 import info.jtrac.domain.FilterCriteria;
+import info.jtrac.domain.FilterCriteria.Expression;
 import info.jtrac.wicket.*;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -46,6 +48,7 @@ public class FilterPage extends BasePage {
         final Form form = new Form("form");        
         add(form);
         form.setModel(new CompoundPropertyModel(filterCriteria));
+        // column ==============================================================
         List<ColumnHeading> columnHeadings = ColumnHeading.getColumnHeadings(getCurrentSpace(), this);        
         DropDownChoice columnChoice = new DropDownChoice("columnHeading", columnHeadings, new IChoiceRenderer() {
             public Object getDisplayValue(Object o) {
@@ -54,8 +57,31 @@ public class FilterPage extends BasePage {
             public String getIdValue(Object o, int i) {
                 return ((ColumnHeading) o).getName();
             }
-        });         
-        form.add(columnChoice);
+        });        
+        form.add(columnChoice);        
+        filterCriteria.setColumnHeading(columnHeadings.get(0));
+        // expression ==========================================================
+        final DropDownChoice expressionChoice = new DropDownChoice("expression", filterCriteria.getExpressionList(), new IChoiceRenderer() {
+            public Object getDisplayValue(Object o) {
+                String key = ((Expression) o).getKey();
+                return localize("item_filter." + key);
+            }
+            public String getIdValue(Object o, int i) {
+                return ((Expression) o).getKey();
+            }            
+        });
+        expressionChoice.setOutputMarkupId(true);
+        form.add(expressionChoice);
+        // ajax ================================================================
+        columnChoice.add(new AjaxFormComponentUpdatingBehavior("onChange") {
+            protected void onUpdate(AjaxRequestTarget target) {
+                ColumnHeading ch = (ColumnHeading) getFormComponent().getConvertedInput();
+                filterCriteria.setColumnHeading(ch);
+                expressionChoice.setChoices(filterCriteria.getExpressionList());
+                target.addComponent(expressionChoice);
+            }
+        });
+        // list ================================================================
         final AjaxListView listView = new AjaxListView("filters");
         form.add(new AjaxButton("add") {
             protected void onSubmit(AjaxRequestTarget target, Form unused) {

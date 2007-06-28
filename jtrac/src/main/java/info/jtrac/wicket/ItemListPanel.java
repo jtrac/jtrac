@@ -249,7 +249,7 @@ public class ItemListPanel extends BasePanel {
                         } else {
                             // TODO optimize if-then for performance
                             String name = ch.getName();
-                            if(name.equals("id")) {
+                            if(name.equals(ColumnHeading.ID)) {
                                 String refId = item.getRefId();
                                 Fragment refIdFrag = new Fragment("column", "refId");
                                 listItem.add(refIdFrag);
@@ -267,9 +267,9 @@ public class ItemListPanel extends BasePanel {
                                     refIdFrag.add(new WebMarkupContainer("index").setVisible(false));
                                 }                                                                
                                 return;
-                            } else if(name.equals("summary")) {
+                            } else if(name.equals(ColumnHeading.SUMMARY)) {
                                 value = new PropertyModel(item, "summary");
-                            } else if(name.equals("detail")) {                                
+                            } else if(name.equals(ColumnHeading.DETAIL)) {                                
                                 if(itemSearch.isShowHistory()) {
                                     Fragment detailFrag = new Fragment("column", "detail");
                                     final History history = (History) item;
@@ -284,13 +284,13 @@ public class ItemListPanel extends BasePanel {
                                 } else {                                    
                                     value = new PropertyModel(item, "detail");                                    
                                 }                               
-                            } else if(name.equals("loggedBy")) {
+                            } else if(name.equals(ColumnHeading.LOGGED_BY)) {
                                 value = new PropertyModel(item, "loggedBy.name");
-                            } else if(name.equals("status")) {
+                            } else if(name.equals(ColumnHeading.STATUS)) {
                                 value = new PropertyModel(item, "statusValue");
-                            } else if(name.equals("assignedTo")) {
+                            } else if(name.equals(ColumnHeading.ASSIGNED_TO)) {
                                 value = new PropertyModel(item, "assignedTo.name");
-                            } else if(name.equals("timeStamp")) {
+                            } else if(name.equals(ColumnHeading.TIME_STAMP)) {
                                 value = new Model(DateUtils.formatTimeStamp(item.getTimeStamp()));
                             } else {
                                 throw new RuntimeException("Unexpected name: '" + name + "'");
