@@ -33,8 +33,9 @@ public class JtracReloadingWicketFilter extends ReloadingWicketFilter {
         ReloadingClassLoader.includePattern("info.jtrac.wicket.*");        
         ReloadingClassLoader.excludePattern("info.jtrac.wicket.JtracApplication");
         ReloadingClassLoader.excludePattern("info.jtrac.wicket.JtracSession");
-        ReloadingClassLoader.excludePattern("org.springframework.*");
-        ReloadingClassLoader.excludePattern("org.acegisecurity.*");
+        ReloadingClassLoader.excludePattern("info.jtrac.wicket.DashboardPage");
+        // ReloadingClassLoader.excludePattern("org.springframework.*");
+        // ReloadingClassLoader.excludePattern("org.acegisecurity.*");
     }
     
     public JtracReloadingWicketFilter() {
