@@ -99,6 +99,10 @@ public class FilterPage extends BasePage {
         final AjaxListView listView = new AjaxListView("filters");
         form.add(new AjaxButton("add") {
             protected void onSubmit(AjaxRequestTarget target, Form unused) {
+                if((filterCriteria.getValues() == null || filterCriteria.getValues().size() == 0) 
+                    && filterCriteria.getValue() == null) {
+                    return;
+                }
                 Item newItem = listView.addItem();                
                 target.prependJavascript("var myTr = document.createElement('tr');"                        
                         + " myTr.id = '" + newItem.getMarkupId() + "';"
@@ -112,7 +116,7 @@ public class FilterPage extends BasePage {
     public Fragment initChoices() {
         expressionChoices = new ArrayList<Expression>();
         ColumnHeading ch = filterCriteria.getColumnHeading();
-        Fragment fragment = null;
+        Fragment fragment = null;        
         if(ch.isField()) {
             switch(ch.getField().getName().getType()) {
                 case 1:
@@ -184,7 +188,7 @@ public class FilterPage extends BasePage {
                 expressionChoices.add(Expression.GE);
                 expressionChoices.add(Expression.LE);
                 fragment = new Fragment("fragParent", "textField");
-                fragment.add(new TextField("value"));                 
+                fragment.add(new TextField("value", String.class));                 
             } else {
                 throw new RuntimeException("Unknown Column Heading " + ch.getName());
             }                        

@@ -6,7 +6,7 @@
                     <tr valign="top">
                         <td><select wicket:id="columnHeading"/></td>
                         <td><select wicket:id="expression"/></td>
-                        <td><span wicket:id="fragParent"></span></td>
+                        <td wicket:id="fragParent"></td>
                         <td><input type="button" value="+" wicket:id="add"/></td>
                     </tr>
                 </table>                
@@ -15,13 +15,13 @@
                         <th>Column</th>                    
                         <th>Expression</th>
                         <th>Values</th>
-                        <th>Remove</th>
+                        <td></td>
                     </tr>
                     <tbody id="container">
                         <tr wicket:id="filters">
-                            <td wicket:id="columnHeading"></td>
-                            <td wicket:id="expression"></td>
-                            <td>
+                            <td wicket:id="columnHeading" class="selected" align="right"></td>
+                            <td wicket:id="expression" align="center"></td>
+                            <td class="alt">
                                 <span wicket:id="values"><span wicket:id="value"></span><br/></span>
                                 <span wicket:id="value"></span>
                             </td>
