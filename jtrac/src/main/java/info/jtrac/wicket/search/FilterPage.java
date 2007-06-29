@@ -20,8 +20,11 @@ import info.jtrac.domain.ColumnHeading;
 import info.jtrac.domain.FilterCriteria;
 import info.jtrac.domain.FilterCriteria.Expression;
 import info.jtrac.domain.User;
+import info.jtrac.util.DateUtils;
 import info.jtrac.wicket.*;
+import info.jtrac.wicket.yui.YuiCalendar;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -39,7 +42,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.RefreshingView;
-import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.BoundCompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -52,10 +55,13 @@ public class FilterPage extends BasePage {
     
     List<Expression> expressionChoices;            
     
+    BoundCompoundPropertyModel model;
+    
     public FilterPage() {
         final Form form = new Form("form");        
         add(form);
-        form.setModel(new CompoundPropertyModel(filterCriteria));       
+        model = new BoundCompoundPropertyModel(filterCriteria);
+        form.setModel(model);       
         // column ==============================================================
         List<ColumnHeading> columnHeadings = ColumnHeading.getColumnHeadings(getCurrentSpace(), this);        
         DropDownChoice columnChoice = new DropDownChoice("columnHeading", columnHeadings, new IChoiceRenderer() {
@@ -98,6 +104,11 @@ public class FilterPage extends BasePage {
         // list ================================================================
         final AjaxListView listView = new AjaxListView("filters");
         form.add(new AjaxButton("add") {
+            @Override
+            protected void onError(AjaxRequestTarget target, Form unused) {
+                logger.debug("ajax form validation error");
+                return;
+            }           
             protected void onSubmit(AjaxRequestTarget target, Form unused) {
                 if((filterCriteria.getValues() == null || filterCriteria.getValues().size() == 0) 
                     && filterCriteria.getValue() == null) {
@@ -141,13 +152,13 @@ public class FilterPage extends BasePage {
                     expressionChoices.add(Expression.GE);
                     expressionChoices.add(Expression.LE);
                     fragment = new Fragment("fragParent", "textField");
-                    fragment.add(new TextField("value"));
+                    fragment.add(new TextField("value", Double.class));
                     break;
                 case 6: // date
                     expressionChoices.add(Expression.GE);
                     expressionChoices.add(Expression.LE);
-                    fragment = new Fragment("fragParent", "textField");
-                    fragment.add(new TextField("value"));                    
+                    fragment = new Fragment("fragParent", "dateField");
+                    fragment.add(new YuiCalendar("value", model, "value", false, ch.getLabel()));                    
                     break;
                 case 5: // free text
                     expressionChoices.add(Expression.CONTAINS);
@@ -187,8 +198,8 @@ public class FilterPage extends BasePage {
             } else if(ch.getName().equals(ColumnHeading.TIME_STAMP)) {
                 expressionChoices.add(Expression.GE);
                 expressionChoices.add(Expression.LE);
-                fragment = new Fragment("fragParent", "textField");
-                fragment.add(new TextField("value", String.class));                 
+                fragment = new Fragment("fragParent", "dateField");
+                fragment.add(new YuiCalendar("value", model, "value", false, ch.getLabel()));                 
             } else {
                 throw new RuntimeException("Unknown Column Heading " + ch.getName());
             }                        
@@ -245,7 +256,11 @@ public class FilterPage extends BasePage {
                     }                    
                 }
             });
-            item.add(new Label("value", (String) fc.getValue()));
+            if(fc.getValue() != null && fc.getValue() instanceof Date) {
+                item.add(new Label("value", DateUtils.format((Date) fc.getValue())));
+            } else {
+                item.add(new Label("value", new PropertyModel(fc, "value")));
+            }            
             item.add((new AjaxButton("remove") {
                 protected void onSubmit(AjaxRequestTarget target, Form form) {
                     AjaxListView.this.removeItem(item);                

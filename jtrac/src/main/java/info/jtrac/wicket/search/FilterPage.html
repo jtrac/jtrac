@@ -12,14 +12,14 @@
                 </table>                
                 <table class="jtrac">
                     <tr>
-                        <th>Column</th>                    
-                        <th>Expression</th>
-                        <th>Values</th>
+                        <th><wicket:message key="item_filter.column"/></th>                    
+                        <th><wicket:message key="item_filter.expression"/></th>
+                        <th><wicket:message key="item_filter.values"/></th>
                         <td></td>
                     </tr>
                     <tbody id="container">
                         <tr wicket:id="filters">
-                            <td wicket:id="columnHeading" class="selected" align="right"></td>
+                            <td class="selected" align="right"><b wicket:id="columnHeading"></b></td>
                             <td wicket:id="expression" align="center"></td>
                             <td class="alt">
                                 <span wicket:id="values"><span wicket:id="value"></span><br/></span>
@@ -31,7 +31,8 @@
                 </table>
             </form>
             <wicket:fragment wicket:id="multiSelect"><span wicket:id="values"></span></wicket:fragment>
-            <wicket:fragment wicket:id="textField"><input wicket:id="value"/></wicket:fragment>             
+            <wicket:fragment wicket:id="textField"><input wicket:id="value"/></wicket:fragment>
+            <wicket:fragment wicket:id="dateField"><span wicket:id="value"></span></wicket:fragment>
         </wicket:extend>        
     </body>
 </html>
