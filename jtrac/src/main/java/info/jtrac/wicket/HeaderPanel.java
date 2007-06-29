@@ -79,7 +79,7 @@ public class HeaderPanel extends BasePanel {
             
             add(new Link("search") {
                 public void onClick() {
-                    setResponsePage(FilterPage.class);
+                    setResponsePage(ItemSearchFormPage.class);
                 }            
             });            
         }

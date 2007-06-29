@@ -26,12 +26,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 public class ItemSearchFormPage extends BasePage {        
         
     public ItemSearchFormPage() {        
-        Space space = getCurrentSpace();
-        if (space != null) {
-            add(new ItemSearchFormPanel("panel", space));
-        } else {
-            add(new ItemSearchFormPanel("panel", getPrincipal()));
-        }
+        add(new ItemSearchFormPanel("panel"));
         add(new WebMarkupContainer("relate").setVisible(false));
     }       
     

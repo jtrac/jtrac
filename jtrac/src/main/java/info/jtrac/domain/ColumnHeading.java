@@ -61,9 +61,9 @@ public class ColumnHeading implements Serializable {
     
     public static List<ColumnHeading> getColumnHeadings(Space s, Component c) {
         List<ColumnHeading> list = new ArrayList<ColumnHeading>();
-        // list.add(new ColumnHeading(ID, c));
-        // list.add(new ColumnHeading(SUMMARY, c));        
-        // list.add(new ColumnHeading(DETAIL, c));                
+        list.add(new ColumnHeading(ID, c));
+        list.add(new ColumnHeading(SUMMARY, c));        
+        list.add(new ColumnHeading(DETAIL, c));                
         list.add(new ColumnHeading(STATUS, c));
         list.add(new ColumnHeading(ASSIGNED_TO, c));
         list.add(new ColumnHeading(LOGGED_BY, c));
@@ -88,6 +88,23 @@ public class ColumnHeading implements Serializable {
 
     public String getLabel() {
         return label;
+    }
+    
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ColumnHeading)) {
+            return false;
+        }
+        final ColumnHeading ch = (ColumnHeading) o;
+        return ch.getName().equals(name);
     }
     
 }

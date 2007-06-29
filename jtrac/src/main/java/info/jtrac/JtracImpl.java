@@ -331,9 +331,9 @@ public class JtracImpl implements Jtrac {
     }
 
     public List<Item> findItems(ItemSearch itemSearch) {
-        String summary = itemSearch.getSummary();
-        if (summary != null) {
-            List<Long> hits = indexSearcher.findItemIdsContainingText(summary);
+        String searchText = itemSearch.getSearchText();
+        if (searchText != null) {
+            List<Long> hits = indexSearcher.findItemIdsContainingText(searchText);
             if (hits.size() == 0) {
                 itemSearch.setResultCount(0);
                 return Collections.<Item>emptyList();

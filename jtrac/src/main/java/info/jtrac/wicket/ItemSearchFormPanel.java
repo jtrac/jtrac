@@ -16,452 +16,297 @@
 
 package info.jtrac.wicket;
 
-import info.jtrac.domain.Field;
+import info.jtrac.domain.ColumnHeading;
+import info.jtrac.domain.FilterCriteria;
+import info.jtrac.domain.FilterCriteria.Expression;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
-import info.jtrac.util.UserUtils;
+import info.jtrac.util.DateUtils;
 import info.jtrac.wicket.yui.YuiCalendar;
-import info.jtrac.wicket.yui.YuiPanel;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
-import org.apache.wicket.behavior.AbstractBehavior;
-import org.apache.wicket.behavior.HeaderContributor;
-import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.IHeaderContributor;
-import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
-import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.model.BoundCompoundPropertyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.validation.IValidatable;
-import org.apache.wicket.validation.validator.AbstractValidator;
 
 /**
  * item search form panel
  */
 public class ItemSearchFormPanel extends BasePanel {        
             
+    private ItemSearch itemSearch;
     
-    public ItemSearchFormPanel(String id, Space space) {
-        super(id);        
-        add(new ItemSearchForm("form", space));
-    }       
+    private FilterCriteria filterCriteria = new FilterCriteria(null);
+    
+    private List<Expression> expressionChoices;
+    
+    private BoundCompoundPropertyModel model;
     
     public ItemSearchFormPanel(String id, User user) {
-        super(id);        
-        add(new ItemSearchForm("form", user));        
-    }      
+        super(id);
+        this.itemSearch = new ItemSearch(user);
+        addComponents();        
+    }
     
-    public ItemSearchFormPanel(String id, ItemSearch itemSearch) {  
-        super(id);                
-        add(new ItemSearchForm("form", itemSearch));        
+    public ItemSearchFormPanel(String id) {
+        super(id);
+        Space s = getCurrentSpace();
+        if(s != null) {
+            this.itemSearch = new ItemSearch(s, this);
+        } else {
+            this.itemSearch = new ItemSearch(getPrincipal());
+        }        
+        addComponents();        
     }    
     
-    /**
-     * custom behavior that highlights the search form fields
-     * that user has filled / modifiedf
-     */
-    private class SelectedHighlighter extends AbstractBehavior {
+    public ItemSearchFormPanel(String id, ItemSearch itemSearch) {
+        super(id);
+        this.itemSearch = itemSearch;
+        addComponents();        
+    }    
     
-        private FormComponent fc;        
-        
-        public SelectedHighlighter(FormComponent fc) {            
-            this.fc = fc;
-        }        
-        
-        @Override
-        public void onComponentTag(Component c, ComponentTag tag) {
-            Object o = fc.getModelObject();
-            if(o == null) {
+    private void addComponents() {
+        final Form form = new Form("form");
+        add(form);
+        model = new BoundCompoundPropertyModel(filterCriteria);
+        form.setModel(model);
+        // column ==============================================================
+        List<ColumnHeading> columnChoiceList = itemSearch.getSearchColumnHeadings();
+        DropDownChoice columnChoice = new DropDownChoice("columnHeading", columnChoiceList, new IChoiceRenderer() {
+            public Object getDisplayValue(Object o) {
+                return ((ColumnHeading) o).getLabel();
+            }
+            public String getIdValue(Object o, int i) {
+                return ((ColumnHeading) o).getName();
+            }
+        });
+        form.add(columnChoice);
+        filterCriteria.setColumnHeading(columnChoiceList.get(0));
+        // values ==============================================================
+        final Fragment frag = initChoices();
+        form.add(frag);
+        // expression ==========================================================
+        final DropDownChoice expressionChoice = new DropDownChoice("expression", expressionChoices, new IChoiceRenderer() {
+            public Object getDisplayValue(Object o) {
+                String key = ((Expression) o).getKey();
+                return localize("item_filter." + key);
+            }
+            public String getIdValue(Object o, int i) {
+                return ((Expression) o).getKey();
+            }
+        });
+        expressionChoice.setOutputMarkupId(true);
+        form.add(expressionChoice);
+        // ajax ================================================================
+        columnChoice.add(new AjaxFormComponentUpdatingBehavior("onChange") {
+            protected void onUpdate(AjaxRequestTarget target) {
+                ColumnHeading ch = (ColumnHeading) getFormComponent().getConvertedInput();
+                filterCriteria.setColumnHeading(ch);
+                Fragment temp = initChoices();
+                form.replace(temp);
+                expressionChoice.setChoices(expressionChoices);
+                target.addComponent(expressionChoice);
+                target.addComponent(temp);
+            }
+        });
+        // list ================================================================
+        final AjaxListView listView = new AjaxListView("filters");
+        form.add(listView);
+        form.add(new AjaxButton("add") {
+            @Override
+            protected void onError(AjaxRequestTarget target, Form unused) {
+                logger.debug("ajax form validation error");
                 return;
             }
-            if(o instanceof Collection && ((Collection) o).size() == 0) {
-                return;
+            protected void onSubmit(AjaxRequestTarget target, Form unused) {
+                if((filterCriteria.getValues() == null || filterCriteria.getValues().size() == 0)
+                && filterCriteria.getValue() == null) {
+                    return;
+                }
+                Item newItem = listView.addItem();
+                target.prependJavascript("var myTr = document.createElement('tr');"
+                        + " myTr.id = '" + newItem.getMarkupId() + "';"
+                        + " document.getElementById('container').appendChild(myTr);");
+                target.addComponent(newItem);
             }
-            tag.put("class", "selected");
-        }
-        
+        });
+        form.add(new Button("search") {
+            @Override
+            public void onSubmit() {
+                setCurrentItemSearch(itemSearch);
+                setResponsePage(ItemListPage.class);            
+            }              
+        });
     }
     
-    /**
-     * wicket form
-     */
-    private class ItemSearchForm extends Form {
-        
-        private ItemSearch itemSearch;        
-        private JtracFeedbackMessageFilter filter;        
-        
-        public ItemSearchForm(String id, User user) {
-            super(id);
-            itemSearch = new ItemSearch(user);
-            addComponents();
-        }        
-        
-        public ItemSearchForm(String id, Space space) {
-            super(id);
-            itemSearch = new ItemSearch(space);
-            addComponents();
-        }
-        
-        public ItemSearchForm(String id, ItemSearch itemSearch) {
-            super(id);
-            this.itemSearch = itemSearch;
-            addComponents();
-        }                            
-        
-        private Component getSelecter(FormComponent fc) {
-            return new WebMarkupContainer(fc.getId() + "Label").add(new SelectedHighlighter(fc));
-        }                 
-        
-        private void addComponents() {
-            final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(itemSearch);
-            setModel(model);
-            // feedback panel ==================================================
-            FeedbackPanel feedback = new FeedbackPanel("feedback");
-            filter =  new JtracFeedbackMessageFilter();
-            feedback.setFilter(filter);
-            add(feedback);            
-            final ItemRefIdFormPanel panel = new ItemRefIdFormPanel(YuiPanel.CONTENT_ID);            
-            final YuiPanel popup = new YuiPanel("dialog", localize("item_search_form.viewItemById"), panel, null);
-            add(popup);
-            panel.setYuiPanel(popup);
-            WebMarkupContainer link = new WebMarkupContainer("link");
-            add(link);
-            link.add(new AttributeModifier("onClick", true, new AbstractReadOnlyModel() {
-                public Object getObject() {
-                    return popup.getShowScript() + panel.getFocusScript();
-                }
-            }));          
-            // summary / text search ===========================================            
-            final TextField summary = new TextField("summary");
-            summary.setOutputMarkupId(true);
-            // validation: is Lucene search query ok?
-            summary.add(new AbstractValidator() {
-                protected void onValidate(IValidatable v) {
-                    String s = (String) v.getValue();                    
-                    if(s != null && !getJtrac().validateTextSearchQuery(s)) {
-                        error(v);
-                    }
-                }
-                @Override
-                protected String resourceKey() {                    
-                    return "item_search_form.error.summary.invalid";
-                } 
-            });
-            summary.add(new ErrorHighlighter());
-            add(getSelecter(summary));
-            add(summary);            
-            add(new HeaderContributor(new IHeaderContributor() {
-                public void renderHead(IHeaderResponse response) {
-                    response.renderOnLoadJavascript("document.getElementById('" + summary.getMarkupId() + "').focus()");
-                }
-            }));                        
-            // page size =======================================================
-            List<Integer> sizes = Arrays.asList(new Integer[] {5, 10, 15, 25, 50, 100, -1});
-            final String noLimit = getLocalizer().getString("item_search_form.noLimit", null);
-            DropDownChoice pageSizeChoice = new DropDownChoice("pageSize", sizes, new IChoiceRenderer() {
-                public Object getDisplayValue(Object o) {
-                    return ((Integer) o) == -1 ? noLimit : o.toString();
-                }
-                public String getIdValue(Object o, int i) {
-                    return o.toString();
-                }
-            });
-            add(pageSizeChoice);
-            add(new WebMarkupContainer("pageSizeLabel").add(new AbstractBehavior() {
-                @Override
-                public void onComponentTag(Component c, ComponentTag tag) {
-                    if(itemSearch.getPageSize() != 25) {
-                        tag.put("class", "selected");
-                    }
-                }                
-            }));
-            // show detail =====================================================
-            add(new CheckBox("showDetail"));
-            add(new WebMarkupContainer("showDetailLabel").add(new AbstractBehavior() {
-                @Override
-                public void onComponentTag(Component c, ComponentTag tag) {
-                    if(itemSearch.isShowDetail()) {
-                        tag.put("class", "selected");
-                    }
-                }                
-            }));                      
-            // show history ====================================================
-            add(new CheckBox("showHistory"));
-            add(new WebMarkupContainer("showHistoryLabel").add(new AbstractBehavior() {
-                @Override
-                public void onComponentTag(Component c, ComponentTag tag) {
-                    if(itemSearch.isShowHistory()) {
-                        tag.put("class", "selected");
-                    }
-                }                
-            }));             
-            // severity / priority =============================================
-            WebMarkupContainer sp = new WebMarkupContainer("severityPriority");
-            if (itemSearch.getSpace() == null) {                
-                final Map<String, String> severityMap = itemSearch.getSeverityOptions();
-                List<Integer> severityList = new ArrayList(severityMap.size());
-                for(String s : severityMap.keySet()) {
-                    severityList.add(new Integer(s));
-                }
-                ListMultipleChoice severityListChoice = new ListMultipleChoice("severityList", severityList, new IChoiceRenderer() {
-                    public Object getDisplayValue(Object o) {
-                        return severityMap.get(o.toString());
-                    }
-                    public String getIdValue(Object o, int i) {
-                        return o.toString();
-                    }                
-                });            
-                sp.add(severityListChoice);
-                sp.add(getSelecter(severityListChoice));
-                final Map<String, String> priorityMap = itemSearch.getPriorityOptions();
-                List<Integer> priorityList = new ArrayList(priorityMap.size());
-                for(String s : priorityMap.keySet()) {
-                    priorityList.add(new Integer(s));
-                }
-                ListMultipleChoice priorityListChoice = new ListMultipleChoice("priorityList", priorityList, new IChoiceRenderer() {
-                    public Object getDisplayValue(Object o) {
-                        return priorityMap.get(o.toString());
-                    }
-                    public String getIdValue(Object o, int i) {
-                        return o.toString();
-                    }                
-                });            
-                sp.add(priorityListChoice);
-                sp.add(getSelecter(priorityListChoice));
-            } else {
-                sp.setVisible(false);
-            }
-            add(sp);
-            // status ==========================================================           
-            final Map<Integer, String> statusMap = itemSearch.getStatusOptions();
-            List<Integer> statusList = new ArrayList(statusMap.keySet());
-            ListMultipleChoice statusListChoice = new ListMultipleChoice("statusList", statusList, new IChoiceRenderer() {
-                public Object getDisplayValue(Object o) {
-                    return statusMap.get(o);
-                }
-                public String getIdValue(Object o, int i) {
-                    return o.toString();
-                }                
-            });            
-            add(statusListChoice);
-            add(getSelecter(statusListChoice));
-            // =================================================================
-            List<User> users = null;
-            if (itemSearch.getSpace() == null) {
-                User user = getPrincipal();
-                users = getJtrac().findUsersForUser(user);
-            } else {
-                users = getJtrac().findUsersForSpace(itemSearch.getSpace().getId());
-            }
-            IChoiceRenderer userChoiceRenderer = new IChoiceRenderer() {
-                public Object getDisplayValue(Object o) {
-                    return ((User) o).getName();
-                }
-                public String getIdValue(Object o, int i) {
-                    return ((User) o).getId() + "";
-                }                
-            };
-            // loggedBy ========================================================
-            ListMultipleChoice loggedByChoice = new ListMultipleChoice("loggedByList", users, userChoiceRenderer);
-            add(loggedByChoice);
-            add(getSelecter(loggedByChoice));
-            // assignedTo ======================================================
-            ListMultipleChoice assignedToChoice = new ListMultipleChoice("assignedToList", users, userChoiceRenderer);            
-            add(assignedToChoice);
-            add(getSelecter(assignedToChoice));
-            // dates ===========================================================
-            String createdDateLabel = getLocalizer().getString("item_search_form.createdDate", null);
-            String modifiedDateLabel = getLocalizer().getString("item_search_form.historyUpdatedDate", null);            
-            add(new YuiCalendar("createdDateStart", model, "createdDateStart", false, createdDateLabel));
-            // TODO refactor this better when date picker component improves
-            add(new WebMarkupContainer("createdDateStartLabel").add(new AbstractBehavior() {
-                @Override
-                public void onComponentTag(Component c, ComponentTag tag) {
-                    if(itemSearch.getCreatedDateStart() != null) {
-                        tag.put("class", "selected");
-                    }
-                }                
-            }));
-            add(new YuiCalendar("createdDateEnd", model, "createdDateEnd", false, createdDateLabel));
-            add(new WebMarkupContainer("createdDateEndLabel").add(new AbstractBehavior() {
-                @Override
-                public void onComponentTag(Component c, ComponentTag tag) {
-                    if(itemSearch.getCreatedDateEnd() != null) {
-                        tag.put("class", "selected");
-                    }
-                }                
-            }));
-            add(new YuiCalendar("modifiedDateStart", model, "modifiedDateStart", false, modifiedDateLabel));
-            add(new WebMarkupContainer("modifiedDateStartLabel").add(new AbstractBehavior() {
-                @Override
-                public void onComponentTag(Component c, ComponentTag tag) {
-                    if(itemSearch.getModifiedDateStart() != null) {
-                        tag.put("class", "selected");
-                    }
-                }                
-            }));
-            add(new YuiCalendar("modifiedDateEnd", model, "modifiedDateEnd", false, modifiedDateLabel));
-            add(new WebMarkupContainer("modifiedDateEndLabel").add(new AbstractBehavior() {
-                @Override
-                public void onComponentTag(Component c, ComponentTag tag) {
-                    if(itemSearch.getModifiedDateEnd() != null) {
-                        tag.put("class", "selected");
-                    }
-                }                
-            }));
-            // spaces ===========================================================
-            WebMarkupContainer spaces = new WebMarkupContainer("spaces");
-            if (itemSearch.getSpace() == null) {
-                final Map<Long, String> spaceOptions = UserUtils.getSpaceNamesMap(itemSearch.getUser());
-                List<Long> spaceIds = new ArrayList(spaceOptions.keySet());
-                ListMultipleChoice spaceChoice = new ListMultipleChoice("spaceList", spaceIds, new IChoiceRenderer() {
-                    public Object getDisplayValue(Object o) {
-                        return spaceOptions.get(o);
-                    }
-                    public String getIdValue(Object o, int i) {
-                        return o.toString();
-                    }
-                });
-                spaces.add(spaceChoice);
-                spaces.add(getSelecter(spaceChoice));
-            } else {
-                spaces.setVisible(false);
-            }
-            add(spaces);
-            // custom drop downs ===============================================
-            if (itemSearch.getSpace() != null) {
-                ListView listView = new ListView("customDropDowns", itemSearch.getDropDownFields()) {
-                    protected void populateItem(ListItem listItem) {
-                        Field field = (Field) listItem.getModelObject();
-                        final Map<String, String> options = field.getOptions();
-                        List<Integer> optionKeys = new ArrayList<Integer>(options.size());
-                        // the types have to match perfectly for binding TODO - remove JSP-ishness
-                        for(String s : options.keySet()) {
-                            optionKeys.add(new Integer(s));
+    public Fragment initChoices() {
+        expressionChoices = new ArrayList<Expression>();
+        ColumnHeading ch = filterCriteria.getColumnHeading();
+        Fragment fragment = null;
+        if(ch.isField()) {
+            switch(ch.getField().getName().getType()) {
+                case 1:
+                case 2:
+                case 3:
+                    expressionChoices.add(Expression.IN);
+                    expressionChoices.add(Expression.NOT_IN);
+                    fragment = new Fragment("fragParent", "multiSelect");
+                    final Map<String, String> options = ch.getField().getOptions();
+                    fragment.add(new JtracCheckBoxMultipleChoice("values", new ArrayList(options.keySet()), new IChoiceRenderer() {
+                        public Object getDisplayValue(Object o) {
+                            return options.get(o);
                         }
-                        final ListMultipleChoice fieldChoice = new ListMultipleChoice("field", optionKeys, new IChoiceRenderer() {
-                            public Object getDisplayValue(Object o) {
-                                return options.get(o.toString());
-                            }
-                            public String getIdValue(Object o, int i) {
-                                return o.toString();
-                            }
-                        });
-                        listItem.add(model.bind(fieldChoice, field.getName().getText() + "List"));
-                        Label label = new Label("label", field.getLabel());
-                        label.add(new AbstractBehavior() {
-                            @Override
-                            public void onComponentTag(Component c, ComponentTag tag) {
-                                Object o = fieldChoice.getModelObject();
-                                if(o != null && ((Collection) o).size() > 0) {
-                                    tag.put("class", "selected");
-                                }
-                            }                
-                        });
-                        listItem.add(label);                        
-                    }                    
-                };
-                add(listView);
-            } else {
-                WebMarkupContainer customDropDowns = new WebMarkupContainer("customDropDowns");
-                customDropDowns.setVisible(false);
-                add(customDropDowns);
+                        public String getIdValue(Object o, int i) {
+                            return o.toString();
+                        }
+                    }));
+                    break; // drop down list
+                case 4: // decimal number
+                    expressionChoices.add(Expression.EQ);
+                    expressionChoices.add(Expression.NOT_EQ);
+                    expressionChoices.add(Expression.GE);
+                    expressionChoices.add(Expression.LE);
+                    fragment = new Fragment("fragParent", "textField");
+                    fragment.add(new TextField("value", Double.class));
+                    break;
+                case 6: // date
+                    expressionChoices.add(Expression.EQ);
+                    expressionChoices.add(Expression.GE);
+                    expressionChoices.add(Expression.LE);
+                    fragment = new Fragment("fragParent", "dateField");
+                    fragment.add(new YuiCalendar("value", model, "value", false, ch.getLabel()));
+                    break;
+                case 5: // free text
+                    expressionChoices.add(Expression.CONTAINS);
+                    fragment = new Fragment("fragParent", "textField");
+                    fragment.add(new TextField("value", String.class));
+                    break;
+                default:
+                    throw new RuntimeException("Unknown Column Heading " + ch.getName());
             }
-            // custom dates ====================================================
-            if (itemSearch.getSpace() != null) {
-                ListView listView = new ListView("customDates", itemSearch.getDateFields()) {
-                    protected void populateItem(ListItem listItem) {
-                        final Field field = (Field) listItem.getModelObject();
-                        Label label = new Label("label", field.getLabel());
-                        listItem.add(label);
-                        // TODO improve and specific to on/after or on/before
-                        listItem.add(new WebMarkupContainer("startLabel").add(new AbstractBehavior() {
-                            @Override
-                            public void onComponentTag(Component c, ComponentTag tag) {
-                                PropertyModel modelStart = new PropertyModel(itemSearch, field.getName().getText() + "Start");                                
-                                if(modelStart.getObject() != null) {
-                                    tag.put("class", "selected");
-                                }
-                            }                
-                        }));
-                        listItem.add(new WebMarkupContainer("endLabel").add(new AbstractBehavior() {
-                            @Override
-                            public void onComponentTag(Component c, ComponentTag tag) {
-                                PropertyModel modelEnd = new PropertyModel(itemSearch, field.getName().getText() + "End");                                
-                                if(modelEnd.getObject() != null) {                                    
-                                    tag.put("class", "selected");
-                                }
-                            }                
-                        }));                        
-                        listItem.add(new YuiCalendar("fieldStart", model, field.getName().getText() + "Start", false, field.getLabel()));
-                        listItem.add(new YuiCalendar("fieldEnd", model, field.getName().getText() + "End", false, field.getLabel()));
-                    }                    
-                };
-                listView.setReuseItems(true);
-                add(listView);
+        } else {
+            if(ch.getName().equals(ColumnHeading.STATUS)) {
+                expressionChoices.add(Expression.IN);
+                expressionChoices.add(Expression.NOT_IN);
+                fragment = new Fragment("fragParent", "multiSelect");
+                final Map<Integer, String> options = getCurrentSpace().getMetadata().getStates();
+                fragment.add(new JtracCheckBoxMultipleChoice("values", new ArrayList(options.keySet()), new IChoiceRenderer() {
+                    public Object getDisplayValue(Object o) {
+                        return options.get(o);
+                    }
+                    public String getIdValue(Object o, int i) {
+                        return o.toString();
+                    }
+                }));
+            } else if(ch.getName().equals(ColumnHeading.ASSIGNED_TO) || ch.getName().equals(ColumnHeading.LOGGED_BY)) {
+                expressionChoices.add(Expression.IN);
+                expressionChoices.add(Expression.NOT_IN);
+                fragment = new Fragment("fragParent", "multiSelect");
+                List<User> users = getJtrac().findUsersForSpace(getCurrentSpace().getId());
+                fragment.add(new JtracCheckBoxMultipleChoice("values", users, new IChoiceRenderer() {
+                    public Object getDisplayValue(Object o) {
+                        return ((User) o).getName();
+                    }
+                    public String getIdValue(Object o, int i) {
+                        return ((User) o).getId() + "";
+                    }
+                }));
+            } else if(ch.getName().equals(ColumnHeading.TIME_STAMP)) {
+                expressionChoices.add(Expression.EQ);
+                expressionChoices.add(Expression.GE);
+                expressionChoices.add(Expression.LE);
+                fragment = new Fragment("fragParent", "dateField");
+                fragment.add(new YuiCalendar("value", model, "value", false, ch.getLabel()));
             } else {
-                WebMarkupContainer customDates = new WebMarkupContainer("customDates");
-                customDates.setVisible(false);
-                add(customDates);
+                throw new RuntimeException("Unknown Column Heading " + ch.getName());
             }
-            // custom text =====================================================
-            if (itemSearch.getSpace() != null) {
-                ListView listView = new ListView("customTexts", itemSearch.getTextFields()) {
-                    protected void populateItem(ListItem listItem) {
-                        Field field = (Field) listItem.getModelObject();
-                        Label label = new Label("label", field.getLabel());
-                        listItem.add(label);
-                        final TextField textField = new TextField("field");
-                        listItem.add(model.bind(textField, field.getName().getText()));
-                        label.add(new AbstractBehavior() {
-                            @Override
-                            public void onComponentTag(Component c, ComponentTag tag) {
-                                if(textField.getModelObject() != null) {
-                                    tag.put("class", "selected");
-                                }
-                            }                
-                        });
-                    }                    
-                };
-                listView.setReuseItems(true);
-                add(listView);
-            } else {
-                WebMarkupContainer customTexts = new WebMarkupContainer("customTexts");
-                customTexts.setVisible(false);
-                add(customTexts);
-            }            
+        }
+        filterCriteria.setExpression(expressionChoices.get(0));
+        filterCriteria.setValue(null);
+        filterCriteria.setValues(null);
+        fragment.setOutputMarkupId(true);
+        return fragment;
+    }
+    
+    public class AjaxListView extends RefreshingView {
+        
+        public AjaxListView(String id) {
+            super(id);
         }
         
-        @Override
-        protected void validate() {
-            filter.reset();
-            super.validate();          
-        }         
+        public Item addItem() {
+            String uniqueId = newChildId();
+            Map map = itemSearch.getFilterCriteriaMap();
+            Item item = newItem(uniqueId, map.size(), new Model(uniqueId));
+            map.put(uniqueId, filterCriteria);
+            populateItem(item);
+            add(item);
+            return item;
+        }
         
-        @Override
-        protected void onSubmit() {
-            setCurrentItemSearch(itemSearch);
-            setResponsePage(ItemListPage.class);            
-        }        
-            
-    }
+        public void removeItem(Item item) {
+            itemSearch.getFilterCriteriaMap().remove(item.getModelObject());
+        }
+        
+        protected Iterator getItemModels() {
+            List<IModel> models = new ArrayList<IModel>();
+            for(String s : itemSearch.getFilterCriteriaMap().keySet()) {
+                models.add(new Model(s));
+            }
+            return models.iterator();
+        }
+        
+        protected void populateItem(final Item item) {
+            FilterCriteria fc = itemSearch.getFilterCriteriaMap().get(item.getModelObject());
+            final ColumnHeading ch = fc.getColumnHeading();
+            item.add(new Label("columnHeading", ch.getLabel()));
+            item.add(new Label("expression", localize("item_filter." + fc.getExpression().getKey())));
+            item.add(new ListView("values", fc.getValues()) {
+                protected void populateItem(ListItem item) {
+                    Object o = item.getModelObject();
+                    if(o instanceof User) {
+                        item.add(new Label("value", new PropertyModel(o, "name")));
+                    } else if(ch.getName().equals(ColumnHeading.STATUS)) {
+                        String label = getCurrentSpace().getMetadata().getStatusValue((Integer) o);
+                        item.add(new Label("value", label));
+                    } else {
+                        item.add(new Label("value", ch.getField().getOptions().get(o)));
+                    }
+                }
+            });
+            if(fc.getValue() != null && fc.getValue() instanceof Date) {
+                item.add(new Label("value", DateUtils.format((Date) fc.getValue())));
+            } else {
+                item.add(new Label("value", new PropertyModel(fc, "value")));
+            }
+            item.add((new AjaxButton("remove") {
+                protected void onSubmit(AjaxRequestTarget target, Form form) {
+                    AjaxListView.this.removeItem(item);
+                    target.appendJavascript("var myTr = document.getElementById('" + item.getMarkupId() + "');"
+                            + " myTr.parentNode.removeChild(myTr);");
+                }
+            }));
+            item.setOutputMarkupId(true);
+        }
+    }    
     
 }
