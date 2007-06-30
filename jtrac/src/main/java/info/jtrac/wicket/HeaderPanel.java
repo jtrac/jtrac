@@ -19,7 +19,6 @@ package info.jtrac.wicket;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
-import info.jtrac.wicket.search.FilterPage;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.Cookie;
