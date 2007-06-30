@@ -2,31 +2,13 @@
     <body>        
         <wicket:panel>            
             <form wicket:id="form">
-                <table>
-                    <tr valign="top">
-                        <td><select wicket:id="columnHeading"/></td>
-                        <td><select wicket:id="expression"/></td>
-                        <td wicket:id="fragParent"></td>
-                        <td><input type="button" value="+" wicket:id="add"/></td>
-                        <td><input type="submit" wicket:message="value:search" wicket:id="search"/></td>
-                    </tr>
-                </table>                
+                <input type="submit" wicket:message="value:search" wicket:id="search"/>               
                 <table class="jtrac">
-                    <tr>
-                        <th><wicket:message key="item_filter.column"/></th>                    
-                        <th><wicket:message key="item_filter.expression"/></th>
-                        <th><wicket:message key="item_filter.values"/></th>
-                        <td></td>
-                    </tr>
-                    <tbody id="container">
-                        <tr wicket:id="filters">
-                            <td class="selected" align="right"><b wicket:id="columnHeading"></b></td>
-                            <td wicket:id="expression" align="center"></td>
-                            <td class="alt">
-                                <span wicket:id="values"><span wicket:id="value"></span><br/></span>
-                                <span wicket:id="value"></span>
-                            </td>
-                            <td><input type="button" value="X" wicket:id="remove"/></td>                        
+                    <tbody wicket:id="columns">
+                        <tr valign="top">
+                            <td wicket:id="columnName" class="label"></td>                            
+                            <td><select wicket:id="expression"/></td>
+                            <td wicket:id="fragParent"></td>
                         </tr>
                     </tbody>
                 </table>

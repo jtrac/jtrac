@@ -40,23 +40,10 @@ public class FilterCriteria implements Serializable {
             return key;
         }             
     }
-    
-    private ColumnHeading columnHeading;
+        
     private Expression expression;
     private List values;
-    private Object value;
-    
-    public FilterCriteria(ColumnHeading columnHeading) {
-        this.columnHeading = columnHeading;
-    }
-    
-    public ColumnHeading getColumnHeading() {
-        return columnHeading;
-    }
-    
-    public void setColumnHeading(ColumnHeading columnHeading) {
-        this.columnHeading = columnHeading;
-    }
+    private Object value;    
 
     public FilterCriteria.Expression getExpression() {
         return expression;

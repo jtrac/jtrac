@@ -16,10 +16,19 @@
 
 package info.jtrac.domain;
 
+import info.jtrac.domain.FilterCriteria.Expression;
+import info.jtrac.wicket.ComponentUtils;
+import info.jtrac.wicket.JtracCheckBoxMultipleChoice;
+import info.jtrac.wicket.yui.YuiCalendar;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.model.BoundCompoundPropertyModel;
 
 /**
  * used to render columns in the search results table
@@ -37,7 +46,9 @@ public class ColumnHeading implements Serializable {
     
     private Field field;
     private String name;
-    private String label;
+    private String label;   
+    
+    private List<FilterCriteria> filterCriteriaList;    
     
     // TODO remove this constructor
     public ColumnHeading(String name) {
@@ -57,7 +68,7 @@ public class ColumnHeading implements Serializable {
     
     private String localize(String key, Component c) {
         return c.getLocalizer().getString("item_list." + key, c);
-    }      
+    }       
     
     public static List<ColumnHeading> getColumnHeadings(Space s, Component c) {
         List<ColumnHeading> list = new ArrayList<ColumnHeading>();
@@ -74,6 +85,145 @@ public class ColumnHeading implements Serializable {
         return list;        
     }      
     
+    public void addFilterCriteria(FilterCriteria fc) {
+        if(filterCriteriaList == null) {
+            filterCriteriaList = new ArrayList<FilterCriteria>();
+        }
+        filterCriteriaList.add(fc);
+    }
+    
+    public List<Expression> getValidFilterExpressions() {        
+        return (List<Expression>) process( null, null);        
+    }
+    
+    public Fragment getFilterUiFragment(BoundCompoundPropertyModel model, Component c) {
+        return (Fragment) process(model, c);
+    }
+    
+    // TODO use some elegant factory pattern here
+    private Object process(BoundCompoundPropertyModel model, Component c) {        
+        boolean forFragment = c != null;
+        List<Expression> list = new ArrayList<Expression>();
+        Fragment fragment = null;
+        if(isField()) {
+            switch(field.getName().getType()) {
+                case 1:
+                case 2:
+                case 3:
+                    list.add(Expression.IN);
+                    list.add(Expression.NOT_IN);
+                    if(forFragment) {
+                        fragment = new Fragment("fragParent", "multiSelect");
+                        final Map<String, String> options = field.getOptions();
+                        fragment.add(new JtracCheckBoxMultipleChoice("values", new ArrayList(options.keySet()), new IChoiceRenderer() {
+                            public Object getDisplayValue(Object o) {
+                                return options.get(o);
+                            }
+                            public String getIdValue(Object o, int i) {
+                                return o.toString();
+                            }
+                        }));
+                    }
+                    break; // drop down list
+                case 4: // decimal number
+                    list.add(Expression.EQ);
+                    list.add(Expression.NOT_EQ);
+                    list.add(Expression.GE);
+                    list.add(Expression.LE);
+                    if(forFragment) {
+                        fragment = new Fragment("fragParent", "textField");
+                        fragment.add(new TextField("value", Double.class));                        
+                    }
+                    break;
+                case 6: // date
+                    list.add(Expression.EQ);
+                    list.add(Expression.GE);
+                    list.add(Expression.LE);
+                    if(forFragment) {
+                        fragment = new Fragment("fragParent", "dateField");
+                        fragment.add(new YuiCalendar("value", model, "value", false, label));                        
+                    }
+                    break;
+                case 5: // free text
+                    list.add(Expression.CONTAINS);
+                    if(forFragment) {
+                        fragment = new Fragment("fragParent", "textField");
+                        fragment.add(new TextField("value", String.class));                        
+                    }
+                    break;
+                default:
+                    throw new RuntimeException("Unknown Column Heading " + name);
+            }
+        } else {
+            if(name.equals(ID)) {
+                list.add(Expression.EQ);
+                if(forFragment) {
+                    fragment = new Fragment("fragParent", "textField");
+                    fragment.add(new TextField("value", String.class));                     
+                }                
+            } else if(name.equals(SUMMARY)) {
+                list.add(Expression.CONTAINS);
+                if(forFragment) {
+                    fragment = new Fragment("fragParent", "textField");
+                    fragment.add(new TextField("value", String.class));                     
+                }                 
+            } else if(name.equals(DETAIL)) {
+                list.add(Expression.CONTAINS);
+                if(forFragment) {
+                    fragment = new Fragment("fragParent", "textField");
+                    fragment.add(new TextField("value", String.class));                     
+                }                 
+            } else if(name.equals(STATUS)) {
+                list.add(Expression.IN);
+                list.add(Expression.NOT_IN);
+                if(forFragment) {
+                    fragment = new Fragment("fragParent", "multiSelect");                    
+                    final Map<Integer, String> options = ComponentUtils.getCurrentSpace(c).getMetadata().getStates();
+                    fragment.add(new JtracCheckBoxMultipleChoice("values", new ArrayList(options.keySet()), new IChoiceRenderer() {
+                        public Object getDisplayValue(Object o) {
+                            return options.get(o);
+                        }
+                        public String getIdValue(Object o, int i) {
+                            return o.toString();
+                        }
+                    }));                    
+                }
+            } else if(name.equals(ASSIGNED_TO) || name.equals(LOGGED_BY)) {
+                list.add(Expression.IN);
+                list.add(Expression.NOT_IN);
+                if(forFragment) {
+                    fragment = new Fragment("fragParent", "multiSelect");
+                    List<User> users = ComponentUtils.getJtrac(c).findUsersForSpace(ComponentUtils.getCurrentSpace(c).getId());
+                    fragment.add(new JtracCheckBoxMultipleChoice("values", users, new IChoiceRenderer() {
+                        public Object getDisplayValue(Object o) {
+                            return ((User) o).getName();
+                        }
+                        public String getIdValue(Object o, int i) {
+                            return ((User) o).getId() + "";
+                        }
+                    }));                    
+                }
+            } else if(name.equals(TIME_STAMP)) {
+                list.add(Expression.EQ);
+                list.add(Expression.GE);
+                list.add(Expression.LE);
+                if(forFragment) {
+                    fragment = new Fragment("fragParent", "dateField");
+                    fragment.add(new YuiCalendar("value", model, "value", false, label));                    
+                }
+            } else {
+                throw new RuntimeException("Unknown Column Heading " + name);
+            }
+        }
+        if(forFragment) {
+            return fragment;
+        } else {
+            return list;
+        }
+    }
+    
+    //==========================================================================
+    
     public Field getField() {
         return field;
     }
@@ -89,7 +239,11 @@ public class ColumnHeading implements Serializable {
     public String getLabel() {
         return label;
     }
-    
+
+    public List<FilterCriteria> getFilterCriteriaList() {
+        return filterCriteriaList;
+    }
+            
     @Override
     public int hashCode() {
         return name.hashCode();
