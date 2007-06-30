@@ -5,7 +5,8 @@ tr.center td { text-align: center; }
 a { color: #0000D9; }
 a:hover { color: black; }
 img { border: none; vertical-align: middle; }
-.multiselect { height: 10em; overflow: auto; background: #FFF; text-align: left; border: 1px solid #CCCCCC; }
+.multiselect { overflow: auto; background: #FFF; text-align: left; border: 1px solid #CCCCCC; }
+.scrollable { height: 10em; }
 .error-input { border: 1px solid #CC2200; }
 div.error-input { float: left; }
 div.error-input select { border: none; }

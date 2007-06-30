@@ -60,9 +60,16 @@ public class JtracCheckBoxMultipleChoice extends ListMultipleChoice {
     protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag) {
         
         final List choices = getChoices();
+        boolean scrollable = choices.size() > 8;
                 
-        final StringBuffer buffer = new StringBuffer();
-        final StringBuffer selectedBuffer = new StringBuffer("<div class=\"multiselect\">");
+        final StringBuffer buffer = new StringBuffer();        
+        final StringBuffer selectedBuffer = new StringBuffer();
+        
+        if(scrollable) {
+            selectedBuffer.append("<div class=\"multiselect scrollable\">");
+        } else {
+            selectedBuffer.append("<div class=\"multiselect\">");
+        }
         
         final String selected = getValue();
         
@@ -108,7 +115,7 @@ public class JtracCheckBoxMultipleChoice extends ListMultipleChoice {
             selectedBuffer.append("<hr/>");
         }
         
-        selectedBuffer.append(buffer).append("</div>");
+        selectedBuffer.append(buffer).append("</div>");        
         
         replaceComponentTagBody(markupStream, openTag, selectedBuffer);
         
