@@ -93,26 +93,20 @@ public class JtracCheckBoxMultipleChoice extends ListMultipleChoice {
                     display = getLocalizer().getString(label, this, label);
                 }
                 CharSequence escaped = Strings.escapeMarkup(display, false, true);
-                
-                // TODO optimize
+                boolean isSelected = false;
+                StringBuilder whichBuffer = buffer;                
                 if(isSelected(choice, index, selected)) {
-                    StringBuilder whichBuffer = null;
+                    isSelected = true;                    
                     if(scrollable) {
                         hasSelected = true;
                         whichBuffer = selectedBuffer;
-                    } else {                        
-                        whichBuffer = buffer;
                     }
-                    whichBuffer.append("<input name=\"").append(getInputName()).append("\"").append(
-                            " type=\"checkbox\" checked=\"checked\"").append((isEnabled() ? "" : " disabled=\"disabled\"")).append(" value=\"")
-                            .append(id).append("\" id=\"").append(idAttr).append("\"/>").append("<label for=\"")
-                            .append(idAttr).append("\">").append(escaped).append("</label>").append("<br/>");
-                } else {
-                    buffer.append("<input name=\"").append(getInputName()).append("\"").append(
-                            " type=\"checkbox\"").append((isEnabled() ? "" : " disabled=\"disabled\"")).append(" value=\"")
-                            .append(id).append("\" id=\"").append(idAttr).append("\"/>").append("<label for=\"")
-                            .append(idAttr).append("\">").append(escaped).append("</label>").append("<br/>");
                 }
+                whichBuffer.append("<input name=\"").append(getInputName()).append("\"").append(" type=\"checkbox\"")
+                            .append(isSelected ? " checked=\"checked\"" : "")
+                            .append((isEnabled() ? "" : " disabled=\"disabled\"")).append(" value=\"")
+                            .append(id).append("\" id=\"").append(idAttr).append("\"/>").append("<label for=\"")
+                            .append(idAttr).append("\">").append(escaped).append("</label>").append("<br/>");
             }
         }
         
