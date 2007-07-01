@@ -33,7 +33,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.apache.wicket.Component;
-import org.apache.wicket.ISessionFactory;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
@@ -166,12 +165,8 @@ public class JtracApplication extends WebApplication {
     }   
     
     @Override
-    public ISessionFactory getSessionFactory() {
-        return new ISessionFactory() {
-            public Session newSession(Request request, Response response) {
-                return new JtracSession(JtracApplication.this, request);
-            }
-        };      
+    public Session newSession(Request request, Response response) {                   
+        return new JtracSession(JtracApplication.this, request);        
     }
     
     public Class getHomePage() {
