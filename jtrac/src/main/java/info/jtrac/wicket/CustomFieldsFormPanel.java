@@ -34,6 +34,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.BoundCompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 
 /**
  * panel for custom fields that can be reused in the ite-create / item-view forms
@@ -80,8 +81,10 @@ public class CustomFieldsFormPanel extends BasePanel {
                     border.add(new ErrorHighlighter(choice));
                     border.add(model.bind(choice, field.getName().getText()));                    
                     listItem.add(f);
-                } else if (field.getName().getType() == 6){ // date picker                        
-                    listItem.add(new YuiCalendar("field", model, field.getName().getText(), !field.isOptional(), field.getLabel()));
+                } else if (field.getName().getType() == 6) { // date picker                        
+                    YuiCalendar calendar = new YuiCalendar("field", new PropertyModel(model, field.getName().getText()), !field.isOptional());
+                    listItem.add(calendar);
+                    calendar.setLabel(new Model(field.getLabel()));
                 } else {
                     Fragment f = new Fragment("field", "textField");
                     TextField textField = new TextField("field");

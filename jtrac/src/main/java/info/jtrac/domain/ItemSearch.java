@@ -110,44 +110,9 @@ public class ItemSearch implements Serializable {
             } else {
                 criteria.add(Restrictions.eq("space", space));
             }            
-        }
-        // main conversion of ui submission into actual hibernate criteria query
+        }        
         for(ColumnHeading ch : columnHeadings) {
-            if(ch.getFilterCriteriaList() == null) {
-                continue;
-            }            
-            for(FilterCriteria fc : ch.getFilterCriteriaList()) {          
-                if(ch.isField()) {
-                    switch(ch.getField().getName().getType()) {
-                        case 1:
-                        case 2:
-                        case 3:
-                            criteria.add(Restrictions.in(ch.getName(), fc.getValues()));
-                            break; // drop down list
-                        case 4: // decimal number
-
-                            break;
-                        case 6: // date
-
-                            break;
-                        case 5: // free text
-
-                            break;
-                        default:
-                            throw new RuntimeException("Unknown Column Heading " + ch.getName());
-                    }
-                } else {
-                    if(ch.getName().equals(ColumnHeading.STATUS)) {
-                        criteria.add(Restrictions.in(ch.getName(), fc.getValues()));
-                    } else if(ch.getName().equals(ColumnHeading.ASSIGNED_TO) || ch.getName().equals(ColumnHeading.LOGGED_BY)) {
-                        criteria.add(Restrictions.in(ch.getName(), fc.getValues()));
-                    } else if(ch.getName().equals(ColumnHeading.TIME_STAMP)) {
-
-                    } else {
-                        throw new RuntimeException("Unknown Column Heading " + ch.getName());
-                    }
-                }
-            }
+            ch.addRestrictions(criteria);
         }        
         return criteria;
     }
@@ -173,16 +138,7 @@ public class ItemSearch implements Serializable {
         } else {
             return space.getMetadata().getFieldList();
         }        
-    }
-    
-    public List<ColumnHeading> getSearchColumnHeadings() {
-        List<ColumnHeading> temp = new ArrayList(columnHeadings);
-        temp.remove(new ColumnHeading(ColumnHeading.ID));
-        temp.remove(new ColumnHeading(ColumnHeading.SUMMARY));
-        temp.remove(new ColumnHeading(ColumnHeading.DETAIL));
-        return temp;
-    }
-    
+    }    
     
     public void toggleSortDirection() {
         sortDescending = !sortDescending;

@@ -22,6 +22,7 @@ import info.jtrac.wicket.JtracCheckBoxMultipleChoice;
 import info.jtrac.wicket.yui.YuiCalendar;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.apache.wicket.Component;
@@ -29,6 +30,9 @@ import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.BoundCompoundPropertyModel;
+import org.apache.wicket.model.PropertyModel;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 /**
  * used to render columns in the search results table
@@ -48,9 +52,9 @@ public class ColumnHeading implements Serializable {
     private String name;
     private String label;   
     
-    private List<FilterCriteria> filterCriteriaList;    
+    private FilterCriteria filterCriteria = new FilterCriteria();    
     
-    // TODO remove this constructor
+    /** used only to remove from collections */
     public ColumnHeading(String name) {
         this.name = name;        
     }    
@@ -83,26 +87,23 @@ public class ColumnHeading implements Serializable {
         }
         list.add(new ColumnHeading(TIME_STAMP, c));
         return list;        
-    }      
-    
-    public void addFilterCriteria(FilterCriteria fc) {
-        if(filterCriteriaList == null) {
-            filterCriteriaList = new ArrayList<FilterCriteria>();
-        }
-        filterCriteriaList.add(fc);
-    }
+    }          
     
     public List<Expression> getValidFilterExpressions() {        
-        return (List<Expression>) process( null, null);        
+        return (List<Expression>) process(null, null);        
     }
     
-    public Fragment getFilterUiFragment(BoundCompoundPropertyModel model, Component c) {
-        return (Fragment) process(model, c);
+    public Fragment getFilterUiFragment(Component c) {
+        return (Fragment) process(c, null);
+    }
+    
+    public void addRestrictions(DetachedCriteria criteria) {
+        process(null, criteria);
     }
     
     // TODO use some elegant factory pattern here
-    private Object process(BoundCompoundPropertyModel model, Component c) {        
-        boolean forFragment = c != null;
+    private Object process(Component c, DetachedCriteria criteria) {        
+        boolean forFragment = c != null;        
         List<Expression> list = new ArrayList<Expression>();
         Fragment fragment = null;
         if(isField()) {
@@ -115,14 +116,19 @@ public class ColumnHeading implements Serializable {
                     if(forFragment) {
                         fragment = new Fragment("fragParent", "multiSelect");
                         final Map<String, String> options = field.getOptions();
-                        fragment.add(new JtracCheckBoxMultipleChoice("values", new ArrayList(options.keySet()), new IChoiceRenderer() {
+                        JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", new ArrayList(options.keySet()), new IChoiceRenderer() {
                             public Object getDisplayValue(Object o) {
                                 return options.get(o);
                             }
                             public String getIdValue(Object o, int i) {
                                 return o.toString();
                             }
-                        }));
+                        });                        
+                        fragment.add(choice);
+                        choice.setModel(new PropertyModel(this, "filterCriteria.values"));
+                    }
+                    if(criteria != null && filterCriteria.getValues() != null) {
+                        criteria.add(Restrictions.in(name, filterCriteria.getValues()));
                     }
                     break; // drop down list
                 case 4: // decimal number
@@ -132,7 +138,9 @@ public class ColumnHeading implements Serializable {
                     list.add(Expression.LE);
                     if(forFragment) {
                         fragment = new Fragment("fragParent", "textField");
-                        fragment.add(new TextField("value", Double.class));                        
+                        TextField textField = new TextField("value", Double.class);
+                        textField.setModel(new PropertyModel(this, "filterCriteria.value"));
+                        fragment.add(textField);                        
                     }
                     break;
                 case 6: // date
@@ -140,15 +148,18 @@ public class ColumnHeading implements Serializable {
                     list.add(Expression.GE);
                     list.add(Expression.LE);
                     if(forFragment) {
-                        fragment = new Fragment("fragParent", "dateField");
-                        fragment.add(new YuiCalendar("value", model, "value", false, label));                        
+                        fragment = new Fragment("fragParent", "dateField");                        
+                        YuiCalendar calendar = new YuiCalendar("value", new PropertyModel(this, "filterCriteria.value"), false);                                                
+                        fragment.add(calendar);
                     }
                     break;
                 case 5: // free text
                     list.add(Expression.CONTAINS);
                     if(forFragment) {
                         fragment = new Fragment("fragParent", "textField");
-                        fragment.add(new TextField("value", String.class));                        
+                        TextField textField = new TextField("value", String.class);
+                        textField.setModel(new PropertyModel(this, "filterCriteria.value"));
+                        fragment.add(textField);                        
                     }
                     break;
                 default:
@@ -159,19 +170,25 @@ public class ColumnHeading implements Serializable {
                 list.add(Expression.EQ);
                 if(forFragment) {
                     fragment = new Fragment("fragParent", "textField");
-                    fragment.add(new TextField("value", String.class));                     
+                        TextField textField = new TextField("value", String.class);
+                        textField.setModel(new PropertyModel(this, "filterCriteria.value"));
+                        fragment.add(textField);                    
                 }                
             } else if(name.equals(SUMMARY)) {
                 list.add(Expression.CONTAINS);
                 if(forFragment) {
                     fragment = new Fragment("fragParent", "textField");
-                    fragment.add(new TextField("value", String.class));                     
+                        TextField textField = new TextField("value", String.class);
+                        textField.setModel(new PropertyModel(this, "filterCriteria.value"));
+                        fragment.add(textField);                     
                 }                 
             } else if(name.equals(DETAIL)) {
                 list.add(Expression.CONTAINS);
                 if(forFragment) {
                     fragment = new Fragment("fragParent", "textField");
-                    fragment.add(new TextField("value", String.class));                     
+                        TextField textField = new TextField("value", String.class);
+                        textField.setModel(new PropertyModel(this, "filterCriteria.value"));
+                        fragment.add(textField);                      
                 }                 
             } else if(name.equals(STATUS)) {
                 list.add(Expression.IN);
@@ -179,44 +196,56 @@ public class ColumnHeading implements Serializable {
                 if(forFragment) {
                     fragment = new Fragment("fragParent", "multiSelect");                    
                     final Map<Integer, String> options = ComponentUtils.getCurrentSpace(c).getMetadata().getStates();
-                    fragment.add(new JtracCheckBoxMultipleChoice("values", new ArrayList(options.keySet()), new IChoiceRenderer() {
+                    options.remove(State.NEW);
+                    JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", new ArrayList(options.keySet()), new IChoiceRenderer() {
                         public Object getDisplayValue(Object o) {
                             return options.get(o);
                         }
                         public String getIdValue(Object o, int i) {
                             return o.toString();
                         }
-                    }));                    
+                    });
+                    fragment.add(choice);
+                    choice.setModel(new PropertyModel(this, "filterCriteria.values"));
                 }
+                if(criteria != null && filterCriteria.getValues() != null) {
+                    criteria.add(Restrictions.in(name, filterCriteria.getValues()));
+                }                
             } else if(name.equals(ASSIGNED_TO) || name.equals(LOGGED_BY)) {
                 list.add(Expression.IN);
                 list.add(Expression.NOT_IN);
                 if(forFragment) {
                     fragment = new Fragment("fragParent", "multiSelect");
                     List<User> users = ComponentUtils.getJtrac(c).findUsersForSpace(ComponentUtils.getCurrentSpace(c).getId());
-                    fragment.add(new JtracCheckBoxMultipleChoice("values", users, new IChoiceRenderer() {
+                    JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", users, new IChoiceRenderer() {
                         public Object getDisplayValue(Object o) {
                             return ((User) o).getName();
                         }
                         public String getIdValue(Object o, int i) {
                             return ((User) o).getId() + "";
                         }
-                    }));                    
+                    });
+                    fragment.add(choice);
+                    choice.setModel(new PropertyModel(this, "filterCriteria.values"));
                 }
+                if(criteria != null && filterCriteria.getValues() != null) {
+                    criteria.add(Restrictions.in(name, filterCriteria.getValues()));
+                }                
             } else if(name.equals(TIME_STAMP)) {
                 list.add(Expression.EQ);
                 list.add(Expression.GE);
                 list.add(Expression.LE);
                 if(forFragment) {
-                    fragment = new Fragment("fragParent", "dateField");
-                    fragment.add(new YuiCalendar("value", model, "value", false, label));                    
+                    fragment = new Fragment("fragParent", "dateField");                    
+                    YuiCalendar calendar = new YuiCalendar("value", new PropertyModel(this, "filterCriteria.value"), false);                    
+                    fragment.add(calendar);                   
                 }
             } else {
                 throw new RuntimeException("Unknown Column Heading " + name);
             }
         }
         if(forFragment) {
-            return fragment;
+            return fragment;            
         } else {
             return list;
         }
@@ -240,9 +269,13 @@ public class ColumnHeading implements Serializable {
         return label;
     }
 
-    public List<FilterCriteria> getFilterCriteriaList() {
-        return filterCriteriaList;
+    public FilterCriteria getFilterCriteria() {
+        return filterCriteria;
     }
+
+    public void setFilterCriteria(FilterCriteria filterCriteria) {
+        this.filterCriteria = filterCriteria;
+    }    
             
     @Override
     public int hashCode() {
@@ -259,6 +292,15 @@ public class ColumnHeading implements Serializable {
         }
         final ColumnHeading ch = (ColumnHeading) o;
         return ch.getName().equals(name);
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("name [").append(name);        
+        sb.append("]; filterCriteria [").append(filterCriteria);
+        sb.append("]");
+        return sb.toString();
     }
     
 }

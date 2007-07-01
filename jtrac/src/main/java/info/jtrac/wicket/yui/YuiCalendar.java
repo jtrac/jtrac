@@ -26,27 +26,29 @@ import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.BoundCompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converters.AbstractConverter;
 
 /**
- * yui date picker panel
- * TODO see if can be made FormComponentPanel for cleaner client code
+ * yui date picker panel 
  */
-public class YuiCalendar extends Panel implements IHeaderContributor {
+public class YuiCalendar extends FormComponentPanel implements IHeaderContributor {
     
     private TextField dateField;
-    private WebMarkupContainer container;
-            
-    public YuiCalendar(String id, BoundCompoundPropertyModel model, String path, boolean required, String label) {
+    private WebMarkupContainer container;        
+    
+    public YuiCalendar(String id, IModel model, boolean required) {
         
-        super(id);        
+        super(id, null);        
                 
         add(HeaderContributor.forJavaScript("resources/yui/yahoo/yahoo-min.js"));
         add(HeaderContributor.forJavaScript("resources/yui/event/event-min.js"));
@@ -55,7 +57,7 @@ public class YuiCalendar extends Panel implements IHeaderContributor {
         add(HeaderContributor.forJavaScript("resources/yui/calendar/calendar-utils.js"));
         add(HeaderContributor.forCss("resources/yui/calendar/assets/calendar.css"));         
         
-        dateField = new TextField("field", Date.class) {
+        dateField = new TextField("field", model, Date.class) {
             @Override
             public IConverter getConverter(Class clazz) {
                 return new AbstractConverter() {
@@ -80,19 +82,15 @@ public class YuiCalendar extends Panel implements IHeaderContributor {
                     }                    
                 };
             }
+            @Override
+            public IModel getLabel() {
+                return YuiCalendar.this.getLabel();
+            }
         };
         dateField.setOutputMarkupId(true);
         dateField.setRequired(required);
-        // this is only used for substituting ${label} when resolving error message
-        if(label != null) {
-            dateField.setLabel(new Model(label));
-        }
         dateField.add(new ErrorHighlighter());
-        if(model != null) {
-            add(model.bind(dateField, path));
-        } else {
-            add(dateField);
-        }
+        add(dateField);                
         
         final WebMarkupContainer button = new WebMarkupContainer("button");
         button.setOutputMarkupId(true);
@@ -106,6 +104,11 @@ public class YuiCalendar extends Panel implements IHeaderContributor {
         container = new WebMarkupContainer("container");
         container.setOutputMarkupId(true);
         add(container);
+    }        
+    
+    @Override
+    public void updateModel() {
+        dateField.updateModel();
     }
     
     private String getCalendarId() {

@@ -17,6 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.ColumnHeading;
+import info.jtrac.domain.FilterCriteria;
 import info.jtrac.domain.FilterCriteria.Expression;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
@@ -34,46 +35,14 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.BoundCompoundPropertyModel;
+import org.apache.wicket.model.PropertyModel;
 
 /**
  * item search form panel
  */
 public class ItemSearchFormPanel extends BasePanel {
     
-    private ItemSearch itemSearch;
-    
-    private Expression expression;
-
-    private BoundCompoundPropertyModel model;
-    
-    public Expression getExpression() {
-        return expression;
-    }
-
-    public void setExpression(Expression expression) {
-        this.expression = expression;
-    }
-    
-    private Object value;
-    private List values;
-
-    public Object getValue() {
-        return value;
-    }
-
-    public void setValue(Object value) {
-        this.value = value;
-    }
-
-    public List getValues() {
-        return values;
-    }
-
-    public void setValues(List values) {
-        this.values = values;
-    }
-    
-    
+    private ItemSearch itemSearch;               
     
     public ItemSearchFormPanel(String id, User user) {
         super(id);
@@ -101,18 +70,17 @@ public class ItemSearchFormPanel extends BasePanel {
     private void addComponents() {
         final Form form = new Form("form");
         add(form);
-        model = new BoundCompoundPropertyModel(this);
-        form.setModel(model);
         form.add(new Button("search") {
             @Override
             public void onSubmit() {
+                logger.debug(itemSearch.getColumnHeadings());
                 setCurrentItemSearch(itemSearch);
                 setResponsePage(ItemListPage.class);
             }
         });
         form.add(new ListView("columns", itemSearch.getColumnHeadings()) {
             protected void populateItem(final ListItem listItem) {
-                final ColumnHeading ch = (ColumnHeading) listItem.getModelObject();
+                final ColumnHeading ch = (ColumnHeading) listItem.getModelObject();                
                 listItem.add(new Label("columnName", ch.getLabel()));
                 DropDownChoice expressionChoice = new DropDownChoice("expression", ch.getValidFilterExpressions(), new IChoiceRenderer() {
                     public Object getDisplayValue(Object o) {
@@ -123,13 +91,14 @@ public class ItemSearchFormPanel extends BasePanel {
                         return ((Expression) o).getKey();
                     }
                 });
+                expressionChoice.setModel(new PropertyModel(ch.getFilterCriteria(), "expression"));
                 listItem.add(expressionChoice);
                 final WebMarkupContainer fragParent = new WebMarkupContainer("fragParent");
                 fragParent.setOutputMarkupId(true);
                 listItem.add(fragParent);                
                 expressionChoice.add(new AjaxFormComponentUpdatingBehavior("onChange") {
                     protected void onUpdate(AjaxRequestTarget target) {
-                        Fragment fragment = ch.getFilterUiFragment(model, ItemSearchFormPanel.this);
+                        Fragment fragment = ch.getFilterUiFragment(ItemSearchFormPanel.this);
                         fragment.setOutputMarkupId(true);
                         listItem.replace(fragment);
                         target.addComponent(fragment);

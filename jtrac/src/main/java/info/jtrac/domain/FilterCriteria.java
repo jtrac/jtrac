@@ -69,4 +69,14 @@ public class FilterCriteria implements Serializable {
         this.values = values;
     }
     
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("expression [").append(expression);
+        sb.append("]; value [").append(value);
+        sb.append("]; values [").append(values);
+        sb.append("]");
+        return sb.toString();        
+    }
+    
 }
