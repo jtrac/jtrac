@@ -22,14 +22,12 @@ import info.jtrac.wicket.JtracCheckBoxMultipleChoice;
 import info.jtrac.wicket.yui.YuiCalendar;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.model.BoundCompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -93,7 +91,7 @@ public class ColumnHeading implements Serializable {
         return (List<Expression>) process(null, null);        
     }
     
-    public Fragment getFilterUiFragment(Component c) {
+    public Component getFilterUiFragment(Component c) {
         return (Fragment) process(c, null);
     }
     
@@ -125,7 +123,7 @@ public class ColumnHeading implements Serializable {
                             }
                         });                        
                         fragment.add(choice);
-                        choice.setModel(new PropertyModel(this, "filterCriteria.values"));
+                        choice.setModel(new PropertyModel(this, "filterCriteria.values"));                        
                     }
                     if(criteria != null && filterCriteria.getValues() != null) {
                         criteria.add(Restrictions.in(name, filterCriteria.getValues()));
@@ -204,7 +202,7 @@ public class ColumnHeading implements Serializable {
                         public String getIdValue(Object o, int i) {
                             return o.toString();
                         }
-                    });
+                    });                    
                     fragment.add(choice);
                     choice.setModel(new PropertyModel(this, "filterCriteria.values"));
                 }

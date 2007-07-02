@@ -17,12 +17,11 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.ColumnHeading;
-import info.jtrac.domain.FilterCriteria;
 import info.jtrac.domain.FilterCriteria.Expression;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
-import java.util.List;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -33,8 +32,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.model.BoundCompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 
 /**
@@ -42,7 +39,7 @@ import org.apache.wicket.model.PropertyModel;
  */
 public class ItemSearchFormPanel extends BasePanel {
     
-    private ItemSearch itemSearch;               
+    private ItemSearch itemSearch;
     
     public ItemSearchFormPanel(String id, User user) {
         super(id);
@@ -80,7 +77,7 @@ public class ItemSearchFormPanel extends BasePanel {
         });
         form.add(new ListView("columns", itemSearch.getColumnHeadings()) {
             protected void populateItem(final ListItem listItem) {
-                final ColumnHeading ch = (ColumnHeading) listItem.getModelObject();                
+                final ColumnHeading ch = (ColumnHeading) listItem.getModelObject();
                 listItem.add(new Label("columnName", ch.getLabel()));
                 DropDownChoice expressionChoice = new DropDownChoice("expression", ch.getValidFilterExpressions(), new IChoiceRenderer() {
                     public Object getDisplayValue(Object o) {
@@ -92,13 +89,17 @@ public class ItemSearchFormPanel extends BasePanel {
                     }
                 });
                 expressionChoice.setModel(new PropertyModel(ch.getFilterCriteria(), "expression"));
+                expressionChoice.setNullValid(true);
                 listItem.add(expressionChoice);
-                final WebMarkupContainer fragParent = new WebMarkupContainer("fragParent");
+                final Component fragParent = getFilterUiFragment(ch);                
                 fragParent.setOutputMarkupId(true);
-                listItem.add(fragParent);                
+                listItem.add(fragParent);
                 expressionChoice.add(new AjaxFormComponentUpdatingBehavior("onChange") {
                     protected void onUpdate(AjaxRequestTarget target) {
-                        Fragment fragment = ch.getFilterUiFragment(ItemSearchFormPanel.this);
+                        if(!ch.getFilterCriteria().requiresUiFragmentUpdate()) {
+                            return;
+                        }
+                        Component fragment = getFilterUiFragment(ch);
                         fragment.setOutputMarkupId(true);
                         listItem.replace(fragment);
                         target.addComponent(fragment);
@@ -106,11 +107,14 @@ public class ItemSearchFormPanel extends BasePanel {
                 });
             }
         });
-        
     }
-    
-    
-    
-    
+        
+    private Component getFilterUiFragment(ColumnHeading ch) {
+        if(ch.getFilterCriteria().getExpression() == null) {
+            return new WebMarkupContainer("fragParent");
+        } else {
+            return ch.getFilterUiFragment(ItemSearchFormPanel.this);
+        }
+    }
     
 }

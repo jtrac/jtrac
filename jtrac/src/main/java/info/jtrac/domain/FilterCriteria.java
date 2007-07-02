@@ -45,12 +45,22 @@ public class FilterCriteria implements Serializable {
     private List values;
     private Object value;    
 
+    private Expression previousExpression;
+    
     public FilterCriteria.Expression getExpression() {
         return expression;
     }
 
-    public void setExpression(FilterCriteria.Expression expression) {
+    public void setExpression(Expression expression) {
+        previousExpression = this.expression;
         this.expression = expression;
+    }
+    
+    public boolean requiresUiFragmentUpdate() {
+        if(expression != null && previousExpression != null) {
+            return false;
+        }
+        return true;
     }
 
     public Object getValue() {
