@@ -31,6 +31,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.PropertyModel;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -100,18 +101,29 @@ public class ColumnHeading implements Serializable {
         process(null, criteria);
     }
     
-    // TODO use some elegant factory pattern here
+    // TODO use some elegant factory pattern here if possible
+    // TODO reduce redundant code
+    // this routine is a massive if-then that has 3 responsibilities
+    // based on column type:
+    // 1) return the possible expressions (equals, greater-than etc) to show on filter UI for selection
+    // 2) or return the wicket ui fragment that will be shown over ajax (based on selected expression)
+    // 3) or add restrictions to the hibernate detached criteria that will be used to query the database
+    // putting all these things into one place, makes it easy to maintain, as the 3 responsibilities
+    // are closely interdependent
     private Object process(Component c, DetachedCriteria criteria) {        
         boolean forFragment = c != null;        
         List<Expression> list = new ArrayList<Expression>();
         Fragment fragment = null;
+        List values = filterCriteria.getValues();
+        Object value = filterCriteria.getValue();
+        Object value2 = filterCriteria.getValue2();
+        Expression expression = filterCriteria.getExpression();
         if(isField()) {
             switch(field.getName().getType()) {
                 case 1:
                 case 2:
                 case 3:
-                    list.add(Expression.IN);
-                    list.add(Expression.NOT_IN);
+                    list.add(Expression.IN);                    
                     if(forFragment) {
                         fragment = new Fragment("fragParent", "multiSelect");
                         final Map<String, String> options = field.getOptions();
@@ -127,8 +139,8 @@ public class ColumnHeading implements Serializable {
                         choice.setModel(new PropertyModel(this, "filterCriteria.values"));                        
                     }
                     if(filterHasValueList(criteria)) {
-                        List<Integer> keys = new ArrayList<Integer>(filterCriteria.getValues().size());
-                        for(Object o : filterCriteria.getValues()) {
+                        List<Integer> keys = new ArrayList<Integer>(values.size());
+                        for(Object o : values) {
                             keys.add(new Integer(o.toString()));
                         }
                         criteria.add(Restrictions.in(name, keys));
@@ -145,7 +157,7 @@ public class ColumnHeading implements Serializable {
                         TextField textField = new TextField("value", Double.class);
                         textField.setModel(new PropertyModel(this, "filterCriteria.value"));
                         fragment.add(textField);
-                        if(filterCriteria.getExpression() == Expression.BETWEEN) {
+                        if(expression == Expression.BETWEEN) {
                             TextField textField2 = new TextField("value2", Double.class);
                             textField.setModel(new PropertyModel(this, "filterCriteria.value2"));
                             fragment.add(textField2);                            
@@ -154,7 +166,17 @@ public class ColumnHeading implements Serializable {
                         }
                     }
                     if(filterHasValue(criteria)) {
-                        criteria.add(Restrictions.in(name, filterCriteria.getValues()));
+                        switch(expression) {
+                            case EQ: criteria.add(Restrictions.eq(name, value)); break;
+                            case NOT_EQ: criteria.add(Restrictions.not(Restrictions.eq(name, value))); break;
+                            case GT: criteria.add(Restrictions.gt(name, value)); break;
+                            case LT: criteria.add(Restrictions.lt(name, value)); break;
+                            case BETWEEN: 
+                                criteria.add(Restrictions.gt(name, value));
+                                criteria.add(Restrictions.lt(name, value2));
+                                break;
+                            default:                            
+                        }                        
                     }                    
                     break;
                 case 6: // date
@@ -174,6 +196,19 @@ public class ColumnHeading implements Serializable {
                             fragment.add(new WebMarkupContainer("value2").setVisible(false));
                         }
                     }
+                    if(filterHasValue(criteria)) {
+                        switch(expression) {
+                            case EQ: criteria.add(Restrictions.eq(name, value)); break;
+                            case NOT_EQ: criteria.add(Restrictions.not(Restrictions.eq(name, value))); break;
+                            case GT: criteria.add(Restrictions.gt(name, value)); break;
+                            case LT: criteria.add(Restrictions.lt(name, value)); break;
+                            case BETWEEN: 
+                                criteria.add(Restrictions.gt(name, value));
+                                criteria.add(Restrictions.lt(name, value2));
+                                break;
+                            default:                            
+                        }                        
+                    }                     
                     break;
                 case 5: // free text
                     list.add(Expression.CONTAINS);
@@ -181,7 +216,11 @@ public class ColumnHeading implements Serializable {
                         fragment = new Fragment("fragParent", "textField");
                         TextField textField = new TextField("value", String.class);
                         textField.setModel(new PropertyModel(this, "filterCriteria.value"));
-                        fragment.add(textField);                        
+                        fragment.add(textField);
+                        fragment.add(new WebMarkupContainer("value2").setVisible(false));
+                    }
+                    if(filterHasValue(criteria)) {
+                        criteria.add(Restrictions.ilike(name, (String) value, MatchMode.ANYWHERE));
                     }
                     break;
                 default:
@@ -194,27 +233,34 @@ public class ColumnHeading implements Serializable {
                     fragment = new Fragment("fragParent", "textField");
                         TextField textField = new TextField("value", String.class);
                         textField.setModel(new PropertyModel(this, "filterCriteria.value"));
-                        fragment.add(textField);                    
-                }                
+                        fragment.add(textField);
+                        fragment.add(new WebMarkupContainer("value2").setVisible(false));
+                }
+                // TODO
             } else if(name.equals(SUMMARY)) {
                 list.add(Expression.CONTAINS);
                 if(forFragment) {
                     fragment = new Fragment("fragParent", "textField");
                         TextField textField = new TextField("value", String.class);
                         textField.setModel(new PropertyModel(this, "filterCriteria.value"));
-                        fragment.add(textField);                     
-                }                 
+                        fragment.add(textField);
+                        fragment.add(new WebMarkupContainer("value2").setVisible(false));
+                }
+                if(filterHasValue(criteria)) {
+                    criteria.add(Restrictions.ilike(name, (String) value, MatchMode.ANYWHERE));
+                }                
             } else if(name.equals(DETAIL)) {
                 list.add(Expression.CONTAINS);
                 if(forFragment) {
                     fragment = new Fragment("fragParent", "textField");
                         TextField textField = new TextField("value", String.class);
                         textField.setModel(new PropertyModel(this, "filterCriteria.value"));
-                        fragment.add(textField);                      
-                }                 
+                        fragment.add(textField);
+                        fragment.add(new WebMarkupContainer("value2").setVisible(false));
+                }
+                // TODO
             } else if(name.equals(STATUS)) {
-                list.add(Expression.IN);
-                list.add(Expression.NOT_IN);
+                list.add(Expression.IN);                
                 if(forFragment) {
                     fragment = new Fragment("fragParent", "multiSelect");                    
                     final Map<Integer, String> options = ComponentUtils.getCurrentSpace(c).getMetadata().getStates();
@@ -234,8 +280,7 @@ public class ColumnHeading implements Serializable {
                     criteria.add(Restrictions.in(name, filterCriteria.getValues()));
                 }                
             } else if(name.equals(ASSIGNED_TO) || name.equals(LOGGED_BY)) {
-                list.add(Expression.IN);
-                list.add(Expression.NOT_IN);
+                list.add(Expression.IN);                
                 if(forFragment) {
                     fragment = new Fragment("fragParent", "multiSelect");
                     List<User> users = ComponentUtils.getJtrac(c).findUsersForSpace(ComponentUtils.getCurrentSpace(c).getId());
@@ -254,6 +299,7 @@ public class ColumnHeading implements Serializable {
                     criteria.add(Restrictions.in(name, filterCriteria.getValues()));
                 }                
             } else if(name.equals(TIME_STAMP)) {
+                list.add(Expression.EQ);
                 list.add(Expression.NOT_EQ);
                 list.add(Expression.GT);
                 list.add(Expression.LT);
@@ -262,13 +308,26 @@ public class ColumnHeading implements Serializable {
                     fragment = new Fragment("fragParent", "dateField");                    
                     YuiCalendar calendar = new YuiCalendar("value", new PropertyModel(this, "filterCriteria.value"), false);                    
                     fragment.add(calendar);
-                    if(filterCriteria.getExpression() == Expression.BETWEEN) {
+                    if(expression == Expression.BETWEEN) {
                         YuiCalendar calendar2 = new YuiCalendar("value2", new PropertyModel(this, "filterCriteria.value2"), false);                                                
                         fragment.add(calendar2);                            
                     }  else {
                         fragment.add(new WebMarkupContainer("value2").setVisible(false));
                     }                   
                 }
+                if(filterHasValue(criteria)) {
+                    switch(expression) {
+                        case EQ: criteria.add(Restrictions.eq(name, value)); break;
+                        case NOT_EQ: criteria.add(Restrictions.not(Restrictions.eq(name, value))); break;
+                        case GT: criteria.add(Restrictions.gt(name, value)); break;
+                        case LT: criteria.add(Restrictions.lt(name, value)); break;
+                        case BETWEEN: 
+                            criteria.add(Restrictions.gt(name, value));
+                            criteria.add(Restrictions.lt(name, value2));
+                            break;
+                        default:                            
+                    }                        
+                }                 
             } else {
                 throw new RuntimeException("Unknown Column Heading " + name);
             }

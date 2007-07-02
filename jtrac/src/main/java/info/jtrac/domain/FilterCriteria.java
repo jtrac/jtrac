@@ -59,6 +59,7 @@ public class FilterCriteria implements Serializable {
         if(expression == null) {
             values = null;
             value = null;
+            value2 = null;
         }
     }
     
