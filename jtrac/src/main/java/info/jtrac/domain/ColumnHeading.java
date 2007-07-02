@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Fragment;
@@ -85,7 +86,7 @@ public class ColumnHeading implements Serializable {
         }
         list.add(new ColumnHeading(TIME_STAMP, c));
         return list;        
-    }          
+    }                  
     
     public List<Expression> getValidFilterExpressions() {        
         return (List<Expression>) process(null, null);        
@@ -125,30 +126,53 @@ public class ColumnHeading implements Serializable {
                         fragment.add(choice);
                         choice.setModel(new PropertyModel(this, "filterCriteria.values"));                        
                     }
-                    if(criteria != null && filterCriteria.getValues() != null) {
-                        criteria.add(Restrictions.in(name, filterCriteria.getValues()));
+                    if(filterHasValueList(criteria)) {
+                        List<Integer> keys = new ArrayList<Integer>(filterCriteria.getValues().size());
+                        for(Object o : filterCriteria.getValues()) {
+                            keys.add(new Integer(o.toString()));
+                        }
+                        criteria.add(Restrictions.in(name, keys));
                     }
                     break; // drop down list
                 case 4: // decimal number
                     list.add(Expression.EQ);
                     list.add(Expression.NOT_EQ);
-                    list.add(Expression.GE);
-                    list.add(Expression.LE);
+                    list.add(Expression.GT);
+                    list.add(Expression.LT);
+                    list.add(Expression.BETWEEN);
                     if(forFragment) {
                         fragment = new Fragment("fragParent", "textField");
                         TextField textField = new TextField("value", Double.class);
                         textField.setModel(new PropertyModel(this, "filterCriteria.value"));
-                        fragment.add(textField);                        
+                        fragment.add(textField);
+                        if(filterCriteria.getExpression() == Expression.BETWEEN) {
+                            TextField textField2 = new TextField("value2", Double.class);
+                            textField.setModel(new PropertyModel(this, "filterCriteria.value2"));
+                            fragment.add(textField2);                            
+                        } else {
+                            fragment.add(new WebMarkupContainer("value2").setVisible(false));
+                        }
                     }
+                    if(filterHasValue(criteria)) {
+                        criteria.add(Restrictions.in(name, filterCriteria.getValues()));
+                    }                    
                     break;
                 case 6: // date
                     list.add(Expression.EQ);
-                    list.add(Expression.GE);
-                    list.add(Expression.LE);
+                    list.add(Expression.NOT_EQ);
+                    list.add(Expression.GT);
+                    list.add(Expression.LT);
+                    list.add(Expression.BETWEEN);
                     if(forFragment) {
                         fragment = new Fragment("fragParent", "dateField");                        
                         YuiCalendar calendar = new YuiCalendar("value", new PropertyModel(this, "filterCriteria.value"), false);                                                
                         fragment.add(calendar);
+                        if(filterCriteria.getExpression() == Expression.BETWEEN) {
+                            YuiCalendar calendar2 = new YuiCalendar("value2", new PropertyModel(this, "filterCriteria.value2"), false);                                                
+                            fragment.add(calendar2);                            
+                        } else {
+                            fragment.add(new WebMarkupContainer("value2").setVisible(false));
+                        }
                     }
                     break;
                 case 5: // free text
@@ -230,13 +254,20 @@ public class ColumnHeading implements Serializable {
                     criteria.add(Restrictions.in(name, filterCriteria.getValues()));
                 }                
             } else if(name.equals(TIME_STAMP)) {
-                list.add(Expression.EQ);
-                list.add(Expression.GE);
-                list.add(Expression.LE);
+                list.add(Expression.NOT_EQ);
+                list.add(Expression.GT);
+                list.add(Expression.LT);
+                list.add(Expression.BETWEEN);
                 if(forFragment) {
                     fragment = new Fragment("fragParent", "dateField");                    
                     YuiCalendar calendar = new YuiCalendar("value", new PropertyModel(this, "filterCriteria.value"), false);                    
-                    fragment.add(calendar);                   
+                    fragment.add(calendar);
+                    if(filterCriteria.getExpression() == Expression.BETWEEN) {
+                        YuiCalendar calendar2 = new YuiCalendar("value2", new PropertyModel(this, "filterCriteria.value2"), false);                                                
+                        fragment.add(calendar2);                            
+                    }  else {
+                        fragment.add(new WebMarkupContainer("value2").setVisible(false));
+                    }                   
                 }
             } else {
                 throw new RuntimeException("Unknown Column Heading " + name);
@@ -248,6 +279,19 @@ public class ColumnHeading implements Serializable {
             return list;
         }
     }
+    
+    private boolean filterHasValueList(DetachedCriteria criteria) {
+        return criteria != null
+                && filterCriteria.getExpression() != null
+                && filterCriteria.getValues() != null 
+                && filterCriteria.getValues().size() > 0;
+    }
+    
+    private boolean filterHasValue(DetachedCriteria criteria) {  
+        return criteria != null
+                && filterCriteria.getExpression() != null
+                && filterCriteria.getValue() != null;
+    }  
     
     //==========================================================================
     

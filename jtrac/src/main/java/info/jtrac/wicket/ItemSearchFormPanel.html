@@ -7,15 +7,15 @@
                     <tbody wicket:id="columns">
                         <tr valign="top">
                             <td wicket:id="columnName" class="label"></td>                            
-                            <td><select wicket:id="expression"/></td>
+                            <td class="alt"><select wicket:id="expression"/></td>
                             <td wicket:id="fragParent"></td>
                         </tr>
                     </tbody>
                 </table>
             </form>
-            <wicket:fragment wicket:id="multiSelect"><span wicket:id="values"></span></wicket:fragment>
-            <wicket:fragment wicket:id="textField"><input wicket:id="value"/></wicket:fragment>
-            <wicket:fragment wicket:id="dateField"><span wicket:id="value"></span></wicket:fragment>       
+            <wicket:fragment wicket:id="multiSelect"><span wicket:id="values"></span></wicket:fragment>            
+            <wicket:fragment wicket:id="textField"><input wicket:id="value"/> <input wicket:id="value2"/></wicket:fragment>            
+            <wicket:fragment wicket:id="dateField"><span wicket:id="value"></span> <span wicket:id="value2"></span></wicket:fragment>
         </wicket:panel>
     </body>
 </html>
