@@ -55,7 +55,7 @@ public class AllTest extends SeleniumTestCase {
 
     public void testSearchAllContainsItem() throws Exception {        
         selenium.clickAndWait("link=SEARCH");
-        assertTextPresent("Text Search");        
+        assertTextPresent("Show History");        
         selenium.clickAndWait("//input[@value='Search']");
         assertTextPresent("1 Record Found");        
         selenium.clickAndWait("link=TEST-1");
@@ -80,6 +80,7 @@ public class AllTest extends SeleniumTestCase {
         selenium.type("user.name", "Test User");
         selenium.type("user.email", "foo@bar.com");
         selenium.clickAndWait("//input[@value='Submit']");      
+        selenium.clickAndWait("//input[@value='Search']");
         assertTextPresent("Test User");    
     }
         
