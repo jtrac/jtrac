@@ -62,7 +62,7 @@ public class ItemViewPanel extends BasePanel {
         add(new Link("relate") {
             public void onClick() {
                 // TODO choose specific space for search
-                ItemSearch itemSearch = new ItemSearch(getPrincipal());
+                ItemSearch itemSearch = new ItemSearch(getPrincipal(), ItemViewPanel.this);
                 itemSearch.setRelatingItemRefId(item.getRefId());
                 setResponsePage(new ItemSearchFormPage(itemSearch));
             }

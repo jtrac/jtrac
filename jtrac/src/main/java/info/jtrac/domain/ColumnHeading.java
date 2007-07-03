@@ -40,17 +40,19 @@ import org.hibernate.criterion.Restrictions;
  */
 public class ColumnHeading implements Serializable {
     
-    public static final String ID = "id";
+    public static final String ID = "id";    
     public static final String SUMMARY = "summary";
     public static final String DETAIL = "detail";
     public static final String LOGGED_BY = "loggedBy";
     public static final String STATUS = "status";
     public static final String ASSIGNED_TO = "assignedTo";
     public static final String TIME_STAMP = "timeStamp";
+    public static final String SPACE = "space";
     
     private Field field;
     private String name;
-    private String label;   
+    private String label;
+    private boolean visible = true;
     
     private FilterCriteria filterCriteria = new FilterCriteria();    
     
@@ -61,6 +63,9 @@ public class ColumnHeading implements Serializable {
     
     public ColumnHeading(String name, Component c) {
         this.name = name;
+        if(name.equals(DETAIL) || name.equals(SPACE)) {
+            visible = false;
+        }
         this.label = localize(name, c);
     }
     
@@ -87,7 +92,20 @@ public class ColumnHeading implements Serializable {
         }
         list.add(new ColumnHeading(TIME_STAMP, c));
         return list;        
-    }                  
+    }
+    
+    public static List<ColumnHeading> getColumnHeadings(User u, Component c) {
+        List<ColumnHeading> list = new ArrayList<ColumnHeading>();
+        list.add(new ColumnHeading(ID, c));
+        list.add(new ColumnHeading(SPACE, c));        
+        list.add(new ColumnHeading(SUMMARY, c));        
+        list.add(new ColumnHeading(DETAIL, c));                
+        list.add(new ColumnHeading(STATUS, c));
+        list.add(new ColumnHeading(ASSIGNED_TO, c));
+        list.add(new ColumnHeading(LOGGED_BY, c));
+        list.add(new ColumnHeading(TIME_STAMP, c));        
+        return list;        
+    }    
     
     public List<Expression> getValidFilterExpressions() {        
         return (List<Expression>) process(null, null);        
@@ -97,7 +115,7 @@ public class ColumnHeading implements Serializable {
         return (Fragment) process(c, null);
     }
     
-    public void addRestrictions(DetachedCriteria criteria) {
+    public void addRestrictions(DetachedCriteria criteria, ItemSearch itemSearch) {
         process(null, criteria);
     }
     
@@ -236,7 +254,7 @@ public class ColumnHeading implements Serializable {
                         fragment.add(textField);
                         fragment.add(new WebMarkupContainer("value2").setVisible(false));
                 }
-                // TODO
+                // should never come here for criteria: see ItemSearch#getRefId()
             } else if(name.equals(SUMMARY)) {
                 list.add(Expression.CONTAINS);
                 if(forFragment) {
@@ -258,7 +276,7 @@ public class ColumnHeading implements Serializable {
                         fragment.add(textField);
                         fragment.add(new WebMarkupContainer("value2").setVisible(false));
                 }
-                // TODO
+                // should never come here for criteria: see ItemSearch#getSearchText()
             } else if(name.equals(STATUS)) {
                 list.add(Expression.IN);                
                 if(forFragment) {
@@ -299,8 +317,6 @@ public class ColumnHeading implements Serializable {
                     criteria.add(Restrictions.in(name, filterCriteria.getValues()));
                 }                
             } else if(name.equals(TIME_STAMP)) {
-                list.add(Expression.EQ);
-                list.add(Expression.NOT_EQ);
                 list.add(Expression.GT);
                 list.add(Expression.LT);
                 list.add(Expression.BETWEEN);
@@ -317,8 +333,6 @@ public class ColumnHeading implements Serializable {
                 }
                 if(filterHasValue(criteria)) {
                     switch(expression) {
-                        case EQ: criteria.add(Restrictions.eq(name, value)); break;
-                        case NOT_EQ: criteria.add(Restrictions.not(Restrictions.eq(name, value))); break;
                         case GT: criteria.add(Restrictions.gt(name, value)); break;
                         case LT: criteria.add(Restrictions.lt(name, value)); break;
                         case BETWEEN: 
@@ -328,6 +342,23 @@ public class ColumnHeading implements Serializable {
                         default:                            
                     }                        
                 }                 
+            } else if(name.equals(SPACE)) {
+                list.add(Expression.IN);
+                if(forFragment) {
+                    fragment = new Fragment("fragParent", "multiSelect");
+                    List<Space> spaces = new ArrayList(ComponentUtils.getPrincipal(c).getSpaces());
+                    JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", spaces, new IChoiceRenderer() {
+                        public Object getDisplayValue(Object o) {
+                            return ((Space) o).getName();
+                        }
+                        public String getIdValue(Object o, int i) {
+                            return ((Space) o).getId() + "";
+                        }
+                    });
+                    fragment.add(choice);
+                    choice.setModel(new PropertyModel(this, "filterCriteria.values"));
+                }
+                // should never come here for criteria: see ItemSearch#getSelectedSpaces()
             } else {
                 throw new RuntimeException("Unknown Column Heading " + name);
             }
@@ -377,7 +408,15 @@ public class ColumnHeading implements Serializable {
     public void setFilterCriteria(FilterCriteria filterCriteria) {
         this.filterCriteria = filterCriteria;
     }    
-            
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+    
     @Override
     public int hashCode() {
         return name.hashCode();

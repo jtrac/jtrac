@@ -184,10 +184,8 @@ public class ItemListPanel extends BasePanel {
                     public void respond(RequestCycle requestCycle) {
                         WebResponse r = (WebResponse) requestCycle.getResponse();
                         r.setAttachmentHeader("jtrac-export.xls");
-                        try {
-                            // TODO better localization
-                            eu.exportToExcel(((JtracApplication) getApplication()).getApplicationContext(),
-                                    getLocale()).write(r.getOutputStream());
+                        try {                            
+                            eu.exportToExcel().write(r.getOutputStream());
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
@@ -198,7 +196,7 @@ public class ItemListPanel extends BasePanel {
         
         //====================== HEADER ========================================        
         
-        final List<ColumnHeading> columnHeadings = itemSearch.getColumnHeadings();
+        final List<ColumnHeading> columnHeadings = itemSearch.getColumnHeadingsToRender();
         
         ListView headings = new ListView("headings", columnHeadings) {
             protected void populateItem(ListItem listItem) {
@@ -208,12 +206,8 @@ public class ItemListPanel extends BasePanel {
                         doSort(ch.getName());
                     }
                 };
-                listItem.add(headingLink);
-                if(ch.isField()) {
-                    headingLink.add(new Label("heading", ch.getField().getLabel()));
-                } else {
-                    headingLink.add(new Label("heading", localize("item_list." + ch.getName())));
-                }
+                listItem.add(headingLink);                
+                headingLink.add(new Label("heading", ch.getLabel()));
                 if (ch.getName().equals(itemSearch.getSortFieldName())) {
                     String order = itemSearch.isSortDescending() ? "order-down" : "order-up";
                     listItem.add(new SimpleAttributeModifier("class", order));
@@ -240,6 +234,8 @@ public class ItemListPanel extends BasePanel {
                     listItem.add(sam);
                 }                
                 
+                final boolean showHistory = itemSearch.isShowHistory();
+                
                 ListView fieldValues = new ListView("columns", columnHeadings) {
                     protected void populateItem(ListItem listItem) {
                         ColumnHeading ch = (ColumnHeading) listItem.getModelObject();
@@ -256,7 +252,7 @@ public class ItemListPanel extends BasePanel {
                                 Link refIdLink = new BookmarkablePageLink("refId", ItemViewPage.class, new PageParameters("0=" + refId));                                
                                 refIdFrag.add(refIdLink);
                                 refIdLink.add(new Label("refId", refId));
-                                if (itemSearch.isShowHistory()) {                                                                                                            
+                                if (showHistory) {                                                                                                            
                                     int index = ((History) item).getIndex();
                                     if (index > 0) {
                                         refIdFrag.add(new Label("index", " (" + index + ")"));
@@ -270,7 +266,7 @@ public class ItemListPanel extends BasePanel {
                             } else if(name.equals(ColumnHeading.SUMMARY)) {
                                 value = new PropertyModel(item, "summary");
                             } else if(name.equals(ColumnHeading.DETAIL)) {                                
-                                if(itemSearch.isShowHistory()) {
+                                if(showHistory) {
                                     Fragment detailFrag = new Fragment("column", "detail");
                                     final History history = (History) item;
                                     detailFrag.add(new AttachmentLinkPanel("attachment", history.getAttachment()));
@@ -292,6 +288,12 @@ public class ItemListPanel extends BasePanel {
                                 value = new PropertyModel(item, "assignedTo.name");
                             } else if(name.equals(ColumnHeading.TIME_STAMP)) {
                                 value = new Model(DateUtils.formatTimeStamp(item.getTimeStamp()));
+                            } else if(name.equals(ColumnHeading.SPACE)) {
+                                if(showHistory) {
+                                    value = new PropertyModel(item, "parent.space.name");
+                                } else {
+                                    value = new PropertyModel(item, "space.name");
+                                }
                             } else {
                                 throw new RuntimeException("Unexpected name: '" + name + "'");
                             }

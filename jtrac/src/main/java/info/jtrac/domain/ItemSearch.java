@@ -47,24 +47,23 @@ public class ItemSearch implements Serializable {
     private boolean showDetail;
         
     private long selectedItemId;
-    private String relatingItemRefId;
-    private String searchText;    
+    private String relatingItemRefId;    
     private Collection<Long> itemIds;
     
-    private List<Space> spaces;
     private List<ColumnHeading> columnHeadings;
     private Map<String, FilterCriteria> filterCriteriaMap = new LinkedHashMap<String, FilterCriteria>();
     
-    public ItemSearch(User user) {
+    public ItemSearch(User user, Component c) {
         this.user = user;
-        // TODO
+        this.columnHeadings = ColumnHeading.getColumnHeadings(user, c);
     }
     
     public ItemSearch(Space space, Component c) {        
-        this.space = space;
-        this.sortDescending = true;
+        this.space = space;        
         this.columnHeadings = ColumnHeading.getColumnHeadings(space, c);
     }      
+    
+    private DetachedCriteria parent; // temp working variable hack
     
     // have to do this two step process as "order by" clause conflicts with "count (*)" clause
     // so the DAO has to use getCriteriaForCount() separately
@@ -72,15 +71,39 @@ public class ItemSearch implements Serializable {
         DetachedCriteria criteria = getCriteriaForCount();
         if (sortFieldName == null) { // can happen only for multi-space search
             sortFieldName = "id"; // effectively is a sort on created date
-        }       
-        if(showHistory && sortFieldName.equals("id")) {
-            // if showHistory: sort by item.id and then history.id
-            if(sortDescending) {
-                criteria.addOrder(Order.desc("parent.id"));
-                criteria.addOrder(Order.desc("id"));
+        }
+        if(sortFieldName.equals("id")) {
+            if(showHistory) {
+                // if showHistory: sort by item.id and then history.id
+                if(sortDescending) {
+                    if(space == null) {
+                        DetachedCriteria parentSpace = parent.createCriteria("space");
+                        parentSpace.addOrder(Order.desc("name"));                        
+                    }                    
+                    criteria.addOrder(Order.desc("parent.id"));
+                    criteria.addOrder(Order.desc("id"));
+                } else {
+                    if(space == null) {
+                        DetachedCriteria parentSpace = parent.createCriteria("space");
+                        parentSpace.addOrder(Order.asc("name"));                        
+                    }                   
+                    criteria.addOrder(Order.asc("parent.id"));
+                    criteria.addOrder(Order.asc("id"));                
+                }
             } else {
-                criteria.addOrder(Order.asc("parent.id"));
-                criteria.addOrder(Order.asc("id"));                
+                if (sortDescending) {
+                    if(space == null) {
+                        DetachedCriteria parent = criteria.createCriteria("space");
+                        parent.addOrder(Order.desc("name"));
+                    }
+                    criteria.addOrder(Order.desc("id"));
+                } else {
+                    if(space == null) {
+                        DetachedCriteria parent = criteria.createCriteria("space");
+                        parent.addOrder(Order.asc("name"));
+                    }                    
+                    criteria.addOrder(Order.asc("id"));
+                }                 
             }
         } else {        
             if (sortDescending) {
@@ -97,32 +120,30 @@ public class ItemSearch implements Serializable {
         if (showHistory) {
             criteria = DetachedCriteria.forClass(History.class);           
             // apply restrictions to parent, this is an inner join =============
-            DetachedCriteria parent = criteria.createCriteria("parent");
+            parent = criteria.createCriteria("parent");
             if(space == null) {
                 parent.add(Restrictions.in("space", getSelectedSpaces()));
             } else {
                 parent.add(Restrictions.eq("space", space));
-            }          
+            } 
+            if (itemIds != null) {
+                parent.add(Restrictions.in("id", itemIds));
+            }             
         } else {
             criteria = DetachedCriteria.forClass(Item.class);
             if(space == null) {
                 criteria.add(Restrictions.in("space", getSelectedSpaces()));
             } else {
                 criteria.add(Restrictions.eq("space", space));
-            }            
+            } 
+            if (itemIds != null) {
+                criteria.add(Restrictions.in("id", itemIds));
+            }             
         }        
         for(ColumnHeading ch : columnHeadings) {
-            ch.addRestrictions(criteria);
-        }        
-        return criteria;
-    }
-    
-    private Collection<Space> getSelectedSpaces() {
-        if(spaces == null || spaces.size() == 0) {
-            return user.getSpaces();
-        } else {
-            return spaces;
+            ch.addRestrictions(criteria, this);
         }
+        return criteria;
     }
     
     public List<Field> getFields() {
@@ -140,20 +161,70 @@ public class ItemSearch implements Serializable {
         }        
     }    
     
+    private ColumnHeading getColumnHeading(String name) {
+        for(ColumnHeading ch : columnHeadings) {
+            if(ch.getName().equals(name)) {
+                return ch;                
+            }
+        }
+        return null;                
+    }
+    
+    public String getRefId() {
+        ColumnHeading ch = getColumnHeading(ColumnHeading.ID);
+        return (String) ch.getFilterCriteria().getValue();
+    }
+    
+    public String getSearchText() {
+        ColumnHeading ch = getColumnHeading(ColumnHeading.DETAIL);
+        return (String) ch.getFilterCriteria().getValue();
+    }
+    
+    public Collection<Space> getSelectedSpaces() {
+        ColumnHeading ch = getColumnHeading(ColumnHeading.SPACE);
+        List values = ch.getFilterCriteria().getValues();
+        if(values == null || values.size() == 0) {
+            return user.getSpaces();
+        }
+        return values;
+    }
+           
     public void toggleSortDirection() {
         sortDescending = !sortDescending;
     }      
     
+    private List getSingletonList(Object o) {
+        List list = new ArrayList(1);
+        list.add(o);
+        return list;
+    }
+    
     public void setLoggedBy(User loggedBy) {
-        // TODO
+        ColumnHeading ch = getColumnHeading(ColumnHeading.LOGGED_BY);
+        ch.getFilterCriteria().setExpression(FilterCriteria.Expression.IN);
+        ch.getFilterCriteria().setValues(getSingletonList(loggedBy));
     }
     
     public void setAssignedTo(User assignedTo) {
-        // TODO
+        ColumnHeading ch = getColumnHeading(ColumnHeading.ASSIGNED_TO);
+        ch.getFilterCriteria().setExpression(FilterCriteria.Expression.IN);
+        ch.getFilterCriteria().setValues(getSingletonList(assignedTo));
     }
     
     public void setStatus(int i) {
-        // TODO
+        ColumnHeading ch = getColumnHeading(ColumnHeading.STATUS);
+        ch.getFilterCriteria().setExpression(FilterCriteria.Expression.IN);
+        ch.getFilterCriteria().setValues(getSingletonList(i));
+    }
+    
+    public List<ColumnHeading> getColumnHeadingsToRender() {
+        List<ColumnHeading> list = new ArrayList<ColumnHeading>(columnHeadings.size());
+        for(ColumnHeading ch : columnHeadings) {
+            if(ch.isVisible()) {
+                list.add(ch);
+            }
+        }
+        return list;
     }
     
     //==========================================================================
@@ -246,14 +317,6 @@ public class ItemSearch implements Serializable {
         this.relatingItemRefId = relatingItemRefId;
     }
 
-    public String getSearchText() {
-        return searchText;
-    }
-
-    public void setSearchText(String searchText) {
-        this.searchText = searchText;
-    }
-
     public Collection<Long> getItemIds() {
         return itemIds;
     }
@@ -276,14 +339,6 @@ public class ItemSearch implements Serializable {
 
     public void setFilterCriteriaMap(Map<String, FilterCriteria> filterCriteriaMap) {
         this.filterCriteriaMap = filterCriteriaMap;
-    }
-
-    public List<Space> getSpaces() {
-        return spaces;
-    }
-
-    public void setSpaces(List<Space> spaces) {
-        this.spaces = spaces;
     }
     
 }

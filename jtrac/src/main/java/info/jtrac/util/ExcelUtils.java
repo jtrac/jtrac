@@ -17,12 +17,12 @@
 package info.jtrac.util;
 
 import info.jtrac.domain.AbstractItem;
+import info.jtrac.domain.ColumnHeading;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.ItemSearch;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
@@ -30,7 +30,6 @@ import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.springframework.context.MessageSource;
 
 /**
  * Excel Sheet generation helper
@@ -41,7 +40,7 @@ public class ExcelUtils {
     private List<AbstractItem> items;
     private ItemSearch itemSearch;
     private HSSFCellStyle csBold;
-    private HSSFCellStyle csDate; 
+    private HSSFCellStyle csDate;
     private HSSFWorkbook wb;
     
     public ExcelUtils(List items, ItemSearch itemSearch) {
@@ -55,11 +54,11 @@ public class ExcelUtils {
         this.csBold.setFont(fBold);
         
         this.csDate = wb.createCellStyle();
-        this.csDate.setDataFormat(HSSFDataFormat.getBuiltinFormat("m/d/yy"));        
+        this.csDate.setDataFormat(HSSFDataFormat.getBuiltinFormat("m/d/yy"));
         
         this.items = items;
         this.itemSearch = itemSearch;
-    }       
+    }
     
     private HSSFCell getCell(int row, int col) {
         HSSFRow sheetRow = sheet.getRow(row);
@@ -71,14 +70,14 @@ public class ExcelUtils {
             cell = sheetRow.createCell((short) col);
         }
         return cell;
-    }         
+    }
     
     private void setText(int row, int col, String text) {
-        HSSFCell cell = getCell(row, col);        
+        HSSFCell cell = getCell(row, col);
         cell.setCellType(HSSFCell.CELL_TYPE_STRING);
         cell.setEncoding(HSSFCell.ENCODING_UTF_16);
-        cell.setCellValue(text);      
-    }    
+        cell.setCellValue(text);
+    }
     
     private void setDate(int row, int col, Date date) {
         if (date == null) {
@@ -86,117 +85,105 @@ public class ExcelUtils {
         }
         HSSFCell cell = getCell(row, col);
         cell.setCellValue(date);
-        cell.setCellStyle(csDate);        
+        cell.setCellStyle(csDate);
     }
     
     private void setDouble(int row, int col, Double value) {
         if (value == null) {
             return;
-        }        
+        }
         HSSFCell cell = getCell(row, col);
-        cell.setCellValue(value);          
-    }  
+        cell.setCellValue(value);
+    }
     
     private void setHistoryIndex(int row, int col, int value) {
         if(value == 0) {
             return;
         }
         HSSFCell cell = getCell(row, col);
-        cell.setCellValue(value);          
-    }    
+        cell.setCellValue(value);
+    }
     
     private void setHeader(int row, int col, String text) {
         HSSFCell cell = getCell(row, col);
-        cell.setCellStyle(csBold);        
+        cell.setCellStyle(csBold);
         cell.setCellType(HSSFCell.CELL_TYPE_STRING);
         cell.setEncoding(HSSFCell.ENCODING_UTF_16);
-        cell.setCellValue(text);      
-    }    
-    
-    private String localize(String key) {
-        try {
-            return messageSource.getMessage("item_list." + key, null, locale);
-        } catch (Exception e) {
-            return "???item_list." + key + "???";
-        }
-    }     
-    
-    private MessageSource messageSource;
-    private Locale locale;
-    
-    public HSSFWorkbook exportToExcel(MessageSource ms, Locale loc) {
-                
-        this.messageSource = ms;
-        this.locale = loc;
+        cell.setCellValue(text);
+    }
+        
+    public HSSFWorkbook exportToExcel() {        
         
         boolean showDetail = itemSearch.isShowDetail();
         boolean showHistory = itemSearch.isShowHistory();
-        List<Field> fields = itemSearch.getFields();
-                
+        List<ColumnHeading> columnHeadings = itemSearch.getColumnHeadingsToRender();
+        
         int row = 0;
         int col = 0;
         
         // begin header row
-        setHeader(row, col++, localize("id"));
-        if(showHistory) {
-            setHeader(row, col++, localize("history"));
+        for(ColumnHeading ch : columnHeadings) {
+            setHeader(row, col++, ch.getLabel());
         }
-        setHeader(row, col++, localize("summary"));
-                
-        if (showDetail) {
-            setHeader(row, col++, localize("detail"));
-        }
-        
-        setHeader(row, col++, localize("loggedBy"));
-        setHeader(row, col++, localize("status"));
-        setHeader(row, col++, localize("assignedTo"));
-        
-        for(Field field : fields) {
-            setHeader(row, col++, field.getLabel());            
-        }
-        
-        setHeader(row, col++, localize("timeStamp"));        
         
         // iterate over list
         for(AbstractItem item : items) {
-            row++; col = 0; 
-            // begin data row
-            setText(row, col++, item.getRefId());
-            
-            if(showHistory) {
-                setHistoryIndex(row, col++, ((History) item).getIndex());
-            }
-            
-            setText(row, col++, item.getSummary());
-            
-            if (showDetail) {
-                if (showHistory) {
-                    History h = (History) item;
-                    if(h.getIndex() > 0) {
-                        setText(row, col++, h.getComment());
-                    } else {
-                        setText(row, col++, h.getDetail());
+            row++; col = 0;
+            for(ColumnHeading ch : columnHeadings) {
+                if(ch.isField()) {
+                    Field field = ch.getField();
+                    switch(field.getName().getType()) {
+                        case 4: // double
+                            setDouble(row, col++, (Double) item.getValue(field.getName()));
+                            break;
+                        case 6: // date
+                            setDate(row, col++, (Date) item.getValue(field.getName()));
+                            break;
+                        default:
+                            setText(row, col++, item.getCustomValue(field.getName()));
                     }
                 } else {
-                    setText(row, col++, item.getDetail());
+                    // TODO optimize if-then for performance
+                    String name = ch.getName();
+                    if(name.equals(ColumnHeading.ID)) {
+                        if (showHistory) {                                                                                                            
+                            int index = ((History) item).getIndex();
+                            if (index > 0) {
+                                setText(row, col++, item.getRefId() + " (" + index + ")");
+                            } else {
+                                setText(row, col++, item.getRefId());
+                            }
+                        } else {                                                                           
+                            setText(row, col++, item.getRefId());
+                        }                        
+                    } else if(name.equals(ColumnHeading.SUMMARY)) {
+                        setText(row, col++, item.getSummary());
+                    } else if(name.equals(ColumnHeading.DETAIL)) {
+                        if (showHistory) {
+                            History h = (History) item;
+                            if(h.getIndex() > 0) {
+                                setText(row, col++, h.getComment());
+                            } else {
+                                setText(row, col++, h.getDetail());
+                            }
+                        } else {
+                            setText(row, col++, item.getDetail());
+                        }
+                    } else if(name.equals(ColumnHeading.LOGGED_BY)) {
+                        setText(row, col++, item.getLoggedBy().getName());
+                    } else if(name.equals(ColumnHeading.STATUS)) {
+                        setText(row, col++, item.getStatusValue());
+                    } else if(name.equals(ColumnHeading.ASSIGNED_TO)) {
+                        setText(row, col++, (item.getAssignedTo() == null ? "" : item.getAssignedTo().getName()));
+                    } else if(name.equals(ColumnHeading.TIME_STAMP)) {
+                        setDate(row, col++, item.getTimeStamp());
+                    } else if(name.equals(ColumnHeading.SPACE)) {
+                        setText(row, col++, item.getSpace().getName());
+                    } else {
+                        throw new RuntimeException("Unexpected name: '" + name + "'");
+                    }
                 }
             }
-            
-            setText(row, col++, item.getLoggedBy().getName());
-            setText(row, col++, item.getStatusValue());
-            setText(row, col++, (item.getAssignedTo() == null ? "" : item.getAssignedTo().getName()));
-            
-            for(Field field : fields) {                
-                if (field.getName().getType() == 4) { // double
-                    setDouble(row, col++, (Double) item.getValue(field.getName()));
-                } else if (field.getName().getType() == 6) { // date
-                    setDate(row, col++, (Date) item.getValue(field.getName()));
-                } else {
-                    setText(row, col++, item.getCustomValue(field.getName()));
-                }               
-            }
-            
-            setDate(row, col++, item.getTimeStamp());            
         }
         return wb;
     }
