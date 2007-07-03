@@ -151,7 +151,7 @@ public class ItemFormPage extends BasePage {
             add(hideAssignedTo);
             add(hideNotifyList);
             add(hideEditReason);
-            if(item.getId() > 0) {
+            if(editMode) {
                 hideAssignedTo.setVisible(false);
                 hideNotifyList.setVisible(false);
                 hideEditReason.add(new TextArea("editReason").setRequired(true).add(new ErrorHighlighter()));
@@ -197,7 +197,7 @@ public class ItemFormPage extends BasePage {
                 public void onClick() {
                     setResponsePage(ItemViewPage.class, new PageParameters("0=" + item.getRefId()));
                 }                
-            }.setVisible(getCurrentItemSearch() != null));            
+            }.setVisible(editMode && getCurrentItemSearch() != null));            
         }
         
         @Override

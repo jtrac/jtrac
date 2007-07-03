@@ -85,8 +85,8 @@ public class ColumnHeading implements Serializable {
         list.add(new ColumnHeading(SUMMARY, c));        
         list.add(new ColumnHeading(DETAIL, c));                
         list.add(new ColumnHeading(STATUS, c));
-        list.add(new ColumnHeading(ASSIGNED_TO, c));
         list.add(new ColumnHeading(LOGGED_BY, c));
+        list.add(new ColumnHeading(ASSIGNED_TO, c));        
         for(Field f : s.getMetadata().getFieldList()) {
             list.add(new ColumnHeading(f));
         }
@@ -100,9 +100,9 @@ public class ColumnHeading implements Serializable {
         list.add(new ColumnHeading(SPACE, c));        
         list.add(new ColumnHeading(SUMMARY, c));        
         list.add(new ColumnHeading(DETAIL, c));                
-        list.add(new ColumnHeading(STATUS, c));
-        list.add(new ColumnHeading(ASSIGNED_TO, c));
+        list.add(new ColumnHeading(STATUS, c));        
         list.add(new ColumnHeading(LOGGED_BY, c));
+        list.add(new ColumnHeading(ASSIGNED_TO, c));
         list.add(new ColumnHeading(TIME_STAMP, c));        
         return list;        
     }    
