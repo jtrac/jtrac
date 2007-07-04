@@ -72,7 +72,7 @@ public class ItemSearch implements Serializable {
         if (sortFieldName == null) { // can happen only for multi-space search
             sortFieldName = "id"; // effectively is a sort on created date
         }
-        if(sortFieldName.equals("id")) {
+        if(sortFieldName.equals("id") || sortFieldName.equals("space")) {
             if(showHistory) {
                 // if showHistory: sort by item.id and then history.id
                 if(sortDescending) {

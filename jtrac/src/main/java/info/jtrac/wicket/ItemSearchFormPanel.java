@@ -126,7 +126,7 @@ public class ItemSearchFormPanel extends BasePanel {
                 final ColumnHeading ch = (ColumnHeading) listItem.getModelObject();
                 listItem.add(new Label("columnName", ch.getLabel()));
                 listItem.add(new CheckBox("visible", new PropertyModel(ch, "visible")));
-                DropDownChoice expressionChoice = new DropDownChoice("expression", ch.getValidFilterExpressions(), new IChoiceRenderer() {
+                DropDownChoice expressionChoice = new IndicatingDropDownChoice("expression", ch.getValidFilterExpressions(), new IChoiceRenderer() {
                     public Object getDisplayValue(Object o) {
                         String key = ((Expression) o).getKey();
                         return localize("item_filter." + key);
@@ -150,6 +150,7 @@ public class ItemSearchFormPanel extends BasePanel {
                         fragment.setOutputMarkupId(true);
                         listItem.replace(fragment);
                         target.addComponent(fragment);
+                        target.appendJavascript("document.getElementById('" + fragment.getMarkupId() + "').focus()");
                     }
                 });
             }

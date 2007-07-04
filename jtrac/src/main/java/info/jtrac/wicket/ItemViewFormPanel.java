@@ -30,9 +30,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.extensions.ajax.markup.html.WicketAjaxIndicatorAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -189,22 +187,6 @@ public class ItemViewFormPanel extends BasePanel {
         }
         
     }
-    /**
-     * wraps the ajax drop down so that the ajax "spinner" image shows
-     */
-    private final class IndicatingDropDownChoice extends DropDownChoice implements IAjaxIndicatorAware {
-        
-        private final WicketAjaxIndicatorAppender indicatorAppender = new WicketAjaxIndicatorAppender();
-        
-        public IndicatingDropDownChoice(String id, List list, IChoiceRenderer cr){
-            super(id, list, cr);
-            add(indicatorAppender);
-        }
-        
-        public java.lang.String getAjaxIndicatorMarkupId(){
-            return indicatorAppender.getMarkupId();
-        }
-        
-    }
+
     
 }
