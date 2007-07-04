@@ -61,6 +61,7 @@ public class HeaderPanel extends BasePanel {
                         Space current = spaces.get(0);
                         setCurrentSpace(current);                        
                     }
+                    setCurrentSpace(null);  // may have come here with back button
                     setResponsePage(ItemSearchFormPage.class);
                 }            
             });            

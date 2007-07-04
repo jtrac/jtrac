@@ -99,8 +99,7 @@ public class ColumnHeading implements Serializable {
         list.add(new ColumnHeading(ID, c));
         list.add(new ColumnHeading(SPACE, c));        
         list.add(new ColumnHeading(SUMMARY, c));        
-        list.add(new ColumnHeading(DETAIL, c));                
-        list.add(new ColumnHeading(STATUS, c));        
+        list.add(new ColumnHeading(DETAIL, c));                            
         list.add(new ColumnHeading(LOGGED_BY, c));
         list.add(new ColumnHeading(ASSIGNED_TO, c));
         list.add(new ColumnHeading(TIME_STAMP, c));        
@@ -294,14 +293,21 @@ public class ColumnHeading implements Serializable {
                     fragment.add(choice);
                     choice.setModel(new PropertyModel(this, "filterCriteria.values"));
                 }
-                if(criteria != null && filterCriteria.getValues() != null) {
+                if(filterHasValueList(criteria)) {
                     criteria.add(Restrictions.in(name, filterCriteria.getValues()));
                 }                
             } else if(name.equals(ASSIGNED_TO) || name.equals(LOGGED_BY)) {
                 list.add(Expression.IN);                
                 if(forFragment) {
                     fragment = new Fragment("fragParent", "multiSelect");
-                    List<User> users = ComponentUtils.getJtrac(c).findUsersForSpace(ComponentUtils.getCurrentSpace(c).getId());
+                    List<User> users = null;
+                    Space s = ComponentUtils.getCurrentSpace(c);
+                    if(s == null) {
+                        User u = ComponentUtils.getPrincipal(c);
+                        users = ComponentUtils.getJtrac(c).findUsersForUser(u);
+                    } else {
+                        users = ComponentUtils.getJtrac(c).findUsersForSpace(s.getId());
+                    }
                     JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", users, new IChoiceRenderer() {
                         public Object getDisplayValue(Object o) {
                             return ((User) o).getName();
@@ -313,7 +319,7 @@ public class ColumnHeading implements Serializable {
                     fragment.add(choice);
                     choice.setModel(new PropertyModel(this, "filterCriteria.values"));
                 }
-                if(criteria != null && filterCriteria.getValues() != null) {
+                if(filterHasValueList(criteria)) {
                     criteria.add(Restrictions.in(name, filterCriteria.getValues()));
                 }                
             } else if(name.equals(TIME_STAMP)) {
