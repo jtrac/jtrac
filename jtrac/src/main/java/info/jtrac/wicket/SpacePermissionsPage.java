@@ -108,6 +108,7 @@ public class SpacePermissionsPage extends BasePage {
             final SimpleAttributeModifier mandatory = new SimpleAttributeModifier("src", "../resources/field-mandatory.gif");            
             final SimpleAttributeModifier optional = new SimpleAttributeModifier("src", "../resources/field-optional.gif");
             final SimpleAttributeModifier hidden = new SimpleAttributeModifier("src", "../resources/field-hidden.gif");
+            final SimpleAttributeModifier altClass = new SimpleAttributeModifier("class", "alt");
             //==================================================================
             add(new ListView("states", stateKeys) {               
                 protected void populateItem(ListItem listItem) {
@@ -175,6 +176,9 @@ public class SpacePermissionsPage extends BasePage {
                             });
                             listItem.add(new ListView("fieldHeads", fields) {
                                 protected void populateItem(ListItem listItem) {
+                                    if(roles.size() == 1 && listItem.getIndex() % 2 == 0) {
+                                        listItem.add(altClass);
+                                    }
                                     final Field field = (Field) listItem.getModelObject();
                                     Button fieldButton = new Button("field") {
                                         @Override
