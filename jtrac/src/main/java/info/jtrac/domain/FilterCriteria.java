@@ -19,6 +19,13 @@ package info.jtrac.domain;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * can possibly be merged into ColumnHeading, but at the moment
+ * hold filter criteria entered by user for search
+ * value = for single values
+ * value2 = second value for "between" kind of queries
+ * values = list of values for multi-select filter criteria
+ */
 public class FilterCriteria implements Serializable {
     
     public enum Expression {        

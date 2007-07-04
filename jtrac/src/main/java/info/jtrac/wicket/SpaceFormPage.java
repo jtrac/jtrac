@@ -18,7 +18,6 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.Space;
 import info.jtrac.util.ValidationUtils;
-import java.io.Serializable;
 import java.util.List;
 import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.html.IHeaderContributor;

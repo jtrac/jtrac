@@ -41,6 +41,9 @@ public class TestPanel extends Panel {
         add(new TestForm("form"));
     }      
     
+    /**
+     * wicket form
+     */
     private class TestForm extends Form {
         
         private String name;
@@ -69,7 +72,8 @@ public class TestPanel extends Panel {
             feedback.setOutputMarkupId(true);
             add(feedback);
             setModel(new CompoundPropertyModel(this));
-            add(nameField = new TextField("name").setRequired(true).setOutputMarkupId(true));
+            nameField = new TextField("name").setRequired(true).setOutputMarkupId(true);
+            add(nameField);
             add(new TextField("description"));
             add(new AjaxSubmitButton("submit", this) {
                 @Override

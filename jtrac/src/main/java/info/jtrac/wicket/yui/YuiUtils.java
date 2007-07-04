@@ -18,6 +18,9 @@ package info.jtrac.wicket.yui;
 
 import java.util.Map;
 
+/**
+ * utilities for doing some javascript stuff e.g. basic JSON serialization
+ */
 public class YuiUtils {
     
     /**

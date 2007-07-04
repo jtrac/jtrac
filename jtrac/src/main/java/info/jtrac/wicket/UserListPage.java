@@ -108,6 +108,9 @@ public class UserListPage extends BasePage {
         
     }
     
+    /**
+     * wicket form
+     */
     private class SearchForm extends Form {        
 
         public String getSearchText() {

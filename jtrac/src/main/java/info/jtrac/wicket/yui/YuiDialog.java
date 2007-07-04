@@ -63,8 +63,8 @@ public class YuiDialog extends Panel {
         dialog.add(new WebMarkupContainer(CONTENT_ID));      
     }         
     
-    public void show(AjaxRequestTarget target, String heading, Component content) {
-        this.heading = heading;
+    public void show(AjaxRequestTarget target, String h, Component content) {
+        this.heading = h;
         target.addComponent(this); 
         dialog.setVisible(true);        
         dialog.replace(content);        

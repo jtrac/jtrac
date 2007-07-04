@@ -93,14 +93,14 @@ public class ItemSearch implements Serializable {
             } else {
                 if (sortDescending) {
                     if(space == null) {
-                        DetachedCriteria parent = criteria.createCriteria("space");
-                        parent.addOrder(Order.desc("name"));
+                        DetachedCriteria parentSpace = criteria.createCriteria("space");
+                        parentSpace.addOrder(Order.desc("name"));
                     }
                     criteria.addOrder(Order.desc("id"));
                 } else {
                     if(space == null) {
-                        DetachedCriteria parent = criteria.createCriteria("space");
-                        parent.addOrder(Order.asc("name"));
+                        DetachedCriteria parentSpace = criteria.createCriteria("space");
+                        parentSpace.addOrder(Order.asc("name"));
                     }                    
                     criteria.addOrder(Order.asc("id"));
                 }                 

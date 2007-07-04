@@ -70,7 +70,8 @@ public class ItemRefIdFormPanel extends BasePanel {
         public ItemRefIdForm() {
             super("form");            
             final FeedbackPanel feedback;
-            add(feedback = new FeedbackPanel("feedback"));
+            feedback = new FeedbackPanel("feedback");
+            add(feedback);
             feedback.setOutputMarkupId(true);
             refIdField = new TextField("refId", new PropertyModel(this, "refId"));
             refIdField.setOutputMarkupId(true);

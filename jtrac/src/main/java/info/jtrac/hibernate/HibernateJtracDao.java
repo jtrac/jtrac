@@ -284,8 +284,8 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     }
     
     public List<User> findUsersForSpaceSet(Collection<Space> spaces) {
-        return getHibernateTemplate().findByNamedParam("select u from User u join u.userSpaceRoles usr" +
-                " where usr.space in (:spaces) order by u.name", "spaces", spaces);
+        return getHibernateTemplate().findByNamedParam("select u from User u join u.userSpaceRoles usr" 
+                + " where usr.space in (:spaces) order by u.name", "spaces", spaces);
     }
     
     public void removeUserSpaceRole(UserSpaceRole userSpaceRole) {        
