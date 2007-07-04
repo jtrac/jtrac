@@ -45,7 +45,8 @@
             <para>
                 JTrac was created after the author felt that he could write a much better alternative to a 
                 commercial defect tracking tool that he was having to use. Development started in 2004. 
-                JTrac is ideal for issue tracking but is so generic that you can use it to track well - almost anything.
+                JTrac is ideal for issue tracking or bug-tracking, but it has been designed to be generic
+                and you can define custom fields to track almost anything you need.
             </para>
             <para>
                 JTrac development used to be hosted at <ulink url="https://jtrac.dev.java.net"/> but moved to SourceForge 
@@ -56,7 +57,7 @@
                 layer for version 2.0 was mainly using 
                 <ulink url="http://opensource.atlassian.com/confluence/spring/display/WEBFLOW/Home">Spring WebFlow</ulink>
                 but as of early 2007 (version 2.1.0 onwards) JTrac switched to using the 
-                <ulink url="http://wicket.sourceforge.net/"/>Wicket</ulink> framework.
+                <ulink url="http://wicket.sourceforge.net/">Wicket</ulink> framework.
             </para>
             <para>
                 JTrac is extremely easy to install and the only pre-requisite is a Java 5 (or higher) Runtime Environment.
@@ -142,7 +143,7 @@
                 There is a limit to how many custom fields of each type that you can configure for a Space.
                 These limits have been set after careful consideration and would very rarely fail to suffice. 
                 They are as follows: Drop Down - 10, Free Text - 5, Numeric - 3, Date/Time - 3.                
-            </para>
+            </para>          
         </sect1>
         <sect1 id="features-customworkflow">
             <title>Custom Workflow</title>
