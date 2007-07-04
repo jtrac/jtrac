@@ -60,8 +60,9 @@ public class HeaderPanel extends BasePanel {
                     if(spaces.size() == 1) {
                         Space current = spaces.get(0);
                         setCurrentSpace(current);                        
+                    } else {
+                        setCurrentSpace(null);  // may have come here with back button
                     }
-                    setCurrentSpace(null);  // may have come here with back button
                     setResponsePage(ItemSearchFormPage.class);
                 }            
             });            
