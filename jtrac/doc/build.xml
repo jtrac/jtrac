@@ -13,6 +13,10 @@
         </delete>      
     </target>    
     
+    <target name="set-proxy" if="http.proxyHost">
+        <property name="proxy.jvmopt" value="-Dhttp.proxyHost=${http.proxyHost}"/>
+    </target>
+    
     <target name="copy-images">
         <mkdir dir="${dist.doc.dir}/images"/>
         <copy todir="${dist.doc.dir}/images"> 
@@ -24,7 +28,7 @@
         </copy>        
     </target>
     
-    <target name="doc-pdf" depends="copy-images">
+    <target name="doc-pdf" depends="copy-images, set-proxy">
         <mkdir dir="${dist.doc.dir}/pdf"/>    
         <java classname="com.icl.saxon.StyleSheet" fork="true">
             <classpath>
@@ -33,7 +37,7 @@
                 </fileset>
             </classpath>
             <jvmarg value="-Xmx256M"/>
-            <jvmarg value="-Dhttp.proxyHost=${http.proxyHost}"/>
+            <jvmarg value="${proxy.jvmopt}"/>
             <arg value="-o"/>
             <arg value="${dist.doc.dir}/pdf/docbook_fop.tmp"/>
             <arg value="${doc.src.dir}/src/index.xml"/>
@@ -51,7 +55,7 @@
         <delete file="${dist.doc.dir}/pdf/docbook_fop.tmp"/>
     </target>
     
-    <target name="doc-html" depends="copy-images">
+    <target name="doc-html" depends="copy-images, set-proxy">
         <mkdir dir="${dist.doc.dir}/html"/>
         <java classname="com.icl.saxon.StyleSheet" fork="true" dir="${dist.doc.dir}/html">
             <classpath>
@@ -60,13 +64,13 @@
                 </fileset>
             </classpath>
             <jvmarg value="-Xmx256M"/>
-            <jvmarg value="-Dhttp.proxyHost=${http.proxyHost}"/>
+            <jvmarg value="${proxy.jvmopt}"/>
             <arg value="${basedir}/${doc.src.dir}/src/index.xml"/>
             <arg value="${basedir}/${doc.src.dir}/styles/html_chunk.xsl"/>
         </java>
     </target>
 
-    <target name="doc-html-single" depends="copy-images">
+    <target name="doc-html-single" depends="copy-images, set-proxy">
         <mkdir dir="${dist.doc.dir}/html-single"/>
         <java classname="com.icl.saxon.StyleSheet" fork="true">
             <classpath>
@@ -75,7 +79,7 @@
                 </fileset>
             </classpath>
             <jvmarg value="-Xmx256M"/>
-            <jvmarg value="-Dhttp.proxyHost=${http.proxyHost}"/>
+            <jvmarg value="${proxy.jvmopt}"/>
             <arg value="-o"/>
             <arg value="${dist.doc.dir}/html-single/index.html"/>
             <arg value="${doc.src.dir}/src/index.xml"/>
