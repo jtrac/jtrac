@@ -243,7 +243,7 @@ public class MailSender {
             sb.append("<p><a href='" + url + "'>" + url + "</a></p>");
             helper.setText(addHeaderAndFooter(sb), true);
             helper.setSentDate(new Date());
-            helper.setCc(from);
+            // helper.setCc(from);
             helper.setFrom(from);
             sendInNewThread(message);
         } catch (Exception e) {
