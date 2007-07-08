@@ -465,9 +465,7 @@
         <sect1 id="features-ldap">
             <title>LDAP authentication support</title>
             <para>
-                JTrac has support for authentication against an LDAP or Active Directory server ob ut of the box.  At the
-                moment, the support is limited to authentication, so authorization details such as roles and the mapping
-                of users to spaces (projects) has to be done using the JTrac admin screens.  
+                JTrac has built-in support for authentication against an LDAP or Active Directory server.
                 Please refer the <link linkend="installation-ldap">LDAP section</link> of the installation guide for more details.
             </para>
         </sect1>        
