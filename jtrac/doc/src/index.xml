@@ -63,7 +63,7 @@
                 JTrac is extremely easy to install and the only pre-requisite is a Java 5 (or higher) Runtime Environment.
                 You can be up and running in seconds because JTrac comes bundled with a small-footprint web-application 
                 server called <ulink url="http://jetty.mortbay.org/">Jetty</ulink> and an embedded database called 
-                <ulink url="http://www.hsqldb.org/">HSQLDB</ulink>.  Please refer the 
+                <ulink url="http://www.hsqldb.org/">HSQLDB</ulink>.  Please refer to the 
                 <link linkend="installation">installation</link> section of this documentation for details.  
                 You can also choose to drop the WAR file into a server of your choice and start using JTrac right away.
             </para>         
@@ -226,6 +226,20 @@
                 </mediaobject>
             </para>            
         </sect1>
+        <sect1 id="features-history">
+            <title>Detailed History View</title>
+            <para>
+                JTrac provides a very detailed history view that completely captures all comments or status
+                changes for an item.  The history can be seen when viewing an item and this is shown above.
+            </para>                 
+        </sect1>
+        <sect1 id="features-attachments">
+            <title>Attachments Support</title>
+            <para>
+                You can upload file attachments at the time of creating of an item or as many times
+                as required after an item has been created.
+            </para>                
+        </sect1>         
         <sect1 id="features-customroles">
             <title>Custom Roles</title>
             <para>
@@ -245,14 +259,19 @@
                         <para>Example of workflow where each role has clearly defined responsibilities.</para>
                     </caption>
                 </mediaobject>
-            </para>            
+            </para>
+            <para>              
+                In the example above, the roles highlighted in red on the visual "map" of the workflow being edited 
+                mean that at these points in the workflow - a user with the given role can assign only to other roles.  
+                So in this case, the TESTER can assign a New item only to a DEVELOPER role and not another TESTER.
+            </para>
             <para>              
                 Field-level permissions can be mapped to roles which allows for even more flexibility. 
                 For example, you can set a project up so that only a "MANAGER" can change the "Severity" level 
                 after a bug is submitted.  JTrac makes it possible for you to define very complex workflows, complete 
                 with both Status and Role dependent field-level permissions, and you can do all this within a 
                 single admin screen.                  
-            </para>                
+            </para>           
         </sect1>        
         <sect1 id="features-search">
             <title>Search Custom Fields</title>
@@ -356,31 +375,7 @@
                     </caption>
                 </mediaobject>
             </para>                
-        </sect1>
-        <sect1 id="features-attachments">
-            <title>Attachments Support</title>
-            <para>
-                You can upload file attachments at the time of creating of an item or as many times
-                as required after an item has been created.
-            </para>                
-        </sect1>            
-        <sect1 id="features-history">
-            <title>Detailed History View</title>
-            <para>
-                JTrac provides a very detailed history view that completely captures all comments or status
-                changes for an item.
-            </para>
-            <para>
-                <mediaobject>
-                    <imageobject role="html">
-                        <imagedata align="center" fileref="../images/history.png"/>
-                    </imageobject>
-                    <caption>
-                        <para>When viewing a single item, the history can be seen in detail</para>
-                    </caption>
-                </mediaobject>
-            </para>                  
-        </sect1>
+        </sect1>           
         <sect1 id="features-navigation">
             <title>Simple Navigation</title>
             <para>
@@ -396,9 +391,9 @@
                 viewing any particular item.
             </para>
             <para>
-                The option to add related items appears at the bottom of the screen when viewing an item 
-                (after it is created).  The navigation is designed so that you have the option to execute a 
-                search before selecting an item to cross-reference.
+                The option to add related items is available when viewing an item after it is created.
+                The navigation is designed so that you have the option to execute a search before selecting an 
+                item to cross-reference.
             </para>
         </sect1>
         <sect1 id="features-guest">
@@ -535,7 +530,7 @@ java -version
             </para>
             <para>
                 JTrac by default will use a "data" directory that will be automatically created
-                within the root (jtrac) folder.  The data directory will contain the files needed by HSQLDB
+                within the root folder "jtrac".  The data directory will contain the files needed by HSQLDB
                 (the embedded database) as well as hold uploaded attachments.  The "start.bat" file configures the 
                 Jetty server to use port 80 which you can easily change by editing "start.bat".  You may need to do this 
                 if for example JTrac does not start because a web-server (like Apache or IIS) is already running on port 80.
@@ -696,7 +691,7 @@ hibernate.show_sql=false
             <title>Installing as a Windows Service</title>
             <para>
                 Note that this approach can reportedly apply to other operating systems.  If you have been able to do
-                this successfully on Linux or Mac, please consider contributing some documentation on this.
+                this successfully on Linux or Mac environments, please consider contributing some documentation on this.
             </para>
             <para>                    
                 If you choose to use the bundled <ulink url="http://jetty.mortbay.org/">Jetty</ulink> web-application 
@@ -1270,13 +1265,10 @@ mvn install -Dhttp.proxyHost=172.19.56.56
             <title>Customize Ant Build Properties File</title>
             <para>
                 The downloaded source code should contain a sample "build.properties" file or you can look at the XML comment
-                provided at the top of "build.xml" for the structure.  Actually the solitary entry is optional and you will require 
-                this only if you want to use Tomcat (instead of Jetty).
-            </para>
-            <para>
-                If you are in a hurry and can't wait to start working on JTrac you can skip setting up Tomcat.  
-                But then, ensure that you remove the build.properties file if one already exists - before the next step.
-            </para>            
+                provided at the top of "build.xml" for the structure.  Actually the couple or so entries are optional and you will need
+                them only if you want to use Tomcat (instead of Jetty) or use the <ulink url="http://jakarta.apache.org/jmeter/">JMeter</ulink>
+                script available for load-testing.
+            </para>           
         </sect1>        
         <sect1 id="dev-antprops-generate">
             <title>Generate Dependencies Properties File</title>
@@ -1345,7 +1337,7 @@ mvn eclipse:eclipse -DdownloadSources=true
             <para>
                 You can explore all the Ant targets that are available. You can also try the "jetty-start" 
                 Ant target straight away that will compile, create and deploy the exploded war as well as boot a Jetty server.
-                For NetBeans users, the "jetty-start" target is neatly mapped to the "Run Main Project (F6)" shortcut, 
+                For NetBeans users, the "jetty-start" target is conveniently mapped to the "Run Main Project (F6)" shortcut, 
                 once you make JTrac the "main project".  Note that this Ant target is smart enough to detect if Jetty 
                 is already running and will perform a shutdown if required before re-starting.
             </para>
@@ -1370,7 +1362,7 @@ mvn eclipse:eclipse -DdownloadSources=true
         <sect1 id="dev-translating">
             <title>Adding a language translation for JTrac</title>
             <para>
-                JTrac has multi-language support and you can easily add a new language without re-compiling JTrac.
+                JTrac has full internationalization (i18n) support and you can easily add a new language without re-compiling JTrac.
                 All you need to do is introduce a translated version of the existing "messages.properties" file into
                 the "/WEB-INF/classes" folder.  Note that you will need to unzip the WAR file in order to add more files to it.
             </para>
