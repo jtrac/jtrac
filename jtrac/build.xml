@@ -153,7 +153,7 @@
         <ant antfile="doc/build.xml"/>
     </target>
         
-    <target name="dist" depends="dist-jtrac, dist-jtrac-src, dist-doc"/>
+    <target name="dist" depends="war, dist-doc, dist-jtrac, dist-jtrac-src"/>
     
     <target name="dist-site-clean">
         <delete includeemptydirs="true">
