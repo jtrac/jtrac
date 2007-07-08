@@ -230,7 +230,7 @@
             <title>Detailed History View</title>
             <para>
                 JTrac provides a very detailed history view that completely captures all comments or status
-                changes for an item.  The history can be seen when viewing an item and this is shown above.
+                changes for an item.  The history can be seen when viewing an item as shown above.
             </para>                 
         </sect1>
         <sect1 id="features-attachments">
@@ -264,6 +264,8 @@
                 In the example above, the roles highlighted in red on the visual "map" of the workflow being edited 
                 mean that at these points in the workflow - a user with the given role can assign only to other roles.  
                 So in this case, the TESTER can assign a New item only to a DEVELOPER role and not another TESTER.
+                And when an item is in the "Assigned" state, a DEVELOPER can only assign to a TESTER when changing the
+                status to "Fixed" or "Rejected".
             </para>
             <para>              
                 Field-level permissions can be mapped to roles which allows for even more flexibility. 
@@ -460,6 +462,15 @@
                 guide for more details and please consider contributing translations to the JTrac project.
             </para>
         </sect1>
+        <sect1 id="features-ldap">
+            <title>LDAP authentication support</title>
+            <para>
+                JTrac has support for authentication against an LDAP or Active Directory server ob ut of the box.  At the
+                moment, the support is limited to authentication, so authorization details such as roles and the mapping
+                of users to spaces (projects) has to be done using the JTrac admin screens.  
+                Please refer the <link linkend="installation-ldap">LDAP section</link> of the installation guide for more details.
+            </para>
+        </sect1>        
     </chapter>
     
     <chapter id="installation">
@@ -686,6 +697,36 @@ hibernate.show_sql=false
                 If you set the validation query to an empty string, this effectively disables the periodic testing of
                 idle database connections that Apache DBCP performs.
             </para>            
+        </sect1>
+        <sect1 id="installation-ldap">
+            <title>Configuring LDAP Authentication</title>
+            <para>
+                A couple of extra entries in "jtrac.properties" are required in order to configure LDAP authentication.
+                JTrac will attempt LDAP authentication if an "ldap.url" config entry is present.
+            </para>
+            <para>
+                <programlisting>
+                    
+ldap.url=ldap://myldaphost
+ldap.searchBase=DC=foo,DC=bar,DC=org
+                </programlisting>
+            </para>
+            <para>
+                The following additional entry is recommended if you are using Active Directory.  This switches on an 
+                LDAP optimization that is specific to Active Directory.
+            </para>
+            <para>
+                <programlisting>
+                    
+ldap.activeDirectoryDomain=MYDOMAIN
+                </programlisting>
+            </para>
+            <para>
+                The benefit of LDAP authentication is that users can sign-on to JTrac by using their existing LDAP credentials
+                (username and password).  At the moment, LDAP support is limited to authentication and not authorization
+                so users still have to be created by an administrator and mapped to the right Spaces before they can
+                sign-on successfully.
+            </para>
         </sect1>
         <sect1 id="installation-windowsservice">
             <title>Installing as a Windows Service</title>
@@ -928,7 +969,9 @@ wrapper.exe -r etc/wrapper.conf
                 <ulink url="http://www.ja-sig.org/products/cas/">Central Authentication Service</ulink> (CAS) installation
                 or LDAP server (even Windows Active Directory) for implementing Single Sign On. 
                 In fact most of the configuration is in place and only needs to be documented.  Note that as of version
-                2.1.0 JTrac supports LDAP authentication out of the box.
+                2.1.0 JTrac supports LDAP authentication out of the box.  This needs to be improved by adding an admin
+                screen that can browse and add users from an LDAP server.  Authorization using LDAP and allowing users to
+                plug in custom authentication and authorization routines would be good to have as well.
             </para>
         </sect1>
         <sect1 id="roadmap-xmlapi">            
