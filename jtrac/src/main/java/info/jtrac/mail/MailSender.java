@@ -145,13 +145,13 @@ public class MailSender {
         // ItemUtils adds the main inline CSS when generating the email content, so we gracefully degrade
         sb.append("<html><body><style type='text/css'>table.jtrac th, table.jtrac td { padding-left: 0.2em; padding-right: 0.2em; }</style>");
         sb.append(html);
-        sb.append("<hr/></html>");
+        sb.append("</html>");
         return sb.toString();
     }
     
     private String getItemViewAnchor(Item item, Locale locale) {
-        return "<p><a href='" + url + "app/item/" + item.getRefId() + "'>" 
-                + fmt("clickHereToAccess", locale) + " " + item.getRefId() + "</a></p>";
+        String itemUrl = url + "app/item/" + item.getRefId();
+        return "<p style='font-family: Arial; font-size: 75%'><a href='" + itemUrl + "'>" + itemUrl + "</a></p>";
     }
     
     private String getSubject(Item item) {       

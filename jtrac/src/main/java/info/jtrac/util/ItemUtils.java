@@ -113,10 +113,10 @@ public final class ItemUtils {
         if (!isWeb) {
             // inline CSS so that HTML mail works across most mail-reader clients
             String tdCommonStyle = "border: 1px solid black";
-            tableStyle = " class='jtrac' style='border-collapse: collapse; font-family: Arial; font-size: 80%'";
+            tableStyle = " class='jtrac' style='border-collapse: collapse; font-family: Arial; font-size: 75%'";
             tdStyle = " style='" + tdCommonStyle + "'";
             thStyle = " style='" + tdCommonStyle + "; background: #CCCCCC'";
-            altStyle = " style='background: #DEDEFF'";
+            altStyle = " style='background: #e1ecfe'";
             labelStyle = " style='" + tdCommonStyle + "; background: #CCCCCC; font-weight: bold; text-align: right'";
         }
 
