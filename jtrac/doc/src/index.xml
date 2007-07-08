@@ -721,9 +721,9 @@ ldap.activeDirectoryDomain=MYDOMAIN
             </para>
             <para>
                 The benefit of LDAP authentication is that users can sign-on to JTrac by using their existing LDAP credentials
-                (username and password).  At the moment, LDAP support is limited to authentication and not authorization
-                so users still have to be created by an administrator and mapped to the right Spaces before they can
-                sign-on successfully.
+                (username and password).  At the moment, LDAP support is limited to authentication and not authorization.
+                Users still have to be created by an administrator and mapped to the relevant Spaces using the JTrac
+                administration screens before they can start using JTrac.
             </para>
         </sect1>
         <sect1 id="installation-windowsservice">
