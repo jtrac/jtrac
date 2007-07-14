@@ -9,7 +9,7 @@ JTrac
 
     * Add custom fields and drop downs
     
-    * Support for multiple projects
+    * Unlimited project spaces per installation
     
     * Per-project customizable workflow
     
@@ -35,7 +35,9 @@ JTrac
     
     * Support for all popular databases
     
-    * Support for multiple languages
+    * Translated into multiple languages (Spanish, French, German, Russian, Japanese etc.)
+    
+    * Support for LDAP or Active Directory based authentication
     
     * Embedded database and web-app server - download and start using right away!
     
