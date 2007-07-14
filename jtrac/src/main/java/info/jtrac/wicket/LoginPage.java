@@ -28,8 +28,8 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
+import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.BoundCompoundPropertyModel;
@@ -56,7 +56,7 @@ public class LoginPage extends WebPage {
     /**
      * wicket form
      */     
-    private class LoginForm extends Form {                               
+    private class LoginForm extends StatelessForm {                               
         
         private String loginName;
         private String password;
