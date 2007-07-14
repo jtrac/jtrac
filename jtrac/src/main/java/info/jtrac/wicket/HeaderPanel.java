@@ -22,6 +22,7 @@ import info.jtrac.domain.User;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.Cookie;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -108,7 +109,7 @@ public class HeaderPanel extends BasePanel {
                     ((WebResponse) getRequestCycle().getResponse()).clearCookie(cookie);                    
                     getSession().invalidate();
                     logger.debug("invalidated session and cleared cookie");                    
-                    setResponsePage(LogoutPage.class);
+                    setResponsePage(LogoutPage.class, new PageParameters("locale=" + user.getLocale()));
                 }            
             });
             add(new WebMarkupContainer("login").setVisible(false));

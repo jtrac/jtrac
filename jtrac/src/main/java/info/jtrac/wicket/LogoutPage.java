@@ -18,8 +18,10 @@ package info.jtrac.wicket;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.springframework.util.StringUtils;
 
 /**
  * logout page.  the session invalidation code is in HeaderPanel
@@ -28,7 +30,11 @@ public class LogoutPage extends WebPage {
     
     protected final Log logger = LogFactory.getLog(getClass());
     
-    public LogoutPage() {
+    public LogoutPage(PageParameters params) {
+        String locale = params.getString("locale");
+        if(locale != null) {
+            getRequestCycle().getSession().setLocale(StringUtils.parseLocaleString(locale));
+        }
         setVersioned(false);
         add(new Label("title", getLocalizer().getString("logout.title", null)));
         String jtracVersion = ComponentUtils.getJtrac(this).getReleaseVersion();
