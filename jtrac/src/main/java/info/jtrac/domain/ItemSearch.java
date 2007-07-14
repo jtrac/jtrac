@@ -177,7 +177,12 @@ public class ItemSearch implements Serializable {
     
     public String getSearchText() {
         ColumnHeading ch = getColumnHeading(ColumnHeading.DETAIL);
-        return (String) ch.getFilterCriteria().getValue();
+        String s = (String) ch.getFilterCriteria().getValue();
+        if(s != null && s.trim().equals("")) {
+            ch.getFilterCriteria().setValue(null);
+            return null;
+        }
+        return s;
     }
     
     public Collection<Space> getSelectedSpaces() {
