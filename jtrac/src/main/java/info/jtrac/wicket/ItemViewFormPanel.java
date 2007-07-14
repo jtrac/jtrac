@@ -88,7 +88,27 @@ public class ItemViewFormPanel extends BasePanel {
             add(new CustomFieldsFormPanel("fields", model, item, user));
             // =================================================================
             final Space space = item.getSpace();
-            final List<UserSpaceRole> userSpaceRoles = getJtrac().findUserRolesForSpace(space.getId());
+            final List<UserSpaceRole> userSpaceRoles = getJtrac().findUserRolesForSpace(space.getId());            
+            // assigned to ===================================================== 
+            final WebMarkupContainer border = new WebMarkupContainer("border");
+            border.setOutputMarkupId(true);
+            final WebMarkupContainer hide = new WebMarkupContainer("hide");
+            border.add(hide);                       
+            final List<User> emptyList = new ArrayList<User>(0);  // will be populated over Ajax
+            assignedToChoice = new DropDownChoice("assignedTo", emptyList, new IChoiceRenderer() {
+                public Object getDisplayValue(Object o) {
+                    return ((User) o).getName();
+                }
+                public String getIdValue(Object o, int i) {
+                    return ((User) o).getId() + "";
+                }
+            });
+            assignedToChoice.setOutputMarkupId(true);
+            assignedToChoice.setVisible(false);
+            assignedToChoice.setNullValid(true);            
+            border.add(new ErrorHighlighter(assignedToChoice));
+            border.add(assignedToChoice);
+            add(border);
             // status ==========================================================
             final Map<Integer, String> statesMap = item.getPermittedTransitions(user);
             List<Integer> states = new ArrayList(statesMap.keySet());
@@ -105,34 +125,19 @@ public class ItemViewFormPanel extends BasePanel {
             statusChoice.add(new AjaxFormComponentUpdatingBehavior("onChange") {
                 protected void onUpdate(AjaxRequestTarget target) {
                     Integer selectedStatus = (Integer) getFormComponent().getConvertedInput();
-                    if (selectedStatus == null) {
-                        assignedToChoice.setEnabled(false);
+                    if (selectedStatus == null) {                        
+                        assignedToChoice.setVisible(false);
+                        hide.setVisible(true);
                     } else {
                         List<User> assignable = UserUtils.filterUsersAbleToTransitionFrom(userSpaceRoles, space, selectedStatus);
                         assignedToChoice.setChoices(assignable);
-                        assignedToChoice.setEnabled(true);
+                        assignedToChoice.setVisible(true);
+                        hide.setVisible(false);
                     }
-                    target.addComponent(assignedToChoice);
+                    target.addComponent(border);
                 }
             });
             add(statusChoice);
-            // assigned to =====================================================
-            List<User> empty = new ArrayList<User>(0);  // will be populated over Ajax
-            assignedToChoice = new DropDownChoice("assignedTo", empty, new IChoiceRenderer() {
-                public Object getDisplayValue(Object o) {
-                    return ((User) o).getName();
-                }
-                public String getIdValue(Object o, int i) {
-                    return ((User) o).getId() + "";
-                }
-            });
-            assignedToChoice.setOutputMarkupId(true);
-            assignedToChoice.setEnabled(false);
-            assignedToChoice.setNullValid(true);
-            WebMarkupContainer border = new WebMarkupContainer("border");
-            border.add(new ErrorHighlighter(assignedToChoice));
-            border.add(assignedToChoice);
-            add(border);
             // notify list =====================================================
             List<ItemUser> choices = UserUtils.convertToItemUserList(userSpaceRoles);
             ListMultipleChoice itemUsers = new JtracCheckBoxMultipleChoice("itemUsers", choices, new IChoiceRenderer() {

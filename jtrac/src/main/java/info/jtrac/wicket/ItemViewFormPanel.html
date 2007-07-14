@@ -12,7 +12,14 @@
                         </tr>
                         <tr>
                             <td class="label"><wicket:message key="item_view_form.assignTo"/></td>
-                            <td><div wicket:id="border"><select wicket:id="assignedTo"/></div></td>
+                            <td>
+                                <div wicket:id="border">
+                                    <select wicket:id="assignedTo"></select>
+                                    <span wicket:id="hide">
+                                        <select><option><wicket:message key="item_view_form.chooseStatus"/></option></select>
+                                    </span>
+                                </div>                                
+                            </td>
                         </tr>
                         <tr>
                             <td class="label">
