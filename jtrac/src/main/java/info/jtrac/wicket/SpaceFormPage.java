@@ -63,7 +63,7 @@ public class SpaceFormPage extends BasePage {
      */     
     private class SpaceForm extends Form {
               
-        private transient Space space;
+        private Space space;
         private Space copyFrom;  
         
         private JtracFeedbackMessageFilter filter;          

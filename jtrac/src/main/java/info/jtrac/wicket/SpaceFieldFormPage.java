@@ -68,7 +68,7 @@ public class SpaceFieldFormPage extends BasePage {
         private JtracFeedbackMessageFilter filter;
         private TextField optionField;
         
-        private transient Field field;
+        private Field field;
         private String option;
 
         public Field getField() {

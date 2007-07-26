@@ -67,7 +67,7 @@ public class UserFormPage extends BasePage {
      */    
     private class UserForm extends Form {
         
-        private transient User user;
+        private User user;
         private String password;
         private String passwordConfirm;
         private boolean sendNotifications;
