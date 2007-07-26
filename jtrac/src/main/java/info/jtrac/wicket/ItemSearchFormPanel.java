@@ -95,6 +95,15 @@ public class ItemSearchFormPanel extends BasePanel {
             public void onSubmit() {
                 String refId = itemSearch.getRefId();                
                 if(refId != null) {
+                    if(getCurrentSpace() != null) {
+                        // user can save typing by entering the refId number without the space prefixCode
+                        try { 
+                            long id = Long.parseLong(refId);
+                            refId = getCurrentSpace().getPrefixCode() + "-" + id;
+                        } catch(Exception e) {
+                            // oops that didn't work, continue
+                        }
+                    }
                     try {
                         new ItemRefId(refId);
                     } catch(InvalidRefIdException e) {
@@ -105,7 +114,8 @@ public class ItemSearchFormPanel extends BasePanel {
                     if(item == null) {
                         form.error(localize("item_search_form.error.refId.notFound")); 
                         return;
-                    }                    
+                    }
+                    setCurrentItemSearch(itemSearch);
                     setResponsePage(ItemViewPage.class, new PageParameters("0=" + item.getRefId()));
                     return;
                 }
@@ -134,12 +144,12 @@ public class ItemSearchFormPanel extends BasePanel {
                         return ((Expression) o).getKey();
                     }
                 });
-                expressionChoice.setModel(new PropertyModel(ch.getFilterCriteria(), "expression"));
-                expressionChoice.setNullValid(true);
-                listItem.add(expressionChoice);
                 final Component fragParent = getFilterUiFragment(ch);                
                 fragParent.setOutputMarkupId(true);
                 listItem.add(fragParent);
+                expressionChoice.setModel(new PropertyModel(ch.getFilterCriteria(), "expression"));
+                expressionChoice.setNullValid(true);
+                listItem.add(expressionChoice);                
                 expressionChoice.add(new AjaxFormComponentUpdatingBehavior("onChange") {
                     protected void onUpdate(AjaxRequestTarget target) {
                         if(!ch.getFilterCriteria().requiresUiFragmentUpdate()) {
