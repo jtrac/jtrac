@@ -323,9 +323,9 @@ public class ColumnHeading implements Serializable {
                     criteria.add(Restrictions.in(name, filterCriteria.getValues()));
                 }                
             } else if(name.equals(TIME_STAMP)) {
-                list.add(Expression.GT);
-                list.add(Expression.LT);
                 list.add(Expression.BETWEEN);
+                list.add(Expression.GT);
+                list.add(Expression.LT);                
                 if(forFragment) {
                     fragment = new Fragment("fragParent", "dateField");                    
                     YuiCalendar calendar = new YuiCalendar("value", new PropertyModel(this, "filterCriteria.value"), false);                    

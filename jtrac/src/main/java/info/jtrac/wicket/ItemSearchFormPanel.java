@@ -37,6 +37,7 @@ import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -49,6 +50,7 @@ import org.apache.wicket.model.PropertyModel;
 public class ItemSearchFormPanel extends BasePanel {
     
     private ItemSearch itemSearch;
+    private boolean expandAll;
     
     public ItemSearchFormPanel(String id, User user) {
         super(id);
@@ -130,12 +132,22 @@ public class ItemSearchFormPanel extends BasePanel {
                 setResponsePage(ItemListPage.class);
             }
         });
+        form.add(new Link("expandAll") {
+            public void onClick() {
+                expandAll = true;
+            }
+            @Override
+            public boolean isVisible() {
+                return !expandAll;
+            }
+        });
         form.add(new ListView("columns", itemSearch.getColumnHeadings()) {
             protected void populateItem(final ListItem listItem) {
                 final ColumnHeading ch = (ColumnHeading) listItem.getModelObject();
                 listItem.add(new Label("columnName", ch.getLabel()));
                 listItem.add(new CheckBox("visible", new PropertyModel(ch, "visible")));
-                DropDownChoice expressionChoice = new IndicatingDropDownChoice("expression", ch.getValidFilterExpressions(), new IChoiceRenderer() {
+                List<Expression> validExpressions = ch.getValidFilterExpressions();
+                DropDownChoice expressionChoice = new IndicatingDropDownChoice("expression", validExpressions, new IChoiceRenderer() {
                     public Object getDisplayValue(Object o) {
                         String key = ((Expression) o).getKey();
                         return localize("item_filter." + key);
@@ -144,7 +156,16 @@ public class ItemSearchFormPanel extends BasePanel {
                         return ((Expression) o).getKey();
                     }
                 });
-                final Component fragParent = getFilterUiFragment(ch);                
+                if(ch.getName().equals(ColumnHeading.ID)) {
+                    ch.getFilterCriteria().setExpression(Expression.EQ);   
+                }
+                Component fragParent = null;
+                if(expandAll) {                    
+                    ch.getFilterCriteria().setExpression(validExpressions.get(0));
+                    fragParent = ch.getFilterUiFragment(ItemSearchFormPanel.this);
+                } else {
+                    fragParent = getFilterUiFragment(ch);
+                }
                 fragParent.setOutputMarkupId(true);
                 listItem.add(fragParent);
                 expressionChoice.setModel(new PropertyModel(ch.getFilterCriteria(), "expression"));
@@ -169,9 +190,8 @@ public class ItemSearchFormPanel extends BasePanel {
     private Component getFilterUiFragment(ColumnHeading ch) {
         if(ch.getFilterCriteria().getExpression() == null) {
             return new WebMarkupContainer("fragParent");
-        } else {
-            return ch.getFilterUiFragment(ItemSearchFormPanel.this);
         }
+        return ch.getFilterUiFragment(ItemSearchFormPanel.this);
     }
-    
+
 }

@@ -170,19 +170,22 @@ public class ItemSearch implements Serializable {
         return null;                
     }
     
+    private String getStringValue(ColumnHeading ch) {
+        String s = (String) ch.getFilterCriteria().getValue();
+        if(s == null || s.trim().length() == 0) {
+            return null;
+        }       
+        return s;        
+    }
+    
     public String getRefId() {
         ColumnHeading ch = getColumnHeading(ColumnHeading.ID);
-        return (String) ch.getFilterCriteria().getValue();
+        return getStringValue(ch);
     }
     
     public String getSearchText() {
         ColumnHeading ch = getColumnHeading(ColumnHeading.DETAIL);
-        String s = (String) ch.getFilterCriteria().getValue();
-        if(s != null && s.trim().equals("")) {
-            ch.getFilterCriteria().setValue(null);
-            return null;
-        }
-        return s;
+        return getStringValue(ch);
     }
     
     public Collection<Space> getSelectedSpaces() {
