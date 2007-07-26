@@ -134,7 +134,7 @@ public class ItemSearchFormPanel extends BasePanel {
         });
         form.add(new Link("expandAll") {
             public void onClick() {
-                expandAll = true;
+                expandAll = true;                
             }
             @Override
             public boolean isVisible() {
@@ -160,7 +160,7 @@ public class ItemSearchFormPanel extends BasePanel {
                     ch.getFilterCriteria().setExpression(Expression.EQ);   
                 }
                 Component fragParent = null;
-                if(expandAll) {                    
+                if(expandAll) {
                     ch.getFilterCriteria().setExpression(validExpressions.get(0));
                     fragParent = ch.getFilterUiFragment(ItemSearchFormPanel.this);
                 } else {
@@ -190,7 +190,7 @@ public class ItemSearchFormPanel extends BasePanel {
     private Component getFilterUiFragment(ColumnHeading ch) {
         if(ch.getFilterCriteria().getExpression() == null) {
             return new WebMarkupContainer("fragParent");
-        }
+        }        
         return ch.getFilterUiFragment(ItemSearchFormPanel.this);
     }
 

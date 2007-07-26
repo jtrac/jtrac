@@ -172,7 +172,8 @@ public class ItemSearch implements Serializable {
     
     private String getStringValue(ColumnHeading ch) {
         String s = (String) ch.getFilterCriteria().getValue();
-        if(s == null || s.trim().length() == 0) {
+        if(s == null || s.trim().length() == 0) {            
+            ch.getFilterCriteria().setExpression(null);
             return null;
         }       
         return s;        
@@ -192,6 +193,7 @@ public class ItemSearch implements Serializable {
         ColumnHeading ch = getColumnHeading(ColumnHeading.SPACE);
         List values = ch.getFilterCriteria().getValues();
         if(values == null || values.size() == 0) {
+            ch.getFilterCriteria().setExpression(null);
             return user.getSpaces();
         }
         return values;

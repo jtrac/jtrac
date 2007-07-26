@@ -377,16 +377,30 @@ public class ColumnHeading implements Serializable {
     }
     
     private boolean filterHasValueList(DetachedCriteria criteria) {
-        return criteria != null
-                && filterCriteria.getExpression() != null
+        if(criteria != null) {
+            if(filterCriteria.getExpression() != null
                 && filterCriteria.getValues() != null 
-                && filterCriteria.getValues().size() > 0;
+                && filterCriteria.getValues().size() > 0) {
+                return true;
+            } else {
+                filterCriteria.setExpression(null);
+                return false;
+            }
+        }
+        return false;
     }
     
     private boolean filterHasValue(DetachedCriteria criteria) {  
-        return criteria != null
-                && filterCriteria.getExpression() != null
-                && filterCriteria.getValue() != null;
+        if(criteria != null) {
+            Object value = filterCriteria.getValue();
+            if(filterCriteria.getExpression() != null && value != null && value.toString().trim().length() > 0) {
+                return true;
+            } else {
+                filterCriteria.setExpression(null);                                
+                return false;
+            }                       
+        }
+        return false;
     }  
     
     //==========================================================================
