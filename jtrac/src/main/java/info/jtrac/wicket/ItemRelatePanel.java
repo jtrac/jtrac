@@ -70,6 +70,7 @@ public class ItemRelatePanel extends BasePanel {
             add(new Link("cancel") {
                 public void onClick() {
                     Item item = getJtrac().loadItemByRefId(refId);
+                    setCurrentItemSearch(null);
                     setResponsePage(ItemViewPage.class, new PageParameters("0=" + item.getRefId()));
                 }
             });
