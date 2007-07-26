@@ -56,10 +56,15 @@ public class ItemViewPage extends BasePage {
         Link link = new Link("back") {
             public void onClick() {
                 itemSearch.setSelectedItemId(item.getId());
-                setResponsePage(ItemListPage.class);
+                if(itemSearch.getRefId() != null) {
+                     // user had entered item id directly, go back to search page
+                     setResponsePage(new ItemSearchFormPage(itemSearch));
+                } else {
+                     setResponsePage(ItemListPage.class);
+                }
             }
         };
-        if(itemSearch == null || itemSearch.getRefId() != null) {
+        if(itemSearch == null) {
             link.setVisible(false);
         }
         
