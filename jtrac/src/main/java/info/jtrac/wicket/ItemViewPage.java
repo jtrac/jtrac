@@ -59,7 +59,7 @@ public class ItemViewPage extends BasePage {
                 setResponsePage(ItemListPage.class);
             }
         };
-        if(itemSearch == null) {
+        if(itemSearch == null || itemSearch.getRefId() != null) {
             link.setVisible(false);
         }
         

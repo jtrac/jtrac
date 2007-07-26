@@ -105,8 +105,7 @@ public class ItemSearchFormPanel extends BasePanel {
                     if(item == null) {
                         form.error(localize("item_search_form.error.refId.notFound")); 
                         return;
-                    }
-                    setCurrentItemSearch(null);
+                    }                    
                     setResponsePage(ItemViewPage.class, new PageParameters("0=" + item.getRefId()));
                     return;
                 }
