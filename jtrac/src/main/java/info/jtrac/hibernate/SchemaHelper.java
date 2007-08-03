@@ -16,10 +16,10 @@
 
 package info.jtrac.hibernate;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaUpdate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utilities to create the database schema, drop and create tables
@@ -28,14 +28,14 @@ import org.hibernate.tool.hbm2ddl.SchemaUpdate;
  */
 public class SchemaHelper {
     
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     private String driverClassName;
     private String url;
     private String username;
     private String password;
     private String hibernateDialect;
-    private String[] mappingResources;        
-
-    private final Log logger = LogFactory.getLog(SchemaHelper.class);    
+    private String[] mappingResources;    
 
     public void setDriverClassName(String driverClassName) {
         this.driverClassName = driverClassName;

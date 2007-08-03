@@ -20,8 +20,8 @@ import java.sql.Connection;
 import java.sql.Statement;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp.BasicDataSource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
@@ -32,15 +32,15 @@ import org.springframework.jdbc.datasource.SingleConnectionDataSource;
  */
 public class DataSourceFactoryBean implements FactoryBean, DisposableBean {
     
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     private String driverClassName;
     private String url;
     private String username;
     private String password;
     private String validationQuery;
     
-    private DataSource dataSource;
-    
-    private final Log logger = LogFactory.getLog(getClass());
+    private DataSource dataSource;        
 
     public void setDriverClassName(String driverClassName) {
         this.driverClassName = driverClassName;

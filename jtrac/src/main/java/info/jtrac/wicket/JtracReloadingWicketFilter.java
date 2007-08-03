@@ -16,18 +16,25 @@
 
 package info.jtrac.wicket;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.application.ReloadingClassLoader;
 import org.apache.wicket.protocol.http.ReloadingWicketFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * only used in development mode, hot deploy modified code
- * as far as possible without having to restart webapp
+ * as far as possible without having to restart webappimport org.slf4j.LoggerFactory;
+
  */
-public class JtracReloadingWicketFilter extends ReloadingWicketFilter {
+public class JtracReloadingWicketFilter extends ReloadingWicketFilter {        
     
-    private final Log logger = LogFactory.getLog(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
+    private static final String banner = 
+        "\n***********************************************\n"
+        + "*** WARNING: Reloading Wicket Filter in use ***\n"
+        + "***    This is wrong if production mode.    ***\n"
+        + "***********************************************";      
     
     static {
         ReloadingClassLoader.includePattern("info.jtrac.wicket.*");        

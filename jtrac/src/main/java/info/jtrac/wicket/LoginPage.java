@@ -19,8 +19,6 @@ package info.jtrac.wicket;
 import info.jtrac.Jtrac;
 import info.jtrac.domain.User;
 import javax.servlet.http.Cookie;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -33,13 +31,15 @@ import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.BoundCompoundPropertyModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * login page
  */
 public class LoginPage extends WebPage {              
     
-    protected final Log logger = LogFactory.getLog(getClass());    
+    private final Logger logger = LoggerFactory.getLogger(getClass());   
     
     private Jtrac getJtrac() {
         return ((JtracApplication) getApplication()).getJtrac();

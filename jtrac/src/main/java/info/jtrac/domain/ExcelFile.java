@@ -21,13 +21,13 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class that encapsulates an Excel Sheet / Workbook
@@ -36,7 +36,7 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
  */
 public class ExcelFile implements Serializable {    
     
-    protected final Log logger = LogFactory.getLog(getClass());    
+    private final Logger logger = LoggerFactory.getLogger(getClass());    
     
     /**
      * represents a column heading and data type

@@ -17,9 +17,8 @@
 package info.jtrac.web;
 
 import info.jtrac.Jtrac;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 /**
@@ -29,7 +28,7 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
  */
 public abstract class AbstractMultiActionController extends MultiActionController {
     
-    protected final Log logger = LogFactory.getLog(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
     
     protected Jtrac jtrac;    
     

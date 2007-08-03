@@ -36,9 +36,6 @@ import info.jtrac.domain.UserSpaceRole;
 import java.util.Collection;
 
 import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
@@ -47,6 +44,8 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -57,7 +56,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     
-    private final Log logger = LogFactory.getLog(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     
     private SchemaHelper schemaHelper;
     

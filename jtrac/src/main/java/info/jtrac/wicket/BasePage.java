@@ -20,10 +20,10 @@ import info.jtrac.Jtrac;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * base class for all wicket pages, this provides
@@ -33,7 +33,7 @@ import org.apache.wicket.markup.html.basic.Label;
  */
 public abstract class BasePage extends WebPage {
     
-    protected final Log logger = LogFactory.getLog(getClass());        
+    protected final Logger logger = LoggerFactory.getLogger(getClass());        
     
     protected Jtrac getJtrac() {
         return ComponentUtils.getJtrac(this);

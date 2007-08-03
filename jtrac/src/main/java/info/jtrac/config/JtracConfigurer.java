@@ -26,8 +26,8 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Properties;
 import javax.servlet.ServletContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
@@ -59,7 +59,7 @@ import org.springframework.web.context.ServletContextAware;
 
 public class JtracConfigurer extends PropertyPlaceholderConfigurer implements ServletContextAware {
 
-    private final Log logger = LogFactory.getLog(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private ServletContext servletContext;
 
@@ -134,7 +134,7 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
             logger.info("directory does not exist, created '" + homeFile.getPath() + "'");
             if (!homeFile.exists()) {
                 String message = "invalid path '" + homeFile.getAbsolutePath() + "', try creating this directory first.  Aborting.";
-                logger.fatal(message);
+                logger.error(message);
                 throw new Exception(message);
             }
         } else {

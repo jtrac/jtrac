@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.acegisecurity.providers.AuthenticationProvider;
 import org.acegisecurity.providers.ProviderManager;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
 
 /**
@@ -32,13 +32,13 @@ import org.springframework.beans.factory.FactoryBean;
  */
 public class ProviderManagerFactoryBean implements FactoryBean {
     
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     private Jtrac jtrac;    
     private String ldapUrl;
     private String activeDirectoryDomain;
     private String searchBase;
-    private AuthenticationProvider authenticationProvider;
-
-    private final Log logger = LogFactory.getLog(getClass());
+    private AuthenticationProvider authenticationProvider;   
 
     public void setJtrac(Jtrac jtrac) {
         this.jtrac = jtrac;

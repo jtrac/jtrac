@@ -27,8 +27,8 @@ import java.util.Map;
 import java.util.Properties;
 import javax.mail.Header;
 import javax.mail.internet.MimeMessage;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -39,7 +39,8 @@ import org.springframework.util.StringUtils;
  */
 public class MailSender {
     
-    private final Log logger = LogFactory.getLog(getClass());    
+    private final Logger logger = LoggerFactory.getLogger(getClass());    
+    
     private JavaMailSenderImpl sender;
     private String prefix;
     private String from;
@@ -133,7 +134,7 @@ public class MailSender {
         try {
             return messageSource.getMessage("mail_sender." + key, null, locale);
         } catch (Exception e) {
-            logger.debug(e);
+            logger.debug(e.getMessage());
             return "???mail_sender." + key + "???";
         }
     }    

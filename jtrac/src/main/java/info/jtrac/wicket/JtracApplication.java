@@ -28,8 +28,6 @@ import org.acegisecurity.Authentication;
 import org.acegisecurity.AuthenticationException;
 import org.acegisecurity.AuthenticationManager;
 import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.apache.wicket.Component;
@@ -44,6 +42,8 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.request.target.coding.IndexedParamUrlCodingStrategy;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * main wicket application for jtrac
@@ -51,10 +51,10 @@ import org.apache.wicket.resource.loader.IStringResourceLoader;
  */
 public class JtracApplication extends WebApplication {                
     
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     private Jtrac jtrac;
-    private ApplicationContext applicationContext;
-
-    protected final Log logger = LogFactory.getLog(getClass());    
+    private ApplicationContext applicationContext;    
     
     public Jtrac getJtrac() {
         return jtrac;

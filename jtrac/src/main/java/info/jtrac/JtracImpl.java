@@ -54,11 +54,11 @@ import java.util.Set;
 import org.acegisecurity.providers.encoding.PasswordEncoder;
 import org.acegisecurity.userdetails.UserDetails;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.util.StringUtils;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -68,6 +68,8 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
  */
 public class JtracImpl implements Jtrac {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     private JtracDao dao;
     private PasswordEncoder passwordEncoder;
     private MailSender mailSender;
@@ -135,8 +137,6 @@ public class JtracImpl implements Jtrac {
     public int getSessionTimeoutInMinutes() {
         return sessionTimeoutInMinutes;
     }
-      
-    private final Log logger = LogFactory.getLog(getClass());
 
     /**
      * this has not been factored into the util package or a helper class

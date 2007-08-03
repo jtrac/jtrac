@@ -38,8 +38,8 @@ import org.acegisecurity.AuthenticationException;
 import org.acegisecurity.providers.AuthenticationProvider;
 import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
 import org.acegisecurity.userdetails.UserDetails;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
@@ -53,6 +53,8 @@ import org.springframework.beans.factory.InitializingBean;
  */
 public class JtracLdapAuthenticationProvider implements AuthenticationProvider, InitializingBean {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     private Jtrac jtrac;
     private String ldapUrl;
     private String activeDirectoryDomain;
@@ -62,8 +64,6 @@ public class JtracLdapAuthenticationProvider implements AuthenticationProvider, 
     private String mailKey = "mail";
     private String[] otherReturningAttributes;
     private String[] returningAttributes;        
-            
-    private final Log logger = LogFactory.getLog(getClass());
 
     // please refer http://forum.java.sun.com/thread.jspa?threadID=726601&tstart=0
     // for the Active Directory LDAP Fast Bind Control approach used here
