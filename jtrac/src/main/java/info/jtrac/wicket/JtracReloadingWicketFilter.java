@@ -47,7 +47,7 @@ public class JtracReloadingWicketFilter extends ReloadingWicketFilter {
     
     public JtracReloadingWicketFilter() {
         super();
-        logger.warn("reloading wicket filter being used - this is wrong if production mode");
+        logger.warn(banner);
     }
     
 }
