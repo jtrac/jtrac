@@ -13,8 +13,7 @@
         <copy todir="${webapp.dir}/WEB-INF" file="etc/web.xml"/>
         <replace file="${webapp.dir}/WEB-INF/web.xml" 
             token="@@applicationClassName@@" 
-            value="${project.name}.${project.name.titleCase}Application"/>          
-        <copy todir="${webapp.dir}" file="etc/index.html"/>
+            value="${project.name}.${project.name.titleCase}Application"/>                  
         <property name="src.dir" value="target/${project.name}/src/main/java"/> 
         <copy todir="${src.dir}" file="etc/log4j.properties"/>
         <replace file="${src.dir}/log4j.properties" token="@@project.name@@" value="${project.name}"/>
@@ -26,6 +25,10 @@
         <copy tofile="${app.java}" file="etc/Application.java"/>
         <replace file="${app.java}" token="@@project.name@@" value="${project.name}"/>        
         <replace file="${app.java}" token="@@applicationClassName@@" value="${project.name.titleCase}Application"/>
+        <property name="filter.java" value="${src.pkg.dir}/${project.name.titleCase}ReloadingWicketFilter.java"/>
+        <copy tofile="${filter.java}" file="etc/ReloadingWicketFilter.java"/>
+        <replace file="${filter.java}" token="@@project.name@@" value="${project.name}"/>        
+        <replace file="${filter.java}" token="@@project.name.titleCase@@" value="${project.name.titleCase}"/>        
         <copy todir="target/${project.name}" file="etc/pom.xml"/>
         <replace file="target/${project.name}/pom.xml" token="@@project.name@@" value="${project.name}"/>
     </target>
