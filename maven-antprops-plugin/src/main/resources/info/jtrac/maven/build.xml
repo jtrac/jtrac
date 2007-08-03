@@ -81,8 +81,17 @@
     <!-- ========================= WAR ============================ -->              
               
     <target name="war-exploded" depends="compile">
-        <war-exploded/>        
+        <war-exploded/> 
+        <!-- <antcall target="war-exploded-dev"/> -->
     </target>    
+
+    <!--
+    <target name="war-exploded-dev" unless="production">         
+        <replace file="target/${war.name}/WEB-INF/web.xml" 
+            token="org.apache.wicket.protocol.http.WicketFilter" 
+            value="@@project.name@@.@@project.name.titleCase@@ReloadingWicketFilter"/>
+    </target>
+    -->
     
     <macrodef name="war-exploded">
         <attribute name="deployDir" default="target/${war.name}"/>

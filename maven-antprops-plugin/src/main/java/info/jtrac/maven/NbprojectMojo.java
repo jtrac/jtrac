@@ -38,14 +38,16 @@ public class NbprojectMojo extends AbstractMojo {
 
 	public void execute() {
 		String projectName = project.getArtifactId();
+		String projectNameTitleCase = Character.toUpperCase(projectName.charAt(0)) + projectName.substring(1);
 		String buildSource = readFile("build.xml").toString();
 		getLog().info("finding and replacing project name: " + projectName);
 		String buildTarget = buildSource.replace("@@project.name@@", projectName);
+		buildTarget = buildTarget.replace("@@project.name.titleCase@@", projectNameTitleCase);
 		writeFile(buildTarget, "build.xml", false);
 		String projectSource = readFile("project.xml").toString();
 		String projectTarget = projectSource.replace("@@project.name@@", projectName);
 		File nbproject = new File("nbproject");
-		nbproject.mkdir();		
+		nbproject.mkdir();
 		writeFile(projectTarget, "nbproject/project.xml", false);
 		File etc = new File("etc");
 		etc.mkdir();
@@ -54,7 +56,7 @@ public class NbprojectMojo extends AbstractMojo {
 		String webdefaultXml = readFile("webdefault.xml").toString();
 		writeFile(webdefaultXml, "etc/webdefault.xml", false);
 	}
-	
+
 	private StringBuffer readFile(String fileName) {
 		InputStream is = getClass().getResourceAsStream(fileName);
 		BufferedReader buffer = null;
@@ -73,8 +75,8 @@ public class NbprojectMojo extends AbstractMojo {
 			throw new RuntimeException(e);
 		}
 		return sb;
-	}	
-	
+	}
+
 	private void writeFile(String content, String fileName, boolean append) {
 		FileWriter writer = null;
 		try {

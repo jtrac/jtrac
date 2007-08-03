@@ -96,7 +96,7 @@
             <compilation-unit>
                 <package-root>src/test/java</package-root>
                 <unit-tests/>
-                <classpath mode="compile">${test.jars}</classpath>
+                <classpath mode="compile">${test.jars};target/classes</classpath>
                 <built-to>target/test-classes</built-to>
                 <source-level>1.5</source-level>
             </compilation-unit>
