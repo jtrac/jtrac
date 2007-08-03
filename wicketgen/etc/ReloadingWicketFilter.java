@@ -20,6 +20,7 @@ public class @@project.name.titleCase@@ReloadingWicketFilter extends ReloadingWi
     }
 
     public @@project.name.titleCase@@ReloadingWicketFilter() {
+		super();
         logger.warn(banner);
     }
 
