@@ -181,14 +181,14 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
         //======================================================================
         String version = "0.0.0";
         String timestamp = "0000";
-        ClassPathResource versionResource = new ClassPathResource("version.properties");
+        ClassPathResource versionResource = new ClassPathResource("jtrac-version.properties");
         if(versionResource.exists()) {
-            logger.info("found 'version.properties' on classpath, processing...");
+            logger.info("found 'jtrac-version.properties' on classpath, processing...");
             Properties versionProps = loadProps(versionResource.getFile());
             version = versionProps.getProperty("version");
             timestamp = versionProps.getProperty("timestamp");
         } else {
-            logger.info("did not find 'version.properties' on classpath");
+            logger.info("did not find 'jtrac-version.properties' on classpath");
         }
         logger.info("jtrac.version = '" + version + "'");
         logger.info("jtrac.timestamp = '" + timestamp + "'");

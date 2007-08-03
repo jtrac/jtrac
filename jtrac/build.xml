@@ -105,13 +105,13 @@
     </target>    
     
     <target name="dist-version-clean">
-        <delete file="src/main/resources/version.properties"/>
+        <delete file="src/main/resources/jtrac-version.properties"/>
     </target>
     
     <target name="dist-version-check">
         <condition property="version.missing">
             <not>
-                <available file="src/main/resources/version.properties"/>
+                <available file="src/main/resources/jtrac-version.properties"/>
             </not>
         </condition>
     </target>
@@ -119,7 +119,7 @@
     <target name="dist-version-set" depends="dist-version-check" if="version.missing">
         <input message="Release Version:" addproperty="version"/>
         <tstamp/>
-        <concat destfile="src/main/resources/version.properties">version=${version}${line.separator}timestamp=${DSTAMP}${TSTAMP}
+        <concat destfile="src/main/resources/jtrac-version.properties">version=${version}${line.separator}timestamp=${DSTAMP}${TSTAMP}
         </concat>           
     </target>        
     
