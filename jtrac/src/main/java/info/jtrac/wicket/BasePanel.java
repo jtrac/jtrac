@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  */
 public class BasePanel extends Panel {
     
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
+    protected static final Logger logger = LoggerFactory.getLogger(BasePanel.class);
     
     protected Jtrac getJtrac() {
         return ComponentUtils.getJtrac(this);

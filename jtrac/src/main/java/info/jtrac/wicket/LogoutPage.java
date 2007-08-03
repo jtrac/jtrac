@@ -28,7 +28,7 @@ import org.springframework.util.StringUtils;
  */
 public class LogoutPage extends WebPage {              
     
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(LogoutPage.class);
     
     public LogoutPage(PageParameters params) {
         String locale = params.getString("locale");

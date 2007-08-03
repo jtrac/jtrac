@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
  */
 public class LoginPage extends WebPage {              
     
-    private final Logger logger = LoggerFactory.getLogger(getClass());   
+    private static final Logger logger = LoggerFactory.getLogger(LoginPage.class);   
     
     private Jtrac getJtrac() {
         return ((JtracApplication) getApplication()).getJtrac();

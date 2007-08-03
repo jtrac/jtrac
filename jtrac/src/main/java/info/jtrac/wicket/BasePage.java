@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class BasePage extends WebPage {
     
-    protected final Logger logger = LoggerFactory.getLogger(getClass());        
+    protected static final Logger logger = LoggerFactory.getLogger(BasePage.class);        
     
     protected Jtrac getJtrac() {
         return ComponentUtils.getJtrac(this);

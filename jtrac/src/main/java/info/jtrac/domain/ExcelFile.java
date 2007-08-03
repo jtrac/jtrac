@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ExcelFile implements Serializable {    
     
-    private final Logger logger = LoggerFactory.getLogger(getClass());    
+    private static final Logger logger = LoggerFactory.getLogger(ExcelFile.class);    
     
     /**
      * represents a column heading and data type
