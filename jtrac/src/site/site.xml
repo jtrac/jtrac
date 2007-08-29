@@ -17,12 +17,12 @@
         <menu name="JTrac">
             <item name="Home" href="index.html"/>
             <item name="Features" href="doc/html/features.html"/>
-	    <item name="Download" href="http://sourceforge.net/project/showfiles.php?group_id=162983&amp;package_id=184104"/>            
+        <item name="Download" href="http://sourceforge.net/project/showfiles.php?group_id=162983&amp;package_id=184104"/>            
             <item name="Installation" href="doc/html/installation.html"/>
             <item name="Upgrading" href="doc/html/upgrading.html"/>            
             <item name="Roadmap" href="doc/html/roadmap.html"/>
             <item name="Developer Guide" href="doc/html/dev-guide.html"/>
-	    <item name="F A Q" href="doc/html/faq.html"/>            
+        <item name="F A Q" href="doc/html/faq.html"/>            
         </menu>
         <menu name="Documentation">
             <item name="HTML" href="doc/html/index.html"/>
@@ -33,7 +33,7 @@
             <item name="Dependencies" href="dependencies.html"/>            
             <item name="Statistics" href="http://sourceforge.net/project/stats/?group_id=162983&amp;ugn=j-trac"/>
             <item name="Forums" href="http://sourceforge.net/forum/forum.php?forum_id=552477"/>
-            <item name="Mailing List" href="http://sourceforge.net/mailarchive/forum.php?forum_id=50111"/>
+            <item name="Mailing List" href="http://sourceforge.net/mailarchive/forum.php?forum_name=j-trac-users"/>
             <item name="Tracker" href="http://sourceforge.net/tracker/?group_id=162983"/>
             <item name="References" href="http://sourceforge.net/forum/forum.php?forum_id=552478"/>
             <item name="Source Code" href="source-repository.html"/>
