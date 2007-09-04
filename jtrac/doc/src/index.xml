@@ -57,7 +57,7 @@
                 layer for version 2.0 was mainly using 
                 <ulink url="http://opensource.atlassian.com/confluence/spring/display/WEBFLOW/Home">Spring WebFlow</ulink>
                 but as of early 2007 (version 2.1.0 onwards) JTrac switched to using the 
-                <ulink url="http://wicket.sourceforge.net/">Wicket</ulink> framework.
+                <ulink url="http://wicket.apache.org/">Apache Wicket</ulink> framework.
             </para>
             <para>
                 JTrac is extremely easy to install and the only pre-requisite is a Java 5 (or higher) Runtime Environment.
@@ -824,7 +824,7 @@ wrapper.exe -r etc/wrapper.conf
                 version 2.4 compliant servlet engine is sufficient for deployment.
             </para>
             <para>
-                The presentation layer is using the <ulink url="http://www.hibernate.org/">Wicket</ulink> framework.
+                The presentation layer is using the <ulink url="http://wicket.apache.org/">Apache Wicket</ulink> framework.
             </para>            
             <para>
                 <ulink url="http://www.hibernate.org/">Hibernate</ulink> is used for data persistence.  This allows for 
