@@ -71,7 +71,7 @@
             <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
             <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-            <stringProp name="RegexExtractor.regex">&quot;(.+:form:.+?)&quot;</stringProp>
+            <stringProp name="RegexExtractor.regex">&quot;(.+%3Aform%3A.+?)&quot;</stringProp>
           </RegexExtractor>
           <hashTree/>
         </hashTree>
@@ -114,7 +114,7 @@
             <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
             <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-            <stringProp name="RegexExtractor.regex">&apos;(.+:options:.+?)&apos;</stringProp>
+            <stringProp name="RegexExtractor.regex">(\?.+:options:.+?)&apos;</stringProp>
           </RegexExtractor>
           <hashTree/>
         </hashTree>
@@ -477,7 +477,7 @@
               <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
               <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-              <stringProp name="RegexExtractor.regex">&quot;(.+:form:.+?)&quot;</stringProp>
+              <stringProp name="RegexExtractor.regex">&quot;(.+%3Aform%3A.+?)&quot;</stringProp>
             </RegexExtractor>
             <hashTree/>
           </hashTree>
@@ -522,11 +522,11 @@
         <hashTree>
           <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Counter" enabled="true">
             <stringProp name="CounterConfig.start">1</stringProp>
-            <stringProp name="CounterConfig.end">100</stringProp>
             <stringProp name="CounterConfig.format"></stringProp>
+            <stringProp name="CounterConfig.end">100</stringProp>
             <boolProp name="CounterConfig.per_user">true</boolProp>
-            <stringProp name="CounterConfig.name">count</stringProp>
             <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">count</stringProp>
           </CounterConfig>
           <hashTree/>
           <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="item update" enabled="true"/>
@@ -637,7 +637,7 @@
               </RegexExtractor>
               <hashTree/>
             </hashTree>
-            <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="item view form post comment" enabled="true">
+            <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="item view form post comment" enabled="false">
               <stringProp name="HTTPSampler.domain"></stringProp>
               <stringProp name="HTTPSampler.FILE_NAME">${emptyfile}</stringProp>
               <stringProp name="HTTPSampler.path">/jtrac/app/${nextUrl}</stringProp>
@@ -673,7 +673,7 @@
               </RegexExtractor>
               <hashTree/>
             </hashTree>
-            <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="item view form post assign" enabled="true">
+            <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="item view form post assign" enabled="false">
               <stringProp name="HTTPSampler.domain"></stringProp>
               <stringProp name="HTTPSampler.FILE_NAME">${emptyfile}</stringProp>
               <stringProp name="HTTPSampler.path">/jtrac/app/${nextUrl}</stringProp>
@@ -697,7 +697,7 @@
                   <elementProp name="" elementType="HTTPArgument">
                     <boolProp name="HTTPArgument.use_equals">true</boolProp>
                     <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.name">assignedTo</stringProp>
+                    <stringProp name="Argument.name">border:assignedTo</stringProp>
                     <stringProp name="Argument.value">1</stringProp>
                     <stringProp name="Argument.metadata">=</stringProp>
                   </elementProp>
