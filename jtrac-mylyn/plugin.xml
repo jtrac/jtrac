@@ -4,16 +4,16 @@
 <extension
       point="org.eclipse.mylyn.tasks.ui.repositories">
    <connectorCore
-         class="info.jtrac.mylar.JtracRepositoryConnector"
+         class="info.jtrac.mylyn.JtracRepositoryConnector"
          name="JTrac Connector"
          type="jtrac">
    </connectorCore>
    <taskListFactory
-         class="info.jtrac.mylar.ui.JtracTaskExternalizer"
+         class="info.jtrac.mylyn.ui.JtracTaskExternalizer"
          name="JTrac TaskListFactory">
    </taskListFactory>
    <connectorUi
-         class="info.jtrac.mylar.ui.JtracRepositoryConnectorUi"
+         class="info.jtrac.mylyn.ui.JtracRepositoryConnectorUi"
          name="JTrac Connector UI">
    </connectorUi>
 </extension>
@@ -28,7 +28,7 @@
 <extension
       point="org.eclipse.mylyn.tasks.ui.editors">
    <editorFactory
-         class="info.jtrac.mylar.ui.editor.JtracTaskEditorFactory">
+         class="info.jtrac.mylyn.ui.editor.JtracTaskEditorFactory">
    </editorFactory>
 </extension>
 
