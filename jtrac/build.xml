@@ -234,6 +234,7 @@
         <attribute name="excludes" default="**/selenium/**/*"/>
         <attribute name="haltonfailure" default="false"/>
         <sequential>
+            <mkdir dir="logs"/>
             <mkdir dir="target/reports"/>
             <emma enabled="@{emmaEnabled}">                    
                 <instr instrpath="target/classes" 
