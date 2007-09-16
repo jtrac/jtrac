@@ -75,7 +75,7 @@ public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public AbstractTask createTask(String repositoryUrl, String refId, String summary) {
 		// TODO set creation date like trac connector
-		return new JtracRepositoryTask(repositoryUrl, refId, summary);		
+		return new JtracTask(repositoryUrl, refId, summary);		
 	}
 
 	@Override

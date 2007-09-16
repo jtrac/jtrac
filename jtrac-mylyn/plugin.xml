@@ -9,7 +9,7 @@
          type="jtrac">
    </connectorCore>
    <taskListFactory
-         class="info.jtrac.mylyn.ui.JtracTaskExternalizer"
+         class="info.jtrac.mylyn.ui.JtracTaskListFactory"
          name="JTrac TaskListFactory">
    </taskListFactory>
    <connectorUi

@@ -16,14 +16,14 @@
 
 package info.jtrac.mylyn.ui;
 
-import info.jtrac.mylyn.JtracRepositoryTask;
+import info.jtrac.mylyn.JtracTask;
 
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
 import org.w3c.dom.Element;
 
 // TODO rename to TaskListFactory
-public class JtracTaskExternalizer extends AbstractTaskListFactory {
+public class JtracTaskListFactory extends AbstractTaskListFactory {
 
 	private static final String KEY_JTRAC = "JTrac";	
 	private static final String KEY_JTRAC_TASK = KEY_JTRAC + KEY_TASK;	
@@ -31,12 +31,12 @@ public class JtracTaskExternalizer extends AbstractTaskListFactory {
 	
 	@Override
 	public boolean canCreate(AbstractTask task) {
-		return task instanceof JtracRepositoryTask;
+		return task instanceof JtracTask;
 	}
 	@Override
 	public AbstractTask createTask(String repositoryUrl, String taskId,
 			String label, Element element) {
-		return new JtracRepositoryTask(repositoryUrl, taskId, label);
+		return new JtracTask(repositoryUrl, taskId, label);
 	}
 	@Override
 	public String getTaskElementName() {

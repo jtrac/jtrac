@@ -17,7 +17,7 @@
 package info.jtrac.mylyn.ui.editor;
 
 import info.jtrac.mylyn.JtracRepositoryConnector;
-import info.jtrac.mylyn.JtracRepositoryTask;
+import info.jtrac.mylyn.JtracTask;
 
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -33,7 +33,7 @@ public class JtracTaskEditorFactory extends AbstractTaskEditorFactory {
 
 	@Override
 	public boolean canCreateEditorFor(AbstractTask task) {
-		return task instanceof JtracRepositoryTask;
+		return task instanceof JtracTask;
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class JtracTaskEditorFactory extends AbstractTaskEditorFactory {
 				&& JtracRepositoryConnector.REPO_TYPE.equals(existingInput.getRepository().getConnectorKind());
 		} else if (input instanceof TaskEditorInput) {
 			TaskEditorInput taskInput = (TaskEditorInput) input;
-			return taskInput.getTask() instanceof JtracRepositoryTask;
+			return taskInput.getTask() instanceof JtracTask;
 		}
 		return false;
 	}
@@ -65,7 +65,7 @@ public class JtracTaskEditorFactory extends AbstractTaskEditorFactory {
 
 	@Override
 	public IEditorInput createEditorInput(AbstractTask task) {
-		JtracRepositoryTask repositoryTask = (JtracRepositoryTask) task;
+		JtracTask repositoryTask = (JtracTask) task;
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 				JtracRepositoryConnector.REPO_TYPE, repositoryTask.getRepositoryUrl());		
 		return new RepositoryTaskEditorInput(repository, 

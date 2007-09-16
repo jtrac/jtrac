@@ -19,11 +19,11 @@ package info.jtrac.mylyn;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 // TODO rename to JtracTask
-public class JtracRepositoryTask extends AbstractTask {
+public class JtracTask extends AbstractTask {
 
 	private static final String URI_APP_ITEM = "/app/item/";
 	
-	public JtracRepositoryTask(String repositoryUrl, String refId, String label) {
+	public JtracTask(String repositoryUrl, String refId, String label) {
 		super(repositoryUrl, refId, label);
 		setUrl(repositoryUrl + URI_APP_ITEM + refId);
 	}	
