@@ -16,13 +16,15 @@
 
 package info.jtrac.mylar;
 
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 
 public class JtracRepositoryQuery extends AbstractRepositoryQuery {
 
-	public JtracRepositoryQuery(String description, TaskList taskList) {
-		super(description, taskList);
+	public JtracRepositoryQuery(String repositoryUrl, String queryUrl, String description) {
+		super(description);		
+		// TODO assert query url like trac
+		setRepositoryUrl(repositoryUrl);
+		setUrl(queryUrl);
 	}
 
 	@Override

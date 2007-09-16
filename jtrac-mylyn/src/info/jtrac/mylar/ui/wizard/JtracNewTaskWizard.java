@@ -22,12 +22,12 @@ import info.jtrac.mylar.JtracTaskDataHandler;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
-import org.eclipse.mylar.tasks.ui.editors.NewTaskEditorInput;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -60,6 +60,7 @@ public class JtracNewTaskWizard extends Wizard implements INewWizard {
 	
 	@Override
 	public boolean performFinish() {
+		// TODO see if this needs to go into NewTaskPage like trac
 		JtracRepositoryConnector connector = JtracPlugin.getDefault().getConnector();
 		JtracTaskDataHandler taskDataHandler = (JtracTaskDataHandler) connector.getTaskDataHandler();
 		RepositoryTaskData repositoryTaskData = new RepositoryTaskData(taskDataHandler.getAttributeFactory(), 
@@ -67,7 +68,7 @@ public class JtracNewTaskWizard extends Wizard implements INewWizard {
 				TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
 		NewTaskEditorInput editorInput = new NewTaskEditorInput(taskRepository, repositoryTaskData);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		TasksUiUtil.openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
 		return true;
 	}
 

@@ -18,8 +18,8 @@ package info.jtrac.mylar;
 
 import java.io.File;
 
-import org.eclipse.mylar.tasks.core.ITaskRepositoryListener;
-import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.ITaskRepositoryListener;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 public class JtracTaskRepositoryListener implements ITaskRepositoryListener {
 

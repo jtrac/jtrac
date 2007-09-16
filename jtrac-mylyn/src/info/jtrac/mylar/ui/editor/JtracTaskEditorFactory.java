@@ -19,48 +19,52 @@ package info.jtrac.mylar.ui.editor;
 import info.jtrac.mylar.JtracRepositoryConnector;
 import info.jtrac.mylar.JtracRepositoryTask;
 
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.editors.ITaskEditorFactory;
-import org.eclipse.mylar.tasks.ui.editors.NewTaskEditorInput;
-import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskEditorInput;
-import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
-import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory;
+import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
-public class JtracTaskEditorFactory implements ITaskEditorFactory {
+public class JtracTaskEditorFactory extends AbstractTaskEditorFactory {
 
-	public boolean canCreateEditorFor(ITask task) {
+	@Override
+	public boolean canCreateEditorFor(AbstractTask task) {
 		return task instanceof JtracRepositoryTask;
 	}
 
+	@Override
 	public boolean canCreateEditorFor(IEditorInput input) {
 		if (input instanceof RepositoryTaskEditorInput) {
 			RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) input;
 			return existingInput.getTaskData() != null 
-				&& JtracRepositoryConnector.REPO_TYPE.equals(existingInput.getRepository().getKind());
-		} else if (input instanceof NewTaskEditorInput) {
-			NewTaskEditorInput newInput = (NewTaskEditorInput) input;
-			return newInput.getTaskData() != null
-				&& JtracRepositoryConnector.REPO_TYPE.equals(newInput.getRepository().getKind());
+				&& JtracRepositoryConnector.REPO_TYPE.equals(existingInput.getRepository().getConnectorKind());
+		} else if (input instanceof TaskEditorInput) {
+			TaskEditorInput taskInput = (TaskEditorInput) input;
+			return taskInput.getTask() instanceof JtracRepositoryTask;
 		}
 		return false;
 	}
 
-	public IEditorPart createEditor(TaskEditor parentEditor, IEditorInput editorInput) {
+	@Override
+	public IEditorPart createEditor(TaskEditor parentEditor,
+			IEditorInput editorInput) {
+		// TODO look at trac
 		if (editorInput instanceof RepositoryTaskEditorInput  || editorInput instanceof TaskEditorInput) {
 			return new JtracRepositoryTaskEditor(parentEditor);
 		}
-		if (editorInput instanceof NewTaskEditorInput) {
+		if (editorInput instanceof TaskEditorInput) {
 			// for item that does not yet exist on the server
 			return new JtracNewRepositoryTaskEditor(parentEditor);
 		}		
 		return null;
 	}
 
-	public IEditorInput createEditorInput(ITask task) {
+	@Override
+	public IEditorInput createEditorInput(AbstractTask task) {
 		JtracRepositoryTask repositoryTask = (JtracRepositoryTask) task;
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 				JtracRepositoryConnector.REPO_TYPE, repositoryTask.getRepositoryUrl());		
@@ -68,12 +72,9 @@ public class JtracTaskEditorFactory implements ITaskEditorFactory {
 				repositoryTask.getHandleIdentifier(), repositoryTask.getUrl());
 	}
 
+	@Override
 	public String getTitle() {
 		return "JTrac";
-	}
-
-	public boolean providesOutline() {
-		return true;
 	}
 
 }

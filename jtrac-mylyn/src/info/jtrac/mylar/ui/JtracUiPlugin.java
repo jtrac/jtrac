@@ -18,7 +18,7 @@ package info.jtrac.mylar.ui;
 
 import info.jtrac.mylar.JtracPlugin;
 
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 

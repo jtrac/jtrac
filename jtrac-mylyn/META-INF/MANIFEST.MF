@@ -8,9 +8,10 @@ Bundle-Vendor: JTrac.info
 Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms,
  org.eclipse.core.runtime,
- org.eclipse.mylar.context.core,
- org.eclipse.mylar.tasks.core,
- org.eclipse.mylar.tasks.ui
+ org.eclipse.mylyn.context.core,
+ org.eclipse.mylyn.tasks.core,
+ org.eclipse.mylyn.tasks.ui,
+ org.eclipse.mylyn.web.core
 Eclipse-LazyStart: true
 Bundle-ClassPath: .,
  lib/dom4j-1.6.1.jar,

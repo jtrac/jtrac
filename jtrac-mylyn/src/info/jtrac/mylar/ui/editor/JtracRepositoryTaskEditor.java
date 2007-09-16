@@ -16,20 +16,13 @@
 
 package info.jtrac.mylar.ui.editor;
 
-import info.jtrac.mylar.ui.JtracUiPlugin;
-
-import org.eclipse.mylar.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.ui.forms.editor.FormEditor;
 
 public class JtracRepositoryTaskEditor extends AbstractRepositoryTaskEditor {
 
 	public JtracRepositoryTaskEditor(FormEditor editor) {
-		super(editor);
-	}
-
-	@Override
-	protected String getPluginId() {
-		return JtracUiPlugin.PLUGIN_ID;
+		super(editor); 
 	}
 
 	@Override

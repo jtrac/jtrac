@@ -1,51 +1,67 @@
 package info.jtrac.mylar;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
+import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.ITaskDataHandler;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
+import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
-public class JtracTaskDataHandler implements ITaskDataHandler {
+public class JtracTaskDataHandler extends AbstractTaskDataHandler {
 
 	private JtracRepositoryConnector connector;
 	
-	private AbstractAttributeFactory attributeFactory = new JtracAttributeFactory();
+	private AbstractAttributeFactory attributeFactory = new JtracAttributeFactory();	
 	
 	public JtracTaskDataHandler(JtracRepositoryConnector connector) {
 		this.connector = connector;
-	}
+	}	
 	
-	public AbstractAttributeFactory getAttributeFactory() {
+	@Override
+	public AbstractAttributeFactory getAttributeFactory(String repositoryUrl,
+			String repositoryKind, String taskKind) {
 		return attributeFactory;
 	}
 
-	public Set<AbstractRepositoryTask> getChangedSinceLastSync(
-			TaskRepository repository, Set<AbstractRepositoryTask> tasks)
-			throws CoreException, UnsupportedEncodingException {
-		// TODO Auto-generated method stub
-		return null;
+	@Override
+	public AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData) {
+		return getAttributeFactory(taskData.getRepositoryUrl(), taskData.getRepositoryKind(), taskData.getTaskKind());
 	}
 
-	public Date getDateForAttributeType(String attributeKey, String dateString) {
-		// TODO Auto-generated method stub
-		return null;
+	@Override
+	public Set<String> getSubTaskIds(RepositoryTaskData taskData) {
+		return Collections.emptySet();
 	}
 
-	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId) throws CoreException {
+	@Override
+	public RepositoryTaskData getTaskData(TaskRepository repository,
+			String taskId, IProgressMonitor monitor) throws CoreException {
 		RepositoryTaskData taskData = new RepositoryTaskData(attributeFactory, 
 				JtracRepositoryConnector.REPO_TYPE, repository.getUrl(), taskId);
 		return taskData;
 	}
 
-	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
+	@Override
+	public boolean initializeTaskData(TaskRepository repository,
+			RepositoryTaskData data, IProgressMonitor monitor)
+			throws CoreException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String postTaskData(TaskRepository repository,
+			RepositoryTaskData taskData, IProgressMonitor monitor)
+			throws CoreException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public AbstractAttributeFactory getAttributeFactory() {
+		return attributeFactory;
 	}
 
 }

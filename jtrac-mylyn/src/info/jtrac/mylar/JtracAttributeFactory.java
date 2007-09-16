@@ -1,27 +1,41 @@
 package info.jtrac.mylar;
 
-import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
+import java.util.Date;
+
+import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 
 public class JtracAttributeFactory extends AbstractAttributeFactory {
 
 	@Override
-	public boolean getIsHidden(String key) {
-		return false;
+	public Date getDateForAttributeType(String attributeKey, String dateString) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public String getName(String key) {
-		return key;
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isHidden(String key) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
 	public boolean isReadOnly(String key) {
-		return true;
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
 	public String mapCommonAttributeKey(String key) {
-		return key;
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+
 
 }

@@ -16,15 +16,7 @@
 
 package info.jtrac.mylar.ui.editor;
 
-import info.jtrac.mylar.JtracPlugin;
-import info.jtrac.mylar.JtracRepositoryConnector;
-import info.jtrac.mylar.JtracRepositoryQuery;
-import info.jtrac.mylar.JtracRepositoryTask;
-import info.jtrac.mylar.ui.JtracUiPlugin;
-
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
-import org.eclipse.mylar.tasks.ui.search.SearchHitCollector;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
 import org.eclipse.ui.forms.editor.FormEditor;
 
 public class JtracNewRepositoryTaskEditor extends AbstractNewRepositoryTaskEditor {
@@ -32,33 +24,5 @@ public class JtracNewRepositoryTaskEditor extends AbstractNewRepositoryTaskEdito
 	public JtracNewRepositoryTaskEditor(FormEditor editor) {
 		super(editor);
 	}
-
-	@Override
-	protected SearchHitCollector getDuplicateSearchCollector(String description) {
-		JtracRepositoryQuery query = new JtracRepositoryQuery("JTrac Query", 
-				TasksUiPlugin.getTaskListManager().getTaskList());
-		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-				repository, query);
-		return collector;
-	}
-
-	@Override
-	protected String getPluginId() {
-		return JtracUiPlugin.PLUGIN_ID;
-	}
-	
-	@Override
-	public void submitToRepository() {
-		if (!prepareSubmit()) {
-			return;
-		}		
-		JtracRepositoryConnector connector = JtracPlugin.getDefault().getConnector();
-		updateTask();
-		String refId = "TEST-101";
-		JtracRepositoryTask newTask = new JtracRepositoryTask(connector.getTaskWebUrl(repository.getUrl(), refId),
-				taskData.getSummary(), true);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask, getCategory());	
-	}
-	
 
 }

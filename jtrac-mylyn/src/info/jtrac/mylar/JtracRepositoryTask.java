@@ -16,44 +16,30 @@
 
 package info.jtrac.mylar;
 
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 
-public class JtracRepositoryTask extends AbstractRepositoryTask {
+// TODO rename to JtracTask
+public class JtracRepositoryTask extends AbstractTask {
 
 	private static final String URI_APP_ITEM = "/app/item/";
 	
-	public JtracRepositoryTask(String handle, String label, boolean newTask) {
-		super(handle, label, newTask);
+	public JtracRepositoryTask(String repositoryUrl, String refId, String label) {
+		super(repositoryUrl, refId, label);
+		setUrl(repositoryUrl + URI_APP_ITEM + refId);
+	}	
+
+	@Override
+	public String getConnectorKind() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public String getRepositoryKind() {
-		return JtracRepositoryConnector.REPO_TYPE;
+	public boolean isLocal() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
-	@Override
-	public String getIdLabel() {
-		return getRefIdFromHandle(handleIdentifier);
-	}
-	
-	public static String getHandleForRefId(String repositoryUrl, String refId) {
-		return repositoryUrl + URI_APP_ITEM + refId;
-	}
-	
-	public static String getRefIdFromHandle(String handle) {
-		if (handle == null) {
-			return null;
-		}
-		int index = handle.lastIndexOf(URI_APP_ITEM);
-		return index == -1 ? null : handle.substring(index + URI_APP_ITEM.length());		
-	}
-	
-	public static String getRepositoryUrlFromHandle(String handle) {
-		if (handle == null) {
-			return null;
-		}
-		int index = handle.lastIndexOf(URI_APP_ITEM);
-		return index == -1 ? null : handle.substring(0, index);		
-	}
+
 	
 }

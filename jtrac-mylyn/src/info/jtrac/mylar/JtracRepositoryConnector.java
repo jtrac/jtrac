@@ -16,25 +16,20 @@
 
 package info.jtrac.mylar;
 
-import info.jtrac.mylar.util.ExceptionUtils;
-
 import java.io.File;
-import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.IAttachmentHandler;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskDataHandler;
-import org.eclipse.mylar.tasks.core.QueryHitCollector;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.ITaskCollector;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * the heart of the mylar connector
@@ -47,96 +42,7 @@ public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 	private JtracTaskRepositoryListener taskRepositoryListener;
 	private JtracTaskDataHandler taskDataHandler = new JtracTaskDataHandler(this);
 	private JtracAttachmentHandler attachmentHandler = new JtracAttachmentHandler(this);
-	
-	@Override
-	public boolean canCreateNewTask(TaskRepository repository) {
-		return true;
-	}
-
-	@Override
-	public boolean canCreateTaskFromKey(TaskRepository repository) {
-		return true;
-	}
-
-	@Override
-	public AbstractRepositoryTask createTaskFromExistingKey(TaskRepository repository, String refId) throws CoreException {
-		String handle = getTaskWebUrl(repository.getUrl(), refId);
-		JtracRepositoryTask task;
-		ITask existingTask = taskList.getTask(handle);
-		if (existingTask instanceof JtracRepositoryTask) {
-			task = (JtracRepositoryTask) existingTask;
-		} else {
-			RepositoryTaskData taskData = taskDataHandler.getTaskData(repository, refId);
-			task = new JtracRepositoryTask(handle, taskData.getLabel(), true);
-			task.setTaskData(taskData);
-			taskList.addTask(task);
-		}
-		return task;
-	}
-
-	@Override
-	public IAttachmentHandler getAttachmentHandler() {
-		return attachmentHandler;
-	}
-
-	@Override
-	public String getLabel() {
-		return UI_LABEL;
-	}
-
-	@Override
-	public String getRepositoryType() {
-		return REPO_TYPE;
-	}
-
-	@Override
-	public String getRepositoryUrlFromTaskUrl(String url) {
-		return JtracRepositoryTask.getRepositoryUrlFromHandle(url);
-	}
-
-	@Override
-	public List<String> getSupportedVersions() {
-		return null;
-	}
-
-	@Override
-	public ITaskDataHandler getTaskDataHandler() {
-		return taskDataHandler;
-	}
-
-	@Override
-	public String getTaskIdFromTaskUrl(String url) {
-		return JtracRepositoryTask.getRefIdFromHandle(url);
-	}
-
-	@Override
-	public String getTaskWebUrl(String repositoryUrl, String refId) {
-		return JtracRepositoryTask.getHandleForRefId(repositoryUrl, refId);
-	}
-
-	@Override
-	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor, QueryHitCollector resultCollector) {
-		// JtracClient client = taskRepositoryListener.getClient(repository);
-		try {
-			resultCollector.accept(new JtracQueryHit(taskList, query.getRepositoryUrl(), "Test Description", "TEST-123"));
-		} catch (Exception e) {
-			return ExceptionUtils.toStatus(e);
-		}
-		return Status.OK_STATUS;
-	}
-
-	@Override
-	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
-		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask) throws CoreException {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	public void stop() {
 		if (taskRepositoryListener != null) {
 			taskRepositoryListener.writeConfig();
@@ -153,6 +59,102 @@ public class JtracRepositoryConnector extends AbstractRepositoryConnector {
 		}
 		return taskRepositoryListener;
 	}
-	
 
+	//=========================================================================
+	
+	@Override
+	public boolean canCreateNewTask(TaskRepository repository) {
+		return true;
+	}
+
+	@Override
+	public boolean canCreateTaskFromKey(TaskRepository repository) {
+		return true;
+	}
+
+	@Override
+	public AbstractTask createTask(String repositoryUrl, String refId, String summary) {
+		// TODO set creation date like trac connector
+		return new JtracRepositoryTask(repositoryUrl, refId, summary);		
+	}
+
+	@Override
+	public AbstractAttachmentHandler getAttachmentHandler() {
+		return attachmentHandler;
+	}
+
+	@Override
+	public String getConnectorKind() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getLabel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getRepositoryUrlFromTaskUrl(String taskFullUrl) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AbstractTaskDataHandler getTaskDataHandler() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getTaskIdFromTaskUrl(String taskFullUrl) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getTaskUrl(String repositoryUrl, String taskId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean markStaleTasks(TaskRepository repository,
+			Set<AbstractTask> tasks, IProgressMonitor monitor)
+			throws CoreException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public IStatus performQuery(AbstractRepositoryQuery query,
+			TaskRepository repository, IProgressMonitor monitor,
+			ITaskCollector resultCollector) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateAttributes(TaskRepository repository,
+			IProgressMonitor monitor) throws CoreException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateTaskFromRepository(TaskRepository repository,
+			AbstractTask repositoryTask, IProgressMonitor monitor)
+			throws CoreException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateTaskFromTaskData(TaskRepository repository,
+			AbstractTask repositoryTask, RepositoryTaskData taskData) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

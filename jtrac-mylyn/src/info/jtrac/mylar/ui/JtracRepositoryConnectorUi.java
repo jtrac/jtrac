@@ -17,15 +17,15 @@
 package info.jtrac.mylar.ui;
 
 import info.jtrac.mylar.JtracRepositoryConnector;
+import info.jtrac.mylar.ui.wizard.JtracNewTaskWizard;
 import info.jtrac.mylar.ui.wizard.JtracQueryWizard;
 import info.jtrac.mylar.ui.wizard.JtracRepositorySettingsPage;
-import info.jtrac.mylar.ui.wizard.JtracNewTaskWizard;
 
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 
 /**
  * main plugin entry point
@@ -33,23 +33,8 @@ import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
 public class JtracRepositoryConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
-	public String getRepositoryType() {
+	public String getConnectorKind() {
 		return JtracRepositoryConnector.REPO_TYPE;
-	}
-
-	@Override
-	public AbstractRepositorySettingsPage getSettingsPage() {
-		return new JtracRepositorySettingsPage(this);
-	}
-
-	@Override
-	public boolean hasRichEditor() {
-		return true;
-	}
-
-	@Override
-	public boolean hasSearchPage() {
-		return true;
 	}
 
 	@Override
@@ -61,5 +46,17 @@ public class JtracRepositoryConnectorUi extends AbstractRepositoryConnectorUi {
 	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery queryToEdit) {
 		return new JtracQueryWizard();
 	}
+
+	@Override
+	public AbstractRepositorySettingsPage getSettingsPage() {
+		return new JtracRepositorySettingsPage(this);
+	}
+
+	@Override
+	public boolean hasSearchPage() {
+		return true;
+	}
+
+
 
 }

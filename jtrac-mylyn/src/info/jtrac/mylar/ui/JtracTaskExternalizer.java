@@ -16,53 +16,33 @@
 
 package info.jtrac.mylar.ui;
 
-import info.jtrac.mylar.JtracRepositoryQuery;
 import info.jtrac.mylar.JtracRepositoryTask;
 
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.DelegatingTaskExternalizer;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.w3c.dom.Node;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
+import org.w3c.dom.Element;
 
-public class JtracTaskExternalizer extends DelegatingTaskExternalizer {
+// TODO rename to TaskListFactory
+public class JtracTaskExternalizer extends AbstractTaskListFactory {
 
-	private static final String KEY_JTRAC = "JTrac";
-	private static final String KEY_JTRAC_CATEGORY = KEY_JTRAC + KEY_CATEGORY;
-	private static final String KEY_JTRAC_TASK = KEY_JTRAC + KEY_TASK;
-	private static final String KEY_JTRAC_QUERY_HIT = KEY_JTRAC + KEY_QUERY_HIT;
-	private static final String KEY_JTRAC_QUERY = KEY_JTRAC + KEY_QUERY;	
+	private static final String KEY_JTRAC = "JTrac";	
+	private static final String KEY_JTRAC_TASK = KEY_JTRAC + KEY_TASK;	
+	private static final String KEY_JTRAC_QUERY = KEY_JTRAC + KEY_QUERY;
 	
 	@Override
-	public boolean canReadCategory(Node node) {
-		return node.getNodeName().equals(KEY_JTRAC_CATEGORY);
-	}	
-	
-	@Override
-	public String getCategoryTagName() {
-		return KEY_JTRAC_CATEGORY;
-	}	
-	
-	@Override
-	public boolean canCreateElementFor(ITask task) {
+	public boolean canCreate(AbstractTask task) {
 		return task instanceof JtracRepositoryTask;
 	}
-	
 	@Override
-	public String getTaskTagName() {
-		return KEY_JTRAC_TASK;
+	public AbstractTask createTask(String repositoryUrl, String taskId,
+			String label, Element element) {
+		return new JtracRepositoryTask(repositoryUrl, taskId, label);
 	}
-	
 	@Override
-	public String getQueryHitTagName() {
-		return KEY_JTRAC_QUERY_HIT;
+	public String getTaskElementName() {
+		return KEY_JTRAC_TASK;
 	}	
 	
-	@Override
-	public String getQueryTagNameForElement(AbstractRepositoryQuery query) {
-		if (query instanceof JtracRepositoryQuery) {
-			return KEY_JTRAC_QUERY;
-		}
-		return "";
-	}	
+	
 	
 }
