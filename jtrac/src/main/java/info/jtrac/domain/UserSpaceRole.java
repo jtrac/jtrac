@@ -104,9 +104,11 @@ public class UserSpaceRole implements GrantedAuthority, Serializable {
             return false;
         }
         final UserSpaceRole usr = (UserSpaceRole) o;
-        return (space == usr.getSpace() || space.equals(usr.getSpace())
+        return (
+            (space == usr.getSpace() || space.equals(usr.getSpace()))
             && user.equals(usr.getUser())
-            && roleKey.equals(usr.getRoleKey()));
+            && roleKey.equals(usr.getRoleKey())
+        );
     }
     
     @Override
