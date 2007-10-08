@@ -18,6 +18,9 @@ public class ValidationUtilsTest extends TestCase {
         assertTrue(ValidationUtils.isValidLoginName("ab.cd"));
         assertTrue(ValidationUtils.isValidLoginName("ab_cd"));
         assertTrue(ValidationUtils.isValidLoginName("Ab-Cd"));
+        assertTrue(ValidationUtils.isValidLoginName("ab@cd"));
+        assertTrue(ValidationUtils.isValidLoginName("AB\\cd"));
+        assertTrue(ValidationUtils.isValidLoginName("AB\\abc@def.com"));
         assertFalse(ValidationUtils.isValidLoginName("ab%cd"));
         assertFalse(ValidationUtils.isValidLoginName("ab:cd"));
         assertFalse(ValidationUtils.isValidLoginName("ab cd"));
