@@ -1096,7 +1096,7 @@ wrapper.exe -r etc/wrapper.conf
             </para>
             <para>
                 If you are shadowing the development builds you would be able to obtain the latest database upgrade
-                scripts from here: <ulink url="http://svn.sourceforge.net/viewvc/j-trac/trunk/jtrac/etc/"/> Look for files 
+                scripts from here: <ulink url="http://j-trac.svn.sourceforge.net/viewvc/j-trac/trunk/jtrac/etc/"/> Look for files 
                 that end with ".bsh" - e.g: "jtrac-hsqldb-2_0rc3-to-2_0.bsh"
             </para>
             <para>
@@ -1422,7 +1422,7 @@ mvn eclipse:eclipse -DdownloadSources=true
             <para>
                 You can also get the latest versions of the "messages.properties" as well as the available
                 translations directly from version control at this url:
-                <ulink url="http://svn.sourceforge.net/viewvc/j-trac/trunk/jtrac/src/main/resources/"/>
+                <ulink url="http://j-trac.svn.sourceforge.net/viewvc/j-trac/trunk/jtrac/src/main/resources/"/>
                 Since these may change a lot, it is recommended that you check here as well before submitting
                 a translation.
             </para>
