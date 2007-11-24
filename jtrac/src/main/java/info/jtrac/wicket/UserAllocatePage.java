@@ -69,6 +69,7 @@ public class UserAllocatePage extends BasePage {
      */
     private class UserAllocateForm extends Form {                
         
+        private User user;
         private Space space;
         private String roleKey;
 
@@ -96,7 +97,8 @@ public class UserAllocatePage extends BasePage {
          * used on form init and also on Ajax onChange event for Space choice
          */
         private void initRoleChoice(Space s) {
-            List<String> roleKeys = new ArrayList(s.getMetadata().getRoles().keySet());
+            List<String> roleKeys = new ArrayList(s.getMetadata().getRoles().keySet());            
+            roleKeys.removeAll(user.getRoleKeys(s));            
             if(roleKeys.size() == 1) {
                 // pre select role for convenience
                 roleKey = roleKeys.get(0);
@@ -114,7 +116,7 @@ public class UserAllocatePage extends BasePage {
             
             add(new FeedbackPanel("feedback"));
             
-            final User user = getJtrac().loadUser(userId);
+            user = getJtrac().loadUser(userId);
             
             add(new Label("label", user.getName() + " (" + user.getLoginName() + ")"));
             
@@ -174,6 +176,24 @@ public class UserAllocatePage extends BasePage {
             });            
             spaceChoice.setNullValid(true);
             
+            add(spaceChoice);
+            
+            spaceChoice.add(new AjaxFormComponentUpdatingBehavior("onChange") {
+                protected void onUpdate(AjaxRequestTarget target) {
+                    Space s = (Space) getFormComponent().getConvertedInput();
+                    if (s == null) {
+                        roleKeyChoice.setEnabled(false);
+                        allocateButton.setEnabled(false);
+                    } else {
+                        Space temp = getJtrac().loadSpace(s.getId());
+                        // populate choice, enable button etc
+                        initRoleChoice(temp);
+                    }
+                    target.addComponent(roleKeyChoice);
+                    target.addComponent(allocateButton);
+                }
+            });                                                
+            
             roleKeyChoice = new DropDownChoice("roleKey");            
             roleKeyChoice.setOutputMarkupId(true);
             roleKeyChoice.setEnabled(false);
@@ -202,26 +222,10 @@ public class UserAllocatePage extends BasePage {
                 space = spaces.get(0);
                 // see if the role can be pre selected also at least populate choice, enable button etc
                 initRoleChoice(space);
-            }            
+            }    
             
-            spaceChoice.add(new AjaxFormComponentUpdatingBehavior("onChange") {
-                protected void onUpdate(AjaxRequestTarget target) {
-                    Space s = (Space) getFormComponent().getConvertedInput();
-                    if (s == null) {
-                        roleKeyChoice.setEnabled(false);
-                        allocateButton.setEnabled(false);
-                    } else {
-                        Space temp = getJtrac().loadSpace(s.getId());
-                        // populate choice, enable button etc
-                        initRoleChoice(temp);
-                    }
-                    target.addComponent(roleKeyChoice);
-                    target.addComponent(allocateButton);
-                }
-            });            
-            
-            add(spaceChoice);                                
-            
+            // make admin ======================================================
+                                                    
             WebMarkupContainer makeAdmin = new WebMarkupContainer("makeAdmin");
             if(user.isAdminForAllSpaces()) {
                 makeAdmin.setVisible(false);

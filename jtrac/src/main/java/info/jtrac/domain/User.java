@@ -67,7 +67,11 @@ public class User implements UserDetails, Serializable {
         userSpaceRoles.remove(new UserSpaceRole(this, space, roleKey));        
     }
     
-    private List<String> getRoleKeys(Space space) {
+    /**
+     * when the passed space is null this has a special significance
+     * it will return roles that are 'global'
+     */
+    public List<String> getRoleKeys(Space space) {
         List<String> roleKeys = new ArrayList<String>();
         for(UserSpaceRole usr : userSpaceRoles) {
             Space s = usr.getSpace();
@@ -76,7 +80,7 @@ public class User implements UserDetails, Serializable {
             }
         }
         return roleKeys;
-    }
+    }        
     
     public Map<Integer, String> getPermittedTransitions(Space space, int status) {
         return space.getMetadata().getPermittedTransitions(getRoleKeys(space), status);
@@ -119,32 +123,27 @@ public class User implements UserDetails, Serializable {
         return map.values();
     }        
     
-    /**
-     * convenience class to load completely eager loaded space out of session
-     * instead of hitting the database, useful when we need a space for
-     * currently logged in user
-     */
-    public Space getSpaceById(long spaceId) {
-        UserSpaceRole usr = getUserSpaceRoleBySpaceId(spaceId);
-        return usr == null ? null : usr.getSpace();
-    }     
-    
     public boolean isGuestForSpace(Space space) {
         if (id == 0) {
             return true;
         }
-        UserSpaceRole usr = getUserSpaceRoleBySpaceId(space.getId());
-        return usr.getRoleKey().equals("ROLE_GUEST");
+        for(UserSpaceRole usr : getUserSpaceRolesBySpaceId(space.getId())) {
+            if(usr.getRoleKey().equals("ROLE_GUEST")) {
+                return true;
+            }
+        }
+        return false;
     }
     
     
-    private UserSpaceRole getUserSpaceRoleBySpaceId(long spaceId) {        
+    private Collection<UserSpaceRole> getUserSpaceRolesBySpaceId(long spaceId) {
+        List<UserSpaceRole> list = new ArrayList<UserSpaceRole>();
         for (UserSpaceRole usr : userSpaceRoles) {
             if (usr.getSpace() != null && usr.getSpace().getId() == spaceId) {
-                return usr;
+                list.add(usr);
             }
         }
-        return null;
+        return list;
     }    
     
     //============ ACEGI UserDetails implementation ===============

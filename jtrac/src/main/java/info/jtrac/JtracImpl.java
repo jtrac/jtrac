@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
@@ -492,11 +493,22 @@ public class JtracImpl implements Jtrac {
 
     public List<User> findUnallocatedUsersForSpace(long spaceId) {
         List<User> users = findAllUsers();
-        List<UserSpaceRole> userSpaceRoles = findUserRolesForSpace(spaceId);
-        for(UserSpaceRole userSpaceRole : userSpaceRoles) {
-            users.remove(userSpaceRole.getUser());
+        Space space = loadSpace(spaceId);
+        Set<String> roleKeys = space.getMetadata().getRoles().keySet();
+        Set<UserSpaceRole> userSpaceRoles = new HashSet(findUserRolesForSpace(spaceId));
+        List<User> unallocated = new ArrayList<User>();
+        // spaces have multiple roles, find users that have not been
+        // allocated all roles for the given space
+        for(User user : users) {
+            for(String roleKey : roleKeys) {
+                UserSpaceRole usr = new UserSpaceRole(user, space, roleKey);
+                if(!userSpaceRoles.contains(usr)) {
+                    unallocated.add(user);
+                    break;
+                }
+            }
         }
-        return users;
+        return unallocated;
     }
 
     public int loadCountOfHistoryInvolvingUser(User user) {
@@ -560,10 +572,20 @@ public class JtracImpl implements Jtrac {
     public List<Space> findUnallocatedSpacesForUser(long userId) {
         List<Space> spaces = findAllSpaces();
         User user = loadUser(userId);
-        for(UserSpaceRole usr : user.getUserSpaceRoles()) {
-            spaces.remove(usr.getSpace());
+        Set<UserSpaceRole> usrs = user.getUserSpaceRoles();
+        List<Space> unallocated = new ArrayList<Space>();
+        // spaces have multiple roles, find spaces that have roles
+        // not yet assigned to the user
+        for(Space space : spaces) {
+            for(String roleKey : space.getMetadata().getRoles().keySet()) {
+                UserSpaceRole usr = new UserSpaceRole(user, space, roleKey);
+                if(!usrs.contains(usr)) {
+                    unallocated.add(space);
+                    break;
+                }
+            }
         }
-        return spaces;
+        return unallocated;
     }
 
     public void removeSpace(Space space) {

@@ -21,6 +21,9 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -73,24 +76,30 @@ public class SpaceAllocatePage extends BasePage {
      * wicket form
      */     
     private class SpaceAllocateForm extends Form {
-        
+                
+        private Space space;
         private User user;
         private String roleKey;
-
-        public String getRoleKey() {
-            return roleKey;
-        }
-
-        public void setRoleKey(String roleKey) {
-            this.roleKey = roleKey;
-        }
-
-        public User getUser() {
-            return user;
-        }
-
-        public void setUser(User user) {
-            this.user = user;
+              
+        private DropDownChoice roleKeyChoice;        
+        private Button allocateButton;  
+        
+        /**
+         * function that attempts to pre-select roleKey for convenience
+         * used on form init and also on Ajax onChange event for User choice
+         */
+        private void initRoleChoice(User u) {            
+            List<String> roleKeys = new ArrayList(space.getMetadata().getRoles().keySet());            
+            for(String s : u.getRoleKeys(space)) {                
+                roleKeys.remove(s);
+            }                   
+            if(roleKeys.size() == 1) {
+                // pre select role for convenience
+                roleKey = roleKeys.get(0);
+            }
+            roleKeyChoice.setChoices(roleKeys);                    
+            roleKeyChoice.setEnabled(true);
+            allocateButton.setEnabled(true);            
         }        
                 
         public SpaceAllocateForm(String id) {
@@ -105,7 +114,7 @@ public class SpaceAllocatePage extends BasePage {
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(this);
             setModel(model);
             
-            final Space space = getJtrac().loadSpace(spaceId);
+            space = getJtrac().loadSpace(spaceId);
             
             add(new Label("label", space.getName() + " (" + space.getPrefixCode() + ")"));
             
@@ -158,12 +167,7 @@ public class SpaceAllocatePage extends BasePage {
                 }
             });
             
-            List<User> users = getJtrac().findUnallocatedUsersForSpace(space.getId());
-            
-            if(user == null && users.size() == 1) {
-                // pre select the user for convenience
-                user = users.get(0);
-            }            
+            List<User> users = getJtrac().findUnallocatedUsersForSpace(spaceId);                      
             
             DropDownChoice userChoice = new DropDownChoice("user", users, new IChoiceRenderer() {
                 public Object getDisplayValue(Object o) {
@@ -178,18 +182,30 @@ public class SpaceAllocatePage extends BasePage {
 
             add(userChoice);
             
-            List<String> roleKeys = new ArrayList(space.getMetadata().getRoles().keySet());
             
-            if(roleKeys.size() == 1) {
-                // pre select the role for convenience
-                roleKey = roleKeys.get(0);
-            }
+            userChoice.add(new AjaxFormComponentUpdatingBehavior("onChange") {
+                protected void onUpdate(AjaxRequestTarget target) {
+                    User u = (User) getFormComponent().getConvertedInput();
+                    if (u == null) {
+                        roleKeyChoice.setEnabled(false);
+                        allocateButton.setEnabled(false);
+                    } else {
+                        User temp = getJtrac().loadUser(u.getId());
+                        // populate choice, enable button etc
+                        initRoleChoice(temp);
+                    }
+                    target.addComponent(roleKeyChoice);
+                    target.addComponent(allocateButton);
+                }
+            });             
             
-            DropDownChoice roleKeyChoice = new DropDownChoice("roleKey", roleKeys);
-            roleKeyChoice.setNullValid(true);
+            roleKeyChoice = new DropDownChoice("roleKey");
+            roleKeyChoice.setOutputMarkupId(true);
+            roleKeyChoice.setEnabled(false);            
+            roleKeyChoice.setNullValid(true);            
             add(roleKeyChoice);
             
-            add(new Button("allocate") {
+            allocateButton = new Button("allocate") {
                 @Override
                 public void onSubmit() {                    
                     if(user == null || roleKey == null) {
@@ -201,7 +217,20 @@ public class SpaceAllocatePage extends BasePage {
                     refreshPrincipal(temp);
                     setResponsePage(new SpaceAllocatePage(spaceId, previous, user.getId()));
                 }
-            });
+            };
+            
+            allocateButton.setOutputMarkupId(true);
+            allocateButton.setEnabled(false);
+            add(allocateButton);    
+            
+            if(users.size() == 1) {
+                // pre select the user for convenience
+                user = users.get(0);                
+            }              
+            
+            if(user != null) {
+                initRoleChoice(user);
+            }
             
             // cancel ==========================================================
             add(new Link("cancel") {
@@ -211,10 +240,10 @@ public class SpaceAllocatePage extends BasePage {
                         return;
                     }
                     if(previous instanceof SpaceListPage) {
-                        ((SpaceListPage) previous).setSelectedSpaceId(space.getId());
+                        ((SpaceListPage) previous).setSelectedSpaceId(spaceId);
                     }
                     if(previous instanceof UserAllocatePage) {
-                        ((UserAllocatePage) previous).setSelectedSpaceId(space.getId());
+                        ((UserAllocatePage) previous).setSelectedSpaceId(spaceId);
                     }                    
                     setResponsePage(previous);
                 }
