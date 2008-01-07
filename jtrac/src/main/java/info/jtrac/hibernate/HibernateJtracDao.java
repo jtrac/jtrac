@@ -62,10 +62,6 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     
     public void setSchemaHelper(SchemaHelper schemaHelper) {
         this.schemaHelper = schemaHelper;
-    }    
-    
-    public void flush() {
-        getHibernateTemplate().flush();
     }
     
     public void storeItem(Item item) {        
@@ -150,12 +146,14 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return (UserSpaceRole) getHibernateTemplate().get(UserSpaceRole.class, id);
     }    
     
-    public SpaceSequence loadSpaceSequence(long id) {        
-        return (SpaceSequence) getHibernateTemplate().get(SpaceSequence.class, id);               
+    public SpaceSequence loadSpaceSequence(long id) {                
+        return (SpaceSequence) getHibernateTemplate().get(SpaceSequence.class, id);           
     }    
     
     public void storeSpaceSequence(SpaceSequence spaceSequence) {
-        getHibernateTemplate().merge(spaceSequence);                
+        getHibernateTemplate().saveOrUpdate(spaceSequence);
+        // important to prevent duplicate sequence numbers, see JtracImpl#storeItem()
+        getHibernateTemplate().flush();
     }
     
     public List<Space> findSpacesByPrefixCode(String prefixCode) {

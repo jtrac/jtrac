@@ -251,13 +251,13 @@ public class JtracImpl implements Jtrac {
         item.add(history);
         SpaceSequence spaceSequence = dao.loadSpaceSequence(item.getSpace().getSpaceSequence().getId());
         item.setSequenceNum(spaceSequence.next());
-        // the synchronize and the flush at the end guarantee that item sequence numbers will be unique
+        // the synchronize for this storeItem method and the hibernate flush() call in the dao implementation
+        // are important to prevent duplicate sequence numbers
         dao.storeSpaceSequence(spaceSequence);
         // this will at the moment execute unnecessary updates (bug in Hibernate handling of "version" property)
         // se http://opensource.atlassian.com/projects/hibernate/browse/HHH-1401
         // TODO confirm if above does not happen anymore
-        dao.storeItem(item);
-        dao.flush();
+        dao.storeItem(item);        
         writeToFile(fileUpload, attachment);
         indexer.index(item);
         indexer.index(history);
@@ -275,8 +275,7 @@ public class JtracImpl implements Jtrac {
         history.setComment(item.getEditReason());
         history.setTimeStamp(new Date());
         item.add(history);
-        dao.storeItem(item);  // merge edits + history
-        dao.flush();
+        dao.storeItem(item);  // merge edits + history        
         // TODO index?
         if (item.isSendNotifications()) {
             mailSender.send(item);
@@ -305,8 +304,7 @@ public class JtracImpl implements Jtrac {
             history.setAttachment(attachment);
         }
         item.add(history);
-        dao.storeItem(item);
-        dao.flush();
+        dao.storeItem(item);        
         writeToFile(fileUpload, attachment);
         indexer.index(history);
         if (history.isSendNotifications()) {
@@ -557,7 +555,7 @@ public class JtracImpl implements Jtrac {
         return spaces.get(0);
     }
 
-    public void storeSpace(Space space) {
+    public void storeSpace(Space space) {        
         dao.storeSpace(space);
     }
 

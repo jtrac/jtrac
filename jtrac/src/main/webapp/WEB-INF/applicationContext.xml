@@ -80,7 +80,16 @@
     
     <!-- Hibernate DAO implementation.  Transactions (AOP) have been applied at the service layer not here -->
     <bean id="dao" class="info.jtrac.hibernate.HibernateJtracDao" init-method="createSchema">
-        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="hibernateTemplate">
+            <bean class="org.springframework.orm.hibernate3.HibernateTemplate">
+                <property name="sessionFactory" ref="sessionFactory"/>
+                <property name="flushMode">
+                    <bean id="org.springframework.orm.hibernate3.HibernateAccessor.FLUSH_COMMIT"
+                        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean"/>                    
+                </property>
+            </bean>
+        </property>        
+        <!-- <property name="sessionFactory" ref="sessionFactory"/> -->
         <property name="schemaHelper">
             <bean class="info.jtrac.hibernate.SchemaHelper">                
                 <property name="mappingResources" value="jtrac.hbm.xml"/>

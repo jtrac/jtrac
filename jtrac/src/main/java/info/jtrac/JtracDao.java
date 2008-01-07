@@ -98,7 +98,5 @@ public interface JtracDao {
     List<Config> findAllConfig();
     void storeConfig(Config config);
     Config loadConfig(String key);
-    //===========================================
-    void flush();
     
 }
