@@ -157,7 +157,7 @@
         </id>        
         <property name="type" column="type"/>         
         <many-to-one name="parent" column="parent"/>
-        <property name="loginName" column="login_name" unique="true" index="idx_users_login_name" length="50"/>
+        <property name="loginName" column="login_name" unique="true" not-null="true" index="idx_users_login_name" length="50"/>
         <property name="name" column="name" length="50"/>
         <property name="password" column="password"/>
         <property name="email" column="email" length="50"/>
