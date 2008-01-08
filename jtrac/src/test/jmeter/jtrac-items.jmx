@@ -674,11 +674,11 @@
                 <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
                 <stringProp name="RegexExtractor.template">$1$</stringProp>
                 <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-                <stringProp name="RegexExtractor.regex">action=&quot;(.+:form:.+?)&quot;</stringProp>
+                <stringProp name="RegexExtractor.regex">action=&quot;../../(.+:form:.+?)&quot;</stringProp>
               </RegexExtractor>
               <hashTree/>
             </hashTree>
-            <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="item view form post comment" enabled="false">
+            <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="item view form post comment" enabled="true">
               <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
                 <collectionProp name="Arguments.arguments">
                   <elementProp name="" elementType="HTTPArgument">
@@ -699,10 +699,10 @@
               <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.mimetype">multipart/form-data</stringProp>
-              <stringProp name="HTTPSampler.FILE_NAME">${emptyfile}</stringProp>
-              <stringProp name="HTTPSampler.FILE_FIELD">file</stringProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">true</boolProp>
+              <stringProp name="HTTPSampler.mimetype"></stringProp>
+              <stringProp name="HTTPSampler.FILE_NAME"></stringProp>
+              <stringProp name="HTTPSampler.FILE_FIELD"></stringProp>
               <stringProp name="HTTPSampler.monitor">false</stringProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
             </HTTPSampler>
@@ -713,11 +713,11 @@
                 <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
                 <stringProp name="RegexExtractor.template">$1$</stringProp>
                 <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-                <stringProp name="RegexExtractor.regex">&quot;(.+:form:.+?)&quot;</stringProp>
+                <stringProp name="RegexExtractor.regex">action=&quot;../../(.+:form:.+?)&quot;</stringProp>
               </RegexExtractor>
               <hashTree/>
             </hashTree>
-            <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="item view form post assign" enabled="false">
+            <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="item view form post assign" enabled="true">
               <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
                 <collectionProp name="Arguments.arguments">
                   <elementProp name="" elementType="HTTPArgument">
@@ -752,10 +752,10 @@
               <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.mimetype">multipart/form-data</stringProp>
-              <stringProp name="HTTPSampler.FILE_NAME">${emptyfile}</stringProp>
-              <stringProp name="HTTPSampler.FILE_FIELD">file</stringProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">true</boolProp>
+              <stringProp name="HTTPSampler.mimetype"></stringProp>
+              <stringProp name="HTTPSampler.FILE_NAME"></stringProp>
+              <stringProp name="HTTPSampler.FILE_FIELD"></stringProp>
               <stringProp name="HTTPSampler.monitor">false</stringProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
             </HTTPSampler>
@@ -766,7 +766,7 @@
                 <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
                 <stringProp name="RegexExtractor.template">$1$</stringProp>
                 <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-                <stringProp name="RegexExtractor.regex">&quot;(.+:form:.+?)&quot;</stringProp>
+                <stringProp name="RegexExtractor.regex">action=&quot;../../(.+:form:.+?)&quot;</stringProp>
               </RegexExtractor>
               <hashTree/>
             </hashTree>
