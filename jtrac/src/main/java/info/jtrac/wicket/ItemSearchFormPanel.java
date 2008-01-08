@@ -80,11 +80,10 @@ public class ItemSearchFormPanel extends BasePanel {
         add(form);
         form.add(new FeedbackPanel("feedback"));
         form.setModel(new CompoundPropertyModel(itemSearch));
-        List<Integer> sizes = Arrays.asList(new Integer[] {5, 10, 15, 25, 50, 100, -1});
-        final String noLimit = getLocalizer().getString("item_search_form.noLimit", null);
+        List<Integer> sizes = Arrays.asList(new Integer[] {5, 10, 15, 25, 50, 100, -1});        
         DropDownChoice pageSizeChoice = new DropDownChoice("pageSize", sizes, new IChoiceRenderer() {
             public Object getDisplayValue(Object o) {
-                return ((Integer) o) == -1 ? noLimit : o.toString();
+                return ((Integer) o) == -1 ? localize("item_search_form.noLimit") : o.toString();
             }
             public String getIdValue(Object o, int i) {
                 return o.toString();
@@ -144,7 +143,8 @@ public class ItemSearchFormPanel extends BasePanel {
         form.add(new ListView("columns", itemSearch.getColumnHeadings()) {
             protected void populateItem(final ListItem listItem) {
                 final ColumnHeading ch = (ColumnHeading) listItem.getModelObject();
-                listItem.add(new Label("columnName", ch.getLabel()));
+                String label = ch.isField() ? ch.getLabel() : localize("item_list." + ch.getName());
+                listItem.add(new Label("columnName", label));
                 listItem.add(new CheckBox("visible", new PropertyModel(ch, "visible")));
                 List<Expression> validExpressions = ch.getValidFilterExpressions();
                 DropDownChoice expressionChoice = new IndicatingDropDownChoice("expression", validExpressions, new IChoiceRenderer() {

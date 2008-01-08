@@ -159,9 +159,11 @@ public class ItemViewFormPanel extends BasePanel {
             // have to use FormValidator because this is conditional validation across two FormComponents
             add(new AbstractFormValidator() {
                 public FormComponent[] getDependentFormComponents() {
-                    return new FormComponent[] {statusChoice, assignedToChoice};
+                    // changed to suppress wicket warning if assignedToChoice is 'not visible'
+                    // return new FormComponent[] {statusChoice, assignedToChoice};
+                    return new FormComponent[] {statusChoice};
                 }
-                public void validate(Form form) {
+                public void validate(Form unused) {
                     if(assignedToChoice.getConvertedInput() == null) {
                         Integer i = (Integer) statusChoice.getConvertedInput();
                         if (i != null && i != State.CLOSED) {

@@ -54,55 +54,49 @@ public class ColumnHeading implements Serializable {
     private String label;
     private boolean visible = true;
     
-    private FilterCriteria filterCriteria = new FilterCriteria();    
+    private FilterCriteria filterCriteria = new FilterCriteria();     
     
-    /** used only to remove from collections */
     public ColumnHeading(String name) {
-        this.name = name;        
-    }    
-    
-    public ColumnHeading(String name, Component c) {
         this.name = name;
         if(name.equals(DETAIL) || name.equals(SPACE)) {
             visible = false;
-        }
-        this.label = localize(name, c);
+        }        
     }
     
     public ColumnHeading(Field field) {
         this.field = field;
         this.name = field.getName().getText();
         this.label = field.getLabel();
-    }
-    
-    private String localize(String key, Component c) {
-        return c.getLocalizer().getString("item_list." + key, c);
     }       
     
-    public static List<ColumnHeading> getColumnHeadings(Space s, Component c) {
+    public boolean isField() {
+        return field != null;
+    }
+    
+    public static List<ColumnHeading> getColumnHeadings(Space s) {
         List<ColumnHeading> list = new ArrayList<ColumnHeading>();
-        list.add(new ColumnHeading(ID, c));
-        list.add(new ColumnHeading(SUMMARY, c));        
-        list.add(new ColumnHeading(DETAIL, c));                
-        list.add(new ColumnHeading(STATUS, c));
-        list.add(new ColumnHeading(LOGGED_BY, c));
-        list.add(new ColumnHeading(ASSIGNED_TO, c));        
+        list.add(new ColumnHeading(ID));
+        list.add(new ColumnHeading(SUMMARY));        
+        list.add(new ColumnHeading(DETAIL));                
+        list.add(new ColumnHeading(STATUS));
+        list.add(new ColumnHeading(LOGGED_BY));
+        list.add(new ColumnHeading(ASSIGNED_TO));        
         for(Field f : s.getMetadata().getFieldList()) {
             list.add(new ColumnHeading(f));
         }
-        list.add(new ColumnHeading(TIME_STAMP, c));
+        list.add(new ColumnHeading(TIME_STAMP));
         return list;        
     }
     
-    public static List<ColumnHeading> getColumnHeadings(User u, Component c) {
+    public static List<ColumnHeading> getColumnHeadings(User u) {
         List<ColumnHeading> list = new ArrayList<ColumnHeading>();
-        list.add(new ColumnHeading(ID, c));
-        list.add(new ColumnHeading(SPACE, c));        
-        list.add(new ColumnHeading(SUMMARY, c));        
-        list.add(new ColumnHeading(DETAIL, c));                            
-        list.add(new ColumnHeading(LOGGED_BY, c));
-        list.add(new ColumnHeading(ASSIGNED_TO, c));
-        list.add(new ColumnHeading(TIME_STAMP, c));        
+        list.add(new ColumnHeading(ID));
+        list.add(new ColumnHeading(SPACE));        
+        list.add(new ColumnHeading(SUMMARY));        
+        list.add(new ColumnHeading(DETAIL));                            
+        list.add(new ColumnHeading(LOGGED_BY));
+        list.add(new ColumnHeading(ASSIGNED_TO));
+        list.add(new ColumnHeading(TIME_STAMP));        
         return list;        
     }    
     
@@ -411,11 +405,7 @@ public class ColumnHeading implements Serializable {
     
     public String getName() {
         return name;
-    }
-    
-    public boolean isField() {
-        return field != null;
-    }
+    }    
 
     public String getLabel() {
         return label;

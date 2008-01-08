@@ -55,12 +55,12 @@ public class ItemSearch implements Serializable {
     
     public ItemSearch(User user, Component c) {
         this.user = user;
-        this.columnHeadings = ColumnHeading.getColumnHeadings(user, c);
+        this.columnHeadings = ColumnHeading.getColumnHeadings(user);
     }
     
     public ItemSearch(Space space, Component c) {        
         this.space = space;        
-        this.columnHeadings = ColumnHeading.getColumnHeadings(space, c);
+        this.columnHeadings = ColumnHeading.getColumnHeadings(space);
     }      
     
     private DetachedCriteria parent; // temp working variable hack
