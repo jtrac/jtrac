@@ -26,8 +26,6 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Properties;
 import javax.servlet.ServletContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
@@ -57,9 +55,7 @@ import org.springframework.web.context.ServletContextAware;
  * database tables exist, and if they dont, would proceed to create them
  */
 
-public class JtracConfigurer extends PropertyPlaceholderConfigurer implements ServletContextAware {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+public class JtracConfigurer extends PropertyPlaceholderConfigurer implements ServletContextAware {    
 
     private ServletContext servletContext;
 
@@ -206,15 +202,15 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
     }
 
     private Properties loadProps(File file) throws Exception {
-            InputStream is = null;
-            Properties props = new Properties();
-            try {
-                is = new FileInputStream(file);
-                props.load(is);
-            } finally {
-                is.close();
-            }
-            return props;
+        InputStream is = null;
+        Properties props = new Properties();
+        try {
+            is = new FileInputStream(file);
+            props.load(is);
+        } finally {
+            is.close();
+        }
+        return props;
     }
 
 }
