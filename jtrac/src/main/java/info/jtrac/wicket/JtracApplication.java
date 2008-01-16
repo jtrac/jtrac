@@ -27,6 +27,7 @@ import javax.servlet.http.Cookie;
 import org.acegisecurity.Authentication;
 import org.acegisecurity.AuthenticationException;
 import org.acegisecurity.AuthenticationManager;
+import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -38,6 +39,7 @@ import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
+import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.request.target.coding.IndexedParamUrlCodingStrategy;
@@ -83,7 +85,8 @@ public class JtracApplication extends WebApplication {
                     // have to return null so that wicket can try to resolve again
                     // e.g. without prefixing component id etc.
                     if(logger.isDebugEnabled()) {
-                        logger.debug("i18n failed for key: '" + key + "'");
+                        logger.debug("i18n failed for key: '" + key + "', Class: " 
+                                + clazz + ", Style: " + style + ", Exception: " + e);
                     }
                     return null;
                 }
@@ -104,6 +107,14 @@ public class JtracApplication extends WebApplication {
             public boolean isInstantiationAuthorized(Class clazz) {
                 if (BasePage.class.isAssignableFrom(clazz)) {
                     if (((JtracSession) Session.get()).isAuthenticated()) {
+                        return true;
+                    }
+                    // attempt CAS authentication ==============================         
+                    logger.debug("check if CAS authentication succeeded");
+                    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                    if(authentication != null && authentication.isAuthenticated()) {
+                        logger.debug("CAS authentication succeeded, initializing session");
+                        ((JtracSession) Session.get()).setUser((User) authentication.getPrincipal());
                         return true;
                     }
                     // attempt remember-me auto login ==========================
@@ -142,13 +153,15 @@ public class JtracApplication extends WebApplication {
                         for (Space space : spaces) {            
                             guestUser.addSpaceWithRole(space, "ROLE_GUEST");
                         }
-                        ((JtracSession) Session.get()).setUser(guestUser);
-                        logger.debug("page requested was " + clazz.getName() + ", redirecting");
+                        ((JtracSession) Session.get()).setUser(guestUser);                        
                         // and proceed
                         return true;
                     }
                     // not authenticated, go to login page
+                    logger.debug("page requested was " + clazz.getName() + ", redirecting");
                     throw new RestartResponseAtInterceptPageException(LoginPage.class);
+                    // String serviceUrl = "http://localhost:8080/jtrac/auth/j_acegi_cas_security_check";                    
+                    // throw new RestartResponseAtInterceptPageException(new RedirectPage("http://localhost:8080/cas/login?service=" + serviceUrl));
                 }
                 return true;
             }

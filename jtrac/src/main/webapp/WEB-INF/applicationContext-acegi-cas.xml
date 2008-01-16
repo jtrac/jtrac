@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
-<!-- import this into applicationContext.xml instead of import-acegi.xml if using CAS -->
-<!-- TODO integrate into wicket -->
-
 <beans>  
+    
+    <bean id="filterChainProxy" class="org.acegisecurity.util.FilterChainProxy">
+        <property name="filterInvocationDefinitionSource">
+            <value>
+                PATTERN_TYPE_APACHE_ANT
+                /**=authenticationFilter
+            </value>
+        </property>
+    </bean>      
     
     <bean id="authenticationFilter" class="org.acegisecurity.ui.cas.CasProcessingFilter">
         <property name="authenticationManager" ref="authenticationManager"/>
         <property name="authenticationFailureUrl" value="/auth/cas_failed.htm"/>
-        <property name="defaultTargetUrl" value="/app"/>
-        <property name="filterProcessesUrl" value="/app/j_acegi_cas_security_check"/>
-    </bean>    
+        <property name="defaultTargetUrl" value="/app/"/>
+        <property name="filterProcessesUrl" value="/auth/j_acegi_cas_security_check"/>
+    </bean>   
+    
+    <bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
+        <property name="providers">
+            <list>
+                <ref bean="authenticationProvider"/>
+            </list>
+        </property>
+    </bean>  
     
     <bean id="authenticationProvider" class="org.acegisecurity.providers.cas.CasAuthenticationProvider">
         <property name="casAuthoritiesPopulator" ref="casAuthoritiesPopulator"/>
@@ -19,15 +33,10 @@
         <property name="ticketValidator" ref="casProxyTicketValidator"/>
         <property name="statelessTicketCache" ref="statelessTicketCache"/>
         <property name="key" value="jtrac-cas"/>
-    </bean>    
-    
-    <bean id="authenticationEntryPoint" class="org.acegisecurity.ui.cas.CasProcessingFilterEntryPoint">
-        <property name="loginUrl" value="http://localhost:8080/cas/login"/>
-        <property name="serviceProperties" ref="serviceProperties"/>
-    </bean>    
+    </bean> 
     
     <bean id="serviceProperties" class="org.acegisecurity.ui.cas.ServiceProperties">
-        <property name="service" value="/jtrac/app/j_acegi_cas_security_check"/>
+        <property name="service" value="http://localhost:8080/jtrac/auth/j_acegi_cas_security_check"/>
         <property name="sendRenew" value="false"/>
     </bean>    
            
@@ -35,7 +44,7 @@
         <property name="casValidate" value="https://localhost:8443/cas/proxyValidate"/>
         <property name="proxyCallbackUrl" value="/casProxy/receptor"/>
         <property name="serviceProperties" ref="serviceProperties"/>
-        <property name="trustStore" value="C:/adms_aep/apache-tomcat-5.5.16/conf/cacerts"/>
+        <property name="trustStore" value="C:/peter/opt/apache-tomcat-5.5.17/conf/cacerts"/>
     </bean>
 
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
