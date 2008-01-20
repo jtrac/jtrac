@@ -20,6 +20,7 @@ import info.jtrac.Jtrac;
 import info.jtrac.acegi.JtracCasProxyTicketValidator;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
+import info.jtrac.util.WebUtils;
 import info.jtrac.wicket.yui.TestPage;
 import java.util.List;
 import java.util.Locale;
@@ -146,7 +147,7 @@ public class JtracApplication extends WebApplication {
                         }
                     }
                     // attempt remember-me auto login ==========================
-                    if(attemptRememberMeAutoLogin()) {
+                    if(attemptRememberMeAutoLogin()) {                        
                         return true;
                     }
                     // attempt guest access if there are "public" spaces =======
@@ -217,13 +218,15 @@ public class JtracApplication extends WebApplication {
     }
     
     private boolean attemptRememberMeAutoLogin() {
+        logger.debug("checking cookies for remember-me auto login");
         Cookie[] cookies = ((WebRequest) RequestCycle.get().getRequest()).getCookies();
         if(cookies == null) {
+            logger.debug("no cookies found");
             return false;
         }        
         for (Cookie c : cookies) {
             if(logger.isDebugEnabled()) {
-                logger.debug("examining cookie: " + c);
+                logger.debug("examining cookie: " + WebUtils.getDebugStringForCookie(c));
             }
             if (!c.getName().equals("jtrac")) {
                 continue;

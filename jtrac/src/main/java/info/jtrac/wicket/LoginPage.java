@@ -18,6 +18,7 @@ package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
 import info.jtrac.domain.User;
+import info.jtrac.util.WebUtils;
 import javax.servlet.http.Cookie;
 import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.html.IHeaderContributor;
@@ -132,10 +133,12 @@ public class LoginPage extends WebPage {
             } else { // login success
                 // remember me cookie
                 if(rememberMe) {                    
-                    Cookie cookie = new Cookie("jtrac", loginName + ":" + getJtrac().encodeClearText(password));
+                    Cookie cookie = new Cookie("jtrac", loginName + ":" + getJtrac().encodeClearText(password));                    
                     cookie.setMaxAge(30 * 24 * 60 * 60); // 30 days in seconds 
+                    String path = getWebRequestCycle().getWebRequest().getHttpServletRequest().getContextPath();
+                    cookie.setPath(path);
                     getWebRequestCycle().getWebResponse().addCookie(cookie);
-                    logger.debug("remember me requested, cookie added: " + cookie.getValue());
+                    logger.debug("remember me requested, cookie added, " + WebUtils.getDebugStringForCookie(cookie));
                 }
                 // setup session with principal
                 ((JtracSession) getSession()).setUser(user);
