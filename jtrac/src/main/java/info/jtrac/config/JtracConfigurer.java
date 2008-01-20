@@ -51,6 +51,13 @@ import org.springframework.web.context.ServletContextAware;
  * - initialize the "test" query for checking idle database connections
  * - initialize list of available locales based on the properties files available
  *
+ * Also playing an important role during startup are the following factory beans:
+ * - DataSourceFactoryBean: 
+ *      * switches between embedded HSQLDB or Apache DBCP (connection pool)
+ *      * performs graceful shutdown of database if embedded HSQLDB
+ * - ProviderManagerFactoryBean
+ *      * conditionally includes LDAP authentication if requested
+ * 
  * Note that later on during startup, the HibernateJtracDao would check if
  * database tables exist, and if they dont, would proceed to create them
  */
@@ -58,10 +65,6 @@ import org.springframework.web.context.ServletContextAware;
 public class JtracConfigurer extends PropertyPlaceholderConfigurer implements ServletContextAware {    
 
     private ServletContext servletContext;
-
-    public JtracConfigurer() {
-        // zero arg constructor
-    }
 
     public void setServletContext(ServletContext servletContext) {
         this.servletContext = servletContext;
@@ -193,7 +196,7 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
         props.setProperty("database.validationQuery", "SELECT 1");
         props.setProperty("ldap.url", "");
         props.setProperty("ldap.activeDirectoryDomain", "");
-        props.setProperty("ldap.searchBase", "");
+        props.setProperty("ldap.searchBase", "");        
         // set default properties that can be overridden by user if required
         setProperties(props);
         // finally set the property that spring is expecting, manually
