@@ -222,7 +222,9 @@ public class ItemFormPage extends BasePage {
                 item.setLoggedBy(user);
                 item.setStatus(State.OPEN);                
                 getJtrac().storeItem(item, fileUpload);                
-            }                         
+            }                   
+            // on creating an item, clear any search filter (especially the related item) from session
+            setCurrentItemSearch(null);
             setResponsePage(ItemViewPage.class, new PageParameters("0=" + item.getRefId()));
         }
         
