@@ -59,7 +59,7 @@ public class JtracApplication extends WebApplication {
     
     private Jtrac jtrac;
     private ApplicationContext applicationContext;    
-    private JtracCasProxyTicketValidator jtracCasProxyTicketValidator;
+    private JtracCasProxyTicketValidator jtracCasProxyTicketValidator;        
     
     public Jtrac getJtrac() {
         return jtrac;
@@ -67,6 +67,22 @@ public class JtracApplication extends WebApplication {
 
     public ApplicationContext getApplicationContext() {
         return applicationContext;
+    }
+    
+    // used only by CasLoginPage
+    public String getCasLoginUrl() {
+        if(jtracCasProxyTicketValidator == null) {
+            return null;
+        }
+        return jtracCasProxyTicketValidator.getLoginUrl();
+    }
+    
+    // used only by logout link in HeaderPanel
+    public String getCasLogoutUrl() {
+        if(jtracCasProxyTicketValidator == null) {
+            return null;
+        }
+        return jtracCasProxyTicketValidator.getLogoutUrl();
     }
     
     @Override

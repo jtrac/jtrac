@@ -19,16 +19,18 @@ package info.jtrac.acegi;
 import org.acegisecurity.providers.cas.ticketvalidator.CasProxyTicketValidator;
 
 /**
- * class that exists purely to add a setter to the Acegi CasProxyTicketValidator
- * so that the loginUrl can be also included in the applicationContext-acegi-cas.xml
+ * class that exists purely to add a couple of setters to the Acegi CasProxyTicketValidator
+ * so that the loginUrl ' logoutUrl can be also included in the applicationContext-acegi-cas.xml
  * since we use Wicket, we don't need the CasProcessingFilterEntryPoint
  * kind of a hack, would have been much better to use the JtracConfigurer + properties file
  * but people who want to use CAS are assumed to be good at hacking XML :)
- * plus Acegi seems to be undergoing a major overhaul at the moment
+ * plus Acegi seems to be undergoing a major overhaul at the moment as well
+ * and haven't yet looked at CAS 3 yet
  */
 public class JtracCasProxyTicketValidator extends CasProxyTicketValidator {
     
     private String loginUrl;
+    private String logoutUrl;
 
     public String getLoginUrl() {
         return loginUrl;
@@ -36,6 +38,14 @@ public class JtracCasProxyTicketValidator extends CasProxyTicketValidator {
 
     public void setLoginUrl(String loginUrl) {
         this.loginUrl = loginUrl;
+    }
+
+    public String getLogoutUrl() {
+        return logoutUrl;
+    }
+
+    public void setLogoutUrl(String logoutUrl) {
+        this.logoutUrl = logoutUrl;
     }        
 
 }

@@ -17,6 +17,8 @@
 package info.jtrac.wicket;
 
 import info.jtrac.wicket.yui.*;
+import org.apache.wicket.behavior.SimpleAttributeModifier;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 
 /**
@@ -24,5 +26,9 @@ import org.apache.wicket.markup.html.WebPage;
  */
 public class CasLoginErrorPage extends WebPage {
     
+    public CasLoginErrorPage() {
+        String casLogoutUrl = ((JtracApplication) getApplication()).getCasLogoutUrl();
+        add(new WebMarkupContainer("casLogin").add(new SimpleAttributeModifier("href", casLogoutUrl)));
+    }
     
 }

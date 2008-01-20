@@ -110,9 +110,16 @@ public class HeaderPanel extends BasePanel {
                     ((WebResponse) getRequestCycle().getResponse()).clearCookie(cookie);                    
                     getSession().invalidate();
                     logger.debug("invalidated session and cleared cookie"); 
-                    // if CAS is involved, clear security context as well
-                    SecurityContextHolder.clearContext();
-                    setResponsePage(LogoutPage.class, new PageParameters("locale=" + user.getLocale()));
+                    // is acegi - cas being used ?
+                    String logoutUrl = ((JtracApplication) getApplication()).getCasLogoutUrl();
+                    if(logoutUrl != null) {
+                        logger.debug("cas authentication being used, clearing security context and redirecting to cas logout page");
+                        SecurityContextHolder.clearContext();                        
+                        // have to use stateless page reference because session is killed
+                        setResponsePage(CasLogoutPage.class);
+                    } else {
+                        setResponsePage(LogoutPage.class, new PageParameters("locale=" + user.getLocale()));
+                    }
                 }            
             });
             add(new WebMarkupContainer("login").setVisible(false));

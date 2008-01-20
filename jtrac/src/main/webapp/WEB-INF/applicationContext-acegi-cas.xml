@@ -53,6 +53,7 @@
         <property name="serviceProperties" ref="serviceProperties"/>
         <property name="trustStore" value="C:/peter/opt/apache-tomcat-5.5.17/conf/cacerts"/>
         <property name="loginUrl" value="https://localhost:8443/cas/login"/>
+        <property name="logoutUrl" value="https://localhost:8443/cas/logout"/>
     </bean>
 
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
