@@ -28,6 +28,7 @@ import info.jtrac.util.ItemUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -79,15 +80,14 @@ public class ItemViewPanel extends BasePanel {
                     } else if (itemItem.getType() == RELATED){
                         message = localize("item_view.relatedTo");                  
                     }
-                    String refId = itemItem.getRelatedItem().getRefId();
+                    final String refId = itemItem.getRelatedItem().getRefId();
                     if(hideLinks) {
                         message = message + " " + refId;
                     }
                     listItem.add(new Label("message", message));
                     Link link = new Link("link") {
                         public void onClick() {
-                            ItemViewPanel.this.replaceWith(
-                                    new ItemViewPanel(ItemViewPanel.this.getId(), itemItem.getRelatedItem().getId()));
+                            setResponsePage(ItemViewPage.class, new PageParameters("0=" + refId));
                         }
                     };
                     link.add(new Label("refId", refId));
@@ -108,6 +108,9 @@ public class ItemViewPanel extends BasePanel {
             add(new ListView("relatingItems", new ArrayList(item.getRelatingItems())) {            
                 protected void populateItem(ListItem listItem) {
                     final ItemItem itemItem = (ItemItem) listItem.getModelObject();
+                    // this looks very similar to related items block above
+                    // but the display strings could be different and in future handling of the 
+                    // inverse of the bidirectional link could be different as well                    
                     String message = null;
                     if(itemItem.getType() == DUPLICATE_OF) {
                         message = localize("item_view.duplicateOfThis");
@@ -116,15 +119,14 @@ public class ItemViewPanel extends BasePanel {
                     } else if (itemItem.getType() == RELATED){
                         message = localize("item_view.relatedToThis");                  
                     }
-                    String refId = itemItem.getItem().getRefId();
+                    final String refId = itemItem.getItem().getRefId();
                     if(hideLinks) {
                         message = refId + " " + message;
                     }                    
                     listItem.add(new Label("message", message));
                     Link link = new Link("link") {
                         public void onClick() {
-                            ItemViewPanel.this.replaceWith(
-                                    new ItemViewPanel(ItemViewPanel.this.getId(), itemItem.getItem().getId()));                        
+                            setResponsePage(ItemViewPage.class, new PageParameters("0=" + refId));
                         }
                     };
                     link.add(new Label("refId", refId));
