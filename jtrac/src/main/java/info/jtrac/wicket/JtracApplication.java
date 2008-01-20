@@ -17,6 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
+import info.jtrac.acegi.JtracCasProxyTicketValidator;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.wicket.yui.TestPage;
@@ -46,6 +47,7 @@ import org.apache.wicket.request.target.coding.IndexedParamUrlCodingStrategy;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
 /**
  * main wicket application for jtrac
@@ -53,10 +55,11 @@ import org.slf4j.LoggerFactory;
  */
 public class JtracApplication extends WebApplication {                
     
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final static Logger logger = LoggerFactory.getLogger(JtracApplication.class);
     
     private Jtrac jtrac;
     private ApplicationContext applicationContext;    
+    private JtracCasProxyTicketValidator jtracCasProxyTicketValidator;
     
     public Jtrac getJtrac() {
         return jtrac;
@@ -75,6 +78,15 @@ public class JtracApplication extends WebApplication {
         ServletContext sc = getServletContext();
         applicationContext = WebApplicationContextUtils.getWebApplicationContext(sc);        
         jtrac = (Jtrac) applicationContext.getBean("jtrac");
+        
+        // check if acegi-cas authentication is being used, get reference to object to be used
+        // by wicket authentication to redirect to right pages for login / logout        
+        try {
+            jtracCasProxyTicketValidator = (JtracCasProxyTicketValidator) applicationContext.getBean("casProxyTicketValidator");
+            logger.info("casProxyTicketValidator retrieved from application context: " + jtracCasProxyTicketValidator);
+        } catch(NoSuchBeanDefinitionException nsbde) {
+            logger.info("casProxyTicketValidator not found in application context: " + nsbde);
+        }         
         
         // delegate wicket i18n support to spring i18n
         getResourceSettings().addStringResourceLoader(new IStringResourceLoader() {
@@ -96,9 +108,7 @@ public class JtracApplication extends WebApplication {
                 Locale locale = component == null ? Session.get().getLocale() : component.getLocale();
                 return loadStringResource(clazz, key, locale, null);
             }            
-        });                               
-        
-        // getPageSettings().setMaxPageVersions(3);
+        });                
         
         getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy() {
             public boolean isActionAuthorized(Component c, Action a) {
@@ -108,39 +118,20 @@ public class JtracApplication extends WebApplication {
                 if (BasePage.class.isAssignableFrom(clazz)) {
                     if (((JtracSession) Session.get()).isAuthenticated()) {
                         return true;
-                    }
-                    // attempt CAS authentication ==============================         
-                    logger.debug("check if CAS authentication succeeded");
-                    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                    if(authentication != null && authentication.isAuthenticated()) {
-                        logger.debug("CAS authentication succeeded, initializing session");
-                        ((JtracSession) Session.get()).setUser((User) authentication.getPrincipal());
-                        return true;
+                    }                    
+                    if(jtracCasProxyTicketValidator != null) {
+                        // attempt CAS authentication ==========================
+                        logger.debug("checking if context contains CAS authentication");
+                        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                        if(authentication != null && authentication.isAuthenticated()) {
+                            logger.debug("security context contains CAS authentication, initializing session");
+                            ((JtracSession) Session.get()).setUser((User) authentication.getPrincipal());
+                            return true;
+                        }
                     }
                     // attempt remember-me auto login ==========================
-                    Cookie[] cookies =  ((WebRequest) RequestCycle.get().getRequest()).getCookies();
-                    if(cookies != null) {
-                        for(Cookie c : cookies) {
-                            if(c.getName().equals("jtrac")) {
-                                String value = c.getValue();
-                                logger.debug("found jtrac cookie: " + value);                
-                                if (value != null) {
-                                    int index = value.indexOf(':');
-                                    if (index != -1) {
-                                        String loginName = value.substring(0, index);
-                                        String encodedPassword = value.substring(index + 1);
-                                        logger.debug("valid cookie, attempting authentication");
-                                        User user = (User) getJtrac().loadUserByUsername(loginName);                                              
-                                        if(encodedPassword.equals(user.getPassword())) {                                        
-                                            ((JtracSession) Session.get()).setUser(user);
-                                            logger.debug("remember me login success");
-                                            // and proceed
-                                            return true;
-                                        }
-                                    }
-                                }                
-                            }
-                        }
+                    if(attemptRememberMeAutoLogin()) {
+                        return true;
                     }
                     // attempt guest access if there are "public" spaces =======
                     List<Space> spaces = getJtrac().findSpacesWhereGuestAllowed();
@@ -158,23 +149,34 @@ public class JtracApplication extends WebApplication {
                         return true;
                     }
                     // not authenticated, go to login page
-                    logger.debug("page requested was " + clazz.getName() + ", redirecting");
-                    throw new RestartResponseAtInterceptPageException(LoginPage.class);
-                    // String serviceUrl = "http://localhost:8080/jtrac/auth/j_acegi_cas_security_check";                    
-                    // throw new RestartResponseAtInterceptPageException(new RedirectPage("http://localhost:8080/cas/login?service=" + serviceUrl));
+                    logger.debug("not authenticated, forcing login, page requested was " + clazz.getName());
+                    if(jtracCasProxyTicketValidator != null) {                        
+                        String serviceUrl = jtracCasProxyTicketValidator.getServiceProperties().getService();
+                        String loginUrl = jtracCasProxyTicketValidator.getLoginUrl();
+                        logger.debug("cas authentication: service URL: " + serviceUrl);
+                        String redirectUrl = loginUrl + "?service=" + serviceUrl;
+                        logger.debug("attempting to redirect to: " + redirectUrl);                        
+                        throw new RestartResponseAtInterceptPageException(new RedirectPage(redirectUrl));
+                    } else {
+                        throw new RestartResponseAtInterceptPageException(LoginPage.class);  
+                    }
                 }
                 return true;
             }
         });
         
         // friendly urls for selected pages
-        mountBookmarkablePage("/login", LoginPage.class);
+        if(jtracCasProxyTicketValidator != null) { 
+            mountBookmarkablePage("/login", CasLoginPage.class);
+        } else {
+            mountBookmarkablePage("/login", LoginPage.class);
+        }        
         mountBookmarkablePage("/logout", LogoutPage.class);
         mountBookmarkablePage("/svn", SvnStatsPage.class);
         mountBookmarkablePage("/test", TestPage.class);
+        mountBookmarkablePage("/casError", CasLoginErrorPage.class);
         // bookmarkable url for viewing items
-        mount(new IndexedParamUrlCodingStrategy("/item", ItemViewPage.class));
-        
+        mount(new IndexedParamUrlCodingStrategy("/item", ItemViewPage.class));        
     }   
     
     @Override
@@ -197,5 +199,40 @@ public class JtracApplication extends WebApplication {
             return null;
         }
     }
+    
+    private boolean attemptRememberMeAutoLogin() {
+        Cookie[] cookies = ((WebRequest) RequestCycle.get().getRequest()).getCookies();
+        if(cookies == null) {
+            return false;
+        }        
+        for (Cookie c : cookies) {
+            if(logger.isDebugEnabled()) {
+                logger.debug("examining cookie: " + c);
+            }
+            if (!c.getName().equals("jtrac")) {
+                continue;
+            }            
+            String value = c.getValue();
+            logger.debug("found jtrac cookie: " + value);
+            if(value == null) {
+                continue;
+            }                
+            int index = value.indexOf(':');
+            if(index == -1) {
+                continue;
+            }                
+            String loginName = value.substring(0, index);
+            String encodedPassword = value.substring(index + 1);
+            logger.debug("valid cookie, attempting authentication");
+            User user = (User) getJtrac().loadUserByUsername(loginName);
+            if (encodedPassword.equals(user.getPassword())) {
+                ((JtracSession) Session.get()).setUser(user);
+                logger.debug("remember me login success");                    
+                return true;
+            }                                         
+        } 
+        // no valid cookies were found
+        return false;
+    }    
     
 }

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
+<!-- 
+    Acegi with CAS security configuration as Spring context
+    for how to use, refer the JTrac documentation at:
+    http://jtrac.info/doc/html/installation.html#installation-cas
+-->       
+
 <beans>  
     
     <bean id="filterChainProxy" class="org.acegisecurity.util.FilterChainProxy">
@@ -14,7 +20,7 @@
     
     <bean id="authenticationFilter" class="org.acegisecurity.ui.cas.CasProcessingFilter">
         <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="authenticationFailureUrl" value="/auth/cas_failed.htm"/>
+        <property name="authenticationFailureUrl" value="/app/casError"/>
         <property name="defaultTargetUrl" value="/app/"/>
         <property name="filterProcessesUrl" value="/auth/j_acegi_cas_security_check"/>
     </bean>   
@@ -33,18 +39,20 @@
         <property name="ticketValidator" ref="casProxyTicketValidator"/>
         <property name="statelessTicketCache" ref="statelessTicketCache"/>
         <property name="key" value="jtrac-cas"/>
-    </bean> 
+    </bean>
     
     <bean id="serviceProperties" class="org.acegisecurity.ui.cas.ServiceProperties">
         <property name="service" value="http://localhost:8080/jtrac/auth/j_acegi_cas_security_check"/>
         <property name="sendRenew" value="false"/>
     </bean>    
            
-    <bean id="casProxyTicketValidator" class="org.acegisecurity.providers.cas.ticketvalidator.CasProxyTicketValidator">
+    <!-- custom extension of CasProxyTicketValidator -->
+    <bean id="casProxyTicketValidator" class="info.jtrac.acegi.JtracCasProxyTicketValidator">
         <property name="casValidate" value="https://localhost:8443/cas/proxyValidate"/>
-        <property name="proxyCallbackUrl" value="/casProxy/receptor"/>
+        <property name="proxyCallbackUrl" value="https://localhost:8443/jtrac/casProxy/receptor"/>
         <property name="serviceProperties" ref="serviceProperties"/>
         <property name="trustStore" value="C:/peter/opt/apache-tomcat-5.5.17/conf/cacerts"/>
+        <property name="loginUrl" value="https://localhost:8443/cas/login"/>
     </bean>
 
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
@@ -64,7 +72,7 @@
         <property name="userDetailsService" ref="jtrac"/>
     </bean>
 
-    <bean id="casProxyDecider" class="org.acegisecurity.providers.cas.proxy.RejectProxyTickets"/>   
+    <bean id="casProxyDecider" class="org.acegisecurity.providers.cas.proxy.AcceptAnyCasProxy"/>   
     
 </beans>
 

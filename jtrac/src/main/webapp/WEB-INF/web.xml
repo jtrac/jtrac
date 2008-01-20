@@ -44,8 +44,9 @@
             <param-value>DEPLOYMENT</param-value>
         </init-param>
     </filter>    
-    
-    <!--        
+        
+    <!-- for acegi CAS authentication -->
+    <!--
     <filter> 
         <filter-name>acegi</filter-name> 
         <filter-class>org.acegisecurity.util.FilterToBeanProxy</filter-class> 
@@ -58,7 +59,7 @@
     <filter-mapping>
         <filter-name>acegi</filter-name>
         <url-pattern>/auth/*</url-pattern>
-    </filter-mapping> 
+    </filter-mapping>
     -->
     
     <!-- open session should be above the wicket filter -->
@@ -86,6 +87,13 @@
         <load-on-startup>2</load-on-startup>
     </servlet>
     
+    <!-- optional for acegi CAS authentication -->    
+    <!--
+    <context-param>
+        <param-name>edu.yale.its.tp.cas.proxyUrl</param-name>
+        <param-value>https://localhost:8443/jtrac/casProxy</param-value>
+    </context-param>    
+    
     <servlet>
         <servlet-name>casProxy</servlet-name>
         <servlet-class>edu.yale.its.tp.cas.proxy.ProxyTicketReceptor</servlet-class>
@@ -95,6 +103,7 @@
         <servlet-name>casProxy</servlet-name>
         <url-pattern>/casProxy/*</url-pattern>
     </servlet-mapping>
+    -->
     
     <servlet-mapping>
         <servlet-name>jtrac-api</servlet-name>

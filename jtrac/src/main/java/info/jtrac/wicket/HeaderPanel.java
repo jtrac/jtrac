@@ -22,6 +22,7 @@ import info.jtrac.domain.User;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.Cookie;
+import org.acegisecurity.context.SecurityContextHolder;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -108,7 +109,9 @@ public class HeaderPanel extends BasePanel {
                         + ":" + getJtrac().encodeClearText(user.getPassword()));
                     ((WebResponse) getRequestCycle().getResponse()).clearCookie(cookie);                    
                     getSession().invalidate();
-                    logger.debug("invalidated session and cleared cookie");                    
+                    logger.debug("invalidated session and cleared cookie"); 
+                    // if CAS is involved, clear security context as well
+                    SecurityContextHolder.clearContext();
                     setResponsePage(LogoutPage.class, new PageParameters("locale=" + user.getLocale()));
                 }            
             });
