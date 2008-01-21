@@ -57,6 +57,7 @@
         <property name="username" value="${database.username}"/>
         <property name="password" value="${database.password}"/>
         <property name="validationQuery" value="${database.validationQuery}"/>
+        <property name="dataSourceJndiName" value="${database.datasource.jndiname}"/>
     </bean>	    
 
     <!-- Hibernate SessionFactory -->
@@ -97,7 +98,8 @@
                 <property name="url" value="${database.url}"/>
                 <property name="username" value="${database.username}"/>
                 <property name="password" value="${database.password}"/>
-                <property name="hibernateDialect" value="${hibernate.dialect}"/>      
+                <property name="hibernateDialect" value="${hibernate.dialect}"/>   
+                <property name="dataSourceJndiName" value="${database.datasource.jndiname}"/>
             </bean>                
         </property>
     </bean>    

@@ -81,7 +81,7 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
         super.postProcessBeanFactory(beanFactory);
     }
 
-    public void configureJtrac() throws Exception {
+    private void configureJtrac() throws Exception {
 
         String jtracHome = null;
         ClassPathResource jtracInitResource = new ClassPathResource("jtrac-init.properties");
@@ -196,7 +196,8 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
         props.setProperty("database.validationQuery", "SELECT 1");
         props.setProperty("ldap.url", "");
         props.setProperty("ldap.activeDirectoryDomain", "");
-        props.setProperty("ldap.searchBase", "");        
+        props.setProperty("ldap.searchBase", "");
+        props.setProperty("database.datasource.jndiname", "");        
         // set default properties that can be overridden by user if required
         setProperties(props);
         // finally set the property that spring is expecting, manually

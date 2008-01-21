@@ -42,6 +42,7 @@ public class Config implements Serializable {
         PARAMS.add("mail.server.starttls.enable");
         PARAMS.add("mail.subject.prefix");
         PARAMS.add("mail.from");
+        PARAMS.add("mail.session.jndiname");
         PARAMS.add("jtrac.url.base");
         PARAMS.add("locale.default");
         PARAMS.add("session.timeout");

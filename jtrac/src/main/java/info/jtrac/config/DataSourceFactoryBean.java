@@ -25,10 +25,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
+import org.springframework.jndi.JndiObjectFactoryBean;
+import org.springframework.util.StringUtils;
 
 /**
  * spring factory bean to conditionally create the right data source
- * either embedded or apache dbcp
+ * either embedded or apache dbcp or JNDI datasource
  */
 public class DataSourceFactoryBean implements FactoryBean, DisposableBean {
     
@@ -39,6 +41,7 @@ public class DataSourceFactoryBean implements FactoryBean, DisposableBean {
     private String username;
     private String password;
     private String validationQuery;
+    private String dataSourceJndiName;
     
     private DataSource dataSource;        
 
@@ -60,10 +63,29 @@ public class DataSourceFactoryBean implements FactoryBean, DisposableBean {
 
     public void setValidationQuery(String validationQuery) {
         this.validationQuery = validationQuery;
-    }    
+    }
+
+    public void setDataSourceJndiName(String dataSourceJndiName) {
+        this.dataSourceJndiName = dataSourceJndiName;
+    }        
     
-    public Object getObject() throws Exception {       
-        if(url.startsWith("jdbc:hsqldb:file")) {
+    public Object getObject() throws Exception {
+        if(StringUtils.hasText(dataSourceJndiName)) {
+            logger.info("JNDI datasource requested, looking up datasource from JNDI name: '" + dataSourceJndiName + "'");
+            JndiObjectFactoryBean factoryBean = new JndiObjectFactoryBean();
+            factoryBean.setJndiName(dataSourceJndiName);
+            // "java:comp/env/" will be prefixed if the JNDI name doesn't already have it
+            factoryBean.setResourceRef(true);
+            // this step actually does the JNDI lookup
+            try {
+                factoryBean.afterPropertiesSet();
+            } catch(Exception e) {
+                logger.error("datasource init from JNDI failed : " + e);
+                logger.error("aborting application startup");
+                throw new RuntimeException(e);
+            }                 
+            dataSource = (DataSource) factoryBean.getObject();
+        } else if(url.startsWith("jdbc:hsqldb:file")) {
             logger.info("embedded HSQLDB mode detected, switching on spring single connection data source");
             SingleConnectionDataSource ds = new SingleConnectionDataSource();
             ds.setUrl(url);
@@ -73,7 +95,7 @@ public class DataSourceFactoryBean implements FactoryBean, DisposableBean {
             ds.setSuppressClose(true);
             dataSource = ds;            
         } else {
-            logger.info("Not using embedded HSQLDB, switching on Apache DBCP data source connection pooling");
+            logger.info("Not using embedded HSQLDB or JNDI datasource, switching on Apache DBCP data source connection pooling");
             BasicDataSource ds = new BasicDataSource();
             ds.setUrl(url);
             ds.setDriverClassName(driverClassName);
@@ -105,11 +127,13 @@ public class DataSourceFactoryBean implements FactoryBean, DisposableBean {
             stmt.close();
             con.close();
             logger.info("embedded HSQLDB database shut down successfully");
-        } else {
+        } else if (dataSource instanceof BasicDataSource){
             logger.info("attempting to close Apache DBCP data source");
             ((BasicDataSource) dataSource).close();
             logger.info("Apache DBCP data source closed successfully");
-        }  
+        } else {
+            logger.info("context shutting down for JNDI datasource");
+        }
     }
     
 }

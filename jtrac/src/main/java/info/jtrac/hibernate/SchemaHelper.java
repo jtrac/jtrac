@@ -20,6 +20,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 /**
  * Utilities to create the database schema, drop and create tables
@@ -35,6 +36,7 @@ public class SchemaHelper {
     private String username;
     private String password;
     private String hibernateDialect;
+    private String dataSourceJndiName;
     private String[] mappingResources;    
 
     public void setDriverClassName(String driverClassName) {
@@ -60,21 +62,31 @@ public class SchemaHelper {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public void setDataSourceJndiName(String dataSourceJndiName) {
+        this.dataSourceJndiName = dataSourceJndiName;
+    }        
     
     /**
      * create tables using the given Hibernate configuration
      */
     public void createSchema() {
-        Configuration cfg = new Configuration();        
-        cfg.setProperty("hibernate.connection.driver_class", driverClassName);        
-        cfg.setProperty("hibernate.connection.url", url);
-        cfg.setProperty("hibernate.connection.username", username);
-        cfg.setProperty("hibernate.connection.password", password);
+        Configuration cfg = new Configuration();
+        if(StringUtils.hasText(dataSourceJndiName)) {
+            cfg.setProperty("hibernate.connection.datasource", dataSourceJndiName);
+        } else {
+            cfg.setProperty("hibernate.connection.driver_class", driverClassName);        
+            cfg.setProperty("hibernate.connection.url", url);
+            cfg.setProperty("hibernate.connection.username", username);
+            cfg.setProperty("hibernate.connection.password", password);
+        }
         cfg.setProperty("hibernate.dialect", hibernateDialect);        
         for (String resource : mappingResources) {
             cfg.addResource(resource);
-        }        
+        }
+        logger.info("begin database schema creation =========================");
         new SchemaUpdate(cfg).execute(true, true);
+        logger.info("end database schema creation ===========================");
     }
     
 }

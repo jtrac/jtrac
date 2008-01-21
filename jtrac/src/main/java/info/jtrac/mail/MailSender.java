@@ -26,10 +26,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import javax.mail.Header;
+import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
+import org.springframework.jndi.JndiObjectFactoryBean;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.util.StringUtils;
@@ -52,49 +54,15 @@ public class MailSender {
         // initialize email sender
         this.messageSource = messageSource;
         this.defaultLocale = StringUtils.parseLocaleString(defaultLocale);
-        String host = config.get("mail.server.host");
-        if (host == null) {
-            logger.warn("'mail.server.host' config is null, mail adapter not initialized");
-            return;
-        }        
-        String port = config.get("mail.server.port");       
-        String tempUrl = config.get("jtrac.url.base");
-        from = config.get("mail.from");
-        prefix = config.get("mail.subject.prefix");
-        String userName = config.get("mail.server.username");
-        String password = config.get("mail.server.password");
-        String startTls = config.get("mail.server.starttls.enable");
-        logger.debug("initializing email adapter: host = '" + host + "', port = '"
-                + port + "', url = '" + url + "', from = '" + from + "', prefix = '" + prefix + "'");        
-        this.prefix = prefix == null ? "[jtrac]" : prefix;
-        this.from = from == null ? "jtrac" : from;
-        this.url = tempUrl == null ?  "http://localhost/jtrac/" : tempUrl;
-        if (!this.url.endsWith("/")) {
-            this.url = url + "/";
-        }          
-        int p = 25;
-        if (port != null) {
-           try {
-               p = Integer.parseInt(port);
-           } catch (NumberFormatException e) {
-               logger.warn("mail.server.port not an integer : '" + port + "', defaulting to 25");
-           }
+        String mailSessionJndiName = config.get("mail.session.jndiname");
+        if(StringUtils.hasText(mailSessionJndiName)) {
+            initMailSenderFromJndi(mailSessionJndiName);
         }
-        sender = new JavaMailSenderImpl();
-        sender.setHost(host);
-        sender.setPort(p);
-        if (userName != null) {
-            // authentication requested
-            Properties props = new Properties();
-            props.put("mail.smtp.auth", "true");
-            if (startTls != null && startTls.toLowerCase().equals("true")) {
-                props.put("mail.smtp.starttls.enable", "true");
-            }
-            sender.setJavaMailProperties(props);
-            sender.setUsername(userName);
-            sender.setPassword(password);
+        if(sender == null) {            
+            initMailSenderFromConfig(config);
         }
-        logger.info("email sender initialized: host = '" + host + "', port = '" + p + "'");
+        // if sender is still null the send* methods will not
+        // do anything when called and will just return immediately
     }
 
     /**
@@ -107,24 +75,25 @@ public class MailSender {
      */
     private void sendInNewThread(final MimeMessage message) {
         new Thread(){
+            @Override
             public void run() {
                 logger.debug("send mail thread start");
                 try {
-                    sender.send(message);
-                    logger.debug("send mail thread successfull");
-                } catch (Exception e) {
-                    logger.error("send mail thread failed", e);
-                    logger.error("mail headers dump start");
                     try {
+                        sender.send(message);
+                        logger.debug("send mail thread successfull");
+                    } catch (Exception e) {
+                        logger.error("send mail thread failed", e);
+                        logger.error("mail headers dump start");                    
                         Enumeration headers = message.getAllHeaders();
                         while(headers.hasMoreElements()) {
                             Header h = (Header) headers.nextElement();
                             logger.info(h.getName() + ": " + h.getValue());
                         }
-                    } catch (Exception f) {
-                        // :(
+                        logger.error("mail headers dump end");
                     }
-                    logger.error("mail headers dump end");
+                } catch(Exception e) {
+                    throw new RuntimeException(e);
                 }
             }
         }.start();
@@ -250,6 +219,71 @@ public class MailSender {
         } catch (Exception e) {
             logger.error("failed to prepare e-mail", e);
         }
+    }
+    
+    private void initMailSenderFromJndi(String mailSessionJndiName) {
+        logger.info("attempting to initialize mail sender from jndi name = '" + mailSessionJndiName + "'");
+        JndiObjectFactoryBean factoryBean = new JndiObjectFactoryBean();
+        factoryBean.setJndiName(mailSessionJndiName);    
+        // "java:comp/env/" will be prefixed if the JNDI name doesn't already have it
+        factoryBean.setResourceRef(true);        
+        try {
+            // this step actually does the JNDI lookup
+            factoryBean.afterPropertiesSet();
+        } catch(Exception e) {
+            logger.warn("failed to locate mail session : " + e);
+            return;
+        }
+        Session session = (Session) factoryBean.getObject();
+        sender = new JavaMailSenderImpl();
+        sender.setSession(session);
+        logger.info("email sender initialized from jndi name = '" + mailSessionJndiName + "'");        
+    }
+    
+    private void initMailSenderFromConfig(Map<String, String> config) {
+        String host = config.get("mail.server.host");
+        if (host == null) {
+            logger.warn("'mail.server.host' config is null, mail sender not initialized");
+            return;
+        }        
+        String port = config.get("mail.server.port");       
+        String tempUrl = config.get("jtrac.url.base");
+        from = config.get("mail.from");
+        prefix = config.get("mail.subject.prefix");
+        String userName = config.get("mail.server.username");
+        String password = config.get("mail.server.password");
+        String startTls = config.get("mail.server.starttls.enable");
+        logger.info("initializing email adapter: host = '" + host + "', port = '"
+                + port + "', url = '" + url + "', from = '" + from + "', prefix = '" + prefix + "'");        
+        this.prefix = prefix == null ? "[jtrac]" : prefix;
+        this.from = from == null ? "jtrac" : from;
+        this.url = tempUrl == null ?  "http://localhost/jtrac/" : tempUrl;
+        if (!this.url.endsWith("/")) {
+            this.url = url + "/";
+        }          
+        int p = 25;
+        if (port != null) {
+           try {
+               p = Integer.parseInt(port);
+           } catch (NumberFormatException e) {
+               logger.warn("mail.server.port not an integer : '" + port + "', defaulting to 25");
+           }
+        }
+        sender = new JavaMailSenderImpl();
+        sender.setHost(host);
+        sender.setPort(p);
+        if (userName != null) {
+            // authentication requested
+            Properties props = new Properties();
+            props.put("mail.smtp.auth", "true");
+            if (startTls != null && startTls.toLowerCase().equals("true")) {
+                props.put("mail.smtp.starttls.enable", "true");
+            }
+            sender.setJavaMailProperties(props);
+            sender.setUsername(userName);
+            sender.setPassword(password);
+        }
+        logger.info("email sender initialized from config: host = '" + host + "', port = '" + p + "'");        
     }
     
 }
