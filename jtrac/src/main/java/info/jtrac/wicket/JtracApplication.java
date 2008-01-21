@@ -102,7 +102,7 @@ public class JtracApplication extends WebApplication {
             jtracCasProxyTicketValidator = (JtracCasProxyTicketValidator) applicationContext.getBean("casProxyTicketValidator");
             logger.info("casProxyTicketValidator retrieved from application context: " + jtracCasProxyTicketValidator);
         } catch(NoSuchBeanDefinitionException nsbde) {
-            logger.info("casProxyTicketValidator not found in application context: " + nsbde);
+            logger.info("casProxyTicketValidator not found in application context, CAS single-sign-on is not being used");
         }         
         
         // delegate wicket i18n support to spring i18n

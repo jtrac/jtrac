@@ -415,7 +415,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         try {
             getHibernateTemplate().find("from Item item where item.id = 1");
         } catch (Exception e) {
-            logger.warn("database schema test failed, will create. Error is: " + e.getMessage());            
+            logger.warn("expected database schema does not exist, will create. Error is: " + e.getMessage());            
             schemaHelper.createSchema();
             User admin = new User();
             admin.setLoginName("admin");
