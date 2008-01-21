@@ -28,7 +28,7 @@
         <property name="analyzer" ref="analyzer"/>
     </bean>
     
-    <bean id="analyzer" class="org.apache.lucene.analysis.WhitespaceAnalyzer"/>
+    <bean id="analyzer" class="org.apache.lucene.analysis.standard.StandardAnalyzer"/>
            
 </beans>
 
