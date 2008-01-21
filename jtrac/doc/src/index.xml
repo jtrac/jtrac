@@ -557,6 +557,9 @@ java -version
                 property settings available from the settings screen as shown below.             
             </para>
             <para>
+                TODO jndi mail
+            </para>            
+            <para>
                 <mediaobject>
                     <imageobject role="html">
                         <imagedata align="center" fileref="../images/settings.png"/>
@@ -696,6 +699,12 @@ hibernate.show_sql=false
                 idle database connections that Apache DBCP performs.
             </para>            
         </sect1>
+        <sect1 id="installation-jndi-datasource">
+            <title>Using a JNDI Datasource</title>
+            <para>
+                TODO
+            </para>
+        </sect1>         
         <sect1 id="installation-ldap">
             <title>Configuring LDAP Authentication</title>
             <para>
@@ -726,6 +735,12 @@ ldap.activeDirectoryDomain=MYDOMAIN
                 administration screens before they can start using JTrac.
             </para>
         </sect1>
+        <sect1 id="installation-cas">
+            <title>CAS Single Sign On Support</title>
+            <para>
+                TODO
+            </para>
+        </sect1>        
         <sect1 id="installation-windowsservice">
             <title>Installing as a Windows Service</title>
             <para>
