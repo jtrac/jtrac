@@ -32,7 +32,7 @@
             <isset property="production.mode"/>
         </condition>
         -->
-        <javac srcdir="src/main/java" destdir="target/classes" debug="${debug}" classpath="${test.jars}">
+        <javac srcdir="src/main/java" destdir="target/classes" debug="${debug}" classpath="${test.jars}" target="1.5">
             <!-- <compilerarg value="-Xlint:unchecked"/> -->
         </javac>
         <copy todir="target/classes">
@@ -175,7 +175,7 @@
     
     <target name="compile-test" depends="compile">
         <mkdir dir="target/test-classes"/>
-        <javac srcdir="src/test/java" destdir="target/test-classes" debug="true">
+        <javac srcdir="src/test/java" destdir="target/test-classes" debug="true" target="1.5">
             <classpath>
                 <path path="target/classes"/>
                 <path path="${test.jars}"/>
