@@ -27,6 +27,7 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
 
 /**
@@ -105,9 +106,10 @@ public class HeaderPanel extends BasePanel {
             }); 
             add(new Link("logout") {
                 public void onClick() {                                        
-                    Cookie cookie = new Cookie("jtrac", user.getLoginName() 
-                        + ":" + getJtrac().encodeClearText(user.getPassword()));
-                    ((WebResponse) getRequestCycle().getResponse()).clearCookie(cookie);                    
+                    Cookie cookie = new Cookie("jtrac", "");                    
+                    String path = ((WebRequest) getRequest()).getHttpServletRequest().getContextPath();
+                    cookie.setPath(path);                    
+                    ((WebResponse) getResponse()).clearCookie(cookie);                    
                     getSession().invalidate();
                     logger.debug("invalidated session and cleared cookie"); 
                     // is acegi - cas being used ?
