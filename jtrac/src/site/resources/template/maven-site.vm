@@ -314,7 +314,7 @@
        #publishDate( "navigation-top" $decoration.publishDate $decoration.version )
        #mainMenu( $decoration.body.menus )
        <br/>
-       <a href="http://wicket.sourceforge.net/" title="Wicket">
+       <a href="http://wicket.apache.org/" title="Apache Wicket">
            <img src="template/wicket-logo.png" style="margin:0px 0px 15px 16px; border: 1px solid grey;"/>
        </a> 
        <a href="http://www.springframework.org/" title="Spring">
