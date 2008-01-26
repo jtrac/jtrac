@@ -1,0 +1,25 @@
+is = new FileInputStream("build-deps.properties");
+props = new Properties();
+props.load(is);
+is.close();
+
+repoPath = props.get("m2.repo");
+fileList = props.get("test.jars");
+
+files = fileList.split(":");
+
+
+os = new FileOutputStream("target/jtrac.fbp");
+out = new PrintWriter(os);
+
+out.write("<Project projectName='jtrac'>\n");
+out.write("    <Jar>target/classes</Jar>\n");
+
+for(file : files) {
+    out.write("    <AuxClasspathEntry>" + file.replace("${m2.repo}", repoPath) + "</AuxClasspathEntry>\n");
+}
+
+out.write("    <SrcDir>src/main/java</SrcDir>\n");
+out.write("</Project>\n");
+
+out.close();
