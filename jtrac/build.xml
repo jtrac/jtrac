@@ -311,6 +311,29 @@
         </java>
     </target>
     
+    <!-- =========================== PMD ============================ -->  
+    
+    <target name="pmd">
+        <mkdir dir="target/reports"/>
+        <java classname="net.sourceforge.pmd.PMD" fork="true" output="target/reports/pmd.xml">
+            <classpath>
+                <path path="${pmd.jars}"/>
+                <path path="${test.jars}"/>
+            </classpath>
+            <jvmarg value="-Xmx512m"/>
+            <arg value="src/main/java"/>
+            <arg value="xml"/>
+            <arg value="basic,imports,unusedcode"/>            
+        </java>
+    </target>
+    
+    <target name="pmd-console-dump">
+        <java classname="bsh.Interpreter" fork="true">
+            <classpath path="${test.jars}"/>
+            <arg line="etc/pmd-console-dump.bsh"/>
+        </java>
+    </target>    
+    
     <!-- =========================== DOC ============================ -->    
     
     <target name="javadoc">

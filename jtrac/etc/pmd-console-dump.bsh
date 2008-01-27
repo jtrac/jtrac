@@ -1,0 +1,26 @@
+// beanshell script called from ant to post-process a pmd xml report
+// and write to the console in a format so that the entries hyperlink
+// to the source code in the IDE
+
+import org.dom4j.io.SAXReader;
+
+document = new SAXReader().read(new File("target/reports/pmd.xml"));
+
+count = 0;
+
+for (fileElement : document.selectNodes("/pmd/file")) {
+    count++;
+          
+    violationElement = fileElement.element("violation");          
+          
+    print(count + ") ruleset: " + violationElement.attributeValue("ruleset")
+            + ", priority: " + violationElement.attributeValue("priority"));            
+            
+    lineNumber = violationElement.attributeValue("beginline"); 
+    columnNumber = violationElement.attributeValue("begincolumn");
+    
+    print(fileElement.attributeValue("name")
+            + ":" + lineNumber + ":" + columnNumber + ": rule: " + violationElement.attributeValue("rule")
+            + violationElement.getText());
+}
+

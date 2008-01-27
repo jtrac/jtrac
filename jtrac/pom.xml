@@ -449,7 +449,18 @@
                                     <version>2.0.5312</version>                        
                                 </dependency>                                
                             </dependencies>
-                        </extraPath>                       
+                        </extraPath>
+                        <extraPath>
+                            <name>pmd.jars</name>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>pmd</groupId>
+                                    <artifactId>pmd</artifactId>
+                                    <version>4.1.1</version>
+                                    <resolve>false</resolve>
+                                </dependency>                               
+                            </dependencies>
+                        </extraPath>                        
                         <extraPath>
                             <fileset>true</fileset>
                             <name>jetty.jars</name>
