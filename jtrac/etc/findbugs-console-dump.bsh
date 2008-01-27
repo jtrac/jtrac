@@ -12,9 +12,8 @@ for (sourceLineElement : document.selectNodes("/BugCollection/BugInstance/Source
     count++;
     bugInstanceElement = sourceLineElement.getParent();   
     
-    print(count + ") type: " + bugInstanceElement.attributeValue("type")
-            + ", priority: " + bugInstanceElement.attributeValue("priority")
-            + ", category: " + bugInstanceElement.attributeValue("category"));
+    print(count + ") category: " + bugInstanceElement.attributeValue("category")
+            + ", priority: " + bugInstanceElement.attributeValue("priority"));            
             
     lineNumber = sourceLineElement.attributeValue("start");
     
@@ -24,7 +23,7 @@ for (sourceLineElement : document.selectNodes("/BugCollection/BugInstance/Source
     }
     
     print(currentDir + sourceLineElement.attributeValue("sourcepath")
-            + ":" + lineNumber + ": "
+            + ":" + lineNumber + ": type: " + bugInstanceElement.attributeValue("type") + "\n"
             + bugInstanceElement.element("LongMessage").getText() + "\n");
 }
 
