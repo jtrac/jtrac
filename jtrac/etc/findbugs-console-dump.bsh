@@ -1,0 +1,30 @@
+// beanshell script called from ant to post-process a findbugs xml report
+// and write to the console in a format so that the entries hyperlink
+// to the source code in the IDE
+
+import org.dom4j.io.SAXReader;
+
+document = new SAXReader().read(new File("target/reports/findbugs.xml"));
+currentDir = new File("").getAbsolutePath().replace('\\', '/') + "/src/main/java/";
+count = 0;
+
+for (sourceLineElement : document.selectNodes("/BugCollection/BugInstance/SourceLine")) {
+    count++;
+    bugInstanceElement = sourceLineElement.getParent();   
+    
+    print(count + ") type: " + bugInstanceElement.attributeValue("type")
+            + ", priority: " + bugInstanceElement.attributeValue("priority")
+            + ", category: " + bugInstanceElement.attributeValue("category"));
+            
+    lineNumber = sourceLineElement.attributeValue("start");
+    
+    if(lineNumber == null) {
+        // this is a class level bug, get the line number of class declaration
+        lineNumber = bugInstanceElement.element("Class").element("SourceLine").attributeValue("start");
+    }
+    
+    print(currentDir + sourceLineElement.attributeValue("sourcepath")
+            + ":" + lineNumber + ": "
+            + bugInstanceElement.element("LongMessage").getText() + "\n");
+}
+

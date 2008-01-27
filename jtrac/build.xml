@@ -4,7 +4,7 @@
     <!-- example build.properties    
     tomcat.home=C:/apache-tomcat-5.5.16 [optional, jetty used by default]
     jmeter.home=C:/jakarta-jmeter-2.2 [optional, for load testing]
-    findbugs.home=C:/peter/opt/findbugs-1.3.1 [optional, for findbugs]
+    findbugs.home=C:/peter/opt/findbugs-1.3.1 [optional, for running findbugs]
     -->
     
     <property file="build.properties"/>
@@ -294,16 +294,22 @@
         <java classname="bsh.Interpreter" fork="true">
             <classpath path="${test.jars}"/>
             <arg line="etc/findbugs-project-gen.bsh"/>
-        </java>        
-        <java classname="edu.umd.cs.findbugs.FindBugs2" fork="true">
-            <classpath>
-                <fileset dir="${findbugs.home}/lib"/>                
-            </classpath>
-            <jvmarg value="-Xmx512m"/>
-            <jvmarg value="-Dfindbugs.home=${findbugs.home}"/>
-            <arg line="-project target/jtrac.fbp"/>                  
-        </java>        
+        </java>
+        <path id="findbugs.classpath">
+            <fileset dir="${findbugs.home}/lib"/>                
+        </path>
+        <mkdir dir="target/reports"/>
+        <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="findbugs.classpath"/>
+        <findbugs home="${findbugs.home}" jvmargs="-Xmx512m"
+            projectFile="target/jtrac.fbp" output="xml:withMessages" outputFile="target/reports/findbugs.xml"/>                           
     </target>    
+    
+    <target name="findbugs-console-dump">
+        <java classname="bsh.Interpreter" fork="true">
+            <classpath path="${test.jars}"/>
+            <arg line="etc/findbugs-console-dump.bsh"/>
+        </java>
+    </target>
     
     <!-- =========================== DOC ============================ -->    
     
