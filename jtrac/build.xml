@@ -309,7 +309,7 @@
             <classpath path="${test.jars}"/>
             <arg line="etc/findbugs-console-dump.bsh"/>
         </java>
-    </target>
+    </target>        
     
     <!-- =========================== PMD ============================ -->  
     
@@ -331,6 +331,19 @@
         <java classname="bsh.Interpreter" fork="true">
             <classpath path="${test.jars}"/>
             <arg line="etc/pmd-console-dump.bsh"/>
+        </java>
+    </target>
+    
+    <target name="pmd-cpd">
+        <mkdir dir="target/reports"/>
+        <java classname="net.sourceforge.pmd.cpd.CPD" fork="true">
+            <classpath>
+                <path path="${pmd.jars}"/>
+                <path path="${test.jars}"/>
+            </classpath>
+            <jvmarg value="-Xmx512m"/>
+            <arg line="--minimum-tokens 100"/>
+            <arg line="--files src/main/java"/>                       
         </java>
     </target>    
     
