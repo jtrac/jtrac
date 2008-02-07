@@ -162,9 +162,7 @@
         <property name="password" column="password"/>
         <property name="email" column="email" length="50"/>
         <property name="locale" column="locale" length="20"/>
-        <property name="locked"> 
-            <column name="locked" sql-type="integer"/> 
-        </property>        
+        <property name="locked" column="locked"/>
         <many-to-one name="metadata" column="metadata_id"/>
         <set name="userSpaceRoles" cascade="all" inverse="true">
             <key column="user_id"/>
@@ -190,9 +188,7 @@
         <property name="prefixCode" column="prefix_code" unique="true" length="10"/>
         <property name="name" column="name" length="50"/>
         <property name="description" column="description" type="text"/>
-        <property name="guestAllowed"> 
-            <column name="guest_allowed" sql-type="integer"/> 
-        </property>         
+        <property name="guestAllowed" column="guest_allowed"/>        
         <one-to-one name="spaceSequence" cascade="all"/>
         <many-to-one name="metadata" column="metadata_id" cascade="all"/>       
     </class>
