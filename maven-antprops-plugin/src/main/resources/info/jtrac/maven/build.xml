@@ -190,7 +190,7 @@
     
     <!-- target for NetBeans Profiler on Windows -->
     <target name="jetty-start-profile" depends="war-exploded" if="netbeans.home">
-        <property name="nbprof.home" value="${netbeans.home}/../profiler1/lib"/>
+        <property name="nbprof.home" value="${netbeans.home}/../profiler2/lib"/>
         <property name="agent.path" value="${nbprof.home}/deployed/jdk15/windows/profilerinterface.dll=${nbprof.home},5140"/>
         <jetty-start arg1="-agentpath:${agent.path}" arg2="-Xmx512m"/>
     </target>    
