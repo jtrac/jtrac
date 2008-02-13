@@ -67,9 +67,17 @@
                 <updatePolicy>always</updatePolicy>
                 <checksumPolicy>warn</checksumPolicy>
             </snapshots>            
-        </repository>        
+        </repository>       
     </repositories>
-  
+    
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jtrac.info</id>
+            <name>custom ant integration plugin</name>
+            <url>http://j-trac.sourceforge.net/repository</url>
+        </pluginRepository>
+    </pluginRepositories>      
+    
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
