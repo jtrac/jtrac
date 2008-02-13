@@ -831,15 +831,13 @@ wrapper.exe -r etc/wrapper.conf
         <sect1 id="faq-architecture">
             <title>What is the JTrac architecture like?</title>
             <para>
-                JTrac is built using the <ulink url="http://www.springframework.org">Spring Framework</ulink> as far as 
-                possible and mostly uses 
-                <ulink url="http://opensource.atlassian.com/confluence/spring/display/WEBFLOW/Home">Spring WebFlow</ulink>
-                within the MVC layer apart from Spring MVC.  Also the <ulink url="http://www.acegisecurity.org/">Acegi Security</ulink>
-                framework for Spring has been used.  JTrac is effectively a "light-weight" Java EE application and any 
-                version 2.4 compliant servlet engine is sufficient for deployment.
+                The presentation layer is using the <ulink url="http://wicket.apache.org/">Apache Wicket</ulink> framework.
             </para>
             <para>
-                The presentation layer is using the <ulink url="http://wicket.apache.org/">Apache Wicket</ulink> framework.
+                The service layer uses the <ulink url="http://www.springframework.org">Spring Framework</ulink>.   
+                Also the <ulink url="http://www.acegisecurity.org/">Acegi Security</ulink>
+                framework for Spring has been used.  JTrac is effectively a "light-weight" Java EE application and any 
+                version 2.4 compliant servlet engine is sufficient for deployment.
             </para>            
             <para>
                 <ulink url="http://www.hibernate.org/">Hibernate</ulink> is used for data persistence.  This allows for 
