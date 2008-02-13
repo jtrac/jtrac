@@ -31,7 +31,7 @@ import org.acegisecurity.userdetails.UserDetails;
 /**
  * Standard User entity with attributes such as name, password etc.
  * The parent relationship is used for easy grouping of users and
- * flexible inheritance of permission schemes.  The user type
+ * flexible inheritance of permission schemes TODO.  The user type
  * determines if this is a normal user or a user group.  Only
  * user groups can have child references.
  *
@@ -116,7 +116,7 @@ public class User implements UserDetails, Serializable {
     public Collection<UserSpaceRole> getSpaceRoles() {
         Map<String, UserSpaceRole> map = new TreeMap<String, UserSpaceRole>();        
         for(UserSpaceRole usr : userSpaceRoles) {
-            if(usr.getSpace() != null && usr.getRoleKey() != "ROLE_ADMIN") {
+            if(usr.getSpace() != null && !usr.getRoleKey().equals("ROLE_ADMIN")) {
                 map.put(usr.getSpace().getName(), usr);
             }
         }
