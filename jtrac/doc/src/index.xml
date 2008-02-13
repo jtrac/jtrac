@@ -1259,22 +1259,11 @@ java -cp bsh-2.0b4.jar;hsqldb-1.8.0.1.jar bsh.Interpreter jtrac-hsqldb-2_0rc3-to
                 Download the source code from 
                 <ulink url="http://sourceforge.net/project/showfiles.php?group_id=162983&amp;package_id=184104">SourceForge</ulink>
                 and extract it to a convenient location.  Note that the source code is a separate download from the main (binary)
-                and the file name will be of the form "jtrac-src-X.Y.Z.zip".  Once you extract this you will end up with two 
-                directories that will be created ("antprops" and "jtrac").
+                and the file name will be of the form "jtrac-src-X.Y.Z.zip".
             </para>
             <para>
                 You could choose to check out the source code directly from the JTrac SourceForge Subversion repository.
-                You have to perform two separate check-outs, one for the "antprops" Maven plugin and of course "jtrac" itself.
-            </para> 
-           <para>
-               Subversion URL for the Maven 2 "Antprops" plugin:
-                <programlisting>
-
-https://j-trac.svn.sourceforge.net/svnroot/j-trac/trunk/maven-antprops-plugin
-                </programlisting>               
-           </para>
-           <para>
-               Subversion URL for the JTrac source code:
+                The Subversion URL for the JTrac source code is as follows:
                 <programlisting>
 
 https://j-trac.svn.sourceforge.net/svnroot/j-trac/trunk/jtrac
@@ -1288,35 +1277,7 @@ https://j-trac.svn.sourceforge.net/svnroot/j-trac/trunk/jtrac
                If you are using Windows, we recommend <ulink url="http://tortoisesvn.tigris.org/">TortoiseSVN</ulink>
                 as a Subversion client.
            </para>           
-        </sect1>        
-        <sect1 id="dev-antprops-install">
-            <title>Install the "Antprops" Maven 2 Plugin</title>
-            <para>
-                This is a "one-time" step that installs a custom Maven 2 plugin into your local repository.
-                Open a command prompt and change to the (root of the) "antprops" directory.  Run the following command:                
-            </para>
-            <para>
-                <programlisting>
-
-mvn install
-                </programlisting>
-            </para>
-            <para>
-                If this does not work, maybe you are not connected to the internet.  Here's a tip that may help if you 
-                are behind an HTTP proxy.  This has been reported to work even when the proxy requires NTLM authentication.  
-                You can append a parameter when running Maven commands as follows:
-            </para>
-            <para>
-                <programlisting>
-
-mvn install -Dhttp.proxyHost=172.19.56.56
-                </programlisting>
-            </para>
-            <para>
-                Note that if your proxy port is different from the default 80, you will have to add an "http.proxyPort" 
-                parameter as well.
-            </para>             
-        </sect1> 
+        </sect1>
         <sect1 id="dev-build-properties">
             <title>Customize Ant Build Properties File</title>
             <para>
@@ -1347,7 +1308,22 @@ mvn antprops:generate
                 and typically when newer versions of JTrac dependencies (e.g. Spring and Hibernate) are available.  Keep
                 watching for changes in the versions of JTrac dependencies or specifically changes to "pom.xml" to avoid 
                 any problems.
-            </para>          
+            </para>
+            <para>
+                If the command does not work, maybe you are not connected to the internet.  Here's a tip that may help if you 
+                are behind an HTTP proxy.  This has been reported to work even when the proxy requires NTLM authentication.  
+                You can append a parameter when running Maven commands as follows:
+            </para>
+            <para>
+                <programlisting>
+
+mvn antprops:generate -Dhttp.proxyHost=172.19.56.56
+                </programlisting>
+            </para>
+            <para>
+                Note that if your proxy port is different from the default 80, you will have to add an "http.proxyPort" 
+                parameter as well.
+            </para>             
         </sect1>
         <sect1 id="dev-eclipse">
             <title>Import project into your IDE</title>
