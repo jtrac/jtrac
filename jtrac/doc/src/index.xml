@@ -530,20 +530,28 @@ java -version
                 </itemizedlist>                 
             </para>
             <para>
-                Note that you can use the "stop.bat" script to stop the application.  If you are not on Windows, you may want 
-                to rename the start and stop *.bat files to e.g. *.sh for Linux (reported to be not required for Ubuntu).  
-                The commands within the batch files will work unchanged as long as Java has been installed correctly i.e. "java" 
-                is in the PATH and it is the expected 1.5 or greater version.  You may need to do things like apply executable 
-                permissions to the batch files on Linux, e.g. "chmod +x *.bat".  And also, unless you have "root" permissions, 
-                you may face problems starting services on port 80 etc.
+                Note that you can use the "stop.bat" script to stop the application.  The "start.bat" file configures the 
+                Jetty server to use port 80 which you can easily change by editing "start.bat".  You may need to do this 
+                if for example JTrac does not start because a web-server (like Apache or IIS) is already running on port 80.
+            </para>
+            <para>
+                If you are not on Windows, you may want to rename the start and stop *.bat files to e.g. *.sh for Linux 
+                (*.bat is reported to work for Ubuntu).  The commands within the batch files will work unchanged as long as 
+                Java has been installed correctly i.e. "java" is in the PATH and it is the expected 1.5 or greater version.  
+                You may need to do things like apply executable permissions to the batch files on Linux, e.g. "chmod +x *.bat".  
+                And also, unless you have "root" permissions, you may face problems starting services on port 80 etc.
             </para>
             <para>
                 JTrac by default will use a "data" directory that will be automatically created
                 within the root folder "jtrac".  The data directory will contain the files needed by HSQLDB
-                (the embedded database) as well as hold uploaded attachments.  The "start.bat" file configures the 
-                Jetty server to use port 80 which you can easily change by editing "start.bat".  You may need to do this 
-                if for example JTrac does not start because a web-server (like Apache or IIS) is already running on port 80.
-            </para>           
+                (the embedded database) as well as hold uploaded attachments.  When using JTrac in production,
+                this is the location that you should consider backing-up on a regular basis.
+            </para>
+            <para>
+                For security reasons, it is best that you change the default "admin" password after installing 
+                JTrac, especially if you are going to make the application accessible pn a public-facing web-site
+                over the internet.  Do refer the section (coming up below) on what data to back up as well.
+            </para>            
         </sect1>
         <sect1 id="installation-settings">
             <title>Settings</title>
@@ -583,7 +591,9 @@ java -version
                 JTrac saves database information and uploaded attachments into a directory on the server.
                 This directory is logically called the "jtrac.home".  When you do a "quick-install" of JTrac
                 by just deploying the WAR file, JTrac creates a ".jtrac" folder in the user home folder and
-                uses that location as the home directory.
+                uses that location as the home directory.  This is great for quickly evaluating JTrac but
+                when you actually use JTrac in production you should configure the JTrac home directory as 
+                a location that can easily be backed-up for example.
             </para>            
         </sect1>
         <sect1 id="installation-custom">
@@ -803,6 +813,24 @@ wrapper.exe -r etc/wrapper.conf
                 When running as a service under the Java Service Wrapper, you can look at the
                 "wrapper.log" file in the "jtrac/logs" folder for troubleshooting.
             </para>
+        </sect1>
+        <sect1 id="installation-backup">
+            <title>What to Backup</title>
+            <para>
+                Although in practice JTrac has been found to be extremely stable in production, you should 
+                regularly backup the database and stored attachments.  If you are using JTrac with 
+                the embedded HSQLDB database, backing up the contents of "jtrac.home" will be sufficient.
+                The HSQLDB data will be stored as files in a directory called "db" under the JTrac home.
+            </para>
+            <para>    
+                If you are using the JTrac distribution as-is, i.e. if you are using the bundled Jetty application
+                server - the JTrac home directory will be called "data" and this is created automatically under the
+                folder where you un-zipped JTrac.                
+            </para>
+            <para>
+                Of course, if you are using a different database you will have to backup the database separately.
+                The "jtrac.home" would still need to be backed up because this is where uploaded attachments are stored.                
+            </para>
         </sect1>        
         <sect1 id="installation-upgrading">
             <title>Upgrading</title>
@@ -826,7 +854,12 @@ wrapper.exe -r etc/wrapper.conf
             <para>
                 JTrac is also written from the ground up to make use of the very best and latest in Java.  For example
                 JTrac is developed using JDK 5.0 features and is targeted at JSP 2.0 and above.
-            </para>               
+            </para>
+            <para>
+                JTrac can be installed in a few minutes and even configuring an e-mail server for notifications 
+                is easy and through the GUI.  One of the reasons why many people choose JTrac over other open-source
+                issue / bug trackers is because of how easy it is to set up.
+            </para>              
         </sect1>
         <sect1 id="faq-architecture">
             <title>What is the JTrac architecture like?</title>
@@ -851,7 +884,56 @@ wrapper.exe -r etc/wrapper.conf
                 That project was called "jTrac" (with a lowercase 'j') and it was based on Spring JDBC and MS Access.                
                 JTrac was completely re-written to use Spring and Hibernate - and the 2.0 version number reflects this.
             </para>
-        </sect1>     
+        </sect1>
+        <sect1 id="faq-password">
+            <title>What is the username and password when you log in for the first time?</title>
+            <para>
+                username: admin
+            </para>
+            <para>
+                password: admin
+            </para>
+            <para>
+                Of course, you are recommended to change the password as soon as possible!
+            </para>            
+        </sect1>
+        <sect1 id="faq-contribute">
+            <title>How can I help?</title>
+            <para>
+                We welcome code contributions in the form of patches which you can submit
+                <ulink url="http://sourceforge.net/tracker/?atid=825943&amp;group_id=162983">here</ulink>.
+                JTrac has a detailed <link linkend="dev-guide">developer guide</link> which can get you up 
+                and running even if you are new to Java development.
+            </para>
+            <para>
+                Do consider contributing a translation which is very easy to do and does not need any
+                Java knowledge.  You can refer to <link linkend="dev-translating">this section</link>
+                of the developer guide for details.
+            </para>
+            <para>
+                Read the section on <link linkend="interim-builds">interim builds</link> on how you can help 
+                by testing the development builds.
+            </para>            
+        </sect1>
+        <sect1 id="faq-hsqldb">
+            <title>We are heavy users of JTrac but it is running on the embedded HSQLDB database.  Can it cope?</title>
+            <para>
+                HSQLDB is surprisingly resilient and we have an instance of JTrac running in the place where
+                I work that has accumulated more than 2000 items across multiple spaces with hundreds of users 
+                using it over 2 years.  The database file has grown beyond 10MB but there are still no signs of problems.
+            </para>
+            <para>
+                But depending on your comfort level, you can consider moving to another database if your usage
+                is really high.  The <link linkend="upgrading-migrating">upgrading section</link> of this document 
+                has details on how you can migrate data from HSQLDB to other databases such as MySQL.
+            </para>
+        </sect1>
+        <sect1 id="faq-morecustomfields">
+            <title>Why does JTrac have a limit on custom fields?  I really need more!</title>
+            <para>
+                TODO
+            </para>
+        </sect1>        
     </chapter>    
     
     <chapter id="roadmap">
@@ -1413,7 +1495,9 @@ mvn eclipse:eclipse -DdownloadSources=true
                 translations directly from version control at this url:
                 <ulink url="http://j-trac.svn.sourceforge.net/viewvc/j-trac/trunk/jtrac/src/main/resources/"/>
                 Since these may change a lot, it is recommended that you check here as well before submitting
-                a translation.
+                a translation.  We recommend that you submit translations as attachments on the 
+                <ulink url="http://sourceforge.net/tracker/?atid=825943&amp;group_id=162983">JTrac patches tracker</ulink> 
+                where we keep track of code contributions as well.                
             </para>
             <para>                
                 You can use this nice open-source tool called <ulink url="https://prbeditor.dev.java.net/">PRBEditor</ulink>
