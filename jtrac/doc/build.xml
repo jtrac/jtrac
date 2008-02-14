@@ -3,7 +3,8 @@
 <project name="jtrac-doc" basedir=".." default="doc">
 
     <property name="doc.src.dir" value="doc"/>    
-    <property name="dist.doc.dir" value="target/site/doc"/>    
+    <property name="dist.doc.dir" value="target/site/doc"/>
+    <property name="proxy.jvmopt" value=""/>
     
     <target name="doc" depends="clean, doc-html, doc-html-single, doc-pdf"/>
     
