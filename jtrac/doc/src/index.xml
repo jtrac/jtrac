@@ -845,21 +845,21 @@ wrapper.exe -r etc/wrapper.conf
         <sect1 id="faq-why">
             <title>Do we really need another issue tracker?</title>
             <para>
-                There are indeed quite a few issue trackers available, both commercial and open source.
-                JTrac has flexible workflow capabilities and offers a rare level of control over field-level 
-                permissions. JTrac is designed to be able to handle requirements management in the future 
-                and this an area where there is a clear lack of open source tools that support
-                the needs of agile development teams.
-            </para>
-            <para>
-                JTrac is also written from the ground up to make use of the very best and latest in Java.  For example
-                JTrac is developed using JDK 5.0 features and is targeted at JSP 2.0 and above.
-            </para>
-            <para>
                 JTrac can be installed in a few minutes and even configuring an e-mail server for notifications 
                 is easy and through the GUI.  One of the reasons why many people choose JTrac over other open-source
                 issue / bug trackers is because of how easy it is to set up.
-            </para>              
+            </para>             
+            <para>
+                There are indeed quite a few issue trackers available, both commercial and open source.
+                JTrac has flexible workflow capabilities and offers a rare level of control over field-level 
+                permissions.
+            </para>
+            <para>
+                JTrac is also written from the ground up to make use of the very best and latest in Java.  For example
+                JTrac is developed using JDK 5.0 features.   JTrac is designed to be able to handle requirements management 
+                in the future and this an area where there is a clear lack of open source tools that support
+                the needs of agile development teams.
+            </para>             
         </sect1>
         <sect1 id="faq-architecture">
             <title>What is the JTrac architecture like?</title>
@@ -894,7 +894,7 @@ wrapper.exe -r etc/wrapper.conf
                 password: admin
             </para>
             <para>
-                Of course, you are recommended to change the password as soon as possible!
+                Of course, it is recommended that you change the default password as soon as possible!
             </para>            
         </sect1>
         <sect1 id="faq-contribute">
@@ -931,9 +931,43 @@ wrapper.exe -r etc/wrapper.conf
         <sect1 id="faq-morecustomfields">
             <title>Why does JTrac have a limit on custom fields?  I really need more!</title>
             <para>
-                TODO
+                The limit is primarily for performance reasons especially when filtered searches are involved.
+                But when people run out of custom fields, it is invariably for "free text" fields.  So when JTrac
+                introduces the feature of being able to "tag" items, this should hopefully cover those kinds
+                of things.
             </para>
-        </sect1>        
+            <para>
+                Anyway, if you really, really want more custom fields, the JTrac code is very clean and you can 
+                easily customize a version that meets your requirements.  A few people have reported having 
+                done this and <ulink url="http://sourceforge.net/forum/forum.php?thread_id=1919986&amp;forum_id=552477">this forum thread</ulink> 
+                for example can help you get started.
+            </para>            
+        </sect1>
+        <sect1 id="faq-tracker">
+            <title>How do I report bugs or feature requests?</title>
+            <para>
+                Use the SourceForge trackers here:
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>Bugs: <ulink url="http://sourceforge.net/tracker/?atid=825941&amp;group_id=162983"></ulink></para>
+                    </listitem>
+                    <listitem>
+                        <para>Feature Requests: <ulink url="http://sourceforge.net/tracker/?atid=825944&amp;group_id=162983"></ulink></para>
+                    </listitem>                               
+                </itemizedlist>                 
+            </para>
+        </sect1>
+        <sect1 id="faq-dogfood">
+            <title>Why is JTrac not being used as the bug-tracker for this project?  You should be eating your own dog food right?</title>
+            <para>
+                We are just trying to use the SourceForge infrastructure as far as possible and the activity on
+                the SourceForge trackers translates into higher rankings which is important for project visibility.
+                At this point, we would rather not get into the details of hosting, upgrading and uptime if we were
+                to host JTrac on the internet.
+            </para>
+        </sect1>       
     </chapter>    
     
     <chapter id="roadmap">
