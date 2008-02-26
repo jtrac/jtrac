@@ -154,8 +154,6 @@
             <zipfileset dir="etc" prefix="jtrac/etc"/>
             <zipfileset dir="src" prefix="jtrac/src"/>
             <zipfileset dir="." includes="*.*" prefix="jtrac"/>
-            <zipfileset dir="../antprops/src" prefix="antprops/src"/>
-            <zipfileset dir="../antprops" includes="*.*" prefix="antprops"/>
         </zip>         
     </target>    
     
