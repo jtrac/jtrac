@@ -7,9 +7,11 @@ JTrac
 
 * Features
 
-    * Add custom fields and drop downs
+    * Very easy to install
     
     * Unlimited project spaces per installation
+
+    * Custom fields and drop-downs for each project
     
     * Per-project customizable workflow
     
@@ -31,13 +33,13 @@ JTrac
     
     * Support for anonymous browsing of projects    
     
-    * Cross-reference items to each other, e.g. "duplicate of", "depends on" etc.
+    * Cross-reference items to each other, e.g. 'duplicate of', 'depends on' etc.    
     
+    * Translated into multiple languages (Spanish, French, German, Russian, Japanese and more)
+
     * Support for all popular databases
     
-    * Translated into multiple languages (Spanish, French, German, Russian, Japanese etc.)
-    
-    * Support for LDAP or Active Directory based authentication
+    * Support for LDAP, Active Directory or CAS based authentication    
     
     * Embedded database and web-app server - download and start using right away!
     

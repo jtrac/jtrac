@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+-->
 
 <book>
     <bookinfo>
@@ -56,8 +61,9 @@
                 <ulink url="http://www.acegisecurity.org/">Acegi Security</ulink> framework for Spring.  The presentation 
                 layer for version 2.0 was mainly using 
                 <ulink url="http://opensource.atlassian.com/confluence/spring/display/WEBFLOW/Home">Spring WebFlow</ulink>
-                but as of early 2007 (version 2.1.0 onwards) JTrac switched to using the 
-                <ulink url="http://wicket.apache.org/">Apache Wicket</ulink> framework.
+                but as of early 2007 (version 2.1.0 onwards) JTrac 
+                <ulink url="http://ptrthomas.wordpress.com/2007/03/02/wicket-impressions-moving-from-spring-mvc-webflow/">switched to </ulink>
+                using the <ulink url="http://wicket.apache.org/">Apache Wicket</ulink> framework.
             </para>
             <para>
                 JTrac is extremely easy to install and the only pre-requisite is a Java 5 (or higher) Runtime Environment.
@@ -65,7 +71,7 @@
                 server called <ulink url="http://jetty.mortbay.org/">Jetty</ulink> and an embedded database called 
                 <ulink url="http://www.hsqldb.org/">HSQLDB</ulink>.  Please refer to the 
                 <link linkend="installation">installation</link> section of this documentation for details.  
-                You can also choose to drop the WAR file into a server of your choice and start using JTrac right away.
+                You can also choose to drop the WAR file into an application server of your choice and start using JTrac right away.
             </para>         
         </sect1>        
         
@@ -83,7 +89,7 @@
     <chapter id="features">
         <title>Features</title>
         <para>                    
-            JTrac has all the features you would expect from a standard issue-tracking application such as 
+            JTrac has all the features that you would expect from a standard issue-tracking application such as 
             support for file-attachments and e-mail integration.  JTrac offers powerful customization options,
             especially in the areas of workflow and field-level permissions and compares well to even
             commercial tools.
@@ -143,7 +149,22 @@
                 There is a limit to how many custom fields of each type that you can configure for a Space.
                 These limits have been set after careful consideration and would very rarely fail to suffice. 
                 They are as follows: Drop Down - 10, Free Text - 5, Numeric - 3, Date/Time - 3.                
-            </para>          
+            </para>
+            <para>
+                The screenshot below shows how creating a new item would look like for the typical
+                project (space) where 'Severity', 'Module', 'Type' and 'Priority' have been defined
+                as custom fields.
+            </para>
+            <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="../images/item-create.png"/>
+                    </imageobject>
+                    <caption>
+                        <para>Creating a new item</para>
+                    </caption>
+                </mediaobject>
+            </para> 
         </sect1>
         <sect1 id="features-customworkflow">
             <title>Custom Workflow</title>
@@ -376,14 +397,30 @@
                         <para>Download search results as an excel sheet</para>
                     </caption>
                 </mediaobject>
-            </para>                
+            </para>
+            <para>
+                One the data is in a spreadsheet, it is very easy to analyze data and do things
+                like creating pivot-tables and charts.  Many users use the 'export to Excel' feature 
+                to fulfil custom reporting requirements.
+            </para>
         </sect1>           
         <sect1 id="features-navigation">
             <title>Simple Navigation</title>
             <para>
                 Most users will use only five screens in JTrac: Dashboard, Create, View, Search and Results.
-                Navigation has been designed with usability and simplicity in mind.
-            </para>                 
+                Navigation has been designed with usability and simplicity in mind.  A screenshot of the 
+                search results screen is shown below.
+            </para>
+            <para>
+                <mediaobject>
+                    <imageobject role="html">
+                        <imagedata align="center" fileref="../images/search-results.png"/>
+                    </imageobject>
+                    <caption>
+                        <para>The search results screen</para>
+                    </caption>
+                </mediaobject>
+            </para>            
         </sect1>
         <sect1 id="features-related">
             <title>Cross Referencing of Items</title>
@@ -448,7 +485,8 @@
                 </mediaobject>
             </para>
             <para>
-                Admin users can configure the SMTP / e-mail server that JTrac should use in the "Manage Settings" page.
+                Admin users can configure the SMTP / e-mail server that JTrac should use in the 
+                "<link linkend="installation-settings">Manage Settings</link>" page.
                 This page can be accessed from the "OPTIONS" menu.  JTrac also can handle an e-mail server that requires
                 authentication or even a secure connection over HTTPS.
             </para>
@@ -468,6 +506,12 @@
                 JTrac has built-in support for authentication against an LDAP or Active Directory server.
                 Please refer the <link linkend="installation-ldap">LDAP section</link> of the installation guide for more details.
             </para>
+            <para>
+                JTrac also has support for integrating with a
+                <ulink url="http://www.ja-sig.org/products/cas/">Central Authentication Service</ulink> (CAS) installation.
+                The <link linkend="installation-cas">install guide</link> has more details on configuring single sign-on
+                using CAS.
+            </para>            
         </sect1>        
     </chapter>
     
@@ -515,7 +559,7 @@ java -version
                     </listitem>
                     <listitem>
                         <para>
-                            Double-click on "start.bat" to start JTrac.  (If you are not on Windows, see below.) 
+                            Double-click or run "start.bat" to start JTrac
                         </para>
                     </listitem>
                     <listitem>
@@ -535,23 +579,37 @@ java -version
                 if for example JTrac does not start because a web-server (like Apache or IIS) is already running on port 80.
             </para>
             <para>
-                If you are not on Windows, you may want to rename the start and stop *.bat files to e.g. *.sh for Linux 
-                (*.bat is reported to work for Ubuntu).  The commands within the batch files will work unchanged as long as 
-                Java has been installed correctly i.e. "java" is in the PATH and it is the expected 1.5 or greater version.  
-                You may need to do things like apply executable permissions to the batch files on Linux, e.g. "chmod +x *.bat".  
-                And also, unless you have "root" permissions, you may face problems starting services on port 80 etc.
+                Remote users should be able to access JTrac over the network by using the machine name instead of "localhost" 
+                in the URL shown above.  If there is a problem, it is likely that a firewall running on the machine where JTrac 
+                is installed is getting in the way - so you may have to reconfigure things so that for example "java.exe" is not blocked.
             </para>
-            <para>
-                JTrac by default will use a "data" directory that will be automatically created
-                within the root folder "jtrac".  The data directory will contain the files needed by HSQLDB
-                (the embedded database) as well as hold uploaded attachments.  When using JTrac in production,
-                this is the location that you should consider backing-up on a regular basis.
-            </para>
-            <para>
-                For security reasons, it is best that you change the default "admin" password after installing 
-                JTrac, especially if you are going to make the application accessible pn a public-facing web-site
-                over the internet.  Do refer the section (coming up below) on what data to back up as well.
-            </para>            
+            <sect2 id="installation-quick-linux">
+                <title>Notes for Linux / Unix users</title>
+                <para>
+                    If you are not on Windows, you may want to rename the start and stop *.bat files to e.g. *.sh for Linux 
+                    (*.bat is reported to work for Ubuntu).  The commands within the batch files will work unchanged as long as 
+                    Java has been installed correctly i.e. "java" is in the PATH and it is the expected 1.5 or greater version.  
+                    You may need to do things like apply executable permissions to the batch files on Linux, e.g. "chmod +x *.bat".  
+                    And also - unless you have "root" permissions, you may face problems starting services on port 80 etc.
+                </para>
+            </sect2>
+            <sect2 id="installation-quick-data">
+                <title>Where JTrac stores data</title>
+                <para>
+                    JTrac by default will use a "data" directory that will be automatically created
+                    within the root folder "jtrac".  The data directory will contain the files needed by HSQLDB
+                    (the embedded database) as well as hold uploaded attachments.  When using JTrac in production,
+                    this is the location that you should consider backing-up on a regular basis.
+                </para>
+            </sect2>
+            <sect2 id="installation-quick-othernotes">
+                <title>Other notes</title>
+                <para>
+                    For security reasons, it is best that you change the default "admin" password after installing 
+                    JTrac, especially if you are going to make the application accessible on a public-facing web-site
+                    over the internet.  Do refer the section (coming up below) on what data to back up as well.
+                </para>
+            </sect2>           
         </sect1>
         <sect1 id="installation-settings">
             <title>Settings</title>
@@ -565,8 +623,12 @@ java -version
                 property settings available from the settings screen as shown below.             
             </para>
             <para>
-                TODO jndi mail
-            </para>            
+                If you have trouble getting e-mail to work, one of the things to watch out for is whether
+                there is any firewall blocking the communication between JTrac and the mail server - for example
+                you may have a firewall runnning on the machine where JTrac is installed.  It is very common
+                for mail servers to be configured to prevent mail-relay requests from unknown applications or
+                IP addresses so you may need to check with your mail server administrator.
+            </para>          
             <para>
                 <mediaobject>
                     <imageobject role="html">
@@ -576,7 +638,11 @@ java -version
                         <para>The JTrac settings screen where you can configure an e-mail / SMTP server</para>
                     </caption>
                 </mediaobject>
-            </para>            
+            </para>
+            <para>
+                JTrac also can lookup and use a JNDI mail session (javax.mail.Session) if required.  If you 
+                provide a JNDI name, JTrac will ignore the SMTP server details provided.
+            </para>              
         </sect1>        
         <sect1 id="installation-war">
             <title>Using only the WAR file</title>
@@ -712,7 +778,8 @@ hibernate.show_sql=false
         <sect1 id="installation-jndi-datasource">
             <title>Using a JNDI Datasource</title>
             <para>
-                TODO
+                You can provide a JNDI datasource name as an additional property called "database.datasource.jndiname" 
+                in the "jtrac.properties" file.  JTrac will ignore the other database properties in this case.
             </para>
         </sect1>         
         <sect1 id="installation-ldap">
@@ -746,10 +813,77 @@ ldap.activeDirectoryDomain=MYDOMAIN
             </para>
         </sect1>
         <sect1 id="installation-cas">
-            <title>CAS Single Sign On Support</title>
+            <title>Integrating with CAS for Single Sign On</title>
             <para>
-                TODO
+                In order to integrate JTrac with <ulink url="http://www.ja-sig.org/products/cas/">CAS</ulink>
+                you have to edit a couple of XML files within the "WEB-INF" folder ('web.xml' and 'applicationContext-acegi-cas.xml').
+                The changes that you need to make are described below.
             </para>
+            <sect2 id="installation-cas-webxml">
+                <title>Changes to web.xml</title>
+                <para>
+                    <itemizedlist>
+                        <listitem>
+                            <para>
+                                Change "applicationContext-acegi.xml" to "applicationContext-acegi-cas.xml".
+                                This appears towards the start of the file in the 'contextConfigLocation' context-param.
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                Uncomment the filter and filter-mapping XML for the 'acegi' FilterToBeanProxy
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                Uncomment the servlet and servlet-mapping XML for the 'casProxy' ProxyTicketReceptor.
+                                You should also uncomment the associated context-param called 'edu.yale.its.tp.cas.proxyUrl'
+                                and customize the value for your environment.
+                            </para>
+                        </listitem>                         
+                    </itemizedlist> 
+                </para>
+            </sect2>
+            <sect2 id="installation-cas-appcontext">
+                <title>Changes to applicationContext-acegi-cas.xml</title>
+                <para>
+                    In the XML corresponding to bean id "casProxyTicketValidator" - edit the following
+                    property values to suit your environment:
+                </para>
+                <para>
+                    <itemizedlist>
+                        <listitem>
+                            <para>
+                                casValidate
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                proxyCallbackUrl
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                trustStore
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                loginUrl
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                logoutUrl
+                            </para>
+                        </listitem>                         
+                    </itemizedlist> 
+                </para>
+                <para>
+                    For more details and troubleshooting, you can refer to the 
+                    <ulink url="http://www.acegisecurity.org/guide/springsecurity.html#cas-client">Acegi documentation on CAS integration</ulink>.
+                </para>
+            </sect2>             
         </sect1>        
         <sect1 id="installation-windowsservice">
             <title>Installing as a Windows Service</title>
@@ -817,8 +951,8 @@ wrapper.exe -r etc/wrapper.conf
         <sect1 id="installation-backup">
             <title>What to Backup</title>
             <para>
-                Although in practice JTrac has been found to be extremely stable in production, you should 
-                regularly backup the database and stored attachments.  If you are using JTrac with 
+                Although in practice JTrac has been found to be extremely stable in production - to safeguard against
+                hardware failures, you should regularly backup the database and stored attachments.  If you are using JTrac with 
                 the embedded HSQLDB database, backing up the contents of "jtrac.home" will be sufficient.
                 The HSQLDB data will be stored as files in a directory called "db" under the JTrac home.
             </para>
@@ -845,20 +979,21 @@ wrapper.exe -r etc/wrapper.conf
         <sect1 id="faq-why">
             <title>Do we really need another issue tracker?</title>
             <para>
-                JTrac can be installed in a few minutes and even configuring an e-mail server for notifications 
-                is easy and through the GUI.  One of the reasons why many people choose JTrac over other open-source
-                issue / bug trackers is because of how easy it is to set up.
+                JTrac can be installed in a few minutes without having to type any commands and you don't even need 
+                to set-up a database.  Configuring an e-mail server for notifications is something easily done through 
+                the user interface.  One of the reasons why many people choose JTrac over other open-source
+                issue trackers or bug trackers is because of <link linkend="installation-quick">how easy it is to set up</link>.                
             </para>             
             <para>
-                There are indeed quite a few issue trackers available, both commercial and open source.
-                JTrac has flexible workflow capabilities and offers a rare level of control over field-level 
-                permissions.
+                JTrac is also written from the ground up to make use of the very best and latest in Java.  For example
+                JTrac is developed using JDK 5.0 features, uses Apache Wicket, Spring and Hibernate and has full 
+                internationalization support.
             </para>
             <para>
-                JTrac is also written from the ground up to make use of the very best and latest in Java.  For example
-                JTrac is developed using JDK 5.0 features.   JTrac is designed to be able to handle requirements management 
-                in the future and this an area where there is a clear lack of open source tools that support
-                the needs of agile development teams.
+                JTrac is designed to be able to handle requirements management in the future and this an area where there 
+                is a clear lack of open source tools that support the needs of agile development teams.  
+                JTrac also has flexible workflow capabilities and offers a rare level of control over field-level 
+                permissions.
             </para>             
         </sect1>
         <sect1 id="faq-architecture">
@@ -896,7 +1031,7 @@ wrapper.exe -r etc/wrapper.conf
             <para>
                 Of course, it is recommended that you change the default password as soon as possible!
             </para>            
-        </sect1>
+        </sect1>       
         <sect1 id="faq-contribute">
             <title>How can I help?</title>
             <para>
@@ -906,8 +1041,8 @@ wrapper.exe -r etc/wrapper.conf
                 and running even if you are new to Java development.
             </para>
             <para>
-                Do consider contributing a translation which is very easy to do and does not need any
-                Java knowledge.  You can refer to <link linkend="dev-translating">this section</link>
+                Do consider contributing a translation which is very easy to do and does not require any
+                knowledge of Java at all.  You can refer to <link linkend="dev-translating">this section</link>
                 of the developer guide for details.
             </para>
             <para>
@@ -919,11 +1054,12 @@ wrapper.exe -r etc/wrapper.conf
             <title>We are heavy users of JTrac but it is running on the embedded HSQLDB database.  Can it cope?</title>
             <para>
                 HSQLDB is surprisingly resilient and we have an instance of JTrac running in the place where
-                I work that has accumulated more than 2000 items across multiple spaces with hundreds of users 
-                using it over 2 years.  The database file has grown beyond 10MB but there are still no signs of problems.
+                I work that over a span of 2 years has accumulated more than 2000 items across multiple spaces
+                with around 200 users.  The database file has grown beyond 10MB but there are still no signs of problems
+                and the application screens still load fast.
             </para>
             <para>
-                But depending on your comfort level, you can consider moving to another database if your usage
+                But depending on what you are comfortable with, you can consider moving to another database if your usage
                 is really high.  The <link linkend="upgrading-migrating">upgrading section</link> of this document 
                 has details on how you can migrate data from HSQLDB to other databases such as MySQL.
             </para>
@@ -931,16 +1067,18 @@ wrapper.exe -r etc/wrapper.conf
         <sect1 id="faq-morecustomfields">
             <title>Why does JTrac have a limit on custom fields?  I really need more!</title>
             <para>
-                The limit is primarily for performance reasons especially when filtered searches are involved.
-                But when people run out of custom fields, it is invariably for "free text" fields.  So when JTrac
-                introduces the feature of being able to "tag" items, this should hopefully cover those kinds
-                of things.
+                Most users never ever run out of custom fields because JTrac provides an ample number of them.
+                In very rare cases where people run out of custom fields, it is invariably for "free text" fields.
+                The limit on custom fields is primarily for performance reasons especially when filtered searches 
+                are involved.  So when JTrac introduces the feature of being able to "tag" items, these kinds of 
+                things are likely to be covered.
             </para>
             <para>
                 Anyway, if you really, really want more custom fields, the JTrac code is very clean and you can 
                 easily customize a version that meets your requirements.  A few people have reported having 
-                done this and <ulink url="http://sourceforge.net/forum/forum.php?thread_id=1919986&amp;forum_id=552477">this forum thread</ulink> 
-                for example can help you get started.
+                done this and for example -
+                <ulink url="http://sourceforge.net/forum/forum.php?thread_id=1919986&amp;forum_id=552477">this forum thread</ulink> 
+                can help you get started.
             </para>            
         </sect1>
         <sect1 id="faq-tracker">
@@ -964,8 +1102,7 @@ wrapper.exe -r etc/wrapper.conf
             <para>
                 We are just trying to use the SourceForge infrastructure as far as possible and the activity on
                 the SourceForge trackers translates into higher rankings which is important for project visibility.
-                At this point, we would rather not get into the details of hosting, upgrading and uptime if we were
-                to host JTrac on the internet.
+                At this point, we would rather not get into the details of hosting an instance of JTrac on the internet.
             </para>
         </sect1>       
     </chapter>    
@@ -974,8 +1111,8 @@ wrapper.exe -r etc/wrapper.conf
         <title>Roadmap</title>
         <para>
             Have a look at our detailed <link linkend="dev-guide">developer guide</link> and you will find that 
-            JTrac has one of the most "developer-friendly" setups among open-source projects.  It will take you
-            only a few minutes to be up and running no matter which java IDE you use.  We actively encourage 
+            JTrac has one of the most developer-friendly set-ups among open-source projects.  It will take you
+            only a few minutes to be up and running no matter which Java IDE you use.  We actively encourage 
             contributions and with your support JTrac can become better than it is today.
         </para>
         <para>
@@ -997,14 +1134,14 @@ wrapper.exe -r etc/wrapper.conf
                 and database schema for this is already in place.  This will allow users to split tasks into sub-tasks 
                 and opens up other possibilities.  One of the plans in the roadmap is to build JTrac into a full-fledged
                 requirements capture tool complete with test-case management and traceability.  JTrac can then be used to
-                manage either XP (eXtreme Programming) or Use Case driven projects.
+                manage user-stories or use-cases for agile development teams.
             </para>
         </sect1>
         <sect1 id="roadmap-validation">
             <title>Custom Validation</title>
             <para>
-                Using <ulink url="http://www.beanshell.org/">Beanshell</ulink>, users will be able to add custom validation 
-                routines for item entry.  Even conditional validation across fields will be possible.
+                Using <ulink url="http://www.beanshell.org/">Beanshell</ulink>, users should be able to introduce custom routines
+                to validate item data entered by a user.  Even conditional validation across fields should be possible.
             </para>
         </sect1>
         <sect1 id="roadmap-scheduler">
@@ -1013,8 +1150,8 @@ wrapper.exe -r etc/wrapper.conf
                 Again using Beanshell, users should be able to define routines to execute periodically, say at a pre-determined
                 time every day.  This would allow triggers for events such as slippage of a "due-date" field.
                 This can be combined with e-mail notifications.  Also a daily dashboard summary could be mailed out once
-                the scheduler is in place. [note that as of version 2.1.0 - the scheduler is already in place for those 
-                who are working on extending JTrac]
+                the scheduler is in place. [As of version 2.1.0 - the scheduler is already in place for those 
+                who are working on extending JTrac.]
             </para>
         </sect1>
         <sect1 id="roadmap-email">
@@ -1082,8 +1219,8 @@ wrapper.exe -r etc/wrapper.conf
         <sect1 id="roadmap-import">            
             <title>Import from other tools</title>            
             <para>
-                Import from other issue tracking systems (such as BugZilla) to be considered.  Work is in progress
-                and once complete, this feature will allow you to import raw data from a spreadsheet, apply any
+                Import from other issue tracking systems (such as BugZilla) to be considered.
+                Once complete, this feature will allow you to import raw data from a spreadsheet, apply any
                 data cleanup needed, identify and load custom fields / drop down values and finally import the items,
                 creating a new Space and users if required.
             </para>
@@ -1091,14 +1228,13 @@ wrapper.exe -r etc/wrapper.conf
         <sect1 id="roadmap-sso">            
             <title>Single Sign On</title>            
             <para>
-                Since JTrac uses the <ulink url="http://www.acegisecurity.org/">Acegi Security</ulink> 
-                framework, it would be easy to configure it to use an existing 
-                <ulink url="http://www.ja-sig.org/products/cas/">Central Authentication Service</ulink> (CAS) installation
-                or LDAP server (even Windows Active Directory) for implementing Single Sign On. 
-                In fact most of the configuration is in place and only needs to be documented.  Note that as of version
-                2.1.0 JTrac supports LDAP authentication out of the box.  This needs to be improved by adding an admin
-                screen that can browse and add users from an LDAP server.  Authorization using LDAP and allowing users to
-                plug in custom authentication and authorization routines would be good to have as well.
+                JTrac uses the <ulink url="http://www.acegisecurity.org/">Acegi Security</ulink> 
+                framework which supports integration with a
+                <ulink url="http://www.ja-sig.org/products/cas/">Central Authentication Service</ulink> (CAS) installation.
+                You can refer to the <link linkend="installation-cas">installation guide</link> for how to configure JTrac to use CAS 
+                for single sign on.  As of version 2.1.0 JTrac supports LDAP authentication out of the box.  This needs to be 
+                improved by adding an admin screen that can browse and add users from an LDAP server.  Authorization using LDAP 
+                and allowing users to plug in custom authentication and authorization routines would be good to have as well.
             </para>
         </sect1>
         <sect1 id="roadmap-xmlapi">            
@@ -1122,7 +1258,15 @@ wrapper.exe -r etc/wrapper.conf
                 The database schema already has support for capturing planned vs actual effort against items.
                 This needs to be implemented and obviously will open up a lot of possibilities.
             </para>
-        </sect1>       
+        </sect1>
+        <sect1 id="roadmap-reporting">            
+            <title>Custom Reports</title>            
+            <para>
+                Although JTrac has an '<link linkend="features-excel">Excel Export</link>' feature that should
+                suffice for all your reporting and charting needs, it would be good to have a reporting engine 
+                that allows the user to create custom reports and even schedule reports to be sent out over e-mail.
+            </para>
+        </sect1>          
     </chapter>
 
     <chapter id="interim-builds">

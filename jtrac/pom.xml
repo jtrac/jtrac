@@ -33,19 +33,17 @@
         </site>
     </distributionManagement>    
     
-    <mailingLists>
+    <mailingLists>      
         <mailingList>
-            <name>JTrac Forums</name>
-            <archive>http://sourceforge.net/forum?group_id=162983</archive>
-        </mailingList>        
-        <mailingList>
-            <name>JTrac Mailing List</name>      
-            <archive>http://sourceforge.net/mailarchive/forum.php?forum_id=50111</archive>
-        </mailingList>
-        <mailingList>
-            <name>JTrac Mailing List - Nabble Archive</name>      
-            <archive>http://www.nabble.com/j-trac-users-f20276.html</archive>
-        </mailingList>        
+            <name>JTrac Mailing List</name>
+            <subscribe>https://lists.sourceforge.net/lists/listinfo/j-trac-users</subscribe>
+            <unsubscribe>-</unsubscribe>
+            <post>-</post>
+            <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=j-trac-users</archive>
+            <otherArchives>
+                <otherArchive>http://www.nabble.com/j-trac-users-f20276.html</otherArchive>
+            </otherArchives>            
+        </mailingList>       
     </mailingLists>    
     
     <developers>
