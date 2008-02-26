@@ -501,16 +501,16 @@
             </para>
         </sect1>
         <sect1 id="features-ldap">
-            <title>LDAP authentication support</title>
+            <title>LDAP / CAS authentication support</title>
             <para>
-                JTrac has built-in support for authentication against an LDAP or Active Directory server.
+                JTrac has built-in support for authenticating user credentials against an LDAP or Active Directory server.
                 Please refer the <link linkend="installation-ldap">LDAP section</link> of the installation guide for more details.
             </para>
             <para>
                 JTrac also has support for integrating with a
                 <ulink url="http://www.ja-sig.org/products/cas/">Central Authentication Service</ulink> (CAS) installation.
-                The <link linkend="installation-cas">install guide</link> has more details on configuring single sign-on
-                using CAS.
+                The install guide has more details on 
+                <link linkend="installation-cas">how to configure single sign-on using CAS</link>.
             </para>            
         </sect1>        
     </chapter>
@@ -580,8 +580,8 @@ java -version
             </para>
             <para>
                 Remote users should be able to access JTrac over the network by using the machine name instead of "localhost" 
-                in the URL shown above.  If there is a problem, it is likely that a firewall running on the machine where JTrac 
-                is installed is getting in the way - so you may have to reconfigure things so that for example "java.exe" is not blocked.
+                in the URL shown above.  If there is a problem, it could be due to a firewall running on the machine where JTrac 
+                is installed - and you may have to reconfigure things so that for example "java.exe" is not blocked.
             </para>
             <sect2 id="installation-quick-linux">
                 <title>Notes for Linux / Unix users</title>
