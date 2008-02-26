@@ -3,8 +3,7 @@
 <project name="jtrac-doc" basedir=".." default="doc">
 
     <property name="doc.src.dir" value="doc"/>    
-    <property name="dist.doc.dir" value="target/site/doc"/>
-    <property name="proxy.jvmopt" value=""/>
+    <property name="dist.doc.dir" value="target/site/doc"/>    
     
     <target name="doc" depends="clean, doc-html, doc-html-single, doc-pdf"/>
     
@@ -12,12 +11,7 @@
         <delete includeemptydirs="true" failonerror="false">
             <fileset dir="${dist.doc.dir}"/>
         </delete>      
-    </target>    
-    
-    <target name="set-proxy" if="http.proxyHost">
-        <echo>setting -Dhttp.proxyHost=${http.proxyHost}</echo>
-        <property name="proxy.jvmopt" value="-Dhttp.proxyHost=${http.proxyHost}"/>
-    </target>
+    </target>        
     
     <target name="copy-images">
         <mkdir dir="${dist.doc.dir}/images"/>
@@ -30,7 +24,7 @@
         </copy>        
     </target>
     
-    <target name="doc-pdf" depends="copy-images, set-proxy">
+    <target name="doc-pdf" depends="copy-images">
         <mkdir dir="${dist.doc.dir}/pdf"/>    
         <java classname="com.icl.saxon.StyleSheet" fork="true">
             <classpath>
@@ -38,8 +32,7 @@
                     <include name="**/*.jar"/>
                 </fileset>
             </classpath>
-            <jvmarg value="-Xmx256M"/>
-            <jvmarg value="${proxy.jvmopt}"/>
+            <jvmarg value="-Xmx256M"/>            
             <arg value="-o"/>
             <arg value="${dist.doc.dir}/pdf/docbook_fop.tmp"/>
             <arg value="${doc.src.dir}/src/index.xml"/>
@@ -57,7 +50,7 @@
         <delete file="${dist.doc.dir}/pdf/docbook_fop.tmp"/>
     </target>
     
-    <target name="doc-html" depends="copy-images, set-proxy">
+    <target name="doc-html" depends="copy-images">
         <mkdir dir="${dist.doc.dir}/html"/>
         <java classname="com.icl.saxon.StyleSheet" fork="true" dir="${dist.doc.dir}/html">
             <classpath>
@@ -65,14 +58,13 @@
                     <include name="**/*.jar"/>
                 </fileset>
             </classpath>
-            <jvmarg value="-Xmx256M"/>
-            <jvmarg value="${proxy.jvmopt}"/>
+            <jvmarg value="-Xmx256M"/>            
             <arg value="${basedir}/${doc.src.dir}/src/index.xml"/>
             <arg value="${basedir}/${doc.src.dir}/styles/html_chunk.xsl"/>
         </java>
     </target>
 
-    <target name="doc-html-single" depends="copy-images, set-proxy">
+    <target name="doc-html-single" depends="copy-images">
         <mkdir dir="${dist.doc.dir}/html-single"/>
         <java classname="com.icl.saxon.StyleSheet" fork="true">
             <classpath>
@@ -80,8 +72,7 @@
                     <include name="**/*.jar"/>
                 </fileset>
             </classpath>
-            <jvmarg value="-Xmx256M"/>
-            <jvmarg value="${proxy.jvmopt}"/>
+            <jvmarg value="-Xmx256M"/>            
             <arg value="-o"/>
             <arg value="${dist.doc.dir}/html-single/index.html"/>
             <arg value="${doc.src.dir}/src/index.xml"/>
