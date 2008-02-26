@@ -15,6 +15,7 @@
     </target>    
     
     <target name="set-proxy" if="http.proxyHost">
+        <echo>setting -Dhttp.proxyHost=${http.proxyHost}</echo>
         <property name="proxy.jvmopt" value="-Dhttp.proxyHost=${http.proxyHost}"/>
     </target>
     
