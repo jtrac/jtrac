@@ -1067,9 +1067,9 @@ wrapper.exe -r etc/wrapper.conf
         <sect1 id="faq-morecustomfields">
             <title>Why does JTrac have a limit on custom fields?  I really need more!</title>
             <para>
-                Most users never ever run out of custom fields because JTrac provides an ample number of them.
+                JTrac provides an ample number of custom fields which can be used for all kinds of tracking needs.
                 In very rare cases where people run out of custom fields, it is invariably for "free text" fields.
-                The limit on custom fields is primarily for performance reasons especially when filtered searches 
+                The limit on custom fields is primarily for performance reasons especially where filtered searches 
                 are involved.  So when JTrac introduces the feature of being able to "tag" items, these kinds of 
                 things are likely to be covered.
             </para>

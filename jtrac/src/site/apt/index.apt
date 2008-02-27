@@ -7,13 +7,13 @@ JTrac
 
 * Features
 
-    * Very easy to install
+    * Extremely easy to install
     
     * Unlimited project spaces per installation
 
     * Custom fields and drop-downs for each project
     
-    * Per-project customizable workflow
+    * Customizable workflow per project
     
     * Field-level permissions
     
@@ -37,7 +37,7 @@ JTrac
     
     * Translated into multiple languages (Spanish, French, German, Russian, Japanese, Chinese and more)
 
-    * Support for all popular databases
+    * Platform independent and various databases supported
     
     * Support for LDAP, Active Directory or CAS based authentication    
     
