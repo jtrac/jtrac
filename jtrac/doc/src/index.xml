@@ -1104,7 +1104,13 @@ wrapper.exe -r etc/wrapper.conf
                 the SourceForge trackers translates into higher rankings which is important for project visibility.
                 At this point, we would rather not get into the details of hosting an instance of JTrac on the internet.
             </para>
-        </sect1>       
+        </sect1>
+        <sect1 id="faq-references">
+            <title>Do you have a list of users or references?</title>
+            <para>
+                Plenty.  Have a look at this page: <ulink url="http://j-trac.wiki.sourceforge.net/references">http://j-trac.wiki.sourceforge.net/references</ulink>
+            </para>
+        </sect1>        
     </chapter>    
     
     <chapter id="roadmap">
