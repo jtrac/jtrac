@@ -65,8 +65,7 @@
    * commons-codec
    * commons-collections   
    * commons-dbcp   
-   * commons-lang
-   * commons-logging
+   * commons-lang   
    * commons-pool
    * poi
    * log4j   
@@ -166,8 +165,26 @@
    http://www.dom4j.org
       
    * dom4j [ http://www.dom4j.org/license.html ]   
+      
+   ======================================================================      
    
-   ======================================================================    
+   This product includes software developed by the BeanShell project 
+   http://www.beanshell.org   
+   
+   * bsh [ http://www.beanshell.org/license.html ]
+   
+   ====================================================================== 
+
+   This product includes software developed by the SLF4J project 
+   http://www.slf4j.org   
+   
+   * jcl104-over-slf4j
+   * slf4j-api 
+   * slf4j-log4j12
+   
+   [ http://www.slf4j.org/license.html ]
+   
+   ======================================================================     
       
    This product includes software developed by the Yahoo! UI Library project.
    http://developer.yahoo.com/yui/
