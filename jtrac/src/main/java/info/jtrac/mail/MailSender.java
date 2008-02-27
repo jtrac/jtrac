@@ -70,6 +70,7 @@ public class MailSender {
      * an email message.  This has the advantage of not slowing down the item
      * create and update screens, i.e. the system returns the next screen
      * after "submit" without blocking.  This has been used in production
+     * (and now I guess in many JTrac installations worldwide)
      * for quite a while now, on Tomcat without any problems.  This helps a lot
      * especially when the SMTP server is slow to respond, etc.
      */
@@ -254,7 +255,7 @@ public class MailSender {
         String password = config.get("mail.server.password");
         String startTls = config.get("mail.server.starttls.enable");
         logger.info("initializing email adapter: host = '" + host + "', port = '"
-                + port + "', url = '" + url + "', from = '" + from + "', prefix = '" + prefix + "'");        
+                + port + "', url = '" + tempUrl + "', from = '" + from + "', prefix = '" + prefix + "'");        
         this.prefix = prefix == null ? "[jtrac]" : prefix;
         this.from = from == null ? "jtrac" : from;
         this.url = tempUrl == null ?  "http://localhost/jtrac/" : tempUrl;
