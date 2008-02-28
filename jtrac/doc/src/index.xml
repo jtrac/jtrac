@@ -524,9 +524,8 @@
                 is required and not the full-blown JDK (Java Development Kit).
             </para>
             <para>    
-                You can download Java from <ulink url="http://www.java.com/download"/>.  Once you have Java installed
-                you can verify that your system is ready to run JTrac by opening a command prompt and typing the
-                following command:
+                There is a good chance that Java is already installed on your system and you can verify whether it is ready 
+                to run JTrac by opening a command prompt and typing the following command:
             </para>
             <para>
                 <programlisting>
@@ -536,6 +535,9 @@ java -version
             </para>
             <para>
                 If the system responds with a java version that is 1.5 or greater, you are ready to download and run JTrac.
+            </para>
+            <para>
+                You can download Java from here: <ulink url="http://www.java.com/download"/>.
             </para>            
         </sect1>        
         <sect1 id="installation-quick">
@@ -574,7 +576,7 @@ java -version
                 </itemizedlist>                 
             </para>
             <para>
-                Note that you can use the "stop.bat" script to stop the application.  The "start.bat" file configures the 
+                You can use the "stop.bat" script to stop the application.  The "start.bat" file configures the 
                 Jetty server to use port 80 which you can easily change by editing "start.bat".  You may need to do this 
                 if for example JTrac does not start because a web-server (like Apache or IIS) is already running on port 80.
             </para>
@@ -593,22 +595,20 @@ java -version
                     And also - unless you have "root" permissions, you may face problems starting services on port 80 etc.
                 </para>
             </sect2>
-            <sect2 id="installation-quick-data">
-                <title>Where JTrac stores data</title>
+            <sect2 id="installation-quick-othernotes">
+                <title>Security and Backup</title>
+                <para>
+                    For security reasons, it is best that you change the default "admin" password after installing 
+                    JTrac, especially if you are going to make the application accessible on a public-facing web-site
+                    over the internet.
+                </para>
                 <para>
                     JTrac by default will use a "data" directory that will be automatically created
                     within the root folder "jtrac".  The data directory will contain the files needed by HSQLDB
                     (the embedded database) as well as hold uploaded attachments.  When using JTrac in production,
-                    this is the location that you should consider backing-up on a regular basis.
-                </para>
-            </sect2>
-            <sect2 id="installation-quick-othernotes">
-                <title>Other notes</title>
-                <para>
-                    For security reasons, it is best that you change the default "admin" password after installing 
-                    JTrac, especially if you are going to make the application accessible on a public-facing web-site
-                    over the internet.  Do refer the section (coming up below) on what data to back up as well.
-                </para>
+                    this is the location that you should consider <link linkend="installation-backup">backing-up</link> 
+                    on a regular basis.
+                </para>                
             </sect2>           
         </sect1>
         <sect1 id="installation-settings">
