@@ -499,6 +499,83 @@
                 Java  development expertise.  See <link linkend="dev-translating">this section</link> of the developer
                 guide for more details and please consider contributing translations to the JTrac project.
             </para>
+            <para>
+                JTrac has already been translated into the following languages:
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>
+                            German - de
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Greek - el
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Spanish - es
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Spanish (Argentina) - es_AR
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Spanish (Mexico) - es_MX
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            French - fr
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Italian - it
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Japanese - ja
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Dutch - nl
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Polish - pl
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Portugese (Brazil) - pt_BR
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Russian - ru
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Chinese (China) - zh_CN
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Chinese (Taiwan) - zh_TW
+                        </para>
+                    </listitem>                    
+                </itemizedlist> 
+            </para>            
         </sect1>
         <sect1 id="features-ldap">
             <title>LDAP / CAS authentication support</title>
