@@ -114,7 +114,7 @@
             <zipfileset dir="target" includes="*.war" prefix="jtrac"/>
             <zipfileset dir="target/jetty" prefix="jtrac"/>
             <zipfileset dir="etc" includes="*.bat" prefix="jtrac"/>
-            <zipfileset dir="etc" includes="*.bsh" prefix="jtrac/etc"/>
+            <zipfileset dir="etc" includes="jtrac-hsqldb-to-mysql.bsh" prefix="jtrac/etc"/>
             <zipfileset dir="target/site/doc" prefix="jtrac/doc"/>
             <zipfileset dir="." includes="*.txt" prefix="jtrac"/>
         </zip>         
@@ -131,7 +131,7 @@
         <ant antfile="doc/build.xml"/>
     </target>
         
-    <target name="dist" depends="dist-doc, dist-jtrac, dist-jtrac-src"/>
+    <target name="dist" depends="clean, dist-doc, dist-jtrac, dist-jtrac-src"/>
     
     <target name="dist-site-clean">
         <delete includeemptydirs="true">
