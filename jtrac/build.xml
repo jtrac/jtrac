@@ -106,7 +106,7 @@
         <zip destfile="target/${war.name}.war" basedir="target/${war.name}"/>
     </target>
         
-    <target name="dist-jtrac" depends="clean, dist-init, war, jetty-setup">
+    <target name="dist-jtrac" depends="dist-init, war, jetty-setup">
         <copy todir="target/jetty/logs" file="etc/dummy.txt"/>
         <copy todir="target/jetty/work" file="etc/dummy.txt"/>
         <mkdir dir="target/site/doc"/>
