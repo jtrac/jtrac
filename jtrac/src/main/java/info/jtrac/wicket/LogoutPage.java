@@ -37,7 +37,7 @@ public class LogoutPage extends WebPage {
         }
         setVersioned(false);
         add(new Label("title", getLocalizer().getString("logout.title", null)));
-        String jtracVersion = ComponentUtils.getJtrac(this).getReleaseVersion();
+        String jtracVersion = JtracApplication.get().getJtrac().getReleaseVersion();
         add(new Label("version", jtracVersion));                  
     }    
     

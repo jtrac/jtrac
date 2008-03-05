@@ -217,7 +217,7 @@ public class SpacePermissionsPage extends BasePage {
                     boolean isNewSpace = space.getId() == 0;
                     getJtrac().storeSpace(space);
                     // current user may be allocated to this space, and e.g. name could have changed
-                    refreshPrincipal();
+                    JtracSession.get().refreshPrincipal();
                     if(isNewSpace) {
                         setResponsePage(new SpaceAllocatePage(space.getId(), previous));
                     } else if(previous == null) {

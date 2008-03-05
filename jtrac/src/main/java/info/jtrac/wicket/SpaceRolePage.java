@@ -85,7 +85,7 @@ public class SpaceRolePage extends BasePage {
                                 // synchronize metadata else when we save again we get Stale Object Exception
                                 space.setMetadata(getJtrac().loadMetadata(space.getMetadata().getId()));
                                 // current user may be allocated to this space with this role - refresh
-                                refreshPrincipal();                                
+                                JtracSession.get().refreshPrincipal();                                
                                 setResponsePage(new SpacePermissionsPage(space, previous));
                             }                        
                         };
@@ -160,7 +160,7 @@ public class SpaceRolePage extends BasePage {
                             // synchronize metadata else when we save again we get Stale Object Exception
                             space.setMetadata(getJtrac().loadMetadata(space.getMetadata().getId()));
                             // current user may be allocated to this space with this role - refresh
-                            refreshPrincipal();                                
+                            JtracSession.get().refreshPrincipal();                                
                             setResponsePage(new SpacePermissionsPage(space, previous));
                         }                        
                     };

@@ -21,7 +21,6 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
@@ -150,8 +149,8 @@ public class SpaceAllocatePage extends BasePage {
                         public void onSubmit() {
                             // avoid lazy loading problem
                             UserSpaceRole temp = getJtrac().loadUserSpaceRole(usr.getId());
-                            getJtrac().removeUserSpaceRole(temp);
-                            refreshPrincipal(temp.getUser());
+                            getJtrac().removeUserSpaceRole(temp);                                                                                      
+                            JtracSession.get().refreshPrincipalIfSameAs(temp.getUser());                            
                             setResponsePage(new SpaceAllocatePage(spaceId, previous));
                         }
                     });
@@ -214,7 +213,7 @@ public class SpaceAllocatePage extends BasePage {
                     // avoid lazy init problem
                     User temp = getJtrac().loadUser(user.getId());
                     getJtrac().storeUserSpaceRole(temp, space, roleKey);
-                    refreshPrincipal(temp);
+                    JtracSession.get().refreshPrincipalIfSameAs(temp);
                     setResponsePage(new SpaceAllocatePage(spaceId, previous, user.getId()));
                 }
             };

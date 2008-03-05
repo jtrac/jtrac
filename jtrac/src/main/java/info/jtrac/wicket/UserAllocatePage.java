@@ -152,7 +152,7 @@ public class UserAllocatePage extends BasePage {
                         @Override
                         public void onSubmit() {
                             getJtrac().removeUserSpaceRole(usr);
-                            refreshPrincipal(usr.getUser());
+                            JtracSession.get().refreshPrincipalIfSameAs(usr.getUser());
                             setResponsePage(new UserAllocatePage(userId, previous));
                         }                   
                     };
@@ -209,7 +209,7 @@ public class UserAllocatePage extends BasePage {
                         return;
                     }
                     getJtrac().storeUserSpaceRole(user, space, roleKey);
-                    refreshPrincipal(user);
+                    JtracSession.get().refreshPrincipalIfSameAs(user);
                     setResponsePage(new UserAllocatePage(userId, previous, space.getId()));
                 }                   
             };
@@ -234,7 +234,7 @@ public class UserAllocatePage extends BasePage {
                     @Override
                     public void onSubmit() {     
                         getJtrac().storeUserSpaceRole(user, null, "ROLE_ADMIN");
-                        refreshPrincipal(user);
+                        JtracSession.get().refreshPrincipalIfSameAs(user);
                         setResponsePage(new UserAllocatePage(userId, previous));
                     }                   
                 });

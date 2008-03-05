@@ -49,7 +49,7 @@ public class JtracSession extends WebSession {
         this.user = user;
         if(user.getLocale() == null) {
             // for downward compatibility, may be null in old JTrac versions
-            user.setLocale(((JtracApplication) getApplication()).getJtrac().getDefaultLocale());
+            user.setLocale(JtracApplication.get().getJtrac().getDefaultLocale());
         }
         // flip locale only if different from existing
         if(!getLocale().getDisplayName().equals(user.getLocale())) {
@@ -57,6 +57,22 @@ public class JtracSession extends WebSession {
         }                   
     }
 
+    /* reload user details from database */
+    public void refreshPrincipal() {
+        // who knows, loginName could have changed, use id to get latest
+        User temp = JtracApplication.get().getJtrac().loadUser(getUser().getId());        
+        // loadUserByUsername forces hibernate eager load
+        // TODO make this suck less
+        setUser((User) JtracApplication.get().getJtrac().loadUserByUsername(temp.getLoginName())); 
+    }
+    
+    /* only reload if passed in user is same as session user */
+    public void refreshPrincipalIfSameAs(User temp) {
+        if(user.getId() == temp.getId()) {
+            refreshPrincipal();
+        }
+    }
+    
     public User getUser() {
         return user;
     }

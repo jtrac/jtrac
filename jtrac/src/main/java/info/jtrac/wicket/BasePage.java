@@ -22,12 +22,14 @@ import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.StringResourceModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * base class for all wicket pages, this provides
  * a way to access the spring managed service layer
+ * as well as other convenience common methods
  * also takes care of the standard template for all
  * pages which is using wicket markup inheritance
  */
@@ -36,48 +38,42 @@ public abstract class BasePage extends WebPage {
     protected static final Logger logger = LoggerFactory.getLogger(BasePage.class);        
     
     protected Jtrac getJtrac() {
-        return ComponentUtils.getJtrac(this);
+        return JtracApplication.get().getJtrac();
     }          
     
     protected User getPrincipal() {
-        return ComponentUtils.getPrincipal(this);
+        return JtracSession.get().getUser();
     }
     
     protected void setCurrentSpace(Space space) {
-        ComponentUtils.setCurrentSpace(this, space);
+        JtracSession.get().setCurrentSpace(space);
     }      
     
     protected Space getCurrentSpace() {
-        return ComponentUtils.getCurrentSpace(this);
+        return JtracSession.get().getCurrentSpace();
     }      
     
     protected void setCurrentItemSearch(ItemSearch itemSearch) {
-        ComponentUtils.setCurrentItemSearch(this, itemSearch);
+        JtracSession.get().setItemSearch(itemSearch);
     }      
     
     protected ItemSearch getCurrentItemSearch() {
-        return ComponentUtils.getCurrentItemSearch(this);
+        return JtracSession.get().getItemSearch();
     }       
     
     protected String localize(String key) {
-        return ComponentUtils.localize(this, key);
+        return getLocalizer().getString(key, null);
     }
     
     protected String localize(String key, Object... params) {
-        return ComponentUtils.localize(this, key, params);
-    }      
-    
-    protected void refreshPrincipal(User user) {
-        ComponentUtils.refreshPrincipal(this, user);
-    }
-    
-    protected void refreshPrincipal() {
-        ComponentUtils.refreshPrincipal(this);
-    }
+        StringResourceModel m = new StringResourceModel(key, null, null, params);
+        m.setLocalizer(getLocalizer());
+        return m.getString();
+    } 
             
     public BasePage() {        
         add(new HeaderPanel().setRenderBodyOnly(true));
-        String jtracVersion = ComponentUtils.getJtrac(this).getReleaseVersion();
+        String jtracVersion = getJtrac().getReleaseVersion();
         add(new Label("version", jtracVersion));
     }
 

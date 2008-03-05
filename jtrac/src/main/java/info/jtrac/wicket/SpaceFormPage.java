@@ -109,7 +109,7 @@ public class SpaceFormPage extends BasePage {
                         public void onConfirm() {
                             getJtrac().removeSpace(space);
                             // logged in user may have been allocated to this space
-                            SpaceFormPage.this.refreshPrincipal();
+                            JtracSession.get().refreshPrincipal();
                             setResponsePage(new SpaceListPage());
                         }                        
                     };

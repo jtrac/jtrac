@@ -17,8 +17,9 @@
 package info.jtrac.domain;
 
 import info.jtrac.domain.FilterCriteria.Expression;
-import info.jtrac.wicket.ComponentUtils;
+import info.jtrac.wicket.JtracApplication;
 import info.jtrac.wicket.JtracCheckBoxMultipleChoice;
+import info.jtrac.wicket.JtracSession;
 import info.jtrac.wicket.yui.YuiCalendar;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -274,7 +275,7 @@ public class ColumnHeading implements Serializable {
                 list.add(Expression.IN);                
                 if(forFragment) {
                     fragment = new Fragment("fragParent", "multiSelect");                    
-                    final Map<Integer, String> options = ComponentUtils.getCurrentSpace(c).getMetadata().getStates();
+                    final Map<Integer, String> options = JtracSession.get().getCurrentSpace().getMetadata().getStates();
                     options.remove(State.NEW);
                     JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", new ArrayList(options.keySet()), new IChoiceRenderer() {
                         public Object getDisplayValue(Object o) {
@@ -295,12 +296,12 @@ public class ColumnHeading implements Serializable {
                 if(forFragment) {
                     fragment = new Fragment("fragParent", "multiSelect");
                     List<User> users = null;
-                    Space s = ComponentUtils.getCurrentSpace(c);
+                    Space s = JtracSession.get().getCurrentSpace();
                     if(s == null) {
-                        User u = ComponentUtils.getPrincipal(c);
-                        users = ComponentUtils.getJtrac(c).findUsersForUser(u);
+                        User u = JtracSession.get().getUser();
+                        users = JtracApplication.get().getJtrac().findUsersForUser(u);
                     } else {
-                        users = ComponentUtils.getJtrac(c).findUsersForSpace(s.getId());
+                        users = JtracApplication.get().getJtrac().findUsersForSpace(s.getId());
                     }
                     JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", users, new IChoiceRenderer() {
                         public Object getDisplayValue(Object o) {
@@ -346,7 +347,7 @@ public class ColumnHeading implements Serializable {
                 list.add(Expression.IN);
                 if(forFragment) {
                     fragment = new Fragment("fragParent", "multiSelect");
-                    List<Space> spaces = new ArrayList(ComponentUtils.getPrincipal(c).getSpaces());
+                    List<Space> spaces = new ArrayList(JtracSession.get().getUser().getSpaces());
                     JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", spaces, new IChoiceRenderer() {
                         public Object getDisplayValue(Object o) {
                             return ((Space) o).getName();

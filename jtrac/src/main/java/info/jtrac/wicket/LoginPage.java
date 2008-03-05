@@ -50,7 +50,7 @@ public class LoginPage extends WebPage {
         setVersioned(false);
         add(new Label("title", getLocalizer().getString("login.title", null)));
         add(new LoginForm("form"));
-        String jtracVersion = ComponentUtils.getJtrac(this).getReleaseVersion();
+        String jtracVersion = JtracApplication.get().getJtrac().getReleaseVersion();
         add(new Label("version", jtracVersion));                
     }
     

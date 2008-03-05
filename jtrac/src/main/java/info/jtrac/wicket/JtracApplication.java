@@ -87,6 +87,10 @@ public class JtracApplication extends WebApplication {
         return jtracCasProxyTicketValidator.getLogoutUrl();
     }    
     
+    public static JtracApplication get() {
+        return (JtracApplication) Application.get();
+    }
+    
     @Override
     public void init() {
         
@@ -146,7 +150,7 @@ public class JtracApplication extends WebApplication {
                         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                         if(authentication != null && authentication.isAuthenticated()) {
                             logger.debug("security context contains CAS authentication, initializing session");
-                            ((JtracSession) Session.get()).setUser((User) authentication.getPrincipal());
+                            JtracSession.get().setUser((User) authentication.getPrincipal());
                             return true;
                         }
                     }
@@ -165,7 +169,7 @@ public class JtracApplication extends WebApplication {
                         for (Space space : spaces) {            
                             guestUser.addSpaceWithRole(space, "ROLE_GUEST");
                         }
-                        ((JtracSession) Session.get()).setUser(guestUser);                        
+                        JtracSession.get().setUser(guestUser);                        
                         // and proceed
                         return true;
                     }

@@ -137,7 +137,7 @@ public class UserFormPage extends BasePage {
                         public void onConfirm() {
                             getJtrac().removeUser(user);
                             // logged in user may have been allocated to space with this user assigned
-                            UserFormPage.this.refreshPrincipal();
+                            JtracSession.get().refreshPrincipal();
                             setResponsePage(new UserListPage());
                         }                        
                     };
@@ -284,7 +284,7 @@ public class UserFormPage extends BasePage {
             } else {
                 getJtrac().storeUser(user);
             }
-            refreshPrincipal(user);
+            JtracSession.get().refreshPrincipalIfSameAs(user);            
             if(previous == null) {
                 UserListPage page = new UserListPage();
                 page.setSelectedUserId(user.getId());
