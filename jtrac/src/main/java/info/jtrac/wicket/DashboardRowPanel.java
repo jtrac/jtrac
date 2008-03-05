@@ -79,7 +79,7 @@ public class DashboardRowPanel extends BasePanel {
             add(new Link("loggedByMe") {
                 public void onClick() {
                     setCurrentSpace(space);
-                    ItemSearch itemSearch = new ItemSearch(space, this);
+                    ItemSearch itemSearch = new ItemSearch(space);
                     itemSearch.setLoggedBy(user);
                     setCurrentItemSearch(itemSearch);
                     setResponsePage(ItemListPage.class);                    
@@ -90,7 +90,7 @@ public class DashboardRowPanel extends BasePanel {
             add(new Link("assignedToMe") {
                 public void onClick() {
                     setCurrentSpace(space);
-                    ItemSearch itemSearch = new ItemSearch(space, this);
+                    ItemSearch itemSearch = new ItemSearch(space);
                     itemSearch.setAssignedTo(user);
                     setCurrentItemSearch(itemSearch);
                     setResponsePage(ItemListPage.class);                    
@@ -104,7 +104,7 @@ public class DashboardRowPanel extends BasePanel {
         add(new Link("total") {
             public void onClick() {
                 setCurrentSpace(space);
-                ItemSearch itemSearch = new ItemSearch(space, this); 
+                ItemSearch itemSearch = new ItemSearch(space); 
                 setCurrentItemSearch(itemSearch);
                 setResponsePage(ItemListPage.class);                
             }

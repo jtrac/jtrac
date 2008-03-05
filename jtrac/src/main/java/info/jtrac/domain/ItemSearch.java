@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.wicket.Component;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -53,12 +52,12 @@ public class ItemSearch implements Serializable {
     private List<ColumnHeading> columnHeadings;
     private Map<String, FilterCriteria> filterCriteriaMap = new LinkedHashMap<String, FilterCriteria>();
     
-    public ItemSearch(User user, Component c) {
+    public ItemSearch(User user) {
         this.user = user;
         this.columnHeadings = ColumnHeading.getColumnHeadings(user);
     }
     
-    public ItemSearch(Space space, Component c) {        
+    public ItemSearch(Space space) {        
         this.space = space;        
         this.columnHeadings = ColumnHeading.getColumnHeadings(space);
     }      

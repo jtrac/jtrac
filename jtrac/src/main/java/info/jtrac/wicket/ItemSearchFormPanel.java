@@ -54,7 +54,7 @@ public class ItemSearchFormPanel extends BasePanel {
     
     public ItemSearchFormPanel(String id, User user) {
         super(id);
-        this.itemSearch = new ItemSearch(user, this);
+        this.itemSearch = new ItemSearch(user);
         addComponents();
     }
     
@@ -62,9 +62,9 @@ public class ItemSearchFormPanel extends BasePanel {
         super(id);
         Space s = getCurrentSpace();
         if(s != null) {
-            this.itemSearch = new ItemSearch(s, this);
+            this.itemSearch = new ItemSearch(s);
         } else {
-            this.itemSearch = new ItemSearch(getPrincipal(), this);
+            this.itemSearch = new ItemSearch(getPrincipal());
         }
         addComponents();
     }

@@ -108,7 +108,7 @@ public class DashboardRowExpandedPanel extends BasePanel {
                     listItem.add(new Link("loggedByMe") {
                         public void onClick() {
                             setCurrentSpace(space);
-                            ItemSearch itemSearch = new ItemSearch(space, this);
+                            ItemSearch itemSearch = new ItemSearch(space);
                             itemSearch.setLoggedBy(user);
                             itemSearch.setStatus(i);
                             setCurrentItemSearch(itemSearch);
@@ -119,7 +119,7 @@ public class DashboardRowExpandedPanel extends BasePanel {
                     listItem.add(new Link("assignedToMe") {
                         public void onClick() {
                             setCurrentSpace(space);
-                            ItemSearch itemSearch = new ItemSearch(space, this);
+                            ItemSearch itemSearch = new ItemSearch(space);
                             itemSearch.setAssignedTo(user);
                             itemSearch.setStatus(i);
                             setCurrentItemSearch(itemSearch);
@@ -134,7 +134,7 @@ public class DashboardRowExpandedPanel extends BasePanel {
                 listItem.add(new Link("total") {
                     public void onClick() {
                         setCurrentSpace(space);
-                        ItemSearch itemSearch = new ItemSearch(space, this);                        
+                        ItemSearch itemSearch = new ItemSearch(space);                        
                         itemSearch.setStatus(i);
                         setCurrentItemSearch(itemSearch);
                         setResponsePage(ItemListPage.class);
@@ -150,7 +150,7 @@ public class DashboardRowExpandedPanel extends BasePanel {
             add(new Link("loggedByMeTotal") {
                 public void onClick() {
                     setCurrentSpace(space);
-                    ItemSearch itemSearch = new ItemSearch(space, this);
+                    ItemSearch itemSearch = new ItemSearch(space);
                     itemSearch.setLoggedBy(user);
                     setCurrentItemSearch(itemSearch);
                     setResponsePage(ItemListPage.class);                                        
@@ -160,7 +160,7 @@ public class DashboardRowExpandedPanel extends BasePanel {
             add(new Link("assignedToMeTotal") {
                 public void onClick() {
                     setCurrentSpace(space);
-                    ItemSearch itemSearch = new ItemSearch(space, this);
+                    ItemSearch itemSearch = new ItemSearch(space);
                     itemSearch.setAssignedTo(user);
                     setCurrentItemSearch(itemSearch);
                     setResponsePage(ItemListPage.class);
@@ -174,7 +174,7 @@ public class DashboardRowExpandedPanel extends BasePanel {
         add(new Link("totalTotal") {
             public void onClick() {
                 setCurrentSpace(space);
-                ItemSearch itemSearch = new ItemSearch(space, this);
+                ItemSearch itemSearch = new ItemSearch(space);
                 setCurrentItemSearch(itemSearch);
                 setResponsePage(ItemListPage.class);                
             }
