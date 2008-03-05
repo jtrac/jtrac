@@ -35,6 +35,7 @@
         -->
         <javac srcdir="src/main/java" destdir="target/classes" debug="${debug}" classpath="${test.jars}" target="1.5">
             <!-- <compilerarg value="-Xlint:unchecked"/> -->
+            <compilerarg value="-Xlint:deprecation"/>
         </javac>
         <copy todir="target/classes">
             <fileset dir="src/main/java" includes="**/*.html"/>
