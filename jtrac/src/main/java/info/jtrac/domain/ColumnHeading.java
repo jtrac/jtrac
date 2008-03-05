@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextField;
@@ -105,7 +106,7 @@ public class ColumnHeading implements Serializable {
         return (List<Expression>) process(null, null);        
     }
     
-    public Component getFilterUiFragment(Component c) {
+    public Component getFilterUiFragment(MarkupContainer c) {
         return (Fragment) process(c, null);
     }
     
@@ -122,7 +123,7 @@ public class ColumnHeading implements Serializable {
     // 3) or add restrictions to the hibernate detached criteria that will be used to query the database
     // putting all these things into one place, makes it easy to maintain, as the 3 responsibilities
     // are closely interdependent
-    private Object process(Component c, DetachedCriteria criteria) {        
+    private Object process(MarkupContainer c, DetachedCriteria criteria) {        
         boolean forFragment = c != null;        
         List<Expression> list = new ArrayList<Expression>();
         Fragment fragment = null;
@@ -137,7 +138,7 @@ public class ColumnHeading implements Serializable {
                 case 3:
                     list.add(Expression.IN);                    
                     if(forFragment) {
-                        fragment = new Fragment("fragParent", "multiSelect");
+                        fragment = new Fragment("fragParent", "multiSelect", c);
                         final Map<String, String> options = field.getOptions();
                         JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", new ArrayList(options.keySet()), new IChoiceRenderer() {
                             public Object getDisplayValue(Object o) {
@@ -165,7 +166,7 @@ public class ColumnHeading implements Serializable {
                     list.add(Expression.LT);
                     list.add(Expression.BETWEEN);
                     if(forFragment) {
-                        fragment = new Fragment("fragParent", "textField");
+                        fragment = new Fragment("fragParent", "textField", c);
                         TextField textField = new TextField("value", Double.class);
                         textField.setModel(new PropertyModel(this, "filterCriteria.value"));
                         fragment.add(textField);
@@ -198,7 +199,7 @@ public class ColumnHeading implements Serializable {
                     list.add(Expression.LT);
                     list.add(Expression.BETWEEN);
                     if(forFragment) {
-                        fragment = new Fragment("fragParent", "dateField");                        
+                        fragment = new Fragment("fragParent", "dateField", c);                        
                         YuiCalendar calendar = new YuiCalendar("value", new PropertyModel(this, "filterCriteria.value"), false);                                                
                         fragment.add(calendar);
                         if(filterCriteria.getExpression() == Expression.BETWEEN) {
@@ -225,7 +226,7 @@ public class ColumnHeading implements Serializable {
                 case 5: // free text
                     list.add(Expression.CONTAINS);
                     if(forFragment) {
-                        fragment = new Fragment("fragParent", "textField");
+                        fragment = new Fragment("fragParent", "textField", c);
                         TextField textField = new TextField("value", String.class);
                         textField.setModel(new PropertyModel(this, "filterCriteria.value"));
                         fragment.add(textField);
@@ -242,7 +243,7 @@ public class ColumnHeading implements Serializable {
             if(name.equals(ID)) {
                 list.add(Expression.EQ);
                 if(forFragment) {
-                    fragment = new Fragment("fragParent", "textField");
+                    fragment = new Fragment("fragParent", "textField", c);
                         TextField textField = new TextField("value", String.class);
                         textField.setModel(new PropertyModel(this, "filterCriteria.value"));
                         fragment.add(textField);
@@ -252,7 +253,7 @@ public class ColumnHeading implements Serializable {
             } else if(name.equals(SUMMARY)) {
                 list.add(Expression.CONTAINS);
                 if(forFragment) {
-                    fragment = new Fragment("fragParent", "textField");
+                    fragment = new Fragment("fragParent", "textField", c);
                         TextField textField = new TextField("value", String.class);
                         textField.setModel(new PropertyModel(this, "filterCriteria.value"));
                         fragment.add(textField);
@@ -264,7 +265,7 @@ public class ColumnHeading implements Serializable {
             } else if(name.equals(DETAIL)) {
                 list.add(Expression.CONTAINS);
                 if(forFragment) {
-                    fragment = new Fragment("fragParent", "textField");
+                    fragment = new Fragment("fragParent", "textField", c);
                         TextField textField = new TextField("value", String.class);
                         textField.setModel(new PropertyModel(this, "filterCriteria.value"));
                         fragment.add(textField);
@@ -274,7 +275,7 @@ public class ColumnHeading implements Serializable {
             } else if(name.equals(STATUS)) {
                 list.add(Expression.IN);                
                 if(forFragment) {
-                    fragment = new Fragment("fragParent", "multiSelect");                    
+                    fragment = new Fragment("fragParent", "multiSelect", c);                    
                     final Map<Integer, String> options = JtracSession.get().getCurrentSpace().getMetadata().getStates();
                     options.remove(State.NEW);
                     JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", new ArrayList(options.keySet()), new IChoiceRenderer() {
@@ -294,7 +295,7 @@ public class ColumnHeading implements Serializable {
             } else if(name.equals(ASSIGNED_TO) || name.equals(LOGGED_BY)) {
                 list.add(Expression.IN);                
                 if(forFragment) {
-                    fragment = new Fragment("fragParent", "multiSelect");
+                    fragment = new Fragment("fragParent", "multiSelect", c);
                     List<User> users = null;
                     Space s = JtracSession.get().getCurrentSpace();
                     if(s == null) {
@@ -322,7 +323,7 @@ public class ColumnHeading implements Serializable {
                 list.add(Expression.GT);
                 list.add(Expression.LT);                
                 if(forFragment) {
-                    fragment = new Fragment("fragParent", "dateField");                    
+                    fragment = new Fragment("fragParent", "dateField", c);                    
                     YuiCalendar calendar = new YuiCalendar("value", new PropertyModel(this, "filterCriteria.value"), false);                    
                     fragment.add(calendar);
                     if(expression == Expression.BETWEEN) {
@@ -346,7 +347,7 @@ public class ColumnHeading implements Serializable {
             } else if(name.equals(SPACE)) {
                 list.add(Expression.IN);
                 if(forFragment) {
-                    fragment = new Fragment("fragParent", "multiSelect");
+                    fragment = new Fragment("fragParent", "multiSelect", c);
                     List<Space> spaces = new ArrayList(JtracSession.get().getUser().getSpaces());
                     JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", spaces, new IChoiceRenderer() {
                         public Object getDisplayValue(Object o) {

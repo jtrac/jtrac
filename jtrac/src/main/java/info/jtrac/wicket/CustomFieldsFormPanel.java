@@ -60,7 +60,7 @@ public class CustomFieldsFormPanel extends BasePanel {
                 listItem.add(new Label("label", field.getLabel()));
                 listItem.add(new Label("star", field.isOptional() ? "&nbsp;" : "*").setEscapeModelStrings(false));
                 if (field.getName().getType() < 4) { // drop down list                    
-                    Fragment f = new Fragment("field", "dropDown");
+                    Fragment f = new Fragment("field", "dropDown", CustomFieldsFormPanel.this);
                     final Map<String, String> options = field.getOptions();                                
                     List<String> keys = new ArrayList(options.keySet());  // bound value
                     DropDownChoice choice = new DropDownChoice("field", keys, new IChoiceRenderer() {
@@ -86,7 +86,7 @@ public class CustomFieldsFormPanel extends BasePanel {
                     listItem.add(calendar);
                     calendar.setLabel(new Model(field.getLabel()));
                 } else {
-                    Fragment f = new Fragment("field", "textField");
+                    Fragment f = new Fragment("field", "textField", CustomFieldsFormPanel.this);
                     TextField textField = new TextField("field");
                     if (field.getName().getType() == 4) {
                         textField.setType(Double.class);

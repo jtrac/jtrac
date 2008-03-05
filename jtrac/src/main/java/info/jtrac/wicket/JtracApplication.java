@@ -125,13 +125,14 @@ public class JtracApplication extends WebApplication {
                     return null;
                 }
             }
-            public String loadStringResource(Component component, String key) {
-                if(logger.isDebugEnabled()) {
-                    logger.debug("loadStringResource: Component: " + component + ", key: '" + key + "'");
-                }                
+            public String loadStringResource(Component component, String key) {              
                 Class clazz = component == null ? null : component.getClass();
                 Locale locale = component == null ? Session.get().getLocale() : component.getLocale();
-                return loadStringResource(clazz, key, locale, null);
+                String value = loadStringResource(clazz, key, locale, null);
+                if(logger.isDebugEnabled() && value == null) {                
+                    logger.debug("loadStringResource returned null for: Component: " + component + ", key: '" + key + "'");
+                }
+                return value;
             }            
         });                
         
@@ -205,7 +206,7 @@ public class JtracApplication extends WebApplication {
     
     @Override
     public Session newSession(Request request, Response response) {                   
-        return new JtracSession(JtracApplication.this, request);        
+        return new JtracSession(request);        
     }
     
     public Class getHomePage() {

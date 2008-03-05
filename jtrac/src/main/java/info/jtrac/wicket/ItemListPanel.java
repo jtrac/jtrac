@@ -248,7 +248,7 @@ public class ItemListPanel extends BasePanel {
                             String name = ch.getName();
                             if(name.equals(ColumnHeading.ID)) {
                                 String refId = item.getRefId();
-                                Fragment refIdFrag = new Fragment("column", "refId");
+                                Fragment refIdFrag = new Fragment("column", "refId", ItemListPanel.this);
                                 listItem.add(refIdFrag);
                                 Link refIdLink = new BookmarkablePageLink("refId", ItemViewPage.class, new PageParameters("0=" + refId));                                
                                 refIdFrag.add(refIdLink);
@@ -268,7 +268,7 @@ public class ItemListPanel extends BasePanel {
                                 value = new PropertyModel(item, "summary");
                             } else if(name.equals(ColumnHeading.DETAIL)) {                                
                                 if(showHistory) {
-                                    Fragment detailFrag = new Fragment("column", "detail");
+                                    Fragment detailFrag = new Fragment("column", "detail", ItemListPanel.this);
                                     final History history = (History) item;
                                     detailFrag.add(new AttachmentLinkPanel("attachment", history.getAttachment()));
                                     if (history.getIndex() > 0) {
