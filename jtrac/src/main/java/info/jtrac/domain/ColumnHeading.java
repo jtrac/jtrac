@@ -103,17 +103,13 @@ public class ColumnHeading implements Serializable {
     
     // global variables
     private List<Expression> validFilterExpressions;
-    private Fragment fragment;
-    private boolean returnValidFilterExpressions;
+    private Fragment fragment;    
     private boolean returnFragment;        
     private DetachedCriteria criteria;
     private MarkupContainer markupContainer;
     
-    public List<Expression> getValidFilterExpressions() {
-        returnValidFilterExpressions = true;
-        validFilterExpressions = new ArrayList<Expression>();
-        doTheSwitchCase();
-        returnValidFilterExpressions = false;
+    public List<Expression> getValidFilterExpressions() {             
+        doTheSwitchCase();                
         return validFilterExpressions;        
     }
     
@@ -127,7 +123,7 @@ public class ColumnHeading implements Serializable {
     public void addRestrictions(DetachedCriteria c) {        
         this.criteria = c;
         doTheSwitchCase();
-    }
+    }    
     
     // TODO use some elegant factory pattern here if possible
     // TODO reduce redundant code
@@ -148,10 +144,8 @@ public class ColumnHeading implements Serializable {
                 //==============================================================
                 case 1:
                 case 2:
-                case 3:
-                    if(returnValidFilterExpressions) {
-                        validFilterExpressions.add(Expression.IN);
-                    }
+                case 3:                    
+                    setValidFilterExpressions(Expression.IN);                    
                     if(returnFragment) {
                         fragment = new Fragment("fragParent", "multiSelect", markupContainer);
                         final Map<String, String> options = field.getOptions();
@@ -175,14 +169,8 @@ public class ColumnHeading implements Serializable {
                     }
                     break; // drop down list
                 //==============================================================
-                case 4: // decimal number
-                    if(returnValidFilterExpressions) {
-                        validFilterExpressions.add(Expression.EQ);
-                        validFilterExpressions.add(Expression.NOT_EQ);
-                        validFilterExpressions.add(Expression.GT);
-                        validFilterExpressions.add(Expression.LT);
-                        validFilterExpressions.add(Expression.BETWEEN);
-                    }
+                case 4: // decimal number                    
+                    setValidFilterExpressions(Expression.EQ, Expression.NOT_EQ, Expression.GT, Expression.LT, Expression.BETWEEN);
                     if(returnFragment) {
                         fragment = new Fragment("fragParent", "textField", markupContainer);
                         TextField textField = new TextField("value", Double.class);
@@ -212,13 +200,7 @@ public class ColumnHeading implements Serializable {
                     break;
                 //==============================================================
                 case 6: // date
-                    if(returnValidFilterExpressions) {
-                        validFilterExpressions.add(Expression.EQ);
-                        validFilterExpressions.add(Expression.NOT_EQ);
-                        validFilterExpressions.add(Expression.GT);
-                        validFilterExpressions.add(Expression.LT);
-                        validFilterExpressions.add(Expression.BETWEEN);
-                    }
+                    setValidFilterExpressions(Expression.EQ, Expression.NOT_EQ, Expression.GT, Expression.LT, Expression.BETWEEN);                    
                     if(returnFragment) {
                         fragment = new Fragment("fragParent", "dateField", markupContainer);                        
                         YuiCalendar calendar = new YuiCalendar("value", new PropertyModel(this, "filterCriteria.value"), false);                                                
@@ -245,10 +227,8 @@ public class ColumnHeading implements Serializable {
                     }                     
                     break;
                 //==============================================================
-                case 5: // free text
-                    if(returnValidFilterExpressions) {
-                        validFilterExpressions.add(Expression.CONTAINS);
-                    }
+                case 5: // free text                    
+                    setValidFilterExpressions(Expression.CONTAINS);                    
                     if(returnFragment) {
                         fragment = new Fragment("fragParent", "textField", markupContainer);
                         TextField textField = new TextField("value", String.class);
@@ -267,9 +247,7 @@ public class ColumnHeading implements Serializable {
         } else {
             //==================================================================
             if(name.equals(ID)) {
-                if(returnValidFilterExpressions) {
-                    validFilterExpressions.add(Expression.EQ);
-                }
+                setValidFilterExpressions(Expression.EQ);
                 if(returnFragment) {
                     fragment = new Fragment("fragParent", "textField", markupContainer);
                         TextField textField = new TextField("value", String.class);
@@ -279,10 +257,8 @@ public class ColumnHeading implements Serializable {
                 }
                 // should never come here for criteria: see ItemSearch#getRefId()
             //==================================================================
-            } else if(name.equals(SUMMARY)) {
-                if(returnValidFilterExpressions) {
-                    validFilterExpressions.add(Expression.CONTAINS);
-                }
+            } else if(name.equals(SUMMARY)) {                
+                setValidFilterExpressions(Expression.CONTAINS);                
                 if(returnFragment) {
                     fragment = new Fragment("fragParent", "textField", markupContainer);
                         TextField textField = new TextField("value", String.class);
@@ -295,9 +271,7 @@ public class ColumnHeading implements Serializable {
                 }
             //==================================================================
             } else if(name.equals(DETAIL)) {
-                if(returnValidFilterExpressions) {
-                    validFilterExpressions.add(Expression.CONTAINS);
-                }
+                setValidFilterExpressions(Expression.CONTAINS);
                 if(returnFragment) {
                     fragment = new Fragment("fragParent", "textField", markupContainer);
                         TextField textField = new TextField("value", String.class);
@@ -308,9 +282,7 @@ public class ColumnHeading implements Serializable {
                 // should never come here for criteria: see ItemSearch#getSearchText()
             //==================================================================
             } else if(name.equals(STATUS)) {
-                if(returnValidFilterExpressions) {
-                    validFilterExpressions.add(Expression.IN);    
-                }
+                setValidFilterExpressions(Expression.IN);
                 if(returnFragment) {
                     fragment = new Fragment("fragParent", "multiSelect", markupContainer);                    
                     final Map<Integer, String> options = JtracSession.get().getCurrentSpace().getMetadata().getStates();
@@ -331,9 +303,7 @@ public class ColumnHeading implements Serializable {
                 }
             //==================================================================
             } else if(name.equals(ASSIGNED_TO) || name.equals(LOGGED_BY)) {
-                if(returnValidFilterExpressions) {
-                    validFilterExpressions.add(Expression.IN);  
-                }
+                setValidFilterExpressions(Expression.IN);
                 if(returnFragment) {
                     fragment = new Fragment("fragParent", "multiSelect", markupContainer);
                     List<User> users = null;
@@ -360,11 +330,7 @@ public class ColumnHeading implements Serializable {
                 }
             //==================================================================
             } else if(name.equals(TIME_STAMP)) {
-                if(returnValidFilterExpressions) {
-                    validFilterExpressions.add(Expression.BETWEEN);
-                    validFilterExpressions.add(Expression.GT);
-                    validFilterExpressions.add(Expression.LT);
-                }
+                setValidFilterExpressions(Expression.BETWEEN, Expression.GT, Expression.LT);
                 if(returnFragment) {
                     fragment = new Fragment("fragParent", "dateField", markupContainer);                    
                     YuiCalendar calendar = new YuiCalendar("value", new PropertyModel(this, "filterCriteria.value"), false);                    
@@ -389,9 +355,7 @@ public class ColumnHeading implements Serializable {
                 }
             //==================================================================
             } else if(name.equals(SPACE)) {
-                if(returnValidFilterExpressions) {
-                    validFilterExpressions.add(Expression.IN);
-                }
+                setValidFilterExpressions(Expression.IN);
                 if(returnFragment) {
                     fragment = new Fragment("fragParent", "multiSelect", markupContainer);
                     List<Space> spaces = new ArrayList(JtracSession.get().getUser().getSpaces());
@@ -440,6 +404,13 @@ public class ColumnHeading implements Serializable {
         }
         return false;
     }  
+    
+    private void setValidFilterExpressions(Expression... expressions) {
+        validFilterExpressions = new ArrayList<Expression>();               
+        for(Expression e : expressions) {
+            validFilterExpressions.add(e);
+        }
+    }
     
     //==========================================================================
     
