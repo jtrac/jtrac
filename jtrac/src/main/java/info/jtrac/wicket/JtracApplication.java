@@ -21,7 +21,7 @@ import info.jtrac.acegi.JtracCasProxyTicketValidator;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.util.WebUtils;
-import info.jtrac.wicket.yui.TestPage;
+
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.ServletContext;
@@ -189,8 +189,7 @@ public class JtracApplication extends WebApplication {
             mountBookmarkablePage("/login", LoginPage.class);
         }        
         mountBookmarkablePage("/logout", LogoutPage.class);
-        mountBookmarkablePage("/svn", SvnStatsPage.class);
-        mountBookmarkablePage("/test", TestPage.class);
+        mountBookmarkablePage("/svn", SvnStatsPage.class);        
         mountBookmarkablePage("/casError", CasLoginErrorPage.class);
         // bookmarkable url for viewing items
         mount(new IndexedParamUrlCodingStrategy("/item", ItemViewPage.class));        
