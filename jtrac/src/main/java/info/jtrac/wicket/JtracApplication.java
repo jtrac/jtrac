@@ -31,6 +31,7 @@ import org.acegisecurity.AuthenticationException;
 import org.acegisecurity.AuthenticationManager;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
+import org.apache.wicket.Application;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.apache.wicket.Component;
@@ -84,7 +85,7 @@ public class JtracApplication extends WebApplication {
             return null;
         }
         return jtracCasProxyTicketValidator.getLogoutUrl();
-    }
+    }    
     
     @Override
     public void init() {
@@ -121,6 +122,9 @@ public class JtracApplication extends WebApplication {
                 }
             }
             public String loadStringResource(Component component, String key) {
+                if(logger.isDebugEnabled()) {
+                    logger.debug("loadStringResource: Component: " + component + ", key: '" + key + "'");
+                }                
                 Class clazz = component == null ? null : component.getClass();
                 Locale locale = component == null ? Session.get().getLocale() : component.getLocale();
                 return loadStringResource(clazz, key, locale, null);
@@ -133,7 +137,7 @@ public class JtracApplication extends WebApplication {
             }
             public boolean isInstantiationAuthorized(Class clazz) {
                 if (BasePage.class.isAssignableFrom(clazz)) {
-                    if (((JtracSession) Session.get()).isAuthenticated()) {
+                    if (JtracSession.get().isAuthenticated()) {
                         return true;
                     }                    
                     if(jtracCasProxyTicketValidator != null) {
@@ -244,7 +248,7 @@ public class JtracApplication extends WebApplication {
             logger.debug("valid cookie, attempting authentication");
             User user = (User) getJtrac().loadUserByUsername(loginName);
             if (encodedPassword.equals(user.getPassword())) {
-                ((JtracSession) Session.get()).setUser(user);
+                JtracSession.get().setUser(user);
                 logger.debug("remember me login success");                    
                 return true;
             }                                         
