@@ -115,8 +115,7 @@ public class ItemSearchFormPanel extends BasePanel {
                     if(item == null) {
                         form.error(localize("item_search_form.error.refId.notFound")); 
                         return;
-                    }
-                    setCurrentItemSearch(itemSearch);
+                    }                    
                     setResponsePage(ItemViewPage.class, new PageParameters("0=" + item.getRefId()));
                     return;
                 }
@@ -127,8 +126,8 @@ public class ItemSearchFormPanel extends BasePanel {
                         return;
                     }
                 }
-                setCurrentItemSearch(itemSearch);
-                setResponsePage(ItemListPage.class);
+                JtracSession.get().setItemSearch(itemSearch);
+                setResponsePage(ItemListPage.class, itemSearch.getAsQueryString());
             }
         });
         form.add(new Link("expandAll") {
@@ -156,16 +155,14 @@ public class ItemSearchFormPanel extends BasePanel {
                         return ((Expression) o).getKey();
                     }
                 });
-                if(ch.getName().equals(ColumnHeading.ID)) {
-                    ch.getFilterCriteria().setExpression(Expression.EQ);   
+                if(ch.getName() == ColumnHeading.Name.ID) {
+                    ch.getFilterCriteria().setExpression(Expression.EQ);
+                }
+                if(expandAll) {
+                    ch.getFilterCriteria().setExpression(validExpressions.get(0));                    
                 }
                 Component fragParent = null;
-                if(expandAll) {
-                    ch.getFilterCriteria().setExpression(validExpressions.get(0));
-                    fragParent = ch.getFilterUiFragment(ItemSearchFormPanel.this);
-                } else {
-                    fragParent = getFilterUiFragment(ch);
-                }
+                fragParent = getFilterUiFragment(ch);
                 fragParent.setOutputMarkupId(true);
                 listItem.add(fragParent);
                 expressionChoice.setModel(new PropertyModel(ch.getFilterCriteria(), "expression"));
@@ -191,7 +188,7 @@ public class ItemSearchFormPanel extends BasePanel {
         if(ch.getFilterCriteria().getExpression() == null) {
             return new WebMarkupContainer("fragParent");
         }        
-        return ch.getFilterUiFragment(ItemSearchFormPanel.this);
+        return ch.getFilterUiFragment(this);
     }
 
 }

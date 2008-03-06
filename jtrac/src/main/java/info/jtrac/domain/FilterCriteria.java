@@ -17,7 +17,9 @@
 package info.jtrac.domain;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * can possibly be merged into ColumnHeading, but at the moment
@@ -27,6 +29,27 @@ import java.util.List;
  * values = list of values for multi-select filter criteria
  */
 public class FilterCriteria implements Serializable {
+    
+    private static final Map<String, Expression> EXPRESSIONS_MAP;
+    
+    // set up a static Map to resolve a String to our Expression enum value
+    static {
+        EXPRESSIONS_MAP = new HashMap<String, Expression>();
+        for (Expression e : Expression.values()) {
+            EXPRESSIONS_MAP.put(e.key, e);
+        }
+    }    
+    
+    /**
+     * Resolve a String to a valid enum value for Expression
+     */
+    public static Expression convertToExpression(String text) {
+        Expression e = EXPRESSIONS_MAP.get(text);
+        if (e == null) {
+            throw new RuntimeException("Bad name " + text);
+        }
+        return e;
+    }    
     
     public enum Expression {        
         IN("in"), 
@@ -80,6 +103,8 @@ public class FilterCriteria implements Serializable {
         }
         return true;
     }    
+    
+    //==========================================================================
     
     public Object getValue() {
         return value;

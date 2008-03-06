@@ -16,14 +16,19 @@
 
 package info.jtrac.domain;
 
-import static info.jtrac.Constants.*;
+import info.jtrac.wicket.JtracApplication;
+import info.jtrac.wicket.JtracSession;
+
+import static info.jtrac.domain.ColumnHeading.Name.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.wicket.PageParameters;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -54,7 +59,7 @@ public class ItemSearch implements Serializable {
     
     public ItemSearch(User user) {
         this.user = user;
-        this.columnHeadings = ColumnHeading.getColumnHeadings(user);
+        this.columnHeadings = ColumnHeading.getColumnHeadings();
     }
     
     public ItemSearch(Space space) {        
@@ -62,6 +67,62 @@ public class ItemSearch implements Serializable {
         this.columnHeadings = ColumnHeading.getColumnHeadings(space);
     }      
     
+    public ItemSearch(PageParameters params) {
+        long spaceId = params.getLong("s", -1);
+        if(spaceId > 0) {            
+            this.space = JtracApplication.get().getJtrac().loadSpace(spaceId);
+            this.columnHeadings = ColumnHeading.getColumnHeadings(space);
+        } else {
+            this.user = JtracSession.get().getUser();
+            this.columnHeadings = ColumnHeading.getColumnHeadings();
+        }        
+        showHistory = params.getBoolean("showHistory");
+        showDetail = params.getBoolean("showDetail");
+        pageSize = params.getInt("pageSize", 25);
+        sortDescending = !params.getBoolean("sortAscending");
+        sortFieldName = params.getString("sortFieldName", "id");        
+        for(Object o : params.keySet()) {
+            String name = o.toString();
+            if(ColumnHeading.isValidFieldOrColumnName(name)) {
+                ColumnHeading ch = getColumnHeading(name);
+                ch.loadFromQueryString(params.getString(name));
+            }
+        }
+        relatingItemRefId = params.getString("relatingItemRefId", null);
+    }
+    
+    public PageParameters getAsQueryString() {
+        Map<String, String> map = new HashMap<String, String>();
+        if(space != null) {
+            map.put("s", space.getId() + "");
+        }
+        for(ColumnHeading ch : columnHeadings) {
+            String s = ch.getQueryString();
+            if(s != null) {
+                map.put(ch.getNameText(), s);
+            }
+        }        
+        if(showHistory) {
+            map.put("showHistory", "true");
+        }
+        if(showDetail) {
+            map.put("showDetail", "true");
+        }
+        if(pageSize != 25) {
+            map.put("pageSize", pageSize + "");
+        }
+        if(!sortDescending) {
+            map.put("sortAscending", "true");
+        }
+        if(!sortFieldName.equals("id")) {
+            map.put("sortFieldName", sortFieldName);
+        }
+        if(relatingItemRefId != null) {
+            map.put("relatingItemRefId", relatingItemRefId);
+        }
+        return new PageParameters(map);
+    }    
+        
     private DetachedCriteria parent; // temp working variable hack
     
     // have to do this two step process as "order by" clause conflicts with "count (*)" clause
@@ -112,7 +173,7 @@ public class ItemSearch implements Serializable {
             } 
         }
         return criteria;
-    }
+    }    
     
     public DetachedCriteria getCriteriaForCount() {               
         DetachedCriteria criteria = null;        
@@ -140,7 +201,7 @@ public class ItemSearch implements Serializable {
             }             
         }        
         for(ColumnHeading ch : columnHeadings) {
-            ch.addRestrictions(criteria, this);
+            ch.addRestrictions(criteria);
         }
         return criteria;
     }
@@ -160,14 +221,23 @@ public class ItemSearch implements Serializable {
         }        
     }    
     
-    private ColumnHeading getColumnHeading(String name) {
+    private ColumnHeading getColumnHeading(ColumnHeading.Name name) {
         for(ColumnHeading ch : columnHeadings) {
-            if(ch.getName().equals(name)) {
+            if(ch.getName() == name) {
                 return ch;                
             }
         }
         return null;                
     }
+    
+    private ColumnHeading getColumnHeading(String name) {
+        for(ColumnHeading ch : columnHeadings) {
+            if(ch.getNameText().equals(name)) {
+                return ch;                
+            }
+        }
+        return null;                
+    }    
     
     private String getStringValue(ColumnHeading ch) {
         String s = (String) ch.getFilterCriteria().getValue();
@@ -179,17 +249,17 @@ public class ItemSearch implements Serializable {
     }
     
     public String getRefId() {
-        ColumnHeading ch = getColumnHeading(ColumnHeading.ID);
+        ColumnHeading ch = getColumnHeading(ID);
         return getStringValue(ch);
     }
     
     public String getSearchText() {
-        ColumnHeading ch = getColumnHeading(ColumnHeading.DETAIL);
+        ColumnHeading ch = getColumnHeading(DETAIL);
         return getStringValue(ch);
     }
     
     public Collection<Space> getSelectedSpaces() {
-        ColumnHeading ch = getColumnHeading(ColumnHeading.SPACE);
+        ColumnHeading ch = getColumnHeading(SPACE);
         List values = ch.getFilterCriteria().getValues();
         if(values == null || values.size() == 0) {
             ch.getFilterCriteria().setExpression(null);
@@ -209,19 +279,19 @@ public class ItemSearch implements Serializable {
     }
     
     public void setLoggedBy(User loggedBy) {
-        ColumnHeading ch = getColumnHeading(ColumnHeading.LOGGED_BY);
+        ColumnHeading ch = getColumnHeading(LOGGED_BY);
         ch.getFilterCriteria().setExpression(FilterCriteria.Expression.IN);
         ch.getFilterCriteria().setValues(getSingletonList(loggedBy));
     }
     
     public void setAssignedTo(User assignedTo) {
-        ColumnHeading ch = getColumnHeading(ColumnHeading.ASSIGNED_TO);
+        ColumnHeading ch = getColumnHeading(ASSIGNED_TO);
         ch.getFilterCriteria().setExpression(FilterCriteria.Expression.IN);
         ch.getFilterCriteria().setValues(getSingletonList(assignedTo));
     }
     
     public void setStatus(int i) {
-        ColumnHeading ch = getColumnHeading(ColumnHeading.STATUS);
+        ColumnHeading ch = getColumnHeading(STATUS);
         ch.getFilterCriteria().setExpression(FilterCriteria.Expression.IN);
         ch.getFilterCriteria().setValues(getSingletonList(i));
     }

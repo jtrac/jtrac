@@ -68,6 +68,7 @@ public interface Jtrac extends UserDetailsService {
     User loadUser(long id);
     User loadUser(String loginName);
     List<User> findAllUsers();
+    List<User> findUsersWhereIdIn(List<Long> ids);
     List<User> findUsersMatching(String searchText, String searchOn);
     List<User> findUsersForSpace(long spaceId);
     List<UserSpaceRole> findUserRolesForSpace(long spaceId);
@@ -83,6 +84,7 @@ public interface Jtrac extends UserDetailsService {
     Space loadSpace(long id);
     Space loadSpace(String prefixCode);
     List<Space> findAllSpaces();
+    List<Space> findSpacesWhereIdIn(List<Long> ids);
     List<Space> findSpacesWhereGuestAllowed();
     List<Space> findUnallocatedSpacesForUser(long userId);
     void removeSpace(Space space);

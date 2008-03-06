@@ -17,6 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.ItemSearch;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 
 /**
@@ -24,15 +25,14 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
  */
 public class ItemSearchFormPage extends BasePage {        
         
-    public ItemSearchFormPage() {        
-        add(new ItemSearchFormPanel("panel"));
+    public ItemSearchFormPage(PageParameters params) {        
+        add(new ItemSearchFormPanel("panel", new ItemSearch(params)));
         add(new WebMarkupContainer("relate").setVisible(false));
     }       
     
     public ItemSearchFormPage(ItemSearch itemSearch) {                        
-        add(new ItemSearchFormPanel("panel", itemSearch));
-        setCurrentItemSearch(itemSearch);
-        add(new ItemRelatePanel("relate", false));
+        add(new ItemSearchFormPanel("panel", itemSearch));        
+        add(new ItemRelatePanel("relate", false, itemSearch));
     }    
     
 }

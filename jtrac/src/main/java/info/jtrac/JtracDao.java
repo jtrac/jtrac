@@ -70,6 +70,7 @@ public interface JtracDao {
     Space loadSpace(long id);
     List<Space> findSpacesByPrefixCode(String prefixCode);
     List<Space> findAllSpaces();
+    List<Space> findSpacesWhereIdIn(List<Long> ids);
     List<Space> findSpacesWhereGuestAllowed();
     void removeSpace(Space space);
     //=========================================== 
@@ -80,6 +81,7 @@ public interface JtracDao {
     User loadUser(long id);
     void removeUser(User user);
     List<User> findAllUsers();
+    List<User> findUsersWhereIdIn(List<Long> ids);
     List<User> findUsersMatching(String searchText, String searchOn);
     List<User> findUsersByLoginName(String loginName);
     List<User> findUsersByEmail(String email);

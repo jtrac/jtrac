@@ -21,6 +21,9 @@ import info.jtrac.domain.ColumnHeading;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.ItemSearch;
+
+import static info.jtrac.domain.ColumnHeading.Name.*;
+
 import java.util.Date;
 import java.util.List;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -94,15 +97,7 @@ public class ExcelUtils {
         }
         HSSFCell cell = getCell(row, col);
         cell.setCellValue(value);
-    }
-    
-    private void setHistoryIndex(int row, int col, int value) {
-        if(value == 0) {
-            return;
-        }
-        HSSFCell cell = getCell(row, col);
-        cell.setCellValue(value);
-    }
+    }    
     
     private void setHeader(int row, int col, String text) {
         HSSFCell cell = getCell(row, col);
@@ -113,8 +108,7 @@ public class ExcelUtils {
     }
         
     public HSSFWorkbook exportToExcel() {        
-        
-        boolean showDetail = itemSearch.isShowDetail();
+                
         boolean showHistory = itemSearch.isShowHistory();
         List<ColumnHeading> columnHeadings = itemSearch.getColumnHeadingsToRender();
         
@@ -143,44 +137,51 @@ public class ExcelUtils {
                             setText(row, col++, item.getCustomValue(field.getName()));
                     }
                 } else {
-                    // TODO optimize if-then for performance
-                    String name = ch.getName();
-                    if(name.equals(ColumnHeading.ID)) {
-                        if (showHistory) {                                                                                                            
-                            int index = ((History) item).getIndex();
-                            if (index > 0) {
-                                setText(row, col++, item.getRefId() + " (" + index + ")");
-                            } else {
+                    switch(ch.getName()) {
+                        case ID:
+                            if (showHistory) {                                                                                                            
+                                int index = ((History) item).getIndex();
+                                if (index > 0) {
+                                    setText(row, col++, item.getRefId() + " (" + index + ")");
+                                } else {
+                                    setText(row, col++, item.getRefId());
+                                }
+                            } else {                                                                           
                                 setText(row, col++, item.getRefId());
                             }
-                        } else {                                                                           
-                            setText(row, col++, item.getRefId());
-                        }                        
-                    } else if(name.equals(ColumnHeading.SUMMARY)) {
-                        setText(row, col++, item.getSummary());
-                    } else if(name.equals(ColumnHeading.DETAIL)) {
-                        if (showHistory) {
-                            History h = (History) item;
-                            if(h.getIndex() > 0) {
-                                setText(row, col++, h.getComment());
+                            break;
+                        case SUMMARY:
+                            setText(row, col++, item.getSummary());
+                            break;
+                        case DETAIL:
+                            if (showHistory) {
+                                History h = (History) item;
+                                if(h.getIndex() > 0) {
+                                    setText(row, col++, h.getComment());
+                                } else {
+                                    setText(row, col++, h.getDetail());
+                                }
                             } else {
-                                setText(row, col++, h.getDetail());
+                                setText(row, col++, item.getDetail());
                             }
-                        } else {
-                            setText(row, col++, item.getDetail());
-                        }
-                    } else if(name.equals(ColumnHeading.LOGGED_BY)) {
-                        setText(row, col++, item.getLoggedBy().getName());
-                    } else if(name.equals(ColumnHeading.STATUS)) {
-                        setText(row, col++, item.getStatusValue());
-                    } else if(name.equals(ColumnHeading.ASSIGNED_TO)) {
-                        setText(row, col++, (item.getAssignedTo() == null ? "" : item.getAssignedTo().getName()));
-                    } else if(name.equals(ColumnHeading.TIME_STAMP)) {
-                        setDate(row, col++, item.getTimeStamp());
-                    } else if(name.equals(ColumnHeading.SPACE)) {
-                        setText(row, col++, item.getSpace().getName());
-                    } else {
-                        throw new RuntimeException("Unexpected name: '" + name + "'");
+                            break;
+                        case LOGGED_BY:
+                            setText(row, col++, item.getLoggedBy().getName());
+                            break;
+                        case STATUS:
+                            setText(row, col++, item.getStatusValue());
+                            break;
+                        case ASSIGNED_TO:
+                            setText(row, col++, (item.getAssignedTo() == null ? "" : item.getAssignedTo().getName()));
+                            break;
+                        case TIME_STAMP:
+                            setDate(row, col++, item.getTimeStamp());
+                            break;
+                        case SPACE:
+                            setText(row, col++, item.getSpace().getName());
+                            break;
+                        default:
+                            throw new RuntimeException("Unexpected name: '" + ch.getName() + "'");                        
                     }
                 }
             }

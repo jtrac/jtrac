@@ -61,6 +61,13 @@ public class Field implements Serializable {
         }
         return n;
     }
+    
+    /**
+     * test if a given string is a valid field name
+     */
+    public static boolean isValidName(String text) {
+        return NAMES_MAP.containsKey(text);
+    }
 
     /**
      * the names that are used for the custom fields in the outside
@@ -255,6 +262,11 @@ public class Field implements Serializable {
         }          
     }    
     
+    /* custom accessor */
+    public void setName(String nameAsString) {        
+        setName(convertToName(nameAsString));
+    }    
+    
     //===================================================================  
     
     public Map<String, String> getOptions() {
@@ -279,12 +291,7 @@ public class Field implements Serializable {
 
     public void setOptional(boolean optional) {
         this.optional = optional;
-    }    
-    
-    /* custom accessor */
-    public void setName(String nameAsString) {        
-        setName(convertToName(nameAsString));
-    }
+    }        
     
     public Name getName() {
         return name;

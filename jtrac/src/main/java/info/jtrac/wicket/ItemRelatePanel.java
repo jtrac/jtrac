@@ -44,9 +44,8 @@ public class ItemRelatePanel extends BasePanel {
     
     private String refId;    
     
-    public ItemRelatePanel(String id, boolean isItemViewPage) {                
-        super(id);
-        ItemSearch itemSearch = getCurrentItemSearch();
+    public ItemRelatePanel(String id, boolean isItemViewPage, ItemSearch itemSearch) {                
+        super(id);        
         refId = itemSearch == null ? null : itemSearch.getRelatingItemRefId();
         if (refId != null) {
             final YuiDialog dialog = new YuiDialog("itemWindow");
@@ -70,7 +69,7 @@ public class ItemRelatePanel extends BasePanel {
             add(new Link("cancel") {
                 public void onClick() {
                     Item item = getJtrac().loadItemByRefId(refId);
-                    setCurrentItemSearch(null);
+                    JtracSession.get().setItemSearch(null);
                     setResponsePage(ItemViewPage.class, new PageParameters("0=" + item.getRefId()));
                 }
             });
@@ -133,7 +132,7 @@ public class ItemRelatePanel extends BasePanel {
             item.addRelated(relatedItem, type);
             item.setEditReason(comment);
             getJtrac().updateItem(item, getPrincipal());
-            setCurrentItemSearch(null);
+            JtracSession.get().setItemSearch(null);
             setResponsePage(ItemViewPage.class, new PageParameters("0=" + item.getRefId()));
         }          
         

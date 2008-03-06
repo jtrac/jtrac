@@ -87,9 +87,8 @@ public class DashboardPage extends BasePage {
                         public void onClick() {
                             setCurrentSpace(null);
                             ItemSearch itemSearch = new ItemSearch(user);
-                            itemSearch.setLoggedBy(user);
-                            setCurrentItemSearch(itemSearch);
-                            setResponsePage(ItemListPage.class);
+                            itemSearch.setLoggedBy(user);                            
+                            setResponsePage(ItemListPage.class, itemSearch.getAsQueryString());
                         }
                     }.add(new Label("loggedByMe", new PropertyModel(countsHolder, "totalLoggedByMe"))));
 
@@ -97,9 +96,8 @@ public class DashboardPage extends BasePage {
                         public void onClick() {
                             setCurrentSpace(null);
                             ItemSearch itemSearch = new ItemSearch(user);
-                            itemSearch.setAssignedTo(user);
-                            setCurrentItemSearch(itemSearch);
-                            setResponsePage(ItemListPage.class);
+                            itemSearch.setAssignedTo(user);                            
+                            setResponsePage(ItemListPage.class, itemSearch.getAsQueryString());
                         }
                     }.add(new Label("assignedToMe", new PropertyModel(countsHolder, "totalAssignedToMe"))));
                 } else {
@@ -110,9 +108,8 @@ public class DashboardPage extends BasePage {
                 total.add(new Link("total") {
                     public void onClick() {
                         setCurrentSpace(null);
-                        ItemSearch itemSearch = new ItemSearch(user);   
-                        setCurrentItemSearch(itemSearch);
-                        setResponsePage(ItemListPage.class);
+                        ItemSearch itemSearch = new ItemSearch(user);                        
+                        setResponsePage(ItemListPage.class, itemSearch.getAsQueryString());
                     }
                 }.add(new Label("total", new PropertyModel(countsHolder, "totalTotal"))));
 

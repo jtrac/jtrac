@@ -16,7 +16,6 @@
 
 package info.jtrac.util;
 
-import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -26,8 +25,8 @@ import java.util.Date;
  */
 public class DateUtils {
     
-    private static Format dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private static Format dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     
     public static String format(Date date) {
         return date == null ? "" : dateFormat.format(date);
@@ -35,6 +34,14 @@ public class DateUtils {
 
     public static String formatTimeStamp(Date date) {
         return date == null ? "" : dateTimeFormat.format(date);
+    }
+    
+    public static Date convert(String s) {
+        try {
+            return dateFormat.parse(s);
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
     }
     
 }

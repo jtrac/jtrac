@@ -164,6 +164,10 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return getHibernateTemplate().find("from Space space order by space.prefixCode");
     }
     
+    public List<Space> findSpacesWhereIdIn(List<Long> ids) {
+        return getHibernateTemplate().findByNamedParam("from Space space where space.id in (:ids)", "ids", ids);
+    }    
+    
     public List<Space> findSpacesWhereGuestAllowed() {        
         return getHibernateTemplate().find("from Space space join fetch space.metadata where space.guestAllowed = true");       
     }
@@ -187,6 +191,10 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     public List<User> findAllUsers() {
         return getHibernateTemplate().find("from User user order by user.name");
     }
+    
+    public List<User> findUsersWhereIdIn(List<Long> ids) {
+        return getHibernateTemplate().findByNamedParam("from User user where user.id in (:ids)", "ids", ids);
+    }    
     
     public List<User> findUsersMatching(final String searchText, final String searchOn) {   
         return (List<User>) getHibernateTemplate().execute(new HibernateCallback() {

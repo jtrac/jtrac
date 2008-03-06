@@ -22,6 +22,9 @@ import info.jtrac.domain.History;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.util.DateUtils;
 import info.jtrac.util.ExcelUtils;
+
+import static info.jtrac.domain.ColumnHeading.Name.*;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,9 +62,10 @@ public class ItemListPanel extends BasePanel {
         }
     }
     
-    public ItemListPanel(final String id) {
+    public ItemListPanel(final String id, ItemSearch is) {
         super(id);
-        this.itemSearch = getCurrentItemSearch();
+        // this.itemSearch = getCurrentItemSearch();
+        this.itemSearch = is;
         LoadableDetachableModel itemListModel = new LoadableDetachableModel() {
             protected Object load() {
                 logger.debug("loading item list from database");
@@ -87,7 +91,7 @@ public class ItemListPanel extends BasePanel {
             public void onClick() {
                 // return to item search form
                 itemSearch.setCurrentPage(0);
-                setResponsePage(new ItemSearchFormPage(itemSearch));
+                setResponsePage(new ItemSearchFormPage(itemSearch));                
             }
         };
         link.add(new Label("count", resultCount + ""));
@@ -100,10 +104,9 @@ public class ItemListPanel extends BasePanel {
         if(pageCount > 1) {
             Link prevOn = new Link("prevOn") {
                 public void onClick() {
-                    itemSearch.setCurrentPage(currentPage - 1);
-                    setCurrentItemSearch(itemSearch);
+                    itemSearch.setCurrentPage(currentPage - 1);                    
                     // TODO avoid next line, refresh pagination only
-                    setResponsePage(ItemListPage.class);                    
+                    setResponsePage(new ItemListPage(itemSearch));                    
                 }
             };
             prevOn.add(new Label("prevOn", "<<"));
@@ -127,10 +130,9 @@ public class ItemListPanel extends BasePanel {
                     String pageNumber = i + 1 + "";
                     Link pageOn = new Link("pageOn") {
                         public void onClick() {
-                            itemSearch.setCurrentPage(i);
-                            setCurrentItemSearch(itemSearch);
+                            itemSearch.setCurrentPage(i);                            
                             // TODO avoid next line, refresh pagination only
-                            setResponsePage(ItemListPage.class);
+                            setResponsePage(new ItemListPage(itemSearch));
                         }
                     };
                     pageOn.add(new Label("pageOn", pageNumber));
@@ -148,10 +150,9 @@ public class ItemListPanel extends BasePanel {
             
             Link nextOn = new Link("nextOn") {
                 public void onClick() {
-                    itemSearch.setCurrentPage(currentPage + 1);
-                    setCurrentItemSearch(itemSearch);
+                    itemSearch.setCurrentPage(currentPage + 1);                    
                     // TODO avoid next line, refresh pagination only
-                    setResponsePage(ItemListPage.class);                    
+                    setResponsePage(new ItemListPage(itemSearch));                    
                 }
             };
             nextOn.add(new Label("nextOn", ">>"));
@@ -203,7 +204,7 @@ public class ItemListPanel extends BasePanel {
                 final ColumnHeading ch = (ColumnHeading) listItem.getModelObject();
                 Link headingLink = new Link("heading") {
                     public void onClick() {
-                        doSort(ch.getName());
+                        doSort(ch.getNameText());
                     }
                 };
                 listItem.add(headingLink); 
@@ -244,59 +245,68 @@ public class ItemListPanel extends BasePanel {
                         if(ch.isField()) {
                             value = new Model(item.getCustomValue(ch.getField().getName()));
                         } else {
-                            // TODO optimize if-then for performance
-                            String name = ch.getName();
-                            if(name.equals(ColumnHeading.ID)) {
-                                String refId = item.getRefId();
-                                Fragment refIdFrag = new Fragment("column", "refId", ItemListPanel.this);
-                                listItem.add(refIdFrag);
-                                Link refIdLink = new BookmarkablePageLink("refId", ItemViewPage.class, new PageParameters("0=" + refId));                                
-                                refIdFrag.add(refIdLink);
-                                refIdLink.add(new Label("refId", refId));
-                                if (showHistory) {                                                                                                            
-                                    int index = ((History) item).getIndex();
-                                    if (index > 0) {
-                                        refIdFrag.add(new Label("index", " (" + index + ")"));
-                                    } else {
+                            switch(ch.getName()) {
+                                case ID:
+                                    String refId = item.getRefId();
+                                    Fragment refIdFrag = new Fragment("column", "refId", ItemListPanel.this);
+                                    listItem.add(refIdFrag);
+                                    Link refIdLink = new BookmarkablePageLink("refId", ItemViewPage.class, new PageParameters("0=" + refId));                                
+                                    refIdFrag.add(refIdLink);
+                                    refIdLink.add(new Label("refId", refId));
+                                    if (showHistory) {                                                                                                            
+                                        int index = ((History) item).getIndex();
+                                        if (index > 0) {
+                                            refIdFrag.add(new Label("index", " (" + index + ")"));
+                                        } else {
+                                            refIdFrag.add(new WebMarkupContainer("index").setVisible(false));
+                                        }
+                                    } else {                                                                           
                                         refIdFrag.add(new WebMarkupContainer("index").setVisible(false));
                                     }
-                                } else {                                                                           
-                                    refIdFrag.add(new WebMarkupContainer("index").setVisible(false));
-                                }                                                                
-                                return;
-                            } else if(name.equals(ColumnHeading.SUMMARY)) {
-                                value = new PropertyModel(item, "summary");
-                            } else if(name.equals(ColumnHeading.DETAIL)) {                                
-                                if(showHistory) {
-                                    Fragment detailFrag = new Fragment("column", "detail", ItemListPanel.this);
-                                    final History history = (History) item;
-                                    detailFrag.add(new AttachmentLinkPanel("attachment", history.getAttachment()));
-                                    if (history.getIndex() > 0) {
-                                        detailFrag.add(new Label("detail", new PropertyModel(history, "comment")));
+                                    // the first column ID is a special case, where we add a fragment.
+                                    // since we have already added a fragment return, instead of "break" 
+                                    // so avoid going to the new Label("column", value) after the switch case                                    
+                                    return;                                    
+                                case SUMMARY:
+                                    value = new PropertyModel(item, "summary");
+                                    break;
+                                case DETAIL:                                
+                                    if(showHistory) {
+                                        Fragment detailFrag = new Fragment("column", "detail", ItemListPanel.this);
+                                        final History history = (History) item;
+                                        detailFrag.add(new AttachmentLinkPanel("attachment", history.getAttachment()));
+                                        if (history.getIndex() > 0) {
+                                            detailFrag.add(new Label("detail", new PropertyModel(history, "comment")));
+                                        } else {
+                                            detailFrag.add(new Label("detail", new PropertyModel(history, "detail")));
+                                        }
+                                        listItem.add(detailFrag);
+                                        return;
+                                    } else {                                    
+                                        value = new PropertyModel(item, "detail");                                    
+                                    } 
+                                    break;
+                                case LOGGED_BY:
+                                    value = new PropertyModel(item, "loggedBy.name");
+                                    break;
+                                case STATUS:
+                                    value = new PropertyModel(item, "statusValue");
+                                    break;
+                                case ASSIGNED_TO:
+                                    value = new PropertyModel(item, "assignedTo.name");
+                                    break;
+                                case TIME_STAMP:
+                                    value = new Model(DateUtils.formatTimeStamp(item.getTimeStamp()));
+                                    break;
+                                case SPACE:
+                                    if(showHistory) {
+                                        value = new PropertyModel(item, "parent.space.name");
                                     } else {
-                                        detailFrag.add(new Label("detail", new PropertyModel(history, "detail")));
+                                        value = new PropertyModel(item, "space.name");
                                     }
-                                    listItem.add(detailFrag);
-                                    return;
-                                } else {                                    
-                                    value = new PropertyModel(item, "detail");                                    
-                                }                               
-                            } else if(name.equals(ColumnHeading.LOGGED_BY)) {
-                                value = new PropertyModel(item, "loggedBy.name");
-                            } else if(name.equals(ColumnHeading.STATUS)) {
-                                value = new PropertyModel(item, "statusValue");
-                            } else if(name.equals(ColumnHeading.ASSIGNED_TO)) {
-                                value = new PropertyModel(item, "assignedTo.name");
-                            } else if(name.equals(ColumnHeading.TIME_STAMP)) {
-                                value = new Model(DateUtils.formatTimeStamp(item.getTimeStamp()));
-                            } else if(name.equals(ColumnHeading.SPACE)) {
-                                if(showHistory) {
-                                    value = new PropertyModel(item, "parent.space.name");
-                                } else {
-                                    value = new PropertyModel(item, "space.name");
-                                }
-                            } else {
-                                throw new RuntimeException("Unexpected name: '" + name + "'");
+                                    break;
+                                default:
+                                    throw new RuntimeException("Unexpected name: '" + ch.getName() + "'");                                
                             }
                         }
                         listItem.add(new Label("column", value));

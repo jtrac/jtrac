@@ -46,6 +46,7 @@ import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.request.target.coding.IndexedParamUrlCodingStrategy;
+import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -198,8 +199,13 @@ public class JtracApplication extends WebApplication {
             mountBookmarkablePage("/login", LoginPage.class);
         }        
         mountBookmarkablePage("/logout", LogoutPage.class);
-        mountBookmarkablePage("/svn", SvnStatsPage.class);        
+        mountBookmarkablePage("/svn", SvnStatsPage.class);
+        mountBookmarkablePage("/options", OptionsPage.class);
         mountBookmarkablePage("/casError", CasLoginErrorPage.class);
+        mountBookmarkablePage("/itemForm", ItemFormPage.class);        
+        // bookmarkable url for search and search results
+        mount(new QueryStringUrlCodingStrategy("/search", ItemSearchFormPage.class));
+        mount(new QueryStringUrlCodingStrategy("/list", ItemListPage.class));        
         // bookmarkable url for viewing items
         mount(new IndexedParamUrlCodingStrategy("/item", ItemViewPage.class));        
     }   

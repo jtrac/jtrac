@@ -17,7 +17,6 @@
 package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
-import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -48,15 +47,7 @@ public class BasePanel extends Panel {
     
     protected Space getCurrentSpace() {
         return JtracSession.get().getCurrentSpace();
-    }      
-    
-    protected void setCurrentItemSearch(ItemSearch itemSearch) {
-        JtracSession.get().setItemSearch(itemSearch);
-    }      
-    
-    protected ItemSearch getCurrentItemSearch() {
-        return JtracSession.get().getItemSearch();
-    }      
+    }               
     
     protected String localize(String key) {
         return getLocalizer().getString(key, null);

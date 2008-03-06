@@ -17,6 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.State;
@@ -121,8 +122,9 @@ public class ItemFormPage extends BasePage {
                         public void onConfirm() {
                             // avoid lazy init problem
                             getJtrac().removeItem(getJtrac().loadItem(item.getId()));
-                            if(getCurrentItemSearch() != null) {
-                                setResponsePage(ItemListPage.class);
+                            ItemSearch itemSearch = JtracSession.get().getItemSearch();
+                            if(itemSearch != null) {
+                                setResponsePage(new ItemListPage(itemSearch));
                             } else {
                                 setResponsePage(DashboardPage.class);
                             }
@@ -197,7 +199,7 @@ public class ItemFormPage extends BasePage {
                 public void onClick() {
                     setResponsePage(ItemViewPage.class, new PageParameters("0=" + item.getRefId()));
                 }                
-            }.setVisible(editMode && getCurrentItemSearch() != null));            
+            }.setVisible(editMode && JtracSession.get().getItemSearch() != null));            
         }
         
         @Override
@@ -224,7 +226,7 @@ public class ItemFormPage extends BasePage {
                 getJtrac().storeItem(item, fileUpload);                
             }                   
             // on creating an item, clear any search filter (especially the related item) from session
-            setCurrentItemSearch(null);
+            JtracSession.get().setItemSearch(null);
             setResponsePage(ItemViewPage.class, new PageParameters("0=" + item.getRefId()));
         }
         

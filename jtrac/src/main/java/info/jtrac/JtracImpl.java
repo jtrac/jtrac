@@ -460,6 +460,10 @@ public class JtracImpl implements Jtrac {
     public List<User> findAllUsers() {
         return dao.findAllUsers();
     }
+    
+    public List<User> findUsersWhereIdIn(List<Long> ids) {
+        return dao.findUsersWhereIdIn(ids);
+    }
 
     public List<User> findUsersMatching(String searchText, String searchOn) {
         return dao.findUsersMatching(searchText, searchOn);
@@ -563,6 +567,10 @@ public class JtracImpl implements Jtrac {
         return dao.findAllSpaces();
     }
 
+    public List<Space> findSpacesWhereIdIn(List<Long> ids) {
+        return dao.findSpacesWhereIdIn(ids);
+    }
+    
     public List<Space> findSpacesWhereGuestAllowed() {
         return dao.findSpacesWhereGuestAllowed();
     }

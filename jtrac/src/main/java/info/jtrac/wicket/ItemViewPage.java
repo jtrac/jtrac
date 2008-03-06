@@ -51,8 +51,8 @@ public class ItemViewPage extends BasePage {
     }  
     
     private void addComponents(final Item item) {  
-        final ItemSearch itemSearch = getCurrentItemSearch();
-        add(new ItemRelatePanel("relate", true));        
+        final ItemSearch itemSearch = JtracSession.get().getItemSearch();
+        add(new ItemRelatePanel("relate", true, itemSearch));        
         Link link = new Link("back") {
             public void onClick() {
                 itemSearch.setSelectedItemId(item.getId());

@@ -58,7 +58,8 @@ public class DashboardRowPanel extends BasePanel {
         add(new Link("search") {
             public void onClick() {
                 setCurrentSpace(space);
-                setResponsePage(ItemSearchFormPage.class);
+                ItemSearch itemSearch = new ItemSearch(space);
+                setResponsePage(ItemSearchFormPage.class, itemSearch.getAsQueryString());
             }
         });        
         
@@ -81,8 +82,8 @@ public class DashboardRowPanel extends BasePanel {
                     setCurrentSpace(space);
                     ItemSearch itemSearch = new ItemSearch(space);
                     itemSearch.setLoggedBy(user);
-                    setCurrentItemSearch(itemSearch);
-                    setResponsePage(ItemListPage.class);                    
+                    // setCurrentItemSearch(itemSearch);
+                    setResponsePage(ItemListPage.class, itemSearch.getAsQueryString());                    
                 }
             }.add(new Label("loggedByMe", new PropertyModel(counts, "loggedByMe"))));        
 
@@ -92,8 +93,8 @@ public class DashboardRowPanel extends BasePanel {
                     setCurrentSpace(space);
                     ItemSearch itemSearch = new ItemSearch(space);
                     itemSearch.setAssignedTo(user);
-                    setCurrentItemSearch(itemSearch);
-                    setResponsePage(ItemListPage.class);                    
+                    // setCurrentItemSearch(itemSearch);
+                    setResponsePage(ItemListPage.class, itemSearch.getAsQueryString());                    
                 }
             }.add(new Label("assignedToMe", new PropertyModel(counts, "assignedToMe"))));
         } else {
@@ -105,8 +106,8 @@ public class DashboardRowPanel extends BasePanel {
             public void onClick() {
                 setCurrentSpace(space);
                 ItemSearch itemSearch = new ItemSearch(space); 
-                setCurrentItemSearch(itemSearch);
-                setResponsePage(ItemListPage.class);                
+                // setCurrentItemSearch(itemSearch);
+                setResponsePage(ItemListPage.class, itemSearch.getAsQueryString());                
             }
         }.add(new Label("total", new PropertyModel(counts, "total"))));
       
