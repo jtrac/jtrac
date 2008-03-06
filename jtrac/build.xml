@@ -121,7 +121,7 @@
         </zip>         
     </target>
     
-    <target name="dist-war-scp" depends="war">
+    <target name="dist-war-scp" depends="clean, dist-init, war">
         <input message="Please enter password:" addproperty="password"/>
         <scp file="target/jtrac.war" 
             todir="ptrthomas@shell.sourceforge.net:/home/groups/j/j-/j-trac/htdocs/files"
