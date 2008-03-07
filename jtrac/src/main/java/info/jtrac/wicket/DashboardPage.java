@@ -37,7 +37,8 @@ public class DashboardPage extends BasePage {
     
     public DashboardPage() {                
         
-        final User user = getPrincipal();        
+        final User user = getPrincipal();
+        setCurrentSpace(null);
         List<UserSpaceRole> spaceRoles = new ArrayList(user.getSpaceRoles());        
         
         WebMarkupContainer table = new WebMarkupContainer("table");
@@ -76,16 +77,14 @@ public class DashboardPage extends BasePage {
             if(spaceRoles.size() > 1) {
 
                 total.add(new Link("search") {
-                    public void onClick() {
-                        setCurrentSpace(null);
+                    public void onClick() {                        
                         setResponsePage(ItemSearchFormPage.class);
                     }
                 });
 
                 if(user.getId() > 0) {            
                     total.add(new Link("loggedByMe") {
-                        public void onClick() {
-                            setCurrentSpace(null);
+                        public void onClick() {                            
                             ItemSearch itemSearch = new ItemSearch(user);
                             itemSearch.setLoggedBy(user);                            
                             setResponsePage(ItemListPage.class, itemSearch.getAsQueryString());
@@ -93,8 +92,7 @@ public class DashboardPage extends BasePage {
                     }.add(new Label("loggedByMe", new PropertyModel(countsHolder, "totalLoggedByMe"))));
 
                     total.add(new Link("assignedToMe") {
-                        public void onClick() {
-                            setCurrentSpace(null);
+                        public void onClick() {                            
                             ItemSearch itemSearch = new ItemSearch(user);
                             itemSearch.setAssignedTo(user);                            
                             setResponsePage(ItemListPage.class, itemSearch.getAsQueryString());
@@ -106,8 +104,7 @@ public class DashboardPage extends BasePage {
                 }
 
                 total.add(new Link("total") {
-                    public void onClick() {
-                        setCurrentSpace(null);
+                    public void onClick() {                        
                         ItemSearch itemSearch = new ItemSearch(user);                        
                         setResponsePage(ItemListPage.class, itemSearch.getAsQueryString());
                     }

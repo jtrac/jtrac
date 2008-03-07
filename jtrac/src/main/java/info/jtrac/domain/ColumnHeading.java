@@ -644,16 +644,22 @@ public class ColumnHeading implements Serializable {
             filterCriteria.setValues(users);
         }        
     }  
-    
-    // TODO remove code duplication
+        
     private void setSpaceListFromQueryString() {
         if(queryStringTokens != null) {            
-            List<Space> spaces = JtracApplication.get().getJtrac().findSpacesWhereIdIn(getAsListOfLong());
+            List<Space> temp = JtracApplication.get().getJtrac().findSpacesWhereIdIn(getAsListOfLong());
+            // for security, prevent URL spoofing to show spaces not allocated to user
+            User u = JtracSession.get().getUser();
+            List<Space> spaces = new ArrayList<Space>();
+            for(Space s : temp) {
+                if(u.isAllocatedToSpace(s.getId())) {
+                    spaces.add(s);
+                }
+            }
             filterCriteria.setValues(spaces);
         }        
     }     
-    
-    // TODO remove code duplication
+        
     private void setStatusListFromQueryString() {
         if(queryStringTokens != null) {            
             List<Integer> statuses = new ArrayList<Integer>();

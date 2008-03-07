@@ -46,14 +46,14 @@ public class JtracSession extends WebSession {
 
     public void setUser(User user) {
         this.user = user;
-        if(user.getLocale() == null) {
+        if (user.getLocale() == null) {
             // for downward compatibility, may be null in old JTrac versions
             user.setLocale(JtracApplication.get().getJtrac().getDefaultLocale());
         }
         // flip locale only if different from existing
-        if(!getLocale().getDisplayName().equals(user.getLocale())) {
+        if (!getLocale().getDisplayName().equals(user.getLocale())) {
             setLocale(StringUtils.parseLocaleString(user.getLocale()));
-        }                   
+        }
     }
 
     /* reload user details from database */

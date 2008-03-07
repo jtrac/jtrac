@@ -16,6 +16,7 @@
 
 package info.jtrac.domain;
 
+import info.jtrac.exception.JtracSecurityException;
 import info.jtrac.wicket.JtracApplication;
 import info.jtrac.wicket.JtracSession;
 
@@ -67,14 +68,18 @@ public class ItemSearch implements Serializable {
         this.columnHeadings = ColumnHeading.getColumnHeadings(space);
     }      
     
-    public ItemSearch(PageParameters params) {
+    public ItemSearch(PageParameters params) throws JtracSecurityException {
         long spaceId = params.getLong("s", -1);
+        User u = JtracSession.get().getUser();
         if(spaceId > 0) {            
-            this.space = JtracApplication.get().getJtrac().loadSpace(spaceId);
-            this.columnHeadings = ColumnHeading.getColumnHeadings(space);
+            space = JtracApplication.get().getJtrac().loadSpace(spaceId);
+            if(!u.isAllocatedToSpace(space.getId())) {
+                throw new JtracSecurityException("User not allocated to space: " + space.getId() + " in URL: " + params);
+            }
+            columnHeadings = ColumnHeading.getColumnHeadings(space);
         } else {
-            this.user = JtracSession.get().getUser();
-            this.columnHeadings = ColumnHeading.getColumnHeadings();
+            this.user = u;
+            columnHeadings = ColumnHeading.getColumnHeadings();
         }        
         showHistory = params.getBoolean("showHistory");
         showDetail = params.getBoolean("showDetail");

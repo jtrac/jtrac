@@ -44,12 +44,7 @@ public class HeaderPanel extends BasePanel {
         
         add(new Link("dashboard") {
             public void onClick() {
-                // if only one space, that would remain "selected" across all navigation.
-                if(spaces.size() == 1) {
-                    JtracSession.get().setCurrentSpace(spaces.get(0));
-                } else {
-                    JtracSession.get().setCurrentSpace(null);
-                }                
+                setCurrentSpace(null);
                 setResponsePage(DashboardPage.class);
             }            
         });

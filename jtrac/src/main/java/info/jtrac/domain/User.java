@@ -100,6 +100,15 @@ public class User implements UserDetails, Serializable {
         return spaces;
     }    
     
+    public boolean isAllocatedToSpace(long spaceId) {
+        for (UserSpaceRole usr : userSpaceRoles) {
+            if (usr.getSpace() != null && usr.getSpace().getId() == spaceId) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public int getSpaceCount() {
         return getSpaces().size();
     }

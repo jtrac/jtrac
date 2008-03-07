@@ -17,22 +17,31 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.ItemSearch;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import info.jtrac.domain.Space;
 
 /**
  * item search form page
  */
-public class ItemSearchFormPage extends BasePage {        
-        
-    public ItemSearchFormPage(PageParameters params) {        
-        add(new ItemSearchFormPanel("panel", new ItemSearch(params)));
-        add(new WebMarkupContainer("relate").setVisible(false));
-    }       
+public class ItemSearchFormPage extends BasePage {
+            
+    public ItemSearchFormPage() {
+        ItemSearch itemSearch = null;
+        Space s = getCurrentSpace();
+        if(s == null) {
+            itemSearch = new ItemSearch(JtracSession.get().getUser());
+        } else {
+            itemSearch = new ItemSearch(s);
+        }
+        addComponents(itemSearch);
+    }
     
     public ItemSearchFormPage(ItemSearch itemSearch) {                        
-        add(new ItemSearchFormPanel("panel", itemSearch));        
-        add(new ItemRelatePanel("relate", false, itemSearch));
+        addComponents(itemSearch);
     }    
+    
+    private void addComponents(ItemSearch itemSearch) {
+        add(new ItemSearchFormPanel("panel", itemSearch));        
+        add(new ItemRelatePanel("relate", false, itemSearch));        
+    }
     
 }

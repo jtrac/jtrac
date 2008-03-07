@@ -17,15 +17,23 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.ItemSearch;
+import info.jtrac.exception.JtracSecurityException;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.RestartResponseAtInterceptPageException;
 
 /**
  * item list page
  */
 public class ItemListPage extends BasePage {        
         
-    public ItemListPage(PageParameters params) {                  
-        ItemSearch itemSearch = new ItemSearch(params);
+    public ItemListPage(PageParameters params) {
+        ItemSearch itemSearch = null;
+        try {
+            itemSearch = new ItemSearch(params);
+        } catch (JtracSecurityException jse) {
+            // TODO currently page is hardcoded to show slightly diff error message
+            throw new RestartResponseAtInterceptPageException(ErrorPage.class);
+        }
         JtracSession.get().setItemSearch(itemSearch);
         addComponents(itemSearch);
     }   
