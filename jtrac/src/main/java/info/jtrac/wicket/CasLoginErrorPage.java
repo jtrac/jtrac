@@ -27,7 +27,7 @@ import org.apache.wicket.markup.html.WebPage;
 public class CasLoginErrorPage extends WebPage {
     
     public CasLoginErrorPage() {
-        String casLogoutUrl = ((JtracApplication) getApplication()).getCasLogoutUrl();
+        String casLogoutUrl = JtracApplication.get().getCasLogoutUrl();
         add(new WebMarkupContainer("casLogin").add(new SimpleAttributeModifier("href", casLogoutUrl)));
     }
     

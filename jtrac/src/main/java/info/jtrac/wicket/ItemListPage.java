@@ -25,12 +25,18 @@ import org.apache.wicket.PageParameters;
 public class ItemListPage extends BasePage {        
         
     public ItemListPage(PageParameters params) {                  
-        this(new ItemSearch(params));
+        ItemSearch itemSearch = new ItemSearch(params);
+        JtracSession.get().setItemSearch(itemSearch);
+        addComponents(itemSearch);
     }   
     
     public ItemListPage(ItemSearch itemSearch) {
+        addComponents(itemSearch);
+    }
+    
+    private void addComponents(ItemSearch itemSearch) {        
         add(new ItemListPanel("panel", itemSearch));
-        add(new ItemRelatePanel("relate", false, itemSearch));         
+        add(new ItemRelatePanel("relate", false, itemSearch));        
     }
     
 }

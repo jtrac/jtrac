@@ -188,7 +188,7 @@ public class ItemViewFormPanel extends BasePanel {
         protected void onSubmit() {
             final FileUpload fileUpload = fileUploadField.getFileUpload();
             History history = (History) getModelObject();
-            User user = ((JtracSession) getSession()).getUser();
+            User user = JtracSession.get().getUser();
             history.setLoggedBy(user);
             getJtrac().storeHistoryForItem(itemId, history, fileUpload);
             setResponsePage(ItemViewPage.class, new PageParameters("0=" + history.getRefId()));

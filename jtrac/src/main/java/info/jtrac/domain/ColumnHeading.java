@@ -418,7 +418,7 @@ public class ColumnHeading implements Serializable {
                         }
                         setQueryStringFromValueList();                        
                     }
-                    setValueListFromQueryString();
+                    setStatusListFromQueryString();
                     break;
                 //==============================================================
                 case ASSIGNED_TO:
@@ -650,6 +650,17 @@ public class ColumnHeading implements Serializable {
         if(queryStringTokens != null) {            
             List<Space> spaces = JtracApplication.get().getJtrac().findSpacesWhereIdIn(getAsListOfLong());
             filterCriteria.setValues(spaces);
+        }        
+    }     
+    
+    // TODO remove code duplication
+    private void setStatusListFromQueryString() {
+        if(queryStringTokens != null) {            
+            List<Integer> statuses = new ArrayList<Integer>();
+            for(String s : queryStringTokens) {
+                statuses.add(new Integer(s));
+            }
+            filterCriteria.setValues(statuses);
         }        
     }     
     

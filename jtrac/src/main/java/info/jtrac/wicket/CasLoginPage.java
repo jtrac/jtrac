@@ -28,7 +28,7 @@ import org.apache.wicket.request.target.basic.RedirectRequestTarget;
 public class CasLoginPage extends WebPage {
     
     public CasLoginPage() {
-        String loginUrl = ((JtracApplication) getApplication()).getCasLoginUrl();
+        String loginUrl = JtracApplication.get().getCasLoginUrl();
         getRequestCycle().setRequestTarget(new RedirectRequestTarget(loginUrl));
     }
     

@@ -28,7 +28,7 @@ import org.apache.wicket.request.target.basic.RedirectRequestTarget;
 public class CasLogoutPage extends WebPage {
     
     public CasLogoutPage() {
-        String logoutUrl = ((JtracApplication) getApplication()).getCasLogoutUrl();
+        String logoutUrl = JtracApplication.get().getCasLogoutUrl();
         getRequestCycle().setRequestTarget(new RedirectRequestTarget(logoutUrl));
     }
     

@@ -16,7 +16,6 @@
 
 package info.jtrac.wicket;
 
-import info.jtrac.Jtrac;
 import info.jtrac.domain.User;
 import info.jtrac.util.WebUtils;
 import javax.servlet.http.Cookie;
@@ -40,11 +39,7 @@ import org.slf4j.LoggerFactory;
  */
 public class LoginPage extends WebPage {              
     
-    private static final Logger logger = LoggerFactory.getLogger(LoginPage.class);   
-    
-    private Jtrac getJtrac() {
-        return ((JtracApplication) getApplication()).getJtrac();
-    }        
+    private static final Logger logger = LoggerFactory.getLogger(LoginPage.class);            
     
     public LoginPage() {
         setVersioned(false);
@@ -127,13 +122,13 @@ public class LoginPage extends WebPage {
                 error(getLocalizer().getString("login.error", null));                
                 return;
             }            
-            User user = ((JtracApplication) getApplication()).authenticate(loginName, password);         
+            User user = JtracApplication.get().authenticate(loginName, password);         
             if (user == null) { // login failed                
                 error(getLocalizer().getString("login.error", null));                   
             } else { // login success
                 // remember me cookie
                 if(rememberMe) {                    
-                    Cookie cookie = new Cookie("jtrac", loginName + ":" + getJtrac().encodeClearText(password));                    
+                    Cookie cookie = new Cookie("jtrac", loginName + ":" + JtracApplication.get().getJtrac().encodeClearText(password));                    
                     cookie.setMaxAge(30 * 24 * 60 * 60); // 30 days in seconds 
                     String path = getWebRequestCycle().getWebRequest().getHttpServletRequest().getContextPath();
                     cookie.setPath(path);
@@ -141,7 +136,7 @@ public class LoginPage extends WebPage {
                     logger.debug("remember me requested, cookie added, " + WebUtils.getDebugStringForCookie(cookie));
                 }
                 // setup session with principal
-                ((JtracSession) getSession()).setUser(user);
+                JtracSession.get().setUser(user);
                 // proceed to bookmarkable page or default dashboard
                 if (!continueToOriginalDestination()) {
                     setResponsePage(DashboardPage.class);

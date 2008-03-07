@@ -125,8 +125,7 @@ public class ItemSearchFormPanel extends BasePanel {
                         form.error(localize("item_search_form.error.summary.invalid"));
                         return;
                     }
-                }
-                JtracSession.get().setItemSearch(itemSearch);
+                }                
                 setResponsePage(ItemListPage.class, itemSearch.getAsQueryString());
             }
         });

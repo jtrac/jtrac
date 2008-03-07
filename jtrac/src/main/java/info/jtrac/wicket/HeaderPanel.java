@@ -46,9 +46,9 @@ public class HeaderPanel extends BasePanel {
             public void onClick() {
                 // if only one space, that would remain "selected" across all navigation.
                 if(spaces.size() == 1) {
-                    ((JtracSession) getSession()).setCurrentSpace(spaces.get(0));
+                    JtracSession.get().setCurrentSpace(spaces.get(0));
                 } else {
-                    ((JtracSession) getSession()).setCurrentSpace(null);
+                    JtracSession.get().setCurrentSpace(null);
                 }                
                 setResponsePage(DashboardPage.class);
             }            
@@ -100,7 +100,7 @@ public class HeaderPanel extends BasePanel {
         } else {
             add(new Link("options") {
                 public void onClick() {
-                    ((JtracSession) getSession()).setCurrentSpace(null); 
+                    JtracSession.get().setCurrentSpace(null); 
                     setResponsePage(OptionsPage.class);
                 }            
             }); 
@@ -113,7 +113,7 @@ public class HeaderPanel extends BasePanel {
                     getSession().invalidate();
                     logger.debug("invalidated session and cleared cookie"); 
                     // is acegi - cas being used ?
-                    String logoutUrl = ((JtracApplication) getApplication()).getCasLogoutUrl();
+                    String logoutUrl = JtracApplication.get().getCasLogoutUrl();
                     if(logoutUrl != null) {
                         logger.debug("cas authentication being used, clearing security context and redirecting to cas logout page");
                         SecurityContextHolder.clearContext();                        

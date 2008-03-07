@@ -60,7 +60,7 @@ public class ItemViewPage extends BasePage {
                      // user had entered item id directly, go back to search page
                      setResponsePage(new ItemSearchFormPage(itemSearch));
                 } else {
-                     setResponsePage(ItemListPage.class);
+                     setResponsePage(new ItemListPage(itemSearch));
                 }
             }
         };

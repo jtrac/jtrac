@@ -210,7 +210,7 @@ public class ItemListPanel extends BasePanel {
                 listItem.add(headingLink); 
                 String label = ch.isField() ? ch.getLabel() : localize("item_list." + ch.getName());
                 headingLink.add(new Label("heading", label));
-                if (ch.getName().equals(itemSearch.getSortFieldName())) {
+                if (ch.getNameText().equals(itemSearch.getSortFieldName())) {
                     String order = itemSearch.isSortDescending() ? "order-down" : "order-up";
                     listItem.add(new SimpleAttributeModifier("class", order));
                 }
