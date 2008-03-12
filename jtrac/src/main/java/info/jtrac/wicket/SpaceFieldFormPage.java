@@ -104,31 +104,34 @@ public class SpaceFieldFormPage extends BasePage {
             Button delete = new Button("delete") {
                 @Override
                 public void onSubmit() {
-                    int affectedCount = getJtrac().loadCountOfRecordsHavingFieldNotNull(space, field);
-                    if (affectedCount > 0) {
-                        String heading = localize("space_field_delete.confirm") + " : " + field.getLabel() 
-                            + " [" + field.getName().getDescription() + " - " + field.getName().getText() + "]";
-                        String warning = localize("space_field_delete.line3");
-                        String line1 = localize("space_field_delete.line1");
-                        String line2 = localize("space_field_delete.line2", affectedCount + "");                        
-                        ConfirmPage confirm = new ConfirmPage(SpaceFieldFormPage.this, heading, warning, new String[] {line1, line2}) {
-                            public void onConfirm() {
-                                // database will be updated, if we don't do this
-                                // user may leave without committing metadata change                                
-                                getJtrac().bulkUpdateFieldToNull(space, field);
-                                space.getMetadata().removeField(field.getName().getText());       
-                                getJtrac().storeSpace(space);
-                                // synchronize metadata version or else if we save again we get Stale Object Exception
-                                space.setMetadata(getJtrac().loadMetadata(space.getMetadata().getId()));
-                                setResponsePage(new SpaceFieldListPage(space, null, previous));
-                            }                        
-                        };
-                        setResponsePage(confirm);
-                    } else {
+                    int affectedCount = 0;
+                    if(space.getId() > 0) {
+                        affectedCount = getJtrac().loadCountOfRecordsHavingFieldNotNull(space, field);
+                    }                    
+                    if(affectedCount == 0) {
                         // this is an unsaved space or there are no impacted items
                         space.getMetadata().removeField(field.getName().getText());
                         setResponsePage(new SpaceFieldListPage(space, null, previous));
-                    }
+                        return;
+                    }                    
+                    String heading = localize("space_field_delete.confirm") + " : " + field.getLabel() 
+                        + " [" + field.getName().getDescription() + " - " + field.getName().getText() + "]";
+                    String warning = localize("space_field_delete.line3");
+                    String line1 = localize("space_field_delete.line1");
+                    String line2 = localize("space_field_delete.line2", affectedCount + "");                        
+                    ConfirmPage confirm = new ConfirmPage(SpaceFieldFormPage.this, heading, warning, new String[] {line1, line2}) {
+                        public void onConfirm() {
+                            // database will be updated, if we don't do this
+                            // user may leave without committing metadata change                                
+                            getJtrac().bulkUpdateFieldToNull(space, field);
+                            space.getMetadata().removeField(field.getName().getText());       
+                            getJtrac().storeSpace(space);
+                            // synchronize metadata version or else if we save again we get Stale Object Exception
+                            space.setMetadata(getJtrac().loadMetadata(space.getMetadata().getId()));
+                            setResponsePage(new SpaceFieldListPage(space, null, previous));
+                        }                        
+                    };
+                    setResponsePage(confirm);
                 }                
             };
             delete.setDefaultFormProcessing(false);
