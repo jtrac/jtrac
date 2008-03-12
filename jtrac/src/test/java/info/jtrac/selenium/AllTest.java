@@ -44,7 +44,7 @@ public class AllTest extends SeleniumTestCase {
     public void testCreateNewItem() throws Exception {        
         selenium.clickAndWait("link=DASHBOARD");
         assertTextPresent("Test Space");        
-        selenium.clickAndWait("link=NEW");
+        selenium.clickAndWait("//img[@title='NEW']");
         assertTextPresent("Summary");        
         selenium.type("summary", "Test Summary");
         selenium.type("detail", "Test Detail");
