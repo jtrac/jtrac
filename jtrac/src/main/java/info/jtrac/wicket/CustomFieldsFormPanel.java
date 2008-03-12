@@ -44,21 +44,22 @@ public class CustomFieldsFormPanel extends BasePanel {
     public CustomFieldsFormPanel(String id, BoundCompoundPropertyModel model, Space space) {
         super(id);
         List<Field> fields = space.getMetadata().getFieldList();
-        addComponents(model, fields);
+        addComponents(model, fields, true);
     }    
     
     public CustomFieldsFormPanel(String id, BoundCompoundPropertyModel model, Item item, User user) {
         super(id);
         List<Field> fields = item.getEditableFieldList(user);
-        addComponents(model, fields);
+        addComponents(model, fields, false);
     }
     
-    private void addComponents(final BoundCompoundPropertyModel model, List<Field> fields) {
+    private void addComponents(final BoundCompoundPropertyModel model, List<Field> fields, final boolean isEditMode) {
         ListView listView = new ListView("fields", fields) {
-            protected void populateItem(ListItem listItem) {
+            protected void populateItem(ListItem listItem) {                
                 final Field field = (Field) listItem.getModelObject();
+                boolean isRequired = isEditMode ? false : !field.isOptional();             
                 listItem.add(new Label("label", field.getLabel()));
-                listItem.add(new Label("star", field.isOptional() ? "&nbsp;" : "*").setEscapeModelStrings(false));
+                listItem.add(new Label("star", isRequired ? "*" : "&nbsp;").setEscapeModelStrings(false));
                 if (field.getName().getType() < 4) { // drop down list                    
                     Fragment f = new Fragment("field", "dropDown", CustomFieldsFormPanel.this);
                     final Map<String, String> options = field.getOptions();                                
@@ -72,17 +73,15 @@ public class CustomFieldsFormPanel extends BasePanel {
                         };
                     });
                     choice.setNullValid(true);                                      
-                    choice.setLabel(new Model(field.getLabel()));                        
-                    if (!field.isOptional()) {
-                        choice.setRequired(true);
-                    }
+                    choice.setLabel(new Model(field.getLabel()));                                            
+                    choice.setRequired(isRequired);
                     WebMarkupContainer border = new WebMarkupContainer("border");
                     f.add(border);
                     border.add(new ErrorHighlighter(choice));
                     border.add(model.bind(choice, field.getName().getText()));                    
                     listItem.add(f);
-                } else if (field.getName().getType() == 6) { // date picker                        
-                    YuiCalendar calendar = new YuiCalendar("field", new PropertyModel(model, field.getName().getText()), !field.isOptional());
+                } else if (field.getName().getType() == 6) { // date picker                     
+                    YuiCalendar calendar = new YuiCalendar("field", new PropertyModel(model, field.getName().getText()), isRequired);
                     listItem.add(calendar);
                     calendar.setLabel(new Model(field.getLabel()));
                 } else {
@@ -91,10 +90,8 @@ public class CustomFieldsFormPanel extends BasePanel {
                     if (field.getName().getType() == 4) {
                         textField.setType(Double.class);
                     }
-                    textField.add(new ErrorHighlighter());
-                    if (!field.isOptional()) {
-                        textField.setRequired(true);
-                    }
+                    textField.add(new ErrorHighlighter());                    
+                    textField.setRequired(isRequired);                    
                     textField.setLabel(new Model(field.getLabel()));                        
                     f.add(model.bind(textField, field.getName().getText()));
                     listItem.add(f);
