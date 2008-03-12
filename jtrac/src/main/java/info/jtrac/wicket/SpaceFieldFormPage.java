@@ -225,6 +225,7 @@ public class SpaceFieldFormPage extends BasePage {
                 hide.add(listView);
                 optionField = new TextField("option");
                 // validation, does option already exist?
+                // TODO validate that at least one option exists
                 optionField.add(new AbstractValidator() {
                     protected void onValidate(IValidatable v) {
                         String s = (String) v.getValue();

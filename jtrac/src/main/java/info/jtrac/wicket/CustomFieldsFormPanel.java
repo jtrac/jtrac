@@ -62,8 +62,13 @@ public class CustomFieldsFormPanel extends BasePanel {
                 listItem.add(new Label("star", isRequired ? "*" : "&nbsp;").setEscapeModelStrings(false));
                 if (field.getName().getType() < 4) { // drop down list                    
                     Fragment f = new Fragment("field", "dropDown", CustomFieldsFormPanel.this);
-                    final Map<String, String> options = field.getOptions();                                
-                    List<String> keys = new ArrayList(options.keySet());  // bound value
+                    final Map<String, String> options = field.getOptions();
+                    List<String> keys; // bound value
+                    if(options != null) {
+                        keys = new ArrayList(options.keySet());  
+                    } else {
+                        keys = new ArrayList<String>();
+                    }                    
                     DropDownChoice choice = new DropDownChoice("field", keys, new IChoiceRenderer() {
                         public Object getDisplayValue(Object o) {
                             return options.get(o);
