@@ -17,7 +17,7 @@
         <menu name="JTrac">
             <item name="Home" href="index.html"/>
             <item name="Features" href="doc/html/features.html"/>
-            <item name="Screenshots" href="http://sourceforge.net/project/screenshots.php?group_id=162983&amp;ssid=75577"/>
+            <item name="Screenshots" href="http://sourceforge.net/project/screenshots.php?group_id=162983"/>
         <item name="Download" href="http://sourceforge.net/project/showfiles.php?group_id=162983&amp;package_id=184104"/>            
             <item name="Installation" href="doc/html/installation.html"/>
             <item name="Upgrading" href="doc/html/upgrading.html"/>            
