@@ -20,22 +20,27 @@ import info.jtrac.JtracDao;
 import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Config;
+import info.jtrac.domain.Counts;
+import info.jtrac.domain.CountsHolder;
 import info.jtrac.domain.Field;
+import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemItem;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.State;
 import info.jtrac.domain.User;
-import info.jtrac.domain.Counts;
-import info.jtrac.domain.CountsHolder;
-import info.jtrac.domain.History;
-import info.jtrac.domain.ItemItem;
 import info.jtrac.domain.UserSpaceRole;
-import java.util.Collection;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
+import org.apache.commons.collections.ComparatorUtils;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
@@ -87,9 +92,24 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     
     public List<Item> findItems(ItemSearch itemSearch) {
         int pageSize = itemSearch.getPageSize();
-        if (pageSize == -1) {
+        // TODO: if we are ordering by a custom column, we must load the whole
+        // list to do an in-memory sort. we need to find a better way        
+        Field.Name sortFieldName = Field.isValidName(itemSearch.getSortFieldName()) ? Field.convertToName(itemSearch.getSortFieldName()) : null;
+        // only trigger the in-memory sort for drop-down fields and when querying within a space
+        // UI currently does not allow you to sort by custom field when querying across spaces, but check again
+        boolean doInMemorySort = sortFieldName != null && sortFieldName.getType() < 4 && itemSearch.getSpace() != null;
+        if (pageSize == -1 || doInMemorySort) {
             List<Item> list = getHibernateTemplate().findByCriteria(itemSearch.getCriteria());
+            if(!list.isEmpty() && doInMemorySort) {
+                doInMemorySort(list, itemSearch);
+            }
             itemSearch.setResultCount(list.size());
+            if (pageSize != -1) {
+                // order-by was requested on custom field, so we loaded all results, but only need one page
+                int start = pageSize * itemSearch.getCurrentPage();
+                int end = Math.min(start + itemSearch.getPageSize(), list.size());
+                return list.subList(start, end);
+            }
             return list;
         } else {
             // pagination
@@ -103,6 +123,24 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         }
     }
     
+    private void doInMemorySort(List<Item> list, ItemSearch itemSearch) { 
+        // we should never come here if search is across multiple spaces
+        final Field field = itemSearch.getSpace().getMetadata().getField(itemSearch.getSortFieldName());        
+        final ArrayList<String> valueList = new ArrayList<String>(field.getOptions().keySet());
+        Comparator<Item> comp = new Comparator<Item>() {
+            public int compare(Item left, Item right) {
+                Object leftVal = left.getValue(field.getName());
+                String leftValString = leftVal == null ? null : leftVal.toString();
+                int leftInd = valueList.indexOf(leftValString);
+                Object rightVal = right.getValue(field.getName());
+                String rightValString = rightVal == null ? null : rightVal.toString();
+                int rightInd = valueList.indexOf(rightValString);
+                return leftInd - rightInd;
+            }
+        };
+        Collections.sort(list, itemSearch.isSortDescending() ? ComparatorUtils.reversedComparator(comp) : comp);
+    }
+
     public List<AbstractItem> findAllItems() {
         // return getHibernateTemplate().loadAll(AbstractItem.class);
         return (List<AbstractItem>) getHibernateTemplate().execute(new HibernateCallback() {
