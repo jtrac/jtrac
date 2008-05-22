@@ -30,6 +30,7 @@
             <item name="PDF" href="http://j-trac.sourceforge.net/doc/pdf/jtrac-doc.pdf"/>
         </menu>
         <menu name="Project">
+            <item name="News" href="http://sourceforge.net/news/?group_id=162983"/>
             <item name="License" href="license.html"/>
             <item name="Dependencies" href="dependencies.html"/>            
             <item name="Statistics" href="http://sourceforge.net/project/stats/?group_id=162983&amp;ugn=j-trac"/>

@@ -676,6 +676,9 @@ java -version
                     You may need to do things like apply executable permissions to the batch files on Linux, e.g. "chmod +x *.bat".  
                     And also - unless you have "root" permissions, you may face problems starting services on port 80 etc.
                 </para>
+                <para>
+                    You can also read this forum thread for more details: <ulink url="http://sourceforge.net/forum/forum.php?thread_id=1971135&amp;forum_id=552477">link</ulink>
+                </para>
             </sect2>
             <sect2 id="installation-quick-othernotes">
                 <title>Security and Backup</title>
