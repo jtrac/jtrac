@@ -16,7 +16,6 @@
 
 package info.jtrac.wicket;
 
-import info.jtrac.wicket.yui.*;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.target.basic.RedirectRequestTarget;
 
