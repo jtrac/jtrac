@@ -1149,6 +1149,15 @@ wrapper.exe -r etc/wrapper.conf
                 has details on how you can migrate data from HSQLDB to other databases such as MySQL.
             </para>
         </sect1>
+        <sect1 id="faq-lookandfeel">
+            <title>How can I customize the header, add a logo image or 're-brand' JTrac for my use?</title>
+            <para>
+                This is very easy and does not require any Java programming knowledge.  You just need to edit
+                a couple of HTML files and place any needed resources like images in the right place.  Have a 
+                look at the section on <link linkend="dev-lookandfeel">customizing look and feel</link> in
+                the developer guide.
+            </para>
+        </sect1>        
         <sect1 id="faq-morecustomfields">
             <title>Why does JTrac have a limit on custom fields?  I really need more!</title>
             <para>
@@ -1738,6 +1747,21 @@ mvn eclipse:eclipse -DdownloadSources=true
                 By now, you may have noticed that because of the 
                 <ulink url="http://ptrthomas.wordpress.com/2006/03/25/how-to-start-and-stop-tomcat-from-ant/">Ant script</ulink>, 
                 you don't even need a Tomcat or Jetty plugin in either NetBeans or Eclipse.
+            </para>            
+        </sect1>
+        <sect1 id="dev-lookandfeel">
+            <title>Customizing look and feel</title>                     
+            <para>
+                This is very easy and does not require any Java programming knowledge.  If you unzip the file called
+                "jtrac.war" the HTML files used by JTrac can be found in the folder: "jtrac/WEB-INF/classes/info/jtrac/wicket".
+                All you need to do is edit 'BasePage.html' which is the common template used by all web-pages
+                in the JTrac user-interface.  You may want to also edit 'LoginPage.html' and 'LogoutPage.html' as well.
+            </para>
+            <para>
+                You can place any additional images you need such as a company logo at the top level or in "jtrac/resources"
+                where all the other images used by JTrac are kept.  JTrac uses a single CSS file  called "jtrac.css" 
+                which is also in the "resources" folder.  You can easily customize the fonts, colors and icons used across
+                JTrac by just editing a single CSS file.                
             </para>            
         </sect1>
         <sect1 id="dev-translating">
