@@ -17,23 +17,31 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.ItemSearch;
+import info.jtrac.domain.Space;
+import info.jtrac.domain.User;
 import info.jtrac.exception.JtracSecurityException;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.RestartResponseAtInterceptPageException;
 
 /**
  * item list page
  */
 public class ItemListPage extends BasePage {        
         
-    public ItemListPage(PageParameters params) {
+    public ItemListPage(PageParameters params) throws JtracSecurityException {        
+        long spaceId = params.getLong("s", -1);
+        User user = JtracSession.get().getUser();
         ItemSearch itemSearch = null;
-        try {
-            itemSearch = new ItemSearch(params);
-        } catch (JtracSecurityException jse) {
-            // TODO currently page is hardcoded to show slightly diff error message
-            throw new RestartResponseAtInterceptPageException(ErrorPage.class);
+        if(spaceId > 0) {            
+            Space space = JtracApplication.get().getJtrac().loadSpace(spaceId);
+            if(!user.isAllocatedToSpace(space.getId())) {
+                throw new JtracSecurityException("User not allocated to space: " + space.getId() + " in URL: " + params);
+            }
+            itemSearch = new ItemSearch(space);
+            JtracSession.get().setCurrentSpace(space);
+        } else {
+            itemSearch = new ItemSearch(user);
         }
+        itemSearch.initFromPageParameters(params, JtracApplication.get().getJtrac());
         JtracSession.get().setItemSearch(itemSearch);
         addComponents(itemSearch);
     }   

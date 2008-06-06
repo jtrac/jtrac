@@ -16,6 +16,7 @@
 
 package info.jtrac.wicket;
 
+import info.jtrac.wicket.devmode.DebugHttpSessionStore;
 import info.jtrac.Jtrac;
 import info.jtrac.acegi.JtracCasProxyTicketValidator;
 import info.jtrac.domain.Space;
@@ -35,6 +36,7 @@ import org.apache.wicket.Application;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
@@ -48,6 +50,7 @@ import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.request.target.coding.IndexedParamUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
+import org.apache.wicket.session.ISessionStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -108,30 +111,25 @@ public class JtracApplication extends WebApplication {
             jtracCasProxyTicketValidator = (JtracCasProxyTicketValidator) applicationContext.getBean("casProxyTicketValidator");
             logger.info("casProxyTicketValidator retrieved from application context: " + jtracCasProxyTicketValidator);
         } catch(NoSuchBeanDefinitionException nsbde) {
+            logger.debug(nsbde.getMessage());
             logger.info("casProxyTicketValidator not found in application context, CAS single-sign-on is not being used");
-        }         
+        }        
         
         // delegate wicket i18n support to spring i18n
         getResourceSettings().addStringResourceLoader(new IStringResourceLoader() {
             public String loadStringResource(Class clazz, String key, Locale locale, String style) {
                 try {
-                    return applicationContext.getMessage(key, null, locale);
+                    return applicationContext.getMessage(key, null, locale == null ? Session.get().getLocale() : locale);
                 } catch(Exception e) {
-                    // have to return null so that wicket can try to resolve again
-                    // e.g. without prefixing component id etc.
-                    if(logger.isDebugEnabled()) {
-                        logger.debug("i18n failed for key: '" + key + "', Class: " 
-                                + clazz + ", Style: " + style + ", Exception: " + e);
-                    }
+                    // for performance, wicket expects null instead of throwing an exception
+                    // and wicket may try to re-resolve using prefixed variants of the key
                     return null;
                 }
             }
-            public String loadStringResource(Component component, String key) {              
-                Class clazz = component == null ? null : component.getClass();
-                Locale locale = component == null ? Session.get().getLocale() : component.getLocale();
-                String value = loadStringResource(clazz, key, locale, null);
+            public String loadStringResource(Component component, String key) {                
+                String value = loadStringResource(null, key, component == null ? null : component.getLocale(), null);
                 if(logger.isDebugEnabled() && value == null) {                
-                    logger.debug("loadStringResource returned null for: Component: " + component + ", key: '" + key + "'");
+                    logger.debug("i18n failed for key: '" + key + "', component: " + component);
                 }
                 return value;
             }            
@@ -207,15 +205,30 @@ public class JtracApplication extends WebApplication {
         mount(new QueryStringUrlCodingStrategy("/search", ItemSearchFormPage.class));
         mount(new QueryStringUrlCodingStrategy("/list", ItemListPage.class));        
         // bookmarkable url for viewing items
-        mount(new IndexedParamUrlCodingStrategy("/item", ItemViewPage.class));        
+        mount(new IndexedParamUrlCodingStrategy("/item", ItemViewPage.class));                     
     }   
     
     @Override
-    public Session newSession(Request request, Response response) {                   
+    public JtracSession newSession(Request request, Response response) {        
         return new JtracSession(request);        
     }
     
-    public Class getHomePage() {
+    @Override
+    protected ISessionStore newSessionStore() {
+        if(getConfigurationType().equalsIgnoreCase(DEVELOPMENT)) {
+            logger.warn("wicket development mode, using custom debug http session store");
+            // the default second level cache session store does not play well with
+            // our custom reloading filter so we use a custom session store
+            return new DebugHttpSessionStore(this);
+        } else {
+            ISessionStore sessionStore = super.newSessionStore();
+            logger.info("wicket production mode, using: " + sessionStore);
+            return sessionStore;
+        }
+        
+    }  
+    
+    public Class<? extends Page> getHomePage() {
         return DashboardPage.class;
     }    
     

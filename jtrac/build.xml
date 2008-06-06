@@ -392,12 +392,10 @@
         <replaceregexp file="target/jetty/etc/webdefault.xml">
             <regexp pattern="(&lt;param-name&gt;useFileMappedBuffer&lt;/param-name&gt;\n.*&lt;param-value&gt;)true(&lt;/param-value&gt;)"/>
             <substitution expression="\1false\2"/>
-        </replaceregexp>
-        <!--
+        </replaceregexp>        
         <replace file="target/${war.name}/WEB-INF/web.xml" 
             token="org.apache.wicket.protocol.http.WicketFilter" 
-            value="info.jtrac.wicket.JtracReloadingWicketFilter"/>
-        -->
+            value="info.jtrac.wicket.devmode.ReloadingWicketFilter"/>        
         <copy todir="target/${war.name}/WEB-INF" file="etc/log4j.properties" overwrite="true"/>            
     </target>
     
@@ -424,18 +422,18 @@
         <jetty-start arg1="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n" arg2="-Xdebug"/>
     </target> 
        
-    <target name="jetty-production-mode-init">        
+    <target name="jetty-set-production-mode">        
         <property name="production.mode" value="true"/>
     </target>     
     
     <!-- target for NetBeans Profiler on Windows -->
-    <target name="jetty-start-profile" depends="jetty-production-mode-init, jetty-setup" if="netbeans.home">
+    <target name="jetty-start-profile" depends="jetty-set-production-mode, jetty-setup" if="netbeans.home">
         <property name="nbprof.home" value="${netbeans.home}/../profiler2/lib"/>
         <property name="agent.path" value="${nbprof.home}/deployed/jdk15/windows/profilerinterface.dll=${nbprof.home},5140"/>        
         <jetty-start arg1="-agentpath:${agent.path}" arg2="-Xmx512m" wicketConfig=""/>
     </target>
     
-    <target name="jetty-start-deploymode" depends="jetty-production-mode-init, jetty-setup">
+    <target name="jetty-start-production-mode" depends="jetty-set-production-mode, jetty-setup">
         <jetty-start arg1="-Xmx512m" wicketConfig=""/>
     </target>
     

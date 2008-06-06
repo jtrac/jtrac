@@ -16,11 +16,11 @@
 
 package info.jtrac.domain;
 
+import info.jtrac.Jtrac;
+import info.jtrac.JtracDao;
 import info.jtrac.domain.FilterCriteria.Expression;
 import info.jtrac.util.DateUtils;
-import info.jtrac.wicket.JtracApplication;
 import info.jtrac.wicket.JtracCheckBoxMultipleChoice;
-import info.jtrac.wicket.JtracSession;
 import info.jtrac.wicket.yui.YuiCalendar;
 
 import static info.jtrac.domain.ColumnHeading.Name.*;
@@ -167,25 +167,40 @@ public class ColumnHeading implements Serializable {
     private String queryString;
     private boolean returnQueryString;
     private List<String> queryStringTokens;
+    private User user;
+    private Space space;
+    // TODO this is a really bad hack
+    private transient Jtrac jtrac;
+    private transient JtracDao jtracDao;
     
-    public List<Expression> getValidFilterExpressions() {             
-        doTheSwitchCase();                
+    public List<Expression> getValidFilterExpressions(Jtrac jtrac) {   
+        queryStringTokens = null;
+        this.jtrac = jtrac;
+        doTheSwitchCase();
+        this.jtrac = null;
         return validFilterExpressions;        
     }
     
-    public Fragment getFilterUiFragment(MarkupContainer c) {
+    public Fragment getFilterUiFragment(MarkupContainer c, User user, Space space, Jtrac jtrac) {
         this.markupContainer = c;
+        this.jtrac = jtrac;
+        this.user = user;
+        this.space = space;
         returnFragment = true;
         doTheSwitchCase();
+        this.jtrac = null;
         return fragment;
     }
     
-    public void addRestrictions(DetachedCriteria c) {        
+    public void addRestrictions(DetachedCriteria c, JtracDao jtracDao) {        
         this.criteria = c;
+        this.jtracDao = jtracDao;
         doTheSwitchCase();
+        this.jtracDao = null;
     }    
     
     public String getQueryString() {
+        returnFragment = false;
         returnQueryString = true;
         doTheSwitchCase();
         if(queryString == null) {
@@ -194,7 +209,8 @@ public class ColumnHeading implements Serializable {
         return filterCriteria.getExpression().getKey() + "_" + queryString;
     }
     
-    public void loadFromQueryString(String s) {
+    public void loadFromQueryString(String s, Jtrac jtrac) {
+        this.jtrac = jtrac;
         String [] tokens = s.split("_");
         filterCriteria.setExpression(FilterCriteria.convertToExpression(tokens[0]));
         queryStringTokens = new ArrayList<String>();
@@ -203,6 +219,7 @@ public class ColumnHeading implements Serializable {
             queryStringTokens.add(tokens[i]);
         }
         doTheSwitchCase();
+        this.jtrac = null;
     }
     
     // TODO use some elegant factory pattern here if possible    
@@ -221,7 +238,7 @@ public class ColumnHeading implements Serializable {
         Object value2 = filterCriteria.getValue2();
         Expression expression = filterCriteria.getExpression();
         boolean returnCriteria = criteria != null;
-        if(isField()) {
+        if(isField()) {            
             switch(field.getName().getType()) {
                 //==============================================================
                 case 1:
@@ -248,7 +265,7 @@ public class ColumnHeading implements Serializable {
                             for(Object o : values) {
                                 keys.add(new Integer(o.toString()));
                             }
-                            criteria.add(Restrictions.in(name.text, keys));
+                            criteria.add(Restrictions.in(getNameText(), keys));
                         }
                         setQueryStringFromValueList();                        
                     }
@@ -273,13 +290,13 @@ public class ColumnHeading implements Serializable {
                     if(filterHasValue()) {
                         if(returnCriteria) {
                             switch(expression) {
-                                case EQ: criteria.add(Restrictions.eq(name.text, value)); break;
+                                case EQ: criteria.add(Restrictions.eq(getNameText(), value)); break;
                                 case NOT_EQ: criteria.add(Restrictions.not(Restrictions.eq(name.text, value))); break;
-                                case GT: criteria.add(Restrictions.gt(name.text, value)); break;
-                                case LT: criteria.add(Restrictions.lt(name.text, value)); break;
+                                case GT: criteria.add(Restrictions.gt(getNameText(), value)); break;
+                                case LT: criteria.add(Restrictions.lt(getNameText(), value)); break;
                                 case BETWEEN: 
-                                    criteria.add(Restrictions.gt(name.text, value));
-                                    criteria.add(Restrictions.lt(name.text, value2));
+                                    criteria.add(Restrictions.gt(getNameText(), value));
+                                    criteria.add(Restrictions.lt(getNameText(), value2));
                                     break;
                                 default:                            
                             }
@@ -305,13 +322,13 @@ public class ColumnHeading implements Serializable {
                     if(filterHasValue()) {
                         if(returnCriteria) {
                             switch(expression) {
-                                case EQ: criteria.add(Restrictions.eq(name.text, value)); break;
-                                case NOT_EQ: criteria.add(Restrictions.not(Restrictions.eq(name.text, value))); break;
-                                case GT: criteria.add(Restrictions.gt(name.text, value)); break;
-                                case LT: criteria.add(Restrictions.lt(name.text, value)); break;
+                                case EQ: criteria.add(Restrictions.eq(getNameText(), value)); break;
+                                case NOT_EQ: criteria.add(Restrictions.not(Restrictions.eq(getNameText(), value))); break;
+                                case GT: criteria.add(Restrictions.gt(getNameText(), value)); break;
+                                case LT: criteria.add(Restrictions.lt(getNameText(), value)); break;
                                 case BETWEEN: 
-                                    criteria.add(Restrictions.gt(name.text, value));
-                                    criteria.add(Restrictions.lt(name.text, value2));
+                                    criteria.add(Restrictions.gt(getNameText(), value));
+                                    criteria.add(Restrictions.lt(getNameText(), value2));
                                     break;
                                 default:                            
                             }
@@ -332,7 +349,7 @@ public class ColumnHeading implements Serializable {
                     }
                     if(filterHasValue()) {
                         if(returnCriteria) {
-                            criteria.add(Restrictions.ilike(name.text, (String) value, MatchMode.ANYWHERE));
+                            criteria.add(Restrictions.ilike(getNameText(), (String) value, MatchMode.ANYWHERE));
                         }
                         setQueryStringFromValue(String.class);                        
                     }
@@ -342,7 +359,7 @@ public class ColumnHeading implements Serializable {
                 default:
                     throw new RuntimeException("Unknown Column Heading " + name);
             }        
-        } else {            
+        } else { // this is not a custom field but one of the "built-in" columns           
             switch(name) {
                 //==============================================================
                 case ID:
@@ -372,7 +389,7 @@ public class ColumnHeading implements Serializable {
                     }
                     if(filterHasValue()) {
                         if(returnCriteria) {
-                            criteria.add(Restrictions.ilike(name.text, (String) value, MatchMode.ANYWHERE));
+                            criteria.add(Restrictions.ilike(getNameText(), (String) value, MatchMode.ANYWHERE));
                         }
                         setQueryStringFromValue(String.class);                        
                     }
@@ -398,8 +415,9 @@ public class ColumnHeading implements Serializable {
                 case STATUS:
                     setValidFilterExpressions(IN);
                     if(returnFragment) {
-                        fragment = new Fragment("fragParent", "multiSelect", markupContainer);                    
-                        final Map<Integer, String> options = JtracSession.get().getCurrentSpace().getMetadata().getStates();
+                        fragment = new Fragment("fragParent", "multiSelect", markupContainer); 
+                        // status selectable only when context space is not null
+                        final Map<Integer, String> options = space.getMetadata().getStates();
                         options.remove(State.NEW);
                         JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", new ArrayList(options.keySet()), new IChoiceRenderer() {
                             public Object getDisplayValue(Object o) {
@@ -414,7 +432,7 @@ public class ColumnHeading implements Serializable {
                     }
                     if(filterHasValueList()) {
                         if(returnCriteria) {
-                            criteria.add(Restrictions.in(name.text, values));
+                            criteria.add(Restrictions.in(getNameText(), values));
                         }
                         setQueryStringFromValueList();                        
                     }
@@ -426,13 +444,11 @@ public class ColumnHeading implements Serializable {
                     setValidFilterExpressions(IN);
                     if(returnFragment) {
                         fragment = new Fragment("fragParent", "multiSelect", markupContainer);
-                        List<User> users = null;
-                        Space s = JtracSession.get().getCurrentSpace();
-                        if(s == null) {
-                            User u = JtracSession.get().getUser();
-                            users = JtracApplication.get().getJtrac().findUsersForUser(u);
+                        List<User> users = null;                        
+                        if(space == null) {                            
+                            users = jtrac.findUsersForUser(user);
                         } else {
-                            users = JtracApplication.get().getJtrac().findUsersForSpace(s.getId());
+                            users = jtrac.findUsersForSpace(space.getId());
                         }
                         JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", users, new IChoiceRenderer() {
                             public Object getDisplayValue(Object o) {
@@ -447,7 +463,7 @@ public class ColumnHeading implements Serializable {
                     }
                     if(filterHasValueList()) {
                         if(returnCriteria) {
-                            criteria.add(Restrictions.in(name.text, filterCriteria.getValues()));
+                            criteria.add(Restrictions.in(getNameText(), filterCriteria.getValues()));
                         }
                         setQueryStringFromUserList();                        
                     }
@@ -470,11 +486,11 @@ public class ColumnHeading implements Serializable {
                     if(filterHasValue()) {
                         if(returnCriteria) {
                             switch(expression) {
-                                case GT: criteria.add(Restrictions.gt(name.text, value)); break;
-                                case LT: criteria.add(Restrictions.lt(name.text, value)); break;
+                                case GT: criteria.add(Restrictions.gt(getNameText(), value)); break;
+                                case LT: criteria.add(Restrictions.lt(getNameText(), value)); break;
                                 case BETWEEN: 
-                                    criteria.add(Restrictions.gt(name.text, value));
-                                    criteria.add(Restrictions.lt(name.text, value2));
+                                    criteria.add(Restrictions.gt(getNameText(), value));
+                                    criteria.add(Restrictions.lt(getNameText(), value2));
                                     break;
                                 default:                            
                             }
@@ -488,7 +504,7 @@ public class ColumnHeading implements Serializable {
                     setValidFilterExpressions(IN);
                     if(returnFragment) {
                         fragment = new Fragment("fragParent", "multiSelect", markupContainer);
-                        List<Space> spaces = new ArrayList(JtracSession.get().getUser().getSpaces());
+                        List<Space> spaces = new ArrayList(user.getSpaces());
                         JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", spaces, new IChoiceRenderer() {
                             public Object getDisplayValue(Object o) {
                                 return ((Space) o).getName();
@@ -519,10 +535,6 @@ public class ColumnHeading implements Serializable {
             && filterCriteria.getValues().size() > 0) {
             return true;
         }
-        // hide unused fields on ui if the search screen is shown again
-        if(criteria != null) {
-            filterCriteria.setExpression(null);
-        }
         return false;        
     }
     
@@ -530,11 +542,7 @@ public class ColumnHeading implements Serializable {
         Object value = filterCriteria.getValue();
         if(filterCriteria.getExpression() != null && value != null && value.toString().trim().length() > 0) {
             return true;
-        }
-        // hide unused fields on ui if the search screen is shown again
-        if(criteria != null && name != ID) {
-            filterCriteria.setExpression(null);
-        }                                
+        }                               
         return false;
     }  
     
@@ -640,19 +648,28 @@ public class ColumnHeading implements Serializable {
     
     private void setUserListFromQueryString() {
         if(queryStringTokens != null) {            
-            List<User> users = JtracApplication.get().getJtrac().findUsersWhereIdIn(getAsListOfLong());
+            List<User> users = null;
+            if(jtrac != null) {
+                users = jtrac.findUsersWhereIdIn(getAsListOfLong());
+            } else {
+                users = jtracDao.findUsersWhereIdIn(getAsListOfLong());
+            }
             filterCriteria.setValues(users);
         }        
     }  
         
     private void setSpaceListFromQueryString() {
         if(queryStringTokens != null) {            
-            List<Space> temp = JtracApplication.get().getJtrac().findSpacesWhereIdIn(getAsListOfLong());
-            // for security, prevent URL spoofing to show spaces not allocated to user
-            User u = JtracSession.get().getUser();
+            List<Space> temp = null;
+            if(jtrac != null) {
+                temp = jtrac.findSpacesWhereIdIn(getAsListOfLong());
+            } else {
+                temp = jtracDao.findSpacesWhereIdIn(getAsListOfLong());
+            }
+            // for security, prevent URL spoofing to show spaces not allocated to user            
             List<Space> spaces = new ArrayList<Space>();
             for(Space s : temp) {
-                if(u.isAllocatedToSpace(s.getId())) {
+                if(user.isAllocatedToSpace(s.getId())) {
                     spaces.add(s);
                 }
             }

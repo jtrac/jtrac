@@ -16,10 +16,9 @@
 
 package info.jtrac.domain;
 
-import info.jtrac.exception.JtracSecurityException;
-import info.jtrac.wicket.JtracApplication;
-import info.jtrac.wicket.JtracSession;
 
+import info.jtrac.Jtrac;
+import info.jtrac.JtracDao;
 import static info.jtrac.domain.ColumnHeading.Name.*;
 
 import java.io.Serializable;
@@ -68,19 +67,7 @@ public class ItemSearch implements Serializable {
         this.columnHeadings = ColumnHeading.getColumnHeadings(space);
     }      
     
-    public ItemSearch(PageParameters params) throws JtracSecurityException {
-        long spaceId = params.getLong("s", -1);
-        User u = JtracSession.get().getUser();
-        if(spaceId > 0) {            
-            space = JtracApplication.get().getJtrac().loadSpace(spaceId);
-            if(!u.isAllocatedToSpace(space.getId())) {
-                throw new JtracSecurityException("User not allocated to space: " + space.getId() + " in URL: " + params);
-            }
-            columnHeadings = ColumnHeading.getColumnHeadings(space);
-        } else {
-            this.user = u;
-            columnHeadings = ColumnHeading.getColumnHeadings();
-        }        
+    public void initFromPageParameters(PageParameters params, Jtrac jtrac) {       
         showHistory = params.getBoolean("showHistory");
         showDetail = params.getBoolean("showDetail");
         pageSize = params.getInt("pageSize", 25);
@@ -90,7 +77,7 @@ public class ItemSearch implements Serializable {
             String name = o.toString();
             if(ColumnHeading.isValidFieldOrColumnName(name)) {
                 ColumnHeading ch = getColumnHeading(name);
-                ch.loadFromQueryString(params.getString(name));
+                ch.loadFromQueryString(params.getString(name), jtrac);
             }
         }
         relatingItemRefId = params.getString("relatingItemRefId", null);
@@ -132,8 +119,8 @@ public class ItemSearch implements Serializable {
     
     // have to do this two step process as "order by" clause conflicts with "count (*)" clause
     // so the DAO has to use getCriteriaForCount() separately
-    public DetachedCriteria getCriteria() {
-        DetachedCriteria criteria = getCriteriaForCount();
+    public DetachedCriteria getCriteria(JtracDao jtracDao) {
+        DetachedCriteria criteria = getCriteriaForCount(jtracDao);
         if (sortFieldName == null) { // can happen only for multi-space search
             sortFieldName = "id"; // effectively is a sort on created date
         }
@@ -180,7 +167,7 @@ public class ItemSearch implements Serializable {
         return criteria;
     }    
     
-    public DetachedCriteria getCriteriaForCount() {               
+    public DetachedCriteria getCriteriaForCount(JtracDao jtracDao) {               
         DetachedCriteria criteria = null;        
         if (showHistory) {
             criteria = DetachedCriteria.forClass(History.class);           
@@ -206,7 +193,7 @@ public class ItemSearch implements Serializable {
             }             
         }        
         for(ColumnHeading ch : columnHeadings) {
-            ch.addRestrictions(criteria);
+            ch.addRestrictions(criteria, jtracDao);
         }
         return criteria;
     }

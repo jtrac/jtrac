@@ -16,6 +16,7 @@
 
 package info.jtrac.wicket;
 
+import info.jtrac.Jtrac;
 import info.jtrac.domain.ColumnHeading;
 import info.jtrac.domain.FilterCriteria.Expression;
 import info.jtrac.domain.Item;
@@ -144,7 +145,7 @@ public class ItemSearchFormPanel extends BasePanel {
                 String label = ch.isField() ? ch.getLabel() : localize("item_list." + ch.getName());
                 listItem.add(new Label("columnName", label));
                 listItem.add(new CheckBox("visible", new PropertyModel(ch, "visible")));
-                List<Expression> validExpressions = ch.getValidFilterExpressions();
+                List<Expression> validExpressions = ch.getValidFilterExpressions(JtracApplication.get().getJtrac());
                 DropDownChoice expressionChoice = new IndicatingDropDownChoice("expression", validExpressions, new IChoiceRenderer() {
                     public Object getDisplayValue(Object o) {
                         String key = ((Expression) o).getKey();
@@ -154,19 +155,20 @@ public class ItemSearchFormPanel extends BasePanel {
                         return ((Expression) o).getKey();
                     }
                 });
+                // always pre-select "equal to" for filter criteria on ID
                 if(ch.getName() == ColumnHeading.Name.ID) {
                     ch.getFilterCriteria().setExpression(Expression.EQ);
+                }                                
+                if(expandAll && ch.getFilterCriteria().getExpression() == null) {                  
+                    ch.getFilterCriteria().setExpression(validExpressions.get(0));                                 
                 }
-                if(expandAll) {
-                    ch.getFilterCriteria().setExpression(validExpressions.get(0));                    
-                }
+                expressionChoice.setModel(new PropertyModel(ch.getFilterCriteria(), "expression"));
+                expressionChoice.setNullValid(true);
+                listItem.add(expressionChoice);
                 Component fragParent = null;
                 fragParent = getFilterUiFragment(ch);
                 fragParent.setOutputMarkupId(true);
-                listItem.add(fragParent);
-                expressionChoice.setModel(new PropertyModel(ch.getFilterCriteria(), "expression"));
-                expressionChoice.setNullValid(true);
-                listItem.add(expressionChoice);                
+                listItem.add(fragParent);                                       
                 expressionChoice.add(new AjaxFormComponentUpdatingBehavior("onChange") {
                     protected void onUpdate(AjaxRequestTarget target) {
                         if(!ch.getFilterCriteria().requiresUiFragmentUpdate()) {
@@ -179,7 +181,7 @@ public class ItemSearchFormPanel extends BasePanel {
                         target.appendJavascript("document.getElementById('" + fragment.getMarkupId() + "').focus()");
                     }
                 });
-            }
+            }            
         });
     }
         
@@ -187,7 +189,11 @@ public class ItemSearchFormPanel extends BasePanel {
         if(ch.getFilterCriteria().getExpression() == null) {
             return new WebMarkupContainer("fragParent");
         }        
-        return ch.getFilterUiFragment(this);
+        User user = JtracSession.get().getUser();
+        // the space could be null also
+        Space space = JtracSession.get().getCurrentSpace();
+        Jtrac jtrac = JtracApplication.get().getJtrac();
+        return ch.getFilterUiFragment(this, user, space, jtrac);
     }
 
 }
