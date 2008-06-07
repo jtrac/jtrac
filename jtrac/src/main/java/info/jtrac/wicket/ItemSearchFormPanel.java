@@ -145,7 +145,7 @@ public class ItemSearchFormPanel extends BasePanel {
                 String label = ch.isField() ? ch.getLabel() : localize("item_list." + ch.getName());
                 listItem.add(new Label("columnName", label));
                 listItem.add(new CheckBox("visible", new PropertyModel(ch, "visible")));
-                List<Expression> validExpressions = ch.getValidFilterExpressions(JtracApplication.get().getJtrac());
+                List<Expression> validExpressions = ch.getValidFilterExpressions();
                 DropDownChoice expressionChoice = new IndicatingDropDownChoice("expression", validExpressions, new IChoiceRenderer() {
                     public Object getDisplayValue(Object o) {
                         String key = ((Expression) o).getKey();

@@ -41,7 +41,7 @@ public class ItemListPage extends BasePage {
         } else {
             itemSearch = new ItemSearch(user);
         }
-        itemSearch.initFromPageParameters(params, JtracApplication.get().getJtrac());
+        itemSearch.initFromPageParameters(params, JtracSession.get().getUser(), JtracApplication.get().getJtrac());
         JtracSession.get().setItemSearch(itemSearch);
         addComponents(itemSearch);
     }   

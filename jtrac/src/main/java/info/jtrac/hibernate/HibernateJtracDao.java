@@ -99,7 +99,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         // UI currently does not allow you to sort by custom field when querying across spaces, but check again
         boolean doInMemorySort = sortFieldName != null && sortFieldName.getType() < 4 && itemSearch.getSpace() != null;
         if (pageSize == -1 || doInMemorySort) {
-            List<Item> list = getHibernateTemplate().findByCriteria(itemSearch.getCriteria(this));
+            List<Item> list = getHibernateTemplate().findByCriteria(itemSearch.getCriteria());
             if(!list.isEmpty() && doInMemorySort) {
                 doInMemorySort(list, itemSearch);
             }
@@ -114,8 +114,8 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         } else {
             // pagination
             int firstResult = pageSize * itemSearch.getCurrentPage();
-            List<Item> list = getHibernateTemplate().findByCriteria(itemSearch.getCriteria(this), firstResult, pageSize);
-            DetachedCriteria criteria = itemSearch.getCriteriaForCount(this);
+            List<Item> list = getHibernateTemplate().findByCriteria(itemSearch.getCriteria(), firstResult, pageSize);
+            DetachedCriteria criteria = itemSearch.getCriteriaForCount();
             criteria.setProjection(Projections.rowCount());
             Integer count = (Integer) getHibernateTemplate().findByCriteria(criteria).get(0);
             itemSearch.setResultCount(count);

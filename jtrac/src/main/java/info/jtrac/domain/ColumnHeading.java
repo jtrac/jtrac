@@ -17,7 +17,6 @@
 package info.jtrac.domain;
 
 import info.jtrac.Jtrac;
-import info.jtrac.JtracDao;
 import info.jtrac.domain.FilterCriteria.Expression;
 import info.jtrac.util.DateUtils;
 import info.jtrac.wicket.JtracCheckBoxMultipleChoice;
@@ -46,7 +45,7 @@ import org.hibernate.criterion.Restrictions;
  * used to render columns in the search results table
  * and also in the search filter screen
  */
-public class ColumnHeading implements Serializable {
+public class ColumnHeading implements Serializable {    
     
     private static final Map<String, Name> NAMES_MAP;
     
@@ -112,6 +111,7 @@ public class ColumnHeading implements Serializable {
     private Name name;    
     private String label;
     private boolean visible = true;
+    private Processor processor;
     
     private FilterCriteria filterCriteria = new FilterCriteria();             
     
@@ -119,12 +119,14 @@ public class ColumnHeading implements Serializable {
         this.name = name;    
         if(name == DETAIL || name == SPACE) {
             visible = false;
-        }        
+        }      
+        processor = getProcessor();
     }
     
     public ColumnHeading(Field field) {
         this.field = field;        
         this.label = field.getLabel();
+        processor = getProcessor();
     }           
     
     public boolean isField() {
@@ -156,205 +158,208 @@ public class ColumnHeading implements Serializable {
         list.add(new ColumnHeading(ASSIGNED_TO));
         list.add(new ColumnHeading(TIME_STAMP));        
         return list;        
-    }            
+    }                        
     
-    // global variables
-    private List<Expression> validFilterExpressions;
-    private Fragment fragment;    
-    private boolean returnFragment;        
-    private DetachedCriteria criteria;
-    private MarkupContainer markupContainer;
-    private String queryString;
-    private boolean returnQueryString;
-    private List<String> queryStringTokens;
-    private User user;
-    private Space space;
-    // TODO this is a really bad hack
-    private transient Jtrac jtrac;
-    private transient JtracDao jtracDao;
+    public List<Expression> getValidFilterExpressions() {
+        return processor.getValidFilterExpressions();
+    }
+        
+    public Fragment getFilterUiFragment(MarkupContainer container, User user, Space space, Jtrac jtrac) {
+        return processor.getFilterUiFragment(container, user, space, jtrac);        
+    } 
     
-    public List<Expression> getValidFilterExpressions(Jtrac jtrac) {   
-        queryStringTokens = null;
-        this.jtrac = jtrac;
-        doTheSwitchCase();
-        this.jtrac = null;
-        return validFilterExpressions;        
+    public void addRestrictions(DetachedCriteria criteria) {
+        processor.addRestrictions(criteria);
     }
     
-    public Fragment getFilterUiFragment(MarkupContainer c, User user, Space space, Jtrac jtrac) {
-        this.markupContainer = c;
-        this.jtrac = jtrac;
-        this.user = user;
-        this.space = space;
-        returnFragment = true;
-        doTheSwitchCase();
-        this.jtrac = null;
-        return fragment;
+    public String getAsQueryString() {
+        return processor.getAsQueryString();
     }
     
-    public void addRestrictions(DetachedCriteria c, JtracDao jtracDao) {        
-        this.criteria = c;
-        this.jtracDao = jtracDao;
-        doTheSwitchCase();
-        this.jtracDao = null;
+    public void loadFromQueryString(String s, User user, Jtrac jtrac) {
+        processor.loadFromQueryString(s, user, jtrac);
     }    
     
-    public String getQueryString() {
-        returnFragment = false;
-        returnQueryString = true;
-        doTheSwitchCase();
-        if(queryString == null) {
-            return null;
-        }
-        return filterCriteria.getExpression().getKey() + "_" + queryString;
-    }
-    
-    public void loadFromQueryString(String s, Jtrac jtrac) {
-        this.jtrac = jtrac;
-        String [] tokens = s.split("_");
-        filterCriteria.setExpression(FilterCriteria.convertToExpression(tokens[0]));
-        queryStringTokens = new ArrayList<String>();
-        // ignore first token, this has been parsed as Expression above
-        for(int i = 1; i < tokens.length; i++ ) {
-            queryStringTokens.add(tokens[i]);
-        }
-        doTheSwitchCase();
-        this.jtrac = null;
-    }
-    
-    // TODO use some elegant factory pattern here if possible    
-    // this routine is a massive if-then construct that has 5 responsibilities
-    // based on column type: (column in the search results table)
-    //  - return the possible expressions (equals, greater-than etc) to show on filter UI for selection
-    //  - return the wicket ui fragment that will be shown over ajax (based on selected expression)
-    //  - convert filter criteria into hibernate restrictions that will be used to query the database
-    //  - return a querystring representation of the filter criteria to create a bookmarkable url
-    //  - load a querystring representation and initialize filter critera when acting on a bookmarkable url
-    // putting all these things into one place, makes it easy to maintain, as each of these things
-    // are closely interdependent
-    private void doTheSwitchCase() {                                        
-        List values = filterCriteria.getValues();
-        Object value = filterCriteria.getValue();
-        Object value2 = filterCriteria.getValue2();
-        Expression expression = filterCriteria.getExpression();
-        boolean returnCriteria = criteria != null;
+    /**
+     * also see description below for the private getProcessor() method
+     */
+    private abstract class Processor implements Serializable {  
+        
+        /* return the possible expressions (equals, greater-than etc) to show on filter UI for selection */
+        abstract List<Expression> getValidFilterExpressions();
+        
+        /* return the wicket ui fragment that will be shown over ajax (based on selected expression) */
+        abstract Fragment getFilterUiFragment(MarkupContainer container, User user, Space space, Jtrac jtrac);
+        
+        /* get as hibernate restriction and append to passed in criteria that will be used to query the database */
+        abstract void addRestrictions(DetachedCriteria criteria);
+        
+        /* return a querystring representation of the filter criteria to create a bookmarkable url */
+        abstract String getAsQueryString();                
+        
+        /* load a querystring representation and initialize filter critera when acting on a bookmarkable url */
+        abstract void loadFromQueryString(String s, User user, Jtrac jtrac);     
+        
+    }    
+        
+    /**
+     * this routine is a massive if-then construct that acts as a factory for the
+     * right implementation of the responsibilities defined in the "Processor" class (above)
+     * based on the type of ColumnHeading - the right implementation will be returned.
+     * having everything in one place below, makes it easy to maintain, as the
+     * logic of each of the methods are closely interdependent for a given column type
+     * for e.g. the kind of hibernate criteria needed depends on what is made available on the UI
+     */
+    private Processor getProcessor() {                                              
         if(isField()) {            
             switch(field.getName().getType()) {
                 //==============================================================
                 case 1:
                 case 2:
-                case 3:                    
-                    setValidFilterExpressions(IN);                    
-                    if(returnFragment) {
-                        fragment = new Fragment("fragParent", "multiSelect", markupContainer);
-                        final Map<String, String> options = field.getOptions();
-                        JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", new ArrayList(options.keySet()), new IChoiceRenderer() {
-                            public Object getDisplayValue(Object o) {
-                                return options.get(o);
-                            }
-                            public String getIdValue(Object o, int i) {
-                                return o.toString();
-                            }
-                        });                        
-                        fragment.add(choice);
-                        choice.setModel(new PropertyModel(filterCriteria, "values"));                        
-                    }
-                    if(filterHasValueList()) {
-                        if(returnCriteria) {
-                            List<Integer> keys = new ArrayList<Integer>(values.size());
-                            for(Object o : values) {
-                                keys.add(new Integer(o.toString()));
-                            }
-                            criteria.add(Restrictions.in(getNameText(), keys));
+                case 3:                
+                    return new Processor() {                        
+                        List<Expression> getValidFilterExpressions() {
+                            return getAsList(IN);
+                        }                        
+                        Fragment getFilterUiFragment(MarkupContainer container, User user, Space space, Jtrac jtrac) {
+                            Fragment fragment = new Fragment("fragParent", "multiSelect", container);
+                            final Map<String, String> options = field.getOptions();
+                            JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", new ArrayList(options.keySet()), new IChoiceRenderer() {
+                                public Object getDisplayValue(Object o) {
+                                    return options.get(o);
+                                }
+                                public String getIdValue(Object o, int i) {
+                                    return o.toString();
+                                }
+                            });                        
+                            fragment.add(choice);
+                            choice.setModel(new PropertyModel(filterCriteria, "values"));
+                            return fragment;
                         }
-                        setQueryStringFromValueList();                        
-                    }
-                    setValueListFromQueryString();
-                    break; // drop down list
+                        void addRestrictions(DetachedCriteria criteria) {
+                            if(filterHasValueList()) {      
+                                List values = filterCriteria.getValues();
+                                List<Integer> keys = new ArrayList<Integer>(values.size());
+                                for(Object o : values) {
+                                    keys.add(new Integer(o.toString()));
+                                }
+                                criteria.add(Restrictions.in(getNameText(), keys));
+                            }
+                        }
+                        String getAsQueryString() {                            
+                            return getQueryStringFromValueList();                             
+                        }
+                        void loadFromQueryString(String s, User user, Jtrac jtrac) {
+                            setValueListFromQueryString(s);
+                        }                        
+                    };
                 //==============================================================
-                case 4: // decimal number                    
-                    setValidFilterExpressions(EQ, NOT_EQ, GT, LT, BETWEEN);
-                    if(returnFragment) {
-                        fragment = new Fragment("fragParent", "textField", markupContainer);
-                        TextField textField = new TextField("value", Double.class);
-                        textField.setModel(new PropertyModel(filterCriteria, "value"));
-                        fragment.add(textField);
-                        if(expression == BETWEEN) {
-                            TextField textField2 = new TextField("value2", Double.class);
-                            textField.setModel(new PropertyModel(filterCriteria, "value2"));
-                            fragment.add(textField2);                            
-                        } else {
-                            fragment.add(new WebMarkupContainer("value2").setVisible(false));
+                case 4: // decimal number  
+                    return new Processor() {                        
+                        List<Expression> getValidFilterExpressions() {
+                            return getAsList(EQ, NOT_EQ, GT, LT, BETWEEN);
+                        }                        
+                        Fragment getFilterUiFragment(MarkupContainer container, User user, Space space, Jtrac jtrac) {
+                            Fragment fragment = new Fragment("fragParent", "textField", container);
+                            TextField textField = new TextField("value", Double.class);
+                            textField.setModel(new PropertyModel(filterCriteria, "value"));
+                            fragment.add(textField);
+                            if(filterCriteria.getExpression() == BETWEEN) {
+                                TextField textField2 = new TextField("value2", Double.class);
+                                textField.setModel(new PropertyModel(filterCriteria, "value2"));
+                                fragment.add(textField2);                            
+                            } else {
+                                fragment.add(new WebMarkupContainer("value2").setVisible(false));
+                            }
+                            return fragment;
                         }
-                    }
-                    if(filterHasValue()) {
-                        if(returnCriteria) {
-                            switch(expression) {
-                                case EQ: criteria.add(Restrictions.eq(getNameText(), value)); break;
-                                case NOT_EQ: criteria.add(Restrictions.not(Restrictions.eq(name.text, value))); break;
-                                case GT: criteria.add(Restrictions.gt(getNameText(), value)); break;
-                                case LT: criteria.add(Restrictions.lt(getNameText(), value)); break;
-                                case BETWEEN: 
-                                    criteria.add(Restrictions.gt(getNameText(), value));
-                                    criteria.add(Restrictions.lt(getNameText(), value2));
-                                    break;
-                                default:                            
+                        void addRestrictions(DetachedCriteria criteria) {
+                            if(filterHasValue()) {
+                                Object value = filterCriteria.getValue();
+                                switch(filterCriteria.getExpression()) {
+                                    case EQ: criteria.add(Restrictions.eq(getNameText(), value)); break;
+                                    case NOT_EQ: criteria.add(Restrictions.not(Restrictions.eq(name.text, value))); break;
+                                    case GT: criteria.add(Restrictions.gt(getNameText(), value)); break;
+                                    case LT: criteria.add(Restrictions.lt(getNameText(), value)); break;
+                                    case BETWEEN: 
+                                        criteria.add(Restrictions.gt(getNameText(), value));
+                                        criteria.add(Restrictions.lt(getNameText(), filterCriteria.getValue2()));
+                                        break;
+                                    default:                            
+                                }                                
                             }
                         }
-                        setQueryStringFromValue(Double.class);                        
-                    } 
-                    setValueFromQueryString(Double.class);
-                    break;
+                        String getAsQueryString() {
+                            return getQueryStringFromValue(Double.class);
+                        }
+                        void loadFromQueryString(String s, User user, Jtrac jtrac) {
+                            setValueFromQueryString(s, Double.class);
+                        }
+                        
+                    };                    
                 //==============================================================
                 case 6: // date
-                    setValidFilterExpressions(EQ, NOT_EQ, GT, LT, BETWEEN);                    
-                    if(returnFragment) {
-                        fragment = new Fragment("fragParent", "dateField", markupContainer);                        
-                        YuiCalendar calendar = new YuiCalendar("value", new PropertyModel(filterCriteria, "value"), false);                                                
-                        fragment.add(calendar);
-                        if(filterCriteria.getExpression() == BETWEEN) {
-                            YuiCalendar calendar2 = new YuiCalendar("value2", new PropertyModel(filterCriteria, "value2"), false);                                                
-                            fragment.add(calendar2);                            
-                        } else {
-                            fragment.add(new WebMarkupContainer("value2").setVisible(false));
+                    return new Processor() {                        
+                        List<Expression> getValidFilterExpressions() {
+                            return getAsList(EQ, NOT_EQ, GT, LT, BETWEEN);
                         }
-                    }
-                    if(filterHasValue()) {
-                        if(returnCriteria) {
-                            switch(expression) {
-                                case EQ: criteria.add(Restrictions.eq(getNameText(), value)); break;
-                                case NOT_EQ: criteria.add(Restrictions.not(Restrictions.eq(getNameText(), value))); break;
-                                case GT: criteria.add(Restrictions.gt(getNameText(), value)); break;
-                                case LT: criteria.add(Restrictions.lt(getNameText(), value)); break;
-                                case BETWEEN: 
-                                    criteria.add(Restrictions.gt(getNameText(), value));
-                                    criteria.add(Restrictions.lt(getNameText(), value2));
-                                    break;
-                                default:                            
+                        Fragment getFilterUiFragment(MarkupContainer container, User user, Space space, Jtrac jtrac) {
+                            Fragment fragment = new Fragment("fragParent", "dateField", container);                        
+                            YuiCalendar calendar = new YuiCalendar("value", new PropertyModel(filterCriteria, "value"), false);                                                
+                            fragment.add(calendar);
+                            if(filterCriteria.getExpression() == BETWEEN) {
+                                YuiCalendar calendar2 = new YuiCalendar("value2", new PropertyModel(filterCriteria, "value2"), false);                                                
+                                fragment.add(calendar2);                            
+                            } else {
+                                fragment.add(new WebMarkupContainer("value2").setVisible(false));
+                            }     
+                            return fragment;
+                        }
+                        void addRestrictions(DetachedCriteria criteria) {
+                            if(filterHasValue()) {
+                                Object value = filterCriteria.getValue();
+                                switch(filterCriteria.getExpression()) {
+                                    case EQ: criteria.add(Restrictions.eq(getNameText(), value)); break;
+                                    case NOT_EQ: criteria.add(Restrictions.not(Restrictions.eq(getNameText(), value))); break;
+                                    case GT: criteria.add(Restrictions.gt(getNameText(), value)); break;
+                                    case LT: criteria.add(Restrictions.lt(getNameText(), value)); break;
+                                    case BETWEEN: 
+                                        criteria.add(Restrictions.gt(getNameText(), value));
+                                        criteria.add(Restrictions.lt(getNameText(), filterCriteria.getValue2()));
+                                        break;
+                                    default:                            
+                                }                                
                             }
                         }
-                        setQueryStringFromValue(Date.class);                        
-                    }
-                    setValueFromQueryString(Date.class);
-                    break;
-                //==============================================================
-                case 5: // free text                    
-                    setValidFilterExpressions(CONTAINS);                    
-                    if(returnFragment) {
-                        fragment = new Fragment("fragParent", "textField", markupContainer);
-                        TextField textField = new TextField("value", String.class);
-                        textField.setModel(new PropertyModel(filterCriteria, "value"));
-                        fragment.add(textField);
-                        fragment.add(new WebMarkupContainer("value2").setVisible(false));
-                    }
-                    if(filterHasValue()) {
-                        if(returnCriteria) {
-                            criteria.add(Restrictions.ilike(getNameText(), (String) value, MatchMode.ANYWHERE));
+                        String getAsQueryString() {
+                            return getQueryStringFromValue(Date.class);
                         }
-                        setQueryStringFromValue(String.class);                        
-                    }
-                    setValueFromQueryString(String.class);
-                    break;
+                        void loadFromQueryString(String s, User user, Jtrac jtrac) {
+                            setValueFromQueryString(s, Date.class);
+                        }                        
+                    };                  
+                //==============================================================
+                case 5: // free text 
+                    return new Processor() {
+                        List<Expression> getValidFilterExpressions() {
+                            return getAsList(CONTAINS);
+                        }
+                        Fragment getFilterUiFragment(MarkupContainer container, User user, Space space, Jtrac jtrac) {
+                            return getTextFieldFragment(container);
+                        }
+                        void addRestrictions(DetachedCriteria criteria) {
+                            if(filterHasValue()) {
+                                criteria.add(Restrictions.ilike(getNameText(), 
+                                        (String) filterCriteria.getValue(), MatchMode.ANYWHERE));
+                            }
+                        }
+                        String getAsQueryString() {
+                            return getQueryStringFromValue(String.class);
+                        }
+                        void loadFromQueryString(String s, User user, Jtrac jtrac) {
+                            setValueFromQueryString(s, String.class);
+                        }                        
+                    };                                      
                 //==============================================================
                 default:
                     throw new RuntimeException("Unknown Column Heading " + name);
@@ -363,170 +368,239 @@ public class ColumnHeading implements Serializable {
             switch(name) {
                 //==============================================================
                 case ID:
-                    setValidFilterExpressions(EQ);
-                    if(returnFragment) {
-                        fragment = new Fragment("fragParent", "textField", markupContainer);
-                            TextField textField = new TextField("value", String.class);
-                            textField.setModel(new PropertyModel(filterCriteria, "value"));
-                            fragment.add(textField);
-                            fragment.add(new WebMarkupContainer("value2").setVisible(false));
-                    }
-                    // should never come here for criteria: see ItemSearch#getRefId()
-                    if(filterHasValue()) {
-                        setQueryStringFromValue(String.class);                        
-                    }
-                    setValueFromQueryString(String.class);
-                    break;
-                //==============================================================
-                case SUMMARY:               
-                    setValidFilterExpressions(CONTAINS);                
-                    if(returnFragment) {
-                        fragment = new Fragment("fragParent", "textField", markupContainer);
-                            TextField textField = new TextField("value", String.class);
-                            textField.setModel(new PropertyModel(filterCriteria, "value"));
-                            fragment.add(textField);
-                            fragment.add(new WebMarkupContainer("value2").setVisible(false));
-                    }
-                    if(filterHasValue()) {
-                        if(returnCriteria) {
-                            criteria.add(Restrictions.ilike(getNameText(), (String) value, MatchMode.ANYWHERE));
+                    return new Processor() {
+                        List<Expression> getValidFilterExpressions() {
+                            return getAsList(EQ);
                         }
-                        setQueryStringFromValue(String.class);                        
-                    }
-                    setValueFromQueryString(String.class);
-                    break;
+                        Fragment getFilterUiFragment(MarkupContainer container, User user, Space space, Jtrac jtrac) {
+                            return getTextFieldFragment(container);
+                        }
+                        void addRestrictions(DetachedCriteria criteria) {   
+                            if(filterHasValue()) {
+                                // should never come here for criteria: see ItemSearch#getRefId()
+                                throw new RuntimeException("should not come here for 'id'");
+                            }
+                        }
+                        String getAsQueryString() {
+                            return getQueryStringFromValue(String.class);
+                        }
+                        void loadFromQueryString(String s, User user, Jtrac jtrac) {
+                            setValueFromQueryString(s, String.class);
+                        }                        
+                    };                                                            
+                //==============================================================
+                case SUMMARY:  
+                    return new Processor() {
+                        List<Expression> getValidFilterExpressions() {
+                            return getAsList(CONTAINS);
+                        }
+                        Fragment getFilterUiFragment(MarkupContainer container, User user, Space space, Jtrac jtrac) {
+                            return getTextFieldFragment(container);
+                        }
+                        void addRestrictions(DetachedCriteria criteria) {
+                            if(filterHasValue()) {
+                                criteria.add(Restrictions.ilike(getNameText(), (String) filterCriteria.getValue(), MatchMode.ANYWHERE));
+                            }
+                        }
+                        String getAsQueryString() {
+                            return getQueryStringFromValue(String.class);
+                        }
+                        void loadFromQueryString(String s, User user, Jtrac jtrac) {
+                            setValueFromQueryString(s, String.class);
+                        }
+                    };                               
                 //==============================================================
                 case DETAIL:
-                    setValidFilterExpressions(CONTAINS);
-                    if(returnFragment) {
-                        fragment = new Fragment("fragParent", "textField", markupContainer);
-                            TextField textField = new TextField("value", String.class);
-                            textField.setModel(new PropertyModel(filterCriteria, "value"));
-                            fragment.add(textField);
-                            fragment.add(new WebMarkupContainer("value2").setVisible(false));
-                    }
-                    // should never come here for criteria: see ItemSearch#getSearchText()
-                    if(filterHasValue()) {
-                        setQueryStringFromValue(String.class);                        
-                    }
-                    setValueFromQueryString(String.class);
-                    break;
+                    return new Processor() {
+                        List<Expression> getValidFilterExpressions() {
+                            return getAsList(CONTAINS);
+                        }
+                        Fragment getFilterUiFragment(MarkupContainer container, User user, Space space, Jtrac jtrac) {
+                            return getTextFieldFragment(container);
+                        }
+                        void addRestrictions(DetachedCriteria criteria) {
+                            if(filterHasValue()) {
+                                // should never come here for criteria: see ItemSearch#getSearchText()
+                                throw new RuntimeException("should not come here for 'detail'");
+                            }
+                        }
+                        String getAsQueryString() {
+                            return getQueryStringFromValue(String.class);
+                        }
+                        void loadFromQueryString(String s, User user, Jtrac jtrac) {
+                            setValueFromQueryString(s, String.class);
+                        }
+                    };
+
                 //==============================================================
                 case STATUS:
-                    setValidFilterExpressions(IN);
-                    if(returnFragment) {
-                        fragment = new Fragment("fragParent", "multiSelect", markupContainer); 
-                        // status selectable only when context space is not null
-                        final Map<Integer, String> options = space.getMetadata().getStates();
-                        options.remove(State.NEW);
-                        JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", new ArrayList(options.keySet()), new IChoiceRenderer() {
-                            public Object getDisplayValue(Object o) {
-                                return options.get(o);
-                            }
-                            public String getIdValue(Object o, int i) {
-                                return o.toString();
-                            }
-                        });                    
-                        fragment.add(choice);
-                        choice.setModel(new PropertyModel(filterCriteria, "values"));
-                    }
-                    if(filterHasValueList()) {
-                        if(returnCriteria) {
-                            criteria.add(Restrictions.in(getNameText(), values));
+                    return new Processor() {
+                        List<Expression> getValidFilterExpressions() {
+                            return getAsList(IN);
                         }
-                        setQueryStringFromValueList();                        
-                    }
-                    setStatusListFromQueryString();
-                    break;
+                        Fragment getFilterUiFragment(MarkupContainer container, User user, Space space, Jtrac jtrac) {
+                            Fragment fragment = new Fragment("fragParent", "multiSelect", container); 
+                            // status selectable only when context space is not null
+                            final Map<Integer, String> options = space.getMetadata().getStates();
+                            options.remove(State.NEW);
+                            JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", new ArrayList(options.keySet()), new IChoiceRenderer() {
+                                public Object getDisplayValue(Object o) {
+                                    return options.get(o);
+                                }
+                                public String getIdValue(Object o, int i) {
+                                    return o.toString();
+                                }
+                            });                    
+                            fragment.add(choice);
+                            choice.setModel(new PropertyModel(filterCriteria, "values"));   
+                            return fragment;
+                        }
+                        void addRestrictions(DetachedCriteria criteria) {
+                            if(filterHasValueList()) {
+                                criteria.add(Restrictions.in(getNameText(), filterCriteria.getValues()));
+                            }
+                        }
+                        String getAsQueryString() {
+                            return getQueryStringFromValueList(); 
+                        }
+                        void loadFromQueryString(String s, User user, Jtrac jtrac) {
+                            setStatusListFromQueryString(s);
+                        }
+                    };                    
                 //==============================================================
                 case ASSIGNED_TO:
-                case LOGGED_BY:                
-                    setValidFilterExpressions(IN);
-                    if(returnFragment) {
-                        fragment = new Fragment("fragParent", "multiSelect", markupContainer);
-                        List<User> users = null;                        
-                        if(space == null) {                            
-                            users = jtrac.findUsersForUser(user);
-                        } else {
-                            users = jtrac.findUsersForSpace(space.getId());
+                case LOGGED_BY:           
+                    return new Processor() {                        
+                        List<Expression> getValidFilterExpressions() {
+                            return getAsList(IN);
                         }
-                        JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", users, new IChoiceRenderer() {
-                            public Object getDisplayValue(Object o) {
-                                return ((User) o).getName();
+                        Fragment getFilterUiFragment(MarkupContainer container, User user, Space space, Jtrac jtrac) {
+                            Fragment fragment = new Fragment("fragParent", "multiSelect", container);
+                            List<User> users = null;                        
+                            if(space == null) {                            
+                                users = jtrac.findUsersForUser(user);
+                            } else {
+                                users = jtrac.findUsersForSpace(space.getId());
                             }
-                            public String getIdValue(Object o, int i) {
-                                return ((User) o).getId() + "";
+                            JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", users, new IChoiceRenderer() {
+                                public Object getDisplayValue(Object o) {
+                                    return ((User) o).getName();
+                                }
+                                public String getIdValue(Object o, int i) {
+                                    return ((User) o).getId() + "";
+                                }
+                            });
+                            fragment.add(choice);
+                            choice.setModel(new PropertyModel(filterCriteria, "values"));  
+                            return fragment;
+                        }                                                    
+                        void addRestrictions(DetachedCriteria criteria) {
+                            if(filterHasValueList()) {
+                                criteria.add(Restrictions.in(getNameText(), filterCriteria.getValues()));
                             }
-                        });
-                        fragment.add(choice);
-                        choice.setModel(new PropertyModel(filterCriteria, "values"));
-                    }
-                    if(filterHasValueList()) {
-                        if(returnCriteria) {
-                            criteria.add(Restrictions.in(getNameText(), filterCriteria.getValues()));
                         }
-                        setQueryStringFromUserList();                        
-                    }
-                    setUserListFromQueryString();
-                    break;
+                        String getAsQueryString() {
+                            return getQueryStringFromUserList();
+                        }
+                        void loadFromQueryString(String s, User user, Jtrac jtrac) {
+                            setUserListFromQueryString(s, jtrac);
+                        }                        
+                    };                    
                 //==============================================================
                 case TIME_STAMP:
-                    setValidFilterExpressions(BETWEEN, GT, LT);
-                    if(returnFragment) {
-                        fragment = new Fragment("fragParent", "dateField", markupContainer);                    
-                        YuiCalendar calendar = new YuiCalendar("value", new PropertyModel(filterCriteria, "value"), false);                    
-                        fragment.add(calendar);
-                        if(expression == BETWEEN) {
-                            YuiCalendar calendar2 = new YuiCalendar("value2", new PropertyModel(filterCriteria, "value2"), false);                                                
-                            fragment.add(calendar2);                            
-                        }  else {
-                            fragment.add(new WebMarkupContainer("value2").setVisible(false));
-                        }                   
-                    }
-                    if(filterHasValue()) {
-                        if(returnCriteria) {
-                            switch(expression) {
-                                case GT: criteria.add(Restrictions.gt(getNameText(), value)); break;
-                                case LT: criteria.add(Restrictions.lt(getNameText(), value)); break;
-                                case BETWEEN: 
-                                    criteria.add(Restrictions.gt(getNameText(), value));
-                                    criteria.add(Restrictions.lt(getNameText(), value2));
-                                    break;
-                                default:                            
+                    return new Processor() {
+                        List<Expression> getValidFilterExpressions() {
+                            return getAsList(BETWEEN, GT, LT);
+                        }
+                        Fragment getFilterUiFragment(MarkupContainer container, User user, Space space, Jtrac jtrac) {
+                            Fragment fragment = new Fragment("fragParent", "dateField", container);                    
+                            YuiCalendar calendar = new YuiCalendar("value", new PropertyModel(filterCriteria, "value"), false);                    
+                            fragment.add(calendar);
+                            if(filterCriteria.getExpression() == BETWEEN) {
+                                YuiCalendar calendar2 = new YuiCalendar("value2", new PropertyModel(filterCriteria, "value2"), false);                                                
+                                fragment.add(calendar2);                            
+                            }  else {
+                                fragment.add(new WebMarkupContainer("value2").setVisible(false));
+                            }              
+                            return fragment;
+                        }
+                        void addRestrictions(DetachedCriteria criteria) {
+                            if(filterHasValue()) {
+                                Object value = filterCriteria.getValue();
+                                switch(filterCriteria.getExpression()) {
+                                    case GT: criteria.add(Restrictions.gt(getNameText(), value)); break;
+                                    case LT: criteria.add(Restrictions.lt(getNameText(), value)); break;
+                                    case BETWEEN: 
+                                        criteria.add(Restrictions.gt(getNameText(), value));
+                                        criteria.add(Restrictions.lt(getNameText(), filterCriteria.getValue2()));
+                                        break;
+                                    default:                            
+                                }                                
                             }
                         }
-                        setQueryStringFromValue(Date.class);                        
-                    }
-                    setValueFromQueryString(Date.class);
-                    break;
+                        String getAsQueryString() {
+                            return getQueryStringFromValue(Date.class);  
+                        }
+                        void loadFromQueryString(String s, User user, Jtrac jtrac) {
+                            setValueFromQueryString(s, Date.class);
+                        }
+                    };
                 //==============================================================
                 case SPACE:
-                    setValidFilterExpressions(IN);
-                    if(returnFragment) {
-                        fragment = new Fragment("fragParent", "multiSelect", markupContainer);
-                        List<Space> spaces = new ArrayList(user.getSpaces());
-                        JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", spaces, new IChoiceRenderer() {
-                            public Object getDisplayValue(Object o) {
-                                return ((Space) o).getName();
+                    return new Processor() {
+                        List<Expression> getValidFilterExpressions() {
+                            return getAsList(IN);
+                        }
+                        Fragment getFilterUiFragment(MarkupContainer container, User user, Space space, Jtrac jtrac) {
+                            Fragment fragment = new Fragment("fragParent", "multiSelect", container);
+                            List<Space> spaces = new ArrayList(user.getSpaces());
+                            JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", spaces, new IChoiceRenderer() {
+                                public Object getDisplayValue(Object o) {
+                                    return ((Space) o).getName();
+                                }
+                                public String getIdValue(Object o, int i) {
+                                    return ((Space) o).getId() + "";
+                                }
+                            });
+                            fragment.add(choice);
+                            choice.setModel(new PropertyModel(filterCriteria, "values"));  
+                            return fragment;
+                        }
+                        void addRestrictions(DetachedCriteria criteria) {
+                            if(filterHasValueList()) {
+                                // should never come here for criteria: see ItemSearch#getSelectedSpaces()
+                                throw new RuntimeException("should not come here for 'space'");
                             }
-                            public String getIdValue(Object o, int i) {
-                                return ((Space) o).getId() + "";
-                            }
-                        });
-                        fragment.add(choice);
-                        choice.setModel(new PropertyModel(filterCriteria, "values"));
-                    }
-                    // should never come here for criteria: see ItemSearch#getSelectedSpaces()
-                    if(filterHasValueList()) {
-                        setQueryStringFromSpaceList();                        
-                    }
-                    setSpaceListFromQueryString();
-                    break;
+                        }
+                        String getAsQueryString() {
+                            return getQueryStringFromSpaceList();
+                        }
+                        void loadFromQueryString(String s, User user, Jtrac jtrac) {
+                            setSpaceListFromQueryString(s, user, jtrac);
+                        }                        
+                    };
                 //==============================================================
                 default:
                     throw new RuntimeException("Unknown Column Heading " + name);   
             }
+        }        
+    }
+    
+    private List<Expression> getAsList(Expression... expressions) {
+        List<Expression> list = new ArrayList<Expression>();               
+        for(Expression e : expressions) {
+            list.add(e);
         }
+        return list;
+    }        
+    
+    private Fragment getTextFieldFragment(MarkupContainer container) {
+        Fragment fragment = new Fragment("fragParent", "textField", container);
+        TextField textField = new TextField("value", String.class);
+        textField.setModel(new PropertyModel(filterCriteria, "value"));
+        fragment.add(textField);
+        fragment.add(new WebMarkupContainer("value2").setVisible(false));       
+        return fragment;
     }
     
     private boolean filterHasValueList() {        
@@ -546,17 +620,14 @@ public class ColumnHeading implements Serializable {
         return false;
     }  
     
-    private void setValidFilterExpressions(Expression... expressions) {
-        validFilterExpressions = new ArrayList<Expression>();               
-        for(Expression e : expressions) {
-            validFilterExpressions.add(e);
-        }
+    private String prependExpression(String s) {
+        return filterCriteria.getExpression().getKey() + "_" + s;
     }
     
-    private void setQueryStringFromValueList() {
-        if(!returnQueryString) {
-            return;
-        }
+    private String getQueryStringFromValueList() {
+        if(!filterHasValueList()) {
+            return null;
+        }        
         String temp = "";
         for(Object o : filterCriteria.getValues()) {
             if(temp.length() > 0) {
@@ -564,14 +635,14 @@ public class ColumnHeading implements Serializable {
             }
             temp = temp + o;
         }
-        queryString = temp;        
+        return prependExpression(temp);       
     }
     
-    private void setQueryStringFromValue(Class clazz) {
-        if(!returnQueryString) {
-            return;
-        }      
-        String temp = "";
+    private String getQueryStringFromValue(Class clazz) {    
+        if(!filterHasValue()) {
+            return null;
+        }        
+        String temp = "";        
         if(clazz.equals(Date.class)) {
             temp = DateUtils.format((Date) filterCriteria.getValue());
             if(filterCriteria.getValue2() != null) {
@@ -583,14 +654,14 @@ public class ColumnHeading implements Serializable {
                 temp = temp + "_" + filterCriteria.getValue2();
             }
         }
-        queryString = temp;
+        return prependExpression(temp);
     }
     
     // TODO refactor code duplication
-    private void setQueryStringFromUserList() {
-        if(!returnQueryString) {
-            return;
-        }
+    private String getQueryStringFromUserList() {
+        if(!filterHasValueList()) {
+            return null;
+        }          
         String temp = "";
         for(User u : (List<User>) filterCriteria.getValues()) {
             if(temp.length() > 0) {
@@ -598,14 +669,14 @@ public class ColumnHeading implements Serializable {
             }
             temp = temp + u.getId();
         }
-        queryString = temp;        
+        return prependExpression(temp);        
     }    
     
     // TODO refactor code duplication
-    private void setQueryStringFromSpaceList() {
-        if(!returnQueryString) {
-            return;
-        }
+    private String getQueryStringFromSpaceList() {
+        if(!filterHasValueList()) {
+            return null;
+        }          
         String temp = "";
         for(Space s : (List<Space>) filterCriteria.getValues()) {
             if(temp.length() > 0) {
@@ -613,83 +684,79 @@ public class ColumnHeading implements Serializable {
             }
             temp = temp + s.getId();
         }
-        queryString = temp;        
+        return prependExpression(temp);        
     }    
     
-    private void setValueListFromQueryString() {
-        if(queryStringTokens != null) {            
-            filterCriteria.setValues(queryStringTokens);
-        }        
+    private List<String> setExpressionAndGetRemainingTokens(String s) {
+        String [] tokens = s.split("_");
+        filterCriteria.setExpression(FilterCriteria.convertToExpression(tokens[0]));
+        List<String> remainingTokens = new ArrayList<String>();
+        // ignore first token, this has been parsed as Expression above
+        for(int i = 1; i < tokens.length; i++ ) {
+            remainingTokens.add(tokens[i]);    
+        }
+        return remainingTokens;
+    }     
+    
+    private void setValueListFromQueryString(String raw) {        
+        filterCriteria.setValues(setExpressionAndGetRemainingTokens(raw));        
     }
     
     // TODO refactor with more methods in filtercriteria
-    private void setValueFromQueryString(Class clazz) {
-        if(queryStringTokens != null) { 
-            String v1 = queryStringTokens.get(0);
-            String v2 = queryStringTokens.size() > 1 ? queryStringTokens.get(1) : null;            
-            if(clazz.equals(Double.class)) {
-                filterCriteria.setValue(new Double(v1));
-                if(v2 != null) {
-                    filterCriteria.setValue2(new Double(v2));
-                }
-            } else if(clazz.equals(Date.class)) {
-                filterCriteria.setValue(DateUtils.convert(v1));
-                if(v2 != null) {
-                    filterCriteria.setValue2(DateUtils.convert(v2));
-                }                 
-            } else { // String
-                filterCriteria.setValue(v1);
-                if(v2 != null) {
-                    filterCriteria.setValue2(v2);
-                }                
-            }            
+    private void setValueFromQueryString(String raw, Class clazz) {        
+        List<String> tokens = setExpressionAndGetRemainingTokens(raw);
+        String v1 = tokens.get(0);
+        String v2 = tokens.size() > 1 ? tokens.get(1) : null;            
+        if(clazz.equals(Double.class)) {
+            filterCriteria.setValue(new Double(v1));
+            if(v2 != null) {
+                filterCriteria.setValue2(new Double(v2));
+            }
+        } else if(clazz.equals(Date.class)) {
+            filterCriteria.setValue(DateUtils.convert(v1));
+            if(v2 != null) {
+                filterCriteria.setValue2(DateUtils.convert(v2));
+            }                 
+        } else { // String
+            filterCriteria.setValue(v1);
+            if(v2 != null) {
+                filterCriteria.setValue2(v2);
+            }                
         }
+        
     }
     
-    private void setUserListFromQueryString() {
-        if(queryStringTokens != null) {            
-            List<User> users = null;
-            if(jtrac != null) {
-                users = jtrac.findUsersWhereIdIn(getAsListOfLong());
-            } else {
-                users = jtracDao.findUsersWhereIdIn(getAsListOfLong());
-            }
-            filterCriteria.setValues(users);
-        }        
+    private void setUserListFromQueryString(String raw, Jtrac jtrac) {
+        List<String> tokens = setExpressionAndGetRemainingTokens(raw);                    
+        List<User> users = jtrac.findUsersWhereIdIn(getAsListOfLong(tokens));
+        filterCriteria.setValues(users);        
     }  
         
-    private void setSpaceListFromQueryString() {
-        if(queryStringTokens != null) {            
-            List<Space> temp = null;
-            if(jtrac != null) {
-                temp = jtrac.findSpacesWhereIdIn(getAsListOfLong());
-            } else {
-                temp = jtracDao.findSpacesWhereIdIn(getAsListOfLong());
+    private void setSpaceListFromQueryString(String raw, User user, Jtrac jtrac) {
+        List<String> tokens = setExpressionAndGetRemainingTokens(raw);                    
+        List<Space> temp = jtrac.findSpacesWhereIdIn(getAsListOfLong(tokens));
+        // for security, prevent URL spoofing to show spaces not allocated to user            
+        List<Space> spaces = new ArrayList<Space>();
+        for(Space s : temp) {
+            if(user.isAllocatedToSpace(s.getId())) {
+                spaces.add(s);
             }
-            // for security, prevent URL spoofing to show spaces not allocated to user            
-            List<Space> spaces = new ArrayList<Space>();
-            for(Space s : temp) {
-                if(user.isAllocatedToSpace(s.getId())) {
-                    spaces.add(s);
-                }
-            }
-            filterCriteria.setValues(spaces);
-        }        
+        }
+        filterCriteria.setValues(spaces);        
     }     
         
-    private void setStatusListFromQueryString() {
-        if(queryStringTokens != null) {            
-            List<Integer> statuses = new ArrayList<Integer>();
-            for(String s : queryStringTokens) {
-                statuses.add(new Integer(s));
-            }
-            filterCriteria.setValues(statuses);
-        }        
+    private void setStatusListFromQueryString(String raw) {
+        List<String> tokens = setExpressionAndGetRemainingTokens(raw);           
+        List<Integer> statuses = new ArrayList<Integer>();
+        for(String s : tokens) {
+            statuses.add(new Integer(s));
+        }
+        filterCriteria.setValues(statuses);        
     }     
     
-    private List<Long> getAsListOfLong() {        
+    private List<Long> getAsListOfLong(List<String> tokens) {        
         List<Long> ids = new ArrayList<Long>();
-        for(String s : queryStringTokens) {
+        for(String s : tokens) {
             ids.add(new Long(s));
         } 
         return ids;
