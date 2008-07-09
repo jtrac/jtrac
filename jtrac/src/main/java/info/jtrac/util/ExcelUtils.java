@@ -18,6 +18,7 @@ package info.jtrac.util;
 
 import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.ColumnHeading;
+import info.jtrac.domain.ColumnHeading.Name;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.ItemSearch;
@@ -26,6 +27,7 @@ import static info.jtrac.domain.ColumnHeading.Name.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
@@ -107,7 +109,7 @@ public class ExcelUtils {
         cell.setCellValue(text);
     }
         
-    public HSSFWorkbook exportToExcel() {        
+    public HSSFWorkbook exportToExcel(Map<Name, String> localizedLabels) {        
                 
         boolean showHistory = itemSearch.isShowHistory();
         List<ColumnHeading> columnHeadings = itemSearch.getColumnHeadingsToRender();
@@ -117,7 +119,7 @@ public class ExcelUtils {
         
         // begin header row
         for(ColumnHeading ch : columnHeadings) {
-            setHeader(row, col++, ch.getLabel());
+            setHeader(row, col++, ch.isField() ? ch.getLabel() : localizedLabels.get(ch.getName()));
         }
         
         // iterate over list

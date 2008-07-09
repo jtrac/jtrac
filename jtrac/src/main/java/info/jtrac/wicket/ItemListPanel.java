@@ -18,6 +18,7 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.ColumnHeading;
+import info.jtrac.domain.ColumnHeading.Name;
 import info.jtrac.domain.History;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.util.DateUtils;
@@ -27,7 +28,9 @@ import static info.jtrac.domain.ColumnHeading.Name.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
@@ -51,6 +54,15 @@ import org.apache.wicket.protocol.http.WebResponse;
 public class ItemListPanel extends BasePanel {
     
     private ItemSearch itemSearch;
+    
+    // helper to avoid polluting Excel export utility with Wicket i18n
+    private Map<Name, String> getLocalizedLabels() {
+        Map<Name, String> map = new EnumMap<Name, String>(Name.class);
+        for(Name name : Name.values()) {
+            map.put(name, localize("item_list." + name.getText()));
+        }
+        return map;
+    }
     
     private void doSort(String sortFieldName) {
         itemSearch.setCurrentPage(0);
@@ -186,7 +198,7 @@ public class ItemListPanel extends BasePanel {
                         WebResponse r = (WebResponse) requestCycle.getResponse();
                         r.setAttachmentHeader("jtrac-export.xls");
                         try {                            
-                            eu.exportToExcel().write(r.getOutputStream());
+                            eu.exportToExcel(getLocalizedLabels()).write(r.getOutputStream());
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
