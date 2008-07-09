@@ -50,14 +50,13 @@ public class DebugHttpSessionStore extends HttpSessionStore {
     }
 
     @Override
-    public void setAttribute(Request request, String name, Object value) {
-        logger.debug("custom session store serializing: " + name + ", class: " + value.getClass());
+    public void setAttribute(Request request, String name, Object value) {        
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             ObjectOutputStream stream = new ObjectOutputStream(os);
             stream.writeObject(value);
             stream.close();
-            logger.debug(os.size() + " bytes serialized");
+            logger.debug(os.size() + " bytes: " + name + " [" + value.getClass().getName() + "]");
         } catch (Exception exception) {
             logger.error("serialization failed for name: " + name + ", class: " + value.getClass());
             // throw Error so that we sit up and take notice
