@@ -60,7 +60,7 @@ public class SpaceStatePage extends BasePage {
             
             SpaceStateModel modelObject = new SpaceStateModel();
             // stateKey is -1 if add new state
-            final String stateName = space.getMetadata().getStates().get(stateKey);            
+            final String stateName = space.getMetadata().getStatesMap().get(stateKey);            
             modelObject.setStateName(stateName);
             final BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(modelObject);
             setModel(model);
@@ -121,7 +121,7 @@ public class SpaceStatePage extends BasePage {
             field.add(new AbstractValidator() {
                 protected void onValidate(IValidatable v) {
                     String s = (String) v.getValue();
-                    if(space.getMetadata().getStates().containsValue(s)) {
+                    if(space.getMetadata().getStatesMap().containsValue(s)) {
                         error(v);
                     }
                 }
@@ -145,7 +145,7 @@ public class SpaceStatePage extends BasePage {
             if (stateKey == -1) {
                 space.getMetadata().addState(model.getStateName());
             } else {
-                space.getMetadata().getStates().put(stateKey, model.getStateName());
+                space.getMetadata().getStatesMap().put(stateKey, model.getStateName());
             }            
             setResponsePage(new SpacePermissionsPage(space, previous));
         }     

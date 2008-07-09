@@ -22,6 +22,7 @@ import info.jtrac.util.XmlUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -291,15 +292,9 @@ public class Metadata implements Serializable {
             map.putAll(parent.getFields());
         }
         return map;
-    }    
+    }        
     
-    // to make JSTL easier
-    public Collection<Role> getRoleList() {
-        return roles.values();
-    }
-    
-    public List<Field> getFieldList() {
-        Map<Field.Name, Field> map = getFields();
+    public List<Field> getFieldList() {        
         List<Field> list = new ArrayList<Field>(fields.size());
         for (Field.Name fieldName : getFieldOrder()) {
             list.add(fields.get(fieldName));
@@ -469,6 +464,27 @@ public class Metadata implements Serializable {
         }
         return fs;
     }
+    
+    public Collection<Role> getRoleList() {
+        return roles.values();
+    }
+    
+    public Collection<String> getRoleKeys() {
+        return roles.keySet();
+    }
+    
+    // introducing Admin permissions per space, slight hack
+    // so Role stands for "workflow" role from now on
+    public List<String> getAdminRoleKeys() {
+        return Arrays.asList(new String[] { "ROLE_ADMIN" });
+    }
+    
+    public List<String> getAllRoleKeys() {
+        List<String> list = new ArrayList<String>(getRoleKeys());
+        list.addAll(getAdminRoleKeys());
+        return list;
+    }
+    
     //==================================================================
     
     public int getVersion() {
@@ -522,11 +538,11 @@ public class Metadata implements Serializable {
     //=======================================
     // no setters required
     
-    public Map<String, Role> getRoles() {
+    public Map<String, Role> getRolesMap() {
         return roles;
     }  
 
-    public Map<Integer, String> getStates() {
+    public Map<Integer, String> getStatesMap() {
         return states;
     }
     

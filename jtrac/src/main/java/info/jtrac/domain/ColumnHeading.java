@@ -441,7 +441,7 @@ public class ColumnHeading implements Serializable {
                         Fragment getFilterUiFragment(MarkupContainer container, User user, Space space, Jtrac jtrac) {
                             Fragment fragment = new Fragment("fragParent", "multiSelect", container); 
                             // status selectable only when context space is not null
-                            final Map<Integer, String> options = space.getMetadata().getStates();
+                            final Map<Integer, String> options = space.getMetadata().getStatesMap();
                             options.remove(State.NEW);
                             JtracCheckBoxMultipleChoice choice = new JtracCheckBoxMultipleChoice("values", new ArrayList(options.keySet()), new IChoiceRenderer() {
                                 public Object getDisplayValue(Object o) {

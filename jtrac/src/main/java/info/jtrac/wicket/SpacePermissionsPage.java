@@ -61,7 +61,7 @@ public class SpacePermissionsPage extends BasePage {
             // label / heading =================================================
             add(new Label("label", space.getName() + " (" + space.getPrefixCode() + ")"));
             // states colspan ==================================================
-            final Map<Integer, String> statesMap = space.getMetadata().getStates();
+            final Map<Integer, String> statesMap = space.getMetadata().getStatesMap();
             SimpleAttributeModifier statesColspan = new SimpleAttributeModifier("colspan", (statesMap.size() - 1) + "");
             add(new WebMarkupContainer("statesColspan").add(statesColspan));
             // fields colspan ==================================================
@@ -236,7 +236,7 @@ public class SpacePermissionsPage extends BasePage {
                     setResponsePage(previous);
                 }                
             });
-            WorkflowRenderer workflow = new WorkflowRenderer(space.getMetadata().getRoles(), space.getMetadata().getStates());
+            WorkflowRenderer workflow = new WorkflowRenderer(space.getMetadata().getRolesMap(), space.getMetadata().getStatesMap());
             add(new Label("workflow", workflow.getAsHtml()).setEscapeModelStrings(false));
         }                        
                 

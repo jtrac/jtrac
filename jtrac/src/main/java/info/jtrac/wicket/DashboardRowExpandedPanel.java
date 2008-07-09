@@ -49,7 +49,7 @@ public class DashboardRowExpandedPanel extends BasePanel {
         final Space space = usr.getSpace();
         final User user = usr.getUser();
         
-        final Map<Integer, String> states = new TreeMap(space.getMetadata().getStates());    
+        final Map<Integer, String> states = new TreeMap(space.getMetadata().getStatesMap());    
         states.remove(State.NEW);
         int rowspan = states.size() + 1; // add one totals row also
         final SimpleAttributeModifier sam = new SimpleAttributeModifier("rowspan", rowspan + "");

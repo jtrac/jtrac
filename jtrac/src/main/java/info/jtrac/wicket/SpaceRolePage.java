@@ -123,7 +123,7 @@ public class SpaceRolePage extends BasePage {
             field.add(new AbstractValidator() {
                 protected void onValidate(IValidatable v) {
                     String s = (String) v.getValue();
-                    if(space.getMetadata().getRoles().containsKey(s)) {
+                    if(space.getMetadata().getRolesMap().containsKey(s)) {
                         error(v);
                     }
                 }

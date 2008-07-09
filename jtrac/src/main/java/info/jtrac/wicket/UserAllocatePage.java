@@ -64,6 +64,7 @@ public class UserAllocatePage extends BasePage {
         add(new UserAllocateForm("form"));
     }    
     
+    
     /**
      * wicket form
      */
@@ -71,42 +72,18 @@ public class UserAllocatePage extends BasePage {
         
         private User user;
         private Space space;
-        private String roleKey;
-
-        public Space getSpace() {
-            return space;
-        }
-
-        public void setSpace(Space space) {
-            this.space = space;
-        }
-
-        public String getRoleKey() {
-            return roleKey;
-        }
-
-        public void setRoleKey(String roleKey) {
-            this.roleKey = roleKey;
-        }        
+        private List<String> roleKeys;      
                         
-        private DropDownChoice roleKeyChoice;        
-        private Button allocateButton;
-                
-        /**
-         * function that attempts to pre-select roleKey for convenience
-         * used on form init and also on Ajax onChange event for Space choice
-         */
-        private void initRoleChoice(Space s) {
-            List<String> roleKeys = new ArrayList(s.getMetadata().getRoles().keySet());            
-            roleKeys.removeAll(user.getRoleKeys(s));            
-            if(roleKeys.size() == 1) {
-                // pre select role for convenience
-                roleKey = roleKeys.get(0);
-            }
-            roleKeyChoice.setChoices(roleKeys);                    
-            roleKeyChoice.setEnabled(true);
-            allocateButton.setEnabled(true);            
-        }
+        private JtracCheckBoxMultipleChoice roleKeyChoice;        
+        private Button allocateButton;                
+        
+        private void initRoleChoice(Space space) {
+            roleKeys = user.getRoleKeys(space);
+            List<String> list = space.getMetadata().getAllRoleKeys();
+            list.removeAll(roleKeys);            
+            roleKeyChoice.setChoices(list);
+            allocateButton.setEnabled(true);
+        }        
         
         public UserAllocateForm(String id) {
             
@@ -121,6 +98,7 @@ public class UserAllocatePage extends BasePage {
             add(new Label("label", user.getName() + " (" + user.getLoginName() + ")"));
             
             List<UserSpaceRole> usrs = new ArrayList(user.getUserSpaceRoles());
+                        
             
             final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
             
@@ -182,7 +160,7 @@ public class UserAllocatePage extends BasePage {
                 protected void onUpdate(AjaxRequestTarget target) {
                     Space s = (Space) getFormComponent().getConvertedInput();
                     if (s == null) {
-                        roleKeyChoice.setEnabled(false);
+                        roleKeyChoice.setChoices(new ArrayList<String>());
                         allocateButton.setEnabled(false);
                     } else {
                         Space temp = getJtrac().loadSpace(s.getId());
@@ -194,21 +172,30 @@ public class UserAllocatePage extends BasePage {
                 }
             });                                                
             
-            roleKeyChoice = new DropDownChoice("roleKey");            
-            roleKeyChoice.setOutputMarkupId(true);
-            roleKeyChoice.setEnabled(false);
-            roleKeyChoice.setRequired(true);
-            roleKeyChoice.setNullValid(true);
+            roleKeyChoice = new JtracCheckBoxMultipleChoice("roleKeys", new ArrayList<String>(), new IChoiceRenderer() {
+                public Object getDisplayValue(Object o) {
+                    return o;
+                }
+
+                public String getIdValue(Object o, int i) {
+                    return (String) o;
+                }
+            });            
+            roleKeyChoice.setOutputMarkupId(true); 
+            
+            // roleKeyChoice.setRequired(true);            
             roleKeyChoice.add(new ErrorHighlighter());
             add(roleKeyChoice);
             
             allocateButton = new Button("allocate") {
                 @Override
                 public void onSubmit() {                    
-                    if(space == null || roleKey == null) {
+                    if(space == null || roleKeys.size() == 0) {
                         return;
                     }
-                    getJtrac().storeUserSpaceRole(user, space, roleKey);
+                    for(String roleKey : roleKeys) {
+                        getJtrac().storeUserSpaceRole(user, space, roleKey);
+                    }                    
                     JtracSession.get().refreshPrincipalIfSameAs(user);
                     setResponsePage(new UserAllocatePage(userId, previous, space.getId()));
                 }                   

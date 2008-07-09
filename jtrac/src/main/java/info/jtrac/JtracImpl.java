@@ -496,7 +496,7 @@ public class JtracImpl implements Jtrac {
     public List<User> findUnallocatedUsersForSpace(long spaceId) {
         List<User> users = findAllUsers();
         Space space = loadSpace(spaceId);
-        Set<String> roleKeys = space.getMetadata().getRoles().keySet();
+        Set<String> roleKeys = new HashSet(space.getMetadata().getAllRoleKeys());
         Set<UserSpaceRole> userSpaceRoles = new HashSet(findUserRolesForSpace(spaceId));
         List<User> unallocated = new ArrayList<User>();
         // spaces have multiple roles, find users that have not been
@@ -583,7 +583,7 @@ public class JtracImpl implements Jtrac {
         // spaces have multiple roles, find spaces that have roles
         // not yet assigned to the user
         for(Space space : spaces) {
-            for(String roleKey : space.getMetadata().getRoles().keySet()) {
+            for(String roleKey : space.getMetadata().getAllRoleKeys()) {
                 UserSpaceRole usr = new UserSpaceRole(user, space, roleKey);
                 if(!usrs.contains(usr)) {
                     unallocated.add(space);

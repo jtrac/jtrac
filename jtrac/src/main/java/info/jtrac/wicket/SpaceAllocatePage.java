@@ -19,7 +19,6 @@ package info.jtrac.wicket;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
-import java.util.ArrayList;
 import java.util.List;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -88,7 +87,7 @@ public class SpaceAllocatePage extends BasePage {
          * used on form init and also on Ajax onChange event for User choice
          */
         private void initRoleChoice(User u) {            
-            List<String> roleKeys = new ArrayList(space.getMetadata().getRoles().keySet());            
+            List<String> roleKeys = space.getMetadata().getAllRoleKeys();            
             for(String s : u.getRoleKeys(space)) {                
                 roleKeys.remove(s);
             }                   
