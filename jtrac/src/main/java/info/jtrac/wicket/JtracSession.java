@@ -135,6 +135,7 @@ public class JtracSession extends WebSession {
     }
 
     public void setItemSearch(ItemSearch itemSearch) {
+        this.currentSpace = itemSearch.getSpace();
         this.itemSearch = itemSearch;
     }
     

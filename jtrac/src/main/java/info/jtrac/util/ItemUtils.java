@@ -16,11 +16,16 @@
 
 package info.jtrac.util;
 
+import info.jtrac.Jtrac;
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemItem;
+import info.jtrac.domain.ItemSearch;
+import info.jtrac.domain.Space;
+import info.jtrac.domain.User;
+import info.jtrac.exception.JtracSecurityException;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.List;
@@ -29,7 +34,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.dom4j.Document;
+import org.apache.wicket.PageParameters;
 import org.dom4j.Element;
 import org.springframework.context.MessageSource;
 import org.springframework.web.servlet.support.RequestContextUtils;
@@ -241,10 +246,11 @@ public final class ItemUtils {
         return sb.toString();
     }
     
-    public static Document getAsXml(Item item) {
-        Document d = XmlUtils.getNewDocument("item");
-        Element root = d.getRootElement();
+    public static Element getAsXml(Item item) {
+        // root
+        Element root = XmlUtils.getNewElement("item");        
         root.addAttribute("refId", item.getRefId());
+        // related items
         if (item.getRelatedItems() != null && item.getRelatedItems().size() > 0) {
             Element relatedItems = root.addElement("relatedItems");
             for(ItemItem itemItem : item.getRelatedItems()) {
@@ -252,6 +258,7 @@ public final class ItemUtils {
                 relatedItem.addAttribute("refId", itemItem.getItem().getRefId());
             }           
         }
+        // relating items
         if (item.getRelatingItems() != null && item.getRelatingItems().size() > 0) {
             Element relatingItems = root.addElement("relatingItems");
             for(ItemItem itemItem : item.getRelatingItems()) {
@@ -259,21 +266,100 @@ public final class ItemUtils {
                 relatingItem.addAttribute("refId", itemItem.getItem().getRefId());
             }
         }
+        // summary
         if (item.getSummary() != null) {
             root.addElement("summary").addText(item.getSummary());
         }
+        // detail
         if (item.getDetail() != null) {
             root.addElement("detail").addText(item.getDetail());
         }
+        // logged by
         Element loggedBy = root.addElement("loggedBy");
         loggedBy.addAttribute("userId", item.getLoggedBy().getId() + "");
         loggedBy.addText(item.getLoggedBy().getName());
+        // assigned to
         if (item.getAssignedTo() != null) {
             Element assignedTo = root.addElement("assignedTo");
             assignedTo.addAttribute("userId", item.getAssignedTo().getId() + "");
             assignedTo.addText(item.getAssignedTo().getName());
         }
-        return d;
+        // status
+        Element status = root.addElement("status");
+        status.addAttribute("statusId", item.getStatus() + "");
+        status.addText(item.getStatusValue());
+        // custom fields
+        Map<Field.Name, Field> fields = item.getSpace().getMetadata().getFields();
+        for(Field.Name fieldName : item.getSpace().getMetadata().getFieldOrder()) {
+            Field field = fields.get(fieldName);
+            Element customField = root.addElement(fieldName.getText());
+            customField.addAttribute("label", field.getLabel());
+            customField.addText(item.getCustomValue(fieldName));            
+        }
+        // timestamp
+        Element timestamp = root.addElement("timestamp");
+        timestamp.addText(DateUtils.formatTimeStamp(item.getTimeStamp()));        
+        // history
+        if (item.getHistory() != null) {  
+            Element historyRoot = root.addElement("history");
+            for(History history : item.getHistory()) {   
+                Element event = historyRoot.addElement("event");
+                // logged by
+                Element historyLoggedBy = event.addElement("loggedBy");
+                historyLoggedBy.addAttribute("userId", history.getLoggedBy().getId() + "");
+                historyLoggedBy.addText(history.getLoggedBy().getName());
+                // status
+                if(history.getStatus() != null) {
+                    Element historyStatus = event.addElement("status");
+                    historyStatus.addAttribute("statusId", history.getStatus() + "");
+                    historyStatus.addText(history.getStatusValue());
+                }
+                // assigned to
+                if(history.getAssignedTo() != null) {
+                    Element historyAssignedTo = event.addElement("assignedTo");
+                    historyAssignedTo.addAttribute("userId", history.getAssignedTo().getId() + "");
+                    historyAssignedTo.addText(history.getAssignedTo().getName());
+                }
+                // attachment
+                if(history.getAttachment() != null) {
+                    Element historyAttachment = event.addElement("attachment");
+                    historyAttachment.addAttribute("attachmentId", history.getAttachment().getId() + "");
+                    historyAttachment.addText(history.getAttachment().getFileName());
+                }
+                // comment
+                if(history.getComment() != null) {
+                    Element historyComment = event.addElement("comment");
+                    historyComment.addText(history.getComment());
+                }
+                // timestamp
+                Element historyTimestamp = event.addElement("timestamp");
+                historyTimestamp.addText(DateUtils.formatTimeStamp(history.getTimeStamp()));
+                // custom fields
+                List<Field> editable = item.getSpace().getMetadata().getEditableFields();
+                for(Field field : editable) {                    
+                    Element historyCustomField = event.addElement(field.getName().getText());
+                    historyCustomField.addAttribute("label", field.getLabel());
+                    historyCustomField.addText(history.getCustomValue(field.getName()));
+                }                
+            }   
+        }        
+        return root;
+    }        
+    
+    public static ItemSearch getItemSearch(User user, PageParameters params, Jtrac jtrac) throws JtracSecurityException {
+        long spaceId = params.getLong("s", -1);        
+        ItemSearch itemSearch = null;
+        if(spaceId > 0) {            
+            Space space = jtrac.loadSpace(spaceId);
+            if(!user.isAllocatedToSpace(space.getId())) {
+                throw new JtracSecurityException("User not allocated to space: " + spaceId + " in URL: " + params);
+            }
+            itemSearch = new ItemSearch(space);            
+        } else {
+            itemSearch = new ItemSearch(user);
+        }
+        itemSearch.initFromPageParameters(params, user, jtrac);
+        return itemSearch;        
     }
     
 }

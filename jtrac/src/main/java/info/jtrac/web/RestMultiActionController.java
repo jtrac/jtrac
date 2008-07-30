@@ -17,6 +17,7 @@
 package info.jtrac.web;
 
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.exception.InvalidRefIdException;
@@ -25,10 +26,16 @@ import info.jtrac.util.XmlUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.List;
+import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.wicket.PageParameters;
+import org.apache.wicket.protocol.http.RequestUtils;
+import org.apache.wicket.util.value.ValueMap;
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MethodNameResolver;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
@@ -67,10 +74,63 @@ public class RestMultiActionController extends AbstractMultiActionController {
         });
     }
     
+    /**
+     * override Spring template method as a crude interceptor
+     * here we are doing HTTP basic authentication TODO better security
+     */
+    @Override
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if(!authenticate(request)) {
+            String title = "Basic realm=\"JTrac Remote API\"";
+            response.setHeader("WWW-Authenticate", title);
+            response.setStatus(401);
+            return null;
+        } else {
+            return super.handleRequestInternal(request, response);
+        }
+    }
+    
+    private boolean authenticate(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        logger.debug("auth header: " + authHeader);
+        if (authHeader == null) {
+            return false;
+        }
+        StringTokenizer st = new StringTokenizer(authHeader);
+        if (st.hasMoreTokens()) {
+            String basic = st.nextToken();
+            if (basic.equalsIgnoreCase("Basic")) {
+                String credentials = st.nextToken();
+                Base64 decoder = new Base64();
+                String userPass = new String(decoder.decode(credentials.getBytes()));                
+                int p = userPass.indexOf(":");
+                if (p == -1) {
+                    return false;
+                }
+                String loginName = userPass.substring(0, p);
+                String password = userPass.substring(p + 1);
+                User user = jtrac.loadUser(loginName);
+                if(user == null) {
+                    return false;
+                }
+                String encoded = jtrac.encodeClearText(password);
+                if(user.getPassword().equals(encoded)) {
+                    request.setAttribute("user", user);
+                    return true;
+                }                
+            }
+        }
+        return false;
+    }
+    
     private void writeXml(Document document, HttpServletResponse response) throws Exception {
+        writeXml(document.getRootElement(), response);
+    }    
+    
+    private void writeXml(Element element, HttpServletResponse response) throws Exception {
         applyCacheSeconds(response, 0, true);
         response.setContentType("text/xml");
-        document.write(response.getWriter());
+        element.write(response.getWriter());
     }
     
     private String getContent(HttpServletRequest request) throws Exception {
@@ -82,6 +142,8 @@ public class RestMultiActionController extends AbstractMultiActionController {
         }
         return new String(baos.toByteArray());
     }
+    
+    //============================ REQUEST HANDLERS ============================
         
     public void versionGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Document d = XmlUtils.getNewDocument("version");
@@ -103,8 +165,8 @@ public class RestMultiActionController extends AbstractMultiActionController {
         if (item == null) {
             return;
         }
-        Document d = ItemUtils.getAsXml(item);
-        writeXml(d, response);
+        Element e = ItemUtils.getAsXml(item);
+        writeXml(e, response);
     }
     
     public void itemPut(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -128,5 +190,23 @@ public class RestMultiActionController extends AbstractMultiActionController {
         writeXml(d, response);
     }
     
+    public void searchGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String queryString = request.getQueryString();
+        logger.debug("parsing queryString: " + queryString);
+        ValueMap map = new ValueMap();
+        RequestUtils.decodeParameters(queryString, map);
+        logger.debug("decoded: " + map);
+        User user = (User) request.getAttribute("user");
+        PageParameters params = new PageParameters(map);
+        ItemSearch itemSearch = ItemUtils.getItemSearch(user, params, jtrac);
+        itemSearch.setPageSize(-1);
+        List<Item> items = jtrac.findItems(itemSearch);
+        Document d = XmlUtils.getNewDocument("items");
+        Element root = d.getRootElement();
+        for(Item item : items) {
+            root.add(ItemUtils.getAsXml(item));
+        }
+        writeXml(d, response);
+    }
     
 }

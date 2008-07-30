@@ -566,11 +566,8 @@ public class ColumnHeading implements Serializable {
                             choice.setModel(new PropertyModel(filterCriteria, "values"));  
                             return fragment;
                         }
-                        void addRestrictions(DetachedCriteria criteria) {
-                            if(filterHasValueList()) {
-                                // should never come here for criteria: see ItemSearch#getSelectedSpaces()
-                                throw new RuntimeException("should not come here for 'space'");
-                            }
+                        void addRestrictions(DetachedCriteria criteria) {                            
+                            // already handled space as special case, see ItemSearch#getSelectedSpaces()
                         }
                         String getAsQueryString() {
                             return getQueryStringFromSpaceList();
