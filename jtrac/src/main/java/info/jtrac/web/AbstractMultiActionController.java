@@ -17,8 +17,6 @@
 package info.jtrac.web;
 
 import info.jtrac.Jtrac;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 /**
@@ -26,9 +24,7 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
  * also contains code for getting hold of a Spring WebFlow context
  * from request, response
  */
-public abstract class AbstractMultiActionController extends MultiActionController {
-    
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
+public abstract class AbstractMultiActionController extends MultiActionController {        
     
     protected Jtrac jtrac;    
     
