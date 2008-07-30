@@ -38,8 +38,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
+import java.util.Map;
 import org.apache.commons.collections.ComparatorUtils;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
@@ -49,8 +51,6 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -59,9 +59,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * DAO Implementation using Spring Hibernate template
  * note usage of the Spring "init-method" and "destroy-method" options
  */
-public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
-    
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {       
     
     private SchemaHelper schemaHelper;
     
@@ -460,6 +458,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     public void createSchema() {
         try {
             getHibernateTemplate().find("from Item item where item.id = 1");
+            logger.info("database schema exists, normal startup");
         } catch (Exception e) {
             logger.warn("expected database schema does not exist, will create. Error is: " + e.getMessage());            
             schemaHelper.createSchema();
@@ -471,10 +470,27 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
             admin.addSpaceWithRole(null, "ROLE_ADMIN");
             logger.info("inserting default admin user into database");
             storeUser(admin);
-            logger.info("schema creation complete");
-            return;
+            logger.info("schema creation complete");            
         }
-        logger.info("database schema exists, normal startup");        
+        List<SpaceSequence> ssList = getHibernateTemplate().loadAll(SpaceSequence.class);
+        Map<Long, SpaceSequence> ssMap = new HashMap<Long, SpaceSequence>(ssList.size());
+        for(SpaceSequence ss : ssList) {
+            ssMap.put(ss.getId(), ss);
+        }
+        List<Object[]> list = getHibernateTemplate().find("select item.space.id, max(item.sequenceNum) from Item item group by item.space.id");
+        for(Object[] oa : list) {
+            Long spaceId = (Long) oa[0];
+            Long maxSeqNum = (Long) oa[1];
+            SpaceSequence ss = ssMap.get(spaceId);
+            logger.info("checking space sequence id: " + spaceId + ", max: " + maxSeqNum + ", next: " + ss.getNextSeqNum());
+            if(ss.getNextSeqNum() <= maxSeqNum) {
+                logger.warn("fixing sequence number for space id: " + spaceId 
+                        + ", was: " + ss.getNextSeqNum() + ", should be: " + (maxSeqNum + 1));
+                ss.setNextSeqNum(maxSeqNum + 1);
+                storeSpaceSequence(ss);
+            }
+        }
+        
     }    
     
 }
