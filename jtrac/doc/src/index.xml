@@ -825,7 +825,10 @@ hibernate.show_sql=false
             <para>
                 You can change the database values and the hibernate dialect to match the settings of a 
                 database that you have already.  When JTrac starts, it will connect to the database and
-                create the schema if one does not already exist.
+                create the schema if one does not already exist.  The database has to exist
+                before JTrac can create the schema, so please ensure that you create the database first,
+                for example if you are using MySQL.
+         
             </para>
             <para>
                 If you edit the "jtrac.properties" file, ensure that there are no trailing spaces in the entries shown above
@@ -838,9 +841,9 @@ hibernate.show_sql=false
                 the "/WEB-INF/lib" folder of the "jtrac" (exploded) WAR itself.
             </para>            
             <para>
-                Given below is a sample jtrac.properties file for MySQL.  Using the default "root" user is obviously
-                not advisable from a security point of view and you should try and have a separate user for the database
-                used by JTrac.
+                Given below is a sample jtrac.properties file for MySQL.  It assumes that you have created a new database
+                called "jtrac".  Using the default "root" user is obviously not advisable from a security point of view 
+                and you should try and have a separate user for the database used by JTrac.
                 <programlisting>
 
 database.driver=com.mysql.jdbc.Driver
