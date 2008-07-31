@@ -26,10 +26,12 @@ import info.jtrac.util.DateUtils;
 import info.jtrac.util.ExcelUtils;
 
 import info.jtrac.util.ItemUtils;
-import info.jtrac.util.XmlUtils;
 import static info.jtrac.domain.ColumnHeading.Name.*;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -37,14 +39,11 @@ import java.util.Map;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
-import org.apache.wicket.Resource;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
-import org.apache.wicket.markup.html.DynamicWebResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
@@ -53,7 +52,6 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebResponse;
-import org.dom4j.Element;
 
 /**
  * item list panel
@@ -191,30 +189,23 @@ public class ItemListPanel extends BasePanel {
         
         //========================== XML EXPORT ================================
         
-        Resource resource = new DynamicWebResource() {
-            protected ResourceState getResourceState() {
-                return new ResourceState() {                    
-                    public byte[] getData() {          
-                        int pageSize = itemSearch.getPageSize();
-                        itemSearch.setPageSize(-1);
-                        List<Item> items = getJtrac().findItems(itemSearch);
-                        itemSearch.setPageSize(pageSize);
-                        final Element root = XmlUtils.getNewElement("items");
-                        for (Item item : items) {
-                            root.add(ItemUtils.getAsXml(item));
-                        }       
-                        return root.asXML().getBytes();
+        add(new Link("exportToXml") {            
+            public void onClick() {
+                itemSearch.setPageSize(-1);
+                final List<Item> items = getJtrac().findItems(itemSearch);
+                itemSearch.setPageSize(pageSize);
+                getRequestCycle().setRequestTarget(new IRequestTarget() {
+                    public void respond(RequestCycle requestCycle) {
+                        WebResponse r = (WebResponse) requestCycle.getResponse();
+                        r.setAttachmentHeader("jtrac-export.xml");     
+                        ItemUtils.writeAsXml(items, new OutputStreamWriter(r.getOutputStream()));                   
                     }
-                    public String getContentType() {
-                        return "text/xml";
-                    }
-                };
+                    public void detach(RequestCycle requestCycle) {                        
+                    }                    
+                });
             }
-        };
-        
-        add(new ResourceLink("exportToXml", resource));
-        
-        
+        });
+                
         //========================== EXCEL EXPORT ==============================
         
         add(new Link("exportToExcel") {
@@ -225,8 +216,6 @@ public class ItemListPanel extends BasePanel {
                 // restore page size
                 itemSearch.setPageSize(pageSize);
                 getRequestCycle().setRequestTarget(new IRequestTarget() {
-                    public void detach(RequestCycle requestCycle) {
-                    }
                     public void respond(RequestCycle requestCycle) {
                         WebResponse r = (WebResponse) requestCycle.getResponse();
                         r.setAttachmentHeader("jtrac-export.xls");
@@ -236,6 +225,8 @@ public class ItemListPanel extends BasePanel {
                             throw new RuntimeException(e);
                         }
                     }
+                    public void detach(RequestCycle requestCycle) {
+                    }                    
                 });
             }
         });

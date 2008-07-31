@@ -128,9 +128,13 @@ public class RestMultiActionController extends AbstractMultiActionController {
     }    
     
     private void writeXml(Element element, HttpServletResponse response) throws Exception {
-        applyCacheSeconds(response, 0, true);
-        response.setContentType("text/xml");
+        initXmlResponse(response);
         element.write(response.getWriter());
+    }
+    
+    private void initXmlResponse(HttpServletResponse response) {
+        applyCacheSeconds(response, 0, true);
+        response.setContentType("text/xml");         
     }
     
     private String getContent(HttpServletRequest request) throws Exception {
@@ -201,12 +205,8 @@ public class RestMultiActionController extends AbstractMultiActionController {
         ItemSearch itemSearch = ItemUtils.getItemSearch(user, params, jtrac);
         itemSearch.setPageSize(-1);
         List<Item> items = jtrac.findItems(itemSearch);
-        Document d = XmlUtils.getNewDocument("items");
-        Element root = d.getRootElement();
-        for(Item item : items) {
-            root.add(ItemUtils.getAsXml(item));
-        }
-        writeXml(d, response);
+        initXmlResponse(response);
+        ItemUtils.writeAsXml(items, response.getWriter());
     }
     
 }

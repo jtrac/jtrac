@@ -267,6 +267,10 @@ public class Field implements Serializable {
         setName(convertToName(nameAsString));
     }    
     
+    public boolean isDropDownType() {
+        return name.type < 4;
+    }
+    
     //===================================================================  
     
     public Map<String, String> getOptions() {

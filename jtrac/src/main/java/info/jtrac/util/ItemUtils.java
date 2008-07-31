@@ -28,6 +28,7 @@ import info.jtrac.domain.User;
 import info.jtrac.exception.JtracSecurityException;
 import java.io.BufferedReader;
 import java.io.StringReader;
+import java.io.Writer;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -246,6 +247,19 @@ public final class ItemUtils {
         return sb.toString();
     }
     
+    public static void writeAsXml(List<Item> items, Writer writer) {        
+        try {
+            writer.write("<items>");
+            for (Item item : items) {                            
+                getAsXml(item).write(writer);                                
+            }
+            writer.write("</items>");
+            writer.flush();            
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }         
+    }    
+    
     public static Element getAsXml(Item item) {
         // root
         Element root = XmlUtils.getNewElement("item");        
@@ -256,6 +270,7 @@ public final class ItemUtils {
             for(ItemItem itemItem : item.getRelatedItems()) {
                 Element relatedItem = relatedItems.addElement("relatedItem");
                 relatedItem.addAttribute("refId", itemItem.getItem().getRefId());
+                relatedItem.addAttribute("linkType", itemItem.getRelationText());
             }           
         }
         // relating items
@@ -264,6 +279,7 @@ public final class ItemUtils {
             for(ItemItem itemItem : item.getRelatingItems()) {
                 Element relatingItem = relatingItems.addElement("relatingItem");
                 relatingItem.addAttribute("refId", itemItem.getItem().getRefId());
+                relatingItem.addAttribute("linkType", itemItem.getRelationText());
             }
         }
         // summary
@@ -276,12 +292,12 @@ public final class ItemUtils {
         }
         // logged by
         Element loggedBy = root.addElement("loggedBy");
-        loggedBy.addAttribute("userId", item.getLoggedBy().getId() + "");
+        // loggedBy.addAttribute("userId", item.getLoggedBy().getId() + "");
         loggedBy.addText(item.getLoggedBy().getName());
         // assigned to
         if (item.getAssignedTo() != null) {
             Element assignedTo = root.addElement("assignedTo");
-            assignedTo.addAttribute("userId", item.getAssignedTo().getId() + "");
+            // assignedTo.addAttribute("userId", item.getAssignedTo().getId() + "");
             assignedTo.addText(item.getAssignedTo().getName());
         }
         // status
@@ -291,10 +307,16 @@ public final class ItemUtils {
         // custom fields
         Map<Field.Name, Field> fields = item.getSpace().getMetadata().getFields();
         for(Field.Name fieldName : item.getSpace().getMetadata().getFieldOrder()) {
-            Field field = fields.get(fieldName);
-            Element customField = root.addElement(fieldName.getText());
-            customField.addAttribute("label", field.getLabel());
-            customField.addText(item.getCustomValue(fieldName));            
+            Object value = item.getValue(fieldName);
+            if(value != null) {
+                Field field = fields.get(fieldName);
+                Element customField = root.addElement(fieldName.getText());
+                customField.addAttribute("label", field.getLabel());
+                if(field.isDropDownType()) {
+                    customField.addAttribute("optionId", value + "");
+                }
+                customField.addText(item.getCustomValue(fieldName)); 
+            }
         }
         // timestamp
         Element timestamp = root.addElement("timestamp");
@@ -304,9 +326,11 @@ public final class ItemUtils {
             Element historyRoot = root.addElement("history");
             for(History history : item.getHistory()) {   
                 Element event = historyRoot.addElement("event");
+                // index
+                event.addAttribute("eventId", (history.getIndex() + 1) + "");
                 // logged by
                 Element historyLoggedBy = event.addElement("loggedBy");
-                historyLoggedBy.addAttribute("userId", history.getLoggedBy().getId() + "");
+                // historyLoggedBy.addAttribute("userId", history.getLoggedBy().getId() + "");
                 historyLoggedBy.addText(history.getLoggedBy().getName());
                 // status
                 if(history.getStatus() != null) {
@@ -317,7 +341,7 @@ public final class ItemUtils {
                 // assigned to
                 if(history.getAssignedTo() != null) {
                     Element historyAssignedTo = event.addElement("assignedTo");
-                    historyAssignedTo.addAttribute("userId", history.getAssignedTo().getId() + "");
+                    // historyAssignedTo.addAttribute("userId", history.getAssignedTo().getId() + "");
                     historyAssignedTo.addText(history.getAssignedTo().getName());
                 }
                 // attachment
@@ -336,10 +360,16 @@ public final class ItemUtils {
                 historyTimestamp.addText(DateUtils.formatTimeStamp(history.getTimeStamp()));
                 // custom fields
                 List<Field> editable = item.getSpace().getMetadata().getEditableFields();
-                for(Field field : editable) {                    
-                    Element historyCustomField = event.addElement(field.getName().getText());
-                    historyCustomField.addAttribute("label", field.getLabel());
-                    historyCustomField.addText(history.getCustomValue(field.getName()));
+                for(Field field : editable) {     
+                    Object value = history.getValue(field.getName());
+                    if(value != null) {
+                        Element historyCustomField = event.addElement(field.getName().getText());
+                        historyCustomField.addAttribute("label", field.getLabel());
+                        if(field.isDropDownType()) {
+                            historyCustomField.addAttribute("optionId", value + "");
+                        }                        
+                        historyCustomField.addText(history.getCustomValue(field.getName()));
+                    }
                 }                
             }   
         }        
