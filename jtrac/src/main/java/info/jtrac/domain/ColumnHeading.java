@@ -419,10 +419,7 @@ public class ColumnHeading implements Serializable {
                             return getTextFieldFragment(container);
                         }
                         void addRestrictions(DetachedCriteria criteria) {
-                            if(filterHasValue()) {
-                                // should never come here for criteria: see ItemSearch#getSearchText()
-                                throw new RuntimeException("should not come here for 'detail'");
-                            }
+                            // do nothing, 'detail' already processed, see: ItemSearch#getSearchText()
                         }
                         String getAsQueryString() {
                             return getQueryStringFromValue(String.class);
