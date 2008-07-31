@@ -9,11 +9,13 @@
         <id name="id" column="id">
             <generator class="native"/>
         </id>
+        <natural-id>
+            <many-to-one name="space" column="space_id" not-null="true" index="idx_items_space_id"/>
+            <property name="sequenceNum" column="sequence_num" index="idx_items_sequence_num"/>
+        </natural-id>        
         <version name="version" column="version"/>
         <property name="type" column="type"/>
         <many-to-one name="parent" column="parent_id"/>
-        <many-to-one name="space" column="space_id" not-null="true" index="idx_items_space_id"/>
-        <property name="sequenceNum" column="sequence_num" index="idx_items_sequence_num"/>
         <property name="timeStamp" column="time_stamp"/>
         <property name="plannedEffort" column="planned_effort"/>
         <set name="children" order-by="id" cascade="all" inverse="true">
