@@ -122,7 +122,7 @@
             <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
             <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-            <stringProp name="RegexExtractor.regex">(\?.+:options:.+?)&apos;</stringProp>
+            <stringProp name="RegexExtractor.regex">&quot;(.+:options:.+?)&quot;</stringProp>
           </RegexExtractor>
           <hashTree/>
         </hashTree>
@@ -413,7 +413,7 @@
             <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
             <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-            <stringProp name="RegexExtractor.regex">&apos;(.+:logout:.+?)&apos;</stringProp>
+            <stringProp name="RegexExtractor.regex">&quot;(.+:logout:.+?)&quot;</stringProp>
           </RegexExtractor>
           <hashTree/>
         </hashTree>
