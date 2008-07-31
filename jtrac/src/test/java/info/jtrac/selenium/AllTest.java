@@ -36,7 +36,8 @@ public class AllTest extends SeleniumTestCase {
         selenium.clickAndWait("//input[@value='Next']");        
         assertTextPresent("Space Roles");        
         selenium.clickAndWait("//input[@value='Save']");        
-        assertTextPresent("Users Allocated To Space");                
+        assertTextPresent("Users Allocated To Space");  
+        selenium.select("roleKey", "DEFAULT");
         selenium.clickAndWait("//input[@value='Allocate']");        
         assertTextPresent("Admin");             
     }  
