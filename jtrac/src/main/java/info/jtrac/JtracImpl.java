@@ -259,8 +259,10 @@ public class JtracImpl implements Jtrac {
         // TODO confirm if above does not happen anymore
         dao.storeItem(item);        
         writeToFile(fileUpload, attachment);
-        indexer.index(item);
-        indexer.index(history);
+        if(indexer != null) {
+            indexer.index(item);
+            indexer.index(history);
+        }
         if (item.isSendNotifications()) {
             mailSender.send(item);
         }
@@ -306,7 +308,9 @@ public class JtracImpl implements Jtrac {
         item.add(history);
         dao.storeItem(item);        
         writeToFile(fileUpload, attachment);
-        indexer.index(history);
+        if(indexer != null) {
+            indexer.index(history);
+        }        
         if (history.isSendNotifications()) {
             mailSender.send(item);
         }
