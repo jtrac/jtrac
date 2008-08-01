@@ -621,7 +621,7 @@
                 <stringProp name="RegexExtractor.default">REGEX_FAILED</stringProp>
                 <stringProp name="RegexExtractor.template">$1$</stringProp>
                 <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-                <stringProp name="RegexExtractor.regex">action=&quot;(.+:form:.+?)&quot;</stringProp>
+                <stringProp name="RegexExtractor.regex">action=&quot;../(.+:form:.+?)&quot;</stringProp>
               </RegexExtractor>
               <hashTree/>
             </hashTree>
@@ -897,7 +897,7 @@
               <stringProp name="HTTPSampler.protocol"></stringProp>
               <stringProp name="HTTPSampler.method">GET</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/jtrac/app/search</stringProp>
+              <stringProp name="HTTPSampler.path">/jtrac/app/item/search</stringProp>
               <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
