@@ -37,6 +37,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.wicket.PageParameters;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.util.HtmlUtils;
@@ -47,6 +49,8 @@ import org.springframework.web.util.HtmlUtils;
  * And we are able to re-use this to send HTML e-mail etc.
  */
 public final class ItemUtils {    
+    
+    private static final Logger logger = LoggerFactory.getLogger(ItemUtils.class);
     
     /** 
      * does HTML escaping, converts tabs to spaces and converts leading 
@@ -247,18 +251,77 @@ public final class ItemUtils {
         return sb.toString();
     }
     
-    public static void writeAsXml(List<Item> items, Writer writer) {        
+    public static void writeAsXml(Jtrac jtrac, Writer writer) {
+        final int batchSize = 500;
+        int totalSize = jtrac.loadCountOfAllItems();
+        logger.info("total count: " + totalSize);
+        int firstResult = 0;
+        int currentItem = 0;
         try {
-            writer.write("<items>");
-            for (Item item : items) {                            
-                getAsXml(item).write(writer);                                
+            while(true) {
+                logger.info("processing batch starting from: " + firstResult + ", current: " + currentItem);
+                List<Item> items = jtrac.findAllItems(firstResult, batchSize);
+                for (Item item : items) {
+                    getAsXml(item).write(writer);
+                    currentItem++;  
+                }
+                logger.debug("size of current batch: " + items.size());
+                firstResult += batchSize;
+                if(currentItem >= totalSize || firstResult > totalSize) {
+                    logger.info("batch completed at position: " + currentItem);
+                    writer.flush();
+                    break;
+                } 
             }
-            writer.write("</items>");
-            writer.flush();            
         } catch(Exception e) {
             throw new RuntimeException(e);
-        }         
-    }    
+        }        
+    }
+    
+    public static void writeAsXml(ItemSearch itemSearch, Jtrac jtrac, Writer writer) {        
+        final int batchSize = 500;
+        int originalPageSize = itemSearch.getPageSize(); 
+        int originalCurrentPage = itemSearch.getCurrentPage();
+        
+        // get the total count first
+        itemSearch.setPageSize(0);
+        itemSearch.setCurrentPage(0);
+        jtrac.findItems(itemSearch);
+        long totalSize = itemSearch.getResultCount();
+        logger.debug("total count: " + totalSize);
+        
+        itemSearch.setBatchMode(true);
+        itemSearch.setPageSize(batchSize);        
+        try {
+            writer.write("<items>");
+            int currentPage = 0;
+            int currentItem = 0;
+            while(true) {
+                logger.debug("processing batch starting from page: " + currentPage);                
+                itemSearch.setCurrentPage(currentPage);
+                List<Item> items = jtrac.findItems(itemSearch);
+                for(Item item : items) {
+                    getAsXml(item).write(writer);
+                    currentItem++;
+                }
+                logger.debug("size of current batch: " + items.size());
+                if(currentItem >= totalSize) {
+                    logger.info("batch completed at position: " +  currentItem);
+                    break;
+                } else {
+                    currentPage++;
+                }
+            }                        
+            writer.write("</items>");
+            writer.flush();
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            itemSearch.setPageSize(originalPageSize);
+            itemSearch.setCurrentPage(originalCurrentPage);
+            itemSearch.setBatchMode(false);            
+        }
+    }   
     
     public static Element getAsXml(Item item) {
         // root

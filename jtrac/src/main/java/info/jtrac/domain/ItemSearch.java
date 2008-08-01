@@ -48,6 +48,7 @@ public class ItemSearch implements Serializable {
     private boolean sortDescending = true;
     private boolean showHistory;
     private boolean showDetail;
+    private boolean batchMode;
         
     private long selectedItemId;
     private String relatingItemRefId;    
@@ -295,10 +296,18 @@ public class ItemSearch implements Serializable {
             }
         }
         return list;
-    }
+    }    
     
     //==========================================================================
+    
+    public boolean isBatchMode() {
+        return batchMode;
+    }
 
+    public void setBatchMode(boolean batchMode) {
+        this.batchMode = batchMode;
+    }
+    
     public Space getSpace() {
         return space;
     }

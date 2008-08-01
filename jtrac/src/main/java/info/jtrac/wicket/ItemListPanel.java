@@ -20,7 +20,6 @@ import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.ColumnHeading;
 import info.jtrac.domain.ColumnHeading.Name;
 import info.jtrac.domain.History;
-import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.util.DateUtils;
 import info.jtrac.util.ExcelUtils;
@@ -30,8 +29,6 @@ import static info.jtrac.domain.ColumnHeading.Name.*;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -191,14 +188,11 @@ public class ItemListPanel extends BasePanel {
         
         add(new Link("exportToXml") {            
             public void onClick() {
-                itemSearch.setPageSize(-1);
-                final List<Item> items = getJtrac().findItems(itemSearch);
-                itemSearch.setPageSize(pageSize);
                 getRequestCycle().setRequestTarget(new IRequestTarget() {
                     public void respond(RequestCycle requestCycle) {
                         WebResponse r = (WebResponse) requestCycle.getResponse();
                         r.setAttachmentHeader("jtrac-export.xml");     
-                        ItemUtils.writeAsXml(items, new OutputStreamWriter(r.getOutputStream()));                   
+                        ItemUtils.writeAsXml(itemSearch, getJtrac(), new OutputStreamWriter(r.getOutputStream()));                   
                     }
                     public void detach(RequestCycle requestCycle) {                        
                     }                    

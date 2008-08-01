@@ -17,7 +17,6 @@
 package info.jtrac.hibernate;
 
 import info.jtrac.JtracDao;
-import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Config;
 import info.jtrac.domain.Counts;
@@ -34,6 +33,7 @@ import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -43,8 +43,10 @@ import java.util.List;
 
 import java.util.Map;
 import org.apache.commons.collections.ComparatorUtils;
+import org.hibernate.CacheMode;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
@@ -95,7 +97,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         Field.Name sortFieldName = Field.isValidName(itemSearch.getSortFieldName()) ? Field.convertToName(itemSearch.getSortFieldName()) : null;
         // only trigger the in-memory sort for drop-down fields and when querying within a space
         // UI currently does not allow you to sort by custom field when querying across spaces, but check again
-        boolean doInMemorySort = sortFieldName != null && sortFieldName.getType() < 4 && itemSearch.getSpace() != null;
+        boolean doInMemorySort = sortFieldName != null && sortFieldName.isDropDownType() && itemSearch.getSpace() != null;
         if (pageSize == -1 || doInMemorySort) {
             List<Item> list = getHibernateTemplate().findByCriteria(itemSearch.getCriteria());
             if(!list.isEmpty() && doInMemorySort) {
@@ -111,12 +113,22 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
             return list;
         } else {
             // pagination
+            if(itemSearch.isBatchMode()) {
+                getHibernateTemplate().execute(new HibernateCallback() {
+                    public Object doInHibernate(Session session) {
+                        session.clear();
+                        return null;
+                    }                    
+                });
+            }
             int firstResult = pageSize * itemSearch.getCurrentPage();
             List<Item> list = getHibernateTemplate().findByCriteria(itemSearch.getCriteria(), firstResult, pageSize);
-            DetachedCriteria criteria = itemSearch.getCriteriaForCount();
-            criteria.setProjection(Projections.rowCount());
-            Integer count = (Integer) getHibernateTemplate().findByCriteria(criteria).get(0);
-            itemSearch.setResultCount(count);
+            if(!itemSearch.isBatchMode()) {
+                DetachedCriteria criteria = itemSearch.getCriteriaForCount();
+                criteria.setProjection(Projections.rowCount());
+                Integer count = (Integer) getHibernateTemplate().findByCriteria(criteria).get(0);
+                itemSearch.setResultCount(count);
+            }
             return list;
         }
     }
@@ -139,12 +151,26 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         Collections.sort(list, itemSearch.isSortDescending() ? ComparatorUtils.reversedComparator(comp) : comp);
     }
 
-    public List<AbstractItem> findAllItems() {
-        // return getHibernateTemplate().loadAll(AbstractItem.class);
-        return (List<AbstractItem>) getHibernateTemplate().execute(new HibernateCallback() {
+    public int loadCountOfAllItems() {
+        return (Integer) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) {
-                Criteria criteria = session.createCriteria(AbstractItem.class);
-                criteria.setFetchMode("space", FetchMode.JOIN);                              
+                Criteria criteria = session.createCriteria(Item.class);
+                criteria.setProjection(Projections.rowCount());
+                return criteria.list().get(0);
+            }
+        });
+    }
+    
+    public List<Item> findAllItems(final int firstResult, final int batchSize) {        
+        return getHibernateTemplate().executeFind(new HibernateCallback() {
+            public Object doInHibernate(Session session) {
+                session.clear();
+                Criteria criteria = session.createCriteria(Item.class);
+                criteria.setCacheMode(CacheMode.IGNORE);                
+                criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+                criteria.setFetchMode("history", FetchMode.JOIN);                
+                criteria.add(Restrictions.ge("id", (long) firstResult));
+                criteria.add(Restrictions.lt("id", (long) firstResult + batchSize));                
                 return criteria.list();
             }
         });        

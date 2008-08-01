@@ -194,7 +194,7 @@ public class RestMultiActionController extends AbstractMultiActionController {
         writeXml(d, response);
     }
     
-    public void searchGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void itemSearchGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String queryString = request.getQueryString();
         logger.debug("parsing queryString: " + queryString);
         ValueMap map = new ValueMap();
@@ -202,11 +202,20 @@ public class RestMultiActionController extends AbstractMultiActionController {
         logger.debug("decoded: " + map);
         User user = (User) request.getAttribute("user");
         PageParameters params = new PageParameters(map);
-        ItemSearch itemSearch = ItemUtils.getItemSearch(user, params, jtrac);
-        itemSearch.setPageSize(-1);
-        List<Item> items = jtrac.findItems(itemSearch);
+        ItemSearch itemSearch = ItemUtils.getItemSearch(user, params, jtrac);        
         initXmlResponse(response);
-        ItemUtils.writeAsXml(items, response.getWriter());
+        ItemUtils.writeAsXml(itemSearch, jtrac, response.getWriter());
+    }
+    
+    public void itemAllGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // GOD mode!
+        User user = (User) request.getAttribute("user");
+        if(!user.isAdminForAllSpaces()) {
+            // TODO error code
+            return;
+        }
+        initXmlResponse(response);
+        ItemUtils.writeAsXml(jtrac, response.getWriter());
     }
     
 }

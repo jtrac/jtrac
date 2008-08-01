@@ -16,8 +16,8 @@
 
 package info.jtrac;
 
-import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.Attachment;
+import info.jtrac.domain.BatchInfo;
 import info.jtrac.domain.Config;
 import info.jtrac.domain.Counts;
 import info.jtrac.domain.CountsHolder;
@@ -69,7 +69,7 @@ import org.slf4j.LoggerFactory;
  */
 public class JtracImpl implements Jtrac {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(JtracImpl.class);
     
     private JtracDao dao;
     private PasswordEncoder passwordEncoder;
@@ -344,6 +344,14 @@ public class JtracImpl implements Jtrac {
             itemSearch.setItemIds(hits);
         }
         return dao.findItems(itemSearch);
+    }
+    
+    public int loadCountOfAllItems() {
+        return dao.loadCountOfAllItems();
+    }
+    
+    public List<Item> findAllItems(int firstResult, int batchSize) {
+        return dao.findAllItems(firstResult, batchSize);
     }
 
     public void removeItem(Item item) {
@@ -655,28 +663,44 @@ public class JtracImpl implements Jtrac {
 
     //========================================================
 
-    public void rebuildIndexes() {
-        clearIndexes();
-        List<AbstractItem> items = dao.findAllItems();
-        for (AbstractItem item : items) {
-            indexer.index(item);
-        }
-    }
-
-    public List<AbstractItem> findAllItems() {
-        // this returns all Item and all History records for indexing
-        return dao.findAllItems();
-    }
-
-    public void clearIndexes() {        
+    public void rebuildIndexes(BatchInfo batchInfo) {
         File file = new File(jtracHome + "/indexes");
         for (File f : file.listFiles()) {
+            logger.debug("deleting file: " + f);
             f.delete();
         }        
-    }
-
-    public void index(AbstractItem item) {
-        indexer.index(item);
+        logger.info("existing index files deleted successfully");
+        int totalSize = dao.loadCountOfAllItems();
+        batchInfo.setTotalSize(totalSize);
+        logger.info("total items to index: " + totalSize);                
+        int firstResult = 0;
+        while(true) {
+            logger.info("processing batch starting from: " + firstResult + ", current: " + batchInfo.getCurrentPosition());
+            List<Item> items = dao.findAllItems(firstResult, batchInfo.getBatchSize());
+            for (Item item : items) {                                    
+                indexer.index(item);                
+                // currently history is indexed separately from item
+                // not sure if this is a good thing, maybe it gives
+                // more flexibility e.g. fine-grained search results
+                int historyCount = 0;
+                for(History history : item.getHistory()) {
+                    indexer.index(history);
+                    historyCount++;
+                }
+                if(logger.isDebugEnabled()) {
+                    logger.debug("indexed item: " + item.getId() 
+                            + " : " + item.getRefId() + ", history: " + historyCount);
+                }
+                batchInfo.incrementPosition();
+            }                        
+            logger.debug("size of current batch: " + items.size());
+            firstResult += batchInfo.getBatchSize();
+            if(batchInfo.isComplete() || firstResult > totalSize) {
+                logger.info("batch completed at position: " + batchInfo.getCurrentPosition());
+                break;
+            }
+        }        
+        
     }
 
     public boolean validateTextSearchQuery(String text) {

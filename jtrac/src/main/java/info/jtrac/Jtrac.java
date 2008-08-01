@@ -16,7 +16,7 @@
 
 package info.jtrac;
 
-import info.jtrac.domain.AbstractItem;
+import info.jtrac.domain.BatchInfo;
 import info.jtrac.domain.Config;
 import info.jtrac.domain.Counts;
 import info.jtrac.domain.CountsHolder;
@@ -48,8 +48,9 @@ public interface Jtrac extends UserDetailsService {
     Item loadItem(long id);
     Item loadItemByRefId(String refId);
     History loadHistory(long id);
-    List<Item> findItems(ItemSearch itemSearch);
-    List<AbstractItem> findAllItems();
+    List<Item> findItems(ItemSearch itemSearch);  
+    int loadCountOfAllItems();
+    List<Item> findAllItems(int firstResult, int batchSize);
     void removeItem(Item item);
     void removeItemItem(ItemItem itemItem);
     //========================================================
@@ -108,9 +109,7 @@ public interface Jtrac extends UserDetailsService {
     void storeConfig(Config config);
     String loadConfig(String param);
     //========================================================
-    void rebuildIndexes();
-    void index(AbstractItem item);
-    void clearIndexes();
+    void rebuildIndexes(BatchInfo batchInfo);
     boolean validateTextSearchQuery(String text);
     //========================================================
     void executeHourlyTask();

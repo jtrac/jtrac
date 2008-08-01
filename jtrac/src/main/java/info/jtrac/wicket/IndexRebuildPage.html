@@ -1,12 +1,15 @@
 <html>
     <body>
         <wicket:extend>
-            <div wicket:id="heading" class="heading"></div> 
+            <div wicket:id="heading" class="heading"></div>             
             <form wicket:id="form">
-                <input type="submit" wicket:id="start" wicket:message="value:submit"/>                
-                <p/>
+                <p>
+                    <img src="resources/warning.gif" class="nav-link"/>
+                    <wicket:message key="index_rebuild.warning"/>  
+                    <input type="submit" wicket:id="start" wicket:message="value:submit"/>
+                </p>                                                        
                 <span wicket:id="progress" class="selected"></span>
-            </form>
+            </form>            
         </wicket:extend>
     </body>
 </html>

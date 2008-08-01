@@ -19,13 +19,12 @@ package info.jtrac.wicket;
 import org.apache.wicket.markup.html.basic.Label;
 
 /**
- * error page
- * TODO make generic
+ * generic error page
  */
 public class ErrorPage extends BasePage {        
         
-    public ErrorPage() {
-        add(new Label("heading", localize("error.itemBelongsToUnallocatedSpace")));        
+    public ErrorPage(String message) {
+        add(new Label("heading", message));        
     }
     
 }

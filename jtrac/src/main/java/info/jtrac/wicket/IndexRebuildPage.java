@@ -17,8 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
-import info.jtrac.domain.AbstractItem;
-import java.util.List;
+import info.jtrac.domain.BatchInfo;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -41,16 +40,16 @@ public class IndexRebuildPage extends BasePage {
             add(new Label("heading", localize("index_rebuild.heading")));
             add(new RebuildIndexesForm("form"));
         }
-    }
+    }        
     
     /**
      * wicket form
      */    
     private class RebuildIndexesForm extends Form {
         
-        private int current;
-        private int total;
-        private boolean finished;        
+        private BatchInfo batchInfo = new BatchInfo();
+        private String errorMessage;
+        private boolean complete;
         
         public RebuildIndexesForm(String id) {
             
@@ -63,19 +62,18 @@ public class IndexRebuildPage extends BasePage {
                 @Override
                 public void onSubmit() {
                     // hide the button
-                    this.setVisible(false);
+                    this.setVisible(false);                                        
                     // long running process, use thread
-                    new Thread() {
-                        // don't serialize this!
+                    new Thread() {   
                         private transient Jtrac jtrac = getJtrac();
-                        public void run() {
-                            jtrac.clearIndexes();
-                            List<AbstractItem> items = jtrac.findAllItems();
-                            total = items.size();
-                            for(current = 0; current < total; current++) {
-                                jtrac.index(items.get(current));
+                        public void run() {                            
+                            try {                                
+                                jtrac.rebuildIndexes(batchInfo);                                
+                            } catch (Exception e) { 
+                                logger.error("indexing error", e);
+                                errorMessage = e.getMessage();                                
                             }
-                            finished = true;
+                            complete = true;
                         }                    
                     }.start();
                     
@@ -83,10 +81,16 @@ public class IndexRebuildPage extends BasePage {
                     progress.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(5)));
                     IModel model = new AbstractReadOnlyModel() {
                         public Object getObject() {
-                            if(finished) {
-                                // reshow the page, with success message
-                                setResponsePage(new IndexRebuildPage(true));
+                            if(complete) {
+                                if(errorMessage != null) {
+                                    setResponsePage(new ErrorPage(errorMessage));
+                                } else {
+                                    // reshow the page, with success message
+                                    setResponsePage(new IndexRebuildPage(true));
+                                }
                             }
+                            int total = batchInfo.getTotalSize();
+                            int current = batchInfo.getCurrentPosition();
                             int percent = total == 0 ? 0 : 100 * current / total;
                             return percent + "% [" + current + " / " + total + "]";
                         };

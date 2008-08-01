@@ -115,6 +115,10 @@ public class Field implements Serializable {
             return text;
         }
         
+        public boolean isDropDownType() {
+            return type < 4;
+        }
+        
         public String getDescription() {
             switch (type) {
                 case 1: return "Severity (Drop Down)";
@@ -245,6 +249,7 @@ public class Field implements Serializable {
     }
     
     public void initOptions() {
+        // TODO i18n
         if (name.type == 1) {
             label = "Severity";
             addOption("1", "Fatal");
@@ -268,7 +273,7 @@ public class Field implements Serializable {
     }    
     
     public boolean isDropDownType() {
-        return name.type < 4;
+        return name.isDropDownType();
     }
     
     //===================================================================  
