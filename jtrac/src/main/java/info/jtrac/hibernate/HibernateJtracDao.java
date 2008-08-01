@@ -33,7 +33,6 @@ import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -46,7 +45,6 @@ import org.apache.commons.collections.ComparatorUtils;
 import org.hibernate.CacheMode;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
@@ -208,7 +206,9 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return (UserSpaceRole) getHibernateTemplate().get(UserSpaceRole.class, id);
     }    
     
-    public SpaceSequence loadSpaceSequence(long id) {                
+    public SpaceSequence loadSpaceSequence(final long id) { 
+        // important to prevent duplicate sequence numbers, see JtracImpl#storeItem()
+        getHibernateTemplate().flush();        
         return (SpaceSequence) getHibernateTemplate().get(SpaceSequence.class, id);           
     }    
     
