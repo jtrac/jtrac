@@ -193,17 +193,18 @@ public class JtracApplication extends WebApplication {
         // friendly urls for selected pages
         if(jtracCasProxyTicketValidator != null) { 
             mountBookmarkablePage("/login", CasLoginPage.class);
+            // this matches the value set in WEB-INF/applicationContext-acegi-cas.xml
+            mountBookmarkablePage("/cas/error", CasLoginErrorPage.class);            
         } else {
             mountBookmarkablePage("/login", LoginPage.class);
         }        
         mountBookmarkablePage("/logout", LogoutPage.class);
         mountBookmarkablePage("/svn", SvnStatsPage.class);
         mountBookmarkablePage("/options", OptionsPage.class);
-        mountBookmarkablePage("/casError", CasLoginErrorPage.class);
-        mountBookmarkablePage("/itemForm", ItemFormPage.class);        
+        mountBookmarkablePage("/item/form", ItemFormPage.class);        
         // bookmarkable url for search and search results
-        mount(new QueryStringUrlCodingStrategy("/search", ItemSearchFormPage.class));
-        mount(new QueryStringUrlCodingStrategy("/list", ItemListPage.class));        
+        mount(new QueryStringUrlCodingStrategy("/item/search", ItemSearchFormPage.class));
+        mount(new QueryStringUrlCodingStrategy("/item/list", ItemListPage.class));        
         // bookmarkable url for viewing items
         mount(new IndexedParamUrlCodingStrategy("/item", ItemViewPage.class));                     
     }   

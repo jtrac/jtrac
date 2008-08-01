@@ -20,7 +20,7 @@
     
     <bean id="authenticationFilter" class="org.acegisecurity.ui.cas.CasProcessingFilter">
         <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="authenticationFailureUrl" value="/app/casError"/>
+        <property name="authenticationFailureUrl" value="/app/cas/error"/>
         <property name="defaultTargetUrl" value="/app/"/>
         <property name="filterProcessesUrl" value="/auth/j_acegi_cas_security_check"/>
     </bean>   
