@@ -90,7 +90,11 @@ public class SpaceAllocatePage extends BasePage {
             List<String> roleKeys = space.getMetadata().getAllRoleKeys();            
             for(String s : u.getRoleKeys(space)) {                
                 roleKeys.remove(s);
-            }                   
+            } 
+            // super user doesn't need space level option
+            if(u.isAdminForAllSpaces()) {
+                roleKeys.remove("ROLE_ADMIN");
+            }
             if(roleKeys.size() == 1) {
                 // pre select role for convenience
                 roleKey = roleKeys.get(0);

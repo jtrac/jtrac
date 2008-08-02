@@ -9,18 +9,22 @@
                 <table class="jtrac">
                     <tr>
                         <th><wicket:message key="user_allocate_space.space"/></th>
-                        <th><wicket:message key="user_allocate_space.role"/></th>
-                        <th><wicket:message key="user_allocate_space.remove"/></th>
+                        <th><wicket:message key="user_allocate_space.role"/></th>                        
                     </tr>
-                    <tr wicket:id="usrs">
-                        <td>
-                            <span wicket:id="space">
-                                <span wicket:id="name"></span>
+                    <tr wicket:id="spaces">
+                        <td>                                             
+                            <span wicket:id="name"></span>
+                            <wicket:enclosure child="prefixCode">
                                 [<a href="#" wicket:id="prefixCode"><span wicket:id="prefixCode"></span></a>]
-                            </span>
+                            </wicket:enclosure>
                         </td>
-                        <td wicket:id="roleKey"></td>                        
-                        <td align="center"><input type="image" wicket:id="deallocate" src="../resources/delete.gif"/></td>
+                        <td>
+                            <span wicket:id="roleKeys">
+                                <span wicket:id="roleKey"></span>
+                                <input type="image" wicket:id="deallocate" src="../resources/delete.gif"/>
+                                &nbsp;
+                            </span>                            
+                        </td>                        
                     </tr>
                 </table>
                 <p/>

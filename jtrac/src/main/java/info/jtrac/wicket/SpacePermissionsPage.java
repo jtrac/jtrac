@@ -51,9 +51,7 @@ public class SpacePermissionsPage extends BasePage {
     /**
      * wicket form
      */     
-    private class SpacePermissionsForm extends Form {
-        
-       private JtracFeedbackMessageFilter filter;
+    private class SpacePermissionsForm extends Form {               
         
         public SpacePermissionsForm(String id) {
             

@@ -21,6 +21,7 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
@@ -36,7 +37,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.BoundCompoundPropertyModel;
-import org.apache.wicket.model.PropertyModel;
 
 /**
  * user allocate page
@@ -63,8 +63,7 @@ public class UserAllocatePage extends BasePage {
         this.selectedSpaceId = selectedSpaceId;
         add(new UserAllocateForm("form"));
     }    
-    
-    
+        
     /**
      * wicket form
      */
@@ -80,7 +79,11 @@ public class UserAllocatePage extends BasePage {
         private void initRoleChoice(Space space) {
             roleKeys = user.getRoleKeys(space);
             List<String> list = space.getMetadata().getAllRoleKeys();
-            list.removeAll(roleKeys);            
+            list.removeAll(roleKeys);
+            // if super user, no need for space level admin option
+            if(user.isAdminForAllSpaces()) {
+                list.remove("ROLE_ADMIN");
+            }
             roleKeyChoice.setChoices(list);
             allocateButton.setEnabled(true);
         }        
@@ -97,48 +100,56 @@ public class UserAllocatePage extends BasePage {
             
             add(new Label("label", user.getName() + " (" + user.getLoginName() + ")"));
             
-            List<UserSpaceRole> usrs = new ArrayList(user.getUserSpaceRoles());
-                        
+            final Map<Long, List<UserSpaceRole>> spaceRolesMap = user.getSpaceRolesMap();                                    
             
             final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
             
-            add(new ListView("usrs", usrs) {
+            add(new ListView("spaces", new ArrayList(spaceRolesMap.keySet())) {
                 protected void populateItem(ListItem listItem) {
-                    final UserSpaceRole usr = (UserSpaceRole) listItem.getModelObject();
-                    if(usr.getSpace() != null && usr.getSpace().getId() == selectedSpaceId) {
+                    long spaceId = (Long) listItem.getModelObject();    
+                    List<UserSpaceRole> usrs = spaceRolesMap.get(spaceId);
+                    // space can be null for "all spaces" role
+                    final Space space = usrs.get(0).getSpace();                     
+                    if(space != null && space.getId() == selectedSpaceId) {
                         listItem.add(new SimpleAttributeModifier("class", "selected"));
                     } else if(listItem.getIndex() % 2 == 1) {
                         listItem.add(sam);
-                    }                                        
-                    WebMarkupContainer spaceSpan = new WebMarkupContainer("space");
-                    listItem.add(spaceSpan);
-                    if(usr.getSpace() == null) {                        
-                        spaceSpan.setVisible(false);                    
+                    }                                                                                                         
+                    if(space == null) {                        
+                        listItem.add(new Label("name", localize("user_allocate_space.allSpaces"))); 
+                        listItem.add(new WebMarkupContainer("prefixCode").setVisible(false));                        
                     } else {
-                        spaceSpan.add(new Label("name", usr.getSpace().getName()));
-                        spaceSpan.add(new Link("prefixCode") {
+                        listItem.add(new Label("name", space.getName()));
+                        listItem.add(new Link("prefixCode") {
                             public void onClick() {
                                 if(previous instanceof SpaceAllocatePage) { // prevent recursive stack buildup
                                     previous = null;
                                 }                                
-                                setResponsePage(new SpaceAllocatePage(usr.getSpace().getId(), UserAllocatePage.this, userId));
+                                setResponsePage(new SpaceAllocatePage(space.getId(), UserAllocatePage.this, userId));
                             }
-                        }.add(new Label("prefixCode", usr.getSpace().getPrefixCode())));
-                    } 
-                    listItem.add(new Label("roleKey", new PropertyModel(usr, "roleKey")));
-                    Button deallocate = new Button("deallocate") {
-                        @Override
-                        public void onSubmit() {
-                            getJtrac().removeUserSpaceRole(usr);
-                            JtracSession.get().refreshPrincipalIfSameAs(usr.getUser());
-                            setResponsePage(new UserAllocatePage(userId, previous));
-                        }                   
-                    };
-                    // make it impossible to remove the first user ensuring there is always an admin
-                    if(usr.getUser().getId() == 1 && "ROLE_ADMIN".equals(usr.getRoleKey())) {
-                        deallocate.setVisible(false);
+                        }.add(new Label("prefixCode", space.getPrefixCode()))); 
                     }
-                    listItem.add(deallocate);
+                    listItem.add(new ListView("roleKeys", usrs) {                            
+                        protected void populateItem(ListItem roleKeyItem) {
+                            final UserSpaceRole usr = (UserSpaceRole) roleKeyItem.getModelObject();
+                            roleKeyItem.add(new Label("roleKey", usr.getRoleKey()));
+                            Button deallocate = new Button("deallocate") {
+                                @Override
+                                public void onSubmit() {
+                                    getJtrac().removeUserSpaceRole(usr);
+                                    JtracSession.get().refreshPrincipalIfSameAs(user);
+                                    setResponsePage(new UserAllocatePage(userId, previous));
+                                }                   
+                            };
+                            // make it impossible to remove the first user ensuring there is always an admin
+                            if(space == null 
+                                    && user.getId() == 1 
+                                    && "ROLE_ADMIN".equals(usr.getRoleKey())) {
+                                deallocate.setVisible(false);
+                            }
+                            roleKeyItem.add(deallocate);                                 
+                        }                            
+                    });                    
                 }
             });                       
             

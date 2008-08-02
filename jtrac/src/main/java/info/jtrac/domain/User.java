@@ -63,7 +63,7 @@ public class User implements UserDetails, Serializable {
         userSpaceRoles.add(new UserSpaceRole(this, space, roleKey));        
     }
     
-    public void removeSpaceWithRole(Space space, String roleKey) {
+    public void removeSpaceWithRole(Space space, String roleKey) {            
         userSpaceRoles.remove(new UserSpaceRole(this, space, roleKey));        
     }
     
@@ -132,6 +132,28 @@ public class User implements UserDetails, Serializable {
         return map.values();
     }        
     
+    /**
+     * returns a sorted map of spaces for this user where the value is
+     * a List of role keys, useful for UI display of this
+     * users allocated spaces and roles
+     */
+    public Map<Long, List<UserSpaceRole>> getSpaceRolesMap() {
+        Map<Long, List<UserSpaceRole>> map = new TreeMap<Long, List<UserSpaceRole>>();
+        for(UserSpaceRole usr : userSpaceRoles) {
+            long spaceId = 0;
+            if(usr.getSpace() != null) {
+                spaceId = usr.getSpace().getId();
+            }
+            List<UserSpaceRole> list = map.get(spaceId);
+            if(list == null) {
+                list = new ArrayList<UserSpaceRole>();
+                map.put(spaceId, list);
+            }
+            list.add(usr);
+        }
+        return map;
+    }
+    
     public boolean isGuestForSpace(Space space) {
         if (id == 0) {
             return true;
@@ -153,7 +175,7 @@ public class User implements UserDetails, Serializable {
             }
         }
         return list;
-    }    
+    }            
     
     //============ ACEGI UserDetails implementation ===============
     
