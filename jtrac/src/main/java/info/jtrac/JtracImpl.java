@@ -514,7 +514,11 @@ public class JtracImpl implements Jtrac {
         // spaces have multiple roles, find users that have not been
         // allocated all roles for the given space
         for(User user : users) {
+            boolean isAdminForAllSpaces = user.isAdminForAllSpaces();
             for(String roleKey : roleKeys) {
+                if(isAdminForAllSpaces && roleKey.equals("ROLE_ADMIN")) {
+                    continue;
+                }
                 UserSpaceRole usr = new UserSpaceRole(user, space, roleKey);
                 if(!userSpaceRoles.contains(usr)) {
                     unallocated.add(user);
@@ -592,10 +596,14 @@ public class JtracImpl implements Jtrac {
         User user = loadUser(userId);
         Set<UserSpaceRole> usrs = user.getUserSpaceRoles();
         List<Space> unallocated = new ArrayList<Space>();
+        boolean isAdminForAllSpaces = user.isAdminForAllSpaces();
         // spaces have multiple roles, find spaces that have roles
         // not yet assigned to the user
         for(Space space : spaces) {
             for(String roleKey : space.getMetadata().getAllRoleKeys()) {
+                if(isAdminForAllSpaces && roleKey.equals("ROLE_ADMIN")) {
+                    continue;
+                }
                 UserSpaceRole usr = new UserSpaceRole(user, space, roleKey);
                 if(!usrs.contains(usr)) {
                     unallocated.add(space);
