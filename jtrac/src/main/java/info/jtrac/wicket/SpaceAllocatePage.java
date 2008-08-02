@@ -19,6 +19,7 @@ package info.jtrac.wicket;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -77,9 +78,9 @@ public class SpaceAllocatePage extends BasePage {
                 
         private Space space;
         private User user;
-        private String roleKey;
+        private List<String> roleKeys;
               
-        private DropDownChoice roleKeyChoice;        
+        private JtracCheckBoxMultipleChoice roleKeyChoice;        
         private Button allocateButton;  
         
         /**
@@ -87,19 +88,15 @@ public class SpaceAllocatePage extends BasePage {
          * used on form init and also on Ajax onChange event for User choice
          */
         private void initRoleChoice(User u) {            
-            List<String> roleKeys = space.getMetadata().getAllRoleKeys();            
+            List<String> list = space.getMetadata().getAllRoleKeys();            
             for(String s : u.getRoleKeys(space)) {                
-                roleKeys.remove(s);
+                list.remove(s);
             } 
             // super user doesn't need space level option
             if(u.isAdminForAllSpaces()) {
-                roleKeys.remove("ROLE_ADMIN");
+                list.remove("ROLE_ADMIN");
             }
-            if(roleKeys.size() == 1) {
-                // pre select role for convenience
-                roleKey = roleKeys.get(0);
-            }
-            roleKeyChoice.setChoices(roleKeys);                    
+            roleKeyChoice.setChoices(list);                    
             roleKeyChoice.setEnabled(true);
             allocateButton.setEnabled(true);            
         }        
@@ -123,7 +120,7 @@ public class SpaceAllocatePage extends BasePage {
             LoadableDetachableModel usrsModel = new LoadableDetachableModel() {
                 protected Object load() {
                     logger.debug("loading user space roles list from database");
-                    return getJtrac().findUserRolesForSpace(spaceId);
+                    return getJtrac().findUsersForSpace(spaceId);
                 }
             };                                    
             
@@ -131,8 +128,8 @@ public class SpaceAllocatePage extends BasePage {
             
             add(new ListView("usrs", usrsModel) {
                 protected void populateItem(ListItem listItem) {
-                    final UserSpaceRole usr = (UserSpaceRole) listItem.getModelObject();
-                    if(selectedUserId == usr.getUser().getId()) {
+                    final User user = (User) listItem.getModelObject();
+                    if(selectedUserId == user.getId()) {
                         listItem.add(new SimpleAttributeModifier("class", "selected"));
                     } else if(listItem.getIndex() % 2 == 1) {
                         listItem.add(sam);
@@ -142,19 +139,25 @@ public class SpaceAllocatePage extends BasePage {
                             if(previous instanceof UserAllocatePage) { // prevent recursive stack buildup
                                 previous = null;
                             }                               
-                            setResponsePage(new UserAllocatePage(usr.getUser().getId(), SpaceAllocatePage.this, spaceId));
+                            setResponsePage(new UserAllocatePage(user.getId(), SpaceAllocatePage.this, spaceId));
                         }
-                    }.add(new Label("loginName", new PropertyModel(usr, "user.loginName"))));
-                    listItem.add(new Label("name", new PropertyModel(usr, "user.name")));
-                    listItem.add(new Label("roleKey", new PropertyModel(usr, "roleKey")));
-                    listItem.add(new Button("deallocate") {
-                        @Override
-                        public void onSubmit() {
-                            // avoid lazy loading problem
-                            UserSpaceRole temp = getJtrac().loadUserSpaceRole(usr.getId());
-                            getJtrac().removeUserSpaceRole(temp);                                                                                      
-                            JtracSession.get().refreshPrincipalIfSameAs(temp.getUser());                            
-                            setResponsePage(new SpaceAllocatePage(spaceId, previous));
+                    }.add(new Label("loginName", new PropertyModel(user, "loginName"))));
+                    listItem.add(new Label("name", new PropertyModel(user, "name")));
+                    List<UserSpaceRole> usrs = user.getSpaceRolesMap().get(space.getId());
+                    listItem.add(new ListView("roleKeys", usrs) {
+                        protected void populateItem(ListItem roleKeyItem) {
+                            final UserSpaceRole usr = (UserSpaceRole) roleKeyItem.getModelObject();
+                            roleKeyItem.add(new Label("roleKey", usr.getRoleKey()));
+                            roleKeyItem.add(new Button("deallocate") {
+                                @Override
+                                public void onSubmit() {
+                                    // avoid lazy loading problem
+                                    UserSpaceRole temp = getJtrac().loadUserSpaceRole(usr.getId());
+                                    getJtrac().removeUserSpaceRole(temp);                                                                                      
+                                    JtracSession.get().refreshPrincipalIfSameAs(temp.getUser());                            
+                                    setResponsePage(new SpaceAllocatePage(spaceId, previous));
+                                }
+                            });                            
                         }
                     });
                 }
@@ -201,21 +204,30 @@ public class SpaceAllocatePage extends BasePage {
                 }
             });             
             
-            roleKeyChoice = new DropDownChoice("roleKey");
+            roleKeyChoice = new JtracCheckBoxMultipleChoice("roleKeys", new ArrayList<String>(), new IChoiceRenderer() {
+                public Object getDisplayValue(Object o) {
+                    return o;
+                }
+
+                public String getIdValue(Object o, int i) {
+                    return (String) o;
+                }
+            });
             roleKeyChoice.setOutputMarkupId(true);
-            roleKeyChoice.setEnabled(false);            
-            roleKeyChoice.setNullValid(true);            
+            roleKeyChoice.setEnabled(false);                      
             add(roleKeyChoice);
             
             allocateButton = new Button("allocate") {
                 @Override
                 public void onSubmit() {                    
-                    if(user == null || roleKey == null) {
+                    if(user == null || roleKeys.size() == 0) {
                         return;
                     }
                     // avoid lazy init problem
                     User temp = getJtrac().loadUser(user.getId());
-                    getJtrac().storeUserSpaceRole(temp, space, roleKey);
+                    for(String roleKey : roleKeys) {
+                        getJtrac().storeUserSpaceRole(temp, space, roleKey);
+                    }                                         
                     JtracSession.get().refreshPrincipalIfSameAs(temp);
                     setResponsePage(new SpaceAllocatePage(spaceId, previous, user.getId()));
                 }
