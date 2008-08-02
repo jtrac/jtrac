@@ -141,7 +141,7 @@ public class SpaceAllocatePage extends BasePage {
                         }
                     }.add(new Label("loginName", new PropertyModel(user, "loginName"))));
                     listItem.add(new Label("name", new PropertyModel(user, "name")));
-                    List<UserSpaceRole> usrs = user.getSpaceRolesMap().get(space.getId());
+                    List<UserSpaceRole> usrs = user.getSpaceRolesMap().get(space.getPrefixCode());
                     listItem.add(new RoleDeAllocatePanel("roleDeAllocatePanel", usrs));
                 }
             });

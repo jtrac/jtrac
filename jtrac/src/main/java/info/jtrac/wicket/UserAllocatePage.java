@@ -107,15 +107,15 @@ public class UserAllocatePage extends BasePage {
             
             add(new Label("label", user.getName() + " (" + user.getLoginName() + ")"));
             
-            final Map<Long, List<UserSpaceRole>> spaceRolesMap = user.getSpaceRolesMap();                                    
+            final Map<String, List<UserSpaceRole>> spaceRolesMap = user.getSpaceRolesMap();                                    
             
             final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
             
             add(new ListView("spaces", new ArrayList(spaceRolesMap.keySet())) {
                 protected void populateItem(ListItem listItem) {
-                    long spaceId = (Long) listItem.getModelObject();    
-                    List<UserSpaceRole> usrs = spaceRolesMap.get(spaceId);
-                    // space can be null for "all spaces" role
+                    String prefixCode = (String) listItem.getModelObject();    
+                    List<UserSpaceRole> usrs = spaceRolesMap.get(prefixCode);
+                    // space can be null for "all spaces" role (prefixCode used in map = "")
                     final Space space = usrs.get(0).getSpace();                     
                     if(space != null && space.getId() == selectedSpaceId) {
                         listItem.add(new SimpleAttributeModifier("class", "selected"));
@@ -144,7 +144,8 @@ public class UserAllocatePage extends BasePage {
             
             DropDownChoice spaceChoice = new DropDownChoice("space", spaces, new IChoiceRenderer() {
                 public Object getDisplayValue(Object o) {
-                    return ((Space) o).getName();
+                    Space space = (Space) o;
+                    return space.getName() + " [" + space.getPrefixCode() + "]";
                 }
                 public String getIdValue(Object o, int i) {
                     return ((Space) o).getId() + "";
