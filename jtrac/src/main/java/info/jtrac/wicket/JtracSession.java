@@ -16,6 +16,7 @@
 
 package info.jtrac.wicket;
 
+import info.jtrac.Jtrac;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
@@ -97,14 +98,18 @@ public class JtracSession extends WebSession {
             setLocale(StringUtils.parseLocaleString(user.getLocale()));
         }
     }
+    
+    private Jtrac getJtrac() {
+        return JtracApplication.get().getJtrac();
+    }
 
     /* reload user details from database */
     public void refreshPrincipal() {
         // who knows, loginName could have changed, use id to get latest
-        User temp = JtracApplication.get().getJtrac().loadUser(getUser().getId());        
+        User temp = getJtrac().loadUser(getUser().getId());        
         // loadUserByUsername forces hibernate eager load
         // TODO make this suck less
-        setUser((User) JtracApplication.get().getJtrac().loadUserByUsername(temp.getLoginName())); 
+        setUser((User) getJtrac().loadUserByUsername(temp.getLoginName())); 
     }
     
     /* only reload if passed in user is same as session user */
