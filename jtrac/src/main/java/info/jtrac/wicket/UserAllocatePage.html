@@ -18,13 +18,7 @@
                                 [<a href="#" wicket:id="prefixCode"><span wicket:id="prefixCode"></span></a>]
                             </wicket:enclosure>
                         </td>
-                        <td>
-                            <span wicket:id="roleKeys">
-                                <span wicket:id="roleKey"></span>
-                                <input type="image" wicket:id="deallocate" src="../resources/delete.gif"/>
-                                &nbsp;
-                            </span>                            
-                        </td>                        
+                        <td wicket:id="roleDeAllocatePanel"></td>                         
                     </tr>
                 </table>
                 <p/>
@@ -41,7 +35,7 @@
                     </tr>
                     <tr>
                         <th rowspan="2"><wicket:message key="user_allocate_space.role"/></th>
-                        <td wicket:id="roleKeys"></td>  
+                        <td wicket:id="roleAllocatePanel"></td>  
                     </tr>
                     <tr>                        
                         <td>

@@ -45,8 +45,16 @@ public class UserAllocatePage extends BasePage {
       
     private WebPage previous;
     private long userId;
-    private long selectedSpaceId;    
+    private long selectedSpaceId;
 
+    public long getUserId() {
+        return userId;
+    }
+
+    public WebPage getPrevious() {
+        return previous;
+    }        
+    
     public void setSelectedSpaceId(long selectedSpaceId) {
         this.selectedSpaceId = selectedSpaceId;
     }    
@@ -70,21 +78,20 @@ public class UserAllocatePage extends BasePage {
     private class UserAllocateForm extends Form {                
         
         private User user;
-        private Space space;
-        private List<String> roleKeys;      
+        private Space space;              
                         
-        private JtracCheckBoxMultipleChoice roleKeyChoice;        
+        private RoleAllocatePanel roleAllocatePanel;      
         private Button allocateButton;                
         
         private void initRoleChoice(Space space) {
-            roleKeys = user.getRoleKeys(space);
+            List<String> roleKeys = user.getRoleKeys(space);
             List<String> list = space.getMetadata().getAllRoleKeys();
             list.removeAll(roleKeys);
             // if super user, no need for space level admin option
             if(user.isAdminForAllSpaces()) {
                 list.remove("ROLE_ADMIN");
             }
-            roleKeyChoice.setChoices(list);
+            roleAllocatePanel.setChoices(list);
             allocateButton.setEnabled(true);
         }        
         
@@ -129,27 +136,7 @@ public class UserAllocatePage extends BasePage {
                             }
                         }.add(new Label("prefixCode", space.getPrefixCode()))); 
                     }
-                    listItem.add(new ListView("roleKeys", usrs) {                            
-                        protected void populateItem(ListItem roleKeyItem) {
-                            final UserSpaceRole usr = (UserSpaceRole) roleKeyItem.getModelObject();
-                            roleKeyItem.add(new Label("roleKey", usr.getRoleKey()));
-                            Button deallocate = new Button("deallocate") {
-                                @Override
-                                public void onSubmit() {
-                                    getJtrac().removeUserSpaceRole(usr);
-                                    JtracSession.get().refreshPrincipalIfSameAs(user);
-                                    setResponsePage(new UserAllocatePage(userId, previous));
-                                }                   
-                            };
-                            // make it impossible to remove the first user ensuring there is always an admin
-                            if(space == null 
-                                    && user.getId() == 1 
-                                    && "ROLE_ADMIN".equals(usr.getRoleKey())) {
-                                deallocate.setVisible(false);
-                            }
-                            roleKeyItem.add(deallocate);                                 
-                        }                            
-                    });                    
+                    listItem.add(new RoleDeAllocatePanel("roleDeAllocatePanel", usrs));                    
                 }
             });                       
             
@@ -171,36 +158,26 @@ public class UserAllocatePage extends BasePage {
                 protected void onUpdate(AjaxRequestTarget target) {
                     Space s = (Space) getFormComponent().getConvertedInput();
                     if (s == null) {
-                        roleKeyChoice.setChoices(new ArrayList<String>());
+                        roleAllocatePanel.setChoices(new ArrayList<String>());
                         allocateButton.setEnabled(false);
                     } else {
                         Space temp = getJtrac().loadSpace(s.getId());
                         // populate choice, enable button etc
                         initRoleChoice(temp);
                     }
-                    target.addComponent(roleKeyChoice);
+                    target.addComponent(roleAllocatePanel);
                     target.addComponent(allocateButton);
                 }
             });                                                
             
-            roleKeyChoice = new JtracCheckBoxMultipleChoice("roleKeys", new ArrayList<String>(), new IChoiceRenderer() {
-                public Object getDisplayValue(Object o) {
-                    return o;
-                }
-
-                public String getIdValue(Object o, int i) {
-                    return (String) o;
-                }
-            });            
-            roleKeyChoice.setOutputMarkupId(true); 
-            
-            // roleKeyChoice.setRequired(true);            
-            roleKeyChoice.add(new ErrorHighlighter());
-            add(roleKeyChoice);
+            roleAllocatePanel = new RoleAllocatePanel("roleAllocatePanel");                    
+            roleAllocatePanel.setOutputMarkupId(true);                                  
+            add(roleAllocatePanel);                                   
             
             allocateButton = new Button("allocate") {
                 @Override
-                public void onSubmit() {                    
+                public void onSubmit() {  
+                    List<String> roleKeys = roleAllocatePanel.getSelected();
                     if(space == null || roleKeys.size() == 0) {
                         return;
                     }

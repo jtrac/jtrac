@@ -15,13 +15,7 @@
                     <tr wicket:id="usrs">                        
                         <td wicket:id="name"></td>
                         <td wicket:id="loginName"><a href="#" wicket:id="loginName"></a></td>                        
-                        <td>
-                            <span wicket:id="roleKeys">
-                                <span wicket:id="roleKey"></span>
-                                <input type="image" wicket:id="deallocate" src="../resources/delete.gif"/>
-                                &nbsp;
-                            </span>
-                        </td>                        
+                        <td wicket:id="roleDeAllocatePanel"></td>                        
                     </tr>
                 </table>
                 <p/>
@@ -38,7 +32,7 @@
                     </tr>
                     <tr>
                         <th rowspan="2"><wicket:message key="space_allocate.role"/></th>
-                        <td wicket:id="roleKeys"></td>  
+                        <td wicket:id="roleAllocatePanel"></td>  
                     </tr>
                     <tr>                        
                         <td>
