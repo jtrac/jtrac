@@ -1776,7 +1776,7 @@ mvn eclipse:eclipse -DdownloadSources=true
             <title>Adding a language translation for JTrac</title>
             <para>
                 JTrac has full internationalization (i18n) support and you can easily add a new language without re-compiling JTrac.
-                All you need to do is introduce a translated version of the existing "messages.properties" file into
+                All you need to do is introduce a translated version of the existing "messages_en.properties" file into
                 the "/WEB-INF/classes" folder.  Note that you will need to unzip the WAR file in order to add more files to it.
             </para>
             <para>
@@ -1792,7 +1792,7 @@ mvn eclipse:eclipse -DdownloadSources=true
                 options screen and this takes effect the instant the user saves his profile.
             </para>
             <para>
-                You can also get the latest versions of the "messages.properties" as well as the available
+                You can also get the latest versions of the "messages_en.properties" as well as the available
                 translations directly from version control at this url:
                 <ulink url="http://j-trac.svn.sourceforge.net/viewvc/j-trac/trunk/jtrac/src/main/resources/"/>
                 Since these may change a lot, it is recommended that you check here as well before submitting
