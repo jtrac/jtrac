@@ -249,11 +249,7 @@ public class JtracImpl implements Jtrac {
         item.setTimeStamp(now);
         history.setTimeStamp(now);
         item.add(history);
-        SpaceSequence spaceSequence = dao.loadSpaceSequence(item.getSpace().getSpaceSequence().getId());
-        item.setSequenceNum(spaceSequence.next());
-        // the synchronize for this storeItem method and the hibernate flush() call in the dao implementation
-        // are important to prevent duplicate sequence numbers
-        dao.storeSpaceSequence(spaceSequence);
+        item.setSequenceNum(dao.loadNextSequenceNum(item.getSpace().getSpaceSequence().getId()));
         // this will at the moment execute unnecessary updates (bug in Hibernate handling of "version" property)
         // se http://opensource.atlassian.com/projects/hibernate/browse/HHH-1401
         // TODO confirm if above does not happen anymore
@@ -268,7 +264,7 @@ public class JtracImpl implements Jtrac {
         }
     }
 
-    public void updateItem(Item item, User user) {
+    public synchronized void updateItem(Item item, User user) {
         logger.debug("update item called");
         History history = new History(item);
         history.setAssignedTo(null);

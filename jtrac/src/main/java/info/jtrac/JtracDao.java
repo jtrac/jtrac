@@ -16,7 +16,6 @@
 
 package info.jtrac;
 
-import info.jtrac.domain.AbstractItem;
 import info.jtrac.domain.Attachment;
 import info.jtrac.domain.Config;
 import info.jtrac.domain.Counts;
@@ -25,7 +24,6 @@ import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
-import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.User;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
@@ -75,8 +73,7 @@ public interface JtracDao {
     List<Space> findSpacesWhereGuestAllowed();
     void removeSpace(Space space);
     //=========================================== 
-    SpaceSequence loadSpaceSequence(long id);
-    void storeSpaceSequence(SpaceSequence spaceSequence);
+    long loadNextSequenceNum(long spaceSequenceId);    
     //===========================================
     void storeUser(User user);
     User loadUser(long id);

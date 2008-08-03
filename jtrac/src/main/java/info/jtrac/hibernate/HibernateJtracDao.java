@@ -206,16 +206,18 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return (UserSpaceRole) getHibernateTemplate().get(UserSpaceRole.class, id);
     }    
     
-    public SpaceSequence loadSpaceSequence(final long id) { 
-        // important to prevent duplicate sequence numbers, see JtracImpl#storeItem()
-        getHibernateTemplate().flush();        
-        return (SpaceSequence) getHibernateTemplate().get(SpaceSequence.class, id);           
-    }    
-    
-    public void storeSpaceSequence(SpaceSequence spaceSequence) {
-        getHibernateTemplate().saveOrUpdate(spaceSequence);
-        // important to prevent duplicate sequence numbers, see JtracImpl#storeItem()
-        getHibernateTemplate().flush();
+    public synchronized long loadNextSequenceNum(final long spaceSequenceId) {
+        return (Long) getHibernateTemplate().execute(new HibernateCallback() {
+            public Object doInHibernate(Session session) {  
+                session.flush();
+                session.setCacheMode(CacheMode.IGNORE);
+                SpaceSequence ss = (SpaceSequence) session.get(SpaceSequence.class, spaceSequenceId);                                
+                long next = ss.next();
+                session.update(ss);
+                session.flush();
+                return next;
+            }
+        });    
     }
     
     public List<Space> findSpacesByPrefixCode(String prefixCode) {
@@ -513,10 +515,9 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
                 logger.warn("fixing sequence number for space id: " + spaceId 
                         + ", was: " + ss.getNextSeqNum() + ", should be: " + (maxSeqNum + 1));
                 ss.setNextSeqNum(maxSeqNum + 1);
-                storeSpaceSequence(ss);
+                getHibernateTemplate().update(ss);
             }
-        }
-        
+        }   
     }    
     
 }
