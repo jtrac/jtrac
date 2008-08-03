@@ -50,8 +50,8 @@ public class HeaderPanel extends BasePanel {
         });
         
         if (space == null) {
-            add(new Label("space", "").setVisible(false));
-            add(new Label("new", "").setVisible(false));
+            add(new WebMarkupContainer("spaceName").setVisible(false));
+            add(new WebMarkupContainer("new").setVisible(false));
             add(new Link("search") {
                 public void onClick() {                    
                     // if only one space don't use generic search screen
@@ -69,7 +69,8 @@ public class HeaderPanel extends BasePanel {
                 }
             });            
         } else {
-            add(new Label("space", space.getName()));            
+            add(new Label("spaceName", space.getName()));   
+            add(new Label("prefixCode", space.getPrefixCode())); 
             if (user.getPermittedTransitions(space, State.NEW).size() > 0) {            
                 add(new Link("new") {
                     public void onClick() {

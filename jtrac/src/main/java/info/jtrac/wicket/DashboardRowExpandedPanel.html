@@ -1,6 +1,9 @@
 <wicket:panel>
     <tr class="nav-table" wicket:id="rows">        
-        <td span wicket:id="space" class="selected" style="text-align:left"></td>
+        <td class="selected" style="text-align:left" wicket:id="space">
+            <span wicket:id="name"></span>
+            <font size="1">[<span wicket:id="prefixCode"></span>]</font>
+        </td>
         <td class="icon" wicket:id="new">
             <a href="#" wicket:id="new"><img src="resources/new.gif" wicket:message="title:dashboard.new"/></a>           
         </td>

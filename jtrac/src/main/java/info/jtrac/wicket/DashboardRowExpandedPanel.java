@@ -61,8 +61,13 @@ public class DashboardRowExpandedPanel extends BasePanel {
                 
                 if (listItem.getIndex() == 0) { // rowspan output only for first row            
                     
-                    listItem.add(new Label("space", space.getName()).add(sam));
-                                        
+                    WebMarkupContainer spaceCell = new WebMarkupContainer("space");     
+                    spaceCell.add(sam);
+                    listItem.add(spaceCell);
+                                      
+                    spaceCell.add(new Label("name", space.getName()));
+                    spaceCell.add(new Label("prefixCode", space.getPrefixCode()));
+                    
                     WebMarkupContainer newColumn = new WebMarkupContainer("new");
                     newColumn.add(sam);   
                     listItem.add(newColumn);

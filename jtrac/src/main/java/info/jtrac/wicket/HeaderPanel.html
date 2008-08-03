@@ -3,7 +3,7 @@
         <table style="float:left">
             <tr>
                 <td><a href="#" wicket:id="dashboard"><img src="resources/dashboard.gif"/><wicket:message key="header.dashboard"/></a></td>
-                <wicket:enclosure><td><img src="resources/space.gif"/><span wicket:id="space"></span></td></wicket:enclosure>
+                <wicket:enclosure child="spaceName"><td><img src="resources/space.gif"/><span wicket:id="spaceName"></span>&nbsp;<font size="1">[<span wicket:id="prefixCode"></span>]</font></td></wicket:enclosure>
                 <wicket:enclosure><td><a href="#" wicket:id="new"><img src="resources/new.gif"/><wicket:message key="header.new"/></a></td></wicket:enclosure>
                 <wicket:enclosure><td><a href="#" wicket:id="search"><img src="resources/search.gif"/><wicket:message key="header.search"/></a></td></wicket:enclosure>
             </tr>

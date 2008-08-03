@@ -41,8 +41,12 @@ public class DashboardRowPanel extends BasePanel {
         
         final Space space = usr.getSpace();
         final User user = usr.getUser();
-        
-        add(new Label("space", space.getName()));
+                            
+        WebMarkupContainer spaceCell = new WebMarkupContainer("space");        
+        add(spaceCell);
+
+        spaceCell.add(new Label("name", space.getName()));
+        spaceCell.add(new Label("prefixCode", space.getPrefixCode()));
         
         if(usr.isAbleToCreateNewItem()) {
             add(new Link("new") {
