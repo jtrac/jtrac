@@ -448,6 +448,7 @@ public class JtracImpl implements Jtrac {
     }
 
     public void storeUser(User user) {
+        user.clearNonPersistentRoles();
         dao.storeUser(user);
     }
 
@@ -546,10 +547,8 @@ public class JtracImpl implements Jtrac {
     //==========================================================================
 
     public void storeUserSpaceRole(User user, Space space, String roleKey) {
-        // very rare chance that incoming user is in guest mode!
-        User temp = loadUser(user.getId());
-        temp.addSpaceWithRole(space, roleKey);
-        dao.storeUser(temp);
+        user.addSpaceWithRole(space, roleKey);
+        storeUser(user);
     }
 
     public void removeUserSpaceRole(UserSpaceRole userSpaceRole) {

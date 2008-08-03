@@ -68,6 +68,22 @@ public class User implements UserDetails, Serializable {
     }
     
     /**
+     * used because there is a rare chance that after a principal "refresh"
+     * like after editing spaces for self, on saving profile for self,
+     * the "fake" roles like "ROLE_GUEST" will get saved to the database
+     * this method has to be called before saving a user object
+     */
+    public void clearNonPersistentRoles() {
+        List<UserSpaceRole> toRemove = new ArrayList<UserSpaceRole>();
+        for(UserSpaceRole usr : userSpaceRoles) {
+            if("ROLE_GUEST".equals(usr.getRoleKey())) {
+                toRemove.add(usr);
+            }
+        }
+        userSpaceRoles.removeAll(toRemove);
+    }
+    
+    /**
      * when the passed space is null this has a special significance
      * it will return roles that are 'global'
      */
