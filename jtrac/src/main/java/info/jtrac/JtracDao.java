@@ -28,6 +28,7 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.ItemItem;
+import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.UserSpaceRole;
 import java.util.Collection;
 
@@ -73,7 +74,8 @@ public interface JtracDao {
     List<Space> findSpacesWhereGuestAllowed();
     void removeSpace(Space space);
     //=========================================== 
-    long loadNextSequenceNum(long spaceSequenceId);    
+    long loadNextSequenceNum(long spaceSequenceId); 
+    void storeSpaceSequence(SpaceSequence spaceSequence);
     //===========================================
     void storeUser(User user);
     User loadUser(long id);

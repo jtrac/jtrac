@@ -249,7 +249,7 @@ public class JtracImpl implements Jtrac {
         item.setTimeStamp(now);
         history.setTimeStamp(now);
         item.add(history);
-        item.setSequenceNum(dao.loadNextSequenceNum(item.getSpace().getSpaceSequence().getId()));
+        item.setSequenceNum(dao.loadNextSequenceNum(item.getSpace().getId()));
         // this will at the moment execute unnecessary updates (bug in Hibernate handling of "version" property)
         // se http://opensource.atlassian.com/projects/hibernate/browse/HHH-1401
         // TODO confirm if above does not happen anymore
@@ -571,8 +571,18 @@ public class JtracImpl implements Jtrac {
         return spaces.get(0);
     }
 
-    public void storeSpace(Space space) {        
+    public void storeSpace(Space space) {
+        boolean newSpace = false;
+        if(space.getId() == 0) {
+            newSpace = true;
+        }
         dao.storeSpace(space);
+        if(newSpace) {
+            SpaceSequence ss = new SpaceSequence();
+            ss.setNextSeqNum(1);
+            ss.setId(space.getId());
+            dao.storeSpaceSequence(ss);
+        }
     }
 
     public List<Space> findAllSpaces() {

@@ -35,13 +35,10 @@ public class Space implements Serializable {
     private String prefixCode;
     private String name;
     private String description;
-    private boolean guestAllowed;
-    private SpaceSequence spaceSequence;
+    private boolean guestAllowed;    
     private Metadata metadata;
     
     public Space() {
-        spaceSequence = new SpaceSequence();
-        spaceSequence.setSpace(this);
         metadata = new Metadata();
     }
     
@@ -53,14 +50,6 @@ public class Space implements Serializable {
 
     public void setVersion(int version) {
         this.version = version;
-    }     
-    
-    public SpaceSequence getSpaceSequence() {
-        return spaceSequence;
-    }
-
-    public void setSpaceSequence(SpaceSequence spaceSequence) {
-        this.spaceSequence = spaceSequence;
     }    
     
     public String getPrefixCode() {

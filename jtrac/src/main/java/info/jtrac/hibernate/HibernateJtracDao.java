@@ -212,12 +212,16 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
                 session.flush();
                 session.setCacheMode(CacheMode.IGNORE);
                 SpaceSequence ss = (SpaceSequence) session.get(SpaceSequence.class, spaceSequenceId);                                
-                long next = ss.next();
+                long next = ss.getAndIncrement();
                 session.update(ss);
                 session.flush();
                 return next;
             }
         });    
+    }
+    
+    public void storeSpaceSequence(SpaceSequence spaceSequence) {
+        getHibernateTemplate().save(spaceSequence);
     }
     
     public List<Space> findSpacesByPrefixCode(String prefixCode) {

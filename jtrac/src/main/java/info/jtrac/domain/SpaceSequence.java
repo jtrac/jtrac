@@ -28,10 +28,9 @@ import java.io.Serializable;
 public class SpaceSequence implements Serializable {
     
     private long id;
-    private long nextSeqNum = 1;
-    private Space space;    
+    private long nextSeqNum;    
     
-    public long next() {
+    public long getAndIncrement() {
         return nextSeqNum++;
     }
     
@@ -49,14 +48,6 @@ public class SpaceSequence implements Serializable {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public Space getSpace() {
-        return space;
-    }
-
-    public void setSpace(Space space) {
-        this.space = space;
     }
 
 }
