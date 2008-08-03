@@ -40,6 +40,10 @@ public class RoleDeAllocatePanel extends BasePanel {
                     public void onSubmit() {
                         // avoid lazy loading problem
                         UserSpaceRole temp = getJtrac().loadUserSpaceRole(usr.getId());
+                        if(temp == null) {
+                            // very rare chance that this is a user in "guest mode"                            
+                            return;
+                        }
                         getJtrac().removeUserSpaceRole(temp);                                                                                      
                         JtracSession.get().refreshPrincipalIfSameAs(temp.getUser());
                         // TODO have some nice interface for this

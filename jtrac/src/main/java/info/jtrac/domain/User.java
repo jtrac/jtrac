@@ -188,15 +188,7 @@ public class User implements UserDetails, Serializable {
     }
     
     public GrantedAuthority[] getAuthorities() {
-        Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        // grant full access only if not a Guest
-        if (id > 0) {
-            authorities.add(new UserSpaceRole(this, null, "ROLE_USER"));
-        }
-        for (UserSpaceRole usr : userSpaceRoles) {            
-            authorities.add(usr);
-        }
-        return authorities.toArray(new GrantedAuthority[authorities.size()]);
+        return userSpaceRoles.toArray(new GrantedAuthority[userSpaceRoles.size()]);
     }
     
     public boolean isCredentialsNonExpired() {

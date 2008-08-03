@@ -164,8 +164,7 @@ public class JtracApplication extends WebApplication {
                         logger.debug(spaces.size() + " public space(s) available, initializing guest user");
                         User guestUser = new User();
                         guestUser.setLoginName("guest");
-                        guestUser.setName("Guest");
-                        guestUser.addSpaceWithRole(null, "ROLE_GUEST");
+                        guestUser.setName("Guest");                        
                         for (Space space : spaces) {            
                             guestUser.addSpaceWithRole(space, "ROLE_GUEST");
                         }

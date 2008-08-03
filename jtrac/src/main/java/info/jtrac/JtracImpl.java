@@ -546,8 +546,10 @@ public class JtracImpl implements Jtrac {
     //==========================================================================
 
     public void storeUserSpaceRole(User user, Space space, String roleKey) {
-        user.addSpaceWithRole(space, roleKey);
-        dao.storeUser(user);
+        // very rare chance that incoming user is in guest mode!
+        User temp = loadUser(user.getId());
+        temp.addSpaceWithRole(space, roleKey);
+        dao.storeUser(temp);
     }
 
     public void removeUserSpaceRole(UserSpaceRole userSpaceRole) {

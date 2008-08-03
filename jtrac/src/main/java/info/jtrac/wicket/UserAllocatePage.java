@@ -87,6 +87,9 @@ public class UserAllocatePage extends BasePage {
             List<String> roleKeys = user.getRoleKeys(space);
             List<String> list = space.getMetadata().getAllRoleKeys();
             list.removeAll(roleKeys);
+            // very rare chance that user is in guest mode
+            // don't allow possibility of this getting saved to DB!
+            list.remove("ROLE_GUEST");
             // if super user, no need for space level admin option
             if(user.isAdminForAllSpaces()) {
                 list.remove("ROLE_ADMIN");
