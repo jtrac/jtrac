@@ -572,10 +572,7 @@ public class JtracImpl implements Jtrac {
     }
 
     public void storeSpace(Space space) {
-        boolean newSpace = false;
-        if(space.getId() == 0) {
-            newSpace = true;
-        }
+        boolean newSpace = space.getId() == 0;
         dao.storeSpace(space);
         if(newSpace) {
             SpaceSequence ss = new SpaceSequence();

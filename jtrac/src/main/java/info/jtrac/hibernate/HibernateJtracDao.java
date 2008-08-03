@@ -206,7 +206,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return (UserSpaceRole) getHibernateTemplate().get(UserSpaceRole.class, id);
     }    
     
-    public synchronized long loadNextSequenceNum(final long spaceSequenceId) {
+    public long loadNextSequenceNum(final long spaceSequenceId) {
         return (Long) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) {  
                 session.flush();
