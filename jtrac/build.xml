@@ -218,6 +218,9 @@
                 outdir="target/instr-classes" 
                 metadatafile="target/metadata.emma" merge="true"/>
             </emma>
+            <delete includeemptydirs="true" failonerror="false">
+                <fileset dir="target/home"/>
+            </delete>            
             <copy file="etc/test.log4j.properties" tofile="target/test-classes/log4j.properties"/>
             <junit fork="true" dir="." tempdir="target" haltonfailure="@{haltonfailure}">
                 <classpath>

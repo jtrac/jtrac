@@ -26,6 +26,7 @@ import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemItem;
 import info.jtrac.domain.ItemSearch;
+import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.SpaceSequence;
@@ -181,6 +182,14 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     public void removeItemItem(ItemItem itemItem) {
         getHibernateTemplate().delete(itemItem);
     }    
+    
+    public List<ItemUser> findItemUsersByUser(User user) {
+        return getHibernateTemplate().find("from ItemUser iu where iu.user = ?", user);
+    }
+    
+    public void removeItemUser(ItemUser itemUser) {
+        getHibernateTemplate().delete(itemUser);
+    }
     
     public void storeAttachment(Attachment attachment) {
         getHibernateTemplate().merge(attachment);

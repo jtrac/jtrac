@@ -28,6 +28,7 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.ItemItem;
+import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.UserSpaceRole;
 import java.util.Collection;
@@ -50,6 +51,8 @@ public interface JtracDao {
     List<Item> findAllItems(int firstResult, int batchSize);
     void removeItem(Item item);
     void removeItemItem(ItemItem itemItem);
+    List<ItemUser> findItemUsersByUser(User user);
+    void removeItemUser(ItemUser itemUser);
     //===========================================
     int loadCountOfRecordsHavingFieldNotNull(Space space, Field field);
     int bulkUpdateFieldToNull(Space space, Field field);
@@ -79,7 +82,7 @@ public interface JtracDao {
     //===========================================
     void storeUser(User user);
     User loadUser(long id);
-    void removeUser(User user);
+    void removeUser(User user);       
     List<User> findAllUsers();
     List<User> findUsersWhereIdIn(List<Long> ids);
     List<User> findUsersMatching(String searchText, String searchOn);

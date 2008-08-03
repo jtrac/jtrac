@@ -27,6 +27,7 @@ import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemItem;
 import info.jtrac.domain.ItemRefId;
 import info.jtrac.domain.ItemSearch;
+import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.SpaceSequence;
@@ -462,7 +463,10 @@ public class JtracImpl implements Jtrac {
     }
 
     public void removeUser(User user) {
-        dao.removeUser(user);
+        for(ItemUser iu : dao.findItemUsersByUser(user)) {            
+            dao.removeItemUser(iu);
+        }
+        dao.removeUser(user);        
     }
 
     public List<User> findAllUsers() {

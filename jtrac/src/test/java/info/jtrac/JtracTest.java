@@ -6,6 +6,7 @@ import info.jtrac.domain.CountsHolder;
 import info.jtrac.domain.Field;
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemItem;
+import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
@@ -42,6 +43,18 @@ public class JtracTest extends JtracTestBase {
                 + "</fields></metadata>";
         metadata.setXmlString(xmlString);
         return metadata;
+    }
+    
+    private void cleanDatabase() { 
+        jdbcTemplate.execute("delete from user_space_roles where id > 1");
+        deleteFromTables(new String[] {
+            "history",
+            "items",
+            "spaces",
+            "metadata",
+            "space_sequence"                        
+        });        
+        jdbcTemplate.execute("delete from users where id > 1");         
     }
     
     //==========================================================================
@@ -186,8 +199,10 @@ public class JtracTest extends JtracTestBase {
         UserSpaceRole usr = jtrac.loadUserSpaceRole(id);
         assertEquals(spaceId, usr.getSpace().getId());
         jtrac.removeUserSpaceRole(usr);
-        endTransaction();
+        setComplete();
+        endTransaction();        
         assertEquals(0, jdbcTemplate.queryForInt("select count(0) from user_space_roles where space_id = " + spaceId));
+        cleanDatabase();
     }
     
     public void testFindSpacesWhereGuestAllowed() {
@@ -229,7 +244,8 @@ public class JtracTest extends JtracTestBase {
         i.setStatus(State.CLOSED);
         // next step will internally try to render item as Html for sending e-mail
         jtrac.storeItem(i, null);
-        System.out.println(ItemUtils.getAsXml(i).asXML());
+        String rendered = ItemUtils.getAsXml(i).asXML();
+        assertTrue(rendered.contains("<item refId=\"TEST-"));
     }
     
     public void testDeleteItemThatHasRelatedItems() {
@@ -267,6 +283,49 @@ public class JtracTest extends JtracTestBase {
         // can we remove i1?
         Item temp = jtrac.loadItem(i1.getId());
         jtrac.removeItem(temp);
+    }        
+    
+    public void testDeletingUserDeletesItemUsersAlso() {
+        Space s = getSpace();
+        jtrac.storeSpace(s);
+        User u = new User();
+        u.setLoginName("test");
+        u.setEmail("dummy");
+        u.addSpaceWithRole(s, "DEFAULT");
+        jtrac.storeUser(u);
+        //========================
+        Item i = new Item();
+        i.setSpace(s);
+        i.setAssignedTo(u);
+        i.setLoggedBy(u);
+        i.setStatus(State.CLOSED);
+        //========================
+        // another user to "watch" this item
+        User w = new User();
+        w.setLoginName("test1");
+        w.setEmail("dummy");
+        w.addSpaceWithRole(s, "DEFAULT");
+        jtrac.storeUser(w);
+        ItemUser iu = new ItemUser(w);
+        Set<ItemUser> ius = new HashSet<ItemUser>();
+        ius.add(iu);
+        i.setItemUsers(ius);
+        //========================
+        jtrac.storeItem(i, null);
+        setComplete();
+        endTransaction();
+        
+        startNewTransaction();
+        jtrac.removeUser(w);
+        setComplete();
+        endTransaction();
+        
+        startNewTransaction();  
+        Item dummyItem = jtrac.loadItem(i.getId());
+        assertEquals(0, dummyItem.getItemUsers().size());
+        
+        cleanDatabase();
+        
     }
     
 }
