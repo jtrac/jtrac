@@ -110,7 +110,7 @@ public class SpaceRolePage extends BasePage {
             field.add(new AbstractValidator() {
                 protected void onValidate(IValidatable v) {
                     String s = (String) v.getValue();
-                    if(!ValidationUtils.isAllUpperCase(s)) {
+                    if(!ValidationUtils.isValidRoleKey(s)) {
                         error(v);
                     }
                 }

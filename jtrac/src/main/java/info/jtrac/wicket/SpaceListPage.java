@@ -17,6 +17,7 @@
 package info.jtrac.wicket;
 
 import info.jtrac.domain.Space;
+import info.jtrac.domain.User;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -38,18 +39,25 @@ public class SpaceListPage extends BasePage {
       
     public SpaceListPage() {            
         
+        final User principal = getPrincipal();
+        
+        // since this admin screen can be seen by space-admins,
+        // only allow super users to create new space
         add(new Link("create") {
             public void onClick() {
                 SpaceFormPage page = new SpaceFormPage();
                 page.setPrevious(SpaceListPage.this);
                 setResponsePage(page);
             }            
-        });
+        }.setVisible(principal.isSuperUser()));
         
         LoadableDetachableModel spaceListModel = new LoadableDetachableModel() {
-            protected Object load() {
-                logger.debug("loading space list from database");
-                return getJtrac().findAllSpaces();
+            protected Object load() {                
+                if(principal.isSuperUser()) {                    
+                    return getJtrac().findAllSpaces();
+                } else {
+                    return principal.getSpacesWhereRoleIsAdmin();
+                }
             }
         };
         

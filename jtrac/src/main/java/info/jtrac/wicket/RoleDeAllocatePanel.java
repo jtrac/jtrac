@@ -18,7 +18,6 @@ package info.jtrac.wicket;
 
 import info.jtrac.domain.UserSpaceRole;
 import java.util.List;
-import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -57,9 +56,11 @@ public class RoleDeAllocatePanel extends BasePanel {
                     }                   
                 };
                 // make it impossible to remove the first user ensuring there is always an admin
-                if(usr.getSpace() == null 
-                        && usr.getUser().getId() == 1 
-                        && "ROLE_ADMIN".equals(usr.getRoleKey())) {
+                if(usr.isSuperUser() && usr.getUser().getId() == 1) {
+                    deallocate.setVisible(false);
+                }
+                // make it impossible to remove admin role for self
+                if(usr.getUser().getId() == getPrincipal().getId() && usr.isSpaceAdmin()) {
                     deallocate.setVisible(false);
                 }
                 roleKeyItem.add(deallocate);                                 

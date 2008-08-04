@@ -76,7 +76,7 @@ public class User implements UserDetails, Serializable {
     public void clearNonPersistentRoles() {
         List<UserSpaceRole> toRemove = new ArrayList<UserSpaceRole>();
         for(UserSpaceRole usr : userSpaceRoles) {
-            if("ROLE_GUEST".equals(usr.getRoleKey())) {
+            if(usr.isGuest()) {
                 toRemove.add(usr);
             }
         }
@@ -125,12 +125,21 @@ public class User implements UserDetails, Serializable {
         return false;
     }
     
+    public boolean isAdminForSpace(long spaceId) {
+        for (UserSpaceRole usr : userSpaceRoles) {
+            if (usr.isSpaceAdmin() && usr.getSpace().getId() == spaceId) {
+                return true;
+            }
+        }
+        return false;
+    }    
+    
     public int getSpaceCount() {
         return getSpaces().size();
     }
     
-    public boolean isAdminForAllSpaces() {
-        return getRoleKeys(null).contains("ROLE_ADMIN");
+    public boolean isSuperUser() {
+        return getRoleKeys(null).contains(Role.ROLE_ADMIN);
     }
     
     /** 
@@ -141,7 +150,7 @@ public class User implements UserDetails, Serializable {
     public Collection<UserSpaceRole> getSpaceRoles() {
         Map<String, UserSpaceRole> map = new TreeMap<String, UserSpaceRole>();        
         for(UserSpaceRole usr : userSpaceRoles) {
-            if(usr.getSpace() != null && !usr.getRoleKey().equals("ROLE_ADMIN")) {
+            if(usr.isSpaceAdmin()) {
                 map.put(usr.getSpace().getName(), usr);
             }
         }
@@ -175,13 +184,22 @@ public class User implements UserDetails, Serializable {
             return true;
         }
         for(UserSpaceRole usr : getUserSpaceRolesBySpaceId(space.getId())) {
-            if(usr.getRoleKey().equals("ROLE_GUEST")) {
+            if(usr.isGuest()) {
                 return true;
             }
         }
         return false;
     }
     
+    public List<Space> getSpacesWhereRoleIsAdmin() {
+        List<Space> list = new ArrayList<Space>();
+        for(UserSpaceRole usr : userSpaceRoles) {
+            if(usr.isSpaceAdmin()) {
+                list.add(usr.getSpace());
+            }
+        }
+        return list;
+    }
     
     private Collection<UserSpaceRole> getUserSpaceRolesBySpaceId(long spaceId) {
         List<UserSpaceRole> list = new ArrayList<UserSpaceRole>();

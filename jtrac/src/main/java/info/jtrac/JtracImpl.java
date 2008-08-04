@@ -29,6 +29,7 @@ import info.jtrac.domain.ItemRefId;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Metadata;
+import info.jtrac.domain.Role;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.User;
@@ -418,7 +419,7 @@ public class JtracImpl implements Jtrac {
         Set<Space> userSpaces = user.getSpaces();
         for(Space s : findSpacesWhereGuestAllowed()) {
             if(!userSpaces.contains(s)) {
-                user.addSpaceWithRole(s, "ROLE_GUEST");
+                user.addSpaceWithRole(s, Role.ROLE_GUEST);
                 
             }
         }
@@ -515,9 +516,9 @@ public class JtracImpl implements Jtrac {
         // spaces have multiple roles, find users that have not been
         // allocated all roles for the given space
         for(User user : users) {
-            boolean isAdminForAllSpaces = user.isAdminForAllSpaces();
+            boolean isAdminForAllSpaces = user.isSuperUser();
             for(String roleKey : roleKeys) {
-                if(isAdminForAllSpaces && roleKey.equals("ROLE_ADMIN")) {
+                if(isAdminForAllSpaces && Role.isAdmin(roleKey)) {
                     continue;
                 }
                 UserSpaceRole usr = new UserSpaceRole(user, space, roleKey);
@@ -604,12 +605,12 @@ public class JtracImpl implements Jtrac {
         User user = loadUser(userId);
         Set<UserSpaceRole> usrs = user.getUserSpaceRoles();
         List<Space> unallocated = new ArrayList<Space>();
-        boolean isAdminForAllSpaces = user.isAdminForAllSpaces();
+        boolean isAdminForAllSpaces = user.isSuperUser();
         // spaces have multiple roles, find spaces that have roles
         // not yet assigned to the user
         for(Space space : spaces) {
             for(String roleKey : space.getMetadata().getAllRoleKeys()) {
-                if(isAdminForAllSpaces && roleKey.equals("ROLE_ADMIN")) {
+                if(isAdminForAllSpaces && Role.isAdmin(roleKey)) {
                     continue;
                 }
                 UserSpaceRole usr = new UserSpaceRole(user, space, roleKey);

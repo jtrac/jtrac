@@ -16,12 +16,15 @@
 
 package info.jtrac.wicket;
 
+import info.jtrac.domain.Role;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
@@ -89,10 +92,10 @@ public class UserAllocatePage extends BasePage {
             list.removeAll(roleKeys);
             // very rare chance that user is in guest mode
             // don't allow possibility of this getting saved to DB!
-            list.remove("ROLE_GUEST");
+            list.remove(Role.ROLE_GUEST);
             // if super user, no need for space level admin option
-            if(user.isAdminForAllSpaces()) {
-                list.remove("ROLE_ADMIN");
+            if(user.isSuperUser()) {
+                list.remove(Role.ROLE_ADMIN);
             }
             roleAllocatePanel.setChoices(list);
             allocateButton.setEnabled(true);
@@ -110,11 +113,29 @@ public class UserAllocatePage extends BasePage {
             
             add(new Label("label", user.getName() + " (" + user.getLoginName() + ")"));
             
-            final Map<String, List<UserSpaceRole>> spaceRolesMap = user.getSpaceRolesMap();                                    
+            final Map<String, List<UserSpaceRole>> spaceRolesMap = user.getSpaceRolesMap();   
+            
+            User principal = getPrincipal();
+            // this flag is used later also for the big "make admin for all spaces" button
+            boolean isPrincipalSuperUser = principal.isSuperUser();
+            
+            List<String> allowedSpaces = new ArrayList<String>();
+            
+            if(isPrincipalSuperUser) {
+                allowedSpaces = new ArrayList(spaceRolesMap.keySet());
+            } else {
+                // session user is not an admin, remove spaces that he should not see                
+                for(Space s : principal.getSpacesWhereRoleIsAdmin()) {
+                    String prefixCode = s.getPrefixCode();
+                    if(spaceRolesMap.containsKey(prefixCode)) {
+                        allowedSpaces.add(prefixCode);
+                    }
+                }
+            }
             
             final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
             
-            add(new ListView("spaces", new ArrayList(spaceRolesMap.keySet())) {
+            add(new ListView("spaces", allowedSpaces) {
                 protected void populateItem(ListItem listItem) {
                     String prefixCode = (String) listItem.getModelObject();    
                     List<UserSpaceRole> usrs = spaceRolesMap.get(prefixCode);
@@ -143,7 +164,20 @@ public class UserAllocatePage extends BasePage {
                 }
             });                       
             
-            List<Space> spaces = getJtrac().findUnallocatedSpacesForUser(user.getId());            
+            List<Space> spaces = getJtrac().findUnallocatedSpacesForUser(user.getId());
+            
+            if(!isPrincipalSuperUser) {
+                // not super user, show only spaces which can admin
+                Set<Space> set = new HashSet(spaces);                
+                List<Space> allowed = new ArrayList<Space>();
+                // also within these spaces may be fully allocated, so trim
+                for(Space s : principal.getSpacesWhereRoleIsAdmin()) {
+                    if(set.contains(s)) {
+                        allowed.add(s);
+                    }
+                }
+                spaces = allowed;
+            }
             
             DropDownChoice spaceChoice = new DropDownChoice("space", spaces, new IChoiceRenderer() {
                 public Object getDisplayValue(Object o) {
@@ -203,16 +237,16 @@ public class UserAllocatePage extends BasePage {
                 initRoleChoice(space);
             }    
             
-            // make admin ======================================================
-                                                    
+            // make admin ======================================================                                                    
+            
             WebMarkupContainer makeAdmin = new WebMarkupContainer("makeAdmin");
-            if(user.isAdminForAllSpaces()) {
+            if(user.isSuperUser() || !isPrincipalSuperUser) {
                 makeAdmin.setVisible(false);
             } else {
                 makeAdmin.add(new Button("makeAdmin") {
                     @Override
                     public void onSubmit() {     
-                        getJtrac().storeUserSpaceRole(user, null, "ROLE_ADMIN");
+                        getJtrac().storeUserSpaceRole(user, null, Role.ROLE_ADMIN);
                         JtracSession.get().refreshPrincipalIfSameAs(user);
                         setResponsePage(new UserAllocatePage(userId, previous));
                     }                   

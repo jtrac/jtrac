@@ -165,7 +165,7 @@ public class SpaceFormPage extends BasePage {
             prefixCode.add(new AbstractValidator() {
                 protected void onValidate(IValidatable v) {
                     String s = (String) v.getValue();
-                    if(!ValidationUtils.isAllUpperCase(s)) {
+                    if(!ValidationUtils.isValidSpaceKey(s)) {
                         error(v);
                     }
                 }

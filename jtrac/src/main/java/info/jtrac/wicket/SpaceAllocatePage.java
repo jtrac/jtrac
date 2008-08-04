@@ -16,6 +16,7 @@
 
 package info.jtrac.wicket;
 
+import info.jtrac.domain.Role;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
@@ -92,8 +93,8 @@ public class SpaceAllocatePage extends BasePage {
                 roleKeys.remove(s);
             } 
             // super user doesn't need space level option
-            if(u.isAdminForAllSpaces()) {
-                roleKeys.remove("ROLE_ADMIN");
+            if(u.isSuperUser()) {
+                roleKeys.remove(Role.ROLE_ADMIN);
             }
             roleAllocatePanel.setChoices(roleKeys);         
             allocateButton.setEnabled(true);            

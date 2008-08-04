@@ -28,6 +28,7 @@ import info.jtrac.domain.ItemItem;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.ItemUser;
 import info.jtrac.domain.Metadata;
+import info.jtrac.domain.Role;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.SpaceSequence;
 import info.jtrac.domain.State;
@@ -508,7 +509,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
             admin.setName("Admin");
             admin.setEmail("admin");
             admin.setPassword("21232f297a57a5a743894a0e4a801fc3");
-            admin.addSpaceWithRole(null, "ROLE_ADMIN");
+            admin.addSpaceWithRole(null, Role.ROLE_ADMIN);
             logger.info("inserting default admin user into database");
             storeUser(admin);
             logger.info("schema creation complete");            

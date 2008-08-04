@@ -3,7 +3,9 @@
         <wicket:extend>
             <div class="heading">
                 <wicket:message key="space_list.spaceList"/>
-                [ <a href="#" wicket:id="create"><wicket:message key="space_list.createNewSpace"/></a> ]
+                <wicket:enclosure>
+                    [ <a href="#" wicket:id="create"><wicket:message key="space_list.createNewSpace"/></a> ]
+                </wicket:enclosure>
             </div>            
             <table class="jtrac">
                 <tr>                    

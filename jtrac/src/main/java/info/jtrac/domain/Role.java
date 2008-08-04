@@ -36,7 +36,10 @@ public class Role implements Serializable {
     
     private String name;
     private String description;
-    private Map<Integer, State> states = new HashMap<Integer, State>();
+    private Map<Integer, State> states = new HashMap<Integer, State>();   
+    
+    public static final String ROLE_ADMIN = "ROLE_ADMIN";
+    public static final String ROLE_GUEST = "ROLE_GUEST";    
     
     public Role(String name) {
         this.name = name;
@@ -71,6 +74,14 @@ public class Role implements Serializable {
             state.addAsChildOf(e);
         }
     }
+    
+    public static boolean isAdmin(String roleKey) {
+        return ROLE_ADMIN.equals(roleKey);
+    }
+    
+    public static boolean isGuest(String roleKey) {
+        return ROLE_GUEST.equals(roleKey);
+    }    
     
     //=======================================================================
     

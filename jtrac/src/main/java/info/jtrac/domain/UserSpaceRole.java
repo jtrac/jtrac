@@ -26,7 +26,7 @@ import org.acegisecurity.GrantedAuthority;
  * if space is null, that means that this is a "global" JTrac role
  * if space is not null, this role applies for the user to that
  * space, and the getAuthority() method used by Acegi returns the 
- * role key appended with "_" + spacePrefixCode
+ * role key appended with ":" + spacePrefixCode
  */
 public class UserSpaceRole implements GrantedAuthority, Serializable {
     
@@ -52,11 +52,27 @@ public class UserSpaceRole implements GrantedAuthority, Serializable {
         return user.getPermittedTransitions(space, State.NEW).size() > 0;
     }
     
+    public boolean isSuperUser() {
+        return space == null && isAdmin();
+    }
+    
+    public boolean isSpaceAdmin() {
+        return space != null && isAdmin();
+    }    
+    
+    private boolean isAdmin() {
+        return Role.ROLE_ADMIN.equals(roleKey);
+    }
+    
+    public boolean isGuest() {
+        return Role.ROLE_GUEST.equals(roleKey);
+    }
+    
     //======== ACEGI GrantedAuthority implementation =============
     
     public String getAuthority() {        
         if (space != null) {
-            return roleKey + "_" + space.getPrefixCode();
+            return roleKey + ":" + space.getPrefixCode();
         }
         return roleKey;
     }

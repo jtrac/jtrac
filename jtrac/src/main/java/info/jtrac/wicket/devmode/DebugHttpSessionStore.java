@@ -57,10 +57,10 @@ public class DebugHttpSessionStore extends HttpSessionStore {
             stream.writeObject(value);
             stream.close();
             logger.debug(os.size() + " bytes: " + name + " [" + value.getClass().getName() + "]");
-        } catch (Exception exception) {
-            logger.error("serialization failed for name: " + name + ", class: " + value.getClass());
+        } catch (Exception e) {
+            logger.error("serialization failed for name: " + name + ", class: " + value.getClass(), e);
             // throw Error so that we sit up and take notice
-            throw new Error("Unable to serialize value: ", exception);
+            throw new Error("Unable to serialize value: ", e);
         }
         super.setAttribute(request, name, value);
     }

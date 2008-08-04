@@ -106,9 +106,8 @@ public class JtracTest extends JtracTestBase {
         User u1 = jtrac.loadUser("test");
         
         GrantedAuthority[] gas = u1.getAuthorities();
-        assertEquals(2, gas.length);
-        assertEquals("ROLE_USER", gas[0].getAuthority());
-        assertEquals("ROLE_TEST_TEST", gas[1].getAuthority());
+        assertEquals(1, gas.length);        
+        assertEquals("ROLE_TEST:TEST", gas[0].getAuthority());
         
         List<UserSpaceRole> userSpaceRoles = jtrac.findUserRolesForSpace(space.getId());
         assertEquals(1, userSpaceRoles.size());
@@ -144,8 +143,7 @@ public class JtracTest extends JtracTestBase {
             set.add(ga.getAuthority());
         }
         
-        assertEquals(2, set.size());
-        assertTrue(set.contains("ROLE_USER"));
+        assertEquals(1, set.size());        
         assertTrue(set.contains("ROLE_ADMIN"));
         
     }
@@ -156,8 +154,7 @@ public class JtracTest extends JtracTestBase {
         for (GrantedAuthority ga : ud.getAuthorities()) {
             set.add(ga.getAuthority());
         }
-        assertEquals(2, set.size());
-        assertTrue(set.contains("ROLE_USER"));
+        assertEquals(1, set.size());        
         assertTrue(set.contains("ROLE_ADMIN"));
     }
     

@@ -4,14 +4,26 @@ import junit.framework.TestCase;
 
 public class ValidationUtilsTest extends TestCase {
     
-    public void testUpperCase() {
-        assertTrue(ValidationUtils.isAllUpperCase("ABCD"));
-        assertTrue(ValidationUtils.isAllUpperCase("AB123CD"));
-        assertFalse(ValidationUtils.isAllUpperCase("ABCD-ABCD"));
-        assertFalse(ValidationUtils.isAllUpperCase("AB CD"));        
+    public void testValidateSpaceKey() {
+        assertTrue(ValidationUtils.isValidSpaceKey("ABCD"));
+        assertTrue(ValidationUtils.isValidSpaceKey("AB123CD"));
+        assertFalse(ValidationUtils.isValidSpaceKey("ABCD-ABCD"));
+        assertFalse(ValidationUtils.isValidSpaceKey("AB CD"));        
     }
     
-    public void testValidLoginName() {
+    public void testValidateRoleKey() {
+        assertTrue(ValidationUtils.isValidRoleKey("ABCD"));
+        assertTrue(ValidationUtils.isValidRoleKey("AB123CD"));
+        assertFalse(ValidationUtils.isValidRoleKey("ABCD-ABCD"));
+        assertFalse(ValidationUtils.isValidRoleKey("ABcD_ABCD"));
+        assertFalse(ValidationUtils.isValidRoleKey("AB CD")); 
+        assertTrue(ValidationUtils.isValidRoleKey("ABCD_EFG"));
+        assertFalse(ValidationUtils.isValidRoleKey("AB1CDE2_"));
+        assertFalse(ValidationUtils.isValidRoleKey("_ABCDEF"));
+        assertTrue(ValidationUtils.isValidRoleKey("1ABCD3_EFG2"));        
+    }    
+    
+    public void testValidateLoginName() {
         assertTrue(ValidationUtils.isValidLoginName("abcd"));
         assertTrue(ValidationUtils.isValidLoginName("abcd123"));
         assertTrue(ValidationUtils.isValidLoginName("ab-cd"));
@@ -26,15 +38,15 @@ public class ValidationUtilsTest extends TestCase {
         assertFalse(ValidationUtils.isValidLoginName("ab cd"));
     }
     
-    public void testCamelDashCase() {
-        assertTrue(ValidationUtils.isCamelDashCase("Abcd"));
-        assertTrue(ValidationUtils.isCamelDashCase("Abcd-Efgh"));
-        assertTrue(ValidationUtils.isCamelDashCase("Abcd-Efgh-Hijk"));
-        assertFalse(ValidationUtils.isCamelDashCase("AbcdEfgh"));
-        assertFalse(ValidationUtils.isCamelDashCase("Abcd123"));
-        assertFalse(ValidationUtils.isCamelDashCase("8bcd"));
-        assertFalse(ValidationUtils.isCamelDashCase("Ab-cd"));
-        assertFalse(ValidationUtils.isCamelDashCase("Ab cd"));
+    public void testValidateStateName() {
+        assertTrue(ValidationUtils.isValidStateName("Abcd"));
+        assertTrue(ValidationUtils.isValidStateName("Abcd-Efgh"));
+        assertTrue(ValidationUtils.isValidStateName("Abcd-Efgh-Hijk"));
+        assertFalse(ValidationUtils.isValidStateName("AbcdEfgh"));
+        assertFalse(ValidationUtils.isValidStateName("Abcd123"));
+        assertFalse(ValidationUtils.isValidStateName("8bcd"));
+        assertFalse(ValidationUtils.isValidStateName("Ab-cd"));
+        assertFalse(ValidationUtils.isValidStateName("Ab cd"));
     }
     
 }

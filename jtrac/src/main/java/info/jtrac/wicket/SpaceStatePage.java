@@ -108,7 +108,7 @@ public class SpaceStatePage extends BasePage {
             field.add(new AbstractValidator() {
                 protected void onValidate(IValidatable v) {
                     String s = (String) v.getValue();
-                    if(!ValidationUtils.isCamelDashCase(s)) {
+                    if(!ValidationUtils.isValidStateName(s)) {
                         error(v);
                     }
                 }

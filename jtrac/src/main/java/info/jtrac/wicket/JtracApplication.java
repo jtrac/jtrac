@@ -19,6 +19,7 @@ package info.jtrac.wicket;
 import info.jtrac.wicket.devmode.DebugHttpSessionStore;
 import info.jtrac.Jtrac;
 import info.jtrac.acegi.JtracCasProxyTicketValidator;
+import info.jtrac.domain.Role;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.util.WebUtils;
@@ -166,7 +167,7 @@ public class JtracApplication extends WebApplication {
                         guestUser.setLoginName("guest");
                         guestUser.setName("Guest");                        
                         for (Space space : spaces) {            
-                            guestUser.addSpaceWithRole(space, "ROLE_GUEST");
+                            guestUser.addSpaceWithRole(space, Role.ROLE_GUEST);
                         }
                         JtracSession.get().setUser(guestUser);                        
                         // and proceed

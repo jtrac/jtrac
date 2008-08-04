@@ -38,36 +38,39 @@ public class OptionsPage extends BasePage {
             }            
         });
         
-        boolean isAdmin = user.isAdminForAllSpaces();
+        boolean isSuperUser = user.isSuperUser();
+        boolean isSpaceAdmin = user.getSpacesWhereRoleIsAdmin().size() > 0;
         
         add(new Link("users") {
             public void onClick() {
                 setResponsePage(new UserListPage());
             }            
-        }.setVisible(isAdmin)); 
+        }.setVisible(isSuperUser || isSpaceAdmin)); 
         
         add(new Link("spaces") {
             public void onClick() {
                 setResponsePage(new SpaceListPage());
             }            
-        }.setVisible(isAdmin));      
+        }.setVisible(isSuperUser || isSpaceAdmin));      
         
         add(new Link("settings") {
             public void onClick() {
                 setResponsePage(new ConfigListPage(null));
             }            
-        }.setVisible(isAdmin));        
+        }.setVisible(isSuperUser));        
         
         add(new Link("indexes") {
             public void onClick() {
                 setResponsePage(new IndexRebuildPage(false));
             }            
-        }.setVisible(isAdmin));        
+        }.setVisible(isSuperUser));        
         
+        // for the future
         add(new Link("import") {
             public void onClick() {
+                setResponsePage(new ExcelImportPage());
             }            
-        }.setVisible(false));                 
+        }.setVisible(isSuperUser));                 
         
     }
     

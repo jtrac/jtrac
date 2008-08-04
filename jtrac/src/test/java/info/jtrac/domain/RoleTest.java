@@ -1,11 +1,7 @@
 package info.jtrac.domain;
 
-import info.jtrac.domain.Field;
-import info.jtrac.domain.Role;
-import info.jtrac.domain.State;
 import info.jtrac.util.XmlUtils;
 
-import javax.naming.Name;
 import junit.framework.TestCase;
 import org.dom4j.Document;
 

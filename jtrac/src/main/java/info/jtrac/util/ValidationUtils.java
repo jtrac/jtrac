@@ -23,12 +23,21 @@ package info.jtrac.util;
  */
 public class ValidationUtils {
         
-    public static boolean isAllUpperCase(String input) {
+    
+    public static boolean isValidSpaceKey(String input) {
         if (input == null) {
             return false;
         }
         return input.matches("[A-Z0-9]+");
-    }    
+    }
+    
+    // underscore allowed, should start with letter
+    public static boolean isValidRoleKey(String input) {
+        if (input == null) {
+            return false;
+        }
+        return input.matches("[A-Z0-9][_A-Z0-9]+[A-Z0-9]");        
+    }
     
     public static boolean isValidLoginName(String input) {
         if (input == null) {
@@ -41,7 +50,7 @@ public class ValidationUtils {
      * Only letters are allowed, not even numbers
      * and CamelCase with dash as word separator
      */
-    public static boolean isCamelDashCase(String input) {
+    public static boolean isValidStateName(String input) {
         if (input == null) {
             return false;
         } 

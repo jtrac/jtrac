@@ -1,7 +1,6 @@
 package info.jtrac.domain;
 
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,11 +30,10 @@ public class UserTest extends TestCase {
             set.add(ga.getAuthority());
         }        
                 
-        assertEquals(4, gas.length);
+        assertEquals(3, gas.length);
         
-        assertTrue(set.contains("ROLE_USER"));
-        assertTrue(set.contains("ROLE_ONE-ONE_SPACE-ONE"));
-        assertTrue(set.contains("ROLE_ONE-TWO_SPACE-ONE"));
+        assertTrue(set.contains("ROLE_ONE-ONE:SPACE-ONE"));
+        assertTrue(set.contains("ROLE_ONE-TWO:SPACE-ONE"));
         assertTrue(set.contains("ROLE_ADMIN"));
      
     }
@@ -44,7 +42,7 @@ public class UserTest extends TestCase {
         User u = new User();
         u.setLoginName("test");
         u.addSpaceWithRole(null, "ROLE_ADMIN");
-        assertTrue(u.isAdminForAllSpaces());
+        assertTrue(u.isSuperUser());
     }
     
 }

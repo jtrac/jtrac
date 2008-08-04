@@ -74,16 +74,16 @@ public class ItemViewPage extends BasePage {
         
         User user = getPrincipal();
         
-        if(!user.getSpaces().contains(item.getSpace())) {
+        if(!user.isAllocatedToSpace(item.getSpace().getId())) {
             logger.debug("user is not allocated to space");
             throw new RestartResponseAtInterceptPageException(ErrorPage.class);
-        }
+        }                
         
         add(new Link("edit") {
             public void onClick() {
                 setResponsePage(new ItemFormPage(item.getId()));
             }
-        }.setVisible(user.isAdminForAllSpaces()));                        
+        }.setVisible(user.isSuperUser() || user.isAdminForSpace(item.getSpace().getId())));                        
         
         add(new ItemViewPanel("itemViewPanel", item, isRelate || user.getId() == 0));
         

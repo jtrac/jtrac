@@ -210,7 +210,7 @@ public class RestMultiActionController extends AbstractMultiActionController {
     public void itemAllGet(HttpServletRequest request, HttpServletResponse response) throws Exception {
         // GOD mode!
         User user = (User) request.getAttribute("user");
-        if(!user.isAdminForAllSpaces()) {
+        if(!user.isSuperUser()) {
             // TODO error code
             return;
         }

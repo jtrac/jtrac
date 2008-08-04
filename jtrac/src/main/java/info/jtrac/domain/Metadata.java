@@ -476,7 +476,7 @@ public class Metadata implements Serializable {
     // introducing Admin permissions per space, slight hack
     // so Role stands for "workflow" role from now on
     public List<String> getAdminRoleKeys() {
-        return Arrays.asList(new String[] { "ROLE_ADMIN" });
+        return Arrays.asList(new String[] { Role.ROLE_ADMIN });
     }
     
     public List<String> getAllRoleKeys() {
