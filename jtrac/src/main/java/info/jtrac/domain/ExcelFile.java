@@ -16,10 +16,12 @@
 
 package info.jtrac.domain;
 
+import info.jtrac.util.DateUtils;
 import info.jtrac.util.ItemUtils;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -41,7 +43,7 @@ public class ExcelFile implements Serializable {
     /**
      * represents a column heading and data type
      */
-    public class Column {        
+    public class Column implements Serializable {        
         
         private String label;
         private Field field;
@@ -63,21 +65,23 @@ public class ExcelFile implements Serializable {
     /**
      * represents a cell value, acts as object holder
      */    
-    public class Cell {
+    public class Cell implements Serializable {
         
         private Object value;
 
         public Cell(Object value) {
             this.value = value;
         }       
-        
-        @Override
-        public String toString() {
+                
+        public String getValueAsString() {
             if (value == null) {
                 return "";
             }
             if (value instanceof String) {
                 return ItemUtils.fixWhiteSpace((String) value);
+            }
+            if(value instanceof Date) {
+                return DateUtils.formatTimeStamp((Date) value);
             }
             return value.toString();
         }
@@ -94,72 +98,61 @@ public class ExcelFile implements Serializable {
     public List<Column> getColumns() {
         return columns;
     }
-    
+            
     //==========================================================================
     // form binding stuff
     
-    private int[] selCols;
-    private int[] selRows;
-    private int action;
+    private List<Integer> selectedColumns = new ArrayList<Integer>();
+    private List<Integer> selectedRows = new ArrayList<Integer>();
 
-    public int getAction() {
-        return action;
+    public List<Integer> getSelectedColumns() {
+        return selectedColumns;
     }
+
+    public void setSelectedColumns(List<Integer> selectedColumns) {
+        this.selectedColumns = selectedColumns;
+    }   
+
+    public List<Integer> getSelectedRows() {
+        return selectedRows;
+    }
+
+    public void setSelectedRows(List<Integer> selectedRows) {
+        this.selectedRows = selectedRows;
+    }         
     
-    public void setAction(int action) {
-        this.action = action;
+    public void clearSelected() {
+        selectedColumns = new ArrayList<Integer>();
+        selectedRows = new ArrayList<Integer>();
     }
-     
-    public int[] getSelCols() {
-        return selCols;
-    }
-
-    public void setSelCols(int[] selCols) {
-        this.selCols = selCols;
-    }
-
-    public int[] getSelRows() {
-        return selRows;
-    }
-
-    public void setSelRows(int[] selRows) {
-        this.selRows = selRows;
-    }    
     
     //==========================================================================
     // edits
     
     /* note that selected rows and columns would be set by spring MVC */
     public void deleteSelectedRowsAndColumns() {
-        int cursor = 0;
-        if (selRows != null) {
-            for(int i : selRows) {
-                rows.remove(i - cursor);
-                cursor++;
+        int cursor = 0;        
+        for(int i : selectedRows) {
+            rows.remove(i - cursor);
+            cursor++;
+        }        
+        cursor = 0;        
+        for(int i : selectedColumns) {
+            columns.remove(i - cursor);
+            for(List<Cell> cells : rows) {                
+                cells.remove(i - cursor);
             }
-        }
-        cursor = 0;
-        if (selCols != null) {
-            for(int i : selCols) {
-                columns.remove(i - cursor);
-                for(List<Cell> cells : rows) {                
-                    cells.remove(i - cursor);
-                }
-                cursor++;
-            }
-        }
+            cursor++;
+        }        
     }
     
     public void convertSelectedColumnsToDate() {
-        if (selCols == null) {
-            return;            
-        }
         // could not find a better way to convert excel number to date
         HSSFWorkbook wb = new HSSFWorkbook();
         HSSFSheet sheet = wb.createSheet();
         HSSFRow row = sheet.createRow(0);
         HSSFCell cell = row.createCell((short) 0);
-        for(int i : selCols) {
+        for(int i : selectedColumns) {
             for(List<Cell> cells : rows) {
                 Cell c = cells.get(i);                
                 if (c != null && c.value instanceof Double) {                    
@@ -171,15 +164,15 @@ public class ExcelFile implements Serializable {
     }
     
     public void concatenateSelectedColumns() {
-        if (selCols == null) {
-            return;            
+        if(selectedColumns.size() == 0) {
+            return;
         }
         List<Cell> list = new ArrayList<Cell>(rows.size());
-        for(List<Cell> cells : rows) {
+        for(List<Cell> rowCells : rows) {
             list.add(new Cell(null));
         }
-        int first = selCols[0];
-        for(int i : selCols) {
+        int first = selectedColumns.get(0);
+        for(int i : selectedColumns) {
             int rowIndex = 0;
             for(List<Cell> cells : rows) {
                 Cell c = cells.get(i);                
@@ -197,17 +190,17 @@ public class ExcelFile implements Serializable {
         }
         // update the first column
         int rowIndex = 0;
-        for(List<Cell> cells : rows) {
-            cells.set(first, list.get(rowIndex));
+        for(List<Cell> rowCells : rows) {
+            rowCells.set(first, list.get(rowIndex));
             rowIndex++;
         }
     }
     
     public void extractSummaryFromSelectedColumn() {
-        if (selCols == null) {
-            return;            
+        if(selectedColumns.size() == 0) {
+            return;
         }
-        int first = selCols[0];           
+        int first = selectedColumns.get(0);           
         for(List<Cell> cells : rows) {
             Cell c = cells.get(first);                
             if (c != null && c.value != null) {
@@ -245,8 +238,10 @@ public class ExcelFile implements Serializable {
         int col = 0;
         columns = new ArrayList<Column>();
         //========================== HEADER ====================================
+        // column headings are important, this routine assumes that the first
+        // row is a header row and assumes that encountering an empty cell means end of data
         r = sheet.getRow(row);       
-        while(true) {
+        while(true) {            
             c = r.getCell((short) col);
             if (c == null) {          
                 break;
@@ -285,7 +280,7 @@ public class ExcelFile implements Serializable {
                     isEmptyRow = false;
                     rowData.add(new Cell(value));
                 } else {
-                    rowData.add(null);
+                    rowData.add(new Cell(null));
                 }
             }
             if(isEmptyRow) {

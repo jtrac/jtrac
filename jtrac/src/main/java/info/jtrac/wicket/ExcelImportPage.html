@@ -1,0 +1,42 @@
+<html>
+    <body>        
+        <wicket:extend>
+            <form wicket:id="uploadForm">
+                <wicket:message key="excel_upload.uploadExcelFile"/>
+                <input wicket:id="file" type="file"/>
+                <input type="submit" wicket:message="value:submit"/>
+            </form>           
+            <form wicket:id="form"> 
+                <div class="heading">                       
+                    <wicket:message key="excel_view.selectedSpace"/>:    
+                    <span wicket:id="selectedSpace"></span>  
+                    [ <a href="#" wicket:id="selectSpace"><wicket:message key="excel_view.selectSpace"/></a> ]                     
+                </div>                    
+                <select wicket:id="action"/>
+                <input type="submit" wicket:message="value:submit"/> 
+                <p/>
+                <table class="jtrac" width="100%" style="font-size:90%">
+                    <tr class="center alt">
+                        <td rowspan="2"></td>
+                        <wicket:container wicket:id="colsCheckGroup">
+                            <td wicket:id="checks">
+                                <input type="checkbox" wicket:id="check"/>                                
+                            </td>
+                        </wicket:container>
+                    </tr>
+                    <tr>                    
+                        <th wicket:id="headings">
+                            <a href="#" wicket:id="link"><span wicket:id="cell"></span></a>                            
+                        </th>
+                    </tr>
+                    <wicket:container wicket:id="rowsCheckGroup">
+                        <tr wicket:id="rows">
+                            <th><input type="checkbox" wicket:id="check"/></th>
+                            <td wicket:id="cols"><span wicket:id="cell"></span></td>
+                        </tr>
+                    </wicket:container>
+                </table>
+            </form>
+        </wicket:extend>
+    </body>
+</html>
