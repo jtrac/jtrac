@@ -23,6 +23,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -41,24 +43,30 @@ public class ExcelFile implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(ExcelFile.class);    
     
     /**
-     * represents a column heading and data type
+     * represents a column heading and mapping to a Space built-in / custom field
      */
     public class Column implements Serializable {        
         
         private String label;
-        private Field field;
+        private ColumnHeading columnHeading;        
         
-        public Column(String label) {
+        public Column(String label) {            
             this.label = label;
         }
 
-        public Field getField() {
-            return field;
-        }
-
-        public String getLabel() {
-            return label;
+        public void setColumnHeading(ColumnHeading columnHeading) {
+            this.columnHeading = columnHeading;
         }       
+        
+        public ColumnHeading getColumnHeading() {
+            return columnHeading;
+        } 
+        
+        public Column getClone() {
+            Column column = new Column(label);
+            column.setColumnHeading(columnHeading);
+            return column;
+        }
         
     }
     
@@ -68,10 +76,24 @@ public class ExcelFile implements Serializable {
     public class Cell implements Serializable {
         
         private Object value;
+        // internal key value for cells mapped to drop downs
+        private Object key;
 
         public Cell(Object value) {
             this.value = value;
-        }       
+        }
+
+        public void setValue(Object value) {
+            this.value = value;
+        }                
+
+        public void setKey(Object key) {
+            this.key = key;
+        }
+
+        public Object getKey() {
+            return key;
+        }                
                 
         public String getValueAsString() {
             if (value == null) {
@@ -86,7 +108,16 @@ public class ExcelFile implements Serializable {
             return value.toString();
         }
         
+        public Cell getClone() {
+            Cell cell = new Cell(value);
+            cell.setKey(key);
+            return cell;
+        }
+        
     }
+    
+    //==========================================================================
+    // grid data
     
     private List<Column> columns;
     private List<List<Cell>> rows;
@@ -100,7 +131,7 @@ public class ExcelFile implements Serializable {
     }
             
     //==========================================================================
-    // form binding stuff
+    // form binding
     
     private List<Integer> selectedColumns = new ArrayList<Integer>();
     private List<Integer> selectedRows = new ArrayList<Integer>();
@@ -119,17 +150,97 @@ public class ExcelFile implements Serializable {
 
     public void setSelectedRows(List<Integer> selectedRows) {
         this.selectedRows = selectedRows;
-    }         
+    }
+    
+    //==========================================================================
+    // operations
+    
+    public boolean isColumnSelected() {
+        return selectedColumns.size() > 0;
+    }
+    
+    public boolean isRowSelected() {
+        return selectedRows.size() > 0;
+    }    
+    
+    public Column getFirstSelectedColumn() {
+        if(selectedColumns.size() == 0) {
+            return null;
+        }
+        int index = selectedColumns.get(0);
+        return columns.get(index);
+    }
+    
+    public List<Cell> getFirstSelectedRow() {
+        if(selectedRows.size() == 0) {
+            return null;
+        }
+        int index = selectedRows.get(0);
+        return rows.get(index);        
+    }
     
     public void clearSelected() {
         selectedColumns = new ArrayList<Integer>();
         selectedRows = new ArrayList<Integer>();
+    }    
+    
+    public List<ColumnHeading> getMappedColumnHeadings() {
+        List<ColumnHeading> list = new ArrayList<ColumnHeading>();
+        for(Column c : columns) {
+            if(c.columnHeading != null) {
+                list.add(c.columnHeading);
+            }
+        }
+        return list;
+    }
+    
+    public List<ColumnHeading> getUnMappedColumnHeadings(Space space) {
+        if(space == null) {
+            return new ArrayList<ColumnHeading>(0);
+        }
+        List<ColumnHeading> mapped = getMappedColumnHeadings();
+        List<ColumnHeading> all = ColumnHeading.getColumnHeadings(space);
+        for(ColumnHeading ch : mapped) {
+            all.remove(ch);
+        }
+        return all;
+    }
+    
+    public List<Cell> getColumnCells(int index) {
+        List<Cell> list = new ArrayList<Cell>(rows.size());
+        for(List<Cell> rowCells : rows) {
+            list.add(rowCells.get(index));
+        }
+        return list;
+    }
+    
+    public List<Cell> getColumnCellsCloned(int index) {
+        List<Cell> list = new ArrayList<Cell>(rows.size());
+        for(List<Cell> rowCells : rows) {
+            list.add(rowCells.get(index).getClone());
+        }
+        return list;        
+    }
+    
+    public void setColumnCells(int index, List<Cell> columnCells) {
+        int count = 0;
+        for(List<Cell> rowCells : rows) {
+            rowCells.set(index, columnCells.get(count));
+            count++;
+        }
+    }
+    
+    public List<String> getColumnDistinctCellValues(int index) {
+        Set<String> set = new TreeSet<String>();
+        for(List<Cell> rowCells : rows) {
+            set.add(rowCells.get(index).getValueAsString());
+        }
+        return new ArrayList(set);
     }
     
     //==========================================================================
     // edits
-    
-    /* note that selected rows and columns would be set by spring MVC */
+        
     public void deleteSelectedRowsAndColumns() {
         int cursor = 0;        
         for(int i : selectedRows) {
@@ -216,11 +327,7 @@ public class ExcelFile implements Serializable {
         columns.add(0, new Column("Summary"));   
     }
     
-    //==========================================================================
-    
-    public ExcelFile() {
-        // zero arg constructor
-    }    
+    //========================================================================== 
     
     public ExcelFile(InputStream is) {
         POIFSFileSystem fs = null;
@@ -239,7 +346,7 @@ public class ExcelFile implements Serializable {
         columns = new ArrayList<Column>();
         //========================== HEADER ====================================
         // column headings are important, this routine assumes that the first
-        // row is a header row and assumes that encountering an empty cell means end of data
+        // row is a header row and that reaching an empty cell means end of data
         r = sheet.getRow(row);       
         while(true) {            
             c = r.getCell((short) col);

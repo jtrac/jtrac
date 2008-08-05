@@ -30,7 +30,6 @@ import static info.jtrac.domain.ColumnHeading.Name.*;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.wicket.IRequestTarget;
@@ -56,15 +55,6 @@ import org.apache.wicket.protocol.http.WebResponse;
 public class ItemListPanel extends BasePanel {
     
     private ItemSearch itemSearch;
-    
-    // helper to avoid polluting Excel export utility with Wicket i18n
-    private Map<Name, String> getLocalizedLabels() {
-        Map<Name, String> map = new EnumMap<Name, String>(Name.class);
-        for(Name name : Name.values()) {
-            map.put(name, localize("item_list." + name.getText()));
-        }
-        return map;
-    }
     
     private void doSort(String sortFieldName) {
         itemSearch.setCurrentPage(0);
@@ -213,8 +203,9 @@ public class ItemListPanel extends BasePanel {
                     public void respond(RequestCycle requestCycle) {
                         WebResponse r = (WebResponse) requestCycle.getResponse();
                         r.setAttachmentHeader("jtrac-export.xls");
-                        try {                            
-                            eu.exportToExcel(getLocalizedLabels()).write(r.getOutputStream());
+                        try {
+                            Map<Name, String> labels = BasePage.getLocalizedLabels(ItemListPanel.this);
+                            eu.exportToExcel(labels).write(r.getOutputStream());
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }

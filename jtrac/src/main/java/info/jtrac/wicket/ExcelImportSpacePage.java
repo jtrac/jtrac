@@ -53,7 +53,7 @@ public class ExcelImportSpacePage extends BasePage {
                 Space s = (Space) o;
                 return s.getName() + " [" + s.getPrefixCode() + "]";
             }
-            public String getIdValue(Object o, int arg1) {
+            public String getIdValue(Object o, int i) {
                 return ((Space) o).getId() + "";
             }
         }); 

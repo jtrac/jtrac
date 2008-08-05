@@ -17,21 +17,22 @@
                 <p/>
                 <table class="jtrac" width="100%" style="font-size:90%">
                     <tr class="center alt">
-                        <td rowspan="2"></td>
+                        <td colspan="2" rowspan="2"></td>
                         <wicket:container wicket:id="colsCheckGroup">
                             <td wicket:id="checks">
                                 <input type="checkbox" wicket:id="check"/>                                
                             </td>
                         </wicket:container>
                     </tr>
-                    <tr>                    
+                    <tr>                  
                         <th wicket:id="headings">
-                            <a href="#" wicket:id="link"><span wicket:id="cell"></span></a>                            
+                            <span wicket:id="cell"></span>                           
                         </th>
                     </tr>
                     <wicket:container wicket:id="rowsCheckGroup">
                         <tr wicket:id="rows">
-                            <th><input type="checkbox" wicket:id="check"/></th>
+                            <td><input type="checkbox" wicket:id="check"/></td>
+                            <th wicket:id="index"></th>
                             <td wicket:id="cols"><span wicket:id="cell"></span></td>
                         </tr>
                     </wicket:container>

@@ -332,6 +332,7 @@ public class User implements UserDetails, Serializable {
         StringBuffer sb = new StringBuffer();
         sb.append("id [").append(id);
         sb.append("]; loginName [").append(loginName);
+        sb.append("]; name [").append(name);
         sb.append("]");
         return sb.toString();
     }

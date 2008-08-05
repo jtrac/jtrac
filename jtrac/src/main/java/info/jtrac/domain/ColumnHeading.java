@@ -133,6 +133,14 @@ public class ColumnHeading implements Serializable {
         return field != null;
     }
     
+    public boolean isDropDownType() {
+        if(isField()) {
+            return field.isDropDownType();
+        } else {
+            return name == LOGGED_BY || name == ASSIGNED_TO;
+        }
+    }
+    
     public static List<ColumnHeading> getColumnHeadings(Space s) {
         List<ColumnHeading> list = new ArrayList<ColumnHeading>();
         list.add(new ColumnHeading(ID));
@@ -812,6 +820,9 @@ public class ColumnHeading implements Serializable {
             return false;
         }
         final ColumnHeading ch = (ColumnHeading) o;
+        if(ch.isField()) {
+            return ch.field.equals(field);
+        }
         return ch.name.equals(name);
     }
     

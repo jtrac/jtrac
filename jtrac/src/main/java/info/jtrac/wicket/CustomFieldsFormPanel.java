@@ -60,7 +60,7 @@ public class CustomFieldsFormPanel extends BasePanel {
                 boolean isRequired = isEditMode ? false : !field.isOptional();             
                 listItem.add(new Label("label", field.getLabel()));
                 listItem.add(new Label("star", isRequired ? "*" : "&nbsp;").setEscapeModelStrings(false));
-                if (field.getName().getType() < 4) { // drop down list                    
+                if (field.isDropDownType()) {                  
                     Fragment f = new Fragment("field", "dropDown", CustomFieldsFormPanel.this);
                     final Map<String, String> options = field.getOptions();
                     List<String> keys; // bound value
@@ -85,14 +85,14 @@ public class CustomFieldsFormPanel extends BasePanel {
                     border.add(new ErrorHighlighter(choice));
                     border.add(model.bind(choice, field.getName().getText()));                    
                     listItem.add(f);
-                } else if (field.getName().getType() == 6) { // date picker                     
+                } else if (field.isDatePickerType()) {                   
                     YuiCalendar calendar = new YuiCalendar("field", new PropertyModel(model, field.getName().getText()), isRequired);
                     listItem.add(calendar);
                     calendar.setLabel(new Model(field.getLabel()));
                 } else {
                     Fragment f = new Fragment("field", "textField", CustomFieldsFormPanel.this);
                     TextField textField = new TextField("field");
-                    if (field.getName().getType() == 4) {
+                    if (field.isDecimalNumberType()) {
                         textField.setType(Double.class);
                     }
                     textField.add(new ErrorHighlighter());                    

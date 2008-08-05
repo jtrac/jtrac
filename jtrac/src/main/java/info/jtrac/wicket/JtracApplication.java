@@ -94,7 +94,7 @@ public class JtracApplication extends WebApplication {
     
     public static JtracApplication get() {
         return (JtracApplication) Application.get();
-    }
+    }       
     
     @Override
     public void init() {

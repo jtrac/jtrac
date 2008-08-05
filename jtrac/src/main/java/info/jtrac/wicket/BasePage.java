@@ -17,8 +17,12 @@
 package info.jtrac.wicket;
 
 import info.jtrac.Jtrac;
+import info.jtrac.domain.ColumnHeading.Name;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
+import java.util.EnumMap;
+import java.util.Map;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.StringResourceModel;
@@ -35,6 +39,15 @@ import org.slf4j.LoggerFactory;
 public abstract class BasePage extends WebPage {
     
     protected static final Logger logger = LoggerFactory.getLogger(BasePage.class);        
+    
+    // helper to avoid polluting non-wicket packages (e.g. excel export, import) with Wicket i18n
+    public static Map<Name, String> getLocalizedLabels(Component c) {
+        Map<Name, String> map = new EnumMap<Name, String>(Name.class);
+        for(Name name : Name.values()) {
+            map.put(name, c.getLocalizer().getString("item_list." + name.getText(), null));
+        }
+        return map;
+    }     
     
     protected Jtrac getJtrac() {
         return JtracApplication.get().getJtrac();

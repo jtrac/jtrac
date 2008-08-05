@@ -22,10 +22,9 @@ import info.jtrac.domain.ExcelFile.Column;
 import info.jtrac.domain.Space;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
-import org.apache.wicket.behavior.SimpleAttributeModifier;
+import java.util.Map;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.CheckGroup;
@@ -37,9 +36,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
 /**
@@ -53,8 +50,16 @@ public class ExcelImportPage extends BasePage {
 
     public void setSpace(Space space) {
         this.space = space;
-    }        
-        
+    }
+
+    public Space getSpace() {
+        return space;
+    }
+
+    public ExcelFile getExcelFile() {
+        return excelFile;
+    }                    
+    
     public ExcelImportPage() {
         final FileUploadField fileUploadField = new FileUploadField("file");        
         Form uploadForm = new Form("uploadForm") {
@@ -85,12 +90,46 @@ public class ExcelImportPage extends BasePage {
             public void onSubmit() { 
                 if(action == 0) {
                     return;
-                }
+                }                
                 switch(action) {
-                    case 1: excelFile.deleteSelectedRowsAndColumns(); break;
-                    case 2: excelFile.convertSelectedColumnsToDate(); break;
-                    case 3: excelFile.concatenateSelectedColumns(); break;
-                    case 4: excelFile.extractSummaryFromSelectedColumn(); break;
+                    case 1: // delete
+                        if(!excelFile.isColumnSelected() && !excelFile.isRowSelected()) {
+                            return;
+                        }
+                        excelFile.deleteSelectedRowsAndColumns(); 
+                        break;
+                    case 2: // convert to date
+                        if(!excelFile.isColumnSelected()) {
+                            return;
+                        }
+                        excelFile.convertSelectedColumnsToDate(); 
+                        break;
+                    case 3: // concatenate
+                        if(excelFile.getSelectedColumns().size() < 2) {
+                            return;
+                        }
+                        excelFile.concatenateSelectedColumns(); 
+                        break;
+                    case 4: // extract summary into new column
+                        if(!excelFile.isColumnSelected()) {
+                            return;
+                        }                        
+                        excelFile.extractSummaryFromSelectedColumn(); 
+                        break;
+                    case 5: // map column
+                        if(!excelFile.isColumnSelected()) {
+                            return;
+                        }
+                        int colIndex = excelFile.getSelectedColumns().get(0);
+                        setResponsePage(new ExcelImportColumnPage(ExcelImportPage.this, colIndex)); 
+                        break;
+                    case 6: // edit row
+                        if(!excelFile.isRowSelected()) {
+                            return;
+                        }
+                        int rowIndex = excelFile.getSelectedRows().get(0);
+                        setResponsePage(new ExcelImportRowPage(ExcelImportPage.this, rowIndex));
+                        break;
                 }
                 action = 0;
                 excelFile.clearSelected();                
@@ -119,22 +158,24 @@ public class ExcelImportPage extends BasePage {
             }            
         });        
         
-        DropDownChoice actionChoice = new DropDownChoice("action", Arrays.asList(new Integer[] { 0, 1, 2, 3, 4}));
+        final Map<Integer, String> map = new LinkedHashMap<Integer, String>();
+        map.put(0, "excel_view.selectActionToPerform");
+        map.put(1, "excel_view.deleteSelected");
+        map.put(2, "excel_view.convertToDate");
+        map.put(3, "excel_view.concatenateFields");
+        map.put(4, "excel_view.extractFirstEighty");
+        map.put(5, "excel_view.mapToField");
+        map.put(6, "excel_view.editRow");
+        
+        DropDownChoice actionChoice = new DropDownChoice("action", new ArrayList(map.keySet()));
         actionChoice.setModel(new PropertyModel(this, "action"));        
         actionChoice.setChoiceRenderer(new IChoiceRenderer() {
             public Object getDisplayValue(Object o) {                
                 int i = (Integer) o;
-                switch(i) {       
-                    case 0: return "-- " + localize("excel_view.selectActionToPerform") + " --";
-                    case 1: return localize("excel_view.deleteSelected");
-                    case 2: return localize("excel_view.convertToDate");
-                    case 3: return localize("excel_view.concatenateFields");
-                    case 4: return localize("excel_view.extractFirstEighty");
-                }
-                return "";
+                return localize(map.get(i));
             }
             public String getIdValue(Object o, int i) {
-                return o.toString();
+                return i + "";
             }
         });   
         
@@ -150,7 +191,7 @@ public class ExcelImportPage extends BasePage {
         form.add(rowsCheckGroup);
         rowsCheckGroup.add(new RowsListView("rows"));
         
-    }
+    }        
     
     private class ColumnCheckboxes extends ReadOnlyRefreshingView {
         
@@ -179,23 +220,15 @@ public class ExcelImportPage extends BasePage {
         }
         
         protected void populateItem(Item item) {            
-            Column column = (Column) item.getModelObject(); 
-            Link link = new Link("link") {
-                public void onClick() {
-                    
-                }                
-            };
-            item.add(link);
+            final Column column = (Column) item.getModelObject();            
             Label label = new Label("cell", new PropertyModel(column, "label"));
             label.setRenderBodyOnly(true);            
-            link.add(label);            
+            item.add(label);            
         }
         
     }
     
-    private class RowsListView extends ReadOnlyRefreshingView {
-        
-        final SimpleAttributeModifier alt = new SimpleAttributeModifier("class", "alt");
+    private class RowsListView extends ReadOnlyRefreshingView {                
         
         public RowsListView(String id) {
             super(id);
@@ -207,9 +240,10 @@ public class ExcelImportPage extends BasePage {
         
         protected void populateItem(Item rowItem) {
             if(rowItem.getIndex() % 2 == 1) {
-                rowItem.add(alt);
+                rowItem.add(CLASS_ALT);
             }
             rowItem.add(new Check("check", new PropertyModel(rowItem, "index")));
+            rowItem.add(new Label("index", rowItem.getIndex() + 1 + ""));
             List<Cell> rowCells = (List<Cell>) rowItem.getModelObject();
             rowItem.add(new ListView("cols", rowCells) {
                 protected void populateItem(ListItem colItem) {                    
@@ -221,30 +255,6 @@ public class ExcelImportPage extends BasePage {
                 }
             });            
         }
-        
-    }
-    
-    private abstract class ReadOnlyRefreshingView<T> extends RefreshingView {                
-        
-        public ReadOnlyRefreshingView(String id) {
-            super(id);            
-        }
-        
-        public abstract List<T> getObjectList();        
-        
-        @Override
-        protected Iterator getItemModels() {
-            List<T> list = getObjectList();
-            List<IModel> models = new ArrayList<IModel>(list.size());
-            for(final T o : list) {
-                models.add(new AbstractReadOnlyModel() {                    
-                    public Object getObject() {
-                        return o;
-                    }
-                });
-            }
-            return models.iterator();
-        }        
         
     }
     

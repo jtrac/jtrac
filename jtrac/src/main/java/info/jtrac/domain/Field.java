@@ -276,6 +276,14 @@ public class Field implements Serializable {
         return name.isDropDownType();
     }
     
+    public boolean isDatePickerType() {
+        return name.type == 6;
+    }
+    
+    public boolean isDecimalNumberType() {
+        return name.type == 4;
+    }    
+    
     //===================================================================  
     
     public Map<String, String> getOptions() {

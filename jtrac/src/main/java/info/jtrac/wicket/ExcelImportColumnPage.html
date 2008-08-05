@@ -1,0 +1,54 @@
+<html>
+    <body>        
+        <wicket:extend>
+            <span wicket:id="feedback"></span>                    
+            <form wicket:id="form">
+                <select wicket:id="column"/>
+                <input type="submit" wicket:id="preview" wicket:message="value:excel_view.preview"/>
+                <input type="submit" wicket:id="submit" wicket:message="value:submit"/>
+                <p/>
+                <a href="#" wicket:id="cancel"><img src="resources/cancel.gif" class="nav-link"/><wicket:message key="cancel"/></a>
+                <p/>
+                <table class="bdr-collapse">
+                    <tr valign="top">
+                        <td>                                                
+                            <table class="jtrac" wicket:id="columnCells">
+                                <tr>
+                                    <td></td>
+                                    <th>
+                                        <wicket:message key="excel_view.columnDataFor"/>
+                                        <span wicket:id="header"></span>
+                                    </th> 
+                                    <th></th>
+                                </tr>
+                                <tr wicket:id="rows">
+                                    <th wicket:id="index"></th>
+                                    <td wicket:id="cell"></td>  
+                                    <td wicket:id="mapped"></td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>&nbsp;&nbsp;</td>
+                        <td>
+                            <table class="jtrac" wicket:id="distinctCells">
+                                <tr>
+                                    <th><wicket:message key="excel_view.distinctValues"/></th>
+                                    <th><wicket:message key="excel_view.mapTo"/></th>
+                                </tr>
+                                <tr wicket:id="rows">                                
+                                    <td wicket:id="cell"></td>
+                                    <td>
+                                        <select wicket:id="key"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <input type="submit" wicket:id="update" wicket:message="value:excel_view.update"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </wicket:extend>        
+    </body>
+</html>
