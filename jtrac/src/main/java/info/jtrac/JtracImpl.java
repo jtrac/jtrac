@@ -32,6 +32,7 @@ import info.jtrac.domain.Metadata;
 import info.jtrac.domain.Role;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.SpaceSequence;
+import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import info.jtrac.lucene.IndexSearcher;
@@ -247,7 +248,11 @@ public class JtracImpl implements Jtrac {
             item.add(attachment);
             history.setAttachment(attachment);
         }
-        Date now = new Date();
+        // timestamp can be set by import, then retain
+        Date now = item.getTimeStamp();
+        if(now == null) {
+            now = new Date();
+        }
         item.setTimeStamp(now);
         history.setTimeStamp(now);
         item.add(history);
@@ -266,6 +271,30 @@ public class JtracImpl implements Jtrac {
         }
     }
 
+    public synchronized void storeItems(List<Item> items) {
+        for(Item item : items) {
+            item.setSendNotifications(false);
+            if(item.getStatus() == State.CLOSED) {
+                // we support CLOSED items for import also but for consistency
+                // simulate the item first created OPEN and then being CLOSED
+                item.setStatus(State.OPEN);
+                History history = new History();
+                history.setTimeStamp(item.getTimeStamp());
+                // need to do this as storeHistoryForItem does some role checks
+                // and so to avoid lazy initialization exception
+                history.setLoggedBy(loadUser(item.getLoggedBy().getId()));
+                history.setAssignedTo(item.getAssignedTo());
+                history.setComment("-");
+                history.setStatus(State.CLOSED); 
+                history.setSendNotifications(false);
+                storeItem(item, null);
+                storeHistoryForItem(item.getId(), history, null);
+            } else {
+                storeItem(item, null);
+            }
+        }
+    }
+    
     public synchronized void updateItem(Item item, User user) {
         logger.debug("update item called");
         History history = new History(item);
@@ -297,7 +326,10 @@ public class JtracImpl implements Jtrac {
             item.setAssignedTo(history.getAssignedTo()); // this may be null, when closing
         }
         item.setItemUsers(history.getItemUsers());
-        history.setTimeStamp(new Date());
+        // may have been set if this is an import
+        if(history.getTimeStamp() == null) {
+            history.setTimeStamp(new Date());
+        }
         Attachment attachment = getAttachment(fileUpload);
         if(attachment != null) {
             item.add(attachment);
@@ -417,6 +449,7 @@ public class JtracImpl implements Jtrac {
         User user = users.get(0);
         // if some spaces have guest access enabled, allocate these spaces as well
         Set<Space> userSpaces = user.getSpaces();
+        logger.debug("user spaces: " + userSpaces);
         for(Space s : findSpacesWhereGuestAllowed()) {
             if(!userSpaces.contains(s)) {
                 user.addSpaceWithRole(s, Role.ROLE_GUEST);
@@ -490,6 +523,36 @@ public class JtracImpl implements Jtrac {
     public List<UserSpaceRole> findUserRolesForSpace(long spaceId) {
         return dao.findUserRolesForSpace(spaceId);
     }
+    
+    public Map<Long, List<UserSpaceRole>> loadUserRolesMapForSpace(long spaceId) {
+        List<UserSpaceRole> list = dao.findUserRolesForSpace(spaceId);
+        Map<Long, List<UserSpaceRole>> map = new LinkedHashMap<Long, List<UserSpaceRole>>();
+        for(UserSpaceRole usr : list) {
+            long userId = usr.getUser().getId();
+            List<UserSpaceRole> value = map.get(userId);
+            if(value == null) {
+                value = new ArrayList<UserSpaceRole>();
+                map.put(userId, value);
+            }
+            value.add(usr);
+        }
+        return map;
+    }
+    
+    public Map<Long, List<UserSpaceRole>> loadSpaceRolesMapForUser(long userId) {
+        List<UserSpaceRole> list = dao.findSpaceRolesForUser(userId);
+        Map<Long, List<UserSpaceRole>> map = new LinkedHashMap<Long, List<UserSpaceRole>>();
+        for(UserSpaceRole usr : list) {
+            long spaceId = usr.getSpace() == null ? 0 : usr.getSpace().getId();
+            List<UserSpaceRole> value = map.get(spaceId);
+            if(value == null) {
+                value = new ArrayList<UserSpaceRole>();
+                map.put(spaceId, value);
+            }
+            value.add(usr);
+        }
+        return map;
+    }    
 
     public List<User> findUsersWithRoleForSpace(long spaceId, String roleKey) {
         return dao.findUsersWithRoleForSpace(spaceId, roleKey);
@@ -507,28 +570,39 @@ public class JtracImpl implements Jtrac {
         return new ArrayList<User>(userSet);
     }
 
-    public List<User> findUnallocatedUsersForSpace(long spaceId) {
-        List<User> users = findAllUsers();
-        Space space = loadSpace(spaceId);
-        Set<String> roleKeys = new HashSet(space.getMetadata().getAllRoleKeys());
-        Set<UserSpaceRole> userSpaceRoles = new HashSet(findUserRolesForSpace(spaceId));
-        List<User> unallocated = new ArrayList<User>();
-        // spaces have multiple roles, find users that have not been
-        // allocated all roles for the given space
-        for(User user : users) {
-            boolean isAdminForAllSpaces = user.isSuperUser();
+    public List<User> findUsersNotFullyAllocatedToSpace(long spaceId) {
+        // trying to reduce database hits and lazy loading as far as possible
+        List<User> notAtAllAllocated = dao.findUsersNotAllocatedToSpace(spaceId);
+        List<UserSpaceRole> usrs = dao.findUserRolesForSpace(spaceId);
+        List<User> notFullyAllocated = new ArrayList<User>(notAtAllAllocated);
+        if(usrs.size() == 0) {
+            return notFullyAllocated;            
+        }
+        Space space = usrs.get(0).getSpace();
+        Set<UserSpaceRole> allocated = new HashSet(usrs);
+        Set<String> roleKeys = new HashSet(space.getMetadata().getAllRoleKeys());                
+        Set<User> processed = new HashSet<User>(usrs.size());
+        Set<User> superUsers = new HashSet(dao.findSuperUsers());
+        for(UserSpaceRole usr : usrs) {
+            User user = usr.getUser();
+            if(processed.contains(user)) {
+                continue;
+            }
+            processed.add(user);
+            // not using the user object as it is db intensive
+            boolean isSuperUser = superUsers.contains(user);
             for(String roleKey : roleKeys) {
-                if(isAdminForAllSpaces && Role.isAdmin(roleKey)) {
+                if(isSuperUser && Role.isAdmin(roleKey)) {
                     continue;
                 }
-                UserSpaceRole usr = new UserSpaceRole(user, space, roleKey);
-                if(!userSpaceRoles.contains(usr)) {
-                    unallocated.add(user);
+                UserSpaceRole temp = new UserSpaceRole(user, space, roleKey);
+                if(!allocated.contains(temp)) {
+                    notFullyAllocated.add(user);
                     break;
                 }
             }
         }
-        return unallocated;
+        return notFullyAllocated;
     }
 
     public int loadCountOfHistoryInvolvingUser(User user) {
@@ -600,27 +674,36 @@ public class JtracImpl implements Jtrac {
         return dao.findSpacesWhereGuestAllowed();
     }
 
-    public List<Space> findUnallocatedSpacesForUser(long userId) {
-        List<Space> spaces = findAllSpaces();
-        User user = loadUser(userId);
-        Set<UserSpaceRole> usrs = user.getUserSpaceRoles();
-        List<Space> unallocated = new ArrayList<Space>();
-        boolean isAdminForAllSpaces = user.isSuperUser();
-        // spaces have multiple roles, find spaces that have roles
-        // not yet assigned to the user
-        for(Space space : spaces) {
+    public List<Space> findSpacesNotFullyAllocatedToUser(long userId) {     
+        // trying to reduce database hits and lazy loading as far as possible
+        List<Space> notAtAllAllocated = dao.findSpacesNotAllocatedToUser(userId); 
+        List<UserSpaceRole> usrs = dao.findSpaceRolesForUser(userId);        
+        List<Space> notFullyAllocated = new ArrayList(notAtAllAllocated);                
+        if(usrs.size() == 0) {
+            return notFullyAllocated;
+        }
+        Set<UserSpaceRole> allocated = new HashSet(usrs);
+        Set<Space> processed = new HashSet<Space>(usrs.size());
+        User user = usrs.get(0).getUser();
+        boolean isSuperUser = user.isSuperUser();                         
+        for(UserSpaceRole usr : usrs) {
+            Space space = usr.getSpace();
+            if(space == null || processed.contains(space)) {
+                continue;
+            }
+            processed.add(space);
             for(String roleKey : space.getMetadata().getAllRoleKeys()) {
-                if(isAdminForAllSpaces && Role.isAdmin(roleKey)) {
+                if(isSuperUser && Role.isAdmin(roleKey)) {
                     continue;
                 }
-                UserSpaceRole usr = new UserSpaceRole(user, space, roleKey);
-                if(!usrs.contains(usr)) {
-                    unallocated.add(space);
+                UserSpaceRole temp = new UserSpaceRole(user, space, roleKey);
+                if(!allocated.contains(temp)) {
+                    notFullyAllocated.add(space);
                     break;
                 }
             }
-        }
-        return unallocated;
+        }        
+        return notFullyAllocated;
     }
 
     public void removeSpace(Space space) {

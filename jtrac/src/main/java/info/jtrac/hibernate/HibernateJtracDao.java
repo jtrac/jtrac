@@ -242,6 +242,11 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return getHibernateTemplate().find("from Space space order by space.prefixCode");
     }
     
+    public List<Space> findSpacesNotAllocatedToUser(long userId) {
+        return getHibernateTemplate().find("from Space space where space not in"
+                + " (select usr.space from UserSpaceRole usr where usr.user.id = ?)", userId);
+    }
+    
     public List<Space> findSpacesWhereIdIn(List<Long> ids) {
         return getHibernateTemplate().findByNamedParam("from Space space where space.id in (:ids)", "ids", ids);
     }    
@@ -293,9 +298,14 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return getHibernateTemplate().find("from User user where user.email = ?", email);
     }
     
+    public List<User> findUsersNotAllocatedToSpace(long spaceId) {
+        return getHibernateTemplate().find("from User user where user not in"
+                + " (select usr.user from UserSpaceRole usr where usr.space.id = ?)", spaceId);
+    }
+    
     public List<UserSpaceRole> findUserRolesForSpace(long spaceId) {
         // join fetch for user object
-         return getHibernateTemplate().find("select usr from UserSpaceRole usr join fetch usr.user"
+        return getHibernateTemplate().find("select usr from UserSpaceRole usr join fetch usr.user"
                  + " where usr.space.id = ? order by usr.user.name", spaceId);
     }
     
@@ -304,6 +314,18 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
                 + " join user.userSpaceRoles as usr where usr.space.id = ?"
                 + " and usr.roleKey = ? order by user.name", new Object[] {spaceId, roleKey});        
     }    
+    
+    public List<UserSpaceRole> findSpaceRolesForUser(long userId) {
+        return getHibernateTemplate().find("select usr from UserSpaceRole usr" 
+                + " left join fetch usr.space as space"
+                + " left join fetch space.metadata"
+                + " where usr.user.id = ? order by usr.space.name", userId);
+    }
+    
+    public List<User> findSuperUsers() {
+        return getHibernateTemplate().find("select usr.user from UserSpaceRole usr"
+                + " where usr.space is null and usr.roleKey = ?", Role.ROLE_ADMIN);
+    }
     
     public int loadCountOfHistoryInvolvingUser(User user) {
         Long count = (Long) getHibernateTemplate().find("select count(history) from History history where "

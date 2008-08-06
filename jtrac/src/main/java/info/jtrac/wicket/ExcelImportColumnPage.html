@@ -1,23 +1,28 @@
 <html>
     <body>        
         <wicket:extend>
-            <span wicket:id="feedback"></span>                    
+            <span wicket:id="feedback"></span>           
             <form wicket:id="form">
                 <select wicket:id="column"/>
                 <input type="submit" wicket:id="preview" wicket:message="value:excel_view.preview"/>
                 <input type="submit" wicket:id="submit" wicket:message="value:submit"/>
                 <p/>
                 <a href="#" wicket:id="cancel"><img src="resources/cancel.gif" class="nav-link"/><wicket:message key="cancel"/></a>
-                <p/>
+                <p/>                 
                 <table class="bdr-collapse">
                     <tr valign="top">
-                        <td>                                                
+                        <td>                            
                             <table class="jtrac" wicket:id="columnCells">
+                                <tr>
+                                    <td colspan="2" class="info">
+                                        <wicket:message key="excel_view.selectedColumn"/>
+                                        &quot;<span wicket:id="header"></span>&quot;
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td></td>
                                     <th>
-                                        <wicket:message key="excel_view.columnDataFor"/>
-                                        <span wicket:id="header"></span>
+                                        <wicket:message key="excel_view.columnData"/>                                        
                                     </th> 
                                     <th></th>
                                 </tr>

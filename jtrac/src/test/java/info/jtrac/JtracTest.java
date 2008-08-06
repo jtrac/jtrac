@@ -321,7 +321,90 @@ public class JtracTest extends JtracTestBase {
         Item dummyItem = jtrac.loadItem(i.getId());
         assertEquals(0, dummyItem.getItemUsers().size());
         
+        cleanDatabase();                
+        
+    }      
+    
+    public void testLogicToFindNotUsersAndSpacesNotAllocated() {
+        
         cleanDatabase();
+        
+        Space s1 = getSpace();
+        Metadata m1 = getMetadata();
+        m1.initRoles();
+        s1.setMetadata(m1);
+        jtrac.storeSpace(s1);
+        
+        Space s2 = getSpace();
+        s2.setPrefixCode("TEST2");
+        Metadata m2 = getMetadata();
+        m2.initRoles();
+        s2.setMetadata(m2);
+        jtrac.storeSpace(s2);
+        
+        User u1 = new User();
+        u1.setLoginName("test");
+        
+        u1.addSpaceWithRole(s1, "DEFAULT");
+        jtrac.storeUser(u1);
+        
+        List<Space> list = jtrac.findSpacesNotFullyAllocatedToUser(u1.getId());
+        assertEquals(2, list.size()); 
+        
+        jtrac.storeUserSpaceRole(u1, s1, "ROLE_ADMIN");
+        
+        List<Space> list2 = jtrac.findSpacesNotFullyAllocatedToUser(u1.getId());
+        assertEquals(1, list2.size());   
+        
+        User u2 = new User();
+        u2.setLoginName("test2");
+        jtrac.storeUser(u2);
+        
+        List<User> list3 = jtrac.findUsersNotFullyAllocatedToSpace(s1.getId());
+        // admin user exists also
+        assertEquals(2, list3.size());
+        
+        jtrac.storeUserSpaceRole(u2, s1, "DEFAULT");
+        
+        List<User> list4 = jtrac.findUsersNotFullyAllocatedToSpace(s1.getId());
+        logger.info(list4);
+        assertEquals(2, list4.size()); 
+        
+        
+        jtrac.storeUserSpaceRole(u2, s1, "ROLE_ADMIN");
+        
+        List<User> list5 = jtrac.findUsersNotFullyAllocatedToSpace(s1.getId());
+        assertEquals(1, list5.size());                
+        
+    }
+    
+    public void testFindSuperUsers() {                
+        
+        List<User> list1 = dao.findSuperUsers();
+        assertEquals(1, list1.size());
+        assertEquals("admin", list1.get(0).getLoginName());
+        
+        User u1 = new User();
+        u1.setLoginName("test2");
+        jtrac.storeUser(u1);
+        
+        jtrac.storeUserSpaceRole(u1, null, "ROLE_ADMIN");              
+        
+        List<User> list2 = dao.findSuperUsers();
+        assertEquals(2, list2.size());           
+                
+    }
+    
+    public void testLoadSpaceRolesMapForUser() {
+        
+        User u1 = new User();
+        u1.setLoginName("test2");
+        jtrac.storeUser(u1);
+        
+        jtrac.storeUserSpaceRole(u1, null, "ROLE_ADMIN");   
+        
+        Map<Long, List<UserSpaceRole>> map = jtrac.loadSpaceRolesMapForUser(u1.getId());
+        assertEquals(1, map.size());
         
     }
     

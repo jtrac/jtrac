@@ -150,7 +150,7 @@ public class User implements UserDetails, Serializable {
     public Collection<UserSpaceRole> getSpaceRoles() {
         Map<String, UserSpaceRole> map = new TreeMap<String, UserSpaceRole>();        
         for(UserSpaceRole usr : userSpaceRoles) {
-            if(usr.isSpaceAdmin()) {
+            if(!usr.isAdmin()) {
                 map.put(usr.getSpace().getName(), usr);
             }
         }
@@ -162,17 +162,17 @@ public class User implements UserDetails, Serializable {
      * a List of role keys, useful for UI display of this
      * users allocated spaces and roles
      */
-    public Map<String, List<UserSpaceRole>> getSpaceRolesMap() {        
-        Map<String, List<UserSpaceRole>> map = new TreeMap<String, List<UserSpaceRole>>();
+    public Map<Long, List<UserSpaceRole>> getSpaceRolesMap() {        
+        Map<Long, List<UserSpaceRole>> map = new TreeMap<Long, List<UserSpaceRole>>();
         for(UserSpaceRole usr : userSpaceRoles) {
-            String prefixCode = "";
+            long spaceId = 0;
             if(usr.getSpace() != null) {                
-                prefixCode = usr.getSpace().getPrefixCode();
+                spaceId = usr.getSpace().getId();
             }
-            List<UserSpaceRole> list = map.get(prefixCode);
+            List<UserSpaceRole> list = map.get(spaceId);
             if(list == null) {
                 list = new ArrayList<UserSpaceRole>();
-                map.put(prefixCode, list);                
+                map.put(spaceId, list);                
             }
             list.add(usr);
         }

@@ -1,6 +1,7 @@
 <html>
     <body>        
         <wicket:extend>
+            <span wicket:id="feedback"></span>
             <form wicket:id="uploadForm">
                 <wicket:message key="excel_upload.uploadExcelFile"/>
                 <input wicket:id="file" type="file"/>
@@ -15,7 +16,7 @@
                 <select wicket:id="action"/>
                 <input type="submit" wicket:message="value:submit"/> 
                 <p/>
-                <table class="jtrac" width="100%" style="font-size:90%">
+                <table class="jtrac" width="100%" style="font-size:85%">
                     <tr class="center alt">
                         <td colspan="2" rowspan="2"></td>
                         <wicket:container wicket:id="colsCheckGroup">

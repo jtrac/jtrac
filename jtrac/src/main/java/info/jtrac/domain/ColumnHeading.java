@@ -115,7 +115,7 @@ public class ColumnHeading implements Serializable {
     
     private FilterCriteria filterCriteria = new FilterCriteria();             
     
-    private ColumnHeading(Name name) {
+    public ColumnHeading(Name name) {
         this.name = name;    
         if(name == DETAIL || name == SPACE) {
             visible = false;
@@ -137,7 +137,9 @@ public class ColumnHeading implements Serializable {
         if(isField()) {
             return field.isDropDownType();
         } else {
-            return name == LOGGED_BY || name == ASSIGNED_TO;
+            return name == LOGGED_BY 
+                    || name == ASSIGNED_TO 
+                    || name == STATUS;
         }
     }
     
@@ -808,6 +810,9 @@ public class ColumnHeading implements Serializable {
     
     @Override
     public int hashCode() {
+        if(isField()) {
+            return field.hashCode();
+        }        
         return name.hashCode();
     }
     

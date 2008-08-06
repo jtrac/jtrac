@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.time.Duration;
@@ -58,7 +59,7 @@ public class IndexRebuildPage extends BasePage {
             final Label progress = new Label("progress");
             progress.setOutputMarkupId(true);               
             
-            add(new Button("start") {
+            Button button = new Button("start") {
                 @Override
                 public void onSubmit() {
                     // hide the button
@@ -97,6 +98,15 @@ public class IndexRebuildPage extends BasePage {
                     };
                     progress.setModel(model);             
                 }
+            };
+            
+            add(button);
+            
+            add(new Link("cancel") {
+                public void onClick() {
+                    setResponsePage(OptionsPage.class);
+                }
+                
             });
 
             add(progress);            

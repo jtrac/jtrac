@@ -22,6 +22,7 @@ import info.jtrac.domain.User;
 import info.jtrac.domain.UserSpaceRole;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
@@ -35,7 +36,6 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.BoundCompoundPropertyModel;
-import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
 
 /**
@@ -116,23 +116,19 @@ public class SpaceAllocatePage extends BasePage {
             
             add(new Label("label", space.getName() + " (" + space.getPrefixCode() + ")"));
             
-            LoadableDetachableModel usrsModel = new LoadableDetachableModel() {
-                protected Object load() {
-                    logger.debug("loading user space roles list from database");
-                    return getJtrac().findUsersForSpace(spaceId);
-                }
-            };                                    
+            final Map<Long, List<UserSpaceRole>> userRolesMap = getJtrac().loadUserRolesMapForSpace(spaceId);
             
             final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
             
-            add(new ListView("usrs", usrsModel) {
+            add(new ListView("usrs", new ArrayList(userRolesMap.keySet())) {
                 protected void populateItem(ListItem listItem) {
-                    final User user = (User) listItem.getModelObject();
-                    if(selectedUserId == user.getId()) {
+                    long userId = (Long) listItem.getModelObject();
+                    final User user = userRolesMap.get(userId).get(0).getUser();
+                    if(selectedUserId == userId) {
                         listItem.add(new SimpleAttributeModifier("class", "selected"));
                     } else if(listItem.getIndex() % 2 == 1) {
                         listItem.add(sam);
-                    }                                         
+                    }                     
                     listItem.add(new Link("loginName") {
                         public void onClick() {                            
                             if(previous instanceof UserAllocatePage) { // prevent recursive stack buildup
@@ -142,7 +138,7 @@ public class SpaceAllocatePage extends BasePage {
                         }
                     }.add(new Label("loginName", new PropertyModel(user, "loginName"))));
                     listItem.add(new Label("name", new PropertyModel(user, "name")));
-                    List<UserSpaceRole> usrs = user.getSpaceRolesMap().get(space.getPrefixCode());
+                    List<UserSpaceRole> usrs = userRolesMap.get(userId);
                     listItem.add(new RoleDeAllocatePanel("roleDeAllocatePanel", usrs));
                 }
             });
@@ -156,7 +152,7 @@ public class SpaceAllocatePage extends BasePage {
                 }
             });
             
-            List<User> users = getJtrac().findUnallocatedUsersForSpace(spaceId);                      
+            List<User> users = getJtrac().findUsersNotFullyAllocatedToSpace(spaceId);                      
             
             DropDownChoice userChoice = new DropDownChoice("user", users, new IChoiceRenderer() {
                 public Object getDisplayValue(Object o) {
@@ -170,8 +166,7 @@ public class SpaceAllocatePage extends BasePage {
             userChoice.setNullValid(true);
 
             add(userChoice);
-            
-            
+                        
             userChoice.add(new AjaxFormComponentUpdatingBehavior("onChange") {
                 protected void onUpdate(AjaxRequestTarget target) {
                     User u = (User) getFormComponent().getConvertedInput();

@@ -16,12 +16,15 @@
 
 package info.jtrac.domain;
 
+import info.jtrac.domain.ColumnHeading.Name;
+import static info.jtrac.domain.ColumnHeading.Name.*;
 import info.jtrac.util.DateUtils;
 import info.jtrac.util.ItemUtils;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -54,6 +57,14 @@ public class ExcelFile implements Serializable {
             this.label = label;
         }
 
+        public String getLabel() {
+            return label;
+        }        
+        
+        public void setLabel(String label) {
+            this.label = label;
+        }        
+        
         public void setColumnHeading(ColumnHeading columnHeading) {
             this.columnHeading = columnHeading;
         }       
@@ -83,6 +94,63 @@ public class ExcelFile implements Serializable {
             this.value = value;
         }
 
+        private boolean isEmpty() {
+            return value == null || value.toString().trim().length() == 0;
+        }
+        
+        public boolean isValid(ColumnHeading ch) {
+            if(ch.isField()) {
+                switch(ch.getField().getName().getType()) {
+                    case 1:
+                    case 2:
+                    case 3:
+                        if(key == null || key instanceof String) {
+                            return true;
+                        }
+                        break;
+                    case 4: 
+                        if(value == null || value instanceof Double) {
+                            return true;
+                        }
+                        break;
+                    case 5:
+                        return true;                        
+                    case 6:
+                        if(value == null || value instanceof Date) {
+                            return true;
+                        }
+                        break;
+                }
+                
+            } else {
+                switch(ch.getName()) {
+                    case SUMMARY:
+                    case DETAIL:
+                        if(!isEmpty()) {
+                            return true;
+                        }
+                        break;
+                    case LOGGED_BY:
+                    case ASSIGNED_TO:
+                        if(key != null && key instanceof User) {
+                            return true;
+                        }
+                        break;
+                    case STATUS:
+                        if(key != null && key instanceof Integer) {
+                            return true;
+                        }
+                        break;
+                    case TIME_STAMP:
+                        if(value == null || value instanceof Date) {
+                            return true;
+                        }
+                        break;
+                }
+            }
+            return false;
+        }
+        
         public void setValue(Object value) {
             this.value = value;
         }                
@@ -194,16 +262,33 @@ public class ExcelFile implements Serializable {
         return list;
     }
     
-    public List<ColumnHeading> getUnMappedColumnHeadings(Space space) {
-        if(space == null) {
-            return new ArrayList<ColumnHeading>(0);
+    public ColumnHeading getDuplicatedColumnHeadings() {
+        Set<ColumnHeading> set = new HashSet<ColumnHeading>();
+        for(ColumnHeading ch : getMappedColumnHeadings()) {
+            if(set.contains(ch)) {
+                return ch;
+            }
+            set.add(ch);
         }
-        List<ColumnHeading> mapped = getMappedColumnHeadings();
-        List<ColumnHeading> all = ColumnHeading.getColumnHeadings(space);
-        for(ColumnHeading ch : mapped) {
-            all.remove(ch);
-        }
-        return all;
+        return null;
+    }
+    
+    public List<ColumnHeading> getUnMappedColumnHeadings() {
+        // status will default to Open
+        // timestamp will default to now
+        // custom field mandatory check will be ignored if any
+        // the following 4 are the only MANDATORY fields for import
+        Set<ColumnHeading> set = new HashSet<ColumnHeading>();        
+        ColumnHeading summary = new ColumnHeading(Name.SUMMARY);
+        ColumnHeading detail = new ColumnHeading(Name.DETAIL);
+        ColumnHeading loggedBy = new ColumnHeading(Name.LOGGED_BY);
+        ColumnHeading assignedTo = new ColumnHeading(Name.ASSIGNED_TO);
+        set.add(summary);
+        set.add(detail);
+        set.add(loggedBy);
+        set.add(assignedTo);
+        set.removeAll(getMappedColumnHeadings());
+        return new ArrayList(set);
     }
     
     public List<Cell> getColumnCells(int index) {
@@ -236,6 +321,66 @@ public class ExcelFile implements Serializable {
             set.add(rowCells.get(index).getValueAsString());
         }
         return new ArrayList(set);
+    }
+    
+    public List<Item> getAsItems(Space s) {
+        List<Item> items = new ArrayList<Item>(rows.size());
+        for(List<Cell> rowCells : rows) {
+            Item item = new Item();
+            item.setSpace(s);
+            for(int i = 0; i < columns.size(); i++) {
+                ColumnHeading ch = columns.get(i).columnHeading;
+                if(ch == null) {
+                    continue;
+                }
+                Cell cell = rowCells.get(i);
+                if(ch.isField()) {                    
+                    Field field = ch.getField();
+                    if(field.isDropDownType()) {
+                        if(cell.key != null) {
+                            item.setValue(field.getName(), cell.key);
+                        }
+                    } else {
+                        if(cell.value != null) {
+                            item.setValue(field.getName(), cell.value);
+                        }
+                    }
+                } else {                    
+                    switch(ch.getName()) {
+                        // next 4 are the only MANDATORY fields in import                        
+                        case SUMMARY:                            
+                            item.setSummary(cell.value.toString());
+                            break;
+                        case DETAIL: 
+                            item.setDetail(cell.value.toString());
+                            break;
+                        case LOGGED_BY: 
+                            item.setLoggedBy((User) cell.key);
+                            break;
+                        case ASSIGNED_TO: 
+                            item.setAssignedTo((User) cell.key);
+                            break;
+                        case STATUS:
+                            if(cell.key != null) {
+                                item.setStatus((Integer) cell.key);
+                            }
+                            break;
+                        case TIME_STAMP:
+                            // timestamp will be set by JtracImpl if null
+                            if(cell.value != null) {
+                                item.setTimeStamp((Date) cell.value);
+                            }
+                            break;
+                    }
+                }              
+            }
+            // if no status, assume Open
+            if(item.getStatus() == null) {
+                item.setStatus(State.OPEN);
+            }
+            items.add(item);
+        } 
+        return items;
     }
     
     //==========================================================================
@@ -275,9 +420,6 @@ public class ExcelFile implements Serializable {
     }
     
     public void concatenateSelectedColumns() {
-        if(selectedColumns.size() == 0) {
-            return;
-        }
         List<Cell> list = new ArrayList<Cell>(rows.size());
         for(List<Cell> rowCells : rows) {
             list.add(new Cell(null));
@@ -308,9 +450,6 @@ public class ExcelFile implements Serializable {
     }
     
     public void extractSummaryFromSelectedColumn() {
-        if(selectedColumns.size() == 0) {
-            return;
-        }
         int first = selectedColumns.get(0);           
         for(List<Cell> cells : rows) {
             Cell c = cells.get(first);                
@@ -319,12 +458,26 @@ public class ExcelFile implements Serializable {
                 if (s.length() > 80) {
                     s = s.substring(0, 80);
                 }
-                cells.add(0, new Cell(s));                
+                cells.add(first, new Cell(s));                
             } else {
-                cells.add(0, null);
+                cells.add(first, new Cell(null));
             }         
         }         
-        columns.add(0, new Column("Summary"));   
+        columns.add(first, new Column("---"));   
+    }
+    
+    public void duplicateSelectedColumn() {
+        int first = selectedColumns.get(0);
+        for(List<Cell> cells : rows) {
+            Cell c = cells.get(first);
+            if (c != null && c.value != null) {
+                Cell clone = c.getClone();
+                cells.add(first, clone);
+            } else {
+                cells.add(first, new Cell(null));
+            }
+        }
+        columns.add(first, new Column("---"));
     }
     
     //========================================================================== 

@@ -72,7 +72,8 @@ public interface JtracDao {
     void storeSpace(Space space);
     Space loadSpace(long id);
     List<Space> findSpacesByPrefixCode(String prefixCode);
-    List<Space> findAllSpaces();
+    List<Space> findAllSpaces();    
+    List<Space> findSpacesNotAllocatedToUser(long userId);
     List<Space> findSpacesWhereIdIn(List<Long> ids);
     List<Space> findSpacesWhereGuestAllowed();
     void removeSpace(Space space);
@@ -89,9 +90,12 @@ public interface JtracDao {
     List<User> findUsersByLoginName(String loginName);
     List<User> findUsersByEmail(String email);
     List<User> findUsersForSpace(long spaceId);
+    List<User> findUsersNotAllocatedToSpace(long spaceId);
     List<UserSpaceRole> findUserRolesForSpace(long spaceId);
+    List<UserSpaceRole> findSpaceRolesForUser(long userId);
     List<User> findUsersWithRoleForSpace(long spaceId, String roleKey);
     List<User> findUsersForSpaceSet(Collection<Space> spaces);
+    List<User> findSuperUsers();
     int loadCountOfHistoryInvolvingUser(User user);
     //===========================================
     UserSpaceRole loadUserSpaceRole(long id);

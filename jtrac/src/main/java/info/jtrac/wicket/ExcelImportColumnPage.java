@@ -22,6 +22,7 @@ import info.jtrac.domain.ExcelFile;
 import info.jtrac.domain.ExcelFile.Cell;
 import info.jtrac.domain.ExcelFile.Column;
 import info.jtrac.domain.Space;
+import info.jtrac.domain.State;
 import info.jtrac.domain.User;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,24 +53,21 @@ public class ExcelImportColumnPage extends BasePage {
     private int index;
     private Map<String, IModel> mappedKeys;
     private Map<Object, String> mappedDisplayValues;
-    private List<Cell> columnCells;
+    private List<Cell> columnCells;        
     
     public ExcelImportColumnPage(final ExcelImportPage previous, final int index) {        
-        add(new FeedbackPanel("feedback"));
+        
+        add(new FeedbackPanel("feedback"));                
+        
         space = previous.getSpace();
         excelFile = previous.getExcelFile();
         this.index = index;
         column = excelFile.getColumns().get(index).getClone();
         columnCells = excelFile.getColumnCellsCloned(index);
-        if(space == null) {
-            error(localize("excel_view.noSpaceSelected"));            
-        }        
-        Form form = new Form("form") {
-            @Override
-            public boolean isVisible() {
-                return space != null;
-            }
-        };
+        final Map<Name, String> labelsMap = BasePage.getLocalizedLabels(this);           
+        
+        Form form = new Form("form");
+        
         add(form);                        
         
         DropDownChoice columnChoice = new DropDownChoice("column");
@@ -77,17 +75,19 @@ public class ExcelImportColumnPage extends BasePage {
             public Object getObject() {
                 // avoid lazy init problem
                 Space s = getJtrac().loadSpace(space.getId());
-                return ColumnHeading.getColumnHeadings(s);
+                List<ColumnHeading> list = ColumnHeading.getColumnHeadings(s);
+                list.remove(new ColumnHeading(Name.ID));
+                list.remove(new ColumnHeading(Name.SPACE));
+                return list;
             }
-        });         
-        final Map<Name, String> labels = BasePage.getLocalizedLabels(ExcelImportColumnPage.this);
+        });                 
         columnChoice.setChoiceRenderer(new IChoiceRenderer() {
             public Object getDisplayValue(Object o) {
                 ColumnHeading ch = (ColumnHeading) o;
                 if(ch.isField()) {
                     return ch.getLabel();
                 }
-                return labels.get(ch.getName());
+                return labelsMap.get(ch.getName());
             }
             public String getIdValue(Object o, int i) {
                 ColumnHeading ch = (ColumnHeading) o;
@@ -108,13 +108,13 @@ public class ExcelImportColumnPage extends BasePage {
             }            
         };         
         
-        form.add(previewButton);                
+        form.add(previewButton);
         
         form.add(new Link("cancel") {
             public void onClick() {
                 setResponsePage(previous);
             }
-        }); 
+        });         
         
         final WebMarkupContainer columnCellsContainer = new WebMarkupContainer("columnCells") {
             @Override
@@ -125,7 +125,7 @@ public class ExcelImportColumnPage extends BasePage {
         
         form.add(columnCellsContainer);
         
-        final WebMarkupContainer distinctCells = new WebMarkupContainer("distinctCells") {
+        final WebMarkupContainer distinctCellsContainer = new WebMarkupContainer("distinctCells") {
             @Override
             public boolean isVisible() {
                 ColumnHeading ch = column.getColumnHeading();
@@ -133,7 +133,7 @@ public class ExcelImportColumnPage extends BasePage {
             }
         };         
         
-        columnCellsContainer.add(new Label("header", new PropertyModel(column, "label")));
+        columnCellsContainer.add(new Label("header", new PropertyModel(column, "label")));        
         columnCellsContainer.add(new ReadOnlyRefreshingView("rows") {            
             public List getObjectList() {
                 return columnCells;
@@ -145,9 +145,12 @@ public class ExcelImportColumnPage extends BasePage {
                 item.add(new Label("index", item.getIndex() + 1 + ""));
                 Cell cell = (Cell) item.getModelObject();
                 Label label = new Label("cell", new PropertyModel(cell, "valueAsString"));
-                label.setEscapeModelStrings(false);
+                label.setEscapeModelStrings(false);                
+                if(!cell.isValid(column.getColumnHeading())) {
+                    label.add(CLASS_ERROR_BACK);
+                }
                 item.add(label);
-                if(distinctCells.isVisible() && cell.getKey() != null) {
+                if(mappedDisplayValues != null && distinctCellsContainer.isVisible() && cell.getKey() != null) {
                     String mapped = mappedDisplayValues.get(cell.getKey());
                     item.add(new Label("mapped", mapped));
                 } else {
@@ -155,17 +158,15 @@ public class ExcelImportColumnPage extends BasePage {
                 }
             }
         });
+                
+        form.add(distinctCellsContainer);
         
-
-        
-        form.add(distinctCells);
-        
-        distinctCells.add(new DistinctCellsView("rows"));
+        distinctCellsContainer.add(new DistinctCellsView("rows"));
         
         Button updateButton = new Button("update") {
             @Override
             public void onSubmit() {
-                if(distinctCells.isVisible()) {
+                if(distinctCellsContainer.isVisible()) {
                     for(Cell cell : columnCells) {
                         IModel model = mappedKeys.get(cell.getValueAsString());
                         Object o = model.getObject();
@@ -175,7 +176,7 @@ public class ExcelImportColumnPage extends BasePage {
             } 
             @Override
             public boolean isVisible() {
-                return columnCellsContainer.isVisible();
+                return distinctCellsContainer.isVisible();
             }
         };
         
@@ -185,8 +186,20 @@ public class ExcelImportColumnPage extends BasePage {
         Button submitButton = new Button("submit") {
             @Override
             public void onSubmit() {
+                ColumnHeading ch = column.getColumnHeading();
+                for(Cell cell : columnCells) {
+                    if(!cell.isValid(ch)) {
+                        error(localize("excel_view.error.invalidValue"));
+                        return;
+                    }
+                }                
+                if(ch.isField()) {
+                    column.setLabel(ch.getLabel());
+                } else {
+                    column.setLabel(labelsMap.get(column.getColumnHeading().getName()));
+                }
                 excelFile.getColumns().set(index, column);
-                if(distinctCells.isVisible()) {
+                if(distinctCellsContainer.isVisible()) {
                     for(Cell cell : columnCells) {
                         cell.setValue(mappedDisplayValues.get(cell.getKey()));
                     }
@@ -213,7 +226,9 @@ public class ExcelImportColumnPage extends BasePage {
             super(id);
         }                        
         
-        private void initChoices() {            
+        private void initChoices() {    
+            // TODO reduce code duplication
+            space = getJtrac().loadSpace(space.getId());
             ColumnHeading ch = column.getColumnHeading();
             if (ch.isField()) {                
                 final Map<String, String> options = ch.getField().getOptions();
@@ -238,7 +253,27 @@ public class ExcelImportColumnPage extends BasePage {
                         return keys;
                     }
                 };
-            } else {                
+            } else if (ch.getName() == ColumnHeading.Name.STATUS) {
+                final Map<Integer, String> options = space.getMetadata().getStatesMap();
+                options.remove(State.NEW);
+                final List<Integer> keys = new ArrayList(options.keySet());
+                choiceRenderer = new IChoiceRenderer() {
+                    public Object getDisplayValue(Object o) {
+                        String value = options.get(o);
+                        mappedDisplayValues.put(o, value);
+                        return value;
+                    }                    
+                    public String getIdValue(Object o, int i) {
+                        return o.toString();
+                    }                    
+                };
+                choicesModel = new AbstractReadOnlyModel() {
+                    public Object getObject() {
+                        return keys;
+                    }
+                };                
+                
+            } else { // LOGGED_BY / ASSIGNED_TO             
                 choiceRenderer = new IChoiceRenderer() {
                     public Object getDisplayValue(Object o) {
                         String value = ((User) o).getName();

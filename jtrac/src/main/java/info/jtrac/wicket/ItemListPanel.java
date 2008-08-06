@@ -270,6 +270,7 @@ public class ItemListPanel extends BasePanel {
                                 case ID:
                                     String refId = item.getRefId();
                                     Fragment refIdFrag = new Fragment("column", "refId", ItemListPanel.this);
+                                    refIdFrag.setRenderBodyOnly(true);
                                     listItem.add(refIdFrag);
                                     Link refIdLink = new BookmarkablePageLink("refId", ItemViewPage.class, new PageParameters("0=" + refId));                                
                                     refIdFrag.add(refIdLink);
@@ -330,7 +331,9 @@ public class ItemListPanel extends BasePanel {
                                     throw new RuntimeException("Unexpected name: '" + ch.getName() + "'");                                
                             }
                         }
-                        listItem.add(new Label("column", value));
+                        Label label = new Label("column", value);
+                        label.setRenderBodyOnly(true);
+                        listItem.add(label);
                     }
                 };
                 

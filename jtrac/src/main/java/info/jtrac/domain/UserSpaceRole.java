@@ -60,7 +60,7 @@ public class UserSpaceRole implements GrantedAuthority, Serializable {
         return space != null && isAdmin();
     }    
     
-    private boolean isAdmin() {
+    public boolean isAdmin() {
         return Role.ROLE_ADMIN.equals(roleKey);
     }
     

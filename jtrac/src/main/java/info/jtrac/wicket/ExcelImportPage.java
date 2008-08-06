@@ -16,6 +16,8 @@
 
 package info.jtrac.wicket;
 
+import info.jtrac.domain.ColumnHeading;
+import info.jtrac.domain.ColumnHeading.Name;
 import info.jtrac.domain.ExcelFile;
 import info.jtrac.domain.ExcelFile.Cell;
 import info.jtrac.domain.ExcelFile.Column;
@@ -25,6 +27,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.CheckGroup;
@@ -35,6 +38,7 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.PropertyModel;
@@ -61,6 +65,7 @@ public class ExcelImportPage extends BasePage {
     }                    
     
     public ExcelImportPage() {
+        add(new FeedbackPanel("feedback"));
         final FileUploadField fileUploadField = new FileUploadField("file");        
         Form uploadForm = new Form("uploadForm") {
             @Override
@@ -89,47 +94,87 @@ public class ExcelImportPage extends BasePage {
             @Override
             public void onSubmit() { 
                 if(action == 0) {
+                    error(localize("excel_view.error.noActionSelected"));
                     return;
                 }                
                 switch(action) {
                     case 1: // delete
                         if(!excelFile.isColumnSelected() && !excelFile.isRowSelected()) {
+                            error(localize("excel_view.error.noColumnOrRowSelected"));
                             return;
                         }
                         excelFile.deleteSelectedRowsAndColumns(); 
                         break;
                     case 2: // convert to date
                         if(!excelFile.isColumnSelected()) {
+                            error(localize("excel_view.error.noColumnSelected"));
                             return;
                         }
                         excelFile.convertSelectedColumnsToDate(); 
                         break;
                     case 3: // concatenate
                         if(excelFile.getSelectedColumns().size() < 2) {
+                            error(localize("excel_view.error.atLeastTwoColumns"));
                             return;
                         }
                         excelFile.concatenateSelectedColumns(); 
                         break;
                     case 4: // extract summary into new column
                         if(!excelFile.isColumnSelected()) {
+                            error(localize("excel_view.error.noColumnSelected"));
                             return;
                         }                        
                         excelFile.extractSummaryFromSelectedColumn(); 
                         break;
-                    case 5: // map column
+                    case 5: // duplicate column
                         if(!excelFile.isColumnSelected()) {
+                            error(localize("excel_view.error.noColumnSelected"));
+                            return;
+                        }                        
+                        excelFile.duplicateSelectedColumn(); 
+                        break;                        
+                    case 6: // map column
+                        if(space == null) {
+                            error(localize("excel_view.error.noSpaceSelected"));
+                            return;                            
+                        }                        
+                        if(!excelFile.isColumnSelected()) {
+                            error(localize("excel_view.error.noColumnSelected"));
                             return;
                         }
                         int colIndex = excelFile.getSelectedColumns().get(0);
                         setResponsePage(new ExcelImportColumnPage(ExcelImportPage.this, colIndex)); 
                         break;
-                    case 6: // edit row
-                        if(!excelFile.isRowSelected()) {
+                    case 7: // edit row
+                        if (!excelFile.isRowSelected()) {
+                            error(localize("excel_view.error.noRowSelected"));
                             return;
                         }
                         int rowIndex = excelFile.getSelectedRows().get(0);
                         setResponsePage(new ExcelImportRowPage(ExcelImportPage.this, rowIndex));
                         break;
+                    case 8: // import !
+                        if(space == null) {
+                            error(localize("excel_view.error.noSpaceSelected"));
+                            return;                            
+                        }
+                        Map<Name, String> labelsMap = BasePage.getLocalizedLabels(ExcelImportPage.this);
+                        ColumnHeading duplicate = excelFile.getDuplicatedColumnHeadings();
+                        if(duplicate != null) {
+                            error(localize("excel_view.error.duplicateMapping", labelsMap.get(duplicate.getName())));
+                            return;                              
+                        }
+                        List<ColumnHeading> unMapped = excelFile.getUnMappedColumnHeadings();
+                        if(unMapped.size() > 0) {                            
+                            for(ColumnHeading ch : unMapped) {
+                                error(localize("excel_view.error.notMapped", labelsMap.get(ch.getName())));
+                            }
+                            return;
+                        }                        
+                        List<info.jtrac.domain.Item> items = excelFile.getAsItems(space);
+                        getJtrac().storeItems(items);
+                        info(localize("excel_view.importSuccess"));
+                        setResponsePage(new ExcelImportPage());
                 }
                 action = 0;
                 excelFile.clearSelected();                
@@ -164,8 +209,10 @@ public class ExcelImportPage extends BasePage {
         map.put(2, "excel_view.convertToDate");
         map.put(3, "excel_view.concatenateFields");
         map.put(4, "excel_view.extractFirstEighty");
-        map.put(5, "excel_view.mapToField");
-        map.put(6, "excel_view.editRow");
+        map.put(5, "excel_view.duplicateColumn");
+        map.put(6, "excel_view.mapToField");
+        map.put(7, "excel_view.editRow");
+        map.put(8, "excel_view.import");
         
         DropDownChoice actionChoice = new DropDownChoice("action", new ArrayList(map.keySet()));
         actionChoice.setModel(new PropertyModel(this, "action"));        
@@ -209,7 +256,9 @@ public class ExcelImportPage extends BasePage {
         
     }    
     
-    private class ColumnHeadings extends ReadOnlyRefreshingView {
+    private static final SimpleAttributeModifier CLASS_SELECTED = new SimpleAttributeModifier("class", "selected");
+    
+    private class ColumnHeadings extends ReadOnlyRefreshingView {        
         
         public ColumnHeadings(String id) {
             super(id);
@@ -220,7 +269,10 @@ public class ExcelImportPage extends BasePage {
         }
         
         protected void populateItem(Item item) {            
-            final Column column = (Column) item.getModelObject();            
+            final Column column = (Column) item.getModelObject();
+            if(column.getColumnHeading() != null) {
+                item.add(CLASS_SELECTED);
+            }
             Label label = new Label("cell", new PropertyModel(column, "label"));
             label.setRenderBodyOnly(true);            
             item.add(label);            

@@ -201,7 +201,36 @@
         <!-- files property expected from netbeans -->
         <fail unless="files">no files selected!</fail>      
         <test-macro includes="${files}" emmaEnabled="false" excludes="" haltonfailure="true"/>      
-    </target>  
+    </target> 
+    
+    <!-- TODO cleanup -->
+    <target name="test-debug-single" depends="compile-test" if="netbeans.home">
+        <!-- files property expected from netbeans -->
+        <fail unless="files">no files selected!</fail>
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="target/home"/>
+        </delete>
+        <path id="test-classpath">            
+            <path path="target/classes"/>
+            <path path="target/test-classes"/>
+            <path path="${test.jars}"/>                     
+        </path>            
+        <nbjpdastart name="${files}" addressproperty="jpda.address" transport="dt_socket">
+            <classpath refid="test-classpath"/>
+        </nbjpdastart>        
+        <junit fork="true" dir="." tempdir="target" haltonfailure="@{haltonfailure}">
+            <classpath refid="test-classpath"/>
+            <jvmarg value="-Xdebug"/>
+            <jvmarg value="-Xnoagent"/>
+            <jvmarg value="-Djava.compiler=none"/>
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,address=${jpda.address}"/>
+            <formatter type="brief" usefile="false"/>
+            <batchtest todir="target/reports">
+                <fileset dir="src/test/java" includes="${files}"/>
+            </batchtest>
+        </junit>        
+             
+    </target>      
     
     <taskdef resource="emma_ant.properties" classpath="${emma.jars}"/>
     

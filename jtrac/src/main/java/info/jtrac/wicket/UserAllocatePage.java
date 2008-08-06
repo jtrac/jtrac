@@ -113,22 +113,22 @@ public class UserAllocatePage extends BasePage {
             
             add(new Label("label", user.getName() + " (" + user.getLoginName() + ")"));
             
-            final Map<String, List<UserSpaceRole>> spaceRolesMap = user.getSpaceRolesMap();   
+            final Map<Long, List<UserSpaceRole>> spaceRolesMap = getJtrac().loadSpaceRolesMapForUser(userId);   
             
             User principal = getPrincipal();
             // this flag is used later also for the big "make admin for all spaces" button
             boolean isPrincipalSuperUser = principal.isSuperUser();
             
-            List<String> allowedSpaces = new ArrayList<String>();
+            List<Long> allowedSpaces = new ArrayList<Long>();
             
             if(isPrincipalSuperUser) {
                 allowedSpaces = new ArrayList(spaceRolesMap.keySet());
             } else {
                 // session user is not an admin, remove spaces that he should not see                
                 for(Space s : principal.getSpacesWhereRoleIsAdmin()) {
-                    String prefixCode = s.getPrefixCode();
-                    if(spaceRolesMap.containsKey(prefixCode)) {
-                        allowedSpaces.add(prefixCode);
+                    long spaceId = s.getId();
+                    if(spaceRolesMap.containsKey(spaceId)) {
+                        allowedSpaces.add(spaceId);
                     }
                 }
             }
@@ -137,8 +137,8 @@ public class UserAllocatePage extends BasePage {
             
             add(new ListView("spaces", allowedSpaces) {
                 protected void populateItem(ListItem listItem) {
-                    String prefixCode = (String) listItem.getModelObject();    
-                    List<UserSpaceRole> usrs = spaceRolesMap.get(prefixCode);
+                    long spaceId = (Long) listItem.getModelObject();    
+                    List<UserSpaceRole> usrs = spaceRolesMap.get(spaceId);
                     // space can be null for "all spaces" role (prefixCode used in map = "")
                     final Space space = usrs.get(0).getSpace();                     
                     if(space != null && space.getId() == selectedSpaceId) {
@@ -164,7 +164,7 @@ public class UserAllocatePage extends BasePage {
                 }
             });                       
             
-            List<Space> spaces = getJtrac().findUnallocatedSpacesForUser(user.getId());
+            List<Space> spaces = getJtrac().findSpacesNotFullyAllocatedToUser(user.getId());
             
             if(!isPrincipalSuperUser) {
                 // not super user, show only spaces which can admin

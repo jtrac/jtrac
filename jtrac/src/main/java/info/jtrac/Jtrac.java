@@ -43,6 +43,7 @@ public interface Jtrac extends UserDetailsService {
     
     // TODO remove Wicket dep with FileUpload
     void storeItem(Item item, FileUpload fileUpload);
+    void storeItems(List<Item> items);
     void updateItem(Item item, User user);
     void storeHistoryForItem(long itemId, History history, FileUpload fileUpload);
     Item loadItem(long id);
@@ -73,9 +74,11 @@ public interface Jtrac extends UserDetailsService {
     List<User> findUsersMatching(String searchText, String searchOn);
     List<User> findUsersForSpace(long spaceId);
     List<UserSpaceRole> findUserRolesForSpace(long spaceId);
+    Map<Long, List<UserSpaceRole>> loadUserRolesMapForSpace(long spaceId);
+    Map<Long, List<UserSpaceRole>> loadSpaceRolesMapForUser(long userId);
     List<User> findUsersWithRoleForSpace(long spaceId, String roleKey);
     List<User> findUsersForUser(User user);
-    List<User> findUnallocatedUsersForSpace(long spaceId);
+    List<User> findUsersNotFullyAllocatedToSpace(long spaceId);
     int loadCountOfHistoryInvolvingUser(User user);
     //========================================================
     CountsHolder loadCountsForUser(User user);
@@ -87,7 +90,7 @@ public interface Jtrac extends UserDetailsService {
     List<Space> findAllSpaces();
     List<Space> findSpacesWhereIdIn(List<Long> ids);
     List<Space> findSpacesWhereGuestAllowed();
-    List<Space> findUnallocatedSpacesForUser(long userId);
+    List<Space> findSpacesNotFullyAllocatedToUser(long userId);
     void removeSpace(Space space);
     //========================================================
     void storeUserSpaceRole(User user, Space space, String roleKey);
