@@ -284,6 +284,14 @@ public class Field implements Serializable {
         return name.type == 4;
     }    
     
+    public Map<Integer, String> getOptionsWithIntegerKeys() {
+        Map<Integer, String> map = new HashMap<Integer, String>(options.size());
+        for(Map.Entry<String, String> entry : options.entrySet()) {
+            map.put(new Integer(entry.getKey()), entry.getValue());
+        }
+        return map;
+    }
+    
     //===================================================================  
     
     public Map<String, String> getOptions() {

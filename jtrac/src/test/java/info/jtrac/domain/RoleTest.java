@@ -30,5 +30,12 @@ public class RoleTest extends TestCase {
         assertEquals(2 , s1.getFields().size());
         assertEquals(new Integer(1), s1.getFields().get(Field.Name.CUS_INT_01));
         assertEquals(new Integer(2), s1.getFields().get(Field.Name.CUS_INT_02));
-    }    
+    } 
+    
+    public void testForReservedRoleNames() {
+        assertTrue(Role.isReservedRoleKey("ROLE_ADMIN"));
+        assertTrue(Role.isReservedRoleKey("ROLE_GUEST"));
+        assertFalse(Role.isReservedRoleKey("ROLE_FOO"));
+    }
+    
 }

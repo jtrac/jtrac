@@ -30,6 +30,7 @@ import org.apache.wicket.model.IModel;
 public abstract class ReadOnlyRefreshingView<T> extends RefreshingView {
 
     protected final SimpleAttributeModifier CLASS_ALT = new SimpleAttributeModifier("class", "alt");
+    protected final SimpleAttributeModifier CLASS_SELECTED = new SimpleAttributeModifier("class", "selected");
     protected final SimpleAttributeModifier CLASS_ERROR_BACK = new SimpleAttributeModifier("class", "error-back");
     
     public ReadOnlyRefreshingView(String id) {

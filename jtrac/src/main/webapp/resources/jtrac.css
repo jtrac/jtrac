@@ -36,6 +36,7 @@ tr.sortable th.order-up { background-color: #c3d9ff; background-image: url("arro
 tr.sortable th.order-down { background-color: #c3d9ff; background-image: url("arrow_down.gif"); }
 tr.sortable a { color: black; }
 tr.sortable a:hover { color: #0000D9; }
-ul { list-style-image: url("error.gif"); }
-li.feedbackPanelERROR { padding-left: 0.4em; }
+/* { list-style-image: url("error.gif"); } */
+li.feedbackPanelINFO { list-style-image: url("success.gif"); padding-left: 0.4em; }
+li.feedbackPanelERROR { list-style-image: url("error.gif"); padding-left: 0.4em; }
 .menu-option div { font-weight: bold; background-color: #e1ecfe; padding-left: 1em; padding-right: 1em; margin-bottom: 1.5em; }

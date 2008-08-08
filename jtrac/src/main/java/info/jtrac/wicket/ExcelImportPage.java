@@ -75,11 +75,12 @@ public class ExcelImportPage extends BasePage {
                 }
                 InputStream is = null;
                 try {
-                    is = fileUploadField.getFileUpload().getInputStream();                    
+                    is = fileUploadField.getFileUpload().getInputStream();
+                    excelFile = new ExcelFile(is);
                 } catch(Exception e) {
-                    throw new RuntimeException(e);
-                }
-                excelFile = new ExcelFile(is);                
+                    error(localize("excel_upload.error.invalidFile"));
+                    return;
+                }                                
             }
             
             @Override

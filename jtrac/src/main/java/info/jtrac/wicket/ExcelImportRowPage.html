@@ -1,15 +1,36 @@
 <html>
+    <head>
+        <wicket:head>
+            <style>
+                .jtrac textarea { font-size: 120%; }                                  
+            </style>
+        </wicket:head>
+    </head>    
     <body>        
-        <wicket:extend>                                
+        <wicket:extend>
+            <span wicket:id="feedback"></span>
+            <p/>
+            <a href="#" wicket:id="cancel"><img src="resources/cancel.gif" class="nav-link"/><wicket:message key="cancel"/></a>
+            <p/>
             <form wicket:id="form">
-                <table class="jtrac" width="100%">
-                    <tr>
-                        
+                <table class="bdr-collapse">
+                    <tr valign="top">
+                        <td>
+                            <table class="jtrac" style="font-size:85%">
+                                <tr wicket:id="cells">
+                                    <th wicket:id="heading"></th>
+                                    <td>                                        
+                                        <textarea wicket:id="value" cols="40" rows="2"></textarea>
+                                    </td>
+                                </tr>
+                            </table>                        
+                        </td>
+                        <td>
+                            <input type="submit" wicket:message="value:submit"/>
+                        </td>
                     </tr>
                 </table>
             </form> 
-            <p/>
-            <a href="#" wicket:id="cancel"><img src="resources/cancel.gif" class="nav-link"/><wicket:message key="cancel"/></a>
         </wicket:extend>        
     </body>
 </html>

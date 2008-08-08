@@ -167,9 +167,10 @@ public class ExcelImportColumnPage extends BasePage {
             @Override
             public void onSubmit() {
                 if(distinctCellsContainer.isVisible()) {
+                    ColumnHeading ch = column.getColumnHeading();
                     for(Cell cell : columnCells) {
                         IModel model = mappedKeys.get(cell.getValueAsString());
-                        Object o = model.getObject();
+                        Object o = model.getObject();                        
                         cell.setKey(o);                        
                     }
                 }               
@@ -230,14 +231,20 @@ public class ExcelImportColumnPage extends BasePage {
             // TODO reduce code duplication
             space = getJtrac().loadSpace(space.getId());
             ColumnHeading ch = column.getColumnHeading();
-            if (ch.isField()) {                
-                final Map<String, String> options = ch.getField().getOptions();
-                final List<String> keys;
+            if (ch.isField() || ch.getName() == ColumnHeading.Name.STATUS) {
+                final Map<Integer, String> options;
+                if(ch.isField()) {
+                    options = ch.getField().getOptionsWithIntegerKeys();                            
+                } else { // STATE
+                    options = space.getMetadata().getStatesMap();
+                    options.remove(State.NEW);
+                }
+                final List<Integer> keys;
                 if (options != null) {
                     keys = new ArrayList(options.keySet());
                 } else {
-                    keys = new ArrayList<String>();
-                }
+                    keys = new ArrayList<Integer>();
+                }                                                
                 choiceRenderer = new IChoiceRenderer() {
                     public Object getDisplayValue(Object o) {
                         String value = options.get(o);
@@ -252,27 +259,7 @@ public class ExcelImportColumnPage extends BasePage {
                     public Object getObject() {
                         return keys;
                     }
-                };
-            } else if (ch.getName() == ColumnHeading.Name.STATUS) {
-                final Map<Integer, String> options = space.getMetadata().getStatesMap();
-                options.remove(State.NEW);
-                final List<Integer> keys = new ArrayList(options.keySet());
-                choiceRenderer = new IChoiceRenderer() {
-                    public Object getDisplayValue(Object o) {
-                        String value = options.get(o);
-                        mappedDisplayValues.put(o, value);
-                        return value;
-                    }                    
-                    public String getIdValue(Object o, int i) {
-                        return o.toString();
-                    }                    
-                };
-                choicesModel = new AbstractReadOnlyModel() {
-                    public Object getObject() {
-                        return keys;
-                    }
-                };                
-                
+                };                                
             } else { // LOGGED_BY / ASSIGNED_TO             
                 choiceRenderer = new IChoiceRenderer() {
                     public Object getDisplayValue(Object o) {

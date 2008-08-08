@@ -35,7 +35,7 @@ public class ValidationUtils {
     public static boolean isValidRoleKey(String input) {
         if (input == null) {
             return false;
-        }
+        }        
         return input.matches("[A-Z0-9][_A-Z0-9]+[A-Z0-9]");        
     }
     

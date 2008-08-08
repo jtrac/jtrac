@@ -602,6 +602,7 @@ public class JtracImpl implements Jtrac {
                 }
             }
         }
+        Collections.sort(notFullyAllocated);
         return notFullyAllocated;
     }
 
@@ -702,7 +703,8 @@ public class JtracImpl implements Jtrac {
                     break;
                 }
             }
-        }        
+        }
+        Collections.sort(notFullyAllocated);
         return notFullyAllocated;
     }
 

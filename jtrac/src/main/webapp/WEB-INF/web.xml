@@ -105,13 +105,10 @@
     </servlet-mapping>
     -->
     
-    <!-- for XML remote API -->
-    <!--
     <servlet-mapping>
         <servlet-name>jtrac-api</servlet-name>
         <url-pattern>/api/*</url-pattern>
-    </servlet-mapping>
-    -->
+    </servlet-mapping>    
   
     <!-- backwards compatibility for e-mail links -->
     <servlet-mapping>

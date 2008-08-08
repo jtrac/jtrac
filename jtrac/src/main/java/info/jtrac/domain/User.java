@@ -19,6 +19,7 @@ package info.jtrac.domain;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ import org.acegisecurity.userdetails.UserDetails;
  * the Acegi UserDetails interface so that Acegi can take care
  * of Authentication and Authorization
  */
-public class User implements UserDetails, Serializable {
+public class User implements UserDetails, Serializable, Comparable<User> {
     
     public static final int SEARCH_NAME = 0;
     public static final int SEARCH_LOGIN_NAME = 1;
@@ -198,6 +199,7 @@ public class User implements UserDetails, Serializable {
                 list.add(usr.getSpace());
             }
         }
+        Collections.sort(list);
         return list;
     }
     
@@ -336,6 +338,22 @@ public class User implements UserDetails, Serializable {
         sb.append("]");
         return sb.toString();
     }
+    
+    public int compareTo(User u) {
+        if(u == null) {
+            return 1;
+        }
+        if(u.name == null) {
+            if(name == null) {
+                return 0;
+            }
+            return 1;            
+        }
+        if(name == null) {
+            return -1;
+        }
+        return name.compareTo(u.name);
+    }     
     
     @Override
     public boolean equals(Object o) {

@@ -104,7 +104,7 @@ public class ExcelFile implements Serializable {
                     case 1:
                     case 2:
                     case 3:
-                        if(key == null || key instanceof String) {
+                        if(key == null || key instanceof Integer) {
                             return true;
                         }
                         break;
@@ -153,8 +153,12 @@ public class ExcelFile implements Serializable {
         
         public void setValue(Object value) {
             this.value = value;
-        }                
+        }
 
+        public Object getValue() {
+            return value;
+        }        
+        
         public void setKey(Object key) {
             this.key = key;
         }
@@ -313,6 +317,19 @@ public class ExcelFile implements Serializable {
             rowCells.set(index, columnCells.get(count));
             count++;
         }
+    }
+    
+    public List<Cell> getRowCellsCloned(int index) {
+        List<Cell> list = new ArrayList<Cell>(columns.size());
+        List<Cell> rowCells = rows.get(index);
+        for(Cell cell : rowCells) {
+            list.add(cell.getClone());
+        }
+        return list;
+    }
+    
+    public void setRowCells(int index, List<Cell> rowCells) {
+        rows.set(index, rowCells);
     }
     
     public List<String> getColumnDistinctCellValues(int index) {

@@ -16,6 +16,7 @@
 
 package info.jtrac.wicket;
 
+import info.jtrac.domain.Role;
 import info.jtrac.domain.Space;
 import info.jtrac.domain.User;
 import info.jtrac.util.ValidationUtils;
@@ -109,7 +110,7 @@ public class SpaceRolePage extends BasePage {
             // validation: format ok?
             field.add(new AbstractValidator() {
                 protected void onValidate(IValidatable v) {
-                    String s = (String) v.getValue();
+                    String s = (String) v.getValue();                    
                     if(!ValidationUtils.isValidRoleKey(s)) {
                         error(v);
                     }
@@ -131,7 +132,24 @@ public class SpaceRolePage extends BasePage {
                 protected String resourceKey() {                    
                     return "space_role_form.error.role.exists";
                 }                
-            });            
+            });
+            // validation is this a 'reserved' role name?
+            field.add(new AbstractValidator() {
+                protected void onValidate(IValidatable v) {
+                    String s = (String) v.getValue();
+                    if(s == null) {
+                        return;
+                    }
+                    if(Role.isReservedRoleKey(s)) {
+                        error(v);
+                    }
+                }
+                @Override
+                protected String resourceKey() {                    
+                    return "space_role_form.error.role.reserved";
+                }                
+                
+            });
             add(field);
             // cancel ==========================================================
             add(new Link("cancel") {

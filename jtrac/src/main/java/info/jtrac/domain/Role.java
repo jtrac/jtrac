@@ -83,6 +83,11 @@ public class Role implements Serializable {
         return ROLE_GUEST.equals(roleKey);
     }    
     
+    public static boolean isReservedRoleKey(String roleKey) {
+        return ROLE_ADMIN.equals(roleKey) 
+                || ROLE_GUEST.equals(roleKey);
+    }
+    
     //=======================================================================
     
     public void add(State state) {

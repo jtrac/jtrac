@@ -70,6 +70,9 @@ public class ItemSearch implements Serializable {
     public void initFromPageParameters(PageParameters params, User user, Jtrac jtrac) {       
         showHistory = params.getBoolean("showHistory");
         showDetail = params.getBoolean("showDetail");
+        if(showDetail) {
+            getColumnHeading(DETAIL).setVisible(true);
+        }
         pageSize = params.getInt("pageSize", 25);
         sortDescending = !params.getBoolean("sortAscending");
         sortFieldName = params.getString("sortFieldName", "id");        
@@ -89,6 +92,9 @@ public class ItemSearch implements Serializable {
             map.put("s", space.getId() + "");
         }
         for(ColumnHeading ch : columnHeadings) {
+            if(ch.getName() == DETAIL) {
+                showDetail = ch.isVisible();
+            }
             String s = ch.getAsQueryString();
             if(s != null) {
                 map.put(ch.getNameText(), s);

@@ -18,7 +18,6 @@ package info.jtrac.domain;
 
 import java.io.Serializable;
 
-import static info.jtrac.domain.Field.Name.*;
 
 /**
  * A JTrac installation can be divided into different project
@@ -27,7 +26,7 @@ import static info.jtrac.domain.Field.Name.*;
  * Items contained within the space.  Users can be mapped to a
  * space with different access permissions.
  */
-public class Space implements Serializable {
+public class Space implements Serializable, Comparable<Space> {
     
     private long id;
     private int version;
@@ -116,6 +115,23 @@ public class Space implements Serializable {
         sb.append("]");
         return sb.toString();
     }
+        
+    public int compareTo(Space s) {
+        if(s == null) {
+            return 1;
+        }
+        if(s.name == null) {
+            if(name == null) {
+                return 0;
+            }
+            return 1;            
+        }
+        if(name == null) {
+            return -1;
+        }
+        return name.compareTo(s.name);
+    }
+    
     
     @Override
     public boolean equals(Object o) {
