@@ -1,52 +1,115 @@
 import java.sql.*;
 
+/**
+ * refer documentation at: http://jtrac.info/doc/html/upgrading.html
+ *
+ * example usage:
+ *
+ * set CLASSPATH = bsh-2.0b4.jar;hsqldb-1.8.0.1.jar;mysql-connector-java-5.1.6-bin.jar
+ * java -Xmx512m -cp %CLASSPATH% bsh.Interpreter jtrac-hsqldb-to-mysql.bsh
+ *
+ * this is for Windows, please make the necessary changes to the above for linux
+ *
+ * edit the next 4 lines and provide database JDBC driver, url, username and password
+ * for the source and destination databases
+ *
+ */        
+
 Class.forName("org.hsqldb.jdbcDriver");
 Class.forName("com.mysql.jdbc.Driver");
 
-conn1 = DriverManager.getConnection("jdbc:hsqldb:file:jtrac", "sa", "");
-conn2 = DriverManager.getConnection("jdbc:mysql://localhost/jtrac", "root", "");
+Connection conn1 = DriverManager.getConnection("jdbc:hsqldb:file:jtrac", "sa", "");
+Connection conn2 = DriverManager.getConnection("jdbc:mysql://localhost/jtrac", "root", "");
 
-md1 = conn1.getMetaData();
-rs = md1.getTables(null, null, null, new String[] { "TABLE" });
+DatabaseMetaData md1 = conn1.getMetaData();
+ResultSet rs1 = md1.getTables(null, null, null, new String[] { "TABLE" });
 
-tableNames = new ArrayList();
+List tableNames = new ArrayList();
 
-while (rs.next()) {
-    tableNames.add(rs.getString("TABLE_NAME"));
+while (rs1.next()) {
+    tableNames.add(rs1.getString("TABLE_NAME"));
 }
 
-stmt1 = conn1.createStatement();
+Statement stmt1 = conn1.createStatement();        
+Statement stmt2 = conn2.createStatement();
 
-stmt2 = conn2.createStatement();
 stmt2.executeUpdate("delete from user_space_roles");
 stmt2.executeUpdate("delete from users");
 
-for (tableName : tableNames) {
-    rs = stmt1.executeQuery("select * from " + tableName);
-    md = rs.getMetaData();
-    cols = "";
-    vals = "";
-    for (int i = 1; i <= md.getColumnCount(); i++) {
-        cols = cols + md.getColumnName(i);
+for (String tableName : tableNames) {           
+
+    rs1 = stmt1.executeQuery("select * from " + tableName);
+    ResultSetMetaData rsmd1 = rs1.getMetaData();                       
+
+    Map map = new HashMap();
+
+    for (int i = 1; i <= rsmd1.getColumnCount(); i++) {
+        String name = rsmd1.getColumnName(i).toUpperCase();
+        map.put(name, i);
+    }                        
+
+    ResultSet rs2 = stmt2.executeQuery("select * from " + tableName.toLowerCase());
+    ResultSetMetaData rsmd2 = rs2.getMetaData();
+
+    String cols = "";
+    String vals = ""; 
+
+    for (int i = 1; i <= rsmd2.getColumnCount(); i++) {
+        String name = rsmd2.getColumnName(i);
+        cols = cols + name;
         vals = vals + "?";
-        if (i != md.getColumnCount()) {
+        if (i != rsmd1.getColumnCount()) {
             cols = cols + ", ";
             vals = vals + ", ";
         }
     }
-    ins = "insert into " + tableName + " (" + cols + ") values (" + vals + ")";
-    print(ins);
-    stmt2 = conn2.prepareStatement(ins);
-    while (rs.next()) {
-        for (int i = 1; i <= md.getColumnCount(); i++) {
-            if (md.getColumnType(i) == Types.TIMESTAMP) {
-                stmt2.setTimestamp(i, rs.getTimestamp(i));
+
+    String ins = "insert into " + tableName.toLowerCase() + " (" + cols + ") values (" + vals + ")";              
+    PreparedStatement ps2 = conn2.prepareStatement(ins);
+
+    boolean isUsersTable = "USERS".equalsIgnoreCase(tableName);
+    Map loginNames = isUsersTable ? new HashMap() : null;
+    
+    System.out.println("\nprocessing table: " + tableName);
+    
+    int count = 0;
+
+    while (rs1.next()) {
+        for (int i = 1; i <= rsmd2.getColumnCount(); i++) {                    
+            String name = rsmd2.getColumnName(i).toUpperCase();
+            int index = map.get(name);
+            Object value = rs1.getObject(index);
+            if(value != null && rsmd2.getColumnType(i) == Types.VARCHAR) {                        
+                String s = (String) value;
+                int precision = rsmd2.getPrecision(i);
+                if(s.length() > precision) {
+                    s = s.substring(0, precision -1);
+                }
+                if(isUsersTable && name.equalsIgnoreCase("LOGIN_NAME")) {
+                    String temp = s.toUpperCase();
+                    if(loginNames.containsKey(temp)) {
+                        Integer userCount = loginNames.get(temp);
+                        userCount++;
+                        System.out.println("\nWARN, duplicate login_name " + s
+                                + ", changing to " + s + userCount);
+                        s = s + userCount;
+                    } else {
+                        loginNames.put(temp, 0);
+                    }
+                }                        
+                ps2.setObject(i, s);
             } else {
-                stmt2.setString(i, rs.getString(i));
+                ps2.setObject(i, value);
             }
+        }
+        try {
+            ps2.execute();
+        } catch (Exception e) {
+            System.out.println("\nWARN: skipping " + rs1.getObject(1) + ", " + e.getMessage());
         }        
-        stmt2.execute();
-    }    
+        count++;        
+        System.out.print("\r" + count);
+    }
 }
 
 conn1.close();
