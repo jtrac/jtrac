@@ -244,7 +244,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     
     public List<Space> findSpacesNotAllocatedToUser(long userId) {
         return getHibernateTemplate().find("from Space space where space not in"
-                + " (select usr.space from UserSpaceRole usr where usr.user.id = ? order by space.name)", userId);
+                + " (select usr.space from UserSpaceRole usr where usr.user.id = ?) order by space.name", userId);
     }
     
     public List<Space> findSpacesWhereIdIn(List<Long> ids) {
@@ -300,7 +300,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     
     public List<User> findUsersNotAllocatedToSpace(long spaceId) {
         return getHibernateTemplate().find("from User user where user not in"
-                + " (select usr.user from UserSpaceRole usr where usr.space.id = ? order by user.name)", spaceId);
+                + " (select usr.user from UserSpaceRole usr where usr.space.id = ?) order by user.name", spaceId);
     }
     
     public List<UserSpaceRole> findUserRolesForSpace(long spaceId) {
