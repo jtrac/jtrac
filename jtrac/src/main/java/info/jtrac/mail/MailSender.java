@@ -63,6 +63,15 @@ public class MailSender {
         }
         // if sender is still null the send* methods will not
         // do anything when called and will just return immediately
+        String tempUrl = config.get("jtrac.url.base");
+        if(tempUrl == null) {
+            tempUrl = "http://localhost/jtrac/";
+        }
+        if (!tempUrl.endsWith("/")) {
+            tempUrl = tempUrl + "/";
+        }
+        this.url = tempUrl;
+        logger.info("email hyperlink base url set to '" + this.url + "'");
     }
 
     /**
@@ -247,21 +256,16 @@ public class MailSender {
             logger.warn("'mail.server.host' config is null, mail sender not initialized");
             return;
         }        
-        String port = config.get("mail.server.port");       
-        String tempUrl = config.get("jtrac.url.base");
+        String port = config.get("mail.server.port");               
         from = config.get("mail.from");
         prefix = config.get("mail.subject.prefix");
         String userName = config.get("mail.server.username");
         String password = config.get("mail.server.password");
         String startTls = config.get("mail.server.starttls.enable");
         logger.info("initializing email adapter: host = '" + host + "', port = '"
-                + port + "', url = '" + tempUrl + "', from = '" + from + "', prefix = '" + prefix + "'");        
+                + port + "', from = '" + from + "', prefix = '" + prefix + "'");        
         this.prefix = prefix == null ? "[jtrac]" : prefix;
-        this.from = from == null ? "jtrac" : from;
-        this.url = tempUrl == null ?  "http://localhost/jtrac/" : tempUrl;
-        if (!this.url.endsWith("/")) {
-            this.url = url + "/";
-        }          
+        this.from = from == null ? "jtrac" : from;       
         int p = 25;
         if (port != null) {
            try {
