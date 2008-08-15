@@ -12,8 +12,8 @@ public abstract class JtracTestBase extends AbstractTransactionalDataSourceSprin
     protected Jtrac jtrac;
     protected JtracDao dao;
     
-    public JtracTestBase() {
-        System.setProperty("jtrac.home", "target/home");
+    public JtracTestBase(String name) {
+        super(name);
     }
     
     // magically autowired by Spring JUnit support
@@ -26,7 +26,9 @@ public abstract class JtracTestBase extends AbstractTransactionalDataSourceSprin
         this.jtrac = jtrac;
     }
     
+    @Override
     protected String[] getConfigLocations() {
+        System.setProperty("jtrac.home", "target/home");
         return new String[] {
             "file:src/main/webapp/WEB-INF/applicationContext.xml",
             "file:src/main/webapp/WEB-INF/applicationContext-lucene.xml"

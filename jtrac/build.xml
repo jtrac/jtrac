@@ -209,7 +209,7 @@
         <fail unless="files">no files selected!</fail>
         <delete includeemptydirs="true" failonerror="false">
             <fileset dir="target/home"/>
-        </delete>
+        </delete>        
         <path id="test-classpath">            
             <path path="target/classes"/>
             <path path="target/test-classes"/>
@@ -218,7 +218,7 @@
         <nbjpdastart name="${files}" addressproperty="jpda.address" transport="dt_socket">
             <classpath refid="test-classpath"/>
         </nbjpdastart>        
-        <junit fork="true" dir="." tempdir="target" haltonfailure="@{haltonfailure}">
+        <junit fork="true" dir="." tempdir="target">
             <classpath refid="test-classpath"/>
             <jvmarg value="-Xdebug"/>
             <jvmarg value="-Xnoagent"/>
@@ -228,9 +228,25 @@
             <batchtest todir="target/reports">
                 <fileset dir="src/test/java" includes="${files}"/>
             </batchtest>
-        </junit>        
-             
+        </junit>                     
     </target>      
+    
+    <target name="test-single-method" depends="compile-test">
+        <input message="enter method name:" addproperty="method.name"/>    
+        <path id="test-classpath">            
+            <path path="target/classes"/>
+            <path path="target/test-classes"/>
+            <path path="${test.jars}"/>                     
+        </path>         
+        <junit fork="true" dir="." tempdir="target">
+            <classpath refid="test-classpath"/>
+            <jvmarg value="-Dmethod.name=${method.name}"/>
+            <formatter type="brief" usefile="false"/>
+            <batchtest todir="target/reports">
+                <fileset dir="src/test/java" includes="info/jtrac/test/SingleMethodRunnerTestCase.java"/>
+            </batchtest>            
+        </junit>
+    </target>
     
     <taskdef resource="emma_ant.properties" classpath="${emma.jars}"/>
     

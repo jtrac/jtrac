@@ -28,6 +28,10 @@ import org.acegisecurity.userdetails.UserDetails;
  */
 public class JtracTest extends JtracTestBase {
     
+    public JtracTest(String name) {
+        super(name);
+    }
+    
     private Space getSpace() {
         Space space = new Space();
         space.setPrefixCode("TEST");
