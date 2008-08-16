@@ -69,6 +69,7 @@ public class NbJavaSeMojo extends AntPropsMojo {
 		}
 		File nbProjPropsFile = new File("nbproject/project.properties");
 		if(!nbProjPropsFile.exists()) {
+			String projectName = project.getArtifactId();
 			OutputStream os = new FileOutputStream("nbproject/project.properties");
 			Writer out = new PrintWriter(os);
 			Date date = new Date();
@@ -77,10 +78,18 @@ public class NbJavaSeMojo extends AntPropsMojo {
 			out.write("javac.target=1.5\n");
 			out.write("build.dir=target\n");
 			out.write("build.classes.dir=${build.dir}/classes\n");
+			out.write("build.classes.excludes=**.java\n");
 			out.write("build.test.classes.dir=${build.dir}/test-classes\n");
+			out.write("build.test.results.dir=${build.dir}/reports\n");
+			out.write("dist.dir=${build.dir}\n");
+			out.write("dist.jar=" + projectName + ".jar\n");
+			out.write("dist.javadoc.dir=${build.dir}/api\n");
+			out.write("excludes=\n");
+			out.write("includes=**\n");
 			out.write("javac.test.classpath=${javac.classpath}:${build.classes.dir}\n");
 			out.write("source.encoding=UTF-8\n");
 			out.write("src.dir=src/main/java\n");
+			out.write("src.resources.dir=src/main/resources\n");
 			out.write("test.src.dir=src/test/java\n");
 			out.write("run.classpath=${javac.classpath}:${build.classes.dir}\n");
 			out.write("run.test.classpath=${javac.test.classpath}:${build.test.classes.dir}\n");
@@ -89,8 +98,7 @@ public class NbJavaSeMojo extends AntPropsMojo {
 			out.close();
 			os.close();			
 			getLog().info("created file 'nbproject/project.properties'");
-			String projectSource = FileUtils.readFile(getClass(), "project-javase.xml").toString();
-			String projectName = project.getArtifactId();			
+			String projectSource = FileUtils.readFile(getClass(), "project-javase.xml").toString();						
 			String projectTarget = projectSource.replace("@@project.name@@", projectName);
 			FileUtils.writeFile(projectTarget, "nbproject/project.xml", false);
 			getLog().info("created file 'nbproject/project.xml'");

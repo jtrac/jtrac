@@ -6,7 +6,8 @@
             <name>@@project.name@@</name>
             <minimum-ant-version>1.6.5</minimum-ant-version>
             <source-roots>
-                <root id="src.dir" name="main/java"/>                
+                <root id="src.dir" name="main/java"/>
+                <root id="src.resources.dir" name="main/resources"/>
             </source-roots>
             <test-roots>
                 <root id="test.src.dir" name="test/java"/>
