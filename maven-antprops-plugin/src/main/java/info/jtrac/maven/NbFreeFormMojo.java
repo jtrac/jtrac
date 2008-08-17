@@ -24,43 +24,35 @@ import org.apache.maven.project.MavenProject;
 
 /**
  * @goal nbfreeform
+ * @requiresDependencyResolution runtime
  * @description netbeans free form project generator
  */
-public class NbFreeFormMojo extends AbstractMojo {
+public class NbFreeFormMojo extends GenerateMojo {
 
-	/**
-	 * @parameter expression="${project}"
-	 */
-	protected MavenProject project;
-
-	public void execute() throws MojoExecutionException {
-		if(FileUtils.exists("build.xml")) {
-			throw new MojoExecutionException("build.xml already exists");
+	public void generate() throws MojoExecutionException {
+		try {
+			super.generate();
+		} catch(Exception e) {
+			throw new MojoExecutionException(e.getLocalizedMessage());
 		}
+		File nbProjectDir = new File("nbproject");
+		if(!nbProjectDir.exists()) {
+			nbProjectDir.mkdir();
+		}
+		if(FileUtils.exists("nbproject/ide-targets.xml")) {
+			throw new MojoExecutionException("NetBeans project file 'nbproject/ide-targets.xml' already exists");
+		}
+		String ideTargets = FileUtils.readFile(getClass(), "ide-targets.xml").toString();
+		FileUtils.writeFile(ideTargets, "nbproject/ide-targets.xml", false);
+		getLog().info("created 'nbproject/ide-targets.xml'");
 		if(FileUtils.exists("nbproject/project.xml")) {
 			throw new MojoExecutionException("NetBeans project file 'nbproject/project.xml' already exists");
 		}
 		String projectName = project.getArtifactId();
-		String projectNameTitleCase = Character.toUpperCase(projectName.charAt(0)) + projectName.substring(1);
-		String buildSource = FileUtils.readFile(getClass(), "build.xml").toString();		
-		String buildTarget = buildSource.replace("@@project.name@@", projectName);
-		buildTarget = buildTarget.replace("@@project.name.titleCase@@", projectNameTitleCase);
-		FileUtils.writeFile(buildTarget, "build.xml", false);
-		getLog().info("created 'build.xml'");
 		String projectSource = FileUtils.readFile(getClass(), "project-freeform.xml").toString();
 		String projectTarget = projectSource.replace("@@project.name@@", projectName);
-		File nbproject = new File("nbproject");
-		nbproject.mkdir();
 		FileUtils.writeFile(projectTarget, "nbproject/project.xml", false);
 		getLog().info("created 'nbproject/project.xml'");
-		File etc = new File("etc");
-		etc.mkdir();
-		String jettyXml = FileUtils.readFile(getClass(), "jetty.xml").toString();
-		FileUtils.writeFile(jettyXml, "etc/jetty.xml", false);
-		getLog().info("created 'etc/jetty.xml'");
-		String webdefaultXml = FileUtils.readFile(getClass(), "webdefault.xml").toString();
-		FileUtils.writeFile(webdefaultXml, "etc/webdefault.xml", false);
-		getLog().info("created 'etc/webdefault.xml'");
 	}
 
 }

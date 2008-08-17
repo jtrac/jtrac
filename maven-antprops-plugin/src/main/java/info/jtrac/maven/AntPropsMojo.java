@@ -308,4 +308,14 @@ public abstract class AntPropsMojo extends AbstractMojo {
 	
 	protected abstract void generate() throws Exception;
 	
+	protected void generateBuildXml() {
+		String projectName = project.getArtifactId();
+		String projectNameTitleCase = Character.toUpperCase(projectName.charAt(0)) + projectName.substring(1);
+		String buildSource = FileUtils.readFile(getClass(), "build.xml").toString();		
+		String buildTarget = buildSource.replace("@@project.name@@", projectName);
+		buildTarget = buildTarget.replace("@@project.name.titleCase@@", projectNameTitleCase);
+		FileUtils.writeFile(buildTarget, "build.xml", false);
+		getLog().info("created 'build.xml'");		
+	}
+	
 }

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="ide-targets">
+    
+    <import file="${basedir}/build.xml"/>   
+    
+    <target name="nb-selection">
+        <fail unless="selected.files">no files selected in NetBeans projects explorer!</fail>
+    </target>
+    
+    <target name="nb-jpdastart" depends="nb-selection">
+        <nbjpdastart name="${selected.files}" addressproperty="jpda.address" transport="dt_socket">
+            <classpath refid="test.classpath"/>
+        </nbjpdastart>        
+        <property name="jpda.jvm.args" value="-Xdebug -Xnoagent -Djava.compiler=none -Xrunjdwp:transport=dt_socket,address=${jpda.address}"/>        
+    </target>
+    
+    <target name="nb-run-single" depends="nb-selection, compile-test">        
+        <java classname="${selected.files}" classpathref="test.classpath"/>
+    </target> 
+        
+    <target name="nb-debug-single" depends="nb-jpdastart, compile-test">      
+        <java classname="${selected.files}" classpathref="test.classpath">
+            <jvmarg line="${jpda.jvm.args}"/>
+        </java>
+    </target>    
+    
+    <target name="nb-test-single" depends="nb-selection, compile-test">             
+        <test-macro includes="${selected.files}" haltonfailure="true"/>      
+    </target>    
+
+    <target name="nb-test-debug-single" depends="nb-jpdastart, compile-test">
+        <test-macro includes="${selected.files}" haltonfailure="true" jvmArgs="${jpda.jvm.args}"/>      
+    </target>
+           
+    <target name="nb-debug" if="netbeans.home" >
+        <nbjpdaconnect address="8000" host="localhost" name="nb-debug" transport="dt_socket">          
+            <sourcepath>
+                <path path="src/main/java"/>                
+            </sourcepath>
+        </nbjpdaconnect>        
+    </target>
+    
+    <target name="nb-debug-fix" depends="nb-selection, compile">        
+        <nbjpdareload>
+            <fileset dir="target/classes">
+                <include name="${selected.files}.class"/>
+            </fileset>
+        </nbjpdareload>
+    </target>
+    
+</project>

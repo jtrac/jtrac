@@ -99,6 +99,9 @@ public class GenerateMojo extends AntPropsMojo {
 		//===============================================================
 		out.close();
 		os.close();
+		if(!FileUtils.exists("build.xml")) {
+			generateBuildXml();
+		}
 	}	
 	
 }
