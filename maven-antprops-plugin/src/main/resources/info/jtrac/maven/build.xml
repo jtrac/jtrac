@@ -35,6 +35,12 @@
         </copy>      
     </target>    
     
+    <path id="test.classpath">
+        <path path="target/classes"/>
+        <path path="target/test-classes"/>
+        <path path="${test.jars}"/>                                            
+    </path>    
+    
     <target name="test" depends="compile-test">
         <test-macro/>     
     </target>   
@@ -45,11 +51,7 @@
         <sequential>
             <mkdir dir="target/reports"/>            
             <junit fork="true" dir="." tempdir="target" haltonfailure="@{haltonfailure}">
-                <classpath>                    
-                    <path path="target/classes"/>
-                    <path path="target/test-classes"/>
-                    <path path="${test.jars}"/>                    
-                </classpath>
+                <classpath refid="test.classpath"/>
                 <formatter type="brief" usefile="false"/>
                 <formatter type="xml"/>
                 <batchtest todir="target/reports">
