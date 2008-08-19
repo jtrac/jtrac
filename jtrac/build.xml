@@ -468,17 +468,10 @@
     
     <target name="jetty-start-debug" depends="jetty-setup">
         <jetty-start arg1="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n" arg2="-Xdebug"/>
-    </target> 
+    </target>   
        
     <target name="jetty-set-production-mode">        
         <property name="production.mode" value="true"/>
-    </target>     
-    
-    <!-- target for NetBeans Profiler on Windows -->
-    <target name="jetty-start-profile" depends="jetty-set-production-mode, jetty-setup" if="netbeans.home">
-        <property name="nbprof.home" value="${netbeans.home}/../profiler2/lib"/>
-        <property name="agent.path" value="${nbprof.home}/deployed/jdk15/windows/profilerinterface.dll=${nbprof.home},5140"/>        
-        <jetty-start arg1="-agentpath:${agent.path}" arg2="-Xmx512m" wicketConfig=""/>
     </target>
     
     <target name="jetty-start-production-mode" depends="jetty-set-production-mode, jetty-setup">
@@ -574,6 +567,23 @@
         </jmeter>
         <xslt in="target/reports/jtrac-items.jtl" out="target/reports/jtrac-items.html"
             style="${jmeter.home}/extras/jmeter-results-report_21.xsl"/>        
+    </target>  
+    
+    <!-- =========================== NETBEANS ============================= -->      
+    
+    <target if="netbeans.home" name="debug-nb">
+        <nbjpdaconnect address="8000" host="localhost" name="debug-nb" transport="dt_socket">          
+            <sourcepath>
+                <path path="src/main/java"/>                
+            </sourcepath>
+        </nbjpdaconnect>        
+    </target>
+    
+    <!-- target for NetBeans Profiler on Windows -->
+    <target name="jetty-start-profile" depends="jetty-set-production-mode, jetty-setup" if="netbeans.home">
+        <property name="nbprof.home" value="${netbeans.home}/../profiler2/lib"/>
+        <property name="agent.path" value="${nbprof.home}/deployed/jdk15/windows/profilerinterface.dll=${nbprof.home},5140"/>        
+        <jetty-start arg1="-agentpath:${agent.path}" arg2="-Xmx512m" wicketConfig=""/>
     </target>    
               
 </project>

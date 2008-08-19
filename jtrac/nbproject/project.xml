@@ -70,11 +70,7 @@
                 <action name="run">
                     <target>jetty-start-debug</target>
                 </action>
-                <action name="Stop-Jetty">
-                    <target>jetty-stop</target>
-                </action>
-                <action name="debug">
-                    <script>nbproject/ide-targets.xml</script>
+                <action name="debug">                    
                     <target>debug-nb</target>
                 </action>
                 <action name="build">
@@ -87,11 +83,7 @@
                 </action>
                 <action name="clean">
                     <target>clean</target>
-                </action>
-                <action name="Clean-Database">
-                    <target>confirm</target>
-                    <target>clean-db</target>
-                </action>                
+                </action>               
                 <action name="javadoc">
                     <target>javadoc</target>
                 </action>
@@ -135,8 +127,15 @@
                     </source-file>
                 </items>
                 <context-menu>
-                    <ide-action name="Stop-Jetty"/>
-                    <ide-action name="Clean-Database"/>
+                    <action>
+                        <label>Stop Jetty</label>
+                        <target>jetty-stop</target>
+                    </action>
+                    <action>
+                        <label>Clean Database</label>
+                        <target>confirm</target>
+                        <target>clean-db</target>
+                    </action>                    
                 </context-menu>
             </view>
             <subprojects/>
