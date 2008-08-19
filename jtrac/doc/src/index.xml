@@ -808,8 +808,8 @@ set JAVA_OPTS=-Djtrac.home=C:/data/jtrac_home -Dfile.encoding=UTF-8
             <para>                    
                 You can configure the database that JTrac uses by editing the "jtrac.properties" file that JTrac expects
                 within the "jtrac.home" folder.  Note that if JTrac does not find a "jtrac.properties" file in the
-                expected location, JTrac creates a fresh one which is pre-configured for HSQLDB.  The contents of this file
-                are as follows:                
+                expected location, JTrac creates a fresh one which is pre-configured for HSQLDB.  The default contents of 
+                this file are as follows:                
             </para>
             <para>
                 <programlisting>
@@ -823,12 +823,13 @@ hibernate.show_sql=false
                 </programlisting>
             </para>          
             <para>
-                You can change the database values and the hibernate dialect to match the settings of a 
-                database that you have already.  When JTrac starts, it will connect to the database and
-                create the schema if one does not already exist.  The database has to exist
-                before JTrac can create the schema, so please ensure that you create the database first,
-                for example if you are using MySQL.
-         
+                You can edit the values above to match the settings of a database that you wish to use.  
+                Please refer to your database JDBC driver documentation for the values needed for
+                the driver and URL.  You can look up the Hibernate dialect corresponding to your database type
+                from <ulink url="http://www.hibernate.org/hib_docs/reference/en/html/session-configuration.html#configuration-optional-dialects">this list</ulink>.                
+                When using a custom database such as MySQL, you have to create an empty database before starting JTrac.
+                When JTrac starts, it will connect to the configured database and create the schema (database tables) 
+                if not already present.  
             </para>
             <para>
                 If you edit the "jtrac.properties" file, ensure that there are no trailing spaces in the entries shown above
@@ -836,7 +837,7 @@ hibernate.show_sql=false
             </para>
             <para>
                 Don't forget to make the database driver available for the web-application.  If you are using the bundled
-                Jetty web-app server, this is as simple as copying the jar file into the "lib" folder along with the
+                Jetty web-app server, this is as simple as placing the jar file in the "lib" folder along with the
                 jetty jar files.  If you are using Tomcat, you can either place the jar file under "shared/lib" or within
                 the "/WEB-INF/lib" folder of the "jtrac" (exploded) WAR itself.
             </para>            
@@ -859,6 +860,28 @@ hibernate.show_sql=false
                 <ulink url="http://dev.mysql.com/doc/connector/j/en/connector-j-usagenotes-j2ee.html#connector-j-usagenotes-tomcat">not recommended</ulink>
                 by the MySQL team.  The <ulink url="http://jakarta.apache.org/commons/dbcp/">Apache DBCP</ulink> 
                 connection pool used internally by JTrac is configured to refresh stale database connections.                
+            </para>
+            <para>
+                You should also ensure that the database default character-set encoding is set correctly for 
+                your requirements and UTF-8 is normally recommended.  When setting up a fresh JTrac installation 
+                on a non-default database such as MySQL, it is best that you do a small test by creating an item with 
+                say Japanese or Chinese text in the summary or description.  Verify that special characters 
+                display correctly when viewing the item.  Also check if e-mail notifications look okay as well.
+            </para>
+            <para>
+                If your database default character set is not what is expected you can consider setting it
+                explicitly for the database to be used by JTrac.  For example if using MySQL, you can create the 
+                database specifying the character set to be used like this:
+                <programlisting>
+                    
+create database jtrac charset utf8;                    
+                </programlisting>
+                And then you can force the encoding used by database connections in the JDBC URL.  This is
+                how the corresponding line in "jtrac.properties" will look like:               
+                <programlisting>
+                    
+database.url=jdbc:mysql://localhost/jtrac?useEncoding=true&amp;characterEncoding=utf8                    
+                </programlisting>
             </para>
             <para>
                 The default query to test idle database connections is "SELECT 1".  This has been reported
@@ -1559,10 +1582,20 @@ java -cp bsh-2.0b4.jar;hsqldb-1.8.0.1.jar bsh.Interpreter jtrac-hsqldb-2_0rc3-to
                 JTrac distribution.  You can execute this just like described in the previous section on upgrading.
                 Note that you will need to have both the database drivers on the classpath in this case.  You should
                 of course edit the database connection parameters (for database 1 and database 2) to suit your environment.
+                Some more instructions are provided within the script file on how to ensure database encoding and invoke
+                the script on the command line.  For example, if your database has a lot of data, you should configure
+                the Java process to use more memory by passing a command line parameter like "-Xmx512m".
             </para>
             <para>
                 This particular script is extremely generic and it should be possible to use this to migrate across
-                combinations of databases other than HSQLDB and MySQL.
+                combinations of databases other than HSQLDB and MySQL.  The use of BeanShell means that you can edit 
+                the script without needing to compile it.
+            </para>
+            <para>
+                Do back-up your data before performing a database migration.  You are well advised to perform
+                a "dry-run" and test if everything is ok once.  Do check if special characters (e.g. Japanese 
+                / Chinese) can still be viewed correctly when JTrac is using the new database.  Also pay attention
+                to any errors or warning messages that may appear on the console when the migration script runs.
             </para>
         </sect1>         
     </chapter>

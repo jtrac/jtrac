@@ -5,21 +5,30 @@ import java.sql.*;
  *
  * example usage:
  *
- * set CLASSPATH = bsh-2.0b4.jar;hsqldb-1.8.0.1.jar;mysql-connector-java-5.1.6-bin.jar
- * java -Xmx512m -cp %CLASSPATH% bsh.Interpreter jtrac-hsqldb-to-mysql.bsh
+ * set CLASSPATH=bsh-2.0b4.jar;hsqldb-1.8.0.1.jar;mysql-connector-java-5.1.6-bin.jar
  *
- * this is for Windows, please make the necessary changes to the above for linux
+ * java -Xmx512m -Dfile.encoding=UTF-8 -cp %CLASSPATH% bsh.Interpreter jtrac-hsqldb-to-mysql.bsh
+ *
+ * (this is for Windows, please make the necessary changes to the above for linux)
+ *
+ * IMPORTANT: 
+ * a) ensure that database encoding is set correctly, one way to do this in MySQL:
+ *
+ *      create database jtrac charset utf8;
+ *
+ * b) and in the MySQL URL you can force the encoding if required, for example:
+ *      
+ *      jdbc:mysql://localhost/jtrac?useEncoding=true&characterEncoding=utf8 
  *
  * edit the next 4 lines and provide database JDBC driver, url, username and password
  * for the source and destination databases
- *
  */        
 
 Class.forName("org.hsqldb.jdbcDriver");
 Class.forName("com.mysql.jdbc.Driver");
 
 Connection conn1 = DriverManager.getConnection("jdbc:hsqldb:file:jtrac", "sa", "");
-Connection conn2 = DriverManager.getConnection("jdbc:mysql://localhost/jtrac", "root", "");
+Connection conn2 = DriverManager.getConnection("jdbc:mysql://localhost/jtrac?useEncoding=true&characterEncoding=utf8", "root", "");
 
 DatabaseMetaData md1 = conn1.getMetaData();
 ResultSet rs1 = md1.getTables(null, null, null, new String[] { "TABLE" });
@@ -114,3 +123,5 @@ for (String tableName : tableNames) {
 
 conn1.close();
 conn2.close();
+
+System.out.println("\n\n-- DONE --");
