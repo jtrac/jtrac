@@ -124,7 +124,7 @@
     <target name="dist-war-scp" depends="clean, dist-init, war">
         <input message="Please enter password:" addproperty="password"/>
         <scp file="target/jtrac.war" 
-            todir="ptrthomas@shell.sourceforge.net:/home/groups/j/j-/j-trac/htdocs/files"
+            todir="ptrthomas@web.sourceforge.net:/home/groups/j/j-/j-trac/htdocs/files"
             password="${password}" trust="true"/>
     </target>
     
@@ -584,6 +584,6 @@
         <property name="nbprof.home" value="${netbeans.home}/../profiler2/lib"/>
         <property name="agent.path" value="${nbprof.home}/deployed/jdk15/windows/profilerinterface.dll=${nbprof.home},5140"/>        
         <jetty-start arg1="-agentpath:${agent.path}" arg2="-Xmx512m" wicketConfig=""/>
-    </target>    
+    </target>
               
 </project>
