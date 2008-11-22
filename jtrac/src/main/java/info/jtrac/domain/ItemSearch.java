@@ -46,8 +46,7 @@ public class ItemSearch implements Serializable {
     private long resultCount;
     private String sortFieldName = "id";
     private boolean sortDescending = true;
-    private boolean showHistory;
-    private boolean showDetail;
+    private boolean showHistory;    
     private boolean batchMode;
         
     private long selectedItemId;
@@ -57,22 +56,23 @@ public class ItemSearch implements Serializable {
     private List<ColumnHeading> columnHeadings;
     private Map<String, FilterCriteria> filterCriteriaMap = new LinkedHashMap<String, FilterCriteria>();
     
+    private String defaultVisibleFlags;
+        
+    
     public ItemSearch(User user) {
         this.user = user;
         this.columnHeadings = ColumnHeading.getColumnHeadings();
+        this.defaultVisibleFlags = getVisibleFlags();
     }
     
     public ItemSearch(Space space) {        
         this.space = space;        
         this.columnHeadings = ColumnHeading.getColumnHeadings(space);
+        this.defaultVisibleFlags = getVisibleFlags();
     }      
     
     public void initFromPageParameters(PageParameters params, User user, Jtrac jtrac) {       
         showHistory = params.getBoolean("showHistory");
-        showDetail = params.getBoolean("showDetail");
-        if(showDetail) {
-            getColumnHeading(DETAIL).setVisible(true);
-        }
         pageSize = params.getInt("pageSize", 25);
         sortDescending = !params.getBoolean("sortAscending");
         sortFieldName = params.getString("sortFieldName", "id");        
@@ -82,29 +82,55 @@ public class ItemSearch implements Serializable {
                 ColumnHeading ch = getColumnHeading(name);
                 ch.loadFromQueryString(params.getString(name), user, jtrac);
             }
-        }
+        }        
         relatingItemRefId = params.getString("relatingItemRefId", null);
+        String visibleFlags = params.getString("cols", null);
+        if(visibleFlags != null) {
+            int i = 0;
+            for(ColumnHeading ch : columnHeadings) {
+                if(i >= visibleFlags.length()) {
+                    break;
+                }
+                char flag = visibleFlags.charAt(i);
+                if(flag == '1') {
+                    ch.setVisible(true);
+                } else {
+                    ch.setVisible(false);
+                }
+                i++;                
+            }
+        }
+    }
+    
+    private String getVisibleFlags() {
+        StringBuilder visibleFlags = new StringBuilder();
+        for(ColumnHeading ch : columnHeadings) {
+            if(ch.isVisible()) {
+                visibleFlags.append("1");                
+            } else  {
+                visibleFlags.append("0");
+            }            
+        } 
+        return visibleFlags.toString();
     }
     
     public PageParameters getAsQueryString() {
         Map<String, String> map = new HashMap<String, String>();
         if(space != null) {
             map.put("s", space.getId() + "");
-        }
+        }                
         for(ColumnHeading ch : columnHeadings) {
-            if(ch.getName() == DETAIL) {
-                showDetail = ch.isVisible();
-            }
             String s = ch.getAsQueryString();
             if(s != null) {
                 map.put(ch.getNameText(), s);
-            }
+            }           
+        }   
+        String visibleFlags = getVisibleFlags();
+        if(!visibleFlags.equals(defaultVisibleFlags)) {
+            map.put("cols", visibleFlags.toString());
         }        
         if(showHistory) {
             map.put("showHistory", "true");
-        }
-        if(showDetail) {
-            map.put("showDetail", "true");
         }
         if(pageSize != 25) {
             map.put("pageSize", pageSize + "");
@@ -376,14 +402,6 @@ public class ItemSearch implements Serializable {
 
     public void setShowHistory(boolean showHistory) {
         this.showHistory = showHistory;
-    }
-
-    public boolean isShowDetail() {
-        return showDetail;
-    }
-
-    public void setShowDetail(boolean showDetail) {
-        this.showDetail = showDetail;
     }
 
     public long getSelectedItemId() {
