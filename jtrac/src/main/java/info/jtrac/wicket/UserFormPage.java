@@ -267,12 +267,22 @@ public class UserFormPage extends BasePage {
                 }                
             });
         }
-     
+        
+        // load form backing object in same transaction as onSubmit
+        // and avoid lazy initialization exception
         @Override
+        public boolean process() {
+            if(user.getId() > 0) {
+                user = getJtrac().loadUser(user.getId());
+            }
+            return super.process();
+        }
+     
+         @Override
         protected void validate() {
             filter.reset();
             super.validate();          
-        }        
+        }                        
         
         @Override
         protected void onSubmit() {                        
