@@ -59,12 +59,7 @@
         <repository>
             <id>openqa.org</id>
             <name>selenium snapshot</name>
-            <url>http://maven.openqa.org</url>           
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
-            </snapshots>            
+	    <url>http://nexus.openqa.org/service/local/repositories/releases/content</url>
         </repository>       
     </repositories>
     
@@ -202,10 +197,10 @@
                     <groupId>logkit</groupId>
                     <artifactId>logkit</artifactId>
                 </exclusion>
-                <exclusion>
+                <!--exclusion>
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
-                </exclusion>                
+                </exclusion-->                
             </exclusions>            
         </dependency>
         <dependency>
