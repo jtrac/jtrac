@@ -1380,6 +1380,10 @@ wrapper.exe -r etc/wrapper.conf
                 data cleanup needed, identify and load custom fields / drop down values and finally import the items,
                 creating a new Space and users if required.
             </para>
+            <para>
+                In the latest version of JTrac, it is possible to import items from an Excel sheet.  See this YouTube video for a demo:
+                <ulink url="http://www.youtube.com/watch?v=T6GxZn4gNYM">http://www.youtube.com/watch?v=T6GxZn4gNYM</ulink>
+            </para>
         </sect1>
         <sect1 id="roadmap-sso">            
             <title>Single Sign On</title>            
