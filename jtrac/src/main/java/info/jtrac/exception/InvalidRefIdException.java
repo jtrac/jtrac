@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package info.jtrac.domain.exception;
+package info.jtrac.exception;
 
 /**
  * Custom exception to denote an invalid Item refId
