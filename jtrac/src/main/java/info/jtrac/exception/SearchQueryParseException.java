@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package info.jtrac.exception;
+package info.jtrac.domain.exception;
 
 /**
  * Custom exception to handle invalid full text search queries
