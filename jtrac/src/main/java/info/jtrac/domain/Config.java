@@ -44,6 +44,9 @@ public class Config implements Serializable {
         PARAMS.add("mail.from");
         PARAMS.add("mail.session.jndiname");
         PARAMS.add("jtrac.url.base");
+        PARAMS.add("jtrac.header.picture");
+        PARAMS.add("jtrac.header.text");
+        PARAMS.add("jtrac.edit.item");
         PARAMS.add("locale.default");
         PARAMS.add("session.timeout");
         PARAMS.add("attachment.maxsize");
