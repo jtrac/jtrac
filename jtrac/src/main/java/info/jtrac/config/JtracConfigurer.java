@@ -193,7 +193,7 @@ public class JtracConfigurer extends PropertyPlaceholderConfigurer implements Se
         logger.info("jtrac.timestamp = '" + timestamp + "'");
         props.setProperty("jtrac.version", version);
         props.setProperty("jtrac.timestamp", timestamp);
-        props.setProperty("database.validationQuery", "SELECT 1");
+        props.setProperty("database.validationQuery", "SELECT 1 FROM DUAL");
         props.setProperty("ldap.url", "");
         props.setProperty("ldap.activeDirectoryDomain", "");
         props.setProperty("ldap.searchBase", "");
