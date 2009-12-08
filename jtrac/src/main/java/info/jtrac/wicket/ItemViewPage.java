@@ -79,11 +79,14 @@ public class ItemViewPage extends BasePage {
             throw new RestartResponseAtInterceptPageException(ErrorPage.class);
         }                
         
+        // Edit: Also the owner of the item should change it.
         add(new Link("edit") {
             public void onClick() {
                 setResponsePage(new ItemFormPage(item.getId()));
             }
-        }.setVisible(user.isSuperUser() || user.isAdminForSpace(item.getSpace().getId())));                        
+        }.setVisible(item.getLoggedBy().getLoginName().equals(user.getLoginName()) || 
+        		     user.isSuperUser() || 
+        		     user.isAdminForSpace(item.getSpace().getId())));                        
         
         add(new ItemViewPanel("itemViewPanel", item, isRelate || user.getId() == 0));
         
