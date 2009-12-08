@@ -46,9 +46,10 @@ public class IndividualHeadPanel extends BasePanel {
 			private static final long serialVersionUID = 1L;
 			public final Object getObject() {
 				// based on some condition return the image source
+				String urlbase = configMap.get("jtrac.url.base");
 				String url = configMap.get("jtrac.header.picture");
 				if ((url == null) ||("".equals(url)))
-					return "../resources/jtrac-logo.gif";
+					return urlbase + "/resources/jtrac-logo.gif";
 				else
   				    return url;
 			}

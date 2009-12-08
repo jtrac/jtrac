@@ -76,6 +76,7 @@ public abstract class BasePage extends WebPage {
     } 
             
     public BasePage() {        
+        add(new IndividualHeadPanel().setRenderBodyOnly(true));
         add(new HeaderPanel().setRenderBodyOnly(true));
         String jtracVersion = getJtrac().getReleaseVersion();
         add(new Label("version", jtracVersion));

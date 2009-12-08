@@ -36,6 +36,7 @@ public class LogoutPage extends WebPage {
             getRequestCycle().getSession().setLocale(StringUtils.parseLocaleString(locale));
         }
         setVersioned(false);
+        add(new IndividualHeadPanel().setRenderBodyOnly(true));
         add(new Label("title", getLocalizer().getString("logout.title", null)));
         String jtracVersion = JtracApplication.get().getJtrac().getReleaseVersion();
         add(new Label("version", jtracVersion));                  

@@ -43,6 +43,7 @@ public class LoginPage extends WebPage {
     
     public LoginPage() {
         setVersioned(false);
+        add(new IndividualHeadPanel().setRenderBodyOnly(true));
         add(new Label("title", getLocalizer().getString("login.title", null)));
         add(new LoginForm("form"));
         String jtracVersion = JtracApplication.get().getJtrac().getReleaseVersion();
