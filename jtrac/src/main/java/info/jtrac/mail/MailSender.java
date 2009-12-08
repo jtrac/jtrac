@@ -164,7 +164,10 @@ public class MailSender {
         }
         // prepare message
         MimeMessage message = sender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");        
+        MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");  
+        
+        // Remember the TO person email to prevent duplicate mails 
+        String toPersonEmail;
         try {
             helper.setText(addHeaderAndFooter(sb), true);
             helper.setSubject(getSubject(item));
@@ -173,20 +176,29 @@ public class MailSender {
             // set TO            
             if (item.getAssignedTo() != null) {
                 helper.setTo(item.getAssignedTo().getEmail());
+                toPersonEmail = item.getAssignedTo().getEmail();
             } else {
                 helper.setTo(item.getLoggedBy().getEmail());
+                toPersonEmail = item.getLoggedBy().getEmail();
             }
             // set CC
             if (item.getItemUsers() != null) {
                 String[] cc = new String[item.getItemUsers().size()];
                 int i = 0;
                 for (ItemUser itemUser : item.getItemUsers()) {
-                    cc[i++] = itemUser.getUser().getEmail();
+                // Send only, if person is not the TO assignee	
+                	if (! toPersonEmail.equals(itemUser.getUser().getEmail())) {
+                        cc[i++] = itemUser.getUser().getEmail();
+                	}
                 }
                 helper.setCc(cc);
             }
             // send message
-            sendInNewThread(message);
+            // workaround: Some PSEUDO user has no email address. Because email address
+            // is mandatory, you can enter "no" in email address and the mail will not
+            // be sent.
+            if (! "no".equals(toPersonEmail))
+                sendInNewThread(message);
         } catch (Exception e) {
             logger.error("failed to prepare e-mail", e);
         }              
