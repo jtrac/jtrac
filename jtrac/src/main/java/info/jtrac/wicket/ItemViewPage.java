@@ -16,6 +16,8 @@
 
 package info.jtrac.wicket;
 
+import java.util.Map;
+
 import info.jtrac.domain.Item;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.User;
@@ -80,14 +82,16 @@ public class ItemViewPage extends BasePage {
         }                
         
         // Edit: Also the owner of the item should change it.
+        final Map<String, String> configMap = getJtrac().loadAllConfig();
+        String shouldEdit = configMap.get("jtrac.edit.item");        
         add(new Link("edit") {
             public void onClick() {
                 setResponsePage(new ItemFormPage(item.getId()));
             }
-        }.setVisible(item.getLoggedBy().getLoginName().equals(user.getLoginName()) || 
+        }.setVisible((item.getLoggedBy().getLoginName().equals(user.getLoginName()) && 
+        		     ("true".equals(shouldEdit))) || 
         		     user.isSuperUser() || 
         		     user.isAdminForSpace(item.getSpace().getId())));                        
-        
         add(new ItemViewPanel("itemViewPanel", item, isRelate || user.getId() == 0));
         
         if(user.isGuestForSpace(item.getSpace()) || isRelate) {        
