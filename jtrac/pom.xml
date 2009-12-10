@@ -468,7 +468,17 @@
                     </systemProperties>
                 </configuration>
             </plugin>
-            -->           
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>                
+                <configuration>
+                    <excludes>
+                        <exclude>info/jtrac/selenium/**</exclude>
+                        <exclude>info/jtrac/test/**</exclude>  
+                    </excludes>
+                </configuration>
+            </plugin>            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
