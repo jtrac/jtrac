@@ -7,9 +7,35 @@
     findbugs.home=C:/peter/opt/findbugs-1.3.1 [optional, for running findbugs]
     -->
     
-    <property file="build.properties"/>
-    <property file="build-deps.properties"/>    
+    <property file="build.properties"/>    
     <property name="war.name" value="jtrac"/>    
+    
+    <!-- ========================= MAVEN ============================ -->
+    
+    <target name="mvn-init" unless="mvn.inited" xmlns:artifact="urn:maven-artifact-ant">  
+        <property name="mvn.inited" value="true"/>
+        <typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant" 
+            classpath="etc/maven-ant-tasks.jar"/>
+        <condition property="maven.repo.local" value="${maven.repo.local}" else="${user.home}/.m2/repository">
+            <isset property="maven.repo.local"/>
+        </condition>        
+        <artifact:localRepository id="local.repository" path="${maven.repo.local}"/> 
+        <artifact:pom file="pom.xml" id="maven.project"/>
+        <artifact:dependencies pathId="compile.classpath" filesetId="compile.fileset" useScope="compile">
+            <pom refid="maven.project"/>
+            <localRepository refid="local.repository"/>
+        </artifact:dependencies>
+        <artifact:dependencies pathId="test.classpath" filesetId="test.fileset" useScope="test">
+            <pom refid="maven.project"/>
+            <localRepository refid="local.repository"/>
+        </artifact:dependencies>
+        <artifact:dependencies pathId="runtime.classpath" filesetId="runtime.fileset" useScope="runtime">
+            <pom refid="maven.project"/>
+            <localRepository refid="local.repository"/>
+        </artifact:dependencies>
+    </target>
+    
+    <!-- ============================= BUILD =============================== -->    
     
     <target name="clean">
         <delete includeemptydirs="true" failonerror="false">
@@ -25,7 +51,7 @@
         </delete>        
     </target>    
     
-    <target name="compile">
+    <target name="compile" depends="mvn-init">
         <mkdir dir="target/classes"/>
         <property name="debug" value="true"/>
         <!-- 
@@ -33,7 +59,7 @@
             <isset property="production.mode"/>
         </condition>
         -->
-        <javac srcdir="src/main/java" destdir="target/classes" debug="${debug}" classpath="${test.jars}" target="1.5">
+        <javac srcdir="src/main/java" destdir="target/classes" debug="${debug}" classpathref="compile.classpath" target="1.5">
             <!-- <compilerarg value="-Xlint:unchecked"/> -->
             <compilerarg value="-Xlint:deprecation"/>
         </javac>
@@ -73,9 +99,9 @@
     <target name="hbm-export" depends="compile">
         <input message="Hibernate Dialect:" addproperty="dialect"/>
         <java classname="org.hibernate.tool.hbm2ddl.SchemaExport" fork="true">
-            <classpath>
-                <path path="${test.jars}"/>
-                <path path="target/classes"/>           
+            <classpath>                
+                <path path="target/classes"/>  
+                <path refid="test.classpath"/>
             </classpath>            
             <jvmarg value="-Dhibernate.dialect=${dialect}"/>
             <arg value="--text"/>
@@ -87,8 +113,7 @@
     
     <!-- cannot be used when jtrac application is connected -->
     <target name="hsqldb-manager">
-        <java classname="org.hsqldb.util.DatabaseManagerSwing" fork="true">
-            <classpath path="${test.jars}"/>
+        <java classname="org.hsqldb.util.DatabaseManagerSwing" fork="true" classpathref="test.classpath">            
             <arg line="-url jdbc:hsqldb:file:home/db/jtrac"/>
         </java>                            
     </target>    
@@ -140,13 +165,7 @@
                 <exclude name="doc/**"/>
             </fileset>
         </delete>
-    </target>
-    
-    <target name="dist-lib">
-        <copy todir="lib">
-            <fileset dir="${m2.repo}" includes="${all.jars}" casesensitive="false"/>         
-        </copy>
-    </target>    
+    </target>       
     
     <target name="dist-jtrac-src">
         <mkdir dir="target"/>
@@ -158,32 +177,21 @@
         </zip>         
     </target>    
     
-    <target name="mvn-export">
-        <copy todir="lib">
-            <fileset dir="${m2.repo}" includes="${all.jars}" casesensitive="false"/>
-        </copy>        
-    </target>
-    
     <!-- ========================== TEST ============================ -->
     
-    <target name="all" depends="clean, compile-test">
-        <checkstyle-macro/>
-        <style in="target/reports/checkstyle.xml" out="target/reports/checkstyle.html" 
-        style="etc/checkstyle-noframes-sorted.xsl"/>        
-        <antcall target="test-coverage"/>
-    </target>
+    <target name="all" depends="clean, compile-test, checkstyle, test-coverage"/>
     
     <target name="compile-test" depends="compile">
         <mkdir dir="target/test-classes"/>
         <javac srcdir="src/test/java" destdir="target/test-classes" debug="true" target="1.5">
             <classpath>
                 <path path="target/classes"/>
-                <path path="${test.jars}"/>
+                <path refid="test.classpath"/>
             </classpath>
         </javac>
     </target>           
     
-    <target name="test-coverage" depends="compile-test">    
+    <target name="test-coverage" depends="emma-init, compile-test">    
         <test-macro emmaEnabled="true"/>
         <junitreport todir="target/reports">
             <fileset dir="target/reports">
@@ -213,7 +221,7 @@
         <path id="test-classpath">            
             <path path="target/classes"/>
             <path path="target/test-classes"/>
-            <path path="${test.jars}"/>                     
+            <path refid="test.classpath"/>                   
         </path>            
         <nbjpdastart name="${files}" addressproperty="jpda.address" transport="dt_socket">
             <classpath refid="test-classpath"/>
@@ -236,7 +244,7 @@
         <path id="test-classpath">            
             <path path="target/classes"/>
             <path path="target/test-classes"/>
-            <path path="${test.jars}"/>                     
+            <path refid="test.classpath"/>                    
         </path>         
         <junit fork="true" dir="." tempdir="target">
             <classpath refid="test-classpath"/>
@@ -248,7 +256,13 @@
         </junit>
     </target>
     
-    <taskdef resource="emma_ant.properties" classpath="${emma.jars}"/>
+    <target name="emma-init" depends="mvn-init" xmlns:artifact="urn:maven-artifact-ant">
+        <artifact:dependencies pathId="emma.classpath">
+            <dependency groupId="emma" artifactId="emma" version="2.0.5312"/>
+            <dependency groupId="emma" artifactId="emma_ant" version="2.0.5312"/>        
+        </artifact:dependencies>
+        <taskdef resource="emma_ant.properties" classpathref="emma.classpath"/>
+    </target>        
     
     <macrodef name="test-macro">
         <attribute name="includes" default="**/*Test.java"/>
@@ -272,8 +286,8 @@
                     <path path="target/instr-classes"/>
                     <path path="target/classes"/>
                     <path path="target/test-classes"/>
-                    <path path="${test.jars}"/>                
-                    <path path="${emma.jars}"/>
+                    <path refid="test.classpath"/>               
+                    <path refid="emma.classpath"/>  
                 </classpath>
                 <jvmarg value="-Demma.coverage.out.file=${basedir}/target/coverage.emma"/>
                 <jvmarg value="-Demma.coverage.out.merge=true"/>
@@ -296,18 +310,28 @@
     
     <!-- ======================= CHECKSTYLE ========================= -->   
     
-    <taskdef resource="checkstyletask.properties" classpath="${checkstyle.jars}"/>                      
+    <target name="checkstyle-init" depends="mvn-init" xmlns:artifact="urn:maven-artifact-ant">
+        <artifact:dependencies pathId="checkstyle.classpath">
+            <dependency groupId="checkstyle" artifactId="checkstyle" version="4.3"/>                 
+        </artifact:dependencies>
+        <taskdef resource="checkstyletask.properties" classpathref="checkstyle.classpath"/> 
+    </target>                                  
     
-    <target name="checkstyle">
+    <target name="checkstyle" depends="checkstyle-init">
         <checkstyle-macro/>
+        <style 
+            in="target/reports/checkstyle.xml" 
+            out="target/reports/checkstyle.html" 
+            style="etc/checkstyle-noframes-sorted.xsl"/> 
+    </target>
+    
+    <target name="checkstyle-dump" depends="checkstyle">
         <concat>
             <fileset dir="target/reports" includes="checkstyle.txt"/>
         </concat>
-        <style in="target/reports/checkstyle.xml" out="target/reports/checkstyle.html" 
-        style="etc/checkstyle-noframes-sorted.xsl"/> 
     </target>
     
-    <target name="checkstyle-single" depends="compile">
+    <target name="checkstyle-single" depends="compile, checkstyle-init">
         <!-- files property expected from netbeans -->
         <fail unless="files">no files selected</fail>
         <checkstyle-macro files="${files}"/>
@@ -327,7 +351,7 @@
                 <!-- <fileset dir="src/main/resources" includes="@{files}"/> -->
                 <classpath>
                     <path path="target/classes"/>
-                    <path path="${test.jars}"/>
+                    <path refid="test.classpath"/>
                 </classpath>
                 <formatter type="xml" toFile="target/reports/checkstyle.xml"/>
                 <formatter type="plain" toFile="target/reports/checkstyle.txt"/>
@@ -338,8 +362,7 @@
     <!-- ========================= FINDBUGS ========================= -->        
     
     <target name="findbugs" depends="compile">      
-        <java classname="bsh.Interpreter" fork="true">
-            <classpath path="${test.jars}"/>
+        <java classname="bsh.Interpreter" fork="true" classpathref="test.classpath">            
             <arg line="etc/findbugs-project-gen.bsh"/>
         </java>
         <path id="findbugs.classpath">
@@ -352,20 +375,25 @@
     </target>    
     
     <target name="findbugs-console-dump">
-        <java classname="bsh.Interpreter" fork="true">
-            <classpath path="${test.jars}"/>
+        <java classname="bsh.Interpreter" fork="true" classpathref="test.classpath">            
             <arg line="etc/findbugs-console-dump.bsh"/>
         </java>
     </target>        
     
     <!-- =========================== PMD ============================ -->  
     
-    <target name="pmd">
+    <target name="pmd-init" depends="mvn-init" xmlns:artifact="urn:maven-artifact-ant">
+        <artifact:dependencies pathId="pmd.classpath">
+            <dependency groupId="pmd" artifactId="pmd" version="4.1.1"/>                 
+        </artifact:dependencies>        
+    </target>      
+    
+    <target name="pmd" depends="pmd-init">
         <mkdir dir="target/reports"/>
         <java classname="net.sourceforge.pmd.PMD" fork="true" output="target/reports/pmd.xml">
             <classpath>
-                <path path="${pmd.jars}"/>
-                <path path="${test.jars}"/>
+                <path refid="pmd.classpath"/>
+                <path refid="test.classpath"/>
             </classpath>
             <jvmarg value="-Xmx512m"/>
             <arg value="src/main/java"/>
@@ -375,18 +403,17 @@
     </target>
     
     <target name="pmd-console-dump">
-        <java classname="bsh.Interpreter" fork="true">
-            <classpath path="${test.jars}"/>
+        <java classname="bsh.Interpreter" fork="true" classpathref="test.classpath">            
             <arg line="etc/pmd-console-dump.bsh"/>
         </java>
     </target>
     
-    <target name="pmd-cpd">
+    <target name="pmd-cpd" depends="pmd-init">
         <mkdir dir="target/reports"/>
         <java classname="net.sourceforge.pmd.cpd.CPD" fork="true">
             <classpath>
-                <path path="${pmd.jars}"/>
-                <path path="${test.jars}"/>
+                <path refid="pmd.classpath"/>
+                <path refid="test.classpath"/>
             </classpath>
             <jvmarg value="-Xmx512m"/>
             <arg line="--minimum-tokens 100"/>
@@ -415,7 +442,13 @@
         <fail if="abort">User aborted.</fail>       
     </target>
     
-    <target name="jetty-setup" depends="war-exploded">
+    <target name="jetty-setup" depends="war-exploded" xmlns:artifact="urn:maven-artifact-ant">
+        <artifact:dependencies filesetId="jetty.jars">
+            <dependency groupId="org.mortbay.jetty" artifactId="jetty" version="6.1.1"/>                 
+        </artifact:dependencies>  
+        <artifact:dependencies filesetId="jetty.start">
+            <dependency groupId="org.mortbay.jetty" artifactId="start" version="6.1.1"/>                 
+        </artifact:dependencies>        
         <copy todir="target/jetty/lib" flatten="true">
             <fileset dir="${m2.repo}" includes="${jetty.jars}" casesensitive="false"/>
         </copy>
@@ -546,7 +579,7 @@
     <!-- ========================= SELENIUM ============================ -->
     
     <target name="selenium-start">
-        <java classname="org.openqa.selenium.server.SeleniumServer" fork="true" classpath="${test.jars}"/>        
+        <java classname="org.openqa.selenium.server.SeleniumServer" fork="true" classpathref="test.classpath"/>        
     </target>
     
     <target name="selenium-stop">
@@ -576,7 +609,8 @@
             <sourcepath>
                 <path path="src/main/java"/>                
             </sourcepath>
-        </nbjpdaconnect>        
+        </nbjpdaconnect>  
+        <nbbrowse url="http://localhost:8080/jtrac"/>
     </target>
     
     <!-- target for NetBeans Profiler on Windows -->
@@ -584,6 +618,6 @@
         <property name="nbprof.home" value="${netbeans.home}/../profiler2/lib"/>
         <property name="agent.path" value="${nbprof.home}/deployed/jdk15/windows/profilerinterface.dll=${nbprof.home},5140"/>        
         <jetty-start arg1="-agentpath:${agent.path}" arg2="-Xmx512m" wicketConfig=""/>
-    </target>
+    </target>         
               
 </project>
