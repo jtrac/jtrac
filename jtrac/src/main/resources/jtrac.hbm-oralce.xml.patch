@@ -1,0 +1,13 @@
+Index: jtrac.hbm.xml
+===================================================================
+--- jtrac.hbm.xml	(revision 1323)
++++ jtrac.hbm.xml	(working copy)
+@@ -120,7 +120,7 @@
+         <many-to-one name="parent" column="item_id" not-null="true"/>
+         <property name="actualEffort" column="actual_effort"/>
+         <many-to-one name="attachment" column="attachment_id"/>
+-        <property name="comment" column="comment" type="text"/>
++        <property name="comment" column="jt_comment" type="text"/>
+         <!-- identical to Item -->
+         <property name="timeStamp" column="time_stamp"/>
+         <many-to-one name="loggedBy" column="logged_by" not-null="true"/>
