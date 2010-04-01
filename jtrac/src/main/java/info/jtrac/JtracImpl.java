@@ -776,14 +776,18 @@ public class JtracImpl implements Jtrac {
         batchInfo.setTotalSize(totalSize);
         logger.info("total items to index: " + totalSize);                
         int firstResult = 0;
+        long lastFetchedId = 0;
         while(true) {
             logger.info("processing batch starting from: " + firstResult + ", current: " + batchInfo.getCurrentPosition());
             List<Item> items = dao.findAllItems(firstResult, batchInfo.getBatchSize());
             for (Item item : items) {                                    
-                indexer.index(item);                
+                
+            	indexer.index(item);  
+                
                 // currently history is indexed separately from item
                 // not sure if this is a good thing, maybe it gives
                 // more flexibility e.g. fine-grained search results
+            	
                 int historyCount = 0;
                 for(History history : item.getHistory()) {
                     indexer.index(history);
@@ -794,10 +798,17 @@ public class JtracImpl implements Jtrac {
                             + " : " + item.getRefId() + ", history: " + historyCount);
                 }
                 batchInfo.incrementPosition();
+                lastFetchedId = item.getId();
             }                        
-            logger.debug("size of current batch: " + items.size());
+            if(logger.isDebugEnabled()) {
+              logger.debug("size of current batch: " + items.size());
+              logger.debug("last fetched Id: " + lastFetchedId);
+            }  
             firstResult += batchInfo.getBatchSize();
-            if(batchInfo.isComplete() || firstResult > totalSize) {
+            if(logger.isDebugEnabled()) {
+                logger.debug("setting firstResult to: " + firstResult);
+            }
+            if(batchInfo.isComplete()) {
                 logger.info("batch completed at position: " + batchInfo.getCurrentPosition());
                 break;
             }
