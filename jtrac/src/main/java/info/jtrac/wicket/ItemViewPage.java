@@ -16,15 +16,21 @@
 
 package info.jtrac.wicket;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import info.jtrac.domain.History;
 import info.jtrac.domain.Item;
+import info.jtrac.domain.ItemItem;
 import info.jtrac.domain.ItemSearch;
 import info.jtrac.domain.User;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.list.ListView;
 
 /**
  * dashboard page
@@ -81,6 +87,15 @@ public class ItemViewPage extends BasePage {
             throw new RestartResponseAtInterceptPageException(ErrorPage.class);
         }                
         
+        // Edit: Only if there is no history (related item) of the Item
+        boolean nohistory = true;
+        if (item.getHistory() != null) {
+            List<History> history = new ArrayList<History>(item.getHistory());
+            if (history.size() > 1) { 
+            	nohistory = false;
+            }	
+        }
+        
         // Edit: Also the owner of the item should change it.
         final Map<String, String> configMap = getJtrac().loadAllConfig();
         String shouldEdit = configMap.get("jtrac.edit.item");        
@@ -89,7 +104,8 @@ public class ItemViewPage extends BasePage {
                 setResponsePage(new ItemFormPage(item.getId()));
             }
         }.setVisible((item.getLoggedBy().getLoginName().equals(user.getLoginName()) && 
-        		     ("true".equals(shouldEdit))) || 
+        		     ("true".equals(shouldEdit)) &&
+        		     (nohistory)) || 
         		     user.isSuperUser() || 
         		     user.isAdminForSpace(item.getSpace().getId())));                        
         add(new ItemViewPanel("itemViewPanel", item, isRelate || user.getId() == 0));
