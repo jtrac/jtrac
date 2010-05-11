@@ -268,7 +268,8 @@ public class MailSender {
             logger.warn("'mail.server.host' config is null, mail sender not initialized");
             return;
         }        
-        String port = config.get("mail.server.port");               
+        String port = config.get("mail.server.port");       
+        String localhost = config.get("mail.smtp.localhost");
         from = config.get("mail.from");
         prefix = config.get("mail.subject.prefix");
         String userName = config.get("mail.server.username");
@@ -289,17 +290,30 @@ public class MailSender {
         sender = new JavaMailSenderImpl();
         sender.setHost(host);
         sender.setPort(p);
+        Properties props = null;
+
         if (userName != null) {
             // authentication requested
-            Properties props = new Properties();
+            props = new Properties();
             props.put("mail.smtp.auth", "true");
             if (startTls != null && startTls.toLowerCase().equals("true")) {
                 props.put("mail.smtp.starttls.enable", "true");
             }
-            sender.setJavaMailProperties(props);
             sender.setUsername(userName);
             sender.setPassword(password);
         }
+        
+        if (localhost != null) {
+        	if (props == null) {
+                props = new Properties();
+        	}
+        	props.put("mail.smtp.localhost", localhost);
+        }
+        
+        if (props != null) {
+            sender.setJavaMailProperties(props);
+        }
+        
         logger.info("email sender initialized from config: host = '" + host + "', port = '" + p + "'");        
     }
     

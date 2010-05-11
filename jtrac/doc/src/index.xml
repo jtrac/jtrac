@@ -11,11 +11,15 @@
     <bookinfo>
         <title>JTrac</title>
         <subtitle>User / Developer Guide</subtitle>
-        <releaseinfo>2.1.0</releaseinfo>
+        <releaseinfo>2.2.0</releaseinfo>
         <authorgroup>
             <author>
                 <firstname>Peter</firstname>
                 <surname>Thomas</surname>
+            </author>
+            <author>
+                <firstname>Manfred</firstname>
+                <surname>Wolff</surname>
             </author>
         </authorgroup>
     </bookinfo>
@@ -82,6 +86,30 @@
                 available in the "<link linkend="upgrading">upgrading</link>" section of this document.  The bundled
                 Jetty web-app server has been upgraded from version 6.0.2 to 6.1.1 but it is not mandatory that you
                 upgrade.
+            </para>
+        </sect1>         
+
+        <sect1 id="introduction-releasenotes-2_2">
+            <title>Release Notes: Version 2.2.0</title>
+            <para>
+                There are no database changes between version 2.1.0 and 2.2.0.  Instructions on how to upgrade are 
+                available in the "<link linkend="upgrading">upgrading</link>" section of this document. 
+            </para>
+            <para>                    
+			    There where some minor changes and bugfixes:
+                <itemizedlist>
+                    <listitem>
+                        <para>It is possible to configure an individual header and an individual logo for your own JTrac.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Errors that were occured because of missing language ressources are fixed.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Some email-issues e.g. sending duplicate mails are fixed.</para>
+                    </listitem>
+                </itemizedlist>                   
+				For details see the <ulink url="https://sourceforge.net/projects/j-trac/">different tracker at
+				the sourceforge website.</ulink>
             </para>
         </sect1>         
     </chapter>
@@ -757,7 +785,16 @@ java -version
             <para>
                 JTrac also can lookup and use a JNDI mail session (javax.mail.Session) if required.  If you 
                 provide a JNDI name, JTrac will ignore the SMTP server details provided.
-            </para>              
+            </para>   
+         
+		    <para> 
+			   JTrac provides also other settings for an individual Headline (jtrac.header.text) and an
+			   individual logo on the right side (jtrac.header.text). If no logo is set the original
+			   JTrac logo is shown. If the jtrac.edit.item configuration item is set to true people may
+			   edit their own items while no change is happens (editable item up to the first history entry).
+			   Admins are always able to change the original item text.
+            </para>   
+			
         </sect1>        
         <sect1 id="installation-war">
             <title>Using only the WAR file</title>
