@@ -1,6 +1,6 @@
 Index: ItemListPanel.java
 ===================================================================
---- ItemListPanel.java	(revision 1349)
+--- ItemListPanel.java	(revision 1350)
 +++ ItemListPanel.java	(working copy)
 @@ -18,6 +18,7 @@
  
@@ -10,13 +10,25 @@ Index: ItemListPanel.java
  import info.jtrac.domain.ColumnHeading.Name;
  import info.jtrac.domain.History;
  import info.jtrac.domain.ItemSearch;
-@@ -318,7 +319,8 @@
+@@ -52,6 +53,7 @@
+ /**
+  * item list panel
+  */
++@SuppressWarnings("serial")
+ public class ItemListPanel extends BasePanel {
+     
+     private ItemSearch itemSearch;
+@@ -318,7 +320,13 @@
                                      value = new PropertyModel(item, "assignedTo.name");
                                      break;
                                  case TIME_STAMP:
--                                    value = new Model(DateUtils.formatTimeStamp(item.getTimeStamp()));
-+                                    //value = new Model(DateUtils.formatTimeStamp(item.getTimeStamp()));
-+                                    value = new Model(DateUtils.formatTimeStamp(((Item)item).getLatestHistory().getTimeStamp()));
++                                	if (item instanceof History) {
+                                     value = new Model(DateUtils.formatTimeStamp(item.getTimeStamp()));
++                                	} else {
++                                		if (item instanceof Item) {
++                                           value = new Model(DateUtils.formatTimeStamp( ((Item)item).getLatestHistory().getTimeStamp()));
++                                		}
++                                	}
                                      break;
                                  case SPACE:
                                      if(showHistory) {
