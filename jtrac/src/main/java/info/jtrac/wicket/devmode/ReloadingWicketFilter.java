@@ -56,7 +56,7 @@ public class ReloadingWicketFilter extends WicketFilter {
     }
 
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) 
+    public boolean doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         if (reloadingClassLoader.hasChanges()) {
             logger.debug("changes to reloadable classes detected, reloading...");            
@@ -64,7 +64,7 @@ public class ReloadingWicketFilter extends WicketFilter {
             // request.getSession().invalidate();            
             super.init(filterConfig);
         }        
-        super.doGet(request, response);
+        return super.doGet(request, response);
     }
 
     @Override
