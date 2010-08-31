@@ -176,8 +176,8 @@ public class JtracImpl implements Jtrac {
      */
     public void init() {
         Map<String, String> config = loadAllConfig();
-        initMailSender(config);
         initDefaultLocale(config.get("locale.default"));
+        initMailSender(config);        
         initAttachmentMaxSize(config.get("attachment.maxsize"));
         initSessionTimeout(config.get("session.timeout"));
     }
