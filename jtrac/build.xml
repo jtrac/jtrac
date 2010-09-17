@@ -82,17 +82,17 @@
     <macrodef name="war-exploded">
         <attribute name="deployDir" default="target/${war.name}"/>
         <sequential>
-            <copy todir="@{deployDir}">
-                <fileset dir="src/main/webapp"/>
-            </copy>
-            <copy todir="@{deployDir}/WEB-INF/classes">
-                <fileset dir="target/classes"/>
-            </copy>
-            <copy todir="@{deployDir}/WEB-INF/lib" flatten="true">
-                <fileset dir="${m2.repo}" includes="${runtime.jars}" casesensitive="false"/>         
-            </copy>
+           <copy todir="@{deployDir}">
+               <fileset dir="src/main/webapp"/>
+           </copy>
+           <copy todir="@{deployDir}/WEB-INF/classes">
+               <fileset dir="target/classes"/>
+           </copy>
+           <copy todir="@{deployDir}/WEB-INF/lib" flatten="true">
+               <fileset refid="runtime.fileset"/>
+           </copy>
         </sequential>
-    </macrodef>     
+    </macrodef>
     
     <!-- ========================= HIBERNATE =========================== -->
 
@@ -443,30 +443,30 @@
     </target>
     
     <target name="jetty-setup" depends="war-exploded" xmlns:artifact="urn:maven-artifact-ant">
-        <artifact:dependencies filesetId="jetty.jars">
-            <dependency groupId="org.mortbay.jetty" artifactId="jetty" version="6.1.1"/>                 
-        </artifact:dependencies>  
-        <artifact:dependencies filesetId="jetty.start">
-            <dependency groupId="org.mortbay.jetty" artifactId="start" version="6.1.1"/>                 
-        </artifact:dependencies>        
+        <artifact:dependencies filesetId="jetty-fileset">
+            <dependency groupId="org.mortbay.jetty" artifactId="jetty" version="6.1.1"/>
+        </artifact:dependencies>
+        <artifact:dependencies filesetId="jetty-start">
+            <dependency groupId="org.mortbay.jetty" artifactId="start" version="6.1.1"/>
+        </artifact:dependencies>
         <copy todir="target/jetty/lib" flatten="true">
-            <fileset dir="${m2.repo}" includes="${jetty.jars}" casesensitive="false"/>
+            <fileset refid="jetty-fileset"/>
         </copy>
         <copy todir="target/jetty" flatten="true">
-            <fileset dir="${m2.repo}" includes="${jetty.start}" casesensitive="false"/>
+            <fileset refid="jetty-start"/>
             <mapper type="merge" to="start.jar"/>
         </copy>
         <copy todir="target/jetty/etc">
             <fileset dir="etc">
-                <include name="jetty.xml"/>                
+                <include name="jetty.xml"/>
                 <include name="wrapper.conf"/>
                 <include name="webdefault.xml"/>
             </fileset>
-        </copy>    
-        <mkdir dir="target/jetty/logs"/>
-        <mkdir dir="target/jetty/work"/>    
-        <antcall target="jetty-setup-dev"/>
-    </target>
+         </copy>
+         <mkdir dir="target/jetty/logs"/>
+         <mkdir dir="target/jetty/work"/>
+         <antcall target="jetty-setup-dev"/>
+    </target>	
    
     <target name="jetty-setup-dev" unless="production.mode">
         <echo>*** making jetty / webapp changes for development mode...</echo>
