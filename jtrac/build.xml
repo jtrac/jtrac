@@ -5,6 +5,7 @@
     tomcat.home=C:/apache-tomcat-5.5.16 [optional, jetty used by default]
     jmeter.home=C:/jakarta-jmeter-2.2 [optional, for load testing]
     findbugs.home=C:/peter/opt/findbugs-1.3.1 [optional, for running findbugs]
+    maven.repo.local=D:/repo
     -->
     
     <property file="build.properties"/>    
@@ -18,7 +19,8 @@
             classpath="etc/maven-ant-tasks.jar"/>
         <condition property="maven.repo.local" value="${maven.repo.local}" else="${user.home}/.m2/repository">
             <isset property="maven.repo.local"/>
-        </condition>        
+        </condition>
+        <echo>using maven local repo: ${maven.repo.local}</echo>
         <artifact:localRepository id="local.repository" path="${maven.repo.local}"/> 
         <artifact:pom file="pom.xml" id="maven.project"/>
         <artifact:dependencies pathId="compile.classpath" filesetId="compile.fileset" useScope="compile">
