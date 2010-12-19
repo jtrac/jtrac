@@ -61,7 +61,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * DAO Implementation using Spring Hibernate template
  * note usage of the Spring "init-method" and "destroy-method" options
  */
-public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {       
+public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     
     private SchemaHelper schemaHelper;
     
@@ -69,7 +69,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         this.schemaHelper = schemaHelper;
     }
     
-    public void storeItem(Item item) {        
+    public void storeItem(Item item) {
         getHibernateTemplate().merge(item);
     }
     
@@ -77,7 +77,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return (Item) getHibernateTemplate().get(Item.class, id);
     }
     
-    public void storeHistory(History history) {        
+    public void storeHistory(History history) {
         getHibernateTemplate().merge(history);
     }    
     
@@ -93,7 +93,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     public List<Item> findItems(ItemSearch itemSearch) {
         int pageSize = itemSearch.getPageSize();
         // TODO: if we are ordering by a custom column, we must load the whole
-        // list to do an in-memory sort. we need to find a better way        
+        // list to do an in-memory sort. we need to find a better way
         Field.Name sortFieldName = Field.isValidName(itemSearch.getSortFieldName()) ? Field.convertToName(itemSearch.getSortFieldName()) : null;
         // only trigger the in-memory sort for drop-down fields and when querying within a space
         // UI currently does not allow you to sort by custom field when querying across spaces, but check again
@@ -135,7 +135,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     
     private void doInMemorySort(List<Item> list, ItemSearch itemSearch) { 
         // we should never come here if search is across multiple spaces
-        final Field field = itemSearch.getSpace().getMetadata().getField(itemSearch.getSortFieldName());        
+        final Field field = itemSearch.getSpace().getMetadata().getField(itemSearch.getSortFieldName());
         final ArrayList<String> valueList = new ArrayList<String>(field.getOptions().keySet());
         Comparator<Item> comp = new Comparator<Item>() {
             public int compare(Item left, Item right) {
@@ -150,7 +150,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         };
         Collections.sort(list, itemSearch.isSortDescending() ? ComparatorUtils.reversedComparator(comp) : comp);
     }
-
+    
     public int loadCountOfAllItems() {
         return (Integer) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) {
@@ -161,28 +161,28 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         });
     }
     
-    public List<Item> findAllItems(final int firstResult, final int batchSize) {        
+    public List<Item> findAllItems(final int firstResult, final int batchSize) {
         return getHibernateTemplate().executeFind(new HibernateCallback() {
             public Object doInHibernate(Session session) {
                 session.clear();
                 Criteria criteria = session.createCriteria(Item.class);
-                criteria.setCacheMode(CacheMode.IGNORE);                
+                criteria.setCacheMode(CacheMode.IGNORE);
                 criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-                criteria.setFetchMode("history", FetchMode.JOIN);                
+                criteria.setFetchMode("history", FetchMode.JOIN);
                 criteria.add(Restrictions.ge("id", (long) firstResult));
-                criteria.add(Restrictions.lt("id", (long) firstResult + batchSize));                
+                criteria.add(Restrictions.lt("id", (long) firstResult + batchSize));
                 return criteria.list();
             }
-        });        
+        });
     }
     
     public void removeItem(Item item) {
         getHibernateTemplate().delete(item);
-    }    
+    }
     
     public void removeItemItem(ItemItem itemItem) {
         getHibernateTemplate().delete(itemItem);
-    }    
+    }
     
     public List<ItemUser> findItemUsersByUser(User user) {
         return getHibernateTemplate().find("from ItemUser iu where iu.user = ?", user);
@@ -214,20 +214,20 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     
     public UserSpaceRole loadUserSpaceRole(long id) {
         return (UserSpaceRole) getHibernateTemplate().get(UserSpaceRole.class, id);
-    }    
+    }
     
     public long loadNextSequenceNum(final long spaceSequenceId) {
         return (Long) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) {  
                 session.flush();
                 session.setCacheMode(CacheMode.IGNORE);
-                SpaceSequence ss = (SpaceSequence) session.get(SpaceSequence.class, spaceSequenceId);                                
+                SpaceSequence ss = (SpaceSequence) session.get(SpaceSequence.class, spaceSequenceId);
                 long next = ss.getAndIncrement();
                 session.update(ss);
                 session.flush();
                 return next;
             }
-        });    
+        });
     }
     
     public void storeSpaceSequence(SpaceSequence spaceSequence) {
@@ -252,12 +252,12 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     }    
     
     public List<Space> findSpacesWhereGuestAllowed() {        
-        return getHibernateTemplate().find("from Space space join fetch space.metadata where space.guestAllowed = true");       
+        return getHibernateTemplate().find("from Space space join fetch space.metadata where space.guestAllowed = true");
     }
     
-    public void removeSpace(Space space) {        
+    public void removeSpace(Space space) {
         getHibernateTemplate().delete(space);
-    }    
+    }
     
     public void storeUser(User user) {
         getHibernateTemplate().merge(user);
@@ -279,7 +279,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         return getHibernateTemplate().findByNamedParam("from User user where user.id in (:ids)", "ids", ids);
     }    
     
-    public List<User> findUsersMatching(final String searchText, final String searchOn) {   
+    public List<User> findUsersMatching(final String searchText, final String searchOn) {
         return (List<User>) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) {
                 Criteria criteria = session.createCriteria(User.class);
@@ -312,7 +312,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     public List<User> findUsersWithRoleForSpace(long spaceId, String roleKey) {
         return getHibernateTemplate().find("from User user"
                 + " join user.userSpaceRoles as usr where usr.space.id = ?"
-                + " and usr.roleKey = ? order by user.name", new Object[] {spaceId, roleKey});        
+                + " and usr.roleKey = ? order by user.name", new Object[] {spaceId, roleKey});
     }    
     
     public List<UserSpaceRole> findSpaceRolesForUser(long userId) {
@@ -330,10 +330,10 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     public int loadCountOfHistoryInvolvingUser(User user) {
         Long count = (Long) getHibernateTemplate().find("select count(history) from History history where "
                 + " history.loggedBy = ? or history.assignedTo = ?", new Object[] {user, user}).get(0);
-        return count.intValue();        
+        return count.intValue();
     }
     
-    //==========================================================================    
+    //==========================================================================
     
     public CountsHolder loadCountsForUser(User user) {
         Collection<Space> spaces = user.getSpaces();
@@ -341,7 +341,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
             return null;
         }
         CountsHolder ch = new CountsHolder();
-        HibernateTemplate ht = getHibernateTemplate();        
+        HibernateTemplate ht = getHibernateTemplate();
         List<Object[]> loggedByList = ht.find("select item.space.id, count(item) from Item item" 
                 + " where item.loggedBy.id = ? group by item.space.id", user.getId());
         List<Object[]> assignedToList = ht.find("select item.space.id, count(item) from Item item" 
@@ -361,7 +361,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     }
     
     public Counts loadCountsForUserSpace(User user, Space space) {
-        HibernateTemplate ht = getHibernateTemplate();        
+        HibernateTemplate ht = getHibernateTemplate();
         List<Object[]> loggedByList = ht.find("select status, count(item) from Item item" 
                 + " where item.loggedBy.id = ? and item.space.id = ? group by item.status", new Object[] {user.getId(), space.getId()});
         List<Object[]> assignedToList = ht.find("select status, count(item) from Item item" 
@@ -393,7 +393,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
                 + " where usr.space in (:spaces) order by u.name", "spaces", spaces);
     }
     
-    public void removeUserSpaceRole(UserSpaceRole userSpaceRole) {        
+    public void removeUserSpaceRole(UserSpaceRole userSpaceRole) {
         getHibernateTemplate().delete(userSpaceRole);
     }
     
@@ -408,7 +408,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     public Config loadConfig(String param) {
         return (Config) getHibernateTemplate().get(Config.class, param);
     }
-
+    
     public int loadCountOfRecordsHavingFieldNotNull(Space space, Field field) {
         Criteria criteria = getSession().createCriteria(Item.class);
         criteria.add(Restrictions.eq("space", space));
@@ -421,9 +421,9 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         criteria.createCriteria("parent").add(Restrictions.eq("space", space));
         criteria.add(Restrictions.isNotNull(field.getName().toString()));
         criteria.setProjection(Projections.rowCount());
-        return itemCount + (Integer) criteria.list().get(0);        
+        return itemCount + (Integer) criteria.list().get(0);
     }
-
+    
     public int bulkUpdateFieldToNull(Space space, Field field) {
         int itemCount = getHibernateTemplate().bulkUpdate("update Item item set item." + field.getName() + " = null" 
                 + " where item.space.id = ?", space.getId());
@@ -433,7 +433,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         logger.info("no of History rows where " + field.getName() + " set to null = " + historyCount);
         return itemCount;
     }
-
+    
     public int loadCountOfRecordsHavingFieldWithValue(Space space, Field field, int optionKey) {
         Criteria criteria = getSession().createCriteria(Item.class);
         criteria.add(Restrictions.eq("space", space));
@@ -446,9 +446,9 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         criteria.createCriteria("parent").add(Restrictions.eq("space", space));
         criteria.add(Restrictions.eq(field.getName().toString(), optionKey));
         criteria.setProjection(Projections.rowCount());
-        return itemCount + (Integer) criteria.list().get(0);        
+        return itemCount + (Integer) criteria.list().get(0);
     }
-
+    
     public int bulkUpdateFieldToNullForValue(Space space, Field field, int optionKey) {
         int itemCount = getHibernateTemplate().bulkUpdate("update Item item set item." + field.getName() + " = null" 
                 + " where item.space.id = ?"
@@ -458,7 +458,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
                 + " where history." + field.getName() + " = ?"
                 + " and history.parent in ( from Item item where item.space.id = ? )", new Object[] {optionKey, space.getId()});
         logger.info("no of History rows where " + field.getName() + " value '" + optionKey + "' replaced with null = " + historyCount);
-        return itemCount;        
+        return itemCount;
     }
     
     public int loadCountOfRecordsHavingStatus(Space space, int status) {
@@ -474,7 +474,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
         criteria.add(Restrictions.eq("status", status));
         criteria.setProjection(Projections.rowCount());
         return itemCount + (Integer) criteria.list().get(0);
-    }    
+    }
     
     public int bulkUpdateStatusToOpen(Space space, int status) {
         int itemCount = getHibernateTemplate().bulkUpdate("update Item item set item.status = " + State.OPEN 
@@ -485,7 +485,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
                 + " and history.parent in ( from Item item where item.space.id = ? )", new Object[] {status, space.getId()});
         logger.info("no of History rows where status changed from " + status + " to " + State.OPEN + " = " + historyCount);
         return itemCount;
-    }    
+    }
     
     public int bulkUpdateRenameSpaceRole(Space space, String oldRoleKey, String newRoleKey) {
         return getHibernateTemplate().bulkUpdate("update UserSpaceRole usr set usr.roleKey = ?"
@@ -494,7 +494,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
     
     public int bulkUpdateDeleteSpaceRole(Space space, String roleKey) {
         if (roleKey == null) {
-            return getHibernateTemplate().bulkUpdate("delete UserSpaceRole usr where usr.space.id = ?", space.getId());            
+            return getHibernateTemplate().bulkUpdate("delete UserSpaceRole usr where usr.space.id = ?", space.getId());
         } else {
             return getHibernateTemplate().bulkUpdate("delete UserSpaceRole usr"
                     + " where usr.space.id = ? and usr.roleKey = ?", new Object[] {space.getId(), roleKey});
@@ -524,7 +524,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
             getHibernateTemplate().find("from Item item where item.id = 1");
             logger.info("database schema exists, normal startup");
         } catch (Exception e) {
-            logger.warn("expected database schema does not exist, will create. Error is: " + e.getMessage());            
+            logger.warn("expected database schema does not exist, will create. Error is: " + e.getMessage());
             schemaHelper.createSchema();
             User admin = new User();
             admin.setLoginName("admin");
@@ -534,7 +534,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
             admin.addSpaceWithRole(null, Role.ROLE_ADMIN);
             logger.info("inserting default admin user into database");
             storeUser(admin);
-            logger.info("schema creation complete");            
+            logger.info("schema creation complete");
         }
         List<SpaceSequence> ssList = getHibernateTemplate().loadAll(SpaceSequence.class);
         Map<Long, SpaceSequence> ssMap = new HashMap<Long, SpaceSequence>(ssList.size());
@@ -553,7 +553,7 @@ public class HibernateJtracDao extends HibernateDaoSupport implements JtracDao {
                 ss.setNextSeqNum(maxSeqNum + 1);
                 getHibernateTemplate().update(ss);
             }
-        }   
-    }    
+        }
+    }
     
 }

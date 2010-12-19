@@ -27,19 +27,23 @@ import org.dom4j.Element;
 
 /**
  * In addition to definition of custom fields, the Metadata
- * for a Space may contain a bunch of Role defintions as well.
+ * for a Space may contain a bunch of Role definitions as well.
  * Roles do the following
  * - define the State Transitions possible (i.e. from status --> to status)
  * - for each State (from status) define the access permissions that this Role has per Field
  */
 public class Role implements Serializable {
+    /**
+     * Generated UID
+     */
+    private static final long serialVersionUID = 3661382262397738228L;
     
     private String name;
     private String description;
-    private Map<Integer, State> states = new HashMap<Integer, State>();   
+    private Map<Integer, State> states = new HashMap<Integer, State>();
     
     public static final String ROLE_ADMIN = "ROLE_ADMIN";
-    public static final String ROLE_GUEST = "ROLE_GUEST";    
+    public static final String ROLE_GUEST = "ROLE_GUEST";
     
     public Role(String name) {
         this.name = name;
@@ -47,53 +51,92 @@ public class Role implements Serializable {
     
     public Role(Element e) {
         name = e.attributeValue(NAME);
+        
         for (Object o : e.elements(STATE)) {
             State state = new State((Element) o);
             states.put(state.getStatus(), state);
-        }
+        } // end for
     }
     
-    /* append this object onto an existing XML document */
+    /**
+     * Append this object onto an existing XML document.
+     */
     public void addAsChildOf(Element parent) {
         Element e = parent.addElement(ROLE);
         copyTo(e);
     }
     
-    /* marshal this object into a fresh new XML Element */
+    /**
+     * Marshal this object into a fresh new XML element.
+     * */
     public Element getAsElement() {
         Element e = XmlUtils.getNewElement(ROLE);
         copyTo(e);
         return e;
     }
     
-    /* copy object values into an existing XML Element */
-    private void copyTo(Element e) {
+    /**
+     * Copy object values into an existing XML element.
+     * 
+     * @param element The {@link Element} object to append.
+     */
+    private void copyTo(Element element) {
         // appending empty strings to create new objects for "clone" support
-        e.addAttribute(NAME, name + "");
+        element.addAttribute(NAME, name + "");
+        
         for (State state : states.values()) {
-            state.addAsChildOf(e);
-        }
+            state.addAsChildOf(element);
+        } // end for
     }
     
+    /**
+     * This method is used to verify if the given roleKey matches the
+     * the role {@link #ROLE_ADMIN}.
+     * 
+     * @param roleKey The roleKey string to check.
+     * @return Returns <code>true</code> if the roleKey matches the role
+     * {@link #ROLE_ADMIN}, otherwise <code>false</code>.
+     */
     public static boolean isAdmin(String roleKey) {
         return ROLE_ADMIN.equals(roleKey);
     }
     
+    /**
+     * This method is used to verify if the given roleKey matches the
+     * the role {@link #ROLE_GUEST}.
+     * 
+     * @param roleKey The roleKey string to check.
+     * @return Returns <code>true</code> if the roleKey matches the role
+     * {@link #ROLE_GUEST}, otherwise <code>false</code>.
+     */
     public static boolean isGuest(String roleKey) {
         return ROLE_GUEST.equals(roleKey);
-    }    
-    
-    public static boolean isReservedRoleKey(String roleKey) {
-        return ROLE_ADMIN.equals(roleKey) 
-                || ROLE_GUEST.equals(roleKey);
     }
     
-    //=======================================================================
+    /**
+     * This method is used to verify if the given roleKey matches one of the
+     * reserved roles (system defined roles).
+     * 
+     * @param roleKey The roleKey string to check.
+     * @return Returns <code>true</code> if the roleKey matches the one of the
+     * reserved roles, otherwise <code>false</code>.
+     */
+    public static boolean isReservedRoleKey(String roleKey) {
+        return (ROLE_ADMIN.equals(roleKey) || ROLE_GUEST.equals(roleKey));
+    }
     
+    /**
+     * 
+     * @param state
+     */
     public void add(State state) {
         states.put(state.getStatus(), state);
     }
     
+    /**
+     * 
+     * @param stateId
+     */
     public void removeState(int stateId) {
         states.remove(stateId);
         for(State s : states.values()) {
@@ -101,36 +144,66 @@ public class Role implements Serializable {
         }
     }
     
-    public boolean hasTransitionsFromState(int stateKey) {        
+    /**
+     * 
+     * @param stateKey
+     * @return
+     */
+    public boolean hasTransitionsFromState(int stateKey) {
         return states.get(stateKey).getTransitions().size() > 0;
     }
     
-    //=======================================================================
-    
+    /**
+     * 
+     * @return
+     */
     public Map<Integer, State> getStates() {
         return states;
     }
     
+    /**
+     * 
+     * @param states
+     */
     public void setStates(Map<Integer, State> states) {
         this.states = states;
     }
     
+    /**
+     * 
+     * @return
+     */
     public String getDescription() {
         return description;
     }
     
+    /**
+     * 
+     * @param description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
     
+    /**
+     * 
+     * @return
+     */
     public String getName() {
         return name;
     }
     
+    /**
+     * 
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
     
+    /**
+     * 
+     */
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
@@ -139,5 +212,4 @@ public class Role implements Serializable {
         sb.append("]");
         return sb.toString();
     }
-    
 }
