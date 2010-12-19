@@ -1,26 +1,25 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    
     <modelVersion>4.0.0</modelVersion>
     <groupId>info.jtrac</groupId>
     <artifactId>jtrac</artifactId>
     <packaging>war</packaging>
     <version>2.2.0</version>
-    <name>JTrac</name>    
+    <name>JTrac</name>
     <description>
         JTrac is a generic issue-tracking web-application that can be easily customized by adding custom fields 
         and drop-downs. Features include customizable workflow, field level permissions, e-mail integration, 
         file attachments and a detailed history view.
     </description>
     <url>http://jtrac.info</url>
-
+    
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
             <url>license.txt</url>
         </license>
     </licenses>
-
+    
     <scm>
         <connection>scm:svn:https://j-trac.svn.sourceforge.net/svnroot/j-trac/trunk/jtrac</connection>
         <url>http://j-trac.svn.sourceforge.net/viewvc/j-trac/trunk/jtrac/</url>
@@ -31,9 +30,9 @@
             <id>website</id>
             <url>scp://shell.sourceforge.net/home/groups/j/j-/j-trac/htdocs</url>
         </site>
-    </distributionManagement>    
+    </distributionManagement>
     
-    <mailingLists>      
+    <mailingLists>
         <mailingList>
             <name>JTrac Mailing List</name>
             <subscribe>https://lists.sourceforge.net/lists/listinfo/j-trac-users</subscribe>
@@ -42,32 +41,32 @@
             <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=j-trac-users</archive>
             <otherArchives>
                 <otherArchive>http://www.nabble.com/j-trac-users-f20276.html</otherArchive>
-            </otherArchives>            
-        </mailingList>       
-    </mailingLists>    
+            </otherArchives>
+        </mailingList>
+    </mailingLists>
     
     <developers>
         <developer>
             <name>Peter Thomas</name>
             <id>ptrthomas</id>
-            <url>http://ptrthomas.wordpress.com</url>                        
+            <url>http://ptrthomas.wordpress.com</url>
             <timezone>+5.5</timezone>
         </developer>
         <developer>
             <name>Manfred Wolff</name>
             <id>manfredwolff</id>
-            <url>http://pointers.de</url>                        
+            <url>http://pointers.de</url>
             <timezone>+1</timezone>
-        </developer>        
+        </developer>
     </developers>
-  
+    
     <repositories>
         <repository>
             <id>openqa.org</id>
-            <name>selenium snapshot</name>        
+            <name>selenium snapshot</name>
             <url>http://nexus.openqa.org/content/repositories/releases</url>
-        </repository>       
-    </repositories>         
+        </repository>
+    </repositories>
     
     <dependencies>
         <dependency>
@@ -97,9 +96,9 @@
                 <exclusion>
                     <groupId>xerces</groupId>
                     <artifactId>xercesImpl</artifactId>
-                </exclusion>                
-            </exclusions>           
-        </dependency>              
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>org.acegisecurity</groupId>
             <artifactId>acegi-security</artifactId>
@@ -132,7 +131,7 @@
                 <exclusion>
                     <groupId>log4j</groupId>
                     <artifactId>log4j</artifactId>
-                </exclusion>                  
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -140,7 +139,7 @@
             <artifactId>servlet-api</artifactId>
             <version>2.4</version>
             <scope>provided</scope>
-        </dependency>      
+        </dependency>
         <dependency>
             <groupId>jfree</groupId>
             <artifactId>jfreechart</artifactId>
@@ -150,8 +149,8 @@
                     <groupId>gnujaxp</groupId>
                     <artifactId>gnujaxp</artifactId>
                 </exclusion>
-            </exclusions>     
-        </dependency>        
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate</artifactId>
@@ -168,8 +167,8 @@
                 <exclusion>
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
-                </exclusion>                 
-            </exclusions>           
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>geronimo-spec</groupId>
@@ -181,7 +180,7 @@
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>1.4</version>
-        </dependency>        
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring</artifactId>
@@ -198,8 +197,8 @@
                 <!--exclusion>
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
-                </exclusion-->                
-            </exclusions>            
+                </exclusion-->
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -233,8 +232,8 @@
                 <exclusion>
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
-                </exclusion>                
-            </exclusions>            
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -249,8 +248,8 @@
                 <exclusion>
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
-                </exclusion>                
-            </exclusions>            
+                </exclusion>
+            </exclusions>
         </dependency>
          <dependency>
             <groupId>org.springmodules</groupId>
@@ -272,11 +271,11 @@
                 <exclusion>
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-aop</artifactId>
-                </exclusion>            
+                </exclusion>
                 <exclusion>
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-core</artifactId>
-                </exclusion>            
+                </exclusion>
                 <exclusion>
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-context</artifactId>
@@ -296,7 +295,7 @@
                  <exclusion>
                     <groupId>org.apache</groupId>
                     <artifactId>poi</artifactId>
-                </exclusion>                 
+                </exclusion>
                  <exclusion>
                     <groupId>org.apache</groupId>
                     <artifactId>poi-scratchpad</artifactId>
@@ -308,7 +307,7 @@
                 <exclusion>
                     <groupId>cglib</groupId>
                     <artifactId>cglib-nodep</artifactId>
-                </exclusion> 
+                </exclusion>
                 <exclusion>
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
@@ -316,36 +315,36 @@
                 <exclusion>
                     <groupId>log4j</groupId>
                     <artifactId>log4j</artifactId>
-                </exclusion>                 
-            </exclusions>      
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket</artifactId>
-            <version>1.3.7</version>            
-        </dependency>        
+            <version>1.3.7</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-extensions</artifactId>
-            <version>1.3.7</version>           
+            <version>1.3.7</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.4.2</version>
             <scope>runtime</scope>
-        </dependency> 
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl104-over-slf4j</artifactId>
             <version>1.4.2</version>
             <scope>runtime</scope>
-        </dependency>        
+        </dependency>
         <dependency>
             <groupId>poi</groupId>
             <artifactId>poi</artifactId>
-            <version>2.5.1-final-20040804</version>            
-        </dependency>       
+            <version>2.5.1-final-20040804</version>
+        </dependency>
         <dependency>
             <groupId>org.tmate</groupId>
             <artifactId>javasvn</artifactId>
@@ -355,14 +354,14 @@
                     <groupId>ch.ethz.ganymed</groupId>
                     <artifactId>ganymed-ssh2</artifactId>
                 </exclusion>
-            </exclusions>             
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.beanshell</groupId>
             <artifactId>bsh</artifactId>
             <version>2.0b4</version>
             <scope>runtime</scope>
-        </dependency>         
+        </dependency>
         <dependency>
             <groupId>hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
@@ -378,19 +377,19 @@
                 <exclusion>
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
-                </exclusion>            
+                </exclusion>
             </exclusions>
-        </dependency>        
+        </dependency>
         <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
-            <version>1.2.2</version>            
+            <version>1.2.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>xml-apis</groupId>
                     <artifactId>xml-apis</artifactId>
                 </exclusion>
-            </exclusions>             
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>net.sf.ehcache</groupId>
@@ -402,20 +401,20 @@
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
-            </exclusions>             
-        </dependency>        
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>org.openqa.selenium.client-drivers</groupId>
             <artifactId>selenium-java-client-driver</artifactId>
-            <version>0.9.0</version>   
+            <version>0.9.0</version>
             <scope>test</scope>
-        </dependency>         
+        </dependency>
         <dependency>
             <groupId>org.openqa.selenium.server</groupId>
             <artifactId>selenium-server</artifactId>
-            <version>0.9.0</version>   
+            <version>0.9.0</version>
             <scope>test</scope>
-        </dependency>        
+        </dependency>
     </dependencies>
     
     <build>
@@ -424,18 +423,18 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <includes>                    
+                <includes>
                     <include>**</include>
                 </includes>
-            </resource>            
+            </resource>
             <resource>
                 <directory>src/main/java</directory>
-                <includes>                    
+                <includes>
                     <include>**</include>
                 </includes>
-                <excludes>                    
+                <excludes>
                     <exclude>**/*.java</exclude>
-                </excludes>                
+                </excludes>
             </resource>
         </resources>
         <plugins>
@@ -463,21 +462,21 @@
             -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>                
+                <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <excludes>
                         <exclude>info/jtrac/selenium/**</exclude>
-                        <exclude>info/jtrac/test/**</exclude>  
+                        <exclude>info/jtrac/test/**</exclude>
                     </excludes>
                 </configuration>
-            </plugin>            
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <configuration>
                     <templateFile>src/site/resources/template/maven-site.vm</templateFile>
                 </configuration>
-            </plugin>           
+            </plugin>
         </plugins>
     </build>
 </project>
