@@ -27,139 +27,263 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
 import org.dom4j.Element;
 
 /**
- * State as in "State Transition"
- * holds a set of possible future states to transition to
- * also holds a map of [ field name = integer "mask" ]
- * to represent permissions (view or edit) that the role owning this state
- * has for each field for an item which is in this particular state
- *
- * For example, consider a state FOO and a role BAR.  
- * When a user with role BAR views an item that is having the status FOO:
- * ie. when item.status == FOO.status, the fields that can be viewed on screen
- * will be the entries in FOO.fields where the value == MASK_READONLY (or 1)
+ * <p>
+ * State as in "State Transition" holds a set of possible future states to
+ * transition. It also holds a map of <code>[field name = integer "mask"]</code>
+ * to represent permissions (view or edit) that the {@link Role} owning this
+ * state has for each field for an item which is in this particular state.
+ * </p>
+ * <p>
+ * For example, consider a state FOO and a role BAR.<br />
+ * When a {@link User} with {@link Role} BAR views an item that is having the
+ * status FOO:
+ * ie. when <code>item.status == FOO.status</code>, the fields that can be viewed on screen
+ * will be the entries in FOO.fields where the value == {@link #MASK_READONLY} (1)
+ * </p>
  */
 public class State implements Serializable {
+    /**
+     * Generated UID
+     */
+    private static final long serialVersionUID = -6321200313541210811L;
     
+    /**
+     * The status of the state.
+     */
     private int status;
+    
+    /**
+     * The {@link Set} of transitions to other {@link State} objects.
+     */
     private Set<Integer> transitions = new HashSet<Integer>();
+    
+    /**
+     * The {@link Map} of {@link Field} objects.
+     */
     private Map<Field.Name, Integer> fields = new HashMap<Field.Name, Integer>();
     
+    /**
+     * The predefined NEW state.
+     */
     public static final int NEW = 0;
+    
+    /**
+     * The predefined OPEN state.
+     */
     public static final int OPEN = 1;
+    
+    /**
+     * The predefined CLOSED state.
+     */
     public static final int CLOSED = 99;
     
+    /**
+     * The predefined HIDDEN mask state.
+     */
     public static final int MASK_HIDDEN = 0;
     public static final int MASK_READONLY = 1;
     public static final int MASK_OPTIONAL = 2;
     public static final int MASK_MANDATORY = 3;
     
+    /**
+     * Default empty constructor.
+     */
     public State() {
-        // zero arg constructor
     }
     
-    public State(int s) {
-        this.status = s;        
+    /**
+     * This constructor will set the {@link #status} of this state.
+     * 
+     * @param status The status of the state.
+     */
+    public State(int status) {
+        this.status = status;
     }
     
-    public State(Element e) {
-        this.status = Integer.parseInt(e.attributeValue(STATUS));
-        for (Object o : e.elements(TRANSITION)) {
+    /**
+     * This constructor will read the status of the state from the given 
+     * {@link Element} attribute. Then all Transitions elements are read
+     * to add them to the map of {@link #transitions}. Finally all Field
+     * elements are read to add them to the map of {@link #fields}.
+     * 
+     * @param element The {@link Element} to read and process.
+     */
+    public State(Element element) {
+        this.status = Integer.parseInt(element.attributeValue(STATUS));
+        
+        for (Object o : element.elements(TRANSITION)) {
             Element t = (Element) o;
             transitions.add(new Integer(t.attributeValue(STATUS)));
-        }
-        for (Object o : e.elements(FIELD)) {
+        } // end for each
+        
+        for (Object o : element.elements(FIELD)) {
             Element f = (Element) o;
             String fieldName = f.attributeValue(NAME);
             fields.put(Field.convertToName(fieldName), new Integer(f.attributeValue(MASK)));
-        }         
+        } // end for each
     }
     
-    /* append this object onto an existing XML document */
+    /**
+     * This method will append this object to an existing XML document.
+     * 
+     * @param parent The parent to apply this state to.
+     */
     public void addAsChildOf(Element parent) {
         Element e = parent.addElement(STATE);
         copyTo(e);
     }    
     
-    /* marshal this object into a fresh new XML Element */
+    /**
+     * This method will marshal this object into a fresh new XML element.
+     * 
+     * @return Returns the state as XML {@link Element}.
+     */
     public Element getAsElement() {
         Element e = XmlUtils.getNewElement(STATE);
         copyTo(e);
         return e;
     }
     
-    /* copy object values into an existing XML Element */
-    private void copyTo(Element e) {
-        // appending empty strings to create new objects for "clone" support
-        e.addAttribute(STATUS, status + "");
-        for (Integer toStatus : transitions) {                
-            Element t = e.addElement(TRANSITION);
+    /**
+     * Copy object values into an existing XML element.
+     * 
+     * @param element The {@link Element} object to append.
+     */
+    private void copyTo(Element element) {
+        // Appending empty strings to create new objects for "clone" support
+        element.addAttribute(STATUS, status + "");
+        
+        for (Integer toStatus : transitions) {
+            Element t = element.addElement(TRANSITION);
             t.addAttribute(STATUS, toStatus + "");
-        }
-        for (Map.Entry<Field.Name, Integer> entry : fields.entrySet()) {                            
-            Element f = e.addElement(FIELD);
+        } // end for each
+        
+        for (Map.Entry<Field.Name, Integer> entry : fields.entrySet()) {
+            Element f = element.addElement(FIELD);
             f.addAttribute(NAME, entry.getKey() + "");
             f.addAttribute(MASK, entry.getValue() + "");
-        }        
+        } // end for each
     }
     
-    //=======================================================================
-    
+    /**
+     * This method allows to add a {@link State} to the map of {@link #fields}.
+     * 
+     * @param fieldNames The {@link Collection} of {@link Field.Name} objects
+     * to add to the map.
+     */
     public void add(Collection<Field.Name> fieldNames) {
         for (Field.Name fieldName : fieldNames) {
             add(fieldName);
-        }
-    }    
+        } // end for each
+    }
     
+    /**
+     * This method allows to add a {@link State} to the map of {@link #fields}.
+     * 
+     * @param fieldName The {@link Field.Name} to add to the map.
+     */
     public void add(Field.Name fieldName) {
         int mask = MASK_READONLY;
-        // for NEW states, normally all Fields on the Item are editable
+        // For NEW states, normally all Fields on the Item are editable
         if (status == NEW) {
             mask = MASK_MANDATORY;
         }
         fields.put(fieldName, mask);
     }
     
+    /**
+     * This method allows to remove the specified field name from the map of
+     * {@link #fields}.
+     * 
+     * @param fieldName The field name to remove from the map of {@link #fields}.
+     */
     public void remove(Field.Name fieldName) {
         fields.remove(fieldName);
     }
     
+    /**
+     * This method allows to add a transition to the set of {@link #transitions}.
+     * 
+     * @param toStatus The transition to add to the set.
+     */
     public void addTransition(int toStatus) {
         transitions.add(toStatus);
     }
     
+    /**
+     * This method allows to remove the specified transition from the set of
+     * {@link #transitions}.
+     * 
+     * @param toStatus The transition to remove from the set of {@link #transitions}.
+     */
     public void removeTransition(int toStatus) {
         transitions.remove(toStatus);
-    }     
+    }
     
-    //=======================================================================   
-
+    /**
+     * This method returns the map of {@link #fields}.
+     * 
+     * @return Returns {@link #fields}.
+     */
     public Map<Field.Name, Integer> getFields() {
         return fields;
     }
-
+    
+    /**
+     * This method allow to store a map of {@link #fields}.
+     * 
+     * @param fields The map of {@link #fields} to store.
+     */
     public void setFields(Map<Field.Name, Integer> fields) {
         this.fields = fields;
     }
-
+    
+    /**
+     * This method returns the {@link #status} of the state.
+     * 
+     * @return Returns {@link #status}.
+     */
     public int getStatus() {
         return status;
     }
-
+    
+    /**
+     * This method allows to store the {@link #status} of the state.
+     * 
+     * @param status The {@link #status} of the state.
+     */
     public void setStatus(int status) {
         this.status = status;
     }
     
+    /**
+     * This method returns the set of {@link #transitions}.
+     * 
+     * @return Returns {@link #transitions}.
+     */
     public Set<Integer> getTransitions() {
         return transitions;
     }
-
+    
+    /**
+     * This method allow to store a set of {@link #transitions}.
+     * 
+     * @param fields The set of {@link #transitions} to store.
+     */
     public void setTransitions(Set<Integer> transitions) {
         this.transitions = transitions;
     }
     
+    /**
+     * This method overrides the default {@link Object#toString()} method to
+     * return the string representation of this object.
+     * 
+     * @return Returns a string representation of the object.
+     */
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
@@ -169,5 +293,4 @@ public class State implements Serializable {
         sb.append("]");
         return sb.toString();
     }
-    
 }
