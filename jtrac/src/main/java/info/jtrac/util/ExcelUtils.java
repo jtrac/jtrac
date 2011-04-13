@@ -23,8 +23,6 @@ import info.jtrac.domain.Field;
 import info.jtrac.domain.History;
 import info.jtrac.domain.ItemSearch;
 
-import static info.jtrac.domain.ColumnHeading.Name.*;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -37,10 +35,9 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 /**
- * Excel Sheet generation helper
+ * Excel Sheet generation helper utility
  */
 public class ExcelUtils {
-    
     private HSSFSheet sheet;
     private List<AbstractItem> items;
     private ItemSearch itemSearch;
@@ -99,7 +96,7 @@ public class ExcelUtils {
         }
         HSSFCell cell = getCell(row, col);
         cell.setCellValue(value);
-    }    
+    }
     
     private void setHeader(int row, int col, String text) {
         HSSFCell cell = getCell(row, col);
@@ -108,8 +105,8 @@ public class ExcelUtils {
         cell.setEncoding(HSSFCell.ENCODING_UTF_16);
         cell.setCellValue(text);
     }
-        
-    public HSSFWorkbook exportToExcel(Map<Name, String> localizedLabels) {        
+    
+    public HSSFWorkbook exportToExcel(Map<Name, String> localizedLabels) {
                 
         boolean showHistory = itemSearch.isShowHistory();
         List<ColumnHeading> columnHeadings = itemSearch.getColumnHeadingsToRender();
@@ -124,7 +121,8 @@ public class ExcelUtils {
         
         // iterate over list
         for(AbstractItem item : items) {
-            row++; col = 0;
+            row++;
+            col = 0;
             for(ColumnHeading ch : columnHeadings) {
                 if(ch.isField()) {
                     Field field = ch.getField();
@@ -141,14 +139,14 @@ public class ExcelUtils {
                 } else {
                     switch(ch.getName()) {
                         case ID:
-                            if (showHistory) {                                                                                                            
+                            if (showHistory) {
                                 int index = ((History) item).getIndex();
                                 if (index > 0) {
                                     setText(row, col++, item.getRefId() + " (" + index + ")");
                                 } else {
                                     setText(row, col++, item.getRefId());
                                 }
-                            } else {                                                                           
+                            } else {
                                 setText(row, col++, item.getRefId());
                             }
                             break;
@@ -183,12 +181,11 @@ public class ExcelUtils {
                             setText(row, col++, item.getSpace().getName());
                             break;
                         default:
-                            throw new RuntimeException("Unexpected name: '" + ch.getName() + "'");                        
+                            throw new RuntimeException("Unexpected name: '" + ch.getName() + "'");
                     }
                 }
             }
         }
         return wb;
     }
-    
 }
