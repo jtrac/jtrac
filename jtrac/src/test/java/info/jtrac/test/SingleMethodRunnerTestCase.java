@@ -6,17 +6,23 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * development convenience, run only a single method in test case
- * since NetBeans does not support this at the moment
+ * This class is for development convenience and runs only a single
+ * method in test case since NetBeans does not support this at the moment.
  */
-public class SingleMethodRunnerTestCase extends TestCase {    
-    
+public class SingleMethodRunnerTestCase extends TestCase {
+    /**
+     * This method creates a TestSuite and adds a test
+     * for a specified method (given as System property:
+     * <code>method.name</code>).
+     * 
+     * @return testSuite The TestSuite containing the test for the specified method.
+     * @throws Exception
+     */
     public static Test suite() throws Exception { 
-        TestSuite s = new TestSuite();
-        String name = System.getProperty("method.name");        
+        TestSuite testSuite = new TestSuite();
+        String name = System.getProperty("method.name");
         Test test = (Test) new JtracTest(name); 
-        s.addTest(test);
-        return s;
-    }    
-
+        testSuite.addTest(test);
+        return testSuite;
+    }
 }
