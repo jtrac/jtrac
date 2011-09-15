@@ -19,28 +19,28 @@ package info.jtrac.wicket;
 import info.jtrac.domain.Config;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.BoundCompoundPropertyModel;
 
 /**
  * config value edit form
  */
-public class ConfigFormPage extends BasePage {
+public class ConfigPasswordFormPage extends BasePage {
     /**
      * Constructor
      * 
      * @param param
      * @param value
      */
-    public ConfigFormPage(String param, String value) {
-        add(new ConfigForm("form", param, value));
+    public ConfigPasswordFormPage(String param, String value) {
+        add(new ConfigPasswordForm("form", param, value));
     }
     
     /**
      * wicket form
      */
-    private class ConfigForm extends Form {
+    private class ConfigPasswordForm extends Form {
         
         private String param;
         
@@ -54,7 +54,7 @@ public class ConfigFormPage extends BasePage {
             this.value = value;
         }
         
-        public ConfigForm(String id, final String param, final String value) {
+        public ConfigPasswordForm(String id, final String param, final String value) {
             
             super(id);
             
@@ -66,7 +66,7 @@ public class ConfigFormPage extends BasePage {
             
             add(new Label("heading", localize("config." + param)));
             add(new Label("param", param));
-            add(new TextField("value"));
+            add(new PasswordTextField("value"));
             
             // cancel ==========================================================
             add(new Link("cancel") {

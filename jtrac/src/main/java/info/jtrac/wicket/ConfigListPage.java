@@ -27,11 +27,17 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 
 /**
- * config list
+ * This class is responsible to list all configuration parameters.
+ * It also declares which edit forms will be called to modify the
+ * configuration parameters.
  */
 public class ConfigListPage extends BasePage {
-      
-    public ConfigListPage(final String selectedParam) {                           
+    /**
+     * Constructor
+     * 
+     * @param selectedParam
+     */
+    public ConfigListPage(final String selectedParam) {
         
         final Map<String, String> configMap = getJtrac().loadAllConfig();
         
@@ -43,22 +49,34 @@ public class ConfigListPage extends BasePage {
             protected void populateItem(ListItem listItem) {
                 final String param = (String) listItem.getModelObject();
                 final String value = configMap.get(param);
+                
                 if (param.equals(selectedParam)) {
                     listItem.add(new SimpleAttributeModifier("class", "selected"));
                 } else if(listItem.getIndex() % 2 == 1) {
                     listItem.add(sam);
-                }                
+                }
+                
                 listItem.add(new Label("param", param));
                 listItem.add(new Label("value", value));
-                listItem.add(new Link("link") {
-                    public void onClick() {
-                        setResponsePage(new ConfigFormPage(param, value));
-                    }
-                });
+                
+                if (param.toLowerCase().indexOf("password") != -1) {
+                    // Password value to be edited
+                    listItem.add(new Link("link") {
+                        public void onClick() {
+                            setResponsePage(new ConfigPasswordFormPage(param, value));
+                        }
+                    });
+                } else {
+                    // Normal text value to be edited
+                    listItem.add(new Link("link") {
+                        public void onClick() {
+                            setResponsePage(new ConfigFormPage(param, value));
+                        }
+                    });
+                }
                 listItem.add(new Label("description", localize("config." + param)));
             }
         });
         
     }
-    
 }
