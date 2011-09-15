@@ -26,32 +26,32 @@ import org.apache.wicket.model.BoundCompoundPropertyModel;
 /**
  * config value edit form
  */
-public class ConfigFormPage extends BasePage {              
+public class ConfigFormPage extends BasePage {
     
-    public ConfigFormPage(String param, String value) {            
+    public ConfigFormPage(String param, String value) {
         add(new ConfigForm("form", param, value));
     }
     
     /**
      * wicket form
      */
-    private class ConfigForm extends Form {                
+    private class ConfigForm extends Form {
         
         private String param;
         
         private String value;
-
+        
         public String getValue() {
             return value;
         }
-
+        
         public void setValue(String value) {
             this.value = value;
-        }         
+        }
         
         public ConfigForm(String id, final String param, final String value) {
             
-            super(id);                             
+            super(id);
             
             this.param = param;
             this.value = value;
@@ -61,23 +61,21 @@ public class ConfigFormPage extends BasePage {
             
             add(new Label("heading", localize("config." + param)));
             add(new Label("param", param));
-
+            
             add(new TextField("value"));
             
             // cancel ==========================================================
             add(new Link("cancel") {
                 public void onClick() {
                     setResponsePage(new ConfigListPage(param));
-                }                
-            });            
+                }
+            });
         }
-                
+        
         @Override
-        protected void onSubmit() {            
+        protected void onSubmit() {
             getJtrac().storeConfig(new Config(param, value));
             setResponsePage(new ConfigListPage(param));
-        }     
-                        
-    }        
-    
+        }
+    }
 }
