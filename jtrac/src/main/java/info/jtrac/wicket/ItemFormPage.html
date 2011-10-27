@@ -1,29 +1,29 @@
 <html>
-    <body>        
-        <wicket:extend>            
-            <form wicket:id="form">                
-                <span wicket:id="feedback"></span>                 
+    <body>
+        <wicket:extend>
+            <form wicket:id="form">
+                <span wicket:id="feedback"></span>
                 <table class="bdr-collapse">
                     <tr>
                         <td colspan="2">
                             <table class="jtrac">
-                                <tr>    
+                                <tr>
                                     <td class="label">
                                         <wicket:message key="item_form.summary"/>
                                         <font color="red">*</font>
-                                    </td>    
+                                    </td>
                                     <td>
                                         <input wicket:id="summary" style="width:49.7em" maxlength="255"/>
-                                        <input type="submit" wicket:id="delete" wicket:message="value:delete"/>                                        
+                                        <input type="submit" wicket:id="delete" wicket:message="value:delete"/>
                                     </td>
                                 </tr>
-                                <tr>    
+                                <tr>
                                     <td class="label">
                                         <wicket:message key="item_form.detail"/>
                                         <font color="red">*</font>
-                                    </td>    
+                                    </td>
                                     <td>
-                                        <textarea wicket:id="detail" rows="10" style="width:51em"></textarea>                                                        
+                                        <textarea wicket:id="detail" rows="10" style="width:51em"></textarea>
                                     </td>
                                 </tr>
                             </table>
@@ -33,16 +33,16 @@
                         <td>
                             <table class="jtrac">
                                 <span wicket:id="fields"></span>
-                                <tr wicket:id="hideAssignedTo">    
+                                <tr wicket:id="hideAssignedTo">
                                     <td class="label">
                                         <wicket:message key="item_form.assignTo"/>
                                         <font color="red">*</font>
-                                    </td>    
+                                    </td>
                                     <td>
                                         <div wicket:id="border"><select wicket:id="assignedTo"/></div>
                                     </td>
                                 </tr>
-                                <tr wicket:id="hideEditReason">    
+                                <tr wicket:id="hideEditReason">
                                     <td class="label">
                                         <wicket:message key="item_form.editReason"/>
                                         <font color="red">*</font>
@@ -50,13 +50,13 @@
                                     <td>
                                         <textarea wicket:id="editReason" rows="5" cols="40"></textarea>
                                     </td>
-                                </tr>                                 
+                                </tr>
                                 <tr>
                                     <td/>
                                     <td>
-                                        <input type="submit" wicket:message="value:submit"/>                                        
+                                        <input type="submit" wicket:message="value:submit"/>
                                         <input type="checkbox" wicket:id="sendNotifications"/>
-                                        <wicket:message key="item_form.sendNotifications"/>                                        
+                                        <wicket:message key="item_form.sendNotifications"/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -64,7 +64,7 @@
                                         <a href="#" wicket:id="cancel"><img src="resources/cancel.gif" class="nav-link"/><wicket:message key="cancel"/></a>
                                     </td>
                                 </tr>
-                            </table>                                                                                    
+                            </table>
                         </td>
                         <td align="right" wicket:id="hideNotifyList">
                             <table class="jtrac">
@@ -82,9 +82,9 @@
                                         <input wicket:id="file" size="15" type="file"/>
                                     </td>
                                 </tr>
-                            </table>                            
+                            </table>
                         </td>
-                    </tr>                            
+                    </tr>
                 </table>
             </form>
         </wicket:extend>
