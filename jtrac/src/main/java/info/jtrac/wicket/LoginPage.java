@@ -35,55 +35,108 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * login page
+ * The JTrac login page.
  */
-public class LoginPage extends WebPage {              
+public class LoginPage extends WebPage {
+    /**
+     * Logger object
+     */
+    private static final Logger logger = LoggerFactory.getLogger(LoginPage.class);
     
-    private static final Logger logger = LoggerFactory.getLogger(LoginPage.class);            
-    
+    /**
+     * Default constructor
+     */
     public LoginPage() {
         setVersioned(false);
         add(new IndividualHeadPanel().setRenderBodyOnly(true));
         add(new Label("title", getLocalizer().getString("login.title", null)));
         add(new LoginForm("form"));
         String jtracVersion = JtracApplication.get().getJtrac().getReleaseVersion();
-        add(new Label("version", jtracVersion));                
+        add(new Label("version", jtracVersion));
     }
     
     /**
-     * wicket form
-     */     
-    private class LoginForm extends StatelessForm {                               
-        
+     * Wicket form for the login (inner class)
+     */
+    private class LoginForm extends StatelessForm {
+        /**
+         * The login name of the user.
+         */
         private String loginName;
+        
+        /**
+         * The password of the user.
+         */
         private String password;
+        
+        /**
+         * The flag indicating if the user wants to be remembered or not.
+         */
         private boolean rememberMe;
-
+        
+        /**
+         * This method will return the login name of the user.
+         * 
+         * @return The login name of the user.
+         */
         public String getLoginName() {
             return loginName;
         }
-
+        
+        /**
+         * This method allows to set the login name entered in the form.
+         * 
+         * @param loginName The login name to set.
+         */
         public void setLoginName(String loginName) {
             this.loginName = loginName;
         }
-
+        
+        /**
+         * This method will return the password of the user.
+         * 
+         * @return The password of the user.
+         */
         public String getPassword() {
             return password;
         }
-
+        
+        /**
+         * This method allows to set the password entered in the form.
+         * 
+         * @param password The password to set.
+         */
         public void setPassword(String password) {
             this.password = password;
-        }        
-
+        }
+        
+        /**
+         * This method will return the flag indicating if the user
+         * want's to be remembered as chosen on the form.
+         * 
+         * @return The flag indicating if the user wants to be remembered
+         * (<code>true</code>) or not (<code>false</code>).
+         */
         public boolean isRememberMe() {
             return rememberMe;
         }
-
+        
+        /**
+         * This method allows to set the boolean flag to be remembered as
+         * checked on the form.
+         * 
+         * @param rememberMe The boolean flag to set.
+         */
         public void setRememberMe(boolean rememberMe) {
             this.rememberMe = rememberMe;
-        }         
+        }
         
-        public LoginForm(String id) {            
+        /**
+         * Constructor for the login form.
+         * 
+         * @param id
+         */
+        public LoginForm(String id) {
             super(id);
             add(new WebMarkupContainer("hide") {
                 @Override
@@ -91,7 +144,7 @@ public class LoginPage extends WebPage {
                     return !LoginForm.this.hasError();
                 }
             });
-            add(new FeedbackPanel("feedback"));            
+            add(new FeedbackPanel("feedback"));
             setModel(new BoundCompoundPropertyModel(this));
             final TextField loginNameField = new TextField("loginName");
             loginNameField.setOutputMarkupId(true);
@@ -100,7 +153,10 @@ public class LoginPage extends WebPage {
             passwordField.setRequired(false);
             passwordField.setOutputMarkupId(true);
             add(passwordField);
-            // intelligently set focus on the appropriate textbox
+            
+            /*
+             * Intelligently set focus on the appropriate textbox.
+             */
             add(new HeaderContributor(new IHeaderContributor() {
                 public void renderHead(IHeaderResponse response) {
                     String markupId;
@@ -108,43 +164,69 @@ public class LoginPage extends WebPage {
                         markupId = loginNameField.getMarkupId();
                     } else {
                         markupId = passwordField.getMarkupId();
-                    }                    
+                    }
                     response.renderOnLoadJavascript("document.getElementById('" + markupId + "').focus()");
                 }
-            }));           
+            }));
             add(new CheckBox("rememberMe"));
-
-        }
-                
+        } // end LoginForm(String)
+        
+        /**
+         * This method will process the login after the user hits the submit
+         * button to login.
+         */
         @Override
-        protected void onSubmit() {                    
+        protected void onSubmit() {
             if(loginName == null || password == null) {
-                logger.debug("login failed - login name or password is null");
-                error(getLocalizer().getString("login.error", null));                
+                logger.error("login failed - login name " + 
+                        (loginName!=null ? "is set (trimmed length=" + 
+                                loginName.trim().length()+")" : "is null") + 
+                        " and password " + 
+                        (password!=null ? "is set" : "is null") + ".");
+                error(getLocalizer().getString("login.error", null));
                 return;
-            }            
-            User user = JtracApplication.get().authenticate(loginName, password);         
-            if (user == null) { // login failed                
-                error(getLocalizer().getString("login.error", null));                   
-            } else { // login success
-                // remember me cookie
-                if(rememberMe) {                    
-                    Cookie cookie = new Cookie("jtrac", loginName + ":" + JtracApplication.get().getJtrac().encodeClearText(password));                    
+            }
+            
+            User user = JtracApplication.get().authenticate(loginName, password);
+            if (user == null) {
+                /*
+                 * ================================
+                 * Login failed!
+                 * ================================
+                 */
+                logger.error("login failed - Authentication for login name '"+
+                        loginName + "' not successful");
+                error(getLocalizer().getString("login.error", null));
+            } else {
+                /*
+                 * ================================
+                 * Login success!
+                 * ================================
+                 */
+                
+                /*
+                 * Set Remember me cookie if checkbox is checked on page.
+                 */
+                if(rememberMe) {
+                    Cookie cookie = new Cookie("jtrac", loginName + ":" + JtracApplication.get().getJtrac().encodeClearText(password));
                     cookie.setMaxAge(30 * 24 * 60 * 60); // 30 days in seconds 
                     String path = getWebRequestCycle().getWebRequest().getHttpServletRequest().getContextPath();
                     cookie.setPath(path);
                     getWebRequestCycle().getWebResponse().addCookie(cookie);
                     logger.debug("remember me requested, cookie added, " + WebUtils.getDebugStringForCookie(cookie));
                 }
-                // setup session with principal
+                
+                /*
+                 * Setup session with principal
+                 */
                 JtracSession.get().setUser(user);
-                // proceed to bookmarkable page or default dashboard
+                /*
+                 * Proceed to bookmarkable page or default dashboard
+                 */
                 if (!continueToOriginalDestination()) {
                     setResponsePage(DashboardPage.class);
-                } 
-            }                
-        }     
-                        
-    }         
-    
+                }
+            }
+        } // end onSubmit()
+    } // end inner class LoginForm
 }
