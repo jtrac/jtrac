@@ -35,6 +35,7 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.BoundCompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.util.convert.converters.DoubleConverter;
 
 /**
  * This class is responsible for the panel of custom fields that
@@ -132,7 +133,31 @@ public class CustomFieldsFormPanel extends BasePanel {
                      * Double values.
                      */
                     if (field.isDecimalNumberType()) {
-                        textField.setType(Double.class);
+                        /*
+                         * The following code overwrites the default
+                         * DoubleConverter used by Wicket (getConverter(Class)).
+                         * The original implementation rounds after three
+                         * digits to the right of the decimal point.
+                         * 
+                         * As there are requirements to show six digits to
+                         * the right of the decimal point the NumberFormat
+                         * is enhanced in the code below by the DecimalFormat
+                         * class. That has been used because the DecimalFormat
+                         * class supports a formatting pattern which allows
+                         * to use the digits to the right only if really
+                         * needed (currently limited to six digits to the
+                         * right of the decimal point).
+                         */
+                        textField = new TextField("field", Double.class) {
+                            public org.apache.wicket.util.convert.IConverter getConverter(Class type) {
+                                DoubleConverter converter = (DoubleConverter) DoubleConverter.INSTANCE;
+                                java.text.NumberFormat numberFormat = converter.getNumberFormat(getLocale());
+                                java.text.DecimalFormat decimalFormat = (java.text.DecimalFormat)numberFormat;
+                                decimalFormat.applyPattern("###,##0.######");
+                                converter.setNumberFormat(getLocale(), decimalFormat);
+                                return converter;
+                            };
+                        };
                     }
                     
                     textField.add(new ErrorHighlighter());
