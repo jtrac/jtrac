@@ -38,58 +38,87 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.PropertyModel;
 
 /**
- * panel for showing the item read-only view
+ * This class is responsible the panel showing the item
+ * read-only view.
  */
-public class ItemViewPanel extends BasePanel {    
-    
+public class ItemViewPanel extends BasePanel {
+    /**
+     * Boolean flags to hide links.
+     */
     private boolean hideLinks;
     
-    public ItemViewPanel(String id, long itemId) {                
+    /**
+     * Constructor
+     * 
+     * @param id
+     * @param itemId
+     */
+    public ItemViewPanel(String id, long itemId) {
         super(id);
         addComponents(getJtrac().loadItem(itemId));
-    }    
+    }
     
-    public ItemViewPanel(String id, final Item item, boolean hideLinks) {                
+    /**
+     * Constructor
+     * 
+     * @param id
+     * @param item
+     * @param hideLinks
+     */
+    public ItemViewPanel(String id, final Item item, boolean hideLinks) {
         super(id);
         this.hideLinks = hideLinks;
         addComponents(item);
     }
     
-    private void addComponents(final Item item) {      
-        
+    /**
+     * This method allows to add components (items).
+     * 
+     * @param item The {@link Item} to add.
+     */
+    private void addComponents(final Item item) {
         add(new Label("refId", new PropertyModel(item, "refId")));
         
         add(new Link("relate") {
             public void onClick() {
-                // TODO choose specific space for search
+                /*
+                 * TODO choose specific space for search
+                 */
                 ItemSearch itemSearch = new ItemSearch(getPrincipal());
                 itemSearch.setRelatingItemRefId(item.getRefId());
                 setResponsePage(new ItemSearchFormPage(itemSearch));
             }
-        }.setVisible(!hideLinks));        
+        }.setVisible(!hideLinks));
         
-        if(item.getRelatedItems() != null) {        
-            add(new ListView("relatedItems", new ArrayList(item.getRelatedItems())) {            
+        if (item.getRelatedItems() != null) {
+            add(new ListView("relatedItems", new ArrayList(item.getRelatedItems())) {
+                /* (non-Javadoc)
+                 * @see org.apache.wicket.markup.html.list.ListView#populateItem(org.apache.wicket.markup.html.list.ListItem)
+                 */
                 protected void populateItem(ListItem listItem) {
                     final ItemItem itemItem = (ItemItem) listItem.getModelObject();
                     String message = null;
-                    if(itemItem.getType() == DUPLICATE_OF) {
+                    
+                    if (itemItem.getType() == DUPLICATE_OF) {
                         message = localize("item_view.duplicateOf");
                     } else if (itemItem.getType() == DEPENDS_ON) {
                         message = localize("item_view.dependsOn");
-                    } else if (itemItem.getType() == RELATED){
-                        message = localize("item_view.relatedTo");                  
+                    } else if (itemItem.getType() == RELATED) {
+                        message = localize("item_view.relatedTo");
                     }
+                    
                     final String refId = itemItem.getRelatedItem().getRefId();
-                    if(hideLinks) {
+                    if (hideLinks) {
                         message = message + " " + refId;
                     }
+                    
                     listItem.add(new Label("message", message));
                     Link link = new Link("link") {
                         public void onClick() {
                             setResponsePage(ItemViewPage.class, new PageParameters("0=" + refId));
                         }
                     };
+                    
                     link.add(new Label("refId", refId));
                     link.setVisible(!hideLinks);
                     listItem.add(link);
@@ -104,31 +133,41 @@ public class ItemViewPanel extends BasePanel {
             add(new WebMarkupContainer("relatedItems").setVisible(false));
         }
         
-        if(item.getRelatingItems() != null) {
-            add(new ListView("relatingItems", new ArrayList(item.getRelatingItems())) {            
+        if (item.getRelatingItems() != null) {
+            add(new ListView("relatingItems", new ArrayList(item.getRelatingItems())) {
+                /* (non-Javadoc)
+                 * @see org.apache.wicket.markup.html.list.ListView#populateItem(org.apache.wicket.markup.html.list.ListItem)
+                 */
                 protected void populateItem(ListItem listItem) {
                     final ItemItem itemItem = (ItemItem) listItem.getModelObject();
-                    // this looks very similar to related items block above
-                    // but the display strings could be different and in future handling of the 
-                    // inverse of the bidirectional link could be different as well                    
+                    
+                    /*
+                     * This looks very similar to related items block above
+                     * but the display strings could be different and in
+                     * future handling of the inverse of the bidirectional
+                     * link could be different as well.
+                     */
                     String message = null;
-                    if(itemItem.getType() == DUPLICATE_OF) {
+                    if (itemItem.getType() == DUPLICATE_OF) {
                         message = localize("item_view.duplicateOfThis");
                     } else if (itemItem.getType() == DEPENDS_ON) {
                         message = localize("item_view.dependsOnThis");
-                    } else if (itemItem.getType() == RELATED){
-                        message = localize("item_view.relatedToThis");                  
+                    } else if (itemItem.getType() == RELATED) {
+                        message = localize("item_view.relatedToThis");
                     }
+                    
                     final String refId = itemItem.getItem().getRefId();
-                    if(hideLinks) {
+                    if (hideLinks) {
                         message = refId + " " + message;
-                    }                    
+                    }
+                    
                     listItem.add(new Label("message", message));
                     Link link = new Link("link") {
                         public void onClick() {
                             setResponsePage(ItemViewPage.class, new PageParameters("0=" + refId));
                         }
                     };
+                    
                     link.add(new Label("refId", refId));
                     link.setVisible(!hideLinks);
                     listItem.add(link);
@@ -136,7 +175,7 @@ public class ItemViewPanel extends BasePanel {
                         public void onClick() {
                             setResponsePage(new ItemRelateRemovePage(item.getId(), itemItem));
                         }
-                    }.setVisible(!hideLinks));                
+                    }.setVisible(!hideLinks));
                 }
             });
         } else {
@@ -147,58 +186,72 @@ public class ItemViewPanel extends BasePanel {
         add(new Label("loggedBy", new PropertyModel(item, "loggedBy.name")));
         add(new Label("assignedTo", new PropertyModel(item, "assignedTo.name")));
         add(new Label("summary", new PropertyModel(item, "summary")));
-        add(new Label("detail", ItemUtils.fixWhiteSpace(item.getDetail())).setEscapeModelStrings(false));        
+        add(new Label("detail", ItemUtils.fixWhiteSpace(item.getDetail())).setEscapeModelStrings(false));
         
         final SimpleAttributeModifier sam = new SimpleAttributeModifier("class", "alt");
         final Map<Field.Name, Field> fields = item.getSpace().getMetadata().getFields();
         add(new ListView("fields", item.getSpace().getMetadata().getFieldOrder()) {
+            /* (non-Javadoc)
+             * @see org.apache.wicket.markup.html.list.ListView#populateItem(org.apache.wicket.markup.html.list.ListItem)
+             */
             protected void populateItem(ListItem listItem) {
-                if(listItem.getIndex() % 2 == 0) {
+                if (listItem.getIndex() % 2 == 0) {
                     listItem.add(sam);
                 }
+                
                 Field.Name fieldName = (Field.Name) listItem.getModelObject();
                 Field field = fields.get(fieldName);
                 listItem.add(new Label("label", field.getLabel()));
                 listItem.add(new Label("value", item.getCustomValue(fieldName)));
-            }            
+            }
         });
         
         final List<Field> editable = item.getSpace().getMetadata().getEditableFields();
+        
         add(new ListView("labels", editable) {
+            /* (non-Javadoc)
+             * @see org.apache.wicket.markup.html.list.ListView#populateItem(org.apache.wicket.markup.html.list.ListItem)
+             */
             protected void populateItem(ListItem listItem) {
                 Field field = (Field) listItem.getModelObject();
                 listItem.add(new Label("label", field.getLabel()));
-            }            
+            }
         });
-      
+        
         if (item.getHistory() != null) {
             List<History> history = new ArrayList(item.getHistory());
             add(new ListView("history", history) {
+                /* (non-Javadoc)
+                 * @see org.apache.wicket.markup.html.list.ListView#populateItem(org.apache.wicket.markup.html.list.ListItem)
+                 */
                 protected void populateItem(ListItem listItem) {
-                    if(listItem.getIndex() % 2 != 0) {
+                    if (listItem.getIndex() % 2 != 0) {
                         listItem.add(sam);
-                    }                    
+                    }
+                    
                     final History h = (History) listItem.getModelObject();
                     listItem.add(new Label("loggedBy", new PropertyModel(h, "loggedBy.name")));
                     listItem.add(new Label("status", new PropertyModel(h, "statusValue")));
                     listItem.add(new Label("assignedTo", new PropertyModel(h, "assignedTo.name")));
                     
-                    WebMarkupContainer comment = new WebMarkupContainer("comment");                    
+                    WebMarkupContainer comment = new WebMarkupContainer("comment");
                     comment.add(new AttachmentLinkPanel("attachment", h.getAttachment()));
                     comment.add(new Label("comment", ItemUtils.fixWhiteSpace(h.getComment())).setEscapeModelStrings(false));
                     listItem.add(comment);
                     
                     listItem.add(new Label("timeStamp", DateUtils.formatTimeStamp(h.getTimeStamp())));
                     listItem.add(new ListView("fields", editable) {
+                        /* (non-Javadoc)
+                         * @see org.apache.wicket.markup.html.list.ListView#populateItem(org.apache.wicket.markup.html.list.ListItem)
+                         */
                         protected void populateItem(ListItem listItem) {
                             Field field = (Field) listItem.getModelObject();
                             listItem.add(new Label("field", h.getCustomValue(field.getName())));
-                        }                        
+                        }
                     });
-                }                
-            });            
+                }
+            });
         }
         
-    }
-    
+    } // end method addComponents(Item)
 }

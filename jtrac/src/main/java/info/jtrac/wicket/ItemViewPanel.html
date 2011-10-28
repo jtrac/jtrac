@@ -1,25 +1,25 @@
-<wicket:panel>    
+<wicket:panel>
     <table class="jtrac jtrac-view" width="100%">
         <tr class="alt" valign="top">
             <td class="label"><wicket:message key="item_view.id"/></td>
             <td wicket:id="refId"></td>
             <td class="label">
                 <wicket:message key="item_view.relatedItems"/>
-                <a href="#" wicket:id="relate" wicket:message="title:item_view_form.addRelatedItem"><img src="resources/add.gif"/></a>                
+                <a href="#" wicket:id="relate" wicket:message="title:item_view_form.addRelatedItem"><img src="resources/add.gif"/></a>
             </td>
             <td colspan="3">
                 <span wicket:id="relatedItems">
                     <span wicket:id="message"></span>
                     <span wicket:id="link"><a href="#" wicket:id="refId"></a></span>
-                    <a href="#" wicket:id="remove" wicket:message="title:item_view.remove"><img src="resources/remove.gif"/></a>                                       
+                    <a href="#" wicket:id="remove" wicket:message="title:item_view.remove"><img src="resources/remove.gif"/></a>
                     <br/>
-                </span>                
-                <span wicket:id="relatingItems">                    
+                </span>
+                <span wicket:id="relatingItems">
                     <span wicket:id="link"><a href="#" wicket:id="refId"></a></span>
                     <span wicket:id="message"></span>
-                    <a href="#" wicket:id="remove" wicket:message="title:item_view.remove"><img src="resources/remove.gif"/></a>                    
+                    <a href="#" wicket:id="remove" wicket:message="title:item_view.remove"><img src="resources/remove.gif"/></a>
                     <br/>
-                </span>                
+                </span>
             </td>
         </tr>
         <tr>
@@ -37,12 +37,12 @@
         <tr>
             <td class="label" valign="top"><wicket:message key="item_view.detail"/></td>
             <td wicket:id="detail" colspan="5"></td>
-        </tr>         
+        </tr>
         <tr wicket:id="fields">
             <td class="label" wicket:id="label"></td>
             <td wicket:id="value" colspan="5"></td>
         </tr>
-    </table>        
+    </table>
     
     <br/><div class="space-below">&nbsp;<b><wicket:message key="item_view.history"/></b></div>
     
